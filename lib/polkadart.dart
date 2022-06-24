@@ -1,0 +1,3 @@
+library polkadart;
+
+class Polkadart {}

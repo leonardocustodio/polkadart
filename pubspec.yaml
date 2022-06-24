@@ -1,0 +1,14 @@
+name: polkadart
+description: polkadart
+version: 0.0.1
+homepage: https://pub.dev
+
+environment:
+  sdk: ">=2.17.1 <3.0.0"
+
+dependencies:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
