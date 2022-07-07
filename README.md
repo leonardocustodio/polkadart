@@ -11,7 +11,7 @@ License: Apache 2.0
 
 ### 📌 Overview
 
-- Polkadart is a Dart client library to use and access API of Substrate based networks.
+- Polkadart is a Dart library that provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node. It's an equivalent to [polkadot-api](https://github.com/polkadot-js/api) written in Dart language.
 
 - Development of a library that allows users to use the potential of Substrate’s based blockchains network on Flutter platform. 
 
