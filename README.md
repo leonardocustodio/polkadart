@@ -214,7 +214,7 @@ Here you can also add any additional information that you think is relevant to t
 - Work you have already done.
 Lohann's previous work:
 https://forte.io
-https://rally.io/
+https://rally.io
 efinity.io
 collectiba (https://www.youtube.com/watch?v=QftJoDz2JXU)
 
