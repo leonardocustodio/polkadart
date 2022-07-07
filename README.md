@@ -15,7 +15,7 @@ License: Apache 2.0
 
 - Development of a library that allows users to connect to Polkadot/Substrate’s nodes on Flutter platform. 
 
-- Our team is developing a ranking-based voting system based on the Substrate's based blockchain and for that, we need to create the Dart-substrate library. Today, there are multiple mobile applications built on Flutter and, until now, there is no possibility to connect them with Substrate based blockchains. 
+- Our team is developing a ranking-based voting system based on the Substrate's based blockchain and for that, we need to create the Dart-substrate library. Today, there are multiple mobile applications built on Flutter and, until now, there is no possibility to connect to Substrate's nodes. 
 <br><br/>
 ### 📌 Project Details
 
