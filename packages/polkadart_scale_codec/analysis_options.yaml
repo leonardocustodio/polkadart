@@ -15,12 +15,13 @@ include: package:lints/recommended.yaml
 
 # Uncomment the following section to specify additional rules.
 
-linter:
-  rules:
-    constant_identifier_names: false
-    overridden_fields: false
+# linter:
+#   rules:
+#     - camel_case_types
+
 # analyzer:
 #   exclude:
+#     - path/to/excluded/files/**
 
 # For more information about the core and recommended set of lints, see
 # https://dart.dev/go/core-lints
