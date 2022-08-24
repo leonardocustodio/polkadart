@@ -1,5 +1,3 @@
-
-
 enum Primitive {
   I8,
   U8,

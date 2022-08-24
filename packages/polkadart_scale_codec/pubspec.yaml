@@ -1,5 +1,5 @@
-name: scale_codec
-description: A starting point for Dart libraries or applications.
+name: polkadart_scale_codec
+description: polkadart_scale_codec description
 version: 1.0.0
 homepage: https://github.com/rankanizer/polkadart
 

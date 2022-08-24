@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:scale_codec/src/util/hex.dart';
+import 'package:polkadart_scale_codec/src/util/hex.dart';
 
 class Src {
   int _idx = 0;
