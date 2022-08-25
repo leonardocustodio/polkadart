@@ -54,6 +54,77 @@ void main() {
       encodeBytes(prefix, Uint8List.fromList(List<int>.filled(len, len)));
     }
   });
+
+  // Decode Exception testing
+  group('decode: throw exception -> ', () {
+    test('data.length < 3 ', () {
+      expect(() => SS58Codec.decode('KS'), throwsException);
+    });
+
+    test('data[0] > 128 ', () {
+      expect(
+          () =>
+              SS58Codec.decode('fRWKeM1KzddF4G6N6isvg6SpFVWJLLXRyYvK1dXLx4xjP'),
+          throwsException);
+    });
+    test('(data.length - offset) != any of [2, 3, 5, 9, 34, 35]', () {
+      expect(
+          () => SS58Codec.decode(
+              '3HX1zEyzCbxeXe34JY8SNSVAZ6djFccsV5f67PTied4CcWHspQ'),
+          throwsException);
+      expect(
+          () => SS58Codec.decode(
+              '4pa95kBXvMqgbpDXkFVHE9JfnNqamjYQYtmSTZGcnBXwvnmosP'),
+          throwsException);
+      expect(
+          () => SS58Codec.decode(
+              '3rr8zEMfiR2AjQYpVvncJCAcRP7CLzfxMGuUU2Pw2MCotrsQnS'),
+          throwsException);
+      expect(
+          () => SS58Codec.decode(
+              '4uqUGom7PszVSaZipgHYwVNsMESj1W6cmMZYeXGFeeXGX6VEqm'),
+          throwsException);
+    });
+  });
+
+  // Encode Exception testing
+  group('encode: throw exception -> ', () {
+    test('invalid prefix ', () {
+      expect(
+          () => SS58Codec.encode(
+              Address(prefix: -1, bytes: Uint8List.fromList([]))),
+          throwsA(isA<AssertionError>()));
+
+      expect(
+          () => SS58Codec.encode(
+              Address(prefix: 16385, bytes: Uint8List.fromList([]))),
+          throwsA(isA<AssertionError>()));
+    });
+
+    test('invalid address length at lengths: [3, 5, 6, 7]', () {
+      for (var len in [3, 5, 6, 7]) {
+        expect(
+            () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
+            throwsA(isA<AssertionError>()));
+      }
+    });
+
+    test('invalid address length 9-31', () {
+      for (var len = 9; len <= 31; len++) {
+        expect(
+            () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
+            throwsA(isA<AssertionError>()));
+      }
+    });
+
+    test('invalid address length at length: 34+', () {
+      for (var len in [34, 35]) {
+        expect(
+            () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
+            throwsA(isA<AssertionError>()));
+      }
+    });
+  });
 }
 
 int randomInt(int max) {
