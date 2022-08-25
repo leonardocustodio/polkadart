@@ -88,7 +88,7 @@ class RegistryItem extends Equatable {
   /// Creating a new object as a copy of symbols to make it [unmodifiable]
   List<int> get symbols => List<int>.from(_symbols);
 
-  /// Used to match and calculate hascode with equality
+  /// Used to match and calculate hashcode with equality
   @override
   List<Object?> get props => [
         prefix,
