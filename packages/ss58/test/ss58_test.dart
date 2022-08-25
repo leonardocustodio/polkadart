@@ -28,7 +28,7 @@ void main() {
       expect(() => registryObject.getByPrefix(500000), throwsException);
     });
 
-    test('-> findByNetwork and findByPrefix', () {
+    test('findByNetwork and findByPrefix', () {
       expect(registryObject.findByNetwork('kusama'),
           equals(registryObject.findByPrefix(2)));
       expect(
@@ -82,6 +82,18 @@ void main() {
           () => Codec(2)
               .decode('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'),
           throwsException);
+    });
+
+    test('invalid prefix assertion error', () {
+      expect(
+          () => Codec(-1)
+              .decode('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'),
+          throwsA(isA<AssertionError>()));
+
+      expect(
+          () => Codec(16385)
+              .decode('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'),
+          throwsA(isA<AssertionError>()));
     });
   });
 }
