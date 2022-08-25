@@ -17,12 +17,13 @@ class Codec {
   }
 
   /// Encode the bytes
-  String encode(Uint8List bytes) {
-    return SS58Codec.encode(Address(prefix: prefix, bytes: bytes));
+  String encode(List<int> bytes) {
+    return SS58Codec.encode(
+        Address(prefix: prefix, bytes: Uint8List.fromList(bytes)));
   }
 
   /// Decode the Address
-  Uint8List decode(String s) {
+  List<int> decode(String s) {
     var address = SS58Codec.decode(s);
     if (address.prefix != prefix) {
       throw Exception(

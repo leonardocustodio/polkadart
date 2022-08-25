@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:ss58/ss58.dart';
 import 'package:test/test.dart';
 import 'package:convert/convert.dart';
@@ -71,7 +69,7 @@ void main() {
           'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
 
       // encoding the bytes to produce exact address
-      final encodedAddress = Codec(42).encode(Uint8List.fromList(bytes));
+      final encodedAddress = Codec(42).encode(bytes);
 
       expect(encodedAddress, equals(address));
     });
