@@ -56,6 +56,7 @@ class RegistryItem extends Equatable {
     _symbols.addAll(symbolsValue);
   }
 
+  /// Initialize Registry Item from the Json
   static RegistryItem fromJson(Map<String, dynamic> json) {
     return RegistryItem._(
       prefix: json['prefix'],
@@ -68,6 +69,7 @@ class RegistryItem extends Equatable {
     );
   }
 
+  /// returns Json of the Registry
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'prefix': prefix,
@@ -86,6 +88,7 @@ class RegistryItem extends Equatable {
   /// Creating a new object as a copy of symbols to make it [unmodifiable]
   List<int> get symbols => List<int>.from(_symbols);
 
+  /// Used to match and calculate hascode with equality
   @override
   List<Object?> get props => [
         prefix,
