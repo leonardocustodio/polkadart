@@ -1,55 +1,9 @@
-import 'package:polkadart_scale_codec/src/core/types.dart';
+import 'dart:math';
+import 'package:polkadart_scale_codec/src/util/functions.dart';
+
+import 'codec_type.dart';
+import 'types.dart';
 import 'codec_variant.dart';
-
-class CodecStructTypeFields {
-  String? name;
-  num? type;
-}
-
-abstract class CodecStructType {
-  final TypeKind kind = TypeKind.Struct;
-  List<CodecStructTypeFields> fields = <CodecStructTypeFields>[];
-}
-
-class CodecVariantType {
-  final TypeKind kind = TypeKind.Variant;
-  List<CodecVariant?> variants = <CodecVariant?>[];
-  Map<String, CodecVariant> variantsByName = <String, CodecVariant>{};
-}
-
-class CodecBytesType {
-  final TypeKind kind = TypeKind.Bytes;
-}
-
-class CodecBytesArrayType {
-  final TypeKind kind = TypeKind.BytesArray;
-  int? len;
-}
-
-class CodecBooleanOptionType {
-  final TypeKind kind = TypeKind.BooleanOption;
-}
-
-class CodecCompactType {
-  final TypeKind kind = TypeKind.Compact;
-  Primitive? integer;
-}
-
-/* enum CodecType {
-  PrimitiveType,
-  SequenceType,
-  BitSequenceType,
-  ArrayType,
-  TupleType,
-  OptionType,
-  DoNotConstructType,
-  CodecCompactType,
-  CodecStructType,
-  CodecVariantType,
-  CodecBytesType,
-  CodecBytesArrayType,
-  CodecBooleanOptionType,
-} */
 
 Type getUnwrappedType(List<Type> types, int ti) {
   Type def = types[ti];
@@ -66,14 +20,14 @@ Type unwrap(Type def, List<Type> types, {Set<int>? visited}) {
   int next;
   switch (def.kind) {
     case TypeKind.Tuple:
-      if (def is TupleType && def.tuple.length == 1) {
+      if ((def as TupleType).tuple.length == 1) {
         next = def.tuple[0];
         break;
       } else {
         return def;
       }
     case TypeKind.Composite:
-      if (def is CompositeType && def.fields[0].name == null) {
+      if ((def as CompositeType).fields[0].name == null) {
         // TODO: Uncomment this below comment when it starts working by calling from the substrate-metadata explorer.
         //
         // var tuple = def.fields.map((t) {
@@ -103,9 +57,113 @@ Type unwrap(Type def, List<Type> types, {Set<int>? visited}) {
   return unwrap(types[next], types, visited: visited);
 }
 
+CodecType getCodecType(List<Type> types, int ti) {
+  Type def = getUnwrappedType(types, ti);
+  switch (def.kind) {
+    case TypeKind.Sequence:
+      if (isPrimitive(Primitive.U8, types, (def as SequenceType).type)) {
+        return CodecBytesType();
+      } else {
+        return def;
+      }
+    case TypeKind.Array:
+      if (isPrimitive(Primitive.U8, types, (def as ArrayType).type)) {
+        return CodecBytesArrayType(len: def.len);
+      } else {
+        return def;
+      }
+    case TypeKind.Compact:
+      var type = getUnwrappedType(types, (def as CompactType).type);
+      switch (type.kind) {
+        case TypeKind.Tuple:
+          assert((type as TupleType).tuple.isEmpty);
+          return type as TupleType;
+        case TypeKind.Primitive:
+          assert((type as PrimitiveType).primitive.name[0] == 'U');
+          return CodecCompactType(integer: (type as PrimitiveType).primitive);
+        default:
+          throw Exception('Unexpected case: ${type.kind}');
+      }
+
+    case TypeKind.Composite:
+      return CodecStructType(
+          fields: (def as CompositeType).fields.map((field) {
+        var name = assertNotNull(field.name);
+        return CodecStructTypeFields(name: name!, type: field.type);
+      }).toList());
+    case TypeKind.Variant:
+      List<Variant> variants = (def as VariantType).variants;
+      Map<String, CodecVariant> variantsByName = <String, CodecVariant>{};
+      Set<int> uniqueIndexes =
+          Set<int>.from(variants.map((Variant v) => v.index));
+      if (uniqueIndexes.length != variants.length) {
+        throw Exception('Variant type $ti has duplicate case indexes');
+      }
+
+      // TODO: To replace with reduce function in dart
+      var len = 0;
+      variants.map((v) => v.index).skip(1).forEach((index) {
+        len = max(len, index);
+      });
+      len += 1;
+      List<CodecVariant?> placedVariants = <CodecVariant?>[]..length = len;
+      for (var v in variants) {
+        late CodecVariant cv;
+        if (v.fields.isNotEmpty && v.fields[0].name == null) {
+          switch (v.fields.length) {
+            case 0:
+              cv = CodecEmptyVariant(name: v.name, index: v.index);
+              break;
+            case 1:
+              cv = CodecValueVariant(
+                  name: v.name, index: v.index, type: v.fields[0].type);
+              break;
+            default:
+              cv = CodecTupleVariant(
+                  name: v.name,
+                  index: v.index,
+                  def: TupleType(
+                      tuple: v.fields.map((Field field) {
+                    assert(field.name == null);
+                    return field.type;
+                  }).toList()));
+          }
+        } else {
+          cv = CodecStructVariant(
+              name: v.name,
+              index: v.index,
+              def: CodecStructType(
+                  fields: v.fields.map((field) {
+                var name = assertNotNull(field.name)!;
+                return CodecStructTypeFields(name: name, type: field.type);
+              }).toList()));
+        }
+        placedVariants[v.index] = cv;
+        variantsByName[cv.name] = cv;
+      }
+      return CodecVariantType(
+        variants: placedVariants,
+        variantsByName: variantsByName,
+      );
+    default:
+      return def as CodecType;
+  }
+}
+
+///
+/// Check whether primitive is a valid [Primitive] or not
 bool isPrimitive(Primitive primitive, List<Type> types, int ti) {
   final Type type = getUnwrappedType(types, ti);
   return type.kind == TypeKind.Primitive &&
-      type is PrimitiveType &&
-      type.primitive == primitive;
+      (type as PrimitiveType).primitive == primitive;
+}
+
+///
+/// Convert list [Types] to [CodecTypes]
+List<CodecType> toCodecTypes(List<Type> types) {
+  List<CodecType> codecTypes = <CodecType>[]..length = types.length;
+  for (var i = 0; i < types.length; i++) {
+    codecTypes[i] = getCodecType(types, i);
+  }
+  return codecTypes;
 }
