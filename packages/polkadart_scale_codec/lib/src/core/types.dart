@@ -27,152 +27,85 @@ enum TypeKind {
   Variant,
   Option,
   DoNotConstruct,
-  /*
-     * @internal
-     */
   BooleanOption,
-  /*
-     * @internal
-     */
   Bytes,
-  /*
-     * @internal
-     */
   BytesArray,
-  /*
-     * @internal
-     */
   Struct
 }
 
 class PrimitiveType extends Type {
-  @override
-  final TypeKind kind = TypeKind.Primitive;
-  @override
-  late Primitive primitive;
+  final Primitive primitive;
+  const PrimitiveType(this.primitive) : super(kind: TypeKind.Primitive);
 }
 
 class CompactType extends Type {
-  @override
-  final TypeKind kind = TypeKind.Compact;
-  @override
-  late int type;
+  final int type;
+  const CompactType({required this.type}) : super(kind: TypeKind.Compact);
 }
 
 class SequenceType extends Type {
-  @override
-  final TypeKind kind = TypeKind.Sequence;
-  @override
-  late int type;
+  final int type;
+  const SequenceType({required this.type}) : super(kind: TypeKind.Sequence);
 }
 
 class BitSequenceType extends Type {
-  @override
-  final TypeKind kind = TypeKind.BitSequence;
-  @override
-  late num bitStoreType;
-  @override
-  late num bitOrderType;
+  final int bitStoreType;
+  final int bitOrderType;
+  const BitSequenceType(
+      {required this.bitStoreType, required this.bitOrderType})
+      : super(kind: TypeKind.BitSequence);
 }
 
 class ArrayType extends Type {
-  @override
-  final TypeKind kind = TypeKind.Array;
-  @override
-  late int len;
-  @override
-  late int type;
+  final int len;
+  final int type;
+  const ArrayType({required this.len, required this.type})
+      : super(kind: TypeKind.Array);
 }
 
 class TupleType extends Type {
-  @override
-  final TypeKind kind = TypeKind.Tuple;
-  @override
-  late int len;
-  @override
-  List<int> tuple = <int>[];
+  final List<int> tuple;
+  const TupleType({this.tuple = const <int>[]}) : super(kind: TypeKind.Tuple);
 }
 
 class CompositeType extends Type {
   @override
   final TypeKind kind = TypeKind.Composite;
-  @override
-  List<Field?> fields = <Field?>[];
+  final List<Field> fields;
+  const CompositeType({this.fields = const <Field>[]})
+      : super(kind: TypeKind.Composite);
 }
 
-class Field extends Type {
-  @override
-  String? name;
-  @override
-  late int type;
+class Field {
+  final String? name;
+  final int type;
+  const Field({required this.type, this.name});
 }
 
 class VariantType extends Type {
-  final TypeKind king = TypeKind.Variant;
-  List<Variant> variants = <Variant>[];
+  final List<Variant> variants;
+  const VariantType({this.variants = const <Variant>[]})
+      : super(kind: TypeKind.Variant);
 }
 
 class Variant {
-  late num index;
-  late String name;
-  List<Field> fields = <Field>[];
+  final int index;
+  final String name;
+  final List<Field> fields;
+  const Variant(
+      {this.fields = const <Field>[], required this.index, required this.name});
 }
 
 class OptionType extends Type {
-  @override
-  final TypeKind kind = TypeKind.Option;
-  @override
-  late int type;
+  final int type;
+  const OptionType({required this.type}) : super(kind: TypeKind.Option);
 }
 
 class DoNotConstructType extends Type {
-  @override
-  final TypeKind kind = TypeKind.DoNotConstruct;
+  const DoNotConstructType() : super(kind: TypeKind.DoNotConstruct);
 }
 
 abstract class Type {
-  late TypeKind kind;
-  late int index;
-  String? name;
-  late int type;
-  late int len;
-  late List<Field?> fields;
-  late num bitStoreType;
-  late num bitOrderType;
-  late Primitive primitive;
-  late List<int> tuple;
+  final TypeKind kind;
+  const Type({required this.kind});
 }
-/* 
-class Type extends ListMixin<Type> {
-  final List<Type> _data = [
-    PrimitiveType(),
-    CompactType(),
-    SequenceType(),
-    BitSequenceType(),
-    ArrayType(),
-    TupleType(),
-    CompositeType(),
-    VariantType(),
-    OptionType(),
-    DoNotConstructType()
-  ];
-
-  @override
-  Type operator [](int index) {
-    return _data[index];
-  }
-
-  @override
-  int get length => _data.length;
-
-  @override
-  void operator []=(int index, Type value) {
-    _data[index] = value;
-  }
-
-  @override
-  set length(int newLength) {
-    throw Exception('Not implemented');
-  }
-}
- */

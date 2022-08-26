@@ -1,4 +1,5 @@
 import 'package:polkadart_scale_codec/src/core/types.dart';
+import 'codec_variant.dart';
 
 class CodecStructTypeFields {
   String? name;
@@ -8,40 +9,6 @@ class CodecStructTypeFields {
 abstract class CodecStructType {
   final TypeKind kind = TypeKind.Struct;
   List<CodecStructTypeFields> fields = <CodecStructTypeFields>[];
-}
-
-class CodecStructVariant {
-  final String kind = 'struct';
-  String? name;
-  int? index;
-  CodecStructType? def;
-}
-
-class CodecTupleVariant {
-  final String kind = 'tuple';
-  String? name;
-  num? index;
-  TupleType? def;
-}
-
-class CodecValueVariant {
-  final String kind = 'value';
-  String? name;
-  num? index;
-  num? type;
-}
-
-class CodecEmptyVariant {
-  final String kind = 'empty';
-  String? name;
-  num? index;
-}
-
-enum CodecVariant {
-  CodecStructVariant,
-  CodecTupleVariant,
-  CodecValueVariant,
-  CodecEmptyVariant,
 }
 
 class CodecVariantType {
@@ -68,7 +35,7 @@ class CodecCompactType {
   Primitive? integer;
 }
 
-enum CodecType {
+/* enum CodecType {
   PrimitiveType,
   SequenceType,
   BitSequenceType,
@@ -82,7 +49,7 @@ enum CodecType {
   CodecBytesType,
   CodecBytesArrayType,
   CodecBooleanOptionType,
-}
+} */
 
 Type getUnwrappedType(List<Type> types, int ti) {
   Type def = types[ti];
@@ -99,29 +66,28 @@ Type unwrap(Type def, List<Type> types, {Set<int>? visited}) {
   int next;
   switch (def.kind) {
     case TypeKind.Tuple:
-      if (def.tuple.length == 1) {
+      if (def is TupleType && def.tuple.length == 1) {
         next = def.tuple[0];
         break;
       } else {
         return def;
       }
     case TypeKind.Composite:
-      if (def.fields[0]?.name == null) {
-        /* 
-                var tuple = def.fields.map((t) {
-                    assert(t?.name == null);
-                    return t.type;
-                }).toList(); 
-                */
+      if (def is CompositeType && def.fields[0].name == null) {
+        // TODO: Uncomment this below comment when it starts working by calling from the substrate-metadata explorer.
+        //
+        // var tuple = def.fields.map((t) {
+        //     assert(t?.name == null);
+        //     return t.type;
+        // }).toList();
+        //
         // TODO: Check this with the above function as if the same working is being done or not.
-        var tuple = def.fields.cast<Field>().map((t) => t.type).toList();
+        var tuple = def.fields.map((t) => t.type).toList();
         if (tuple.length == 1) {
           next = tuple[0];
           break;
         } else {
-          return TupleType()
-            ..kind = TypeKind.Tuple
-            ..tuple = tuple;
+          return TupleType(tuple: tuple);
         }
       } else {
         return def;
@@ -135,4 +101,11 @@ Type unwrap(Type def, List<Type> types, {Set<int>? visited}) {
   visited = visited ?? <int>{};
   visited.add(next);
   return unwrap(types[next], types, visited: visited);
+}
+
+bool isPrimitive(Primitive primitive, List<Type> types, int ti) {
+  final Type type = getUnwrappedType(types, ti);
+  return type.kind == TypeKind.Primitive &&
+      type is PrimitiveType &&
+      type.primitive == primitive;
 }
