@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:polkadart_scale_codec/src/util/exceptions.dart';
+import 'package:polkadart_scale_codec/src/util/extensions.dart';
 import 'package:utility/utility.dart';
 
 T assertNotNull<T>(T val, {String? msg}) {
@@ -45,8 +48,8 @@ bool checkSignedInt(dynamic val, int bitSize) {
   return checkInt(val, 'I', bitSize, min, max);
 }
 
-BigInt calculateBigIntPow(int number, int pow) {
-  return BigInt.from(number).pow(BigInt.from(pow).toInt());
+BigInt calculateBigIntPow(int number, int exponent) {
+  return number.bigInt.pow(exponent.bigInt.toInt());
 }
 
 bool checkSignedBigInt(dynamic val, int bitSize) {
@@ -58,7 +61,7 @@ bool checkSignedBigInt(dynamic val, int bitSize) {
     case 256:
       var value = calculateBigIntPow(2, bitSize - 1);
       min = -value;
-      max = value - BigInt.from(1);
+      max = value - 1.bigInt;
       break;
     default:
       throw UnexpectedCaseException(bitSize);
@@ -92,12 +95,12 @@ bool checkUnsignedBigInt(dynamic val, int bitSize) {
       break;
     case 128:
     case 256:
-      max = calculateBigIntPow(2, bitSize) - BigInt.from(1);
+      max = calculateBigIntPow(2, bitSize) - 1.bigInt;
       break;
     default:
       throw UnexpectedCaseException(bitSize);
   }
-  return checkBigInt(val, 'U', bitSize, BigInt.from(0), max);
+  return checkBigInt(val, 'U', bitSize, 0.bigInt, max);
 }
 
 BigInt toSignedBigInt(dynamic val, int bitSize) {
@@ -125,4 +128,27 @@ BigInt toUnsignedBigInt(dynamic val, int bitSize) {
   }
   checkUnsignedBigInt(value, bitSize);
   return value;
+}
+
+/// Decodes UTF-8 buffer
+String utf8Decoder(List<int> codeUnits, {bool allowMalformed = true}) =>
+    Utf8Codec(allowMalformed: allowMalformed)
+        .decode(codeUnits, allowMalformed: allowMalformed);
+
+/// Encodes UTF-8 String
+List<int> utf8Encoder(String input) => Utf8Codec().encode(input);
+
+int unsignedIntByteLength(BigInt val) {
+  int len = 0;
+  BigInt bigInt0 = 0.bigInt;
+  BigInt bigInt8 = 8.bigInt;
+  while (val > bigInt0) {
+    val = val >> bigInt8.toInt();
+    len += 1;
+  }
+  return len;
+}
+
+bool isObject(dynamic value) {
+  return value != null && value is Object;
 }

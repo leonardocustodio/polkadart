@@ -25,6 +25,34 @@ class InvalidSizeException implements Exception {
   }
 }
 
+///
+/// IncompatibleCompactException
+class IncompatibleCompactException implements Exception {
+  const IncompatibleCompactException(this.size);
+
+  // Custom exception message
+  final String size;
+
+  @override
+  String toString() {
+    return '$size is too large for a compact';
+  }
+}
+
+///
+/// InvalidCompactException
+class InvalidCompactException implements Exception {
+  const InvalidCompactException([this.msg]);
+
+  // Custom exception message
+  final String? msg;
+
+  @override
+  String toString() {
+    return msg ?? 'Invalid compact.';
+  }
+}
+
 class UnexpectedTypeException implements Exception {
   const UnexpectedTypeException([this.type]);
 
