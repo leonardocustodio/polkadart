@@ -1,3 +1,4 @@
-## 1.0.0
+## [1.0.0] - 2022-08-24
 
-- Initial version.
+### First Version
+- First Initialized Version
