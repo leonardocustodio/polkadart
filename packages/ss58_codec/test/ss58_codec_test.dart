@@ -1,4 +1,5 @@
 import 'package:convert/convert.dart';
+import 'package:ss58_codec/src/exceptions.dart';
 import 'dart:typed_data';
 import 'dart:math';
 
@@ -93,19 +94,19 @@ void main() {
       expect(
           () => SS58Codec.encode(
               Address(prefix: -1, bytes: Uint8List.fromList([]))),
-          throwsA(isA<AssertionError>()));
+          throwsA(isA<InvalidPrefixException>()));
 
       expect(
           () => SS58Codec.encode(
-              Address(prefix: 16385, bytes: Uint8List.fromList([]))),
-          throwsA(isA<AssertionError>()));
+              Address(prefix: 16384, bytes: Uint8List.fromList([]))),
+          throwsA(isA<InvalidPrefixException>()));
     });
 
     test('invalid address length at lengths: [3, 5, 6, 7]', () {
       for (var len in [3, 5, 6, 7]) {
         expect(
             () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
-            throwsA(isA<AssertionError>()));
+            throwsA(isA<BadAddressLengthException>()));
       }
     });
 
@@ -113,7 +114,7 @@ void main() {
       for (var len = 9; len <= 31; len++) {
         expect(
             () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
-            throwsA(isA<AssertionError>()));
+            throwsA(isA<BadAddressLengthException>()));
       }
     });
 
@@ -121,7 +122,7 @@ void main() {
       for (var len in [34, 35]) {
         expect(
             () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
-            throwsA(isA<AssertionError>()));
+            throwsA(isA<BadAddressLengthException>()));
       }
     });
   });
