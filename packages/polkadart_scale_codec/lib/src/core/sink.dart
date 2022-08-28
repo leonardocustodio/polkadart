@@ -128,14 +128,13 @@ abstract class Sink {
       if (val < 0) {
         throw InvalidCompactException();
       }
-
-      _compactFromInt(val);
+      _compact(val);
       return;
     } else if (val is BigInt) {
       if (val.toInt() < 0) {
         throw InvalidCompactException();
       }
-      _compactFromBigInt(val);
+      _compact(val.toInt());
       return;
     } else {
       throw UnexpectedTypeException(
@@ -143,31 +142,7 @@ abstract class Sink {
     }
   }
 
-  void _compactFromBigInt(BigInt value) {
-    if (value.toInt() < 64) {
-      write(value.toInt() * 4);
-    } else if (value.toInt() < pow(2, 14).toInt()) {
-      int val = value.toInt();
-      write((val.toInt() & 63) * 4 + 1);
-      write(val >>> 6);
-    } else if (value.toInt() < pow(2, 30).toInt()) {
-      int val = value.toInt();
-      write((val & 63) * 4 + 2);
-      write((val >>> 6) & 0xff);
-      _uncheckedU16(val.toInt() >>> 14);
-    } else if (value.toInt() < 2.bigInt.pow(536.bigInt.toInt()).toInt()) {
-      BigInt val = value;
-      write(unsignedIntByteLength(val) * 4 - 13);
-      while (val.toInt() > 0) {
-        write(val.toInt() & '0xff'.bigInt.toInt());
-        val = val >> 8.bigInt.toInt();
-      }
-    } else {
-      throw IncompatibleCompactException(value.toRadixString(16));
-    }
-  }
-
-  void _compactFromInt(int value) {
+  void _compact(int value) {
     if (value < 64) {
       write(value * 4);
     } else if (value < pow(2, 14).toInt()) {
