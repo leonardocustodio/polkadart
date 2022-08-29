@@ -18,12 +18,12 @@ class Src {
       throw EOFException();
     }
     _idx += 1;
-    return _data[_idx];
+    return _data[_idx - 1];
   }
 
   int i8() {
     var b = _byte();
-    return b | (b & (pow(2, 7) as int)) * 0x1fffffe;
+    return (b | (b & (pow(2, 7) as int)) * 0x1fffffe).toSigned(16);
   }
 
   int u8() {
@@ -128,11 +128,9 @@ class Src {
     }
     var n = BigInt.from(i);
     var base = BigInt.from(32);
-    len--;
-    while (len != 0) {
+    while (len-- != 0) {
       n += BigInt.from(_byte()) << base.toInt();
       base += BigInt.from(8);
-      len--;
     }
     // returning [BigInt] here
     return n;
@@ -159,7 +157,7 @@ class Src {
     return _data.sublist(beg, end);
   }
 
-  bool getBool() {
+  bool boolean() {
     return _byte() != 0;
   }
 

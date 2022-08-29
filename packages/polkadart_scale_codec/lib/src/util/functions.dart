@@ -137,9 +137,9 @@ List<int> utf8Encoder(String input) => Utf8Codec().encode(input);
 int unsignedIntByteLength(BigInt val) {
   int len = 0;
   BigInt bigInt0 = 0.bigInt;
-  BigInt bigInt8 = 8.bigInt;
+  int bigInt8 = 8.bigInt.toInt();
   while (val > bigInt0) {
-    val = val >> bigInt8.toInt();
+    val = val >> bigInt8;
     len += 1;
   }
   return len;

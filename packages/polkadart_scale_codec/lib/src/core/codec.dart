@@ -350,7 +350,7 @@ dynamic decodePrimitiveFromSrc(Primitive type, Src src) {
     case Primitive.U256:
       return src.u256();
     case Primitive.Bool:
-      return src.getBool();
+      return src.boolean();
     case Primitive.Str:
       return src.str();
     default:

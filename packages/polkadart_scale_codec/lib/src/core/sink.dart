@@ -124,13 +124,13 @@ abstract class Sink {
       if (val < 0) {
         throw InvalidCompactException();
       }
-      _compact(val);
+      _compactFromInt(val);
       return;
     } else if (val is BigInt) {
       if (val.toInt() < 0) {
         throw InvalidCompactException();
       }
-      _compact(val.toInt());
+      _compactFromBigInt(val);
       return;
     } else {
       throw UnexpectedTypeException(
@@ -138,7 +138,7 @@ abstract class Sink {
     }
   }
 
-  void _compact(int value) {
+  void _compactFromInt(int value) {
     if (value < 64) {
       write(value * 4);
     } else if (value < pow(2, 14).toInt()) {
@@ -159,6 +159,29 @@ abstract class Sink {
       throw IncompatibleCompactException(value.toRadixString(16));
     }
   }
+
+  void _compactFromBigInt(BigInt value) {
+    final val = value.toInt();
+    if (val < 64) {
+      write(val * 4);
+    } else if (val < pow(2, 14).toInt()) {
+      write((val & 63) * 4 + 1);
+      write(val >>> 6);
+    } else if (val < pow(2, 30).toInt()) {
+      write((val & 63) * 4 + 2);
+      write((val >>> 6) & 0xff);
+      _uncheckedU16(val >>> 14);
+    } else if (value < 2.bigInt.pow(536.bigInt.toInt())) {
+      BigInt copiedValue = value;
+      write(unsignedIntByteLength(copiedValue) * 4 - 13);
+      while (copiedValue.toInt() > 0) {
+        write((copiedValue & BigInt.parse('0xff')).toInt());
+        copiedValue = copiedValue >> 8.bigInt.toInt();
+      }
+    } else {
+      throw IncompatibleCompactException(value.toRadixString(16));
+    }
+  }
 }
 
 class HexSink extends Sink {
@@ -172,7 +195,7 @@ class HexSink extends Sink {
 
   @override
   void bytes(Uint8List b) {
-    _hex += utf8Decoder(b);
+    _hex += encodeHex(b.toList()).replaceFirst(RegExp(r'0x'), '');
   }
 
   String toHex() {

@@ -11,7 +11,7 @@ dynamic toJSON(dynamic val) {
     return val.toString();
   } else if (val is Object) {
     if (val is Uint8List) {
-      return hex.encode(val);
+      return encodeHex(val);
     } else if (val is DateTime) {
       return val.toIso8601String();
     } else if ((val as dynamic) is Function &&
