@@ -1,4 +1,5 @@
 import 'codec_type.dart';
+import 'type_kind.dart';
 
 enum Primitive {
   I8,
@@ -16,23 +17,6 @@ enum Primitive {
   Bool,
   Str,
   Char,
-}
-
-enum TypeKind {
-  Primitive,
-  Compact,
-  Sequence,
-  BitSequence,
-  Array,
-  Tuple,
-  Composite,
-  Variant,
-  Option,
-  DoNotConstruct,
-  BooleanOption,
-  Bytes,
-  BytesArray,
-  Struct
 }
 
 class PrimitiveType extends Type with CodecType {

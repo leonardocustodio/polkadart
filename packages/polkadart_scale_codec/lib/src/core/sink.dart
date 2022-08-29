@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:polkadart_scale_codec/src/util/exceptions.dart';
 
 import '../util/utils.dart';
 

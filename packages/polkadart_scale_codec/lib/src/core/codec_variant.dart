@@ -14,9 +14,10 @@ enum CodecVariantKind {
 class CodecStructVariant extends CodecVariant {
   @override
   final String name;
-  final int? index;
-  final CodecStructType? def;
-  const CodecStructVariant({required this.name, this.index, this.def})
+  final int index;
+  final CodecStructType def;
+  const CodecStructVariant(
+      {required this.name, required this.index, required this.def})
       : super(kind: CodecVariantKind.struct, name: name);
 }
 
@@ -25,9 +26,10 @@ class CodecStructVariant extends CodecVariant {
 class CodecTupleVariant extends CodecVariant {
   @override
   final String name;
-  final int? index;
-  final TupleType? def;
-  const CodecTupleVariant({required this.name, this.index, this.def})
+  final int index;
+  final TupleType def;
+  const CodecTupleVariant(
+      {required this.name, required this.index, required this.def})
       : super(kind: CodecVariantKind.tuple, name: name);
 }
 
@@ -36,9 +38,10 @@ class CodecTupleVariant extends CodecVariant {
 class CodecValueVariant extends CodecVariant {
   @override
   final String name;
-  final int? index;
-  final int? type;
-  const CodecValueVariant({required this.name, this.index, this.type})
+  final int index;
+  final int type;
+  const CodecValueVariant(
+      {required this.name, required this.index, required this.type})
       : super(kind: CodecVariantKind.value, name: name);
 }
 
@@ -47,8 +50,8 @@ class CodecValueVariant extends CodecVariant {
 class CodecEmptyVariant extends CodecVariant {
   @override
   final String name;
-  final int? index;
-  const CodecEmptyVariant({required this.name, this.index})
+  final int index;
+  const CodecEmptyVariant({required this.name, required this.index})
       : super(kind: CodecVariantKind.empty, name: name);
 }
 

@@ -9,3 +9,15 @@ extension StringExtension on String {
     return BigInt.parse(this);
   }
 }
+
+extension DynamicExtension on dynamic {
+  void assertionCheck<T>() {
+    if (this is! T) {
+      throw AssertionError('Expected type (`$T`), but found (`$runtimeType`)');
+    }
+  }
+
+  void assertList<T>() {
+    assertionCheck<List<T>>();
+  }
+}

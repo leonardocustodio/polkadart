@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:polkadart_scale_codec/src/util/hex.dart';
+import 'package:polkadart_scale_codec/src/util/utils.dart';
 
 class Src {
   int _idx = 0;
@@ -140,7 +140,7 @@ class Src {
 
   int compactLength() {
     var len = compact();
-    assert(len is int);
+    assertionCheck(len is int);
     return len;
   }
 

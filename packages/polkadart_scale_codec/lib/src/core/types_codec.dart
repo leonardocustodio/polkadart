@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:polkadart_scale_codec/src/util/functions.dart';
 
 import 'codec_type.dart';
+import 'type_kind.dart';
 import 'types.dart';
 import 'codec_variant.dart';
 
@@ -76,11 +77,11 @@ CodecType getCodecType(List<Type> types, int ti) {
       var type = getUnwrappedType(types, (def as CompactType).type);
       switch (type.kind) {
         case TypeKind.Tuple:
-          assert((type as TupleType).tuple.isEmpty);
-          return type as TupleType;
+          assertionCheck((type as TupleType).tuple.isEmpty);
+          return type;
         case TypeKind.Primitive:
-          assert((type as PrimitiveType).primitive.name[0] == 'U');
-          return CodecCompactType(integer: (type as PrimitiveType).primitive);
+          assertionCheck((type as PrimitiveType).primitive.name[0] == 'U');
+          return CodecCompactType(integer: type.primitive);
         default:
           throw Exception('Unexpected case: ${type.kind}');
       }
@@ -124,7 +125,7 @@ CodecType getCodecType(List<Type> types, int ti) {
                   index: v.index,
                   def: TupleType(
                       tuple: v.fields.map((Field field) {
-                    assert(field.name == null);
+                    assertionCheck(field.name == null);
                     return field.type;
                   }).toList()));
           }

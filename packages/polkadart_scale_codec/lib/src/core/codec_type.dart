@@ -1,4 +1,5 @@
 import 'codec_variant.dart';
+import 'type_kind.dart';
 import 'types.dart';
 
 ///

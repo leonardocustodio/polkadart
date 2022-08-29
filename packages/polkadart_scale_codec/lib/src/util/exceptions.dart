@@ -12,6 +12,18 @@ class UnexpectedCaseException implements Exception {
 }
 
 ///
+/// AssertionException
+class AssertionException implements Exception {
+  const AssertionException([this.msg]);
+
+  final String? msg;
+  @override
+  String toString() {
+    return msg ?? 'Assertion Exception';
+  }
+}
+
+///
 /// InvalidSizeException
 class InvalidSizeException implements Exception {
   const InvalidSizeException([this.msg]);

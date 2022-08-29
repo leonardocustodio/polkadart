@@ -5,7 +5,7 @@ import 'package:polkadart_scale_codec/src/util/extensions.dart';
 import 'package:utility/utility.dart';
 
 T assertNotNull<T>(T val, {String? msg}) {
-  assert(val != null, msg);
+  assertionCheck(val != null, msg);
   return val;
 }
 
@@ -151,4 +151,10 @@ int unsignedIntByteLength(BigInt val) {
 
 bool isObject(dynamic value) {
   return value != null && value is Object;
+}
+
+void assertionCheck(bool condition, [String? msg]) {
+  if (!condition) {
+    throw AssertionError(msg ?? 'Assertion Error occured.');
+  }
 }
