@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:polkadart_scale_codec/src/util/exceptions.dart';
-import 'package:polkadart_scale_codec/src/util/extensions.dart';
-import 'package:utility/utility.dart';
+part of utils;
 
 T assertNotNull<T>(T val, {String? msg}) {
   assertionCheck(val != null, msg);

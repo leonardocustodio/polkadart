@@ -1,3 +1,5 @@
+part of polkadart_scale_codec_core;
+
 enum TypeKind {
   Primitive,
   Compact,

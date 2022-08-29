@@ -1,10 +1,4 @@
-import 'dart:math';
-import 'package:polkadart_scale_codec/src/util/functions.dart';
-
-import 'codec_type.dart';
-import 'type_kind.dart';
-import 'types.dart';
-import 'codec_variant.dart';
+part of polkadart_scale_codec_core;
 
 Type getUnwrappedType(List<Type> types, int ti) {
   Type def = types[ti];

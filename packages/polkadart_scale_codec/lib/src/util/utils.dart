@@ -1,7 +1,12 @@
 library utils;
 
-export 'functions.dart';
-export 'hex.dart';
-export 'extensions.dart';
-export 'exceptions.dart';
-export 'parse_json.dart';
+import 'dart:convert';
+import 'package:utility/utility.dart';
+import 'dart:typed_data';
+import 'package:convert/convert.dart';
+
+part 'exceptions.dart';
+part 'extensions.dart';
+part 'functions.dart';
+part 'hex.dart';
+part 'parse_json.dart';

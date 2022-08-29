@@ -1,6 +1,4 @@
-import 'dart:typed_data';
-
-import 'package:convert/convert.dart';
+part of utils;
 
 dynamic toJSON(dynamic val) {
   if (val == null) {

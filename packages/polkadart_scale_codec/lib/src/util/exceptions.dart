@@ -1,3 +1,5 @@
+part of utils;
+
 ///
 /// UnexpectedCaseException
 class UnexpectedCaseException implements Exception {
@@ -8,6 +10,17 @@ class UnexpectedCaseException implements Exception {
   @override
   String toString() {
     return 'Unexpected case${value == null ? '' : ': $value'}.';
+  }
+}
+
+///
+/// EOFException
+class EOFException implements Exception {
+  const EOFException();
+
+  @override
+  String toString() {
+    return 'Unexpected EOF.';
   }
 }
 

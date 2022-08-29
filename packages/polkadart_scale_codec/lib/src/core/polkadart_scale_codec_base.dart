@@ -1,26 +1,24 @@
-import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
-import 'package:polkadart_scale_codec/src/util/utils.dart';
+part of polkadart_scale_codec_core;
 
 class Src {
   int _idx = 0;
-  late Uint8List _buf;
+  late Uint8List _data;
 
-  Src.fromUint8List(Uint8List buf) {
-    _buf = buf;
-  }
-
-  Src.fromString(String buf) {
-    _buf = decodeHex(buf);
+  Src(dynamic data) {
+    assertionCheck(data is String || data is Uint8List);
+    if (data is String) {
+      _data = decodeHex(data);
+    } else {
+      _data = data;
+    }
   }
 
   int _byte() {
-    if (_idx >= _buf.length) {
-      throw eof();
+    if (_idx >= _data.length) {
+      throw EOFException();
     }
     _idx += 1;
-    return _buf[_idx];
+    return _data[_idx];
   }
 
   int i8() {
@@ -93,9 +91,10 @@ class Src {
     return lo + (hi << 128);
   }
 
-  /// can return either [BigInt] or [int]
+  ///
+  /// Returns: `BigInt` | `int`
   dynamic compact() {
-    var b = _byte();
+    int b = _byte();
     var mode = b & 3;
     switch (mode) {
       case 0:
@@ -115,7 +114,8 @@ class Src {
     }
   }
 
-  /// can return either [BigInt] or [int]
+  ///
+  /// Returns: `BigInt` | `int`
   dynamic _bigCompact(num len) {
     var i = u32();
     switch (len) {
@@ -134,7 +134,7 @@ class Src {
       base += BigInt.from(8);
       len--;
     }
-    // returning BigInt here
+    // returning [BigInt] here
     return n;
   }
 
@@ -153,10 +153,10 @@ class Src {
   Uint8List bytes(int len) {
     var beg = _idx;
     var end = _idx += len;
-    if (_buf.length < end) {
-      throw eof();
+    if (_data.length < end) {
+      throw EOFException();
     }
-    return _buf.sublist(beg, end);
+    return _data.sublist(beg, end);
   }
 
   bool getBool() {
@@ -164,7 +164,7 @@ class Src {
   }
 
   bool hasBytes() {
-    return _buf.length > _idx;
+    return _data.length > _idx;
   }
 
   void assertEOF() {
@@ -172,8 +172,4 @@ class Src {
       throw Exception('Unprocessed data left');
     }
   }
-}
-
-Exception eof() {
-  throw Exception('Unexpected EOF');
 }

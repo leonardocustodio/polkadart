@@ -1,7 +1,4 @@
-import 'dart:math';
-import 'dart:typed_data';
-
-import '../util/utils.dart';
+part of polkadart_scale_codec_core;
 
 abstract class Sink {
   void write(int byte);

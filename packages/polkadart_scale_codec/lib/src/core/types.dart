@@ -1,5 +1,4 @@
-import 'codec_type.dart';
-import 'type_kind.dart';
+part of polkadart_scale_codec_core;
 
 enum Primitive {
   I8,

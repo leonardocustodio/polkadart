@@ -1,7 +1,4 @@
-import 'dart:typed_data';
-import 'package:convert/convert.dart';
-import 'package:utility/utility.dart';
-import 'functions.dart';
+part of utils;
 
 Uint8List decodeHex(String value) {
   assertionCheck(value.isHex);

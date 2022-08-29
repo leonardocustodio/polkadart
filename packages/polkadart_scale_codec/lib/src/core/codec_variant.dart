@@ -1,5 +1,4 @@
-import 'codec_type.dart';
-import 'types.dart';
+part of polkadart_scale_codec_core;
 
 /// enum [CodecVariantKind]
 enum CodecVariantKind {
@@ -14,11 +13,12 @@ enum CodecVariantKind {
 class CodecStructVariant extends CodecVariant {
   @override
   final String name;
+  @override
   final int index;
   final CodecStructType def;
   const CodecStructVariant(
       {required this.name, required this.index, required this.def})
-      : super(kind: CodecVariantKind.struct, name: name);
+      : super(kind: CodecVariantKind.struct, name: name, index: index);
 }
 
 ///
@@ -26,11 +26,12 @@ class CodecStructVariant extends CodecVariant {
 class CodecTupleVariant extends CodecVariant {
   @override
   final String name;
+  @override
   final int index;
   final TupleType def;
   const CodecTupleVariant(
       {required this.name, required this.index, required this.def})
-      : super(kind: CodecVariantKind.tuple, name: name);
+      : super(kind: CodecVariantKind.tuple, name: name, index: index);
 }
 
 ///
@@ -38,11 +39,12 @@ class CodecTupleVariant extends CodecVariant {
 class CodecValueVariant extends CodecVariant {
   @override
   final String name;
+  @override
   final int index;
   final int type;
   const CodecValueVariant(
       {required this.name, required this.index, required this.type})
-      : super(kind: CodecVariantKind.value, name: name);
+      : super(kind: CodecVariantKind.value, name: name, index: index);
 }
 
 ///
@@ -50,9 +52,10 @@ class CodecValueVariant extends CodecVariant {
 class CodecEmptyVariant extends CodecVariant {
   @override
   final String name;
+  @override
   final int index;
   const CodecEmptyVariant({required this.name, required this.index})
-      : super(kind: CodecVariantKind.empty, name: name);
+      : super(kind: CodecVariantKind.empty, name: name, index: index);
 }
 
 ///
@@ -60,5 +63,7 @@ class CodecEmptyVariant extends CodecVariant {
 class CodecVariant {
   final CodecVariantKind kind;
   final String name;
-  const CodecVariant({required this.kind, required this.name});
+  final int index;
+  const CodecVariant(
+      {required this.kind, required this.name, required this.index});
 }

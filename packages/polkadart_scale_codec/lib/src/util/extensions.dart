@@ -1,3 +1,5 @@
+part of utils;
+
 extension IntExtension on int {
   BigInt get bigInt {
     return BigInt.from(this);
