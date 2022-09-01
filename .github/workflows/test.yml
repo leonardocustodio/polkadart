@@ -17,7 +17,7 @@ on:
       - master
       - main
       - develop
-      - release-v*
+      - feature/*
 
 # Declare default permissions as read only.
 permissions: read-all
