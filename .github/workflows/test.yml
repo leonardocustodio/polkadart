@@ -50,7 +50,7 @@ jobs:
     name: Test ss58_codec
     runs-on: ubuntu-latest
     needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/unit_test_job.yml@v1\3
+    uses: rankanizer/polkadart/.github/workflows/unit_test_job.yml@v3
     with:
       workflow-directory: ./packages/ss58_codec
 
