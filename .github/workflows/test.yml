@@ -50,14 +50,18 @@ jobs:
     name: Test ss58_codec
     runs-on: ubuntu-latest
     needs: [lints, markdown-link-check]
-    uses: ./.github/workflows/unit_test_job.yml
-    with:
-      workflow-directory: ./packages/ss58_codec
+    steps:
+      - name: Link check
+        uses: ./.github/workflows/unit_test_job.yml
+        with:
+        workflow-directory: ./packages/ss58_codec
 
   ss58:
     name: Test ss58
     runs-on: ubuntu-latest
     needs: [ss58_codec, lints, markdown-link-check]
-    uses: ./.github/workflows/unit_test_job.yml
-    with:
-      workflow-directory: ./packages/ss58
+    steps:
+      - name: Run Workflow for ss58
+        uses: ./.github/workflows/unit_test_job.yml
+        with:
+        workflow-directory: ./packages/ss58
