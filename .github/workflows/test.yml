@@ -49,7 +49,7 @@ jobs:
   ss58_codec:
     name: Test ss58_codec
     needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.ymlfeature/CI-CD
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/CI-CD
     with:
       working-directory: "./packages/ss58_codec"
 
