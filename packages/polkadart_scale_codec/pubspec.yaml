@@ -11,5 +11,7 @@ dependencies:
   convert: ^3.0.2 # BSD-3-Clause
 
 dev_dependencies:
-  lints: ^2.0.0
-  test: ^1.16.0
+  json_schema2: ^2.0.2+9 # MIT
+  path: ^1.8.2 # BSD-3-Clause
+  lints: ^2.0.0 # BSD-3-Clause
+  test: ^1.16.0 # BSD-3-Clause
