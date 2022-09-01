@@ -33,8 +33,8 @@ jobs:
       - name: Link check
         uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
-          use-quiet-mode: 'yes'
-          config-file: '.github/workflows/mlc_config.json'
+          use-quiet-mode: "yes"
+          config-file: ".github/workflows/mlc_config.json"
 
   lints:
     name: Check code lints
@@ -46,35 +46,18 @@ jobs:
       - name: Check TOML Format
         uses: dprint/check@v2.0
 
-  unit-test:
-    name: Unit tests on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    needs: [lints, markdown-link-check]
-    strategy:
-      matrix:
-        os: [ubuntu-18.04, windows-2019, macos-11.0]
-    steps:
-      # Set up Dart.
-      - uses: actions/checkout@v3
+  ss58_codec:
+    - name: Test ss58_codec
+      runs-on: ubuntu-latest
+      needs: [lints, markdown-link-check]
+      uses: rankanizer/polkadart/.github/workflows/unit_test_job.yml@v1\3
+      with:
+        workflow-directory: ./packages/ss58_codec
 
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
-
-      # Checkout code and get packages.
-      - name: Test ss58
-        uses: rankanizer/polkadart/.github/workflows/unit_test_job.yml@v1
-        with:
-          workflow-directory: ./packages/ss58
-      
-      - name: Test ss58_codec
-        uses: rankanizer/polkadart/.github/workflows/unit_test_job.yml@v1
-        with:
-          workflow-directory: ./packages/ss58_codec
-      
-      - name: Test Polkadart
-        uses: rankanizer/polkadart/.github/workflows/unit_test_job.yml@v1
-        with:
-          workflow-directory: ./polkadart
+  ss58:
+    - name: Test ss58
+      runs-on: ubuntu-latest
+      needs: [ss58_codec, lints, markdown-link-check]
+      uses: rankanizer/polkadart/.github/workflows/unit_test_job.yml@v3
+      with:
+        workflow-directory: ./packages/ss58
