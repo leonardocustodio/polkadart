@@ -49,7 +49,7 @@ jobs:
   # separated few test cases where the formatting and analyzing can be done from root folder all at-once
   common_dart_test:
     runs-on: ubuntu-latest
-    needs: [markdown-link-check, links]
+    needs: [markdown-link-check, lints]
     steps:
       - name: Check out code
         uses: actions/checkout@v2
