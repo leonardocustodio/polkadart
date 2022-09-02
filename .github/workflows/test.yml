@@ -55,7 +55,21 @@ jobs:
 
   ss58:
     name: Test ss58
-    needs: [ss58_codec]
+    needs: [lints, markdown-link-check]
     uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/CI-CD
     with:
       working-directory: "./packages/ss58"
+
+  polkadart_scale_codec:
+    name: Test polkadart_scale_codec
+    needs: [lints, markdown-link-check]
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/CI-CD
+    with:
+      working-directory: "./packages/polkadart_scale_codec"
+
+  polkadart:
+    name: Test polkadart
+    needs: [lints, markdown-link-check]
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/CI-CD
+    with:
+      working-directory: "./polkadart"
