@@ -39,7 +39,7 @@ jobs:
     name: Test ss58
     needs: [lints, markdown-link-check]
     uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
-    with: no
+    with:
       working-directory: "./packages/ss58"
 
   polkadart_scale_codec:
