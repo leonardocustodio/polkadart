@@ -31,27 +31,27 @@ jobs:
   ss58_codec:
     name: Test ss58_codec
     needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/CI-CD
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
     with:
       working-directory: "./packages/ss58_codec"
 
   ss58:
     name: Test ss58
     needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/CI-CD
-    with:
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
+    with: no
       working-directory: "./packages/ss58"
 
   polkadart_scale_codec:
     name: Test polkadart_scale_codec
     needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/CI-CD
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
     with:
       working-directory: "./packages/polkadart_scale_codec"
 
   polkadart:
     name: Test polkadart
     needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/CI-CD
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
     with:
       working-directory: "./polkadart"
