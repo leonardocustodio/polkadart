@@ -48,7 +48,7 @@ jobs:
     needs: [lints, markdown-link-check]
     uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
     with:
-      codecov_flag: "ss58_codec"
+      codecov-flag: "ss58_codec"
       working-directory: "./packages/ss58_codec"
 
   ss58:
@@ -56,7 +56,7 @@ jobs:
     needs: [lints, markdown-link-check]
     uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
     with:
-      codecov_flag: "ss58"
+      codecov-flag: "ss58"
       working-directory: "./packages/ss58"
 
   polkadart_scale_codec:
@@ -64,7 +64,7 @@ jobs:
     needs: [lints, markdown-link-check]
     uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
     with:
-      codecov_flag: "polkadart_scale_codec"
+      codecov-flag: "polkadart_scale_codec"
       working-directory: "./packages/polkadart_scale_codec"
 
   polkadart:
@@ -72,5 +72,5 @@ jobs:
     needs: [lints, markdown-link-check]
     uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
     with:
-      codecov_flag: "polkadart"
+      codecov-flag: "polkadart"
       working-directory: "./polkadart"
