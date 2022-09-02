@@ -15,6 +15,9 @@ jobs:
       run:
         working-directory: ${{ inputs.working-directory }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
       # Get latest stable version of dart-lang
       - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
 
