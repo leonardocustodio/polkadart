@@ -1,21 +1,5 @@
 name: Tests
-
-on:
-  pull_request:
-    branches:
-      - master
-      - main
-      - develop
-      - release-v*
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
-  push:
-    branches:
-      - master
-      - main
+on: [push, pull_request]
 
 # Declare default permissions as read only.
 permissions: read-all
