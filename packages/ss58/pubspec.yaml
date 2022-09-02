@@ -16,7 +16,7 @@ dependencies:
   # and change 'ss58_codec': to the pub.dev published version.
   ss58_codec:
     git:
-      url: git@github.com:rankanizer/polkadart.git
+      url: https://github.com/rankanizer/polkadart.git
       ref: feature/ss58_codec
       path: packages/ss58_codec
 
