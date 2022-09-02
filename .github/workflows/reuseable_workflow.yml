@@ -4,6 +4,9 @@ on:
   workflow_call:
     inputs:
       # working-directory is added to accommodate monorepo.  For multi repo, defaults to '.', current directory
+      codecov-flag:
+        required: true
+        type: string
       working-directory:
         required: true
         type: string
