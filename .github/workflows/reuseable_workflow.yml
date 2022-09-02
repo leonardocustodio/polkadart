@@ -42,7 +42,7 @@ jobs:
         run: dart test --coverage
         
       - name: Code Coverage
-      - uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ inputs.working-directory }}
