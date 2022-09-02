@@ -6,6 +6,9 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 
+import '../model/spec_version.model.dart';
+import '../utils/spec_version_maker.dart';
+
 class Chain {
   final String name;
   const Chain(this.name);
@@ -14,6 +17,10 @@ class Chain {
 
   String _item(String name) {
     return join('../chain', this.name, name);
+  }
+
+  List<SpecVersion> versions() {
+    return readSpecVersions(_item('versions.jsonl'));
   }
 
   void _save(String filePath, dynamic content) {

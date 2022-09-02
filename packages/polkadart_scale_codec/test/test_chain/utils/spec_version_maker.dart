@@ -43,7 +43,7 @@ List<SpecVersion> readJsonLines(String filePath) {
           'Failed to parse record #${result.length + 1} of $file: $e');
     }
     if (validateSpecVersion(json, reportMultipleErrors: true)) {
-      result.add(json);
+      result.add(SpecVersion.fromJson(json));
     } else {
       throw SpecFileException(
           'Failed to extract chain version from record #${result.length} of $file');
@@ -66,7 +66,9 @@ List<SpecVersion> readJson(String filePath) {
     throw SpecFileException('Failed to parse Json $filePath: $e');
   }
   if (validateSpecVersionArray(json)) {
-    return json;
+    return (json['items'] as List<dynamic>)
+        .map((spec) => SpecVersion.fromJson(spec))
+        .toList();
   } else {
     throw SpecFileException('Failed to extract chain versions from $filePath');
   }
