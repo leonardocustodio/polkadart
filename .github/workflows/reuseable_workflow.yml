@@ -47,7 +47,7 @@ jobs:
       - name: Code Coverage
         uses: codecov/codecov-action@v3
         with:
-          directory: ./coverage/test/
+          files: ss58_test.dart.vm.json,polkadart_scale_codec_test.dart.vm.json,ss58_codec_test.dart.vm.json,polkadart_test.dart.vm.json
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ inputs.codecov-flag }}
           verbose: true
