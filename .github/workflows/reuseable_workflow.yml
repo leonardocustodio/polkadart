@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: dart pub get
         
-      - name: Activate coverage
-        run: dart pub global activate coverage
-
       # Uncomment this step to verify the use of 'dart format' on each commit.
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
@@ -42,12 +39,17 @@ jobs:
       # package:test for this step to succeed. Note that Flutter projects will
       # want to change this to 'flutter test'.
       - name: Run tests
-        run: dart test --coverage=./coverage/
-        
-      - name: Code Coverage
+        run: dart test
+
+      - name: Activate coverage
+        run: dart pub global activate coverage
+
+      - name: Run Code Coverage
+        run: dart pub global run coverage:test_with_coverage
+
+      - name: Upload Code Coverage
         uses: codecov/codecov-action@v3
         with:
-          files: ss58_test.dart.vm.json,polkadart_scale_codec_test.dart.vm.json,ss58_codec_test.dart.vm.json,polkadart_test.dart.vm.json
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ inputs.codecov-flag }}
           verbose: true
