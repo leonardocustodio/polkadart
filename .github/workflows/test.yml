@@ -43,9 +43,34 @@ jobs:
       - name: Check TOML Format
         uses: dprint/check@v2.0
 
-  run_formatting_and_testing:
-    name: Run Formatting and Testing
+  ss58_codec:
+    name: Test ss58_codec
     needs: [lints, markdown-link-check]
     uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
     with:
-      codecov-flag: "polkadart,polkadart_scale_codec,ss58,ss58_codec"
+      codecov-flag: "ss58_codec"
+      working-directory: "./packages/ss58_codec"
+
+  ss58:
+    name: Test ss58
+    needs: [lints, markdown-link-check]
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
+    with:
+      codecov-flag: "ss58"
+      working-directory: "./packages/ss58"
+
+  polkadart_scale_codec:
+    name: Test polkadart_scale_codec
+    needs: [lints, markdown-link-check]
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
+    with:
+      codecov-flag: "polkadart_scale_codec"
+      working-directory: "./packages/polkadart_scale_codec"
+
+  polkadart:
+    name: Test polkadart
+    needs: [lints, markdown-link-check]
+    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@leonardocustodio-patch-1
+    with:
+      codecov-flag: "polkadart"
+      working-directory: "./polkadart"
