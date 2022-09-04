@@ -3,20 +3,13 @@ name: Unit test for sub-directories
 on:
   workflow_call:
     inputs:
-      # working-directory is added to accommodate monorepo.  For multi repo, defaults to '.', current directory
       codecov-flag:
-        required: true
-        type: string
-      working-directory:
         required: true
         type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ inputs.working-directory }}
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -25,7 +18,7 @@ jobs:
       - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
 
       - name: Install dependencies
-        run: dart pub get
+        run: find ./* -maxdepth 2 -name pubspec.yaml -execdir dart pub get \;
         
       # Uncomment this step to verify the use of 'dart format' on each commit.
       - name: Verify formatting
@@ -39,13 +32,13 @@ jobs:
       # package:test for this step to succeed. Note that Flutter projects will
       # want to change this to 'flutter test'.
       - name: Run tests
-        run: dart test
+        run: find ./* -maxdepth 2 -name pubspec.yaml -execdir dart test \;
 
       - name: Activate coverage
         run: dart pub global activate coverage
 
       - name: Run Code Coverage
-        run: dart pub global run coverage:test_with_coverage
+        run: find ./* -maxdepth 2 -name pubspec.yaml -execdir dart pub global run coverage:test_with_coverage \;
 
       - name: Upload Code Coverage
         uses: codecov/codecov-action@v3
