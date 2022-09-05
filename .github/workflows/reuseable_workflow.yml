@@ -4,6 +4,9 @@ on:
   workflow_call:
     inputs:
       # working-directory is added to accommodate monorepo.  For multi repo, defaults to '.', current directory
+      codecov-flag:
+        required: true
+        type: string
       working-directory:
         required: true
         type: string
@@ -23,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: dart pub get
-
+        
       # Uncomment this step to verify the use of 'dart format' on each commit.
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
@@ -37,3 +40,16 @@ jobs:
       # want to change this to 'flutter test'.
       - name: Run tests
         run: dart test
+
+      - name: Activate coverage
+        run: dart pub global activate coverage
+
+      - name: Run Code Coverage
+        run: dart pub global run coverage:test_with_coverage
+
+      - name: Upload Code Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ inputs.codecov-flag }}
+          verbose: true
