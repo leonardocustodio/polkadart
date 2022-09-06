@@ -63,34 +63,36 @@ class OldSetDefinition extends OldTypeDefinition {
 }
 
 class OldTypesAlias extends MapMixin<String, Map<String, String>> {
-  final _pallet = <String, Map<String, String>>{};
+  final Map<String, Map<String, String>> data;
+
+  OldTypesAlias(this.data);
 
   @override
   Map<String, String>? operator [](Object? key) {
-    return _pallet[key];
+    return data[key];
   }
 
   @override
   void operator []=(String key, Map<String, String> value) {
-    _pallet[key] = value;
+    data[key] = value;
   }
 
   @override
   void clear() {
-    _pallet.clear();
+    data.clear();
   }
 
   @override
-  Iterable<String> get keys => _pallet.keys;
+  Iterable<String> get keys => data.keys;
 
   @override
   Map<String, String>? remove(Object? key) {
-    return _pallet.remove(key);
+    return data.remove(key);
   }
 }
 
 class OldTypes {
-  final Map<String, OldTypeDefinition>? types;
+  final Map<String, dynamic>? types;
   final OldTypesAlias? typesAlias;
   final Map<String, String>? signedExtensions;
 
@@ -102,7 +104,13 @@ class SpecVersionRange extends ListMixin<int?> {
   @override
   int length = 2;
 
-  final _data = List<int?>.filled(2, null);
+  final List<int?> _data = List<int?>.filled(2, null);
+
+  SpecVersionRange(List<int?> value) {
+    assertionCheck(value.length == 2);
+    _data[0] = value[0];
+    _data[1] = value[1];
+  }
 
   @override
   int? operator [](int index) {
@@ -120,7 +128,7 @@ class OldTypesWithSpecVersionRange extends OldTypes {
 
   const OldTypesWithSpecVersionRange(
       {required this.minmax,
-      Map<String, OldTypeDefinition>? types,
+      Map<String, dynamic>? types,
       OldTypesAlias? typesAlias,
       Map<String, String>? signedExtensions})
       : super(
@@ -134,7 +142,7 @@ class OldTypesBundle extends OldTypes {
 
   const OldTypesBundle(
       {required this.versions,
-      Map<String, OldTypeDefinition>? types,
+      Map<String, dynamic>? types,
       OldTypesAlias? typesAlias,
       Map<String, String>? signedExtensions})
       : super(

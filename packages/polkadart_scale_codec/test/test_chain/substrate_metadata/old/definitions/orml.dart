@@ -74,12 +74,11 @@ const ormlTypes = <String, dynamic>{
   'VestingScheduleOf': 'OrmlVestingSchedule'
 };
 
-final aliases = OldTypesAlias()
-  ..addAll(
-    <String, Map<String, String>>{
-      'tokens': {
-        'AccountData': 'OrmlAccountData',
-        'BalanceLock': 'OrmlBalanceLock'
-      },
+final ormlAlias = OldTypesAlias(
+  <String, Map<String, String>>{
+    'tokens': {
+      'AccountData': 'OrmlAccountData',
+      'BalanceLock': 'OrmlBalanceLock'
     },
-  );
+  },
+);
