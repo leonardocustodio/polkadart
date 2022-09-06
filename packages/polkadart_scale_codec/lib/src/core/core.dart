@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import '../util/utils.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'dart:convert';
-import 'package:polkadart_scale_codec/src/util/utils.dart';
 
 part 'codec_json.dart';
 part 'codec_type.dart';
