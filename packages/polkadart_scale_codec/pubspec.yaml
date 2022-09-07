@@ -15,3 +15,4 @@ dev_dependencies:
   path: ^1.8.2 # BSD-3-Clause
   lints: ^2.0.0 # BSD-3-Clause
   test: ^1.16.0 # BSD-3-Clause
+  cryptography: ^2.0.5 # Apache-2.0

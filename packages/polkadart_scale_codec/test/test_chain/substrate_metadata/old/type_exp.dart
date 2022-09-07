@@ -1,3 +1,5 @@
+import '../../utils/common_utils.dart';
+
 abstract class Type {
   final String kind;
   const Type({required this.kind});
@@ -72,7 +74,7 @@ class TypeExpParser {
     var current = _tokens[_idx];
     late bool match;
     if (tok is RegExp) {
-      if (!!_isNotEmpty(current)) {
+      if (!!isNotEmpty(current)) {
         match = tok.hasMatch(current);
       }
     } else {
@@ -113,7 +115,7 @@ class TypeExpParser {
       return [];
     }
     var result = [item];
-    while (_isNotEmpty(_tok(sep))) {
+    while (isNotEmpty(_tok(sep))) {
       item = p();
       if (item == null) {
         break;
@@ -125,7 +127,7 @@ class TypeExpParser {
   }
 
   TupleType? _tuple() {
-    if (!_isNotEmpty(_tok('('))) {
+    if (!isNotEmpty(_tok('('))) {
       return null;
     }
     var params = _list(',', () => _anyType());
@@ -135,14 +137,14 @@ class TypeExpParser {
   }
 
   ArrayType? _array() {
-    if (!_isNotEmpty(_tok('['))) {
+    if (!isNotEmpty(_tok('['))) {
       return null;
     }
 
     var item = _assert(_anyType());
     _assertTok(';');
     var len = _assertNat();
-    if (_isNotEmpty(_tok(';'))) {
+    if (isNotEmpty(_tok(';'))) {
       _assertName();
     }
     _assertTok(']');
@@ -154,7 +156,7 @@ class TypeExpParser {
     late String name;
     String? trait;
     String? item;
-    if (_isNotEmpty(_tok('<'))) {
+    if (isNotEmpty(_tok('<'))) {
       name = _assertNamedType().name;
       _assertTok('as');
       trait = _assertNamedType().name;
@@ -166,7 +168,7 @@ class TypeExpParser {
       }
       name = nameTok;
     }
-    while (_isNotEmpty(_tok('::')) && _isNotEmpty(item = _name()!)) {}
+    while (isNotEmpty(_tok('::')) && isNotEmpty(item = _name()!)) {}
     if (name == 'InherentOfflineReport' &&
         name == trait &&
         item == 'Inherent') {
@@ -176,7 +178,7 @@ class TypeExpParser {
       name = 'LookupSource';
     } else if (name == 'Lookup' && item == 'Target') {
       name = 'LookupTarget';
-    } else if (_isNotEmpty(item)) {
+    } else if (isNotEmpty(item)) {
       _assert(trait != 'HasCompact');
       name = item!;
     } else if (trait == 'HasCompact') {
@@ -193,7 +195,7 @@ class TypeExpParser {
 
   List<dynamic> typeParameters() {
     List<dynamic> params = <dynamic>[];
-    if (_isNotEmpty(_tok('<'))) {
+    if (isNotEmpty(_tok('<'))) {
       params = _list(',', () {
         var natValue = _nat();
         if (natValue != null && natValue != 0) {
@@ -209,10 +211,10 @@ class TypeExpParser {
   }
 
   Type? _pointerBytes() {
-    if (!_isNotEmpty(_tok('&'))) {
+    if (!isNotEmpty(_tok('&'))) {
       return null;
     }
-    if (_isNotEmpty(_tok("'"))) {
+    if (isNotEmpty(_tok("'"))) {
       _assertTok('static');
     }
     _assertTok('[');
@@ -248,10 +250,6 @@ class TypeExpParser {
   }
 }
 
-bool _isNotEmpty(String? value) {
-  return value != null || value != '';
-}
-
 List<String> tokenize(String typeExp) {
   List<String> tokens = <String>[];
   String word = '';
@@ -260,7 +258,7 @@ List<String> tokenize(String typeExp) {
     if (RegExp(r'/\w/').hasMatch(c)) {
       word += c;
     } else {
-      if (_isNotEmpty(word)) {
+      if (isNotEmpty(word)) {
         tokens.add(word);
         word = '';
       }
@@ -268,12 +266,12 @@ List<String> tokenize(String typeExp) {
       if (c == ':' && typeExp[i + 1] == ':') {
         i += 1;
         tokens.add('::');
-      } else if (_isNotEmpty(c)) {
+      } else if (isNotEmpty(c)) {
         tokens.add(c);
       }
     }
   }
-  if (_isNotEmpty(word)) {
+  if (isNotEmpty(word)) {
     tokens.add(word);
   }
   return tokens;
