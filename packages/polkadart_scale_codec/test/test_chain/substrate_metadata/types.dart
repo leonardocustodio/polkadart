@@ -2,18 +2,21 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
 
 /// Parent Class Holder to mimic multiple types under one type
 mixin Type implements scale.Type {
-  List<String>? get path;
-  List<String>? get docs;
+  List<String>? path;
+  List<String>? docs;
   @override
   scale.TypeKind get kind;
 }
 
 class DoNotConstructType extends scale.DoNotConstructType implements Type {
   @override
-  List<String>? get docs => throw UnimplementedError();
+  List<String>? docs = throw UnimplementedError();
 
   @override
-  List<String>? get path => throw UnimplementedError();
+  List<String>? path = throw UnimplementedError();
+
+  @override
+  scale.TypeKind get kind => scale.TypeKind.DoNotConstruct;
 }
 
 class PrimitiveType extends scale.PrimitiveType implements Type {
@@ -29,9 +32,6 @@ class PrimitiveType extends scale.PrimitiveType implements Type {
     this.path,
     this.docs,
   }) : super(primitive: primitive);
-
-  @override
-  scale.TypeKind get kind => scale.TypeKind.Primitive;
 }
 
 class CompactType extends scale.CompactType implements Type {

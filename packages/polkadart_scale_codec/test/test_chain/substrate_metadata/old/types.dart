@@ -3,10 +3,10 @@ import '../../utils/assertion_check.dart';
 
 abstract class OldTypeDefinition {}
 
-class OldTypeExp extends OldTypeDefinition {
+/* class OldTypeExp extends OldTypeDefinition {
   final String value;
   OldTypeExp(this.value);
-}
+} */
 
 class OldStructDefinition extends MapMixin<String, String>
     with OldTypeDefinition {
