@@ -1,9 +1,9 @@
 import 'package:cryptography/dart.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
-import '../utils/common_utils.dart';
 import 'package:utility/utility.dart';
 import 'dart:convert';
-import 'metadata.model.dart';
+import '../utils/common_utils.dart';
+import 'models/models.dart' show Metadata;
 import 'types.dart';
 
 List<Type> normalizeMetadataTypes(List<Type> types) {
@@ -107,7 +107,7 @@ List<Type> removeUnitFieldsFromStructs(List<Type> types) {
 
         case scale.TypeKind.Variant:
           var variants = (type as VariantType).variants.map((v) {
-            if (v.fields[0].name == null) {
+            if (v.fields.isEmpty || v.fields[0].name == null) {
               return v;
             }
             var fields = v.fields.where((f) {
@@ -199,7 +199,9 @@ List<Field> convertToCamelCase(List<Field> fields) {
       if (name!.startsWith(RegExp(r'r#'))) {
         name = name.slice(2);
       }
-      name = name.camelCase;
+      if (name.words().length > 1) {
+        name = name.camelCase;
+      }
       return Field(docs: f.docs, type: f.type, name: name);
     } else {
       return f;

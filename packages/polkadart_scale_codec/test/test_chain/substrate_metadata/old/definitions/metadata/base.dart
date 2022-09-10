@@ -136,5 +136,5 @@ const ScaleInfoTypes = <String, dynamic>{
   'Si1TypeDefVariant': {
     'variants': 'Vec<Si1Variant>',
   },
-  ...Si1Variant
+  'Si1Variant': Si1Variant
 };

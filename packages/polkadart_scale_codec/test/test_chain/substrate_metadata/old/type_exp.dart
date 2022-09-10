@@ -93,7 +93,7 @@ class TypeExpParser {
   }
 
   int? _nat() {
-    var tok = _tok(RegExp(r'/^\d+$/'));
+    var tok = _tok(RegExp(r'^\d+$'));
     return tok == null ? null : int.tryParse(tok);
   }
 
@@ -102,7 +102,7 @@ class TypeExpParser {
   }
 
   String? _name() {
-    return _tok(RegExp(r'/^[a-zA-Z]\w*$/'));
+    return _tok(RegExp(r'^[a-zA-Z]\w*$'));
   }
 
   String _assertName() {
@@ -255,7 +255,7 @@ List<String> tokenize(String typeExp) {
   String word = '';
   for (var i = 0; i < typeExp.length; i++) {
     var c = typeExp[i];
-    if (RegExp(r'/\w/').hasMatch(c)) {
+    if (RegExp(r'\w').hasMatch(c)) {
       word += c;
     } else {
       if (isNotEmpty(word)) {

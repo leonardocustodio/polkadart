@@ -16,3 +16,9 @@ dev_dependencies:
   lints: ^2.0.0 # BSD-3-Clause
   test: ^1.16.0 # BSD-3-Clause
   cryptography: ^2.0.5 # Apache-2.0
+  cached: ^1.2.2 # MIT
+  cached_annotation:
+  weak_map: ^2.0.4
+
+dependency_override:
+  test_coverage: ^0.4.2

@@ -1,8 +1,8 @@
 part of utils;
 
-T assertNotNull<T>(T val, {String? msg}) {
+T assertNotNull<T>(T? val, {String? msg}) {
   assertionCheck(val != null, msg);
-  return val;
+  return val as T;
 }
 
 bool checkInt(dynamic val, String sign, int bitSize, int min, int max) {

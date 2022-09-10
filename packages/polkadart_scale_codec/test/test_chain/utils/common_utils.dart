@@ -6,6 +6,8 @@ bool isNotEmpty(dynamic value) {
     return value.trim() != '';
   } else if (value is int) {
     return value != 0;
+  } else if (value is Map) {
+    return value.isNotEmpty;
   }
   throw Exception('Unknown Type Exception');
 }

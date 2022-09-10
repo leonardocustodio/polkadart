@@ -7,12 +7,18 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
 import 'types.dart' as old;
 import './type_exp.dart' as texp;
 
-class TypeAlias {
-  int kind = -1;
+class TypeAlias implements scale.Type {
+  @override
+  // this donotcontruct have no effect here
+  scale.TypeKind get kind => scale.TypeKind.DoNotConstruct;
   int alias;
   String name;
 
   TypeAlias({required this.alias, required this.name});
+
+  List<String>? docs;
+
+  List<String>? path;
 }
 
 typedef TypeCallback = Type Function();
@@ -50,16 +56,18 @@ class OldTypeRegistry {
 
     Type replace(int ti) {
       var a = types[ti];
-      if (a is Type || (a as TypeAlias).kind != -1) {
+      if (a is Type || (a is Map && a['kind'] != -1)) {
         return a;
       }
+      scale.assertionCheck(a is Map);
       if (seen.contains(ti)) {
-        throw Exception('Cycle of non-constructable types involving ${a.name}');
+        throw Exception(
+            'Cycle of non-constructable types involving ${a['name']}');
       } else {
         seen.add(ti);
       }
-      var type = replace(a.alias);
-      type.path = [a.name];
+      var type = replace(a['alias']);
+      type.path = [a['name']];
       return types[ti] = type;
     }
 
@@ -226,7 +234,7 @@ class OldTypeRegistry {
     }
   }
 
-  Type _buildScaleType(texp.Type type) {
+  dynamic _buildScaleType(texp.Type type) {
     switch (type.kind) {
       case 'named':
         return _buildNamedType(type as texp.NamedType);
@@ -239,7 +247,7 @@ class OldTypeRegistry {
     }
   }
 
-  Type _buildNamedType(texp.NamedType type) {
+  dynamic _buildNamedType(texp.NamedType type) {
     if (_definitions[type.name] != null) {
       return _definitions[type.name]!();
     }
@@ -291,28 +299,33 @@ class OldTypeRegistry {
   }
 
   ///
-  /// Returns `Type` or `TypeAlias`
+  /// Returns `Type` or `Map`
   ///
-  dynamic _buildFromDefinition(String typeName, old.OldTypeDefinition def) {
+  dynamic _buildFromDefinition(String typeName, dynamic def) {
     Type result;
     if (def is String) {
-      return TypeAlias(
+      return <String, dynamic>{
+        'kind': -1,
+        'alias': use(def),
+        'name': typeName,
+      };
+      /* return TypeAlias(
         alias: use(def),
         name: typeName,
-      );
-    } else if (def is old.OldEnumDefinition && def.enum_ != null) {
+      ); */
+    } else if (def is Map && def['_enum'] != null) {
       result = _buildEnum(def);
-    } else if (def is old.OldSetDefinition && isNotEmpty(def.set_.bitLength_)) {
+    } else if (def is Map && def['_set'] != null) {
       return _types[_buildSet(def)];
     } else {
-      result = _buildStruct(def as old.OldStructDefinition);
+      result = _buildStruct(def);
     }
     result.path = [typeName];
     return result;
   }
 
-  int _buildSet(old.OldSetDefinition def) {
-    var len = def.set_.bitLength_ == 0 ? 8 : def.set_.bitLength_;
+  int _buildSet(dynamic def) {
+    var len = def?['_set']?['_bitLength'] == 0 ? 8 : def['_set']['_bitLength'];
     switch (len) {
       case 8:
       case 16:
@@ -327,28 +340,28 @@ class OldTypeRegistry {
     }
   }
 
-  Type _buildEnum(old.OldEnumDefinition def) {
+  Type _buildEnum(dynamic def) {
     var variants = <Variant>[];
-    if (def.enum_ is List) {
-      for (var index = 0; index < def.enum_.length; index++) {
+    if (def['_enum'] is List) {
+      for (var index = 0; index < (def['_enum'] as List).length; index++) {
         variants.add(
-          Variant(name: def.enum_[index], index: index, fields: []),
+          Variant(name: def['_enum'][index], index: index, fields: []),
         );
       }
     } else if (isIndexedEnum(def)) {
-      for (var entry in (def.enum_ as Map<String, int>).entries) {
+      for (var entry in (def['_enum'] as Map<String, int>).entries) {
         variants.add(Variant(name: entry.key, index: entry.value, fields: []));
       }
     } else {
       var index = 0;
-      for (var name in (def.enum_ as Map).keys) {
-        var type = def.enum_[name];
+      for (var name in (def['_enum'] as Map).keys) {
+        var type = def['_enum'][name];
         var fields = <Field>[];
         if (type is String) {
           fields.add(Field(type: use(type)));
         } else if (type != null) {
-          scale.assertionCheck(type is old.OldStructDefinition);
-          for (var key in (type as old.OldStructDefinition).keys) {
+          scale.assertionCheck(type is Map);
+          for (var key in (type as Map).keys) {
             fields.add(Field(name: key, type: use(type[key])));
           }
         }
@@ -363,9 +376,9 @@ class OldTypeRegistry {
     return VariantType(variants: variants);
   }
 
-  Type _buildStruct(old.OldStructDefinition def) {
+  Type _buildStruct(Map def) {
     var fields = <Field>[];
-    for (var name in def.data.keys) {
+    for (var name in def.keys) {
       fields.add(Field(name: name, type: use(def[name])));
     }
     return CompositeType(
@@ -391,12 +404,12 @@ class OldTypeRegistry {
   }
 }
 
-bool isIndexedEnum(old.OldEnumDefinition def) {
-  if (def.enum_ is! Map) {
+bool isIndexedEnum(dynamic def) {
+  if (def['_enum'] is! Map) {
     return false;
   }
-  for (var key in def.enum_) {
-    if (def.enum_[key] is! int) {
+  for (var key in (def['_enum'] as Map).keys) {
+    if (def['_enum'][key] is! int) {
       return false;
     }
   }

@@ -1,9 +1,20 @@
+import '../../types.dart';
 import './base.dart';
+import './v9.dart';
+import './v10.dart';
+import './v11.dart';
+import './v12.dart';
+import './v13.dart';
 import './v14.dart';
 
-const types = <String, dynamic>{
+const types = OldTypes(types: <String, dynamic>{
   'Type': 'Str',
   ...ScaleInfoTypes,
+  ...V9,
+  ...V10,
+  ...V11,
+  ...V12,
+  ...V13,
   ...V14,
   'Metadata': {
     '_enum': {
@@ -25,4 +36,4 @@ const types = <String, dynamic>{
       'V14': 'MetadataV14'
     }
   }
-};
+});

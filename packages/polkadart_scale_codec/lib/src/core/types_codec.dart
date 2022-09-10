@@ -84,7 +84,7 @@ CodecType getCodecType(List<Type> types, int ti) {
       return CodecStructType(
           fields: (def as CompositeType).fields.map((field) {
         var name = assertNotNull(field.name);
-        return CodecStructTypeFields(name: name!, type: field.type);
+        return CodecStructTypeFields(name: name, type: field.type);
       }).toList());
     case TypeKind.Variant:
       List<Variant> variants = (def as VariantType).variants;
@@ -129,7 +129,7 @@ CodecType getCodecType(List<Type> types, int ti) {
               index: v.index,
               def: CodecStructType(
                   fields: v.fields.map((field) {
-                var name = assertNotNull(field.name)!;
+                var name = assertNotNull(field.name);
                 return CodecStructTypeFields(name: name, type: field.type);
               }).toList()));
         }
@@ -156,9 +156,9 @@ bool isPrimitive(Primitive primitive, List<Type> types, int ti) {
 ///
 /// Convert list [Types] to [CodecTypes]
 List<CodecType> toCodecTypes(List<Type> types) {
-  List<CodecType> codecTypes = <CodecType>[]..length = types.length;
+  List<CodecType> codecTypes = <CodecType>[];
   for (var i = 0; i < types.length; i++) {
-    codecTypes[i] = getCodecType(types, i);
+    codecTypes.add(getCodecType(types, i));
   }
   return codecTypes;
 }

@@ -10,10 +10,10 @@ mixin Type implements scale.Type {
 
 class DoNotConstructType extends scale.DoNotConstructType implements Type {
   @override
-  List<String>? docs = throw UnimplementedError();
+  List<String>? docs;
 
   @override
-  List<String>? path = throw UnimplementedError();
+  List<String>? path;
 
   @override
   scale.TypeKind get kind => scale.TypeKind.DoNotConstruct;
