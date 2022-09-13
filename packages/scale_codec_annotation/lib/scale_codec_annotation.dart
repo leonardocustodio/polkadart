@@ -3,3 +3,4 @@
 library scale_codec_annotation;
 
 export 'src/scale_codec_serializable.dart';
+export 'src/scale_codec_key.dart';
