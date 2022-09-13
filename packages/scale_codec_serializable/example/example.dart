@@ -1,6 +1,6 @@
 import 'package:scale_codec_annotation/scale_codec_annotation.dart';
 
-void main() {}
+part 'example.g.dart';
 
 @ScaleCodecSerializable()
 class Person {

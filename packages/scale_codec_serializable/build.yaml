@@ -1,11 +1,12 @@
 targets:
   $default:
     builders:
-      scale_codec_serializable|scale_codec_annotation:
+      scale_codec_serializable:
         enabled: true
 
 builders:
   scale_codec_serializable:
+    target: ":scale_codec_serializable"
     import: "package:scale_codec_serializable/builder.dart"
     builder_factories: ["scaleCodecSerializable"]
     build_extensions: {".dart": [".g.dart"] }
