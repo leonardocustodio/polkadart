@@ -1,10 +1,4 @@
-import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:scale_codec_annotation/scale_codec_annotation.dart';
-import 'package:source_gen/source_gen.dart';
-
-import 'type_helpers/config_types.dart';
 
 /// Return the Dart code presentation for the given [type].
 ///
@@ -31,53 +25,4 @@ String typeToCode(
     return type.getDisplayString(withNullability: false);
   }
   throw UnimplementedError('(${type.runtimeType}) $type');
-}
-
-/// If [targetType] is an enum, returns the [FieldElement] instances associated
-/// with its values.
-///
-/// Otherwise, `null`.
-Iterable<FieldElement>? iterateEnumFields(DartType targetType) {
-  if (targetType is InterfaceType && targetType.element2 is EnumElement) {
-    return targetType.element2.fields
-        .where((element) => element.isEnumConstant);
-  }
-  return null;
-}
-
-T enumValueForDartObject<T>(
-  DartObject source,
-  List<T> items,
-  String Function(T) name,
-) =>
-    items[source.getField('index')!.toIntValue()!];
-
-/// Return an instance of [JsonSerializable] corresponding to a the provided
-/// [reader].
-// #CHANGE WHEN UPDATING json_annotation
-ScaleCodecSerializable _valueForAnnotation(ConstantReader reader) =>
-    ScaleCodecSerializable(
-      createDecodeMethod:
-          reader.read('createDecodeMethod').literalValue as bool?,
-      createEncodeMethod:
-          reader.read('createEncodeMethod').literalValue as bool?,
-    );
-
-/// Returns a [ClassConfig] with values from the [ScaleCodecSerializable]
-/// instance represented by [reader].
-///
-/// For fields that are not defined in [ScaleCodecSerializable] or `null` in [reader],
-/// use the values in [config].
-ClassConfig mergeConfig(
-  ClassConfig config,
-  ConstantReader reader, {
-  required ClassElement classElement,
-}) {
-  final annotation = _valueForAnnotation(reader);
-
-  return ClassConfig(
-      createDecodeMethod:
-          annotation.createDecodeMethod ?? config.createDecodeMethod,
-      createEncodeMethod:
-          annotation.createEncodeMethod ?? config.createEncodeMethod);
 }
