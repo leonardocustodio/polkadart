@@ -20,6 +20,9 @@ abstract class HelperCore {
   String get targetClassReference => element.name;
 
   @protected
+  List<ConstructorElement> get constructors => element.constructors;
+
+  @protected
   String get prefix => '_\$${element.name.nonPrivate}';
 }
 
