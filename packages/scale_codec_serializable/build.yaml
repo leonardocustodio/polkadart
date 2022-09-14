@@ -4,6 +4,11 @@ targets:
       scale_codec_serializable:
         enabled: true
 
+      source_gen|combining_builder:
+        options:
+          ignore_for_file:
+          - unused_element
+
 builders:
   scale_codec_serializable:
     target: ":scale_codec_serializable"
