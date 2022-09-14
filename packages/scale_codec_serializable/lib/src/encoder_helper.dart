@@ -2,9 +2,21 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:scale_codec_serializable/src/helper_core.dart';
 
 abstract class EncoderHelper implements HelperCore {
+  /// Write encode method implementation as example above:
+  ///
+  /// ```dart
+  ///   // ...
+  ///   String encode() => "";
+  ///   // ...
+  /// ```
   Iterable<String> createEncode(Set<FieldElement> accessibleFields) sync* {
-    assert(config.createEncodeMethod);
+    assert(config.createDecodeMethod);
 
-    yield '// create decode method';
+    final buffer = StringBuffer();
+
+    buffer.writeln('//TODO: encode method implementation');
+    buffer.writeln('String encode() => "";');
+
+    yield buffer.toString();
   }
 }
