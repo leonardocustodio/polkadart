@@ -6,27 +6,6 @@ import 'package:source_gen/source_gen.dart';
 
 import 'type_helpers/config_types.dart';
 
-const _scaleCodecKeyChecker = TypeChecker.fromRuntime(ScaleCodecKey);
-
-DartObject? _scaleCodecKeyAnnotation(FieldElement element) =>
-    _scaleCodecKeyChecker.firstAnnotationOf(element) ??
-    (element.getter == null
-        ? null
-        : _scaleCodecKeyChecker.firstAnnotationOf(element.getter!));
-
-ConstantReader scaleCodecKeyAnnotation(FieldElement element) =>
-    ConstantReader(_scaleCodecKeyAnnotation(element));
-
-/// Returns `true` if [element] is annotated with [ScaleCodecKey].
-bool hasJsonKeyAnnotation(FieldElement element) =>
-    _scaleCodecKeyAnnotation(element) != null;
-
-Never throwUnsupported(FieldElement element, String message) =>
-    throw InvalidGenerationSourceError(
-      'Error with `@JsonKey` on the `${element.name}` field. $message',
-      element: element,
-    );
-
 /// Return the Dart code presentation for the given [type].
 ///
 /// This function is intentionally limited, and does not support all possible

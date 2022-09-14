@@ -1,9 +1,9 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 
-class ModelVisitor extends SimpleElementVisitor<void> {
+class ClassVisitor extends SimpleElementVisitor<void> {
   late String className;
-  final fields = <String, dynamic>{};
+  final fields = <String, FieldElement>{};
 
   @override
   void visitConstructorElement(ConstructorElement element) {
@@ -13,7 +13,7 @@ class ModelVisitor extends SimpleElementVisitor<void> {
 
   @override
   void visitFieldElement(FieldElement element) {
-    final elementType = element.type.toString();
-    fields[element.name] = elementType.replaceFirst('*', '');
+    // final elementType = element.type.toString();
+    fields[element.name] = element;
   }
 }

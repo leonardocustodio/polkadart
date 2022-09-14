@@ -11,15 +11,31 @@ abstract class DecodeHelper implements HelperCore {
   ///     Example();
   ///   // ...
   /// ```
-  Iterable<String> createDecode(Set<FieldElement> accessibleFields) sync* {
+  Iterable<String> createDecode(
+      Map<String, FieldElement> accessibleFields) sync* {
     assert(config.createDecodeMethod);
 
     final buffer = StringBuffer();
 
-    buffer.writeln('//TODO: decode method implementation');
-    buffer.writeln(
-        '$targetClassReference decode(String encodedData) => $targetClassReference();');
+    //TODO: write decode complete implementation
+    buffer.writeln('$targetClassReference decode(String encodedData) => ');
+
+    _writeDefaultConstructor(buffer, accessibleFields);
 
     yield buffer.toString();
+  }
+
+  void _writeDefaultConstructor(
+      StringBuffer stringBuffer, Map<String, FieldElement> fields) {
+    stringBuffer.write('$targetClassReference(');
+
+    for (var field in fields.keys) {
+      final fieldName =
+          field.startsWith('_') ? field.replaceFirst('_', '') : field;
+
+      stringBuffer.write('$fieldName, ');
+    }
+
+    stringBuffer.writeln(');');
   }
 }

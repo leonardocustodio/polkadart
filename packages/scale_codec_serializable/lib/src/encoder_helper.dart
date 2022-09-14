@@ -9,12 +9,13 @@ abstract class EncoderHelper implements HelperCore {
   ///   String encode() => "";
   ///   // ...
   /// ```
-  Iterable<String> createEncode(Set<FieldElement> accessibleFields) sync* {
+  Iterable<String> createEncode(
+      Map<String, FieldElement> accessibleFields) sync* {
     assert(config.createDecodeMethod);
 
     final buffer = StringBuffer();
 
-    buffer.writeln('//TODO: encode method implementation');
+    //TODO: encode complete implementation
     buffer.writeln('String encode() => "";');
 
     yield buffer.toString();

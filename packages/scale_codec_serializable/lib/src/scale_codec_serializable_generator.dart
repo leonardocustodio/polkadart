@@ -1,19 +1,15 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:scale_codec_annotation/scale_codec_annotation.dart';
-import 'package:scale_codec_serializable/src/settings.dart';
+import 'package:scale_codec_serializable/src/type_helpers/config_types.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'generator_helper.dart';
 
 class ScaleCodecSerializableGenerator
     extends GeneratorForAnnotation<ScaleCodecSerializable> {
-  final Settings _settings;
-
-  ScaleCodecSerializable get config =>
-      _settings.config.toScaleCodecSerializable();
-
-  ScaleCodecSerializableGenerator.fromSettings(this._settings);
+  final ClassConfig _config;
+  ScaleCodecSerializableGenerator.withConfig(this._config);
 
   @override
   Iterable<String> generateForAnnotatedElement(
@@ -31,7 +27,11 @@ class ScaleCodecSerializableGenerator
           element: element);
     }
 
-    final helper = GeneratorHelper(_settings, element, annotation);
+    final helper = GeneratorHelper(
+      element,
+      _config,
+      annotation,
+    );
     return helper.generate();
   }
 }

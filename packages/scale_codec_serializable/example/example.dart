@@ -6,5 +6,9 @@ part 'example.g.dart';
 class Person {
   final String firstName, lastName;
 
-  Person({required this.firstName, required this.lastName});
+  Person(this.firstName, this.lastName);
+}
+
+void main() {
+  //final teste = Person(firstName: 'Gabriel', lastName: 'Okura');
 }
