@@ -1,11 +1,11 @@
 import 'package:scale_codec_annotation/scale_codec_annotation.dart';
 
-/// Represents values from [JsonKey] when merged with local configuration.
+/// Represents values from [ScaleCodecKey] when merged with local configuration.
 class KeyConfig {
-  final bool ignore;
+  final bool shouldIgnore;
 
   KeyConfig({
-    required this.ignore,
+    required this.shouldIgnore,
   });
 }
 
@@ -14,30 +14,28 @@ class KeyConfig {
 ///
 /// Values are all known, so types are non-nullable.
 class ClassConfig {
-  final bool createDecodeMethod;
-  final bool createEncodeMethod;
+  final bool shouldCreateDecodeMethod;
+  final bool shouldCreateEncodeMethod;
 
   const ClassConfig(
-      {required this.createDecodeMethod, required this.createEncodeMethod});
+      {required this.shouldCreateDecodeMethod,
+      required this.shouldCreateEncodeMethod});
 
   factory ClassConfig.fromScaleCodecSerializable(
           ScaleCodecSerializable config) =>
       ClassConfig(
-        createDecodeMethod: config.createDecodeMethod ??
-            ClassConfig.defaults.createDecodeMethod,
-        createEncodeMethod: config.createEncodeMethod ??
-            ClassConfig.defaults.createEncodeMethod,
-      );
+          shouldCreateDecodeMethod: config.shouldCreateDecodeMethod,
+          shouldCreateEncodeMethod: config.shouldCreateEncodeMethod);
 
   /// An instance of [ScaleCodecSerializable] with all fields set to their default
   /// values.
   static const defaults = ClassConfig(
-    createDecodeMethod: true,
-    createEncodeMethod: true,
+    shouldCreateDecodeMethod: true,
+    shouldCreateEncodeMethod: true,
   );
 
   ScaleCodecSerializable toScaleCodecSerializable() => ScaleCodecSerializable(
-        createDecodeMethod: createDecodeMethod,
-        createEncodeMethod: createEncodeMethod,
+        shouldCreateDecodeMethod: shouldCreateDecodeMethod,
+        shouldCreateEncodeMethod: shouldCreateEncodeMethod,
       );
 }
