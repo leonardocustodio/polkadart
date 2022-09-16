@@ -1,8 +1,9 @@
 import 'package:build/build.dart';
 import 'package:scale_codec_annotation/scale_codec_annotation.dart';
-import 'package:scale_codec_serializable/src/scale_codec_serializable_generator.dart';
-import 'package:scale_codec_serializable/src/type_helpers/config_types.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'scale_codec_serializable_generator.dart';
+import 'type_helpers/config_types.dart';
 
 /// Returns a [Builder] for use within a `package:build_runner`
 /// `BuildAction`.

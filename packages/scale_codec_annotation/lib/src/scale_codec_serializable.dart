@@ -20,8 +20,8 @@ class ScaleCodecSerializable {
   /// of setting arguments on the associated annotation class.
   factory ScaleCodecSerializable.fromMap(Map<String, dynamic> map) {
     return ScaleCodecSerializable(
-      shouldCreateDecodeMethod: map['should_create_decode_method'],
-      shouldCreateEncodeMethod: map['should_create_encode_method'],
+      shouldCreateDecodeMethod: map['should_create_decode_method'] ?? true,
+      shouldCreateEncodeMethod: map['should_create_encode_method'] ?? true,
     );
   }
 }
