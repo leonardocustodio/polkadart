@@ -19,8 +19,6 @@ class GeneratorHelper extends HelperCore with EncoderHelper, DecodeHelper {
   }
 
   Iterable<String> generate() sync* {
-    assert(_addedMembers.isEmpty);
-
     final visitor = ClassVisitor();
     element.visitChildren(visitor);
 
@@ -35,12 +33,10 @@ class GeneratorHelper extends HelperCore with EncoderHelper, DecodeHelper {
         .fold<Map<String, FieldElement>>(<String, FieldElement>{},
             (map, field) {
       if (field.getter == null) {
-        assert(field.setter != null);
         unavailableReasons[field.name] =
             'Setter-only properties are not supported.';
         log.warning('Setters are ignored: ${element.name}.${field.name}');
       } else {
-        assert(!map.containsKey(field.name));
         map[field.name] = field;
       }
 

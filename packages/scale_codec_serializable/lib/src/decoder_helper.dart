@@ -13,8 +13,6 @@ abstract class DecodeHelper implements HelperCore {
   /// ```
   Iterable<String> createDecode(
       Map<String, FieldElement> accessibleFields) sync* {
-    assert(config.shouldCreateDecodeMethod);
-
     //TODO: write decode complete implementation
 
     final buffer = StringBuffer()

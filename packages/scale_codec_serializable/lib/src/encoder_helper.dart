@@ -11,8 +11,6 @@ abstract class EncoderHelper implements HelperCore {
   /// ```
   Iterable<String> createEncode(
       Map<String, FieldElement> accessibleFields) sync* {
-    assert(config.shouldCreateEncodeMethod);
-
     //TODO: encode complete implementation
     final buffer = StringBuffer()..writeln("String encode() => '';");
 
