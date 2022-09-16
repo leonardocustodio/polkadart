@@ -55,11 +55,11 @@ class GeneratorHelper extends HelperCore with EncoderHelper, DecodeHelper {
 
     yield createClassBody(accessibleFields);
 
-    if (config.createDecodeMethod) {
+    if (config.shouldCreateDecodeMethod) {
       yield* createDecode(accessibleFields);
     }
 
-    if (config.createEncodeMethod) {
+    if (config.shouldCreateEncodeMethod) {
       yield* createEncode(accessibleFields);
     }
 
