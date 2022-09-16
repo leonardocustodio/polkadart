@@ -15,10 +15,10 @@ abstract class DecodeHelper implements HelperCore {
       Map<String, FieldElement> accessibleFields) sync* {
     assert(config.shouldCreateDecodeMethod);
 
-    final buffer = StringBuffer();
-
     //TODO: write decode complete implementation
-    buffer.writeln('$targetClassReference decode(String encodedData) => ');
+
+    final buffer = StringBuffer()
+      ..writeln('$targetClassReference decode(String encodedData) => ');
 
     _writeDefaultConstructor(buffer, accessibleFields);
 
@@ -30,9 +30,7 @@ abstract class DecodeHelper implements HelperCore {
     stringBuffer.write('$targetClassReference(');
 
     for (var field in fields.keys) {
-      final fieldName =
-          field.startsWith('_') ? field.replaceFirst('_', '') : field;
-
+      final fieldName = field.replaceFirst('_', '');
       stringBuffer.write('$fieldName, ');
     }
 

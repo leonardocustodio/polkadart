@@ -1,21 +1,17 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:scale_codec_serializable/src/class_visitor.dart';
-import 'package:scale_codec_serializable/src/decoder_helper.dart';
-import 'package:scale_codec_serializable/src/encoder_helper.dart';
-import 'package:scale_codec_serializable/src/helper_core.dart';
-import 'package:scale_codec_serializable/src/type_helpers/config_types.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'class_visitor.dart';
+import 'decoder_helper.dart';
+import 'encoder_helper.dart';
+import 'helper_core.dart';
 
 class GeneratorHelper extends HelperCore with EncoderHelper, DecodeHelper {
   final _addedMembers = <String>{};
   final ConstantReader annotation;
 
-  GeneratorHelper(ClassElement element, ClassConfig config, this.annotation)
-      : super(
-          element,
-          config,
-        );
+  GeneratorHelper(super.element, super.config, this.annotation);
 
   @override
   void addMember(String memberContent) {
@@ -51,8 +47,6 @@ class GeneratorHelper extends HelperCore with EncoderHelper, DecodeHelper {
       return map;
     });
 
-    yield 'extension _\$${targetClassReference}Extension on $targetClassReference {';
-
     yield createClassBody(accessibleFields);
 
     if (config.shouldCreateDecodeMethod) {
@@ -64,7 +58,6 @@ class GeneratorHelper extends HelperCore with EncoderHelper, DecodeHelper {
     }
 
     yield* _addedMembers;
-
     yield '}';
   }
 
@@ -77,17 +70,17 @@ class GeneratorHelper extends HelperCore with EncoderHelper, DecodeHelper {
   ///   //...
   /// ```
   String createClassBody(Map<String, FieldElement> fields) {
-    final buffer = StringBuffer();
+    final buffer = StringBuffer()
+      ..write('extension _\$${targetClassReference}Extension')
+      ..writeln(' on $targetClassReference {');
 
     for (var field in fields.keys) {
-      final fieldName =
-          field.startsWith('_') ? field.replaceFirst('_', '') : field;
+      final fieldName = field.replaceFirst('_', '');
       final dartType = fields[field]?.type;
 
       buffer.writeln(
-          'String get ${fieldName}Encoded => "TODO: encode $dartType type";');
+          "String get ${fieldName}Encoded => 'TODO: encode $dartType type';");
     }
-
     return buffer.toString();
   }
 }

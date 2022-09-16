@@ -27,8 +27,8 @@ class ClassConfig {
           shouldCreateDecodeMethod: config.shouldCreateDecodeMethod,
           shouldCreateEncodeMethod: config.shouldCreateEncodeMethod);
 
-  /// An instance of [ScaleCodecSerializable] with all fields set to their default
-  /// values.
+  /// An instance of [ScaleCodecSerializable] with
+  /// all fields set to their default values.
   static const defaults = ClassConfig(
     shouldCreateDecodeMethod: true,
     shouldCreateEncodeMethod: true,
