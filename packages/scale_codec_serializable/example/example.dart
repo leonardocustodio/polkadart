@@ -8,7 +8,3 @@ class Person {
 
   Person(this.firstName, this.lastName);
 }
-
-void main() {
-  //final teste = Person(firstName: 'Gabriel', lastName: 'Okura');
-}

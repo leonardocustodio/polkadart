@@ -6,7 +6,6 @@ class ClassVisitor extends SimpleElementVisitor<void> {
 
   @override
   void visitFieldElement(FieldElement element) {
-    // final elementType = element.type.toString();
     fields[element.name] = element;
   }
 }

@@ -17,7 +17,6 @@ abstract class EncoderHelper implements HelperCore {
 
     //TODO: encode complete implementation
     buffer.writeln('String encode() => "";');
-
     yield buffer.toString();
   }
 }
