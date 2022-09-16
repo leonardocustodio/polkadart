@@ -5,14 +5,14 @@ import 'package:meta/meta_meta.dart';
 class ScaleCodecKey {
   /// `true` if the generator should ignore this field completely.
   ///
-  /// If `null` (the default) or `false`, the field will be considered for
+  /// If `false`, the field will be considered for
   /// serialization.
-  final bool? ignore;
+  final bool shouldIgnore;
 
   /// Creates a new [ScaleCodecKey] instance.
   ///
   /// Only required when the default behavior is not desired.
   const ScaleCodecKey({
-    this.ignore,
+    this.shouldIgnore = false,
   });
 }
