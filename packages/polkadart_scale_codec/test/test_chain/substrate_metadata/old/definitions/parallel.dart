@@ -174,7 +174,7 @@ const bridge = <String, dynamic>{
   }
 };
 
-const types = <String, String>{
+const types = <String, dynamic>{
   ...loans,
   ...liquidStaking,
   ...amm,
@@ -188,7 +188,7 @@ const types = <String, String>{
 };
 
 final bundle = <String, dynamic>{
-  'types': {...ormlTypes, ...types},
+  'types': <String, dynamic>{...ormlTypes, ...types},
   'typesAlias': {...ormlAlias},
   'versions': [
     {

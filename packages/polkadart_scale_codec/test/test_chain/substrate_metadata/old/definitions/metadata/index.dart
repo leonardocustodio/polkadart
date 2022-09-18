@@ -7,7 +7,7 @@ import './v12.dart';
 import './v13.dart';
 import './v14.dart';
 
-const types = OldTypes(types: <String, dynamic>{
+final types = OldTypes(types: <String, dynamic>{
   'Type': 'Str',
   ...ScaleInfoTypes,
   ...V9,

@@ -8,18 +8,20 @@ mixin Type implements scale.Type {
   scale.TypeKind get kind;
 }
 
-class DoNotConstructType extends scale.DoNotConstructType implements Type {
+class DoNotConstructType extends scale.DoNotConstructType with Type {
   @override
   List<String>? docs;
 
   @override
   List<String>? path;
 
+  DoNotConstructType();
+
   @override
   scale.TypeKind get kind => scale.TypeKind.DoNotConstruct;
 }
 
-class PrimitiveType extends scale.PrimitiveType implements Type {
+class PrimitiveType extends scale.PrimitiveType with Type {
   @override
   List<String>? path;
 
@@ -32,9 +34,12 @@ class PrimitiveType extends scale.PrimitiveType implements Type {
     this.path,
     this.docs,
   }) : super(primitive: primitive);
+
+  @override
+  scale.TypeKind get kind => scale.TypeKind.Primitive;
 }
 
-class CompactType extends scale.CompactType implements Type {
+class CompactType extends scale.CompactType with Type {
   @override
   List<String>? path;
 
@@ -52,7 +57,7 @@ class CompactType extends scale.CompactType implements Type {
   scale.TypeKind get kind => scale.TypeKind.Compact;
 }
 
-class SequenceType extends scale.SequenceType implements Type {
+class SequenceType extends scale.SequenceType with Type {
   @override
   List<String>? path;
 
@@ -70,7 +75,7 @@ class SequenceType extends scale.SequenceType implements Type {
   scale.TypeKind get kind => scale.TypeKind.Sequence;
 }
 
-class BitSequenceType extends scale.BitSequenceType implements Type {
+class BitSequenceType extends scale.BitSequenceType with Type {
   @override
   List<String>? path;
 
@@ -89,7 +94,7 @@ class BitSequenceType extends scale.BitSequenceType implements Type {
   scale.TypeKind get kind => scale.TypeKind.BitSequence;
 }
 
-class ArrayType extends scale.ArrayType implements Type {
+class ArrayType extends scale.ArrayType with Type {
   @override
   List<String>? path;
 
@@ -109,7 +114,7 @@ class ArrayType extends scale.ArrayType implements Type {
 }
 
 /// Tuple Type
-class TupleType extends scale.TupleType implements Type {
+class TupleType extends scale.TupleType with Type {
   @override
   List<String>? path;
 
@@ -118,16 +123,21 @@ class TupleType extends scale.TupleType implements Type {
 
   /// Constructor
   TupleType({
-    required List<int> tuple,
     this.path,
     this.docs,
-  }) : super(tuple: tuple);
+    required super.tuple,
+  });
 
   @override
   scale.TypeKind get kind => scale.TypeKind.Tuple;
+
+  @override
+  String toString() {
+    return 'returning our trouble making tuple';
+  }
 }
 
-class OptionType extends scale.OptionType implements Type {
+class OptionType extends scale.OptionType with Type {
   @override
   List<String>? path;
 
@@ -151,7 +161,7 @@ class Field extends scale.Field {
       : super(type: type, name: name);
 }
 
-class CompositeType extends scale.CompositeType implements Type {
+class CompositeType extends scale.CompositeType with Type {
   @override
   final List<Field> fields;
   @override
@@ -179,7 +189,7 @@ class Variant extends scale.Variant {
       : super(fields: fields, index: index, name: name);
 }
 
-class VariantType extends scale.VariantType implements Type {
+class VariantType extends scale.VariantType with Type {
   @override
   final List<Variant> variants;
   @override

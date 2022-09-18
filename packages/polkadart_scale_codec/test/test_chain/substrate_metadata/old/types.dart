@@ -33,11 +33,18 @@ class OldTypesAlias extends MapMixin<String, Map<String, String>> {
 }
 
 class OldTypes {
-  final Map<String, dynamic>? types;
-  final OldTypesAlias? typesAlias;
-  final Map<String, String>? signedExtensions;
+  Map<String, dynamic>? types;
+  OldTypesAlias? typesAlias;
+  Map<String, String>? signedExtensions;
 
-  const OldTypes({this.types, this.typesAlias, this.signedExtensions});
+  OldTypes({this.types, this.typesAlias, this.signedExtensions});
+
+  static OldTypes fromMap(Map<String, dynamic> map) {
+    return OldTypes(
+        types: map['types'],
+        typesAlias: OldTypesAlias(map['typesAlias']),
+        signedExtensions: map['signedExtensions']);
+  }
 }
 
 class SpecVersionRange extends ListMixin<int?> {
@@ -66,27 +73,41 @@ class SpecVersionRange extends ListMixin<int?> {
 class OldTypesWithSpecVersionRange extends OldTypes {
   final SpecVersionRange minmax;
 
-  const OldTypesWithSpecVersionRange(
+  OldTypesWithSpecVersionRange(
       {required this.minmax,
-      Map<String, dynamic>? types,
-      OldTypesAlias? typesAlias,
-      Map<String, String>? signedExtensions})
-      : super(
-            types: types,
-            typesAlias: typesAlias,
-            signedExtensions: signedExtensions);
+      super.types,
+      super.typesAlias,
+      super.signedExtensions});
+
+  static OldTypesWithSpecVersionRange fromMap(Map<String, dynamic> map) {
+    return OldTypesWithSpecVersionRange(
+        minmax: SpecVersionRange((map['minmax'] as List).cast<int?>()),
+        types: map['types'],
+        typesAlias:
+            map['typesAlias'] == null ? null : OldTypesAlias(map['typesAlias']),
+        signedExtensions: map['signedExtensions']);
+  }
 }
 
 class OldTypesBundle extends OldTypes {
-  final List<OldTypesWithSpecVersionRange>? versions;
+  List<OldTypesWithSpecVersionRange>? versions;
 
-  const OldTypesBundle(
-      {required this.versions,
-      Map<String, dynamic>? types,
-      OldTypesAlias? typesAlias,
-      Map<String, String>? signedExtensions})
-      : super(
-            types: types,
-            typesAlias: typesAlias,
-            signedExtensions: signedExtensions);
+  OldTypesBundle(
+      {this.versions, super.types, super.typesAlias, super.signedExtensions});
+
+  static OldTypesBundle fromMap(Map<String, dynamic> map) {
+    var obj = OldTypesBundle(
+        types: map['types'], signedExtensions: map['signedExtensions']);
+
+    if (map['versions'] != null) {
+      obj.versions = (map['versions'] as List)
+          .map((value) => OldTypesWithSpecVersionRange.fromMap(value))
+          .toList();
+    }
+    if (map['typesAlias'] != null) {
+      obj.typesAlias = OldTypesAlias(map['typesAlias']);
+    }
+
+    return obj;
+  }
 }

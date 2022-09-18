@@ -1,5 +1,5 @@
 const bundle = <String, dynamic>{
-  'types': {},
+  'types': <String, dynamic>{},
   'versions': [
     {
       // on all versions

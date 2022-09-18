@@ -207,13 +207,10 @@ class Si1TypeDefBitSequence {
       );
 }
 
-class Si1Field {
-  final String? name;
-  final int type;
+class Si1Field extends Field {
   final String? typeName;
-  final List<String> docs;
   const Si1Field(
-      {this.name, required this.type, this.typeName, required this.docs});
+      {super.name, required super.type, this.typeName, required super.docs});
 
   /// Creates Class Object from `Json`
   static Si1Field fromJson(Map<String, dynamic> map) => Si1Field(
@@ -224,17 +221,12 @@ class Si1Field {
       );
 }
 
-class Si1Variant {
-  final String name;
-  final List<Si1Field> fields;
-  final int index;
-  final List<String> docs;
-
-  const Si1Variant(
-      {required this.name,
-      required this.fields,
-      required this.index,
-      required this.docs});
+class Si1Variant extends Variant {
+  Si1Variant(
+      {required super.name,
+      required super.fields,
+      required super.index,
+      required super.docs});
 
   /// Creates Class Object from `Json`
   static Si1Variant fromJson(Map<String, dynamic> map) => Si1Variant(

@@ -3,16 +3,6 @@ import 'dart:typed_data';
 import 'types.dart' show Type;
 import 'util.dart' show sha256;
 
-/* 
-StorageHasher =
-    "Blake2_128" |
-    "Blake2_256" |
-    "Blake2_128Concat" |
-    "Twox128" |
-    "Twox256" |
-    "Twox64Concat" |
-    "Identity"; */
-
 class StorageItem {
   List<String> hashers;
   List<int> keys;

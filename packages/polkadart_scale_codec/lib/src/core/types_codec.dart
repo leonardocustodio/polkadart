@@ -22,7 +22,7 @@ Type unwrap(Type def, List<Type> types, {Set<int>? visited}) {
         return def;
       }
     case TypeKind.Composite:
-      if ((def as CompositeType).fields[0].name == null) {
+      if ((def as CompositeType).fields.isEmpty || def.fields[0].name == null) {
         // TODO: Uncomment this below comment when it starts working by calling from the substrate-metadata explorer.
         //
         // var tuple = def.fields.map((t) {
@@ -96,11 +96,15 @@ CodecType getCodecType(List<Type> types, int ti) {
       }
 
       // TODO: To replace with reduce function in dart
+
       var len = 0;
-      variants.map((v) => v.index).skip(1).forEach((index) {
-        len = max(len, index);
-      });
-      len += 1;
+      if (variants.isNotEmpty) {
+        variants.map((v) => v.index).forEach((index) {
+          len = max(len, index);
+        });
+        len += 1;
+      }
+
       List<CodecVariant?> placedVariants = <CodecVariant?>[]..length = len;
       for (var v in variants) {
         late CodecVariant cv;
@@ -133,8 +137,12 @@ CodecType getCodecType(List<Type> types, int ti) {
                 return CodecStructTypeFields(name: name, type: field.type);
               }).toList()));
         }
-        placedVariants[v.index] = cv;
-        variantsByName[cv.name] = cv;
+        try {
+          placedVariants[v.index] = cv;
+          variantsByName[cv.name] = cv;
+        } catch (e) {
+          rethrow;
+        }
       }
       return CodecVariantType(
         variants: placedVariants,

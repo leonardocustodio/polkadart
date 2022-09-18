@@ -1,5 +1,5 @@
 const bundle = <String, dynamic>{
-  'types': {
+  'types': <String, dynamic>{
     'EthereumHeaderThingWithProof': {
       'header': 'EthereumHeader',
       'ethash_proof': 'Vec<EthashProof>',
@@ -342,7 +342,7 @@ const bundle = <String, dynamic>{
   'versions': [
     {
       'minmax': [0, 22],
-      'types': {},
+      'types': <String, dynamic>{},
     },
     {
       'minmax': [23, 24],
@@ -414,7 +414,7 @@ const bundle = <String, dynamic>{
     },
     {
       'minmax': [1160, null],
-      'types': {},
+      'types': <String, dynamic>{},
     },
   ],
   'signedExtensions': {

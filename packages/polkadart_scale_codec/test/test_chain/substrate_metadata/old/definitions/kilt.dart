@@ -938,7 +938,7 @@ final types2700 = <String, dynamic>{
 };
 
 final bundle = <String, dynamic>{
-  'types': {},
+  'types': <String, dynamic>{},
   'versions': [
     {
       'minmax': [0, 8],

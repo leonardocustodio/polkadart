@@ -44,19 +44,17 @@ model.Metadata decodeMetadata(dynamic data) {
 model.Metadata decode(int version, scale.Src src) {
   var metadataVal = codec.decode(versions[version - 9], src);
   src.assertEOF();
-  var meta = model.MetadataV14.fromJson(metadataVal);
-  return model.Metadata_V14(value: meta);
+  var meta = model.Metadata.fromVersion(metadataVal, version);
+  return meta;
 }
 
 Map<String, dynamic> createScaleCodec() {
-  print('creating scale codec...');
   var registry = type_registry.OldTypeRegistry(metadata_definitions.types);
   var versions = List<int>.filled(6, 0);
   for (var i = 9; i < 15; i++) {
     versions[i - 9] = registry.use('MetadataV$i');
   }
 
-  print('scale codec created....');
   return <String, dynamic>{
     'codec': scale.Codec(registry.getTypes()),
     'versions': versions

@@ -15,7 +15,7 @@ const sharedTypes = <String, dynamic>{
 
 // these are override types for Statemine, Statemint, Westmint
 const bundle = <String, dynamic>{
-  'types': {},
+  'types': <String, dynamic>{},
   'versions': [
     {
       'minmax': [0, 3],
@@ -58,7 +58,7 @@ const bundle = <String, dynamic>{
     {
       // metadata V14
       'minmax': [500, null],
-      'types': {}
+      'types': <String, dynamic>{}
     }
   ]
 };

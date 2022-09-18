@@ -1,5 +1,5 @@
 const bundle = <String, dynamic>{
-  'types': {
+  'types': <String, dynamic>{
     'Address': 'MultiAddress',
     'LookupSource': 'MultiAddress',
     'AccountInfo': 'AccountInfoWithProviders',

@@ -83,17 +83,14 @@ List<Type> removeUnitFieldsFromStructs(List<Type> types) {
     types = types.map((type) {
       switch (type.kind) {
         case scale.TypeKind.Composite:
-          if ((type as CompositeType).fields[0].name == null) {
+          if ((type as CompositeType).fields.isEmpty ||
+              type.fields[0].name == null) {
             return type;
           }
           var fields = type.fields.where((f) {
-            var fieldType = scale.getUnwrappedType(types, f.type) as Type;
+            var fieldType = scale.getUnwrappedType(types, f.type);
             return !isUnitType(fieldType);
           }).toList();
-          /* var fields = type.fields.filter(f => {
-                        let fieldType = getUnwrappedType(types, f.type)
-                        return !isUnitType(fieldType)
-                    }); */
           if (fields.length == type.fields.length) {
             return type;
           }
@@ -110,9 +107,9 @@ List<Type> removeUnitFieldsFromStructs(List<Type> types) {
             if (v.fields.isEmpty || v.fields[0].name == null) {
               return v;
             }
-            var fields = v.fields.where((f) {
+            var fields = v.fields.where((Field f) {
               var fieldType = scale.getUnwrappedType(types, f.type);
-              return !isUnitType(fieldType as Type);
+              return !isUnitType(fieldType);
             }).toList();
 
             if (fields.length == v.fields.length) {
@@ -141,8 +138,15 @@ List<Type> removeUnitFieldsFromStructs(List<Type> types) {
   return types;
 }
 
-bool isUnitType(Type type) {
-  return type.kind == scale.TypeKind.Tuple && (type as TupleType).tuple.isEmpty;
+bool isUnitType(scale.Type type) {
+  if (type.kind == scale.TypeKind.Tuple) {
+    try {
+      return (type as scale.TupleType).tuple.isEmpty;
+    } catch (e) {
+      rethrow;
+    }
+  }
+  return false;
 }
 
 List<Type> replaceUnitOptionWithBoolean(List<Type> types) {

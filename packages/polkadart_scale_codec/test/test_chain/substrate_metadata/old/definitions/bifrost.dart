@@ -471,14 +471,14 @@ final bundle = <String, dynamic>{
     {
       'minmax': [0, 901],
       'types': {
-        ...TokenSymbol,
+        'TokenSymbol': TokenSymbol,
         ...xcmV0,
       },
     },
     {
       'minmax': [902, null],
       'types': {
-        ...TokenSymbol,
+        'TokenSymbol': TokenSymbol,
         ...xcmV1,
       },
     },

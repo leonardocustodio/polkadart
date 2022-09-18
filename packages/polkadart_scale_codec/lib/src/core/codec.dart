@@ -102,7 +102,8 @@ class Codec {
 
   Map<String, dynamic> _decodeVariant(CodecVariantType def, Src src) {
     var idx = src.u8();
-    CodecVariant? variant = def.variants[idx];
+    CodecVariant? variant =
+        idx < def.variants.length ? def.variants[idx] : null;
     if (variant == null) {
       throw UnexpectedCaseException('unknown variant index: $idx');
     }
@@ -319,7 +320,7 @@ dynamic decodeCompact(CodecCompactType type, Src src) {
     case Primitive.U32:
       return n;
     default:
-      return BigInt.from(n as int);
+      return n is int ? BigInt.from(n) : n;
   }
 }
 

@@ -253,7 +253,7 @@ class OldTypeRegistry {
     }
 
     var def = _oldTypes.types?[type.name];
-    if (isNotEmpty(def)) {
+    if (def != null) {
       return _buildFromDefinition(type.name, def);
     }
 
@@ -309,10 +309,6 @@ class OldTypeRegistry {
         'alias': use(def),
         'name': typeName,
       };
-      /* return TypeAlias(
-        alias: use(def),
-        name: typeName,
-      ); */
     } else if (def is Map && def['_enum'] != null) {
       result = _buildEnum(def);
     } else if (def is Map && def['_set'] != null) {
@@ -460,7 +456,7 @@ String convertGenericIntegerToPrimitive(String kind, texp.NamedType type) {
         'Invalid type ${type.toString()}: bit size is not specified');
   }
   var size = type.params[0];
-  if (size is int) {
+  if (size is! int) {
     throw Exception(
         'Invalid type ${type.toString()}: bit size expected as a first type parameter, e.g. ${type.name}<32>');
   }

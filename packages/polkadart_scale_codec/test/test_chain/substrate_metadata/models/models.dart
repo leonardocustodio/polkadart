@@ -3,6 +3,8 @@ library models;
 import 'dart:typed_data';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
 
+import '../types.dart';
+
 part './metadata/metadata_base.dart';
 part './metadata/metadata_versions.dart';
 part './extrinsics/extrinsics.dart';
@@ -15,3 +17,6 @@ part './events/events.dart';
 part './function/function.dart';
 part './module_metadata/module_metadata.dart';
 part './error_metadata/error_metadata.dart';
+part './storage/storage_entry_metadata.dart';
+part './storage/storage_metadata.dart';
+part './storage/storage_entry_type.dart';

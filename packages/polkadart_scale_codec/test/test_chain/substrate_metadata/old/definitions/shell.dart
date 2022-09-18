@@ -1,4 +1,4 @@
 const bundle = <String, dynamic>{
-  'types': {},
+  'types': <String, dynamic>{},
   'signedExtensions': {'DisallowSigned': 'Null'}
 };

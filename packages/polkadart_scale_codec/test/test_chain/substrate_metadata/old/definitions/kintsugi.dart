@@ -1,7 +1,7 @@
 import './orml.dart';
 
 final bundle = <String, dynamic>{
-  'types': {
+  'types': <String, dynamic>{
     ...ormlTypes,
     'H256Le': 'H256',
     'Value': 'i64',

@@ -1,5 +1,5 @@
 const bundle = <String, dynamic>{
-  'types': {
+  'types': <String, dynamic>{
     'AssetPair': {
       'asset_in': 'AssetId',
       'asset_out': 'AssetId',

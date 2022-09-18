@@ -59,7 +59,7 @@ Map<String, String> mapXcmTypes(String version) {
 }
 
 final bundle = <String, dynamic>{
-  'types': {},
+  'types': <String, dynamic>{},
   'versions': [
     {
       // 1020 is first CC3
@@ -225,7 +225,7 @@ final bundle = <String, dynamic>{
     {
       // metadata v14
       'minmax': [9106, null],
-      'types': {}
+      'types': <String, dynamic>{}
     }
   ],
   'signedExtensions': {

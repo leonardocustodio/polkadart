@@ -1,5 +1,5 @@
 const bundle = <String, dynamic>{
-  'types': {},
+  'types': <String, dynamic>{},
   'versions': [
     {
       'minmax': [0, null],

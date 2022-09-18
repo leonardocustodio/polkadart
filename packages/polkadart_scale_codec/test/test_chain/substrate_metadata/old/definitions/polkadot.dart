@@ -25,7 +25,7 @@ const addrAccountIdTypes = <String, String>{
 };
 
 final bundle = <String, dynamic>{
-  'types': {},
+  'types': <String, dynamic>{},
   'versions': [
     {
       'minmax': [0, 12],
@@ -69,7 +69,7 @@ final bundle = <String, dynamic>{
     {
       // metadata v14
       'minmax': [9110, null],
-      'types': {}
+      'types': <String, dynamic>{}
     }
   ],
   'signedExtensions': {

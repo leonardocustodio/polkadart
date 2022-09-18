@@ -343,7 +343,7 @@ const TYPES_POST_900 = <String, dynamic>{
 };
 
 final bundle = <String, dynamic>{
-  'types': {'GenericEthereumAccountId': '[u8; 20]'},
+  'types': <String, dynamic>{'GenericEthereumAccountId': '[u8; 20]'},
   'typesAlias': {
     'assetManager': {'Balance': 'TAssetBalance'},
     'xTokens': {'Balance': 'TAssetBalance'}

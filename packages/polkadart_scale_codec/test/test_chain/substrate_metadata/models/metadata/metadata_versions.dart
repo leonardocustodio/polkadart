@@ -2,9 +2,60 @@
 
 part of models;
 
+class Metadata_V9 extends Metadata {
+  @override
+  final MetadataV9 value;
+  const Metadata_V9({required this.value}) : super(kind: 'V9', value: value);
+
+  /// Creates Class Object from `Json`
+  static Metadata_V9 fromJson(Map<String, dynamic> map) =>
+      Metadata_V9(value: MetadataV9.fromJson(map));
+}
+
+class Metadata_V10 extends Metadata {
+  @override
+  final MetadataV10 value;
+  const Metadata_V10({required this.value}) : super(kind: 'V10', value: value);
+
+  /// Creates Class Object from `Json`
+  static Metadata_V10 fromJson(Map<String, dynamic> map) =>
+      Metadata_V10(value: MetadataV10.fromJson(map));
+}
+
+class Metadata_V11 extends Metadata {
+  @override
+  final MetadataV11 value;
+  const Metadata_V11({required this.value}) : super(kind: 'V11', value: value);
+
+  /// Creates Class Object from `Json`
+  static Metadata_V11 fromJson(Map<String, dynamic> map) =>
+      Metadata_V11(value: MetadataV11.fromJson(map));
+}
+
+class Metadata_V12 extends Metadata {
+  @override
+  final MetadataV12 value;
+  const Metadata_V12({required this.value}) : super(kind: 'V12', value: value);
+
+  /// Creates Class Object from `Json`
+  static Metadata_V12 fromJson(Map<String, dynamic> map) =>
+      Metadata_V12(value: MetadataV12.fromJson(map));
+}
+
+class Metadata_V13 extends Metadata {
+  @override
+  final MetadataV13 value;
+  const Metadata_V13({required this.value}) : super(kind: 'V13', value: value);
+
+  /// Creates Class Object from `Json`
+  static Metadata_V13 fromJson(Map<String, dynamic> map) =>
+      Metadata_V13(value: MetadataV13.fromJson(map));
+}
+
 class Metadata_V14 extends Metadata {
+  @override
   final MetadataV14 value;
-  const Metadata_V14({required this.value}) : super(kind: 'V14');
+  const Metadata_V14({required this.value}) : super(kind: 'V14', value: value);
 
   /// Creates Class Object from `Json`
   static Metadata_V14 fromJson(Map<String, dynamic> map) =>
@@ -39,4 +90,65 @@ class MetadataV14 {
 
     return obj;
   }
+}
+
+class MetadataV9 {
+  final List<ModuleMetadataV9> modules;
+  const MetadataV9({required this.modules});
+
+  /// Creates Class Object from `Json`
+  static MetadataV9 fromJson(Map<String, dynamic> map) => MetadataV9(
+      modules: (map['modules'] as List)
+          .map((value) => ModuleMetadataV9.fromJson(value))
+          .toList());
+}
+
+class MetadataV10 {
+  final List<ModuleMetadataV10> modules;
+  const MetadataV10({required this.modules});
+
+  /// Creates Class Object from `Json`
+  static MetadataV10 fromJson(Map<String, dynamic> map) => MetadataV10(
+      modules: (map['modules'] as List)
+          .map((value) => ModuleMetadataV10.fromJson(value))
+          .toList());
+}
+
+class MetadataV11 {
+  final ExtrinsicMetadataV11 extrinsic;
+  final List<ModuleMetadataV11> modules;
+  const MetadataV11({required this.modules, required this.extrinsic});
+
+  /// Creates Class Object from `Json`
+  static MetadataV11 fromJson(Map<String, dynamic> map) => MetadataV11(
+      modules: (map['modules'] as List)
+          .map((value) => ModuleMetadataV11.fromJson(value))
+          .toList(),
+      extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
+}
+
+class MetadataV12 {
+  final ExtrinsicMetadataV11 extrinsic;
+  final List<ModuleMetadataV12> modules;
+  const MetadataV12({required this.modules, required this.extrinsic});
+
+  /// Creates Class Object from `Json`
+  static MetadataV12 fromJson(Map<String, dynamic> map) => MetadataV12(
+      modules: (map['modules'] as List)
+          .map((value) => ModuleMetadataV12.fromJson(value))
+          .toList(),
+      extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
+}
+
+class MetadataV13 {
+  final ExtrinsicMetadataV11 extrinsic;
+  final List<ModuleMetadataV13> modules;
+  const MetadataV13({required this.modules, required this.extrinsic});
+
+  /// Creates Class Object from `Json`
+  static MetadataV13 fromJson(Map<String, dynamic> map) => MetadataV13(
+      modules: (map['modules'] as List)
+          .map((value) => ModuleMetadataV13.fromJson(value))
+          .toList(),
+      extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
 }

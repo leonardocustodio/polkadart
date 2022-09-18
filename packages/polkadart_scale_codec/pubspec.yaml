@@ -7,7 +7,7 @@ environment:
   sdk: '>=2.17.6 <3.0.0'
 
 dependencies:
-  utility: ^1.0.2 # MIT
+  utility: ^1.0.3 # MIT
   convert: ^3.0.2 # BSD-3-Clause
 
 dev_dependencies:
@@ -17,8 +17,7 @@ dev_dependencies:
   test: ^1.16.0 # BSD-3-Clause
   cryptography: ^2.0.5 # Apache-2.0
   cached: ^1.2.2 # MIT
+  build_runner:
   cached_annotation:
-  weak_map: ^2.0.4
+  weak_map: ^2.1.0
 
-dependency_override:
-  test_coverage: ^0.4.2

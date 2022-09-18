@@ -1,5 +1,5 @@
 const bundle = <String, dynamic>{
-  'types': {
+  'types': <String, dynamic>{
     'CurrencyId': {
       '_enum': ['MA']
     },
