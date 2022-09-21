@@ -14,11 +14,13 @@ class Src {
   }
 
   int _byte() {
+    late int b;
     if (_idx >= _data.length) {
       throw EOFException();
     }
+    b = _data[_idx];
     _idx += 1;
-    return _data[_idx - 1];
+    return b;
   }
 
   int i8() {
@@ -45,7 +47,7 @@ class Src {
     return _byte() +
         _byte() * (pow(2, 8) as int) +
         _byte() * (pow(2, 16) as int) +
-        (_byte() << 24);
+        (_byte() << 24).toSigned(32);
   }
 
   int u32() {

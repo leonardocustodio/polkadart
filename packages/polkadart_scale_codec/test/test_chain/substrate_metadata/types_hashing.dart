@@ -177,7 +177,7 @@ class TypeHasher {
       case scale.TypeKind.Tuple:
         return _hashTuple((type as TupleType).tuple, parent);
       case scale.TypeKind.Composite:
-        if ((type as CompositeType).fields.isNotEmpty &&
+        if ((type as CompositeType).fields.isEmpty ||
             type.fields[0].name == null) {
           return _hashTuple(
               type.fields.map((f) {

@@ -108,7 +108,7 @@ CodecType getCodecType(List<Type> types, int ti) {
       List<CodecVariant?> placedVariants = <CodecVariant?>[]..length = len;
       for (var v in variants) {
         late CodecVariant cv;
-        if (v.fields.isNotEmpty && v.fields[0].name == null) {
+        if (v.fields.isEmpty || v.fields[0].name == null) {
           switch (v.fields.length) {
             case 0:
               cv = CodecEmptyVariant(name: v.name, index: v.index);

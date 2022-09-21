@@ -109,22 +109,22 @@ class Codec {
     }
     switch (variant.kind) {
       case CodecVariantKind.empty:
-        return <String, dynamic>{'kind': variant.name};
+        return <String, dynamic>{'__kind': variant.name};
       case CodecVariantKind.tuple:
         return <String, dynamic>{
-          'kind': variant.name,
+          '__kind': variant.name,
           'value': _decodeTuple((variant as CodecTupleVariant).def, src)
         };
       case CodecVariantKind.value:
         return <String, dynamic>{
-          'kind': variant.name,
+          '__kind': variant.name,
           'value': decode((variant as CodecValueVariant).type, src)
         };
       case CodecVariantKind.struct:
         {
           Map<String, dynamic> value =
               _decodeStruct((variant as CodecStructVariant).def, src);
-          value['kind'] = variant.name;
+          value['__kind'] = variant.name;
           return value;
         }
       default:
@@ -224,11 +224,11 @@ class Codec {
 
   void _encodeVariant(CodecVariantType def, dynamic val, Sink sink) {
     assertionCheck(val is Map<String, dynamic>);
-    assertionCheck(val['kind'] is String, 'not a variant type value');
+    assertionCheck(val['__kind'] is String, 'not a variant type value');
 
-    CodecVariant? variant = def.variantsByName[val['kind']];
+    CodecVariant? variant = def.variantsByName[val['__kind']];
     if (variant == null) {
-      throw Exception('Unknown variant: ${val['kind']}');
+      throw Exception('Unknown variant: ${val['__kind']}');
     }
     sink.u8(variant.index);
     switch (variant.kind) {

@@ -8,7 +8,7 @@ class Si0TypeDefPrimitive {
 
   /// Creates Class Object from `Json`
   static Si0TypeDefPrimitive fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Bool':
         return Si0TypeDefPrimitive_Bool();
       case 'Char':

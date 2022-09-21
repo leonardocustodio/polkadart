@@ -95,30 +95,30 @@ class JsonCodec {
   Map<String, dynamic> _decodeVariant(CodecVariantType def, dynamic value) {
     assertionCheck(isObject(value));
     assertionCheck(value is Map);
-    assertionCheck(value['kind'] is String);
-    CodecVariant? variant = def.variantsByName[value['kind']];
+    assertionCheck(value['__kind'] is String);
+    CodecVariant? variant = def.variantsByName[value['__kind']];
     if (variant == null) {
-      throw Exception('Unknown variant ${value['kind']}');
+      throw Exception('Unknown variant ${value['__kind']}');
     }
     switch (variant.kind) {
       case CodecVariantKind.empty:
         return <String, dynamic>{
-          'kind': value['kind'],
+          '__kind': value['__kind'],
         };
       case CodecVariantKind.value:
         return <String, dynamic>{
-          'kind': value['kind'],
+          '__kind': value['__kind'],
           'value': decode((variant as CodecValueVariant).type, value['value'])
         };
       case CodecVariantKind.tuple:
         return <String, dynamic>{
-          'kind': value['kind'],
+          '__kind': value['__kind'],
           'value': _decodeTuple((variant as CodecTupleVariant).def, value.value)
         };
       case CodecVariantKind.struct:
         Map<String, dynamic> s =
             _decodeStruct((variant as CodecStructVariant).def, value);
-        s['kind'] = value['kind'];
+        s['__kind'] = value['__kind'];
         return s;
       default:
         throw UnexpectedCaseException(variant.kind);

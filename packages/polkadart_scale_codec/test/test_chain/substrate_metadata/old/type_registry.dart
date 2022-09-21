@@ -321,7 +321,8 @@ class OldTypeRegistry {
   }
 
   int _buildSet(dynamic def) {
-    var len = def?['_set']?['_bitLength'] == 0 ? 8 : def['_set']['_bitLength'];
+    var len =
+        (def?['_set']?['_bitLength'] ?? 0) == 0 ? 8 : def['_set']['_bitLength'];
     switch (len) {
       case 8:
       case 16:

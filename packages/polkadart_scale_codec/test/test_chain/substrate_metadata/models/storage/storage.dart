@@ -17,7 +17,7 @@ class StorageEntryModifierV9 {
 
   /// Creates Class Object from `Json`
   static StorageEntryModifierV9 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Optional':
         return StorageEntryModifierV9_Optional();
       case 'Default':
@@ -49,7 +49,7 @@ class StorageEntryTypeV14 {
 
   /// Creates Class Object from `Json`
   static StorageEntryTypeV14 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Plain':
         return StorageEntryTypeV14_Plain.fromJson(map);
       case 'Map':
@@ -116,7 +116,7 @@ class StorageHasherV9 {
 
   /// Creates Class Object from `Json`
   static StorageHasherV9 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Blake2_128':
         return StorageHasherV9_Blake2_128();
       case 'Blake2_256':
@@ -159,7 +159,7 @@ class StorageHasherV10 {
 
   /// Creates Class Object from `Json`
   static StorageHasherV10 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Blake2_128':
         return StorageHasherV10_Blake2_128();
       case 'Blake2_256':
@@ -208,7 +208,7 @@ class StorageHasherV11 {
 
   /// Creates Class Object from `Json`
   static StorageHasherV11 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Blake2_128':
         return StorageHasherV11_Blake2_128();
       case 'Blake2_256':

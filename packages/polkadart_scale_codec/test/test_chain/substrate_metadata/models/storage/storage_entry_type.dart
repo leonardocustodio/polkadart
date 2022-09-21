@@ -19,7 +19,7 @@ class StorageEntryTypeV9 {
 
   /// Creates Class Object from `Json`
   static StorageEntryTypeV9 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Plain':
         return StorageEntryTypeV9_Plain.fromJson(map);
       case 'Map':
@@ -104,7 +104,7 @@ class StorageEntryTypeV10 {
 
   /// Creates Class Object from `Json`
   static StorageEntryTypeV10 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Plain':
         return StorageEntryTypeV10_Plain.fromJson(map);
       case 'Map':
@@ -189,7 +189,7 @@ class StorageEntryTypeV11 {
 
   /// Creates Class Object from `Json`
   static StorageEntryTypeV11 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Plain':
         return StorageEntryTypeV11_Plain.fromJson(map);
       case 'Map':
@@ -274,7 +274,7 @@ class StorageEntryTypeV13 {
 
   /// Creates Class Object from `Json`
   static StorageEntryTypeV13 fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Plain':
         return StorageEntryTypeV13_Plain.fromJson(map);
       case 'Map':

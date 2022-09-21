@@ -468,13 +468,20 @@ abstract class FromOld implements _$FromOld {
   void _defineGenericCall() {
     _registry.define('GenericCall', () {
       var variants = <Variant>[];
-      _forEachPallet((AnyOldModule mod) => mod.calls,
-          (AnyOldModule mod, int index) {
-        variants.add(Variant(
-            name: mod.name,
-            index: index,
-            fields: [Field(type: _makeCallEnum(mod.name, mod.calls!))]));
-      });
+      _forEachPallet(
+        (AnyOldModule mod) => mod.calls,
+        (AnyOldModule mod, int index) {
+          variants.add(
+            Variant(
+              name: mod.name,
+              index: index,
+              fields: [
+                Field(type: _makeCallEnum(mod.name, mod.calls!)),
+              ],
+            ),
+          );
+        },
+      );
       return VariantType(variants: variants);
     });
   }

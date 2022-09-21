@@ -31,20 +31,20 @@ OldTypes getTypesFromBundle(OldTypesBundle bundle, int specVersion) {
   for (var i = 0; i < bundle.versions!.length; i++) {
     var override = bundle.versions![i];
     if (isWithinRange(override.minmax, specVersion)) {
-      types.types = <String, dynamic>{
-        if (override.types != null) ...override.types!,
-        if (types.types != null) ...types.types!
-      };
+      types.types ??= <String, dynamic>{};
+      if (override.types != null) {
+        types.types!.addAll(override.types!);
+      }
 
-      types.typesAlias = OldTypesAlias(<String, Map<String, String>>{
-        if (override.typesAlias?.data != null) ...override.typesAlias!.data,
-        if (types.typesAlias != null) ...types.typesAlias!
-      });
+      types.typesAlias ??= OldTypesAlias(<String, Map<String, String>>{});
+      if (override.typesAlias?.data != null) {
+        types.typesAlias!.addAll(override.typesAlias!.data);
+      }
 
-      types.signedExtensions = <String, String>{
-        if (override.signedExtensions != null) ...override.signedExtensions!,
-        if (types.signedExtensions != null) ...types.signedExtensions!
-      };
+      types.signedExtensions ??= <String, String>{};
+      if (override.signedExtensions != null) {
+        types.signedExtensions!.addAll(override.signedExtensions!);
+      }
     }
   }
 

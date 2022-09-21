@@ -42,7 +42,7 @@ class Si1TypeDef {
 
   /// Creates Class Object from `Json`
   static Si1TypeDef fromJson(Map<String, dynamic> map) {
-    switch (map['kind']) {
+    switch (map['__kind']) {
       case 'Composite':
         return Si1TypeDef_Composite.fromJson(map);
       case 'Variant':
