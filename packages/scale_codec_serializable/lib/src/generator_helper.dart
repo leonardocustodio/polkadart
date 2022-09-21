@@ -10,15 +10,4 @@ class GeneratorHelper {
   String generate() => '''
         ${classTemplate.generate()}
       ''';
-
-  // if (config.shouldCreateDecodeMethod) {
-  //   yield* createDecode(accessibleFields);
-  // }
-
-  // if (config.shouldCreateEncodeMethod) {
-  //   yield* createEncode(accessibleFields);
-  // }
-
-  // yield* _addedMembers;
-  // yield '}';
 }

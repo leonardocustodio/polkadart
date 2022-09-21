@@ -7,6 +7,9 @@ class DecodeMethodTemplate {
   const DecodeMethodTemplate(this.scaleCodecClass);
 
   String generate() {
+    if (!scaleCodecClass.shouldCreateDecodeMethod) {
+      return '';
+    }
     final constructorParamTemplates =
         AllParamsTemplate(scaleCodecClass.constructor.params);
 

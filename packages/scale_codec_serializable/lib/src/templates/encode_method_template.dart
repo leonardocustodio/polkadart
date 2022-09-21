@@ -5,7 +5,12 @@ class EncodeMethodTemplate {
 
   const EncodeMethodTemplate(this.scaleCodecClass);
 
-  String generate() => '''
+  String generate() {
+    if (!scaleCodecClass.shouldCreateEncodeMethod) {
+      return '';
+    }
+    return '''
     String encode() => '';
     ''';
+  }
 }
