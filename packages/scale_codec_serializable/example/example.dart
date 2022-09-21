@@ -2,12 +2,12 @@ import 'package:scale_codec_annotation/scale_codec_annotation.dart';
 
 part 'example.g.dart';
 
-@ScaleCodecSerializable(
-  shouldCreateDecodeMethod: true,
-  shouldCreateEncodeMethod: true,
-)
+@ScaleCodecSerializable()
 class Person {
-  final String firstName, lastName;
+  final String firstName;
+  final String lastName;
+  final bool isYoung;
 
-  Person(this.firstName, this.lastName);
+  Person(
+      {required this.firstName, required this.lastName, this.isYoung = false});
 }

@@ -1,7 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'helper_core.dart';
 
-abstract class EncoderHelper implements HelperCore {
+abstract class EncoderHelper {
   /// Write encode method implementation as example above:
   ///
   /// ```dart

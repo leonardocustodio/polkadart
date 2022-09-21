@@ -1,8 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 
-import 'helper_core.dart';
-
-abstract class DecodeHelper implements HelperCore {
+abstract class DecodeHelper {
   /// Write decode method implementation as example above:
   ///
   /// ```dart
@@ -15,8 +13,7 @@ abstract class DecodeHelper implements HelperCore {
       Map<String, FieldElement> accessibleFields) sync* {
     //TODO: write decode complete implementation
 
-    final buffer = StringBuffer()
-      ..writeln('$targetClassReference decode(String encodedData) => ');
+    final buffer = StringBuffer()..writeln(' decode(String encodedData) => ');
 
     _writeDefaultConstructor(buffer, accessibleFields);
 
@@ -25,7 +22,7 @@ abstract class DecodeHelper implements HelperCore {
 
   void _writeDefaultConstructor(
       StringBuffer stringBuffer, Map<String, FieldElement> fields) {
-    stringBuffer.write('$targetClassReference(');
+    stringBuffer.write('(');
 
     for (var field in fields.keys) {
       final fieldName = field.replaceFirst('_', '');

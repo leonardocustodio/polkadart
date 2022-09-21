@@ -4,34 +4,28 @@ import 'package:scale_codec_annotation/scale_codec_annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'generator_helper.dart';
+import 'models/scale_codec_class.dart';
 import 'type_helpers/config_types.dart';
+import 'utils/utils.dart';
 
 class ScaleCodecSerializableGenerator
     extends GeneratorForAnnotation<ScaleCodecSerializable> {
-  final ClassConfig _config;
-  ScaleCodecSerializableGenerator.withConfig(this._config);
+  final ClassConfig config;
+  const ScaleCodecSerializableGenerator({required this.config});
 
   @override
-  Iterable<String> generateForAnnotatedElement(
+  String generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
-    if (!element.library!.isNonNullableByDefault) {
-      throw InvalidGenerationSourceError(
-          'Generator cannot target libraries that have not been migrated to '
-          'null-safety.',
-          element: element);
-    }
-
     if (element is! ClassElement || element is EnumElement) {
       throw InvalidGenerationSourceError(
-          '`@ScaleCodecSerializable` can only be used on classes. ',
+          '`@ScaleCodecSerializable` can only be used on classes.',
           element: element);
     }
 
-    final helper = GeneratorHelper(
-      element,
-      _config,
-      annotation,
-    );
+    final mergedConfig = mergeConfig(config: config, reader: annotation);
+    final scaleCodecClass = ScaleCodecClass.fromElement(element, mergedConfig);
+
+    final helper = GeneratorHelper(scaleCodecClass);
     return helper.generate();
   }
 }

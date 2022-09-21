@@ -9,13 +9,12 @@ part of 'example.dart';
 // **************************************************************************
 
 extension _$PersonExtension on Person {
-  String get firstNameEncoded => 'TODO: encode String type';
-  String get lastNameEncoded => 'TODO: encode String type';
-
-  Person decode(String encodedData) => Person(
-        firstName,
-        lastName,
-      );
+  String get firstNameEncoded => 'TODO: encode firstName';
+  String get lastNameEncoded => 'TODO: encode lastName';
+  String get isYoungEncoded => 'TODO: encode isYoung';
 
   String encode() => '';
+
+  Person decode(String encodedData) =>
+      Person(firstName: firstName, lastName: lastName, isYoung: isYoung);
 }
