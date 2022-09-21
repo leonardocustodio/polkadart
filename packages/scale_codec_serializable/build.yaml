@@ -3,6 +3,8 @@ targets:
     builders:
       scale_codec_serializable:
         enabled: true
+        generate_for:
+          - example/*
 
       source_gen|combining_builder:
         options:
@@ -11,9 +13,8 @@ targets:
 
 builders:
   scale_codec_serializable:
-    target: ":scale_codec_serializable"
     import: "package:scale_codec_serializable/builder.dart"
-    builder_factories: ["scaleCodecSerializable"]
+    builder_factories: ["scaleCodecBuilder"]
     build_extensions: {".dart": [".g.dart"] }
     build_to: cache
     auto_apply: dependents

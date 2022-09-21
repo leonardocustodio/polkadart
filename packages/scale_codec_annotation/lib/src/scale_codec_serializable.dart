@@ -1,27 +1,25 @@
 class ScaleCodecSerializable {
   /// If `true` (the default), a static `.decode()` method
   /// is created in the generated part file.
-  final bool shouldCreateDecodeMethod;
+  final bool? shouldCreateDecodeMethod;
 
-  /// If `true` (the default), a static `.encode()` method
-  /// is created in the generated part file.
-  final bool shouldCreateEncodeMethod;
+  /// If `true` (the default), a static `.encode()` method is created in
+  /// the generated part file.
+  final bool? shouldCreateEncodeMethod;
 
   /// Creates a new [ScaleCodecSerializable] instance
   const ScaleCodecSerializable({
-    this.shouldCreateDecodeMethod = true,
-    this.shouldCreateEncodeMethod = true,
+    this.shouldCreateDecodeMethod,
+    this.shouldCreateEncodeMethod,
   });
 
   /// Creates a new [ScaleCodecSerializable] instance.
   ///
-  /// Used with `BuilderOptions.config` when the builder configuration
-  /// on `build.yaml` is used to provide custom configurations instead
-  /// of setting arguments on the associated annotation class.
+  /// Used to load data from [BuilderOptions] on `build.yaml`.
   factory ScaleCodecSerializable.fromMap(Map<String, dynamic> map) {
     return ScaleCodecSerializable(
-      shouldCreateDecodeMethod: map['should_create_decode_method'] ?? true,
-      shouldCreateEncodeMethod: map['should_create_encode_method'] ?? true,
+      shouldCreateDecodeMethod: map['should_create_decode_method'] as bool?,
+      shouldCreateEncodeMethod: map['should_create_encode_method'] as bool?,
     );
   }
 }
