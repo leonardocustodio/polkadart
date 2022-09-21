@@ -13,15 +13,24 @@ void assertClassIsNotAbstract(ClassElement element) {
   }
 }
 
-/// Check if the class has only `one` default `const factory` constructor.
+/// Check if the class has only `one` default `const` constructor.
 ///
 /// Used to avoid errors when decoding `Substrate` classes data.
-void assertOneConstFactoryConstructor(ClassElement element) {
+void assertOneConstConstructor(ClassElement element) {
   final constructorElements = element.constructors;
 
   if (constructorElements.length != 1) {
     throw InvalidGenerationSourceError(
       '[ERROR] To many constructors in ${element.name} class. Class can have only one constructor',
+      element: element,
+    );
+  }
+
+  final constructor = constructorElements.first;
+
+  if (constructor.isFactory) {
+    throw InvalidGenerationSourceError(
+      '[ERROR] Class ${element.name} cant have one factory constructor',
       element: element,
     );
   }

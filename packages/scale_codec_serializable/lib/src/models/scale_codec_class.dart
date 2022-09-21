@@ -20,7 +20,7 @@ class ScaleCodecClass {
   factory ScaleCodecClass.fromElement(
       ClassElement element, ClassConfig config) {
     assertClassIsNotAbstract(element);
-    assertOneConstFactoryConstructor(element);
+    assertOneConstConstructor(element);
 
     final constructor = element.constructors.map(Constructor.fromElement).first;
 

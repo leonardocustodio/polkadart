@@ -8,6 +8,14 @@ Future<void> main() async {
 
   const expectedAnnotatedTests = {
     'EnumExample',
+    'MultipleConstructors',
+    'FactoryConstructor',
+    'AbstractClass',
+    'ValidClassWithAllMethods',
+    'ValidClassWithEncodeMethod',
+    'ValidClassWithDecodeMethod',
+    'ValidClassWithoutMethods',
+    'ValidClass',
   };
 
   final reader = await initializeLibraryReaderForDirectory(
