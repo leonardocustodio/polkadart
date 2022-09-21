@@ -6,16 +6,16 @@ import 'package:path/path.dart' as path;
 import 'package:cached_annotation/cached_annotation.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
-import 'package:test/expect.dart';
-import 'package:test/scaffolding.dart';
-import '../model/spec_version.model.dart';
-import '../substrate_metadata/events_and_calls.dart' as eac;
-import '../../test_chain/substrate_metadata/codec.dart';
-import '../substrate_metadata/chainDescription.dart';
-import '../substrate_metadata/io.dart';
-import '../substrate_metadata/old/types_bundle.dart';
-import '../utils/lines.dart';
-import '../utils/spec_version_maker.dart';
+import 'package:substrate_metadata/chainDescription.dart';
+import 'package:substrate_metadata/codec.dart';
+import 'package:substrate_metadata/events_and_calls.dart';
+import 'package:substrate_metadata/io.dart';
+import 'package:substrate_metadata/models/models.dart';
+import 'package:substrate_metadata/old/types_bundle.dart';
+import 'package:substrate_metadata/schema/spec_version.model.dart';
+import 'package:substrate_metadata/utils/lines.dart';
+import 'package:substrate_metadata/utils/spec_version_maker.dart';
+import 'package:test/test.dart';
 
 part 'chain.cached.dart';
 
@@ -149,8 +149,8 @@ abstract class Chain implements _$Chain {
         description: description,
         codec: scale_codec.Codec(description.types),
         jsonCodec: scale_codec.JsonCodec(description.types),
-        events: eac.Registry(description.types, description.event),
-        calls: eac.Registry(description.types, description.call),
+        events: Registry(description.types, description.event),
+        calls: Registry(description.types, description.call),
 
         /// passing params for super-class i.e. SpecVersion
         metadata: sv.metadata,
@@ -193,51 +193,4 @@ abstract class Chain implements _$Chain {
   String _readFile(String fileName) {
     return File(_item(fileName)).readAsStringSync();
   }
-}
-
-class RawBlockEvents {
-  final int blockNumber;
-  final String events;
-  const RawBlockEvents({required this.blockNumber, required this.events});
-
-  @override
-  bool operator ==(Object other) {
-    return other is RawBlockEvents &&
-        blockNumber == other.blockNumber &&
-        events == other.events;
-  }
-
-  @override
-  int get hashCode => blockNumber.hashCode ^ events.hashCode;
-}
-
-class DecodedBlockEvents {
-  final int blockNumber;
-  final List<dynamic> events;
-  const DecodedBlockEvents({required this.blockNumber, required this.events});
-}
-
-class VersionDescription extends SpecVersion {
-  final ChainDescription description;
-  final scale_codec.Codec codec;
-  final scale_codec.JsonCodec jsonCodec;
-  final eac.Registry events;
-  final eac.Registry calls;
-
-  VersionDescription(
-      {
-
-      /// local params
-      required this.description,
-      required this.codec,
-      required this.jsonCodec,
-      required this.events,
-      required this.calls,
-
-      /// Super params
-      required super.metadata,
-      required super.specName,
-      required super.specVersion,
-      required super.blockNumber,
-      required super.blockHash});
 }

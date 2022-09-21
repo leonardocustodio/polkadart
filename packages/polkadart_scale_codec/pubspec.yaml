@@ -4,20 +4,21 @@ version: 1.0.0
 homepage: https://github.com/rankanizer/polkadart
 
 environment:
-  sdk: '>=2.17.6 <3.0.0'
+  sdk: ">=2.17.6 <3.0.0"
 
 dependencies:
   utility: ^1.0.3 # MIT
   convert: ^3.0.2 # BSD-3-Clause
 
 dev_dependencies:
-  json_schema2: ^2.0.2+9 # MIT
-  path: ^1.8.2 # BSD-3-Clause
-  lints: ^2.0.0 # BSD-3-Clause
-  test: ^1.16.0 # BSD-3-Clause
-  cryptography: ^2.0.5 # Apache-2.0
+  build_runner: ^2.2.1 # BSD-3-Clause
   cached: ^1.2.2 # MIT
-  build_runner:
-  cached_annotation:
-  weak_map: ^2.1.0
-
+  cached_annotation: ^1.2.0 # MIT
+  lints: ^2.0.0 # BSD-3-Clause
+  path: ^1.8.2 # BSD-3-Clause
+  substrate_metadata:
+    git:
+      url: https://github.com/rankanizer/polkadart.git
+      ref: feature/substrate_metadata
+      path: packages/substrate_metadata
+  test: ^1.16.0 # BSD-3-Clause
