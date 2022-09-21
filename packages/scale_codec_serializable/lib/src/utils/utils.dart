@@ -1,7 +1,7 @@
 import 'package:scale_codec_annotation/scale_codec_annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../type_helpers/config_types.dart';
+import '../config.dart';
 
 /// Return an instance of [ScaleCodecSerializable] corresponding to the
 /// provided [reader].

@@ -1,6 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 
-import '../type_helpers/config_types.dart';
+import '../config.dart';
 import '../utils/asserts.dart';
 import 'constructor.dart';
 

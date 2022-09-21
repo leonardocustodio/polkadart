@@ -3,7 +3,7 @@ import 'package:scale_codec_annotation/scale_codec_annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'scale_codec_serializable.dart';
-import 'src/type_helpers/config_types.dart';
+import 'src/config.dart';
 
 /// Returns a [Builder] for use within a `package:build_runner`
 ///

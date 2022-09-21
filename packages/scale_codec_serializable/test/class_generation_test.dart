@@ -1,6 +1,6 @@
 import 'package:path/path.dart' as p;
 import 'package:scale_codec_serializable/scale_codec_serializable.dart';
-import 'package:scale_codec_serializable/src/type_helpers/config_types.dart';
+import 'package:scale_codec_serializable/src/config.dart';
 import 'package:source_gen_test/source_gen_test.dart';
 
 Future<void> main() async {
