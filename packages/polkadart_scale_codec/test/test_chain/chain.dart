@@ -1,4 +1,4 @@
-//ignore_for_file: unused_element
+// ignore_for_file: unused_element
 
 import 'dart:convert';
 import 'dart:io';
@@ -9,6 +9,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
 import 'package:substrate_metadata/chainDescription.dart';
 import 'package:substrate_metadata/codec.dart';
 import 'package:substrate_metadata/events_and_calls.dart';
+import 'package:substrate_metadata/extrinsic.dart';
 import 'package:substrate_metadata/io.dart';
 import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/old/types_bundle.dart';
@@ -21,10 +22,10 @@ part 'chain.cached.dart';
 
 @WithCache()
 abstract class Chain implements _$Chain {
-  factory Chain(String name) = _Chain;
+  factory Chain(String chainName) = _Chain;
 
   String _item(String name) {
-    return path.join('./test/chain', this.name, name);
+    return path.join('./test/chain', chainName, name);
   }
 
   @Cached()
@@ -43,6 +44,13 @@ abstract class Chain implements _$Chain {
   }
 
   @Cached()
+  List<RawBlock> getBlocks() {
+    return _readLines('blocks.jsonl')
+        .map((dynamic map) => RawBlock.fromMap(map))
+        .toList();
+  }
+
+  @Cached()
   List<RawBlockEvents> events() {
     return _readLines('events.jsonl')
         .map((dynamic map) => RawBlockEvents(
@@ -50,14 +58,77 @@ abstract class Chain implements _$Chain {
         .toList();
   }
 
+  @Cached()
+  List<DecodedBlockExtrinsics> decodedExtrinsics() {
+    var blocks = getBlocks();
+    return blocks.map((b) {
+      var d = getVersion(b.blockNumber);
+      var extrinsics = b.extrinsics.map((hex) {
+        return decodeExtrinsic(hex, d.description, d.codec);
+      }).toList();
+      return DecodedBlockExtrinsics(
+          blockNumber: b.blockNumber, extrinsics: extrinsics);
+    }).toList();
+  }
+
+  void testExtrinsicsScaleEncodingDecoding() {
+    var decoded = decodedExtrinsics();
+
+    var encoded = flatten(decoded.map((b) {
+      var d = getVersion(b.blockNumber);
+      var extrinsics = b.extrinsics.map((ex) {
+        return scale_codec
+            .encodeHex(encodeExtrinsic(ex, d.description, d.codec));
+      }).toList();
+      return RawBlock(blockNumber: b.blockNumber, extrinsics: extrinsics);
+    }).map((b) {
+      return b.extrinsics.asMap().entries.map((mapEntry) {
+        return <String, dynamic>{
+          'blockNumber': b.blockNumber,
+          'idx': mapEntry.key,
+          'extrinsic': mapEntry.value
+        };
+      }).toList();
+    }).toList());
+
+    var original = flatten(getBlocks().map((b) {
+      return RawBlock(blockNumber: b.blockNumber, extrinsics: b.extrinsics);
+    }).map((b) {
+      return b.extrinsics.asMap().entries.map((mapEntry) {
+        return <String, dynamic>{
+          'blockNumber': b.blockNumber,
+          'idx': mapEntry.key,
+          'extrinsic': mapEntry.value
+        };
+      }).toList();
+    }).toList());
+
+    test('Extrinsics Encode/Decode', () {
+      for (var i = 0; i < encoded.length; i++) {
+        try {
+          expect(encoded[i], equals(original[i]));
+        } catch (e) {
+          /// FIXME SQD-749
+          var b = original[i];
+          var d = getVersion(b['blockNumber']);
+          var fromEncoded =
+              decodeExtrinsic(encoded[i]['extrinsic'], d.description, d.codec);
+          var fromOriginal =
+              decodeExtrinsic(b['extrinsic'], d.description, d.codec);
+          expect(fromEncoded, equals(fromOriginal));
+        }
+      }
+    });
+  }
+
   void testConstantsScaleEncodingDecoding() {
-    switch (name) {
+    switch (chainName) {
       // fixme
       case 'heiko':
       case 'kintsugi':
         return;
     }
-    for (final des in description()) {
+    for (final des in getDescription()) {
       for (final pallet in des.description.constants.keys) {
         test(
             ' Constants Encode/Decode  Spec-Version: ${des.specVersion}  Pallet: $pallet',
@@ -71,6 +142,16 @@ abstract class Chain implements _$Chain {
         });
       }
     }
+  }
+
+  List<Map<String, dynamic>> flatten(List<List<Map<String, dynamic>>> list) {
+    var result = <Map<String, dynamic>>[];
+    for (var value in list) {
+      for (var val in value) {
+        result.add(val);
+      }
+    }
+    return result;
   }
 
   List<dynamic> _readLines(String name) {
@@ -113,7 +194,7 @@ abstract class Chain implements _$Chain {
 
   @Cached()
   VersionDescription getVersion(int blockNumber) {
-    var description = this.description();
+    var description = getDescription();
     int next = -1;
     for (var index = 0; index < description.length; index++) {
       if (description[index].blockNumber >= blockNumber) {
@@ -135,7 +216,7 @@ abstract class Chain implements _$Chain {
   }
 
   @Cached()
-  List<VersionDescription> description() {
+  List<VersionDescription> getDescription() {
     return versions().map((SpecVersion sv) {
       var metadata = decodeMetadata(sv.metadata);
       var typesBundle = getOldTypesBundle(sv.specName);

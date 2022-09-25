@@ -264,13 +264,13 @@ Uint8List decodeBytes(Src src) {
 }
 
 void encodeBytes(dynamic val, Sink sink) {
-  assertionCheck(val is Uint8List);
+  assertionCheck(val is List);
   sink.compact(val.length);
   sink.bytes(val);
 }
 
 void encodeBytesArray(CodecBytesArrayType def, dynamic val, Sink sink) {
-  assertionCheck(val is Uint8List && val.length == def.len);
+  assertionCheck(val is List && val.length == def.len);
   sink.bytes(val);
 }
 
@@ -280,7 +280,7 @@ Uint8List decodeBitSequence(Src src) {
 }
 
 void encodeBitSequence(dynamic bits, Sink sink) {
-  assertionCheck(bits is Uint8List);
+  assertionCheck(bits is List);
   sink.compact(bits.length * 8);
   sink.bytes(bits);
 }

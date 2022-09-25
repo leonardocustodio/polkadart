@@ -9,21 +9,23 @@ part of 'chain.dart';
 // **************************************************************************
 
 abstract class _$Chain {
-  String get name;
+  String get chainName;
 }
 
 class _Chain with Chain implements _$Chain {
-  _Chain(this.name);
+  _Chain(this.chainName);
 
   @override
-  final String name;
+  final String chainName;
 
   final _versionsCached = <String, List<SpecVersion>>{};
   final _blockNumbersCached = <String, List<int>>{};
+  final _getBlocksCached = <String, List<RawBlock>>{};
   final _eventsCached = <String, List<RawBlockEvents>>{};
+  final _decodedExtrinsicsCached = <String, List<DecodedBlockExtrinsics>>{};
   final _decodedEventsCached = <String, List<DecodedBlockEvents>>{};
   final _getVersionCached = <String, VersionDescription>{};
-  final _descriptionCached = <String, List<VersionDescription>>{};
+  final _getDescriptionCached = <String, List<VersionDescription>>{};
 
   @override
   List<SpecVersion> versions() {
@@ -68,6 +70,27 @@ class _Chain with Chain implements _$Chain {
   }
 
   @override
+  List<RawBlock> getBlocks() {
+    final cachedValue = _getBlocksCached[""];
+    if (cachedValue == null) {
+      final List<RawBlock> toReturn;
+      try {
+        final result = super.getBlocks();
+
+        toReturn = result;
+      } catch (_) {
+        rethrow;
+      } finally {}
+
+      _getBlocksCached[""] = toReturn;
+
+      return toReturn;
+    } else {
+      return cachedValue;
+    }
+  }
+
+  @override
   List<RawBlockEvents> events() {
     final cachedValue = _eventsCached[""];
     if (cachedValue == null) {
@@ -81,6 +104,27 @@ class _Chain with Chain implements _$Chain {
       } finally {}
 
       _eventsCached[""] = toReturn;
+
+      return toReturn;
+    } else {
+      return cachedValue;
+    }
+  }
+
+  @override
+  List<DecodedBlockExtrinsics> decodedExtrinsics() {
+    final cachedValue = _decodedExtrinsicsCached[""];
+    if (cachedValue == null) {
+      final List<DecodedBlockExtrinsics> toReturn;
+      try {
+        final result = super.decodedExtrinsics();
+
+        toReturn = result;
+      } catch (_) {
+        rethrow;
+      } finally {}
+
+      _decodedExtrinsicsCached[""] = toReturn;
 
       return toReturn;
     } else {
@@ -131,19 +175,19 @@ class _Chain with Chain implements _$Chain {
   }
 
   @override
-  List<VersionDescription> description() {
-    final cachedValue = _descriptionCached[""];
+  List<VersionDescription> getDescription() {
+    final cachedValue = _getDescriptionCached[""];
     if (cachedValue == null) {
       final List<VersionDescription> toReturn;
       try {
-        final result = super.description();
+        final result = super.getDescription();
 
         toReturn = result;
       } catch (_) {
         rethrow;
       } finally {}
 
-      _descriptionCached[""] = toReturn;
+      _getDescriptionCached[""] = toReturn;
 
       return toReturn;
     } else {

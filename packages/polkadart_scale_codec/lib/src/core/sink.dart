@@ -3,7 +3,7 @@ part of polkadart_scale_codec_core;
 abstract class Sink {
   void write(int byte);
 
-  void bytes(Uint8List b);
+  void bytes(List b);
 
   void _uncheckedU16(int val) {
     write(val & 0xff);
@@ -194,8 +194,8 @@ class HexSink extends Sink {
   }
 
   @override
-  void bytes(Uint8List b) {
-    _hex += encodeHex(b.toList()).replaceFirst(RegExp(r'0x'), '');
+  void bytes(List b) {
+    _hex += encodeHex(b.cast<int>()).replaceFirst(RegExp(r'0x'), '');
   }
 
   String toHex() {
@@ -223,9 +223,9 @@ class ByteSink extends Sink {
   }
 
   @override
-  void bytes(Uint8List b) {
+  void bytes(List b) {
     _alloc(b.length);
-    _data.setAll(_pos, b);
+    _data.setAll(_pos, b.cast<int>());
     _pos += b.length;
   }
 
