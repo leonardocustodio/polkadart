@@ -24,10 +24,9 @@ class ClassConfig {
   factory ClassConfig.fromScaleCodecSerializable(
           ScaleCodecSerializable config) =>
       ClassConfig(
-          shouldCreateDecodeMethod: config.shouldCreateDecodeMethod ??
-              ClassConfig.defaults.shouldCreateDecodeMethod,
-          shouldCreateEncodeMethod: config.shouldCreateEncodeMethod ??
-              ClassConfig.defaults.shouldCreateEncodeMethod);
+        shouldCreateDecodeMethod: config.shouldCreateDecodeMethod,
+        shouldCreateEncodeMethod: config.shouldCreateEncodeMethod,
+      );
 
   /// An instance of [ScaleCodecSerializable] with
   /// all fields set to their default values.
