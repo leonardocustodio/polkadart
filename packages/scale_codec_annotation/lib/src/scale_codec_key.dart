@@ -7,12 +7,12 @@ class ScaleCodecKey {
   ///
   /// If `false`, the field will be considered for
   /// serialization.
-  final bool shouldIgnore;
+  final bool isIgnored;
 
   /// Creates a new [ScaleCodecKey] instance.
   ///
   /// Only required when the default behavior is not desired.
   const ScaleCodecKey({
-    this.shouldIgnore = false,
+    this.isIgnored = false,
   });
 }
