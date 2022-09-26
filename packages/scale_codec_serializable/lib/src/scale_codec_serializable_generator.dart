@@ -4,8 +4,8 @@ import 'package:scale_codec_annotation/scale_codec_annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'config.dart';
-import 'generator_helper.dart';
 import 'models/scale_codec_class.dart';
+import 'templates/class_template.dart';
 import 'utils/utils.dart';
 
 class ScaleCodecSerializableGenerator
@@ -25,7 +25,7 @@ class ScaleCodecSerializableGenerator
     final mergedConfig = mergeConfig(config: config, reader: annotation);
     final scaleCodecClass = ScaleCodecClass.fromElement(element, mergedConfig);
 
-    final helper = GeneratorHelper(scaleCodecClass);
-    return helper.generate();
+    final classTemplate = ClassTemplate(scaleCodecClass);
+    return classTemplate.generate();
   }
 }
