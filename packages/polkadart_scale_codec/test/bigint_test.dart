@@ -72,14 +72,20 @@ void main() {
       test('$bitSize bit: ${value['low']}', () {
         ///
         /// Testing Low value
-        expect(() => toSignedBigInt(value['low'], bitSize),
-            throwsA(isA<InvalidSizeException>()));
+        expect(
+            () => toSignedBigInt(value['low'], bitSize),
+            throwsA(predicate((e) =>
+                e is InvalidSizeException &&
+                e.toString() == 'Invalid I$bitSize: ${value['low']}')));
       });
       test('$bitSize bit: ${value['high']}', () {
         ///
         /// Testing High value
-        expect(() => toSignedBigInt(value['high'], bitSize),
-            throwsA(isA<InvalidSizeException>()));
+        expect(
+            () => toSignedBigInt(value['high'], bitSize),
+            throwsA(predicate((e) =>
+                e is InvalidSizeException &&
+                e.toString() == 'Invalid I$bitSize: ${value['high']}')));
       });
     }
   });
@@ -106,10 +112,16 @@ void main() {
           expect(toSignedBigInt('1', bitSize).toInt(), equals(1));
           expect(toUnsignedBigInt('1', bitSize).toInt(), equals(1));
         } else {
-          expect(() => toSignedBigInt('1', bitSize),
-              throwsA(isA<UnexpectedCaseException>()));
-          expect(() => toUnsignedBigInt('1', bitSize),
-              throwsA(isA<UnexpectedCaseException>()));
+          expect(
+              () => toSignedBigInt('1', bitSize),
+              throwsA(predicate((e) =>
+                  e is UnexpectedCaseException &&
+                  e.toString() == 'Unexpected case: $bitSize.')));
+          expect(
+              () => toUnsignedBigInt('1', bitSize),
+              throwsA(predicate((e) =>
+                  e is UnexpectedCaseException &&
+                  e.toString() == 'Unexpected case: $bitSize.')));
         }
       });
     }
@@ -182,14 +194,20 @@ void main() {
       test('$bitSize bit: ${value['low']}', () {
         ///
         /// Testing Low value
-        expect(() => toUnsignedBigInt(value['low'], bitSize),
-            throwsA(isA<InvalidSizeException>()));
+        expect(
+            () => toUnsignedBigInt(value['low'], bitSize),
+            throwsA(predicate((e) =>
+                e is InvalidSizeException &&
+                e.toString() == 'Invalid U$bitSize: ${value['low']}')));
       });
       test('$bitSize bit: ${value['high']}', () {
         ///
         /// Testing High value
-        expect(() => toUnsignedBigInt(value['high'], bitSize),
-            throwsA(isA<InvalidSizeException>()));
+        expect(
+            () => toUnsignedBigInt(value['high'], bitSize),
+            throwsA(predicate((e) =>
+                e is InvalidSizeException &&
+                e.toString() == 'Invalid U$bitSize: ${value['high']}')));
       });
     }
   });
