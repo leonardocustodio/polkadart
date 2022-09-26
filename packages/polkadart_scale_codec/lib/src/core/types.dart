@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 part of polkadart_scale_codec_core;
 
 enum Primitive {
@@ -22,24 +24,16 @@ class PrimitiveType extends Type with CodecType {
   final Primitive primitive;
   const PrimitiveType({required this.primitive})
       : super(kind: TypeKind.Primitive);
-  @override
-  TypeKind get kind => TypeKind.Primitive;
 }
 
 class CompactType extends Type with CodecType {
   final int type;
   const CompactType({required this.type}) : super(kind: TypeKind.Compact);
-
-  @override
-  TypeKind get kind => TypeKind.Compact;
 }
 
 class SequenceType extends Type with CodecType {
   final int type;
   const SequenceType({required this.type}) : super(kind: TypeKind.Sequence);
-
-  @override
-  TypeKind get kind => TypeKind.Sequence;
 }
 
 class BitSequenceType extends Type with CodecType {
@@ -48,9 +42,6 @@ class BitSequenceType extends Type with CodecType {
   const BitSequenceType(
       {required this.bitStoreType, required this.bitOrderType})
       : super(kind: TypeKind.BitSequence);
-
-  @override
-  TypeKind get kind => TypeKind.BitSequence;
 }
 
 class ArrayType extends Type with CodecType {
@@ -58,26 +49,17 @@ class ArrayType extends Type with CodecType {
   final int type;
   const ArrayType({required this.len, required this.type})
       : super(kind: TypeKind.Array);
-
-  @override
-  TypeKind get kind => TypeKind.Array;
 }
 
 class TupleType extends Type with CodecType {
   final List<int> tuple;
   const TupleType({this.tuple = const <int>[]}) : super(kind: TypeKind.Tuple);
-
-  @override
-  TypeKind get kind => TypeKind.Tuple;
 }
 
 class CompositeType extends Type with CodecType {
   final List<Field> fields;
   const CompositeType({this.fields = const <Field>[]})
       : super(kind: TypeKind.Composite);
-
-  @override
-  TypeKind get kind => TypeKind.Composite;
 }
 
 class Field {
@@ -90,9 +72,6 @@ class VariantType extends Type with CodecType {
   final List<Variant> variants;
   const VariantType({this.variants = const <Variant>[]})
       : super(kind: TypeKind.Variant);
-
-  @override
-  TypeKind get kind => TypeKind.Variant;
 }
 
 class Variant {
@@ -106,16 +85,10 @@ class Variant {
 class OptionType extends Type with CodecType {
   final int type;
   const OptionType({required this.type}) : super(kind: TypeKind.Option);
-
-  @override
-  TypeKind get kind => TypeKind.Option;
 }
 
 class DoNotConstructType extends Type with CodecType {
   const DoNotConstructType() : super(kind: TypeKind.DoNotConstruct);
-
-  @override
-  TypeKind get kind => TypeKind.DoNotConstruct;
 }
 
 abstract class Type {

@@ -9,4 +9,3 @@ part 'exceptions.dart';
 part 'extensions.dart';
 part 'functions.dart';
 part 'hex.dart';
-part 'parse_json.dart';

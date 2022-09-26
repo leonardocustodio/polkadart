@@ -229,7 +229,6 @@ abstract class Chain implements _$Chain {
         /// local to class params
         description: description,
         codec: scale_codec.Codec(description.types),
-        jsonCodec: scale_codec.JsonCodec(description.types),
         events: Registry(description.types, description.event),
         calls: Registry(description.types, description.call),
 

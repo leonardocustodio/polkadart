@@ -110,7 +110,7 @@ BigInt toSignedBigInt(dynamic val, int bitSize) {
   }
 
   checkSignedBigInt(value, bitSize);
-  return val;
+  return value;
 }
 
 BigInt toUnsignedBigInt(dynamic val, int bitSize) {
@@ -125,11 +125,6 @@ BigInt toUnsignedBigInt(dynamic val, int bitSize) {
   checkUnsignedBigInt(value, bitSize);
   return value;
 }
-
-/// Decodes UTF-8 buffer
-String utf8Decoder(List<int> codeUnits, {bool allowMalformed = true}) =>
-    Utf8Codec(allowMalformed: allowMalformed)
-        .decode(codeUnits, allowMalformed: allowMalformed);
 
 /// Encodes UTF-8 String
 List<int> utf8Encoder(String input) => Utf8Codec().encode(input);

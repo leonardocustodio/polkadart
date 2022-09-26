@@ -1,7 +1,7 @@
+import 'dart:mirrors';
 import 'package:polkadart_scale_codec/src/core/core.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
-import 'dart:mirrors';
 
 void testCompact(String hex, dynamic val) {
   test('Src.compact: $hex == $val', () {
@@ -58,6 +58,7 @@ void main() {
     testPrimitiveTypes('i8', 100);
     testPrimitiveTypes('i16', 126);
     testPrimitiveTypes('i16', 3220);
+    testPrimitiveTypes('i32', 32423445435.toSigned(32));
     testPrimitiveTypes('i64', BigInt.from(233));
     testPrimitiveTypes('i128', BigInt.from(987733));
     testPrimitiveTypes('i256', BigInt.from(77522123));
