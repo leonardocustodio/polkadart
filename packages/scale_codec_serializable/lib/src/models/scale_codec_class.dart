@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 
 import '../config.dart';
-import '../utils/asserts.dart';
+import '../utils/checks.dart';
 import 'constructor.dart';
 
 class ScaleCodecClass {
@@ -19,8 +19,8 @@ class ScaleCodecClass {
 
   factory ScaleCodecClass.fromElement(
       ClassElement element, ClassConfig config) {
-    assertClassIsNotAbstract(element);
-    assertOneConstConstructor(element);
+    checkClassIsNotAbstract(element);
+    checkOneConstConstructor(element);
 
     final constructor = element.constructors.map(Constructor.fromElement).first;
 
