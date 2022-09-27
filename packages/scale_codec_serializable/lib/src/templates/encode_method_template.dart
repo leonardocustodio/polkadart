@@ -1,12 +1,8 @@
 import '../models/scale_codec_class.dart';
 
-class EncodeMethodTemplate {
-  final ScaleCodecClass scaleCodecClass;
-
-  const EncodeMethodTemplate(this.scaleCodecClass);
-
-  String generate() {
-    if (!scaleCodecClass.shouldCreateEncodeMethod) {
+extension EncodeMethodTemplate on ScaleCodecClass {
+  String generateEncodeMethod() {
+    if (!shouldCreateEncodeMethod) {
       return '';
     }
     return '''

@@ -1,21 +1,16 @@
 import '../models/scale_codec_class.dart';
 import 'all_params_template.dart';
 
-class DecodeMethodTemplate {
-  final ScaleCodecClass scaleCodecClass;
-
-  const DecodeMethodTemplate(this.scaleCodecClass);
-
-  String generate() {
-    if (!scaleCodecClass.shouldCreateDecodeMethod) {
+extension DecodeMethodTemplate on ScaleCodecClass {
+  String generateDecodeMethod() {
+    if (!shouldCreateDecodeMethod) {
       return '';
     }
-    final constructorParamTemplates =
-        AllParamsTemplate(scaleCodecClass.constructor.params);
+    final constructorParamTemplates = AllParamsTemplate(constructor.params);
 
     return '''
-    ${scaleCodecClass.name} decode (String encodedData) =>
-    ${scaleCodecClass.name}(${constructorParamTemplates.generateParamsUsage()});
+    $name decode (String encodedData) =>
+    $name(${constructorParamTemplates.generateParamsUsage()});
     ''';
   }
 }

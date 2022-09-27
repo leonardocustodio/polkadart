@@ -25,7 +25,6 @@ class ScaleCodecSerializableGenerator
     final mergedConfig = config.mergeWith(annotation);
     final scaleCodecClass = ScaleCodecClass.fromElement(element, mergedConfig);
 
-    final classTemplate = ClassTemplate(scaleCodecClass);
-    return classTemplate.generate();
+    return scaleCodecClass.generateClassTemplate();
   }
 }
