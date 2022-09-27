@@ -1,6 +1,15 @@
 import 'package:scale_codec_annotation/scale_codec_annotation.dart';
 import 'package:source_gen_test/annotations.dart';
 
+/// Testing `generateEncodedFields()` in `../templates/all_params_template.dart`.
+/// The generated file must be equal to `@ShouldGenerate`.
+//TODO: add all substrate types scenarios
+
+/// [OneStringField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [OneStringField] should generate a new param called
+/// `exampleEncoded` with [example] value encoded.
 @ShouldGenerate('''extension _\$OneStringFieldExtension on OneStringField {
   String get exampleEncoded => 'TODO: encode example';
 }
@@ -15,6 +24,14 @@ class OneStringField {
   const OneStringField(this.example);
 }
 
+/// [TwoStringFields] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [TwoStringFields] should generate `two` new params called:
+///
+///   -`exampleEncoded` with [example] `string` value encoded.
+///
+///    -`example2Encoded` with [example2] `string` value encoded.
 @ShouldGenerate('''extension _\$TwoStringFieldsExtension on TwoStringFields {
   String get exampleEncoded => 'TODO: encode example';
   String get example2Encoded => 'TODO: encode example2';
@@ -31,6 +48,11 @@ class TwoStringFields {
   const TwoStringFields(this.example, this.example2);
 }
 
+/// [DoubleField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [DoubleField] should generate a new param called
+/// `exampleEncoded` with [example] `double` value encoded.
 @ShouldGenerate('''extension _\$DoubleFieldExtension on DoubleField {
   String get exampleEncoded => 'TODO: encode example';
 }
@@ -45,6 +67,11 @@ class DoubleField {
   const DoubleField(this.example);
 }
 
+/// [BooleanField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [BooleanField] should generate a new param called
+/// `exampleEncoded` with [example] `bool` value encoded.
 @ShouldGenerate('''extension _\$BooleanFieldExtension on BooleanField {
   String get exampleEncoded => 'TODO: encode example';
 }
@@ -59,6 +86,11 @@ class BooleanField {
   const BooleanField(this.example);
 }
 
+/// [IntegerField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [IntegerField] should generate a new param called
+/// `exampleEncoded` with [example] `int` value encoded.
 @ShouldGenerate('''extension _\$IntegerFieldExtension on IntegerField {
   String get exampleEncoded => 'TODO: encode example';
 }
@@ -73,6 +105,11 @@ class IntegerField {
   const IntegerField(this.example);
 }
 
+/// [BigIntField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [BigIntField] should generate a new param called
+/// `exampleEncoded` with [example] `BigInt` value encoded.
 @ShouldGenerate('''extension _\$BigIntFieldExtension on BigIntField {
   String get exampleEncoded => 'TODO: encode example';
 }
@@ -87,6 +124,12 @@ class BigIntField {
   const BigIntField(this.example);
 }
 
+/// [MapField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [MapField] should generate a new param called
+/// `exampleEncoded` with [example] `Map<dynamic, dynamic>`
+///  value encoded.
 @ShouldGenerate('''extension _\$MapFieldExtension on MapField {
   String get exampleEncoded => 'TODO: encode example';
 }
@@ -101,6 +144,11 @@ class MapField {
   const MapField(this.example);
 }
 
+/// [ListField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [ListField] should generate a new param called
+/// `exampleEncoded` with [example] `List<dynamic>` value encoded.
 @ShouldGenerate('''extension _\$ListFieldExtension on ListField {
   String get exampleEncoded => 'TODO: encode example';
 }
@@ -115,6 +163,11 @@ class ListField {
   const ListField(this.example);
 }
 
+/// [NumberField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [NumberField] should generate a new param called
+/// `exampleEncoded` with [example] `num` value encoded.
 @ShouldGenerate('''extension _\$NumberFieldExtension on NumberField {
   String get exampleEncoded => 'TODO: encode example';
 }
@@ -129,6 +182,11 @@ class NumberField {
   const NumberField(this.example);
 }
 
+/// [SetField] should generate one class extension without
+/// `decode` and `encode` methods.
+///
+/// [SetField] should generate a new param called
+/// `exampleEncoded` with [example] `Set<dynamic>` value encoded.
 @ShouldGenerate('''extension _\$SetFieldExtension on SetField {
   String get exampleEncoded => 'TODO: encode example';
 }
