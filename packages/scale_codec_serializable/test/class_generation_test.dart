@@ -16,6 +16,8 @@ Future<void> main() async {
     'ValidClassWithDecodeMethod',
     'ValidClassWithoutMethods',
     'ValidClass',
+    'OnlyEncodeMethod',
+    'OnlyDecodeMethod',
   };
 
   final reader = await initializeLibraryReaderForDirectory(
