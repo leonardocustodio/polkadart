@@ -22,7 +22,7 @@ class ScaleCodecSerializableGenerator
           element: element);
     }
 
-    final mergedConfig = mergeConfig(config: config, reader: annotation);
+    final mergedConfig = config.mergeWith(annotation);
     final scaleCodecClass = ScaleCodecClass.fromElement(element, mergedConfig);
 
     final classTemplate = ClassTemplate(scaleCodecClass);
