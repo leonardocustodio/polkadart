@@ -122,19 +122,19 @@ abstract class Sink {
   void compact(dynamic val) {
     if (val is int) {
       if (val < 0) {
-        throw InvalidCompactException();
+        throw InvalidCompactException('Value can\'t be less than 0.');
       }
       _compactFromInt(val);
       return;
     } else if (val is BigInt) {
       if (val.toInt() < 0) {
-        throw InvalidCompactException();
+        throw InvalidCompactException('Value can\'t be less than 0.');
       }
       _compactFromBigInt(val);
       return;
     } else {
       throw UnexpectedTypeException(
-          'Expected `int` or `BigInt`, but found ${val.runtimeType}');
+          'Expected `int` or `BigInt`, but found ${val.runtimeType}.');
     }
   }
 

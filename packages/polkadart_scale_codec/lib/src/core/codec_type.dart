@@ -58,15 +58,6 @@ class CodecBytesArrayType with CodecType {
 }
 
 ///
-/// CodecBooleanOptionType
-class CodecBooleanOptionType with CodecType {
-  const CodecBooleanOptionType();
-
-  @override
-  TypeKind get kind => TypeKind.BooleanOption;
-}
-
-///
 /// CodecCompactType
 class CodecCompactType with CodecType {
   final Primitive integer;

@@ -79,13 +79,13 @@ class InvalidCompactException implements Exception {
 }
 
 class UnexpectedTypeException implements Exception {
-  const UnexpectedTypeException([this.type]);
+  const UnexpectedTypeException([this.msg]);
 
   // Unexpected type
-  final dynamic type;
+  final dynamic msg;
 
   @override
   String toString() {
-    return 'Unexpected type${type == null ? '' : ': ${type.runtimeType}'}.';
+    return msg ?? 'Unexpected type.';
   }
 }

@@ -11,7 +11,6 @@ enum TypeKind {
   Variant,
   Option,
   DoNotConstruct,
-  BooleanOption,
   Bytes,
   BytesArray,
   Struct

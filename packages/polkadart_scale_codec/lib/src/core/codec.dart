@@ -47,14 +47,10 @@ class Codec {
         return _decodeVariant((def as CodecVariantType), src);
       case TypeKind.Option:
         return _decodeOption((def as OptionType), src);
-      case TypeKind.BooleanOption:
-        return decodeBooleanOptionFromSrc(src);
       case TypeKind.Bytes:
         return decodeBytes(src);
       case TypeKind.BytesArray:
         return src.bytes((def as CodecBytesArrayType).len);
-      case TypeKind.DoNotConstruct:
-        throw UnexpectedCaseException('DoNotConstruct type reached');
       default:
         throw UnexpectedCaseException((def as Type).kind);
     }
@@ -127,8 +123,6 @@ class Codec {
           value['__kind'] = variant.name;
           return value;
         }
-      default:
-        throw UnexpectedCaseException();
     }
   }
 
@@ -140,7 +134,7 @@ class Codec {
       case 1:
         return decode(def.type, src);
       default:
-        throw UnexpectedCaseException(byte.toString());
+        throw UnexpectedCaseException(byte);
     }
   }
 
@@ -176,9 +170,6 @@ class Codec {
         break;
       case TypeKind.Bytes:
         encodeBytes(val, sink);
-        break;
-      case TypeKind.BooleanOption:
-        encodeBooleanOption(val, sink);
         break;
       case TypeKind.Option:
         _encodeOption((def as OptionType), val, sink);
@@ -243,8 +234,6 @@ class Codec {
       case CodecVariantKind.struct:
         _encodeStruct((variant as CodecStructVariant).def, val, sink);
         break;
-      default:
-        throw UnexpectedCaseException();
     }
   }
 
@@ -283,29 +272,6 @@ void encodeBitSequence(dynamic bits, Sink sink) {
   assertionCheck(bits is List);
   sink.compact(bits.length * 8);
   sink.bytes(bits);
-}
-
-bool? decodeBooleanOptionFromSrc(Src src) {
-  var byte = src.u8();
-  switch (byte) {
-    case 0:
-      return null;
-    case 1:
-      return true;
-    case 2:
-      return false;
-    default:
-      throw UnexpectedCaseException(byte.toString());
-  }
-}
-
-void encodeBooleanOption(dynamic val, Sink sink) {
-  if (val == null) {
-    sink.u8(0);
-  } else {
-    assertionCheck(val is bool);
-    sink.u8(val ? 1 : 2);
-  }
 }
 
 ///

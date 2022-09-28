@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:test/test.dart';
 
@@ -43,10 +44,84 @@ void main() {
     }
   });
 
+  {
+    ///
+    /// This test will passes for the values in between low and high.
+    ///
+    group('Unsigned/Signed BigInt passes easily: ', () {
+      var tests = {
+        64: <String, dynamic>{
+          'low': Random.secure().nextInt(4294967296),
+          'high': '9223372036854775807',
+        },
+        128: <String, dynamic>{
+          'low': Random.secure().nextInt(4294967296),
+          'high': '170141183460469231731687303715884105727',
+        },
+        256: <String, dynamic>{
+          'low': Random.secure().nextInt(4294967296),
+          'high':
+              '57896044618658097711785492504343953926634992332820282019728792003956564819967',
+        },
+      };
+
+      for (var entry in tests.entries) {
+        var bitSize = entry.key;
+        var value = entry.value;
+        test('$bitSize bit', () {
+          ///
+          /// Testing Low value
+          expect(toSignedBigInt(value['low'], bitSize).toString(),
+              equals(value['low'].toString()));
+          expect(toUnsignedBigInt(value['low'], bitSize).toString(),
+              equals(value['low'].toString()));
+
+          ///
+          /// Testing High value
+          expect(toSignedBigInt(value['high'], bitSize).toString(),
+              equals(value['high']));
+          expect(toUnsignedBigInt(value['high'], bitSize).toString(),
+              equals(value['high']));
+        });
+      }
+    });
+  }
+
+  {
+    ///
+    /// This test will throw UnexpectedTypeException
+    ///
+    group('Unsigned/Signed BigInt UnexpectedTypeException: ', () {
+      var values = [
+        BigInt.from(429496726),
+        BigInt.from(123),
+        BigInt.parse('57896045664819967')
+      ];
+
+      for (var val in values) {
+        test('$val', () {
+          expect(
+              () => toSignedBigInt(val, 256),
+              throwsA(predicate((e) =>
+                  e is UnexpectedTypeException &&
+                  e.toString() ==
+                      'Only `String` and `int` are valid parameters.')));
+
+          expect(
+              () => toUnsignedBigInt(val, 256),
+              throwsA(predicate((e) =>
+                  e is UnexpectedTypeException &&
+                  e.toString() ==
+                      'Only `String` and `int` are valid parameters.')));
+        });
+      }
+    });
+  }
+
   ///
   /// Here InvalidSizeException will be thrown as testing with
   ///
-  /// lowest - 1 and high + 1 that a bitsize can hold.
+  /// lowest - 1 and high + 1 that a bitsize can't hold.
   ///
   group('Signed BigInt: InvalidSizeException: ', () {
     var tests = {

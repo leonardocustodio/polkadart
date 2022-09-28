@@ -77,7 +77,7 @@ CodecType getCodecType(List<Type> types, int ti) {
           assertionCheck((type as PrimitiveType).primitive.name[0] == 'U');
           return CodecCompactType(integer: type.primitive);
         default:
-          throw Exception('Unexpected case: ${type.kind}');
+          throw UnexpectedCaseException('${type.kind}');
       }
 
     case TypeKind.Composite:

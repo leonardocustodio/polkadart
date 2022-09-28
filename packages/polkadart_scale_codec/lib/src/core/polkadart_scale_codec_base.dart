@@ -5,11 +5,12 @@ class Src {
   late Uint8List _data;
 
   Src(dynamic data) {
-    assertionCheck(data is String || data is Uint8List);
+    assertionCheck(data is String || data is List<int> || data is Uint8List,
+        'Src(data) -> `data` should be either String, List<int> or Uint8List.');
     if (data is String) {
       _data = decodeHex(data);
     } else {
-      _data = data;
+      _data = data is Uint8List ? data : Uint8List.fromList(data);
     }
   }
 
@@ -34,7 +35,7 @@ class Src {
 
   int i16() {
     var val = u16();
-    return val | (val & (pow(2, 15) as int)) * 0x1fffe;
+    return (val | (val & (pow(2, 15) as int)) * 0x1fffe).toSigned(16);
   }
 
   int u16() {
@@ -111,8 +112,6 @@ class Src {
       case 3:
         // returning BigInt here
         return _bigCompact(b >> 2);
-      default:
-        throw Exception('Reached unreachable statement');
     }
   }
 

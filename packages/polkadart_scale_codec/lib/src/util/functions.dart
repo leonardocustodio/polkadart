@@ -106,7 +106,8 @@ BigInt toSignedBigInt(dynamic val, int bitSize) {
   } else if (val is int) {
     value = BigInt.from(val);
   } else {
-    throw UnexpectedTypeException(val);
+    throw UnexpectedTypeException(
+        'Only `String` and `int` are valid parameters.');
   }
 
   checkSignedBigInt(value, bitSize);
@@ -120,7 +121,8 @@ BigInt toUnsignedBigInt(dynamic val, int bitSize) {
   } else if (val is int) {
     value = BigInt.from(val);
   } else {
-    throw UnexpectedTypeException(val);
+    throw UnexpectedTypeException(
+        'Only `String` and `int` are valid parameters.');
   }
   checkUnsignedBigInt(value, bitSize);
   return value;
@@ -140,12 +142,8 @@ int unsignedIntByteLength(BigInt val) {
   return len;
 }
 
-bool isObject(dynamic value) {
-  return value != null && value is Object;
-}
-
 void assertionCheck(bool condition, [String? msg]) {
   if (!condition) {
-    throw AssertionError(msg ?? 'Assertion Error occured.');
+    throw AssertionException(msg ?? 'Assertion Error occured.');
   }
 }
