@@ -8,12 +8,12 @@ void testCompact(String hex, dynamic val) {
     var src = Src(hex);
     expect(src.compact(), equals(val));
 
-    /// This should not throw error.
+    // This should not throw error.
     src.assertEOF();
   });
 
   test('Sink.compact: $hex == $val', () {
-    /// Test with Hex
+    // Test with Hex
     var sink = HexSink();
     sink.compact(val);
     expect(sink.toHex(), equals(hex));

@@ -5,6 +5,7 @@ import 'package:substrate_metadata/old/types.dart' as old_types;
 import 'package:substrate_metadata/old/type_registry.dart';
 
 void main() {
+  // Creates the registry for parsing the types and selecting particular schema.
   var registry = OldTypeRegistry(
     old_types.OldTypes(
       types: <String, dynamic>{
@@ -14,15 +15,18 @@ void main() {
       },
     ),
   );
-  var _ = registry.use('Codec');
+
+  // specifying which schema type to use.
+  registry.use('Codec');
+
+  // fetching the parsed types from `Json` to `Type`
   var types = registry.getTypes();
+
+  // Initializing Scale-Codec object
   var codec = scale_codec.Codec(types);
 
-  ///
-  ///
-  /// BitVec<u8> type encode / decode
-  ///
-  ///
+  //
+  // Encodes adn Decodes type: `BitVec<u8>`
   group('Encode/Decode BitVec<u8>: ', () {
     for (var vec in [1, 2, 3]) {
       test('$vec', () {

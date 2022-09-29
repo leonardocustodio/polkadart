@@ -122,28 +122,28 @@ void main() {
   };
   group('Xcm Tests', () {
     test('Decode Xcm Test', () {
-      /// Decode the Hex to match with the desired map
+      // Decode the Hex to match with the desired map
       var map = decodeXcm(xcmHex1, return_map: true);
       expect(map, equals(xcmMap1));
 
-      /// Decode the Hex to match with the desired map
+      // Decode the Hex to match with the desired map
       var map2 = decodeXcm(xcmHex2, return_map: true);
       expect(map2, equals(xcmMap2));
     });
 
     test('Encode Xcm Test', () {
-      /// Encoding the Json Object `xcmMap1`: Output: `Uint8List`
-      /// Decode the encoded buffer from the above result
-      ///
-      /// Match if `xcm_map` == `result_map`
+      // Encoding the Json Object `xcmMap1`: Output: `Uint8List`
+      // Decode the encoded buffer from the above result
+      //
+      // Match if `xcm_map` == `result_map`
       var encodedBuffer1 = encodeXcm(xcmMap1);
       var resultMap1 = decodeXcm(encodedBuffer1, return_map: true);
       expect(resultMap1, equals(xcmMap1));
 
-      /// Encoding the Json Object `xcmMap1`: Output: `Uint8List`
-      /// Decode the encoded buffer from the above result
-      ///
-      /// Match if `xcm_map` == `result_map`
+      // Encoding the Json Object `xcmMap1`: Output: `Uint8List`
+      // Decode the encoded buffer from the above result
+      //
+      // Match if `xcm_map` == `result_map`
       var encodedBuffer2 = encodeXcm(xcmMap2);
       var resultMap2 = decodeXcm(encodedBuffer2, return_map: true);
       expect(resultMap2, equals(xcmMap2));

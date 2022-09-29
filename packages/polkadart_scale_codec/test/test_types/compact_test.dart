@@ -7,11 +7,11 @@ import 'package:substrate_metadata/old/type_registry.dart';
 
 void main() {
   {
-    ///
-    /// Unexpected case: TypeKind.Sequence.
-    ///
-    /// We can't compact Vector so it should throw exception.
-    ///
+    //
+    // Unexpected case: TypeKind.Sequence.
+    //
+    // We can't compact `Vector` so it should throw `Exception`.
+    //
     group('Compact Exception', () {
       test('Exception: Compact<Vec<u8>>', () {
         var registry = OldTypeRegistry(
@@ -23,12 +23,14 @@ void main() {
             },
           ),
         );
-        var _ = registry.use('Codec');
+
+        // specifying which schema type to use.
+        registry.use('Codec');
+
+        // fetching the parsed types from `Json` to `Type`
         var types = registry.getTypes();
 
-        ///
-        /// Invalid Case Exception
-        ///
+        // Invalid Case Exception
         expect(
             () => scale_codec.Codec(types),
             throwsA(predicate((e) =>
@@ -38,6 +40,7 @@ void main() {
     });
   }
 
+  // Creates the registry for parsing the types and selecting particular schema.
   var registry = OldTypeRegistry(
     old_types.OldTypes(
       types: <String, dynamic>{
@@ -47,30 +50,32 @@ void main() {
       },
     ),
   );
-  var _ = registry.use('Codec');
+
+  // specifying which schema type to use.
+  registry.use('Codec');
+
+  // fetching the parsed types from `Json` to `Type`
   var types = registry.getTypes();
+
+  // Initializing Scale-Codec object
   var codec = scale_codec.Codec(types);
 
   {
-    ///
-    ///
-    /// Testing Compact exception
-    ///
-    ///
+    // Testing Compact exception
     group('Compact Exception', () {
       test('Encode Compact<u8>', () {
-        ///
-        /// Invalid int compacting
-        ///
+        //
+        // Invalid int compacting
+        //
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), -1),
             throwsA(predicate((e) =>
                 e is InvalidCompactException &&
                 e.toString() == 'Value can\'t be less than 0.')));
 
-        ///
-        /// Invalid BigInt compacting
-        ///
+        //
+        // Invalid BigInt compacting
+        //
         expect(
             () =>
                 codec.encodeToHex(registry.use('Compact<u8>'), BigInt.from(-1)),
@@ -78,9 +83,9 @@ void main() {
                 e is InvalidCompactException &&
                 e.toString() == 'Value can\'t be less than 0.')));
 
-        ///
-        /// Invalid Type Compacting
-        ///
+        //
+        // Invalid Type Compacting
+        //
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), 'A'),
             throwsA(predicate((e) =>
@@ -88,9 +93,9 @@ void main() {
                 e.toString() ==
                     'Expected `int` or `BigInt`, but found String.')));
 
-        ///
-        /// Exceeding BigInt Compacting value range: 2 ** 536
-        ///
+        //
+        // Exceeding BigInt Compacting value range: 2 ** 536
+        //
         BigInt invalidValue = 2.bigInt.pow(536.bigInt.toInt());
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), invalidValue),
@@ -99,9 +104,9 @@ void main() {
                 e.toString() ==
                     '${invalidValue.toRadixString(16)} is too large for a compact')));
 
-        ///
-        /// Exceeding int Compacting value range: 2 ** 536
-        ///
+        //
+        // Exceeding int Compacting value range: 2 ** 536
+        //
         expect(
             () => codec.encodeToHex(
                 registry.use('Compact<u8>'), invalidValue.toInt()),

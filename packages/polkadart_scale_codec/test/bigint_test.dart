@@ -4,11 +4,11 @@ import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
-  ///
-  /// This test will pass at the boundaries of max and min values of BigInt according to bitsize
-  ///
-  /// All the test cases will pass with [low, high] values with low and high being inclusive
-  ///
+  //
+  // This test will pass at the boundaries of max and min values of BigInt according to bitsize
+  //
+  // All the test cases will pass with [low, high] values with low and high being inclusive
+  //
   group('Signed BigInt passes easily: ', () {
     var tests = {
       64: <String, String>{
@@ -31,13 +31,13 @@ void main() {
       var bitSize = entry.key;
       var value = entry.value;
       test('$bitSize bit', () {
-        ///
-        /// Testing Low value
+        //
+        // Testing Low value
         expect(toSignedBigInt(value['low'], bitSize).toString(),
             equals(value['low']));
 
-        ///
-        /// Testing High value
+        //
+        // Testing High value
         expect(toSignedBigInt(value['high'], bitSize).toString(),
             equals(value['high']));
       });
@@ -45,9 +45,9 @@ void main() {
   });
 
   {
-    ///
-    /// This test will passes for the values in between low and high.
-    ///
+    //
+    // This test will passes for the values in between low and high.
+    //
     group('Unsigned/Signed BigInt passes easily: ', () {
       var tests = {
         64: <String, dynamic>{
@@ -69,15 +69,15 @@ void main() {
         var bitSize = entry.key;
         var value = entry.value;
         test('$bitSize bit', () {
-          ///
-          /// Testing Low value
+          //
+          // Testing Low value
           expect(toSignedBigInt(value['low'], bitSize).toString(),
               equals(value['low'].toString()));
           expect(toUnsignedBigInt(value['low'], bitSize).toString(),
               equals(value['low'].toString()));
 
-          ///
-          /// Testing High value
+          //
+          // Testing High value
           expect(toSignedBigInt(value['high'], bitSize).toString(),
               equals(value['high']));
           expect(toUnsignedBigInt(value['high'], bitSize).toString(),
@@ -88,9 +88,9 @@ void main() {
   }
 
   {
-    ///
-    /// This test will throw UnexpectedTypeException
-    ///
+    //
+    // This test will throw UnexpectedTypeException
+    //
     group('Unsigned/Signed BigInt UnexpectedTypeException: ', () {
       var values = [
         BigInt.from(429496726),
@@ -118,11 +118,11 @@ void main() {
     });
   }
 
-  ///
-  /// Here InvalidSizeException will be thrown as testing with
-  ///
-  /// lowest - 1 and high + 1 that a bitsize can't hold.
-  ///
+  //
+  // Here InvalidSizeException will be thrown as testing with
+  //
+  // lowest - 1 and high + 1 that a bitsize can't hold.
+  //
   group('Signed BigInt: InvalidSizeException: ', () {
     var tests = {
       64: <String, String>{
@@ -145,8 +145,8 @@ void main() {
       var bitSize = entry.key;
       var value = entry.value;
       test('$bitSize bit: ${value['low']}', () {
-        ///
-        /// Testing Low value
+        //
+        // Testing Low value
         expect(
             () => toSignedBigInt(value['low'], bitSize),
             throwsA(predicate((e) =>
@@ -154,8 +154,8 @@ void main() {
                 e.toString() == 'Invalid I$bitSize: ${value['low']}')));
       });
       test('$bitSize bit: ${value['high']}', () {
-        ///
-        /// Testing High value
+        //
+        // Testing High value
         expect(
             () => toSignedBigInt(value['high'], bitSize),
             throwsA(predicate((e) =>
@@ -165,9 +165,9 @@ void main() {
     }
   });
 
-  ///
-  /// Here we are testing random bit sizes and checking if it passes from unsigned and signed or not ?
-  ///
+  //
+  // Here we are testing random bit sizes and checking if it passes from unsigned and signed or not ?
+  //
   group('Bit Size checking ', () {
     final allowedBits = [64, 128, 256];
     var randomBits = List.generate(
@@ -202,11 +202,11 @@ void main() {
     }
   });
 
-  ///
-  /// This test will pass at the boundaries of max and min values of BigInt according to bitsize
-  ///
-  /// All the test cases will pass with [low, high] values with low and high being inclusive
-  ///
+  //
+  // This test will pass at the boundaries of max and min values of BigInt according to bitsize
+  //
+  // All the test cases will pass with [low, high] values with low and high being inclusive
+  //
   group('Unsigned BigInt passes easily: ', () {
     var tests = {
       64: <String, String>{
@@ -228,24 +228,24 @@ void main() {
       var bitSize = entry.key;
       var value = entry.value;
       test('$bitSize bit', () {
-        ///
-        /// Testing Low value
+        //
+        // Testing Low value
         expect(toUnsignedBigInt(value['low'], bitSize).toString(),
             equals(value['low']));
 
-        ///
-        /// Testing High value
+        //
+        // Testing High value
         expect(toUnsignedBigInt(value['high'], bitSize).toString(),
             equals(value['high']));
       });
     }
   });
 
-  ///
-  /// Here InvalidSizeException will be thrown as testing with
-  ///
-  /// lowest - 1 and high + 1 that a bitsize can hold.
-  ///
+  //
+  // Here InvalidSizeException will be thrown as testing with
+  //
+  // lowest - 1 and high + 1 that a bitsize can hold.
+  //
   group('Unsigned BigInt: InvalidSizeException: ', () {
     var tests = {
       64: <String, String>{
@@ -267,8 +267,8 @@ void main() {
       var bitSize = entry.key;
       var value = entry.value;
       test('$bitSize bit: ${value['low']}', () {
-        ///
-        /// Testing Low value
+        //
+        // Testing Low value
         expect(
             () => toUnsignedBigInt(value['low'], bitSize),
             throwsA(predicate((e) =>
@@ -276,8 +276,8 @@ void main() {
                 e.toString() == 'Invalid U$bitSize: ${value['low']}')));
       });
       test('$bitSize bit: ${value['high']}', () {
-        ///
-        /// Testing High value
+        //
+        // Testing High value
         expect(
             () => toUnsignedBigInt(value['high'], bitSize),
             throwsA(predicate((e) =>

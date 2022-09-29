@@ -37,13 +37,11 @@ void main() {
   var codec = scale_codec.Codec(types);
 
   {
-    ///
-    ///
-    /// Expect Exception when decoding list and list type is not `List<int> or Uint8List`
-    /// or
-    /// when the list is empty.
-    ///
-    ///
+    //
+    // Expect Exception when decoding list and list type is not `List<int> or Uint8List`
+    // or
+    // when the list is empty.
+    //
     group('Exception Vec:', () {
       test('List<int> is empty', () {
         expect(
@@ -63,13 +61,11 @@ void main() {
   }
 
   {
-    ///
-    ///
-    /// Exception when setting Option Flag to greator than `1`.
-    ///
-    /// Option flag can be `0` or `1`.
-    ///
-    ///
+    //
+    // Exception when setting Option Flag to greator than `1`.
+    //
+    // Option flag can be `0` or `1`.
+    //
     group('Exception Option:', () {
       test('Flag at 2', () {
         expect(
@@ -85,29 +81,32 @@ void main() {
                 e is UnexpectedCaseException &&
                 e.toString() == 'Unexpected case: 3.')));
       });
+      test('Flag at 4', () {
+        expect(
+            () => codec.decodeBinary(registry.use('Option<u8>'), '0x04015231'),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == 'Unexpected case: 4.')));
+      });
     });
   }
 
   {
-    ///
-    ///
-    /// Primitive (usigned / signed) (2, 16, 32) type encode / decode
-    ///
-    ///
+    // Primitive (usigned / signed) (2, 16, 32) type encode / decode
     group('Encode/Decode Primitive:', () {
       for (var bit in ['i', 'u']) {
         var multiplier = bit == 'i' ? -1 : 0;
         for (var size in [8, 16, 32]) {
-          /// concates i with 8 and so on
-          /// i + (8 | 16 | 32)  -> i8 || i16 || i32
-          /// u + (8 | 16 | 32)  -> u8 || u16 || u32
-          ///
+          // concates i with 8 and so on
+          // i + (8 | 16 | 32)  -> i8 || i16 || i32
+          // u + (8 | 16 | 32)  -> u8 || u16 || u32
+          //
           var bitSize = '$bit$size';
           test(bitSize, () {
-            /// 2 ** (8 || 16 || 32)
+            // 2 ** (8 || 16 || 32)
             var poweredValue = pow(2, size - 1);
 
-            /// lowest accepted value
+            // lowest accepted value
             var lowest = multiplier * poweredValue;
 
             var encodedLow = codec.encodeToHex(registry.use(bitSize), lowest);
@@ -116,7 +115,7 @@ void main() {
 
             expect(lowest, equals(decodedLow));
 
-            /// highest accepted value
+            // highest accepted value
             var highest = poweredValue - 1;
 
             var encodedHigh = codec.encodeToHex(registry.use(bitSize), highest);
@@ -131,24 +130,22 @@ void main() {
   }
 
   {
-    ///
-    ///
-    /// Testing exceptions when the signed and unsigned can't hold values out of boundaries.
-    ///
-    /// Testing with values ver `first lowest negative value` which throws exception and with `very first highest positive value` to cause exception.
-    ///
-    ///
+    //
+    // Testing exceptions when the signed and unsigned can't hold values out of boundaries.
+    //
+    // Testing with values ver `first lowest negative value` which throws exception and with `very first highest positive value` to cause exception.
+    //
     group('Exception Value out of bounds Primitive:', () {
       for (var bit in ['i', 'u']) {
         var multiplier = bit == 'i' ? -1 : 0;
         for (var size in [8, 16, 32]) {
-          /// concates i with 8 and so on
-          /// i + (8 | 16 | 32)  -> i8 || i16 || i32
-          /// u + (8 | 16 | 32)  -> u8 || u16 || u32
-          ///
+          // concates i with 8 and so on
+          // i + (8 | 16 | 32)  -> i8 || i16 || i32
+          // u + (8 | 16 | 32)  -> u8 || u16 || u32
+          //
           var bitSize = '$bit$size';
           test(bitSize.toUpperCase(), () {
-            /// 2 ** (8 || 16 || 32)
+            // 2 ** (8 || 16 || 32)
             var poweredValue = pow(2, size - 1);
 
             var lowest = (multiplier * poweredValue) - 1;
@@ -175,9 +172,9 @@ void main() {
   }
 
   {
-    ///
-    /// Needed to be BigInt but we're forcing exception with u64, u128, u256
-    ///
+    //
+    // Needed to be BigInt but we're forcing exception with u64, u128, u256
+    //
     group('UnexpectedCase Exception Unsigned:', () {
       for (var size in [64, 128, 256]) {
         test('Unknown Unsigned Bit-size: u$size', () {
@@ -192,9 +189,9 @@ void main() {
   }
 
   {
-    ///
-    /// Needed to be BigInt but we're forcing exception with i64, i128, i256
-    ///
+    //
+    // Needed to be BigInt but we're forcing exception with i64, i128, i256
+    //
     group('UnexpectedCase Exception Signed:', () {
       for (var size in [64, 128, 256]) {
         test('Unknown Signed Bit-size: i$size', () {
@@ -209,11 +206,9 @@ void main() {
   }
 
   {
-    ///
-    ///
-    /// Exception checking at DoNotConstruct
-    ///
-    ///
+    //
+    // Exception checking at DoNotConstruct
+    //
     group('Exception at DoNotConstruct:', () {
       test('Encode', () {
         expect(
@@ -233,11 +228,9 @@ void main() {
   }
 
   {
-    ///
-    ///
-    /// Exception checking at Primitive.Char
-    ///
-    ///
+    //
+    // Exception checking at Primitive.Char
+    //
     group('Exception at Primitive.Char:', () {
       test('Encode', () {
         expect(
@@ -257,15 +250,13 @@ void main() {
   }
 
   {
-    ///
-    ///
-    /// Exceptions expected in case scenario of wrong bit sizes
-    ///
-    ///
+    //
+    // Exceptions expected in case scenario of wrong bit sizes
+    //
 
-    ///
-    /// Here we are testing random bit sizes and checking if it passes from unsigned and signed or not ?
-    ///
+    //
+    // Here we are testing random bit sizes and checking if it passes from unsigned and signed or not ?
+    //
     group('Bit Size checking', () {
       var randomBits = [1, 30, 88, 100];
       for (var bitSize in randomBits) {
@@ -286,25 +277,23 @@ void main() {
   }
 
   {
-    ///
-    ///
-    /// Testing Compact exception
-    ///
-    ///
+    //
+    // Testing Compact exception
+    //
     group('Compact Exception', () {
       test('Encode Compact<u8>', () {
-        ///
-        /// Invalid int compacting
-        ///
+        //
+        // Invalid int compacting
+        //
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), -1),
             throwsA(predicate((e) =>
                 e is InvalidCompactException &&
                 e.toString() == 'Value can\'t be less than 0.')));
 
-        ///
-        /// Invalid BigInt compacting
-        ///
+        //
+        // Invalid BigInt compacting
+        //
         expect(
             () =>
                 codec.encodeToHex(registry.use('Compact<u8>'), BigInt.from(-1)),
@@ -312,9 +301,9 @@ void main() {
                 e is InvalidCompactException &&
                 e.toString() == 'Value can\'t be less than 0.')));
 
-        ///
-        /// Invalid Type Compacting
-        ///
+        //
+        // Invalid Type Compacting
+        //
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), 'A'),
             throwsA(predicate((e) =>
@@ -322,9 +311,9 @@ void main() {
                 e.toString() ==
                     'Expected `int` or `BigInt`, but found String.')));
 
-        ///
-        /// Exceeding BigInt Compacting value range: 2 ** 536
-        ///
+        //
+        // Exceeding BigInt Compacting value range: 2 ** 536
+        //
         BigInt invalidValue = 2.bigInt.pow(536.bigInt.toInt());
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), invalidValue),
@@ -333,9 +322,9 @@ void main() {
                 e.toString() ==
                     '${invalidValue.toRadixString(16)} is too large for a compact')));
 
-        ///
-        /// Exceeding int Compacting value range: 2 ** 536
-        ///
+        //
+        // Exceeding int Compacting value range: 2 ** 536
+        //
         expect(
             () => codec.encodeToHex(
                 registry.use('Compact<u8>'), invalidValue.toInt()),
@@ -347,25 +336,23 @@ void main() {
     });
   }
   {
-    ///
-    ///
-    /// Primitive (usigned / signed) (64, 128, 256) type encode / decode
-    ///
-    ///
+    //
+    // Primitive (usigned / signed) (64, 128, 256) type encode / decode
+    //
     group('Encode/Decode Primitive:', () {
       for (var bit in ['i', 'u']) {
         var multiplier = bit == 'i' ? -1.bigInt : 0.bigInt;
         for (var size in [64, 128, 256]) {
-          /// concates `i` or `u` with `size` and so on
-          /// i + (64 | 128 | 256)  -> i64 || i128 || i256
-          /// u + (64 | 128 | 256)  -> u64 || u128 || u256
-          ///
+          // concates `i` or `u` with `size` and so on
+          // i + (64 | 128 | 256)  -> i64 || i128 || i256
+          // u + (64 | 128 | 256)  -> u64 || u128 || u256
+          //
           var bitSize = '$bit$size';
           test(bitSize, () {
-            /// 2 ** (64 || 128 || 256)
+            // 2 ** (64 || 128 || 256)
             var poweredValue = calculateBigIntPow(2, size - 1);
 
-            /// lowest accepted value
+            // lowest accepted value
             var lowest = multiplier * poweredValue;
 
             var encodedLow = codec.encodeToHex(registry.use(bitSize), lowest);
@@ -374,7 +361,7 @@ void main() {
 
             expect(lowest, equals(decodedLow));
 
-            /// highest accepted value
+            // highest accepted value
             var highest = poweredValue - 1.bigInt;
 
             var encodedHigh = codec.encodeToHex(registry.use(bitSize), highest);
