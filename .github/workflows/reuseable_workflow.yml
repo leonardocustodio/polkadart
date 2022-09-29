@@ -35,17 +35,16 @@ jobs:
       - name: Analyze project source
         run: dart analyze
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
+      # Run the test cases and output the coverage file
       - name: Run tests
-        run: dart test
+        run: dart run test --no-chain-stack-traces --no-run-skipped --coverage=./coverage
 
       - name: Activate coverage
         run: dart pub global activate coverage
 
-      - name: Run Code Coverage
-        run: dart pub global run coverage:test_with_coverage
+      - name: Format the coverage and generate lcov.info
+        run: dart pub global run coverage:format_coverage --packages=.dart_tool/package_config.json --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage/
+
 
       - name: Upload Code Coverage
         uses: codecov/codecov-action@v3
