@@ -4,7 +4,6 @@
 
 # Conventional directory for build outputs.
 build/
-chain/
 coverage/
 
 # Omit committing pubspec.lock for library packages; see
