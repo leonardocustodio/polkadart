@@ -25,7 +25,7 @@ abstract class Chain implements _$Chain {
   factory Chain(String chainName) = _Chain;
 
   String _item(String name) {
-    return path.join('./test/chain', chainName, name);
+    return path.join('../../chain', chainName, name);
   }
 
   @Cached()
