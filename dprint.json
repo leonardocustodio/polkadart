@@ -5,6 +5,8 @@
   ],
   "excludes": [
     "build/",
+    "**/*.{jsonl}",
+    "block-numbers.json",
     "coverage/",
     ".dart_tool/",
     ".packages/",
