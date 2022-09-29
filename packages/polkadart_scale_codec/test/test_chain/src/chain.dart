@@ -129,18 +129,16 @@ abstract class Chain implements _$Chain {
         return;
     }
     for (final des in getDescription()) {
-      for (final pallet in des.description.constants.keys) {
-        test(
-            ' Constants Encode/Decode  Spec-Version: ${des.specVersion}  Pallet: $pallet',
-            () {
+      test(' Constants Encode/Decode  Spec-Version: ${des.specVersion}', () {
+        for (final pallet in des.description.constants.keys) {
           for (var name in des.description.constants[pallet]!.keys) {
             var def = des.description.constants[pallet]![name];
             var value = des.codec.decodeBinary(def!.type, def.value);
             var encoded = des.codec.encodeToBinary(def.type, value);
             expect(encoded, equals(def.value));
           }
-        });
-      }
+        }
+      });
     }
   }
 
@@ -168,17 +166,17 @@ abstract class Chain implements _$Chain {
   void testEventsScaleEncodingDecoding() {
     var decoded = decodedEvents();
     var original = events();
-    for (var i = 0; i < decoded.length; i++) {
-      var b = decoded[i];
-      test('Events: Encode/Decode: ${b.blockNumber}', () {
+    test('Events: Encode/Decode', () {
+      for (var i = 0; i < decoded.length; i++) {
+        var b = decoded[i];
         var d = getVersion(b.blockNumber);
         var events =
             d.codec.encodeToHex(d.description.eventRecordList, b.events);
         var encoded =
             RawBlockEvents(blockNumber: b.blockNumber, events: events);
         expect(encoded, equals(original[i]));
-      });
-    }
+      }
+    });
   }
 
   @Cached()
