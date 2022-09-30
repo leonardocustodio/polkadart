@@ -2,13 +2,13 @@ SF:/Users/hypeempreendimentos/Desktop/Jurimetric/polkadart/packages/ss58_codec/l
 DA:4,1
 DA:9,1
 DA:11,4
-DA:18,0
-DA:20,0
+DA:18,1
+DA:20,1
 DA:29,1
 DA:34,1
 DA:36,4
 LF:8
-LH:6
+LH:8
 end_of_record
 SF:/Users/hypeempreendimentos/Desktop/Jurimetric/polkadart/packages/ss58_codec/lib/src/address.dart
 DA:15,1
@@ -45,7 +45,7 @@ DA:72,1
 DA:75,1
 DA:76,2
 DA:77,6
-DA:78,0
+DA:78,1
 DA:82,1
 DA:84,3
 DA:96,1
@@ -80,5 +80,5 @@ DA:160,5
 DA:163,1
 DA:165,2
 LF:59
-LH:58
+LH:59
 end_of_record

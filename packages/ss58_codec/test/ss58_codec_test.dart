@@ -56,39 +56,92 @@ void main() {
     }
   });
 
-  // Decode Exception testing
+  /// [SS58Codec] `decode` method Exception testing
   group('decode: throw exception -> ', () {
+    /// `String` address with `length < 3`
     test('data.length < 3 ', () {
-      expect(() => SS58Codec.decode('KS'), throwsException);
+      expect(
+        () => SS58Codec.decode('KS'),
+        throwsA(
+          predicate((exception) =>
+              exception is BadAddressLengthException &&
+              exception.toString() == 'Bad Length Address: KS.'),
+        ),
+      );
     });
 
+    /// decoded address first byte is greater than 127.
+    /// Ex:
+    /// ```
+    /// Uint8List test = decode(fRWKeM1KzddF4G6N6isvg6SpFVWJLLXRyYvK1dXLx4xjP);
+    /// print('$test') => [`129`, 87, 121, 101, 101, 66, 117, 113, 134, 103, 193, 64, 109, 47, 24, 9, 100, 151, 78, 205, 74, 127, 183, 173, 105, 102, 53, 139, 176, 225, 152, 73, 158];
+    /// ```
     test('data[0] > 128 ', () {
       expect(
-          () =>
-              SS58Codec.decode('fRWKeM1KzddF4G6N6isvg6SpFVWJLLXRyYvK1dXLx4xjP'),
-          throwsException);
+        () => SS58Codec.decode('fRWKeM1KzddF4G6N6isvg6SpFVWJLLXRyYvK1dXLx4xjP'),
+        throwsA(
+          predicate((exception) =>
+              exception is InvalidPrefixException &&
+              exception.toString() == 'Invalid SS58 prefix byte.'),
+        ),
+      );
     });
+
+    /// example of invalid decoded address length
     test('(data.length - offset) != any of [2, 3, 5, 9, 34, 35]', () {
       expect(
-          () => SS58Codec.decode(
-              '3HX1zEyzCbxeXe34JY8SNSVAZ6djFccsV5f67PTied4CcWHspQ'),
-          throwsException);
+        () => SS58Codec.decode(
+            '3HX1zEyzCbxeXe34JY8SNSVAZ6djFccsV5f67PTied4CcWHspQ'),
+        throwsA(
+          predicate((exception) =>
+              exception is BadAddressLengthException &&
+              exception.toString() == 'Bad Length Address.'),
+        ),
+      );
       expect(
-          () => SS58Codec.decode(
-              '4pa95kBXvMqgbpDXkFVHE9JfnNqamjYQYtmSTZGcnBXwvnmosP'),
-          throwsException);
+        () => SS58Codec.decode(
+            '4pa95kBXvMqgbpDXkFVHE9JfnNqamjYQYtmSTZGcnBXwvnmosP'),
+        throwsA(
+          predicate((exception) =>
+              exception is BadAddressLengthException &&
+              exception.toString() == 'Bad Length Address.'),
+        ),
+      );
       expect(
-          () => SS58Codec.decode(
-              '3rr8zEMfiR2AjQYpVvncJCAcRP7CLzfxMGuUU2Pw2MCotrsQnS'),
-          throwsException);
+        () => SS58Codec.decode(
+            '3rr8zEMfiR2AjQYpVvncJCAcRP7CLzfxMGuUU2Pw2MCotrsQnS'),
+        throwsA(
+          predicate((exception) =>
+              exception is BadAddressLengthException &&
+              exception.toString() == 'Bad Length Address.'),
+        ),
+      );
       expect(
-          () => SS58Codec.decode(
-              '4uqUGom7PszVSaZipgHYwVNsMESj1W6cmMZYeXGFeeXGX6VEqm'),
-          throwsException);
+        () => SS58Codec.decode(
+            '4uqUGom7PszVSaZipgHYwVNsMESj1W6cmMZYeXGFeeXGX6VEqm'),
+        throwsA(
+          predicate((exception) =>
+              exception is BadAddressLengthException &&
+              exception.toString() == 'Bad Length Address.'),
+        ),
+      );
+    });
+
+    /// example of invalid decoded address.
+    test('invalid check sum exception', () {
+      expect(
+        () => SS58Codec.decode(
+            '3HX1zEyzCbxeXe34JY8SNSVAZ6djFccsV5f67PTied4CcWHs'),
+        throwsA(
+          predicate((exception) =>
+              exception is InvalidCheckSumException &&
+              exception.toString() == 'Invalid checksum'),
+        ),
+      );
     });
   });
 
-  // [SS58Codec] `encode` method Exception testing
+  /// [SS58Codec] `encode` method Exception testing
   group('encode: throw exception -> ', () {
     /// [Address] with invalid `prefix`
     test('invalid prefix ', () {
