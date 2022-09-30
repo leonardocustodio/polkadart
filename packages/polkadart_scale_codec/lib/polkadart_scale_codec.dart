@@ -1,4 +1,3 @@
-/// Doing something awesome.
 library polkadart_scale_codec;
 
 export 'src/core/core.dart';

@@ -1,12 +1,102 @@
 part of polkadart_scale_codec_core;
 
+///
+/// Codec
 class Codec {
   List<CodecType> _types = <CodecType>[];
 
+  /// Initialize the Codec types with the help of metadata
+  ///
+  /// Example:
+  /// ```dart
+  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'as scale_codec;
+  /// import 'package:substrate_metadata/old/types.dart' as old_types;
+  /// import 'package:substrate_metadata/old/type_registry.dart';
+  ///
+  ///
+  /// // Creates the registry for parsing the types and selecting particular schema.
+  /// var registry = OldTypeRegistry(
+  ///   old_types.OldTypes(
+  ///     types: <String, dynamic>{
+  ///       'Codec': {
+  ///         'vec_u8': 'Vec<u8>',
+  ///         'option_u8': 'Option<u8>',
+  ///         'primitive_compact_u8': 'Compact<u8>',
+  ///         'primitive_i8': 'i8',
+  ///         'primitive_i16': 'i16',
+  ///         'primitive_i32': 'i32',
+  ///         'primitive_i64': 'i64',
+  ///         'primitive_i128': 'i128',
+  ///         'primitive_i256': 'i256',
+  ///         'primitive_u8': 'u8',
+  ///         'primitive_u16': 'u16',
+  ///         'primitive_u32': 'u32',
+  ///         'primitive_u64': 'u64',
+  ///         'primitive_u128': 'u128',
+  ///         'primitive_u256': 'u256',
+  ///       },
+  ///     },
+  ///   ),
+  /// );
+  ///
+  /// // specifying which schema type to use when creating types
+  /// registry.use('Codec');
+  ///
+  /// // fetching the parsed types from `Json` to `Type`
+  /// var types = registry.getTypes();
+  ///
+  /// // Initializing Scale-Codec object
+  /// var codec = scale_codec.Codec(types);
+  /// ```
   Codec(List<Type> types) {
     _types = toCodecTypes(types);
   }
 
+  /// Decodes the value with initialized codec
+  ///
+  /// Example:
+  /// ```dart
+  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'as scale_codec;
+  /// import 'package:substrate_metadata/old/types.dart' as old_types;
+  /// import 'package:substrate_metadata/old/type_registry.dart';
+  ///
+  ///
+  /// // Creates the registry for parsing the types and selecting particular schema.
+  /// var registry = OldTypeRegistry(
+  ///   old_types.OldTypes(
+  ///     types: <String, dynamic>{
+  ///       'Codec': {
+  ///         'vec_u8': 'Vec<u8>',
+  ///         'option_u8': 'Option<u8>',
+  ///         'primitive_compact_u8': 'Compact<u8>',
+  ///         'primitive_i8': 'i8',
+  ///         'primitive_i16': 'i16',
+  ///         'primitive_i32': 'i32',
+  ///         'primitive_i64': 'i64',
+  ///         'primitive_i128': 'i128',
+  ///         'primitive_i256': 'i256',
+  ///         'primitive_u8': 'u8',
+  ///         'primitive_u16': 'u16',
+  ///         'primitive_u32': 'u32',
+  ///         'primitive_u64': 'u64',
+  ///         'primitive_u128': 'u128',
+  ///         'primitive_u256': 'u256',
+  ///       },
+  ///     },
+  ///   ),
+  /// );
+  ///
+  /// // specifying which schema type to use when creating types
+  /// registry.use('Codec');
+  ///
+  /// // fetching the parsed types from `Json` to `Type`
+  /// var types = registry.getTypes();
+  ///
+  /// // Initializing Scale-Codec object
+  /// var codec = scale_codec.Codec(types);
+  ///
+  /// var result = codec.decodeBinary(registry.use('Option<u8>'), '0x0108'); // 8
+  /// ```
   dynamic decodeBinary(int type, dynamic data) {
     Src src = Src(data);
     var val = decode(type, src);
@@ -14,6 +104,51 @@ class Codec {
     return val;
   }
 
+  /// Encodes the value to hex
+  ///
+  /// Example:
+  /// ```dart
+  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'as scale_codec;
+  /// import 'package:substrate_metadata/old/types.dart' as old_types;
+  /// import 'package:substrate_metadata/old/type_registry.dart';
+  ///
+  ///
+  /// // Creates the registry for parsing the types and selecting particular schema.
+  /// var registry = OldTypeRegistry(
+  ///   old_types.OldTypes(
+  ///     types: <String, dynamic>{
+  ///       'Codec': {
+  ///         'vec_u8': 'Vec<u8>',
+  ///         'option_u8': 'Option<u8>',
+  ///         'primitive_compact_u8': 'Compact<u8>',
+  ///         'primitive_i8': 'i8',
+  ///         'primitive_i16': 'i16',
+  ///         'primitive_i32': 'i32',
+  ///         'primitive_i64': 'i64',
+  ///         'primitive_i128': 'i128',
+  ///         'primitive_i256': 'i256',
+  ///         'primitive_u8': 'u8',
+  ///         'primitive_u16': 'u16',
+  ///         'primitive_u32': 'u32',
+  ///         'primitive_u64': 'u64',
+  ///         'primitive_u128': 'u128',
+  ///         'primitive_u256': 'u256',
+  ///       },
+  ///     },
+  ///   ),
+  /// );
+  ///
+  /// // specifying which schema type to use when creating types
+  /// registry.use('Codec');
+  ///
+  /// // fetching the parsed types from `Json` to `Type`
+  /// var types = registry.getTypes();
+  ///
+  /// // Initializing Scale-Codec object
+  /// var codec = scale_codec.Codec(types);
+  ///
+  /// var result = codec.decodeBinary(registry.use('Option<u8>'), '0x0108'); // 8
+  /// ```
   String encodeToHex(int type, dynamic val) {
     var sink = HexSink();
     encode(type, val, sink);
@@ -180,7 +315,7 @@ class Codec {
   }
 
   void _encodeArray(ArrayType def, dynamic val, Sink sink) {
-    assertionCheck(val is List && val.length == def.len);
+    assertNotNull(val is List && val.length == def.len);
 
     for (var i = 0; i < val.length; i++) {
       encode(def.type, val[i], sink);
@@ -188,7 +323,7 @@ class Codec {
   }
 
   void _encodeSequence(SequenceType def, dynamic val, Sink sink) {
-    assertionCheck(val is List);
+    assertNotNull(val is List);
     sink.compact((val as List).length);
     for (var i = 0; i < val.length; i++) {
       encode(def.type, val[i], sink);
@@ -200,7 +335,7 @@ class Codec {
       assert(val == null);
       return;
     }
-    assertionCheck(val is List && def.tuple.length == val.length);
+    assertNotNull(val is List && def.tuple.length == val.length);
     for (var i = 0; i < val.length; i++) {
       encode(def.tuple[i], val[i], sink);
     }
@@ -214,8 +349,8 @@ class Codec {
   }
 
   void _encodeVariant(CodecVariantType def, dynamic val, Sink sink) {
-    assertionCheck(val is Map<String, dynamic>);
-    assertionCheck(val['__kind'] is String, 'not a variant type value');
+    assertNotNull(val is Map<String, dynamic>);
+    assertNotNull(val['__kind'] is String, 'not a variant type value');
 
     CodecVariant? variant = def.variantsByName[val['__kind']];
     if (variant == null) {
@@ -253,13 +388,13 @@ Uint8List decodeBytes(Src src) {
 }
 
 void encodeBytes(dynamic val, Sink sink) {
-  assertionCheck(val is List);
+  assertNotNull(val is List);
   sink.compact(val.length);
   sink.bytes(val);
 }
 
 void encodeBytesArray(CodecBytesArrayType def, dynamic val, Sink sink) {
-  assertionCheck(val is List && val.length == def.len);
+  assertNotNull(val is List && val.length == def.len);
   sink.bytes(val);
 }
 
@@ -269,7 +404,7 @@ Uint8List decodeBitSequence(Src src) {
 }
 
 void encodeBitSequence(dynamic bits, Sink sink) {
-  assertionCheck(bits is List);
+  assertNotNull(bits is List);
   sink.compact(bits.length * 8);
   sink.bytes(bits);
 }

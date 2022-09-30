@@ -1,27 +1,56 @@
 part of utils;
 
-T assertNotNull<T>(T? val, {String? msg}) {
-  assertionCheck(val != null, msg);
-  return val as T;
+/// Assets if the `T` value is null or not.
+///
+/// Returns `T` if not null otherwise throws `AssertionException`
+T assertNotNull<T>(T? val, [String? msg]) {
+  if (val == null || val is bool && !val) {
+    throw AssertionException(msg ?? 'Assertion Error occured.');
+  }
+  return val;
 }
 
+/// Returns `true` if the val is `num` and is in range of [min, max] with `min` and `max` being inclusive.
+///
+/// Throws `InvalidSizeException` if the above condition is `false`.
+///
+/// Sign:
+/// - u --> unsigned
+/// - i --> signed
 bool checkInt(dynamic val, String sign, int bitSize, int min, int max) {
-  final bool ok = isNumber(val) && min <= (val as num) && max >= val;
+  final bool ok = val is num && min <= val && max >= val;
   if (!ok) {
     throw InvalidSizeException('Invalid $sign$bitSize: $val');
   }
   return ok;
 }
 
-bool checkBigInt(
-    dynamic val, String sign, int bitSize, BigInt min, BigInt max) {
-  final bool ok = val is BigInt && min <= val && max >= val;
+/// Returns `true` if the val is in range of [min, max] with `min` and `max` being inclusive.
+///
+/// Throws `InvalidSizeException` if the above condition is `false`.
+///
+/// Sign:
+/// - u --> unsigned
+/// - i --> signed
+bool checkBigInt(BigInt val, String sign, int bitSize, BigInt min, BigInt max) {
+  final bool ok = min <= val && max >= val;
   if (!ok) {
     throw InvalidSizeException('Invalid $sign$bitSize: $val');
   }
   return ok;
 }
 
+/// Returns `true` if the Signed int `val` is in range of [min, max] according to `bitSize`.
+///
+/// bitsize ranges are:
+/// - 8 -> [-128, 127]
+/// - 16 -> [-32768, 32767]
+/// - 32 -> [-2147483648, 2147483647]
+///
+/// Exceptions:
+/// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
+/// - `InvalidSizeException` if the val is not in range.
+///
 bool checkSignedInt(dynamic val, int bitSize) {
   late int min;
   late int max;
@@ -44,10 +73,27 @@ bool checkSignedInt(dynamic val, int bitSize) {
   return checkInt(val, 'I', bitSize, min, max);
 }
 
+/// Calculates BigInt power.
+///
+///Example:
+/// ```dart
+/// BigInt value = calculateBigIntPow(2, 7);
+/// ```
 BigInt calculateBigIntPow(int number, int exponent) {
   return number.bigInt.pow(exponent.bigInt.toInt());
 }
 
+/// Returns `true` if the Signed BigInt `val` is in range of [min, max] according to `bitSize`.
+///
+/// bitsize ranges are:
+/// - 64 -> [-9223372036854775808, 9223372036854775807]
+/// - 128 -> [-170141183460469231731687303715884105728, 170141183460469231731687303715884105727]
+/// - 256 -> [-57896044618658097711785492504343953926634992332820282019728792003956564819968, 57896044618658097711785492504343953926634992332820282019728792003956564819967]
+///
+/// Exceptions:
+/// - `UnexpectedCaseException` if the `bitsize` is not (64 || 128 || 256)
+/// - `InvalidSizeException` if the val is not in range.
+///
 bool checkSignedBigInt(dynamic val, int bitSize) {
   late BigInt min;
   late BigInt max;
@@ -65,6 +111,17 @@ bool checkSignedBigInt(dynamic val, int bitSize) {
   return checkBigInt(val, 'I', bitSize, min, max);
 }
 
+/// Returns `true` if the Unsigned int `val` is in range of [min, max] according to `bitSize`.
+///
+/// bitsize ranges are:
+/// - 8 -> [0, 127]
+/// - 16 -> [0, 32767]
+/// - 32 -> [0, 2147483647]
+///
+/// Exceptions:
+/// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
+/// - `InvalidSizeException` if the val is not in range.
+///
 bool checkUnsignedInt(dynamic val, int bitSize) {
   late int max;
   switch (bitSize) {
@@ -83,12 +140,21 @@ bool checkUnsignedInt(dynamic val, int bitSize) {
   return checkInt(val, 'U', bitSize, 0, max);
 }
 
+/// Returns `true` if the Signed BigInt `val` is in range of [min, max] according to `bitSize`.
+///
+/// bitsize ranges are:
+/// - 64 -> [0, 18446744073709551615]
+/// - 128 -> [0, 170141183460469231731687303715884105727]
+/// - 256 -> [0, 57896044618658097711785492504343953926634992332820282019728792003956564819967]
+///
+/// Exceptions:
+/// - `UnexpectedCaseException` if the `bitsize` is not (64 || 128 || 256)
+/// - `InvalidSizeException` if the val is not in range.
+///
 bool checkUnsignedBigInt(dynamic val, int bitSize) {
   late BigInt max;
   switch (bitSize) {
     case 64:
-      max = BigInt.parse('0xffffffffffffffff');
-      break;
     case 128:
     case 256:
       max = calculateBigIntPow(2, bitSize) - 1.bigInt;
@@ -99,6 +165,16 @@ bool checkUnsignedBigInt(dynamic val, int bitSize) {
   return checkBigInt(val, 'U', bitSize, 0.bigInt, max);
 }
 
+///
+/// Accepts `val` as `int` or `String`.
+///
+/// Throws `UnexpectedTypeException` when val is not `int` or `String`.
+///
+///Example:
+/// ```dart
+///BigInt val = toSignedBigInt(2, 64);
+///// val = 2;
+///```
 BigInt toSignedBigInt(dynamic val, int bitSize) {
   late BigInt value;
   if (val is String) {
@@ -114,6 +190,16 @@ BigInt toSignedBigInt(dynamic val, int bitSize) {
   return value;
 }
 
+///
+/// Accepts `val` as `int` or `String`.
+///
+/// Throws `UnexpectedTypeException` when val is not `int` or `String`.
+///
+///Example:
+/// ```dart
+///BigInt val = toUnsignedBigInt(2, 64);
+///// val = 2;
+///```
 BigInt toUnsignedBigInt(dynamic val, int bitSize) {
   late BigInt value;
   if (val is String) {
@@ -129,8 +215,18 @@ BigInt toUnsignedBigInt(dynamic val, int bitSize) {
 }
 
 /// Encodes UTF-8 String
+///
+/// Throws `FormatException` when undetermined Unicode Character sequence is found.
+///
+///Example:
+/// ```dart
+/// var val = utf8Encoder('polkadot');
+/// // val = [112, 111, 108, 107, 97, 100, 111, 116]
+/// ```
 List<int> utf8Encoder(String input) => Utf8Codec().encode(input);
 
+///
+/// Counts the shifts made to the the bits of [val] to the right by shiftAmount:`8` before becoming `0`.
 int unsignedIntByteLength(BigInt val) {
   int len = 0;
   BigInt bigInt0 = 0.bigInt;
@@ -140,10 +236,4 @@ int unsignedIntByteLength(BigInt val) {
     len += 1;
   }
   return len;
-}
-
-void assertionCheck(bool condition, [String? msg]) {
-  if (!condition) {
-    throw AssertionException(msg ?? 'Assertion Error occured.');
-  }
 }

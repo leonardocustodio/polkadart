@@ -71,10 +71,10 @@ CodecType getCodecType(List<Type> types, int ti) {
       var type = getUnwrappedType(types, (def as CompactType).type);
       switch (type.kind) {
         case TypeKind.Tuple:
-          assertionCheck((type as TupleType).tuple.isEmpty);
+          assertNotNull((type as TupleType).tuple.isEmpty);
           return type;
         case TypeKind.Primitive:
-          assertionCheck((type as PrimitiveType).primitive.name[0] == 'U');
+          assertNotNull((type as PrimitiveType).primitive.name[0] == 'U');
           return CodecCompactType(integer: type.primitive);
         default:
           throw UnexpectedCaseException('${type.kind}');
@@ -123,7 +123,7 @@ CodecType getCodecType(List<Type> types, int ti) {
                   index: v.index,
                   def: TupleType(
                       tuple: v.fields.map((Field field) {
-                    assertionCheck(field.name == null);
+                    assertNotNull(field.name == null);
                     return field.type;
                   }).toList()));
           }

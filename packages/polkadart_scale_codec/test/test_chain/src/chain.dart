@@ -208,8 +208,7 @@ abstract class Chain implements _$Chain {
           ? description[description.length - 1]
           : description[next - 1];
     }
-    scale_codec.assertNotNull(e,
-        msg: 'not found metadata for block $blockNumber');
+    scale_codec.assertNotNull(e, 'not found metadata for block $blockNumber');
     return e!;
   }
 

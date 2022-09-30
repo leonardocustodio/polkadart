@@ -1,6 +1,5 @@
 part of utils;
 
-///
 /// UnexpectedCaseException
 class UnexpectedCaseException implements Exception {
   const UnexpectedCaseException([this.value]);
@@ -8,20 +7,15 @@ class UnexpectedCaseException implements Exception {
   final dynamic value;
 
   @override
-  String toString() {
-    return 'Unexpected case${value == null ? '' : ': $value'}.';
-  }
+  String toString() => 'Unexpected case${value == null ? '' : ': $value'}.';
 }
 
-///
 /// EOFException
 class EOFException implements Exception {
   const EOFException();
 
   @override
-  String toString() {
-    return 'Unexpected EOF.';
-  }
+  String toString() => 'Unexpected EOF.';
 }
 
 ///
@@ -31,12 +25,9 @@ class AssertionException implements Exception {
 
   final String? msg;
   @override
-  String toString() {
-    return msg ?? 'Assertion Exception';
-  }
+  String toString() => msg ?? 'Assertion Exception';
 }
 
-///
 /// InvalidSizeException
 class InvalidSizeException implements Exception {
   const InvalidSizeException([this.msg]);
@@ -45,12 +36,9 @@ class InvalidSizeException implements Exception {
   final String? msg;
 
   @override
-  String toString() {
-    return msg ?? 'Invalid size.';
-  }
+  String toString() => msg ?? 'Invalid size.';
 }
 
-///
 /// IncompatibleCompactException
 class IncompatibleCompactException implements Exception {
   const IncompatibleCompactException(this.size);
@@ -59,12 +47,9 @@ class IncompatibleCompactException implements Exception {
   final String size;
 
   @override
-  String toString() {
-    return '$size is too large for a compact';
-  }
+  String toString() => '$size is too large for a compact';
 }
 
-///
 /// InvalidCompactException
 class InvalidCompactException implements Exception {
   const InvalidCompactException([this.msg]);
@@ -73,11 +58,10 @@ class InvalidCompactException implements Exception {
   final String? msg;
 
   @override
-  String toString() {
-    return msg ?? 'Invalid compact.';
-  }
+  String toString() => msg ?? 'Invalid compact.';
 }
 
+/// UnexpectedTypeException
 class UnexpectedTypeException implements Exception {
   const UnexpectedTypeException([this.msg]);
 
@@ -85,7 +69,5 @@ class UnexpectedTypeException implements Exception {
   final dynamic msg;
 
   @override
-  String toString() {
-    return msg ?? 'Unexpected type.';
-  }
+  String toString() => msg ?? 'Unexpected type.';
 }

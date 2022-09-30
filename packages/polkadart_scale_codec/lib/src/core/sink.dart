@@ -1,8 +1,12 @@
 part of polkadart_scale_codec_core;
 
+///
+/// Abstract class to laydown the defined set of instructions when making a [HexSink] or [ByteSink]
 abstract class Sink {
+  /// process and append the byte to the data
   void write(int byte);
 
+  /// append the list of bytes to the data.
   void bytes(List b);
 
   void _uncheckedU16(int val) {
@@ -102,22 +106,23 @@ abstract class Sink {
     _uncheckedU256(val);
   }
 
+  /// Encode and write string value to the data.
   void str(String val) {
     List<int> encodedBytes = utf8Encoder(val);
     compact(encodedBytes.length);
     bytes(Uint8List.fromList(encodedBytes));
   }
 
+  /// write boolean value to data as `int`.
   void boolean(bool val) {
     write(val ? 1 : 0);
   }
 
-  ///
   /// `dyanmic val`: (int or BigInt)
   ///
   /// ```
   /// throw UnexpectedTypeException: when (val is not either (int or BigInt))
-  /// throw InvalidCompactException: when (val < 0)
+  /// throw InvalidCompactException: when (val < 0) || (value > calculateBigIntPow(2, 536))
   /// ```
   void compact(dynamic val) {
     if (val is int) {
@@ -138,6 +143,9 @@ abstract class Sink {
     }
   }
 
+  /// Compact the integer value and write it to buffer data.
+  ///
+  /// Throws `IncompatibleCompactException` when value > calculateBigIntPow(2, 536)
   void _compactFromInt(int value) {
     if (value < 64) {
       write(value * 4);
@@ -148,7 +156,7 @@ abstract class Sink {
       write((value & 63) * 4 + 2);
       write((value >>> 6) & 0xff);
       _uncheckedU16(value >>> 14);
-    } else if (value < 2.bigInt.pow(536.bigInt.toInt()).toInt()) {
+    } else if (value < calculateBigIntPow(2, 536).toInt()) {
       final val = BigInt.from(value);
       write(unsignedIntByteLength(val) * 4 - 13);
       while (value > 0) {
@@ -160,6 +168,9 @@ abstract class Sink {
     }
   }
 
+  /// Compact the BigInt value and write it to buffer data.
+  ///
+  /// Throws `IncompatibleCompactException` when value > calculateBigIntPow(2, 536)
   void _compactFromBigInt(BigInt value) {
     final val = value.toInt();
     if (val < 64) {
@@ -171,7 +182,7 @@ abstract class Sink {
       write((val & 63) * 4 + 2);
       write((val >>> 6) & 0xff);
       _uncheckedU16(val >>> 14);
-    } else if (value < 2.bigInt.pow(536.bigInt.toInt())) {
+    } else if (value < calculateBigIntPow(2, 536)) {
       BigInt copiedValue = value;
       write(unsignedIntByteLength(copiedValue) * 4 - 13);
       while (copiedValue.toInt() > 0) {
@@ -198,12 +209,14 @@ class HexSink extends Sink {
     _hex += encodeHex(b.cast<int>()).replaceFirst(RegExp(r'0x'), '');
   }
 
+  /// Return current hex data
   String toHex() {
     return _hex;
   }
 }
 
 class ByteSink extends Sink {
+  /// Fixed length buffer [_data].
   Uint8List _data = Uint8List(128);
   int _pos = 0;
 
@@ -215,6 +228,7 @@ class ByteSink extends Sink {
     }
   }
 
+  /// allocate a byte space if the [_data] is full and then append the [byte] to the buffer
   @override
   void write(int byte) {
     _alloc(1);
@@ -222,6 +236,7 @@ class ByteSink extends Sink {
     _pos += 1;
   }
 
+  /// allocate space for `b-length` buffer, if the [_data] is full and then append buffer: [b] to the [_data]
   @override
   void bytes(List b) {
     _alloc(b.length);
@@ -229,6 +244,7 @@ class ByteSink extends Sink {
     _pos += b.length;
   }
 
+  /// Returns current Buffer data
   Uint8List toBytes() {
     return _data.sublist(0, _pos);
   }
