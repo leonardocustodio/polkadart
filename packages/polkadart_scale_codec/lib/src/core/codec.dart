@@ -147,7 +147,7 @@ class Codec {
   /// // Initializing Scale-Codec object
   /// var codec = scale_codec.Codec(types);
   ///
-  /// var result = codec.decodeBinary(registry.use('Option<u8>'), '0x0108'); // 8
+  /// var result = codec.encodeToHex(registry.use('Option<u8>'), 8); // '0x0108'
   /// ```
   String encodeToHex(int type, dynamic val) {
     var sink = HexSink();
@@ -155,21 +155,36 @@ class Codec {
     return sink.toHex();
   }
 
+  /// Encodes the [val] and outputs `Uint8List`
+  ///
+  ///Example:
+  /// ```dart
+  /// var result = codec.encodeToBinary(registry.use('Option<u8>'), 8); // [1, 8]
+  /// ```
   Uint8List encodeToBinary(int type, dynamic val) {
     var sink = ByteSink();
     encode(type, val, sink);
     return sink.toBytes();
   }
 
+  /// Decodes the [data] wrapped in [Src] object
+  ///
+  ///Example:
+  /// ```dart
+  /// Src src = Src('0x0108');
+  /// var result = codec.decode(registry.use('Option<u8>'), src); // 8
+  /// ```
+  ///
+  /// Throws `UnexpectedCaseException` if the type is not recognised.
   dynamic decode(int type, Src src) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
-        return decodePrimitiveFromSrc((def as PrimitiveType).primitive, src);
+        return _decodePrimitiveFromSrc((def as PrimitiveType).primitive, src);
       case TypeKind.Compact:
-        return decodeCompact((def as CodecCompactType), src);
+        return _decodeCompact((def as CodecCompactType), src);
       case TypeKind.BitSequence:
-        return decodeBitSequence(src);
+        return _decodeBitSequence(src);
       case TypeKind.Array:
         return _decodeArray((def as ArrayType), src);
       case TypeKind.Sequence:
@@ -183,7 +198,7 @@ class Codec {
       case TypeKind.Option:
         return _decodeOption((def as OptionType), src);
       case TypeKind.Bytes:
-        return decodeBytes(src);
+        return _decodeBytes(src);
       case TypeKind.BytesArray:
         return src.bytes((def as CodecBytesArrayType).len);
       default:
@@ -191,6 +206,7 @@ class Codec {
     }
   }
 
+  /// Decodes Array
   List<dynamic> _decodeArray(ArrayType def, Src src) {
     int len = def.len;
     int type = def.type;
@@ -202,6 +218,7 @@ class Codec {
     return result;
   }
 
+  /// Decodes Bit Sequence
   List<dynamic> _decodeSequence(SequenceType def, Src src) {
     int len = src.compactLength();
     List<dynamic> result = <dynamic>[]..length = len;
@@ -211,6 +228,7 @@ class Codec {
     return result;
   }
 
+  /// Decodes Tuple
   List<dynamic>? _decodeTuple(TupleType def, Src src) {
     if (def.tuple.isEmpty) {
       return null;
@@ -222,6 +240,7 @@ class Codec {
     return result;
   }
 
+  /// Decodes Struct
   Map<String, dynamic> _decodeStruct(CodecStructType def, Src src) {
     Map<String, dynamic> result = <String, dynamic>{};
     for (var i = 0; i < def.fields.length; i++) {
@@ -231,6 +250,7 @@ class Codec {
     return result;
   }
 
+  /// Decodes Variant
   Map<String, dynamic> _decodeVariant(CodecVariantType def, Src src) {
     var idx = src.u8();
     CodecVariant? variant =
@@ -261,6 +281,7 @@ class Codec {
     }
   }
 
+  /// Decodes Option
   dynamic _decodeOption(OptionType def, Src src) {
     int byte = src.u8();
     switch (byte) {
@@ -273,17 +294,33 @@ class Codec {
     }
   }
 
+  /// Encodes the [val] and writes the result to [sink] object
+  ///
+  ///Example:
+  /// ```dart
+  /// // Byte Sink
+  /// var byteSink = ByteSink();
+  /// codec.encode(registry.use('Option<u8>'), 8, byteSink);
+  /// byteSink.toBytes(); // [1, 8]
+  ///
+  /// //or
+  /// // Hex Sink
+  /// var hexSink = HexSink();
+  /// codec.encode(registry.use('Option<u8>'), 8, hexSink);
+  /// hexSink.toHex(); // '0x0108'
+  ///
+  /// ```
   void encode(int type, dynamic val, Sink sink) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
-        encodePrimitive((def as PrimitiveType).primitive, val, sink);
+        _encodePrimitive((def as PrimitiveType).primitive, val, sink);
         break;
       case TypeKind.Compact:
         sink.compact(val);
         break;
       case TypeKind.BitSequence:
-        encodeBitSequence(val, sink);
+        _encodeBitSequence(val, sink);
         break;
       case TypeKind.Array:
         _encodeArray((def as ArrayType), val, sink);
@@ -301,10 +338,10 @@ class Codec {
         _encodeVariant((def as CodecVariantType), val, sink);
         break;
       case TypeKind.BytesArray:
-        encodeBytesArray((def as CodecBytesArrayType), val, sink);
+        _encodeBytesArray((def as CodecBytesArrayType), val, sink);
         break;
       case TypeKind.Bytes:
-        encodeBytes(val, sink);
+        _encodeBytes(val, sink);
         break;
       case TypeKind.Option:
         _encodeOption((def as OptionType), val, sink);
@@ -314,6 +351,8 @@ class Codec {
     }
   }
 
+  ///
+  /// Encodes Array
   void _encodeArray(ArrayType def, dynamic val, Sink sink) {
     assertNotNull(val is List && val.length == def.len);
 
@@ -322,6 +361,8 @@ class Codec {
     }
   }
 
+  ///
+  /// Encodes Bit Sequence
   void _encodeSequence(SequenceType def, dynamic val, Sink sink) {
     assertNotNull(val is List);
     sink.compact((val as List).length);
@@ -330,6 +371,8 @@ class Codec {
     }
   }
 
+  ///
+  /// Encodes Tuple
   void _encodeTuple(TupleType def, dynamic val, Sink sink) {
     if (def.tuple.isEmpty) {
       assert(val == null);
@@ -341,6 +384,8 @@ class Codec {
     }
   }
 
+  ///
+  /// Encodes Struct
   void _encodeStruct(CodecStructType def, dynamic val, Sink sink) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
@@ -348,6 +393,8 @@ class Codec {
     }
   }
 
+  ///
+  /// Encodes Variant
   void _encodeVariant(CodecVariantType def, dynamic val, Sink sink) {
     assertNotNull(val is Map<String, dynamic>);
     assertNotNull(val['__kind'] is String, 'not a variant type value');
@@ -372,6 +419,8 @@ class Codec {
     }
   }
 
+  ///
+  /// Encodes Option
   void _encodeOption(OptionType def, dynamic val, Sink sink) {
     if (val == null) {
       sink.u8(0);
@@ -382,28 +431,38 @@ class Codec {
   }
 }
 
-Uint8List decodeBytes(Src src) {
+///
+/// Decodes Bytes
+Uint8List _decodeBytes(Src src) {
   int len = src.compactLength();
   return src.bytes(len);
 }
 
-void encodeBytes(dynamic val, Sink sink) {
+///
+/// Encodes Bytes
+void _encodeBytes(dynamic val, Sink sink) {
   assertNotNull(val is List);
   sink.compact(val.length);
   sink.bytes(val);
 }
 
-void encodeBytesArray(CodecBytesArrayType def, dynamic val, Sink sink) {
+///
+/// Encodes Bytes Array
+void _encodeBytesArray(CodecBytesArrayType def, dynamic val, Sink sink) {
   assertNotNull(val is List && val.length == def.len);
   sink.bytes(val);
 }
 
-Uint8List decodeBitSequence(Src src) {
+///
+/// Decodes Bit Sequence
+Uint8List _decodeBitSequence(Src src) {
   var len = (src.compactLength() / 8).ceil();
   return src.bytes(len);
 }
 
-void encodeBitSequence(dynamic bits, Sink sink) {
+///
+/// Encodes Bit Sequence
+void _encodeBitSequence(dynamic bits, Sink sink) {
   assertNotNull(bits is List);
   sink.compact(bits.length * 8);
   sink.bytes(bits);
@@ -411,7 +470,7 @@ void encodeBitSequence(dynamic bits, Sink sink) {
 
 ///
 /// Returns: `BigInt` | `int`
-dynamic decodeCompact(CodecCompactType type, Src src) {
+dynamic _decodeCompact(CodecCompactType type, Src src) {
   var n = src.compact();
 
   // n is either [BigInt] or [int]
@@ -425,7 +484,8 @@ dynamic decodeCompact(CodecCompactType type, Src src) {
   }
 }
 
-dynamic decodePrimitiveFromSrc(Primitive type, Src src) {
+/// Decodes [src] object when Primitive is known.
+dynamic _decodePrimitiveFromSrc(Primitive type, Src src) {
   switch (type) {
     case Primitive.I8:
       return src.i8();
@@ -460,7 +520,8 @@ dynamic decodePrimitiveFromSrc(Primitive type, Src src) {
   }
 }
 
-void encodePrimitive(Primitive type, dynamic val, Sink sink) {
+/// Encodes [src] object to `sink` when [Primitive] is know
+void _encodePrimitive(Primitive type, dynamic val, Sink sink) {
   switch (type) {
     case Primitive.I8:
       sink.i8(val);
