@@ -88,46 +88,93 @@ void main() {
     });
   });
 
-  // Encode Exception testing
+  // [SS58Codec] `encode` method Exception testing
   group('encode: throw exception -> ', () {
+    /// [Address] with invalid `prefix`
     test('invalid prefix ', () {
+      /// [Address] invalid because of `negative` prefix
+      final addressWithNegativePrefix =
+          Address(prefix: -1, bytes: Uint8List.fromList([]));
       expect(
-          () => SS58Codec.encode(
-              Address(prefix: -1, bytes: Uint8List.fromList([]))),
-          throwsA(isA<InvalidPrefixException>()));
+        () => SS58Codec.encode(addressWithNegativePrefix),
+        throwsA(
+          predicate((exception) =>
+              exception is InvalidPrefixException &&
+              exception.toString() == 'Invalid SS58 prefix byte: -1.'),
+        ),
+      );
+
+      /// [Address] invalid because of prefix is greater than the limit
+      final addressWithInvalidPrefix =
+          Address(prefix: 16384, bytes: Uint8List.fromList([]));
 
       expect(
-          () => SS58Codec.encode(
-              Address(prefix: 16384, bytes: Uint8List.fromList([]))),
-          throwsA(isA<InvalidPrefixException>()));
+        () => SS58Codec.encode(addressWithInvalidPrefix),
+        throwsA(
+          predicate((exception) =>
+              exception is InvalidPrefixException &&
+              exception.toString() == 'Invalid SS58 prefix byte: 16384.'),
+        ),
+      );
     });
 
+    /// [Address] with invalid `address.bytes.length`
     test('invalid address length at lengths: [3, 5, 6, 7]', () {
       for (var len in [3, 5, 6, 7]) {
+        final invalidAddress = Address(prefix: 0, bytes: Uint8List(len));
         expect(
-            () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
-            throwsA(isA<BadAddressLengthException>()));
+          () => SS58Codec.encode(invalidAddress),
+          throwsA(
+            predicate(
+              (exception) =>
+                  exception is BadAddressLengthException &&
+                  exception.toString() ==
+                      'Bad Length Address: ${invalidAddress.toString()}.',
+            ),
+          ),
+        );
       }
     });
 
+    /// [Address] with invalid `address.bytes.length`
     test('invalid address length 9-31', () {
       for (var len = 9; len <= 31; len++) {
+        final invalidAddress = Address(prefix: 0, bytes: Uint8List(len));
         expect(
-            () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
-            throwsA(isA<BadAddressLengthException>()));
+          () => SS58Codec.encode(invalidAddress),
+          throwsA(
+            predicate(
+              (exception) =>
+                  exception is BadAddressLengthException &&
+                  exception.toString() ==
+                      'Bad Length Address: ${invalidAddress.toString()}.',
+            ),
+          ),
+        );
       }
     });
 
+    /// [Address] with invalid `address.bytes.length`
     test('invalid address length at length: 34+', () {
       for (var len in [34, 35]) {
+        final invalidAddress = Address(prefix: 0, bytes: Uint8List(len));
         expect(
-            () => SS58Codec.encode(Address(prefix: 0, bytes: Uint8List(len))),
-            throwsA(isA<BadAddressLengthException>()));
+          () => SS58Codec.encode(invalidAddress),
+          throwsA(
+            predicate(
+              (exception) =>
+                  exception is BadAddressLengthException &&
+                  exception.toString() ==
+                      'Bad Length Address: ${invalidAddress.toString()}.',
+            ),
+          ),
+        );
       }
     });
   });
 }
 
+/// Returns one random `int` less than [max].
 int randomInt(int max) {
   return Random.secure().nextInt(max);
 }
