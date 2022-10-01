@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:test/test.dart';
 
