@@ -1,10 +1,11 @@
 import 'dart:math';
-import 'package:polkadart_scale_codec/src/util/utils.dart';
-import 'package:test/test.dart';
+
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
-import 'package:substrate_metadata/old/types.dart' as old_types;
+import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:substrate_metadata/old/type_registry.dart';
+import 'package:substrate_metadata/old/types.dart' as old_types;
+import 'package:test/test.dart';
 
 void main() {
   var registry = OldTypeRegistry(
@@ -314,7 +315,7 @@ void main() {
         //
         // Exceeding BigInt Compacting value range: 2 ** 536
         //
-        BigInt invalidValue = 2.bigInt.pow(536.bigInt.toInt());
+        BigInt invalidValue = 2.toBigInt.pow(536.toBigInt.toInt());
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), invalidValue),
             throwsA(predicate((e) =>
@@ -341,7 +342,7 @@ void main() {
     //
     group('Encode/Decode Primitive:', () {
       for (var bit in ['i', 'u']) {
-        var multiplier = bit == 'i' ? -1.bigInt : 0.bigInt;
+        var multiplier = bit == 'i' ? -1.toBigInt : 0.toBigInt;
         for (var size in [64, 128, 256]) {
           // concates `i` or `u` with `size` and so on
           // i + (64 | 128 | 256)  -> i64 || i128 || i256
@@ -362,7 +363,7 @@ void main() {
             expect(lowest, equals(decodedLow));
 
             // highest accepted value
-            var highest = poweredValue - 1.bigInt;
+            var highest = poweredValue - 1.toBigInt;
 
             var encodedHigh = codec.encodeToHex(registry.use(bitSize), highest);
             var decodedHigh =

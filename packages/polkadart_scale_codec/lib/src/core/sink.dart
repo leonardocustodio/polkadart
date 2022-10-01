@@ -2,7 +2,7 @@ part of polkadart_scale_codec_core;
 
 ///
 /// Abstract class to laydown the defined set of instructions when making a [HexSink] or [ByteSink]
-abstract class Sink {
+abstract class ScaleCodecSink {
   /// process and append the byte to the data
   void write(int byte);
 
@@ -22,18 +22,18 @@ abstract class Sink {
   }
 
   void _uncheckedU64(BigInt val) {
-    _uncheckedU32((val & '0xffffffff'.bigInt).toInt());
-    _uncheckedU32((val >> 32.bigInt.toInt()).toInt());
+    _uncheckedU32((val & '0xffffffff'.toBigInt).toInt());
+    _uncheckedU32((val >> 32.toBigInt.toInt()).toInt());
   }
 
   void _uncheckedU128(BigInt val) {
-    _uncheckedU64(val & '0xffffffffffffffff'.bigInt);
-    _uncheckedU64(val >> 64.bigInt.toInt());
+    _uncheckedU64(val & '0xffffffffffffffff'.toBigInt);
+    _uncheckedU64(val >> 64.toBigInt.toInt());
   }
 
   void _uncheckedU256(BigInt val) {
-    _uncheckedU128(val & calculateBigIntPow(2, 128) - 1.bigInt);
-    _uncheckedU128(val >> 128.bigInt.toInt());
+    _uncheckedU128(val & calculateBigIntPow(2, 128) - 1.toBigInt);
+    _uncheckedU128(val >> 128.toBigInt.toInt());
   }
 
   void u8(int val) {
@@ -160,8 +160,8 @@ abstract class Sink {
       final val = BigInt.from(value);
       write(unsignedIntByteLength(val) * 4 - 13);
       while (value > 0) {
-        write(value & '0xff'.bigInt.toInt());
-        value = value >> 8.bigInt.toInt();
+        write(value & '0xff'.toBigInt.toInt());
+        value = value >> 8.toBigInt.toInt();
       }
     } else {
       throw IncompatibleCompactException(value.toRadixString(16));
@@ -187,7 +187,7 @@ abstract class Sink {
       write(unsignedIntByteLength(copiedValue) * 4 - 13);
       while (copiedValue.toInt() > 0) {
         write((copiedValue & BigInt.parse('0xff')).toInt());
-        copiedValue = copiedValue >> 8.bigInt.toInt();
+        copiedValue = copiedValue >> 8.toBigInt.toInt();
       }
     } else {
       throw IncompatibleCompactException(value.toRadixString(16));
@@ -195,7 +195,9 @@ abstract class Sink {
   }
 }
 
-class HexSink extends Sink {
+///
+/// `HexSink` to write the bytes and parallely write the result as Hex.
+class HexSink extends ScaleCodecSink {
   String _hex = '0x';
 
   @override
@@ -215,7 +217,9 @@ class HexSink extends Sink {
   }
 }
 
-class ByteSink extends Sink {
+///
+/// `ByteSink` to write the `byte` or a group of `bytes` and append to the existing result as buffer only.
+class ByteSink extends ScaleCodecSink {
   /// Fixed length buffer [_data].
   Uint8List _data = Uint8List(128);
   int _pos = 0;

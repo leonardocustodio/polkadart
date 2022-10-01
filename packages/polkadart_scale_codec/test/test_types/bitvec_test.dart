@@ -26,16 +26,40 @@ void main() {
   var codec = scale_codec.Codec(types);
 
   //
-  // Encodes adn Decodes type: `BitVec<u8>`
-  group('Encode/Decode BitVec<u8>: ', () {
-    for (var vec in [1, 2, 3]) {
-      test('$vec', () {
-        var encoded = codec.encodeToHex(registry.use('BitVec<u8>'), [vec]);
+  // Encodes type: `BitVec<u8>`
+  group('Encode BitVec<u8>:', () {
+    test('1', () {
+      var encoded = codec.encodeToHex(registry.use('BitVec<u8>'), [1]);
+      expect(encoded, equals('0x2001'));
+    });
 
-        var decoded = codec.decodeBinary(registry.use('BitVec<u8>'), encoded);
+    test('Encode: 2', () {
+      var encoded = codec.encodeToHex(registry.use('BitVec<u8>'), [2]);
+      expect(encoded, equals('0x2002'));
+    });
 
-        expect([vec], equals(decoded));
-      });
-    }
+    test('Encode: 3', () {
+      var encoded = codec.encodeToHex(registry.use('BitVec<u8>'), [3]);
+      expect(encoded, equals('0x2003'));
+    });
+  });
+
+  //
+  // Decodes type: `BitVec<u8>`
+  group('Decode BitVec<u8>:', () {
+    test('1', () {
+      var decoded = codec.decodeBinary(registry.use('BitVec<u8>'), '0x2001');
+      expect(decoded, equals([1]));
+    });
+
+    test('2', () {
+      var decoded = codec.decodeBinary(registry.use('BitVec<u8>'), '0x2002');
+      expect(decoded, equals([2]));
+    });
+
+    test('3', () {
+      var decoded = codec.decodeBinary(registry.use('BitVec<u8>'), '0x2003');
+      expect(decoded, equals([3]));
+    });
   });
 }

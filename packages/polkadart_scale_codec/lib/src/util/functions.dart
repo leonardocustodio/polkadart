@@ -1,13 +1,22 @@
 part of utils;
 
-/// Assets if the `T` value is null or not.
+/// Asserts if the `T` value is null or not.
 ///
 /// Returns `T` if not null otherwise throws `AssertionException`
 T assertNotNull<T>(T? val, [String? msg]) {
-  if (val == null || val is bool && !val) {
+  if (val == null) {
     throw AssertionException(msg ?? 'Assertion Error occured.');
   }
   return val;
+}
+
+/// Asserts if the [val] value is true or not
+///
+/// Throws `AssertionException` if `false`
+void assertionCheck(bool val, [String? msg]) {
+  if (!val) {
+    throw AssertionException(msg ?? 'Assertion Error occured.');
+  }
 }
 
 /// Returns `true` if the val is `num` and is in range of [min, max] with `min` and `max` being inclusive.
@@ -80,7 +89,7 @@ bool checkSignedInt(dynamic val, int bitSize) {
 /// BigInt value = calculateBigIntPow(2, 7);
 /// ```
 BigInt calculateBigIntPow(int number, int exponent) {
-  return number.bigInt.pow(exponent.bigInt.toInt());
+  return number.toBigInt.pow(exponent.toBigInt.toInt());
 }
 
 /// Returns `true` if the Signed BigInt `val` is in range of [min, max] according to `bitSize`.
@@ -103,7 +112,7 @@ bool checkSignedBigInt(dynamic val, int bitSize) {
     case 256:
       var value = calculateBigIntPow(2, bitSize - 1);
       min = -value;
-      max = value - 1.bigInt;
+      max = value - 1.toBigInt;
       break;
     default:
       throw UnexpectedCaseException(bitSize);
@@ -157,12 +166,12 @@ bool checkUnsignedBigInt(dynamic val, int bitSize) {
     case 64:
     case 128:
     case 256:
-      max = calculateBigIntPow(2, bitSize) - 1.bigInt;
+      max = calculateBigIntPow(2, bitSize) - 1.toBigInt;
       break;
     default:
       throw UnexpectedCaseException(bitSize);
   }
-  return checkBigInt(val, 'U', bitSize, 0.bigInt, max);
+  return checkBigInt(val, 'U', bitSize, 0.toBigInt, max);
 }
 
 ///
@@ -229,8 +238,8 @@ List<int> utf8Encoder(String input) => Utf8Codec().encode(input);
 /// Counts the shifts made to the the bits of [val] to the right by shiftAmount:`8` before becoming `0`.
 int unsignedIntByteLength(BigInt val) {
   int len = 0;
-  BigInt bigInt0 = 0.bigInt;
-  int bigInt8 = 8.bigInt.toInt();
+  BigInt bigInt0 = 0.toBigInt;
+  int bigInt8 = 8.toBigInt.toInt();
   while (val > bigInt0) {
     val = val >> bigInt8;
     len += 1;

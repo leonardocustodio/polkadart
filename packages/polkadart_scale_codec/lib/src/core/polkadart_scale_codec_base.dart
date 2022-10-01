@@ -5,7 +5,7 @@ class Src {
   late Uint8List _data;
 
   Src(dynamic data) {
-    assertNotNull(data is String || data is List<int> || data is Uint8List,
+    assertionCheck(data is String || data is List<int> || data is Uint8List,
         'Src(data) -> `data` should be either String, List<int> or Uint8List.');
     if (data is String) {
       _data = decodeHex(data);
@@ -139,7 +139,7 @@ class Src {
 
   int compactLength() {
     var len = compact();
-    assertNotNull(len is int);
+    assertionCheck(len is int);
     return len;
   }
 

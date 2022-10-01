@@ -1,27 +1,31 @@
 part of utils;
 
-extension IntExtension on int {
+extension IntConverter on int {
   ///
   /// Converts `int` to BigInt.
   ///
   /// ```
-  /// BigInt value = 5.bigInt;
-  /// BigInt value = 100.bigInt;
+  /// BigInt value = 5.toBigInt;
+  /// BigInt value = 100.toBigInt;
   /// ```
-  BigInt get bigInt {
+  BigInt get toBigInt {
     return BigInt.from(this);
   }
 }
 
-extension StringExtension on String {
-  ///
+extension StringConverter on String {
   /// Converts `String` to BigInt.
   ///
   /// ```
-  /// BigInt value = '5'.bigInt;
-  /// BigInt value = '100'.bigInt;
+  /// BigInt value = '5'.toBigInt;
+  /// BigInt value = '100'.toBigInt;
   /// ```
-  BigInt get bigInt {
-    return BigInt.parse(this);
+  BigInt get toBigInt {
+    try {
+      return BigInt.parse(trim());
+    } catch (_) {
+      throw UnexpectedCaseException(
+          'Can\'t convert `$this` string to `BigInt`.');
+    }
   }
 }

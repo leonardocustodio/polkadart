@@ -108,7 +108,6 @@ abstract class Chain implements _$Chain {
         try {
           expect(encoded[i], equals(original[i]));
         } catch (e) {
-          /// FIXME SQD-749
           var b = original[i];
           var d = getVersion(b['blockNumber']);
           var fromEncoded =
@@ -129,7 +128,7 @@ abstract class Chain implements _$Chain {
         return;
     }
     for (final des in getDescription()) {
-      test(' Constants Encode/Decode  Spec-Version: ${des.specVersion}', () {
+      test('Constants Encode/Decode  Spec-Version: ${des.specVersion}', () {
         for (final pallet in des.description.constants.keys) {
           for (var name in des.description.constants[pallet]!.keys) {
             var def = des.description.constants[pallet]![name];
@@ -201,8 +200,6 @@ abstract class Chain implements _$Chain {
       }
     }
     VersionDescription? e;
-
-    /// TODO: Confirm the condition of next != 0
     if (description.isNotEmpty && next != 0 && next < description.length) {
       e = next < 0
           ? description[description.length - 1]

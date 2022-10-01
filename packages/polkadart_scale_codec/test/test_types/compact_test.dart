@@ -1,9 +1,9 @@
-import 'package:polkadart_scale_codec/src/util/utils.dart';
-import 'package:test/test.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
-import 'package:substrate_metadata/old/types.dart' as old_types;
+import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:substrate_metadata/old/type_registry.dart';
+import 'package:substrate_metadata/old/types.dart' as old_types;
+import 'package:test/test.dart';
 
 void main() {
   {
@@ -96,7 +96,7 @@ void main() {
         //
         // Exceeding BigInt Compacting value range: 2 ** 536
         //
-        BigInt invalidValue = 2.bigInt.pow(536.bigInt.toInt());
+        BigInt invalidValue = 2.toBigInt.pow(536.toBigInt.toInt());
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), invalidValue),
             throwsA(predicate((e) =>
