@@ -8,7 +8,7 @@ import 'package:substrate_metadata/old/types.dart' as old_types;
 import 'package:test/test.dart';
 
 void main() {
-  var registry = OldTypeRegistry(
+  final registry = OldTypeRegistry(
     old_types.OldTypes(
       types: <String, dynamic>{
         'Codec': {
@@ -33,9 +33,9 @@ void main() {
       },
     ),
   );
-  var _ = registry.use('Codec');
-  var types = registry.getTypes();
-  var codec = scale_codec.Codec(types);
+  registry.use('Codec');
+  final types = registry.getTypes();
+  final codec = scale_codec.Codec(types);
 
   {
     //
@@ -338,7 +338,7 @@ void main() {
   }
   {
     //
-    // Primitive (usigned / signed) (64, 128, 256) type encode / decode
+    // Primitive Unsigned (64, 128, 256) type encode
     //
     group('Encode/Decode Primitive:', () {
       for (var bit in ['i', 'u']) {

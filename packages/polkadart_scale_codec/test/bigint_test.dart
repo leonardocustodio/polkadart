@@ -3,86 +3,124 @@ import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
-  //
-  // This test will pass at the boundaries of max and min values of BigInt according to bitsize
-  //
-  // All the test cases will pass with [low, high] values with low and high being inclusive
-  //
-  group('Signed BigInt passes easily: ', () {
-    var tests = {
-      64: <String, String>{
-        'low': '-9223372036854775808',
-        'high': '9223372036854775807',
-      },
-      128: <String, String>{
-        'low': '-170141183460469231731687303715884105728',
-        'high': '170141183460469231731687303715884105727',
-      },
-      256: <String, String>{
-        'low':
-            '-57896044618658097711785492504343953926634992332820282019728792003956564819968',
-        'high':
-            '57896044618658097711785492504343953926634992332820282019728792003956564819967',
-      },
-    };
-
-    for (var entry in tests.entries) {
-      var bitSize = entry.key;
-      var value = entry.value;
-      test('$bitSize bit', () {
-        //
-        // Testing Low value
-        expect(toSignedBigInt(value['low'], bitSize).toString(),
-            equals(value['low']));
-
-        //
-        // Testing High value
-        expect(toSignedBigInt(value['high'], bitSize).toString(),
-            equals(value['high']));
+  {
+    // Signed BigInt
+    //
+    // This test will pass at the boundaries of max and min values of BigInt according to bitsize
+    //
+    // All the test cases will pass with [low, high] values with low and high being inclusive
+    //
+    group('Signed BigInt 64 bit:', () {
+      //
+      // Testing Low value
+      test('Lowest value `-9223372036854775808` must pass', () {
+        final lowestValue = '-9223372036854775808';
+        expect(toSignedBigInt(lowestValue, 64).toString(), equals(lowestValue));
       });
-    }
-  });
+      //
+      // Testing High value
+      test('Highest value `9223372036854775807` must pass', () {
+        final highestValue = '9223372036854775807';
+        expect(
+            toSignedBigInt(highestValue, 64).toString(), equals(highestValue));
+      });
+    });
+
+    group('Signed BigInt 128 bit:', () {
+      // Testing Low value
+      test('Lowest value `-170141183460469231731687303715884105728` must pass',
+          () {
+        final lowestValue = '-170141183460469231731687303715884105728';
+        expect(
+            toSignedBigInt(lowestValue, 128).toString(), equals(lowestValue));
+      });
+      // Testing High value
+      test('Highest value `170141183460469231731687303715884105727` must pass',
+          () {
+        final highestValue = '170141183460469231731687303715884105727';
+        expect(
+            toSignedBigInt(highestValue, 128).toString(), equals(highestValue));
+      });
+    });
+
+    group('Signed BigInt 256 bit:', () {
+      // Testing Low value
+      test(
+          'Lowest value `-57896044618658097711785492504343953926634992332820282019728792003956564819968` must pass',
+          () {
+        final lowestValue =
+            '-57896044618658097711785492504343953926634992332820282019728792003956564819968';
+        expect(
+            toSignedBigInt(lowestValue, 256).toString(), equals(lowestValue));
+      });
+      // Testing High value
+      test(
+          'Highest value `57896044618658097711785492504343953926634992332820282019728792003956564819967` must pass',
+          () {
+        final highestValue =
+            '57896044618658097711785492504343953926634992332820282019728792003956564819967';
+        expect(
+            toSignedBigInt(highestValue, 256).toString(), equals(highestValue));
+      });
+    });
+  }
 
   {
+    // Unsigned BigInt
     //
-    // This test will passes for the values in between low and high.
+    // This test will pass at the boundaries of min and max values of BigInt according to bitsize.
     //
-    group('Unsigned/Signed BigInt passes easily: ', () {
-      var tests = {
-        64: <String, dynamic>{
-          'low': Random.secure().nextInt(4294967296),
-          'high': '9223372036854775807',
-        },
-        128: <String, dynamic>{
-          'low': Random.secure().nextInt(4294967296),
-          'high': '170141183460469231731687303715884105727',
-        },
-        256: <String, dynamic>{
-          'low': Random.secure().nextInt(4294967296),
-          'high':
-              '57896044618658097711785492504343953926634992332820282019728792003956564819967',
-        },
-      };
+    // All the test cases will pass with [low, high] values with low and high being `inclusive`.
+    //
+    group('Unsigned BigInt 64 bit:', () {
+      //
+      // Testing Low value
+      test('Lowest value `0` must pass', () {
+        final lowestValue = '0';
+        expect(
+            toUnsignedBigInt(lowestValue, 64).toString(), equals(lowestValue));
+      });
+      //
+      // Testing High value
+      test('Highest value `9223372036854775807` must pass', () {
+        final highestValue = '9223372036854775807';
+        expect(toUnsignedBigInt(highestValue, 64).toString(),
+            equals(highestValue));
+      });
+    });
 
-      for (var entry in tests.entries) {
-        var bitSize = entry.key;
-        var value = entry.value;
-        test('$bitSize bit', () {
-          //
-          // Testing Low value
-          expect(toSignedBigInt(value['low'], bitSize).toString(),
-              equals(value['low'].toString()));
-          expect(toUnsignedBigInt(value['low'], bitSize).toString(),
-              equals(value['low'].toString()));
+    group('Unsigned BigInt 128 bit:', () {
+      // Testing Low value
+      test('Lowest value `0` must pass', () {
+        final lowestValue = '0';
+        expect(
+            toUnsignedBigInt(lowestValue, 128).toString(), equals(lowestValue));
+      });
+      // Testing High value
+      test('Highest value `170141183460469231731687303715884105727` must pass',
+          () {
+        final highestValue = '170141183460469231731687303715884105727';
+        expect(toUnsignedBigInt(highestValue, 128).toString(),
+            equals(highestValue));
+      });
+    });
 
-          //
-          // Testing High value
-          expect(toSignedBigInt(value['high'], bitSize).toString(),
-              equals(value['high']));
-          expect(toUnsignedBigInt(value['high'], bitSize).toString(),
-              equals(value['high']));
-        });
-      }
+    group('Unsigned BigInt 256 bit:', () {
+      // Testing Low value
+      test('Lowest value `0` must pass', () {
+        final lowestValue = '0';
+        expect(
+            toUnsignedBigInt(lowestValue, 256).toString(), equals(lowestValue));
+      });
+      // Testing High value
+      test(
+          'Highest value `57896044618658097711785492504343953926634992332820282019728792003956564819967` must pass',
+          () {
+        final highestValue =
+            '57896044618658097711785492504343953926634992332820282019728792003956564819967';
+        expect(toUnsignedBigInt(highestValue, 256).toString(),
+            equals(highestValue));
+      });
     });
   }
 
@@ -90,30 +128,46 @@ void main() {
     //
     // This test will throw UnexpectedTypeException
     //
-    group('Unsigned/Signed BigInt UnexpectedTypeException: ', () {
-      var values = [
-        BigInt.from(429496726),
-        BigInt.from(123),
-        BigInt.parse('57896045664819967')
-      ];
+    group('toSignedBigInt should throw UnexpectedTypeException', () {
+      final exceptionMessage = 'Only `String` and `int` are valid parameters.';
+      test('at val: BigInt.from(429496726)', () {
+        expect(
+            () => toSignedBigInt(BigInt.from(429496726), 256),
+            throwsA(predicate((e) =>
+                e is UnexpectedTypeException &&
+                e.toString() == exceptionMessage)));
+      });
 
-      for (var val in values) {
-        test('$val', () {
-          expect(
-              () => toSignedBigInt(val, 256),
-              throwsA(predicate((e) =>
-                  e is UnexpectedTypeException &&
-                  e.toString() ==
-                      'Only `String` and `int` are valid parameters.')));
+      test('at val: BigInt.parse(\'57896045664819967\')', () {
+        expect(
+            () => toSignedBigInt(BigInt.parse('57896045664819967'), 256),
+            throwsA(predicate((e) =>
+                e is UnexpectedTypeException &&
+                e.toString() == exceptionMessage)));
+      });
+    });
+  }
+  {
+    //
+    // Unsigned BigInt test will throw UnexpectedTypeException
+    //
+    group('toUnsignedBigInt should throw UnexpectedTypeException', () {
+      final exceptionMessage = 'Only `String` and `int` are valid parameters.';
+      test('at val: BigInt.from(429496726)', () {
+        expect(
+            () => toUnsignedBigInt(BigInt.from(429496726), 256),
+            throwsA(predicate((e) =>
+                e is UnexpectedTypeException &&
+                e.toString() == exceptionMessage)));
+      });
 
-          expect(
-              () => toUnsignedBigInt(val, 256),
-              throwsA(predicate((e) =>
-                  e is UnexpectedTypeException &&
-                  e.toString() ==
-                      'Only `String` and `int` are valid parameters.')));
-        });
-      }
+      test('at val: BigInt.parse(\'57896045664819967\')', () {
+        expect(
+            () => toUnsignedBigInt(BigInt.parse('57896045664819967'), 256),
+            throwsA(predicate((e) =>
+                e is UnexpectedTypeException &&
+                e.toString() == exceptionMessage)));
+      });
     });
   }
 

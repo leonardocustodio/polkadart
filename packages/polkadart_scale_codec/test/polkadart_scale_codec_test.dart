@@ -9,7 +9,7 @@ void testCompact(String hex, dynamic val) {
     expect(src.compact(), equals(val));
 
     // This should not throw error.
-    src.assertEOF();
+    expect(() => src.assertEOF(), returnsNormally);
   });
 
   test('Sink.compact: $hex == $val', () {

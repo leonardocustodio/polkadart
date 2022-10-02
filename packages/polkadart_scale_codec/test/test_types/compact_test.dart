@@ -13,8 +13,8 @@ void main() {
     // We can't compact `Vector` so it should throw `Exception`.
     //
     group('Compact Exception', () {
-      test('Exception: Compact<Vec<u8>>', () {
-        var registry = OldTypeRegistry(
+      test('On using Compact<Vec<u8>> as Types then Codec initialization should throw UnexpectedCaseException', () {
+        final registry = OldTypeRegistry(
           old_types.OldTypes(
             types: <String, dynamic>{
               'Codec': {
@@ -28,7 +28,7 @@ void main() {
         registry.use('Codec');
 
         // fetching the parsed types from `Json` to `Type`
-        var types = registry.getTypes();
+        final types = registry.getTypes();
 
         // Invalid Case Exception
         expect(
@@ -41,7 +41,7 @@ void main() {
   }
 
   // Creates the registry for parsing the types and selecting particular schema.
-  var registry = OldTypeRegistry(
+  final registry = OldTypeRegistry(
     old_types.OldTypes(
       types: <String, dynamic>{
         'Codec': {
@@ -55,10 +55,10 @@ void main() {
   registry.use('Codec');
 
   // fetching the parsed types from `Json` to `Type`
-  var types = registry.getTypes();
+  final types = registry.getTypes();
 
   // Initializing Scale-Codec object
-  var codec = scale_codec.Codec(types);
+  final codec = scale_codec.Codec(types);
 
   {
     // Testing Compact exception
@@ -96,7 +96,7 @@ void main() {
         //
         // Exceeding BigInt Compacting value range: 2 ** 536
         //
-        BigInt invalidValue = 2.toBigInt.pow(536.toBigInt.toInt());
+        final BigInt invalidValue = 2.toBigInt.pow(536.toBigInt.toInt());
         expect(
             () => codec.encodeToHex(registry.use('Compact<u8>'), invalidValue),
             throwsA(predicate((e) =>
