@@ -3,13 +3,22 @@ import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
+  //
+  //
+  //
+  //
+  //
+  // Signed BigInt
+  //
+  // This test will pass at the boundaries of max and min values of BigInt according to bitsize
+  //
+  // All the test cases will pass with [low, high] values with low and high being inclusive
+  //
+  //
+  //
+  //
+  //
   {
-    // Signed BigInt
-    //
-    // This test will pass at the boundaries of max and min values of BigInt according to bitsize
-    //
-    // All the test cases will pass with [low, high] values with low and high being inclusive
-    //
     group('Signed BigInt 64 bit:', () {
       //
       // Testing Low value
@@ -27,14 +36,18 @@ void main() {
     });
 
     group('Signed BigInt 128 bit:', () {
+      //
       // Testing Low value
+      //
       test('Lowest value `-170141183460469231731687303715884105728` must pass',
           () {
         final lowestValue = '-170141183460469231731687303715884105728';
         expect(
             toSignedBigInt(lowestValue, 128).toString(), equals(lowestValue));
       });
+      //
       // Testing High value
+      //
       test('Highest value `170141183460469231731687303715884105727` must pass',
           () {
         final highestValue = '170141183460469231731687303715884105727';
@@ -44,7 +57,9 @@ void main() {
     });
 
     group('Signed BigInt 256 bit:', () {
+      //
       // Testing Low value
+      //
       test(
           'Lowest value `-57896044618658097711785492504343953926634992332820282019728792003956564819968` must pass',
           () {
@@ -53,7 +68,9 @@ void main() {
         expect(
             toSignedBigInt(lowestValue, 256).toString(), equals(lowestValue));
       });
+      //
       // Testing High value
+      //
       test(
           'Highest value `57896044618658097711785492504343953926634992332820282019728792003956564819967` must pass',
           () {
@@ -65,40 +82,53 @@ void main() {
     });
   }
 
+  //
+  //
+  //
+  //
+  //
+  // Unsigned BigInt
+  //
+  // This test will pass at the boundaries of min and max values of BigInt according to bitsize.
+  //
+  // All the test cases will pass with [low, high] values with low and high being `inclusive`.
+  //
+  //
+  //
+  //
+  //
   {
-    // Unsigned BigInt
-    //
-    // This test will pass at the boundaries of min and max values of BigInt according to bitsize.
-    //
-    // All the test cases will pass with [low, high] values with low and high being `inclusive`.
-    //
     group('Unsigned BigInt 64 bit:', () {
       //
       // Testing Low value
+      //
       test('Lowest value `0` must pass', () {
-        final lowestValue = '0';
-        expect(
-            toUnsignedBigInt(lowestValue, 64).toString(), equals(lowestValue));
+        final lowestValue = 0;
+        expect(toUnsignedBigInt(lowestValue, 64).toInt(), equals(lowestValue));
       });
       //
       // Testing High value
+      //
       test('Highest value `9223372036854775807` must pass', () {
-        final highestValue = '9223372036854775807';
-        expect(toUnsignedBigInt(highestValue, 64).toString(),
-            equals(highestValue));
+        final highestValue = 9223372036854775807;
+        expect(
+            toUnsignedBigInt(highestValue, 64).toInt(), equals(highestValue));
       });
     });
 
     group('Unsigned BigInt 128 bit:', () {
+      //
       // Testing Low value
+      //
       test('Lowest value `0` must pass', () {
-        final lowestValue = '0';
-        expect(
-            toUnsignedBigInt(lowestValue, 128).toString(), equals(lowestValue));
+        final lowestValue = 0;
+        expect(toUnsignedBigInt(lowestValue, 128).toInt(), equals(lowestValue));
       });
-      // Testing High value
       test('Highest value `170141183460469231731687303715884105727` must pass',
           () {
+        //
+        // Testing High value
+        //
         final highestValue = '170141183460469231731687303715884105727';
         expect(toUnsignedBigInt(highestValue, 128).toString(),
             equals(highestValue));
@@ -106,13 +136,16 @@ void main() {
     });
 
     group('Unsigned BigInt 256 bit:', () {
+      //
       // Testing Low value
+      //
       test('Lowest value `0` must pass', () {
-        final lowestValue = '0';
-        expect(
-            toUnsignedBigInt(lowestValue, 256).toString(), equals(lowestValue));
+        final lowestValue = 0;
+        expect(toUnsignedBigInt(lowestValue, 256).toInt(), equals(lowestValue));
       });
+      //
       // Testing High value
+      //
       test(
           'Highest value `57896044618658097711785492504343953926634992332820282019728792003956564819967` must pass',
           () {
@@ -124,10 +157,18 @@ void main() {
     });
   }
 
+  //
+  //
+  //
+  //
+  //
+  // This test will throw UnexpectedTypeException when called `toSignedBigInt`
+  //
+  //
+  //
+  //
+  //
   {
-    //
-    // This test will throw UnexpectedTypeException
-    //
     group('toSignedBigInt should throw UnexpectedTypeException', () {
       final exceptionMessage = 'Only `String` and `int` are valid parameters.';
       test('at val: BigInt.from(429496726)', () {
@@ -147,10 +188,19 @@ void main() {
       });
     });
   }
+
+  //
+  //
+  //
+  //
+  //
+  // This test will throw UnexpectedTypeException when called `toUnsignedBigInt`
+  //
+  //
+  //
+  //
+  //
   {
-    //
-    // Unsigned BigInt test will throw UnexpectedTypeException
-    //
     group('toUnsignedBigInt should throw UnexpectedTypeException', () {
       final exceptionMessage = 'Only `String` and `int` are valid parameters.';
       test('at val: BigInt.from(429496726)', () {
@@ -172,9 +222,176 @@ void main() {
   }
 
   //
+  //
+  //
+  //
+  //
+  // Unsigned BigInt
+  //
+  // checkUnsignedBigInt should return true when value within range according to bit sizes are passed.
+  //
+  //
+  //
+  //
+  //
+  {
+    group('Unsigned BigInt at 64 bit:', () {
+      //
+      // Testing Low value
+      //
+      test('Lowest value `0` must return `true`', () {
+        expect(checkUnsignedBigInt(BigInt.from(0), 64), equals(true));
+      });
+      //
+      // Testing High value
+      //
+      test('Highest value `9223372036854775807` must return `true`', () {
+        expect(checkUnsignedBigInt(BigInt.from(9223372036854775807), 64),
+            equals(true));
+      });
+    });
+
+    group('Unsigned BigInt at 128 bit:', () {
+      //
+      // Testing Low value
+      //
+      test('Lowest value `0` must return `true`', () {
+        expect(checkUnsignedBigInt(BigInt.from(0), 128), equals(true));
+      });
+      //
+      // Testing High value
+      //
+      test(
+          'Highest value `170141183460469231731687303715884105727` must return `true`',
+          () {
+        expect(
+            checkUnsignedBigInt(
+                BigInt.parse('170141183460469231731687303715884105727'), 128),
+            equals(true));
+      });
+    });
+
+    group('Unsigned BigInt at 256 bit:', () {
+      //
+      // Testing Low value
+      //
+      test('Lowest value `0` must return `true`', () {
+        expect(checkUnsignedBigInt(BigInt.from(0), 256), equals(true));
+      });
+      //
+      // Testing High value
+      //
+      test(
+          'Highest value `57896044618658097711785492504343953926634992332820282019728792003956564819967` must return `true`',
+          () {
+        expect(
+            checkUnsignedBigInt(
+                BigInt.parse(
+                    '57896044618658097711785492504343953926634992332820282019728792003956564819967'),
+                256),
+            equals(true));
+      });
+    });
+  }
+
+  //
+  //
+  //
+  //
+  //
+  // Signed BigInt
+  //
+  // checkSignedBigInt should return true when value within range according to bit sizes are passed.
+  //
+  //
+  //
+  //
+  //
+  {
+    group('Signed BigInt at 64 bit:', () {
+      //
+      // Testing Low value
+      //
+      test('Lowest value `-9223372036854775808` must return `true`', () {
+        expect(checkSignedBigInt(BigInt.from(-9223372036854775808), 64),
+            equals(true));
+      });
+      //
+      // Testing High value
+      //
+      test('Highest value `9223372036854775807` must return `true`', () {
+        expect(checkSignedBigInt(BigInt.from(9223372036854775807), 64),
+            equals(true));
+      });
+    });
+
+    group('Signed BigInt at 128 bit:', () {
+      //
+      // Testing Low value
+      //
+      test(
+          'Lowest value `-170141183460469231731687303715884105728` must return `true`',
+          () {
+        expect(
+            checkSignedBigInt(
+                BigInt.parse('-170141183460469231731687303715884105728'), 128),
+            equals(true));
+      });
+      //
+      // Testing High value
+      //
+      test(
+          'Highest value `170141183460469231731687303715884105727` must return `true`',
+          () {
+        expect(
+            checkSignedBigInt(
+                BigInt.parse('170141183460469231731687303715884105727'), 128),
+            equals(true));
+      });
+    });
+
+    group('Signed BigInt at 256 bit:', () {
+      //
+      // Testing Low value
+      //
+      test(
+          'Lowest value `-57896044618658097711785492504343953926634992332820282019728792003956564819968` must return `true`',
+          () {
+        expect(
+            checkSignedBigInt(
+                BigInt.parse(
+                    '-57896044618658097711785492504343953926634992332820282019728792003956564819968'),
+                256),
+            equals(true));
+      });
+      //
+      // Testing High value
+      //
+      test(
+          'Highest value `57896044618658097711785492504343953926634992332820282019728792003956564819967` must return `true`',
+          () {
+        expect(
+            checkSignedBigInt(
+                BigInt.parse(
+                    '57896044618658097711785492504343953926634992332820282019728792003956564819967'),
+                256),
+            equals(true));
+      });
+    });
+  }
+
+  //
+  //
+  //
+  //
+  //
   // Here InvalidSizeException will be thrown as testing with
   //
   // lowest - 1 and high + 1 that a bitsize can't hold.
+  //
+  //
+  //
+  //
   //
   group('Signed BigInt: InvalidSizeException: ', () {
     var tests = {

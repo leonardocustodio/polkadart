@@ -60,7 +60,7 @@ bool checkBigInt(BigInt val, String sign, int bitSize, BigInt min, BigInt max) {
 /// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
 /// - `InvalidSizeException` if the val is not in range.
 ///
-bool checkSignedInt(dynamic val, int bitSize) {
+bool checkSignedInt(int val, int bitSize) {
   late int min;
   late int max;
   switch (bitSize) {
@@ -103,7 +103,7 @@ BigInt calculateBigIntPow(int number, int exponent) {
 /// - `UnexpectedCaseException` if the `bitsize` is not (64 || 128 || 256)
 /// - `InvalidSizeException` if the val is not in range.
 ///
-bool checkSignedBigInt(dynamic val, int bitSize) {
+bool checkSignedBigInt(BigInt val, int bitSize) {
   late BigInt min;
   late BigInt max;
   switch (bitSize) {
@@ -131,7 +131,7 @@ bool checkSignedBigInt(dynamic val, int bitSize) {
 /// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
 /// - `InvalidSizeException` if the val is not in range.
 ///
-bool checkUnsignedInt(dynamic val, int bitSize) {
+bool checkUnsignedInt(int val, int bitSize) {
   late int max;
   switch (bitSize) {
     case 8:
@@ -160,7 +160,7 @@ bool checkUnsignedInt(dynamic val, int bitSize) {
 /// - `UnexpectedCaseException` if the `bitsize` is not (64 || 128 || 256)
 /// - `InvalidSizeException` if the val is not in range.
 ///
-bool checkUnsignedBigInt(dynamic val, int bitSize) {
+bool checkUnsignedBigInt(BigInt val, int bitSize) {
   late BigInt max;
   switch (bitSize) {
     case 64:
