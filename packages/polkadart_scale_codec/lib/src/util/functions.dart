@@ -26,8 +26,8 @@ void assertionCheck(bool val, [String? msg]) {
 /// Sign:
 /// - u --> unsigned
 /// - i --> signed
-bool checkInt(dynamic val, String sign, int bitSize, int min, int max) {
-  final bool ok = val is num && min <= val && max >= val;
+bool checkInt(int val, String sign, int bitSize, int min, int max) {
+  final bool ok = min <= val && max >= val;
   if (!ok) {
     throw InvalidSizeException('Invalid $sign$bitSize: $val');
   }

@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:test/test.dart';
 
@@ -376,6 +377,106 @@ void main() {
                     '57896044618658097711785492504343953926634992332820282019728792003956564819967'),
                 256),
             equals(true));
+      });
+    });
+  }
+
+  //
+  //
+  //
+  //
+  //
+  // Unsigned BigInt
+  //
+  // checkUnsignedBigInt should throw `UnexpectedCaseException` when an unknow bitsize is passed.
+  //
+  //
+  //
+  //
+  //
+  {
+    group('checkUnsignedBigInt must throw "UnexpectedCaseException":', () {
+      test('at bitsize: 20', () {
+        final exceptionMessage = 'Unexpected case: 20.';
+        expect(
+            () => checkUnsignedBigInt(BigInt.from(0), 20),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == exceptionMessage)));
+      });
+      test('at bitsize: 0', () {
+        final exceptionMessage = 'Unexpected case: 0.';
+        expect(
+            () => checkUnsignedBigInt(BigInt.from(0), 0),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == exceptionMessage)));
+      });
+      test('at bitsize: 120', () {
+        final exceptionMessage = 'Unexpected case: 120.';
+        expect(
+            () => checkUnsignedBigInt(BigInt.from(0), 120),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == exceptionMessage)));
+      });
+      test('at bitsize: 255', () {
+        final exceptionMessage = 'Unexpected case: 255.';
+        expect(
+            () => checkUnsignedBigInt(BigInt.from(0), 255),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == exceptionMessage)));
+      });
+    });
+  }
+
+  //
+  //
+  //
+  //
+  //
+  // Signed BigInt
+  //
+  // checkSignedBigInt should throw `UnexpectedCaseException` when an unknow bitsize is passed.
+  //
+  //
+  //
+  //
+  //
+  {
+    group('checkSignedBigInt must throw "UnexpectedCaseException":', () {
+      test('at bitsize: 20', () {
+        final exceptionMessage = 'Unexpected case: 20.';
+        expect(
+            () => checkSignedBigInt(BigInt.from(0), 20),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == exceptionMessage)));
+      });
+      test('at bitsize: 0', () {
+        final exceptionMessage = 'Unexpected case: 0.';
+        expect(
+            () => checkSignedBigInt(BigInt.from(0), 0),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == exceptionMessage)));
+      });
+      test('at bitsize: 120', () {
+        final exceptionMessage = 'Unexpected case: 120.';
+        expect(
+            () => checkSignedBigInt(BigInt.from(0), 120),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == exceptionMessage)));
+      });
+      test('at bitsize: 255', () {
+        final exceptionMessage = 'Unexpected case: 255.';
+        expect(
+            () => checkSignedBigInt(BigInt.from(0), 255),
+            throwsA(predicate((e) =>
+                e is UnexpectedCaseException &&
+                e.toString() == exceptionMessage)));
       });
     });
   }
