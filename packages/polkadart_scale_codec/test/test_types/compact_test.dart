@@ -13,7 +13,9 @@ void main() {
     // We can't compact `Vector` so it should throw `Exception`.
     //
     group('Compact Exception', () {
-      test('On using Compact<Vec<u8>> as Types then Codec initialization should throw UnexpectedCaseException', () {
+      test(
+          'On using Compact<Vec<u8>> as Types then Codec initialization should throw UnexpectedCaseException',
+          () {
         final registry = OldTypeRegistry(
           old_types.OldTypes(
             types: <String, dynamic>{
