@@ -5,21 +5,17 @@ import 'package:ss58_codec/src/exceptions.dart';
 import 'package:ss58_codec/ss58_codec.dart';
 import 'package:test/test.dart';
 
-import 'test_extension.dart';
-
 void main() {
   group('SS58Codec decode method tests', () {
     test('Should decoded data be equal to expected address', () {
       final Address decodedAddress =
           SS58Codec.decode('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
 
-      final expectedAddress = Address(
-          prefix: 42,
-          bytes: Uint8List.fromList(hex.decode(
-              'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d')));
+      final int prefix = 42;
+      final Uint8List bytes = Uint8List.fromList(hex.decode(
+          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'));
 
-      // Match whether the 2 addresses are equal or not
-      decodedAddress.isEqual(expectedAddress);
+      expect(decodedAddress, Address(prefix: prefix, bytes: bytes));
     });
     test(
         'Should decode the given kusama addresses and return prefix equal to kusama prefix',
@@ -45,6 +41,17 @@ void main() {
       final address = '1zugcag7cJVBtVRnFxv5Qftn7xKAnR6YJ9x4x3XLgGgmNnS';
 
       expect(SS58Codec.decode(address).prefix, polkadotPrefix);
+    });
+
+    test(
+        'Should decode the given crust address and return prefix equal to crust prefix',
+        () {
+      final crustPrefix = 66;
+
+      // polkadot address
+      final address = 'cTMxUeDi2HdYVpedqu5AFMtyDcn4djbBfCKiPDds6k1fuFYXL';
+
+      expect(SS58Codec.decode(address).prefix, crustPrefix);
     });
   });
   group('SS58Codec decode method exception testing', () {

@@ -1,35 +1,51 @@
-import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:convert/convert.dart';
 import 'package:ss58_codec/src/exceptions.dart';
 import 'package:ss58_codec/ss58_codec.dart';
 import 'package:test/test.dart';
-import 'test_extension.dart';
 
 void main() {
   group('SS58Codec encode method', () {
-    test('Should encode all addresses sucessfully', () {
-      final address1 =
+    test('Should encode when prefix is zero', () {
+      final address =
           Address(prefix: 0, bytes: Uint8List.fromList([1, 2, 3, 4]));
-      final address2 = Address(prefix: 64, bytes: Uint8List.fromList([1, 2]));
-      final address3 = Address(prefix: 16383, bytes: Uint8List.fromList([2]));
 
-      expect(() => SS58Codec.encode(address1), returnsNormally);
-      expect(() => SS58Codec.encode(address2), returnsNormally);
-      expect(() => SS58Codec.encode(address3), returnsNormally);
+      expect(() => SS58Codec.encode(address), returnsNormally);
     });
 
-    test(
-        'Should encode the address and then re-decode that encoded object to match with original bytes passed',
-        () {
-      final originalAddress = Address(
-          prefix: 64, bytes: Uint8List.fromList(List<int>.filled(32, 32)));
+    test('Should encode when prefix is 64', () {
+      final address =
+          Address(prefix: 64, bytes: Uint8List.fromList([1, 2, 3, 4]));
 
-      final String encodedAddress = SS58Codec.encode(originalAddress);
+      expect(() => SS58Codec.encode(address), returnsNormally);
+    });
 
-      final Address decodedAddress = SS58Codec.decode(encodedAddress);
+    test('Should encode when bytes,length is 8', () {
+      final address = Address(
+          prefix: 0, bytes: Uint8List.fromList([1, 2, 3, 4, 5, 6, 7, 8]));
 
-      decodedAddress.isEqual(originalAddress);
+      expect(() => SS58Codec.encode(address), returnsNormally);
+    });
+
+    test('Should encode when bytes,length is 32', () {
+      final address = Address(prefix: 0, bytes: Uint8List(32));
+
+      expect(() => SS58Codec.encode(address), returnsNormally);
+    });
+
+    test('Should encode and return correct address', () {
+      final int prefix = 42;
+      final Uint8List bytes = Uint8List.fromList(hex.decode(
+          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'));
+
+      final String expectedEncodedAddress =
+          '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
+
+      final String encodedAddress =
+          SS58Codec.encode(Address(prefix: prefix, bytes: bytes));
+
+      expect(encodedAddress, expectedEncodedAddress);
     });
   });
   group('SS58Codec encode exception', () {
@@ -67,72 +83,142 @@ void main() {
     });
 
     test(
-        'Should throw BadAddressLengthException when an address bytes length is equal to 3, 5, 6 or 7.',
+        'Should throw BadAddressLengthException when an address bytes length is equal to 3.',
         () {
-      for (var len in [3, 5, 6, 7]) {
-        final bytes = Uint8List(len);
-        final invalidAddress = Address(prefix: 0, bytes: bytes);
-        final expectedErrorMessage =
-            'Bad Length Address: prefix: 0, bytes: $bytes.';
-        expect(
-          () => SS58Codec.encode(invalidAddress),
-          throwsA(
-            predicate(
-              (exception) =>
-                  exception is BadAddressLengthException &&
-                  exception.toString() == expectedErrorMessage,
-            ),
+      final Uint8List bytes = Uint8List(3);
+      final int prefix = 0;
+      final expectedErrorMessage =
+          'Bad Length Address: prefix: 0, bytes: $bytes.';
+      expect(
+        () => SS58Codec.encode(Address(prefix: prefix, bytes: bytes)),
+        throwsA(
+          predicate(
+            (exception) =>
+                exception is BadAddressLengthException &&
+                exception.toString() == expectedErrorMessage,
           ),
-        );
-      }
+        ),
+      );
     });
 
     test(
-        'Should throw BadAddressLengthException when an address bytes length is equal to [9-31]',
+        'Should throw BadAddressLengthException when an address bytes length is equal to 5.',
         () {
-      for (var len = 9; len <= 31; len++) {
-        final bytes = Uint8List(len);
-        final invalidAddress = Address(prefix: 0, bytes: bytes);
-        final expectedErrorMessage =
-            'Bad Length Address: prefix: 0, bytes: $bytes.';
-
-        expect(
-          () => SS58Codec.encode(invalidAddress),
-          throwsA(
-            predicate(
-              (exception) =>
-                  exception is BadAddressLengthException &&
-                  exception.toString() == expectedErrorMessage,
-            ),
+      final Uint8List bytes = Uint8List(5);
+      final int prefix = 0;
+      final expectedErrorMessage =
+          'Bad Length Address: prefix: 0, bytes: $bytes.';
+      expect(
+        () => SS58Codec.encode(Address(prefix: prefix, bytes: bytes)),
+        throwsA(
+          predicate(
+            (exception) =>
+                exception is BadAddressLengthException &&
+                exception.toString() == expectedErrorMessage,
           ),
-        );
-      }
+        ),
+      );
     });
 
     test(
-        'Should throw BadAddressLengthException when an address bytes length is equal or greater than 34',
+        'Should throw BadAddressLengthException when an address bytes length is equal to 6.',
         () {
-      for (var len in [34, 35]) {
-        final bytes = Uint8List(len);
-        final invalidAddress = Address(prefix: 0, bytes: bytes);
-        final expectedErrorMessage =
-            'Bad Length Address: prefix: 0, bytes: $bytes.';
-
-        expect(
-          () => SS58Codec.encode(invalidAddress),
-          throwsA(
-            predicate(
-              (exception) =>
-                  exception is BadAddressLengthException &&
-                  exception.toString() == expectedErrorMessage,
-            ),
+      final Uint8List bytes = Uint8List(6);
+      final int prefix = 0;
+      final expectedErrorMessage =
+          'Bad Length Address: prefix: 0, bytes: $bytes.';
+      expect(
+        () => SS58Codec.encode(Address(prefix: prefix, bytes: bytes)),
+        throwsA(
+          predicate(
+            (exception) =>
+                exception is BadAddressLengthException &&
+                exception.toString() == expectedErrorMessage,
           ),
-        );
-      }
+        ),
+      );
+    });
+
+    test(
+        'Should throw BadAddressLengthException when an address bytes length is equal to 7.',
+        () {
+      final Uint8List bytes = Uint8List(7);
+      final int prefix = 0;
+      final expectedErrorMessage =
+          'Bad Length Address: prefix: 0, bytes: $bytes.';
+      expect(
+        () => SS58Codec.encode(Address(prefix: prefix, bytes: bytes)),
+        throwsA(
+          predicate(
+            (exception) =>
+                exception is BadAddressLengthException &&
+                exception.toString() == expectedErrorMessage,
+          ),
+        ),
+      );
+    });
+
+    test(
+        'Should throw BadAddressLengthException when an address bytes length is equal to 9.',
+        () {
+      final Uint8List bytes = Uint8List(9);
+      final int prefix = 0;
+
+      final expectedErrorMessage =
+          'Bad Length Address: prefix: 0, bytes: $bytes.';
+
+      expect(
+        () => SS58Codec.encode(Address(prefix: prefix, bytes: bytes)),
+        throwsA(
+          predicate(
+            (exception) =>
+                exception is BadAddressLengthException &&
+                exception.toString() == expectedErrorMessage,
+          ),
+        ),
+      );
+    });
+
+    test(
+        'Should throw BadAddressLengthException when an address bytes length is equal to 31.',
+        () {
+      final Uint8List bytes = Uint8List(31);
+      final int prefix = 0;
+
+      final expectedErrorMessage =
+          'Bad Length Address: prefix: 0, bytes: $bytes.';
+
+      expect(
+        () => SS58Codec.encode(Address(prefix: prefix, bytes: bytes)),
+        throwsA(
+          predicate(
+            (exception) =>
+                exception is BadAddressLengthException &&
+                exception.toString() == expectedErrorMessage,
+          ),
+        ),
+      );
+    });
+
+    test(
+        'Should throw BadAddressLengthException when an address bytes length is equal to 35.',
+        () {
+      final Uint8List bytes = Uint8List(35);
+      final int prefix = 0;
+
+      final expectedErrorMessage =
+          'Bad Length Address: prefix: 0, bytes: $bytes.';
+
+      expect(
+        () => SS58Codec.encode(Address(prefix: prefix, bytes: bytes)),
+        throwsA(
+          predicate(
+            (exception) =>
+                exception is BadAddressLengthException &&
+                exception.toString() == expectedErrorMessage,
+          ),
+        ),
+      );
     });
   });
-}
-
-int randomInt(int max) {
-  return Random.secure().nextInt(max);
 }
