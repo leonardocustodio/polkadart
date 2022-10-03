@@ -1,7 +1,4 @@
-// ignore_for_file: file_names
 part of polkadart_scale_codec_core;
-
-typedef TypeCallback = Type Function();
 
 class OldTypeRegistry {
   /// [Private]
@@ -18,11 +15,6 @@ class OldTypeRegistry {
   ///
   /// HashMap to store already looked typeExp
   final Map<String, int> _fastLookup = <String, int>{};
-
-  /// [Private]
-  ///
-  /// Allowed list types: `Type` or `TypeAlias`
-  final Map<String, TypeCallback> _definitions = <String, TypeCallback>{};
 
   Map<String, Map<String, String>>? typesAlias;
   Map<String, dynamic>? types;
@@ -447,10 +439,6 @@ class OldTypeRegistry {
   }
 
   dynamic _buildNamedType(RegistryNamedType type) {
-    if (_definitions[type.name] != null) {
-      return _definitions[type.name]!();
-    }
-
     var def = types?[type.name];
     if (def != null) {
       return _buildFromDefinition(type.name, def);

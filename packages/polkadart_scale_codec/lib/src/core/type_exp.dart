@@ -67,8 +67,6 @@ class RegistryTupleType extends RegistryType with EquatableMixin {
   String toString() => super.toString();
 }
 
-typedef _CustomFunc = dynamic Function();
-
 class TypeExpParser {
   List<String> _tokens = <String>[];
   int _idx = 0;
@@ -133,7 +131,7 @@ class TypeExpParser {
     return _assert(_name());
   }
 
-  List<dynamic> _list(String sep, _CustomFunc p) {
+  List<dynamic> _list(String sep, dynamic Function() p) {
     var item = p();
     if (item == null) {
       return [];
