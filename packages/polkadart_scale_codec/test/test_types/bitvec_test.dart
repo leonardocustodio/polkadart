@@ -1,45 +1,34 @@
 import 'package:test/test.dart';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
-    as scale_codec;
-import 'package:substrate_metadata/old/types.dart' as old_types;
-import 'package:substrate_metadata/old/type_registry.dart';
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 
 void main() {
   // Creates the registry for parsing the types and selecting particular schema.
-  final registry = OldTypeRegistry(
-    old_types.OldTypes(
-      types: <String, dynamic>{
-        'Codec': {
-          'bit_sequence_value_u8': 'BitVec<u8>',
-        },
-      },
-    ),
-  );
+  final registry = OldTypeRegistry();
 
-  // specifying which schema type to use.
-  registry.use('Codec');
+  // specifying which type to use.
+  int usageIndex = registry.getIndex('BitVec<u8>');
 
   // fetching the parsed types from `Json` to `Type`
   final types = registry.getTypes();
 
   // Initializing Scale-Codec object
-  final codec = scale_codec.Codec(types);
+  final codec = Codec(types);
 
   //
   // Encodes type: `BitVec<u8>`
   group('Encode BitVec<u8>:', () {
     test('1', () {
-      final encoded = codec.encodeToHex(registry.use('BitVec<u8>'), [1]);
+      final encoded = codec.encodeToHex(usageIndex, [1]);
       expect(encoded, equals('0x2001'));
     });
 
     test('Encode: 2', () {
-      final encoded = codec.encodeToHex(registry.use('BitVec<u8>'), [2]);
+      final encoded = codec.encodeToHex(usageIndex, [2]);
       expect(encoded, equals('0x2002'));
     });
 
     test('Encode: 3', () {
-      final encoded = codec.encodeToHex(registry.use('BitVec<u8>'), [3]);
+      final encoded = codec.encodeToHex(usageIndex, [3]);
       expect(encoded, equals('0x2003'));
     });
   });
@@ -48,17 +37,17 @@ void main() {
   // Decodes type: `BitVec<u8>`
   group('Decode BitVec<u8>:', () {
     test('1', () {
-      final decoded = codec.decodeBinary(registry.use('BitVec<u8>'), '0x2001');
+      final decoded = codec.decodeBinary(usageIndex, '0x2001');
       expect(decoded, equals([1]));
     });
 
     test('2', () {
-      final decoded = codec.decodeBinary(registry.use('BitVec<u8>'), '0x2002');
+      final decoded = codec.decodeBinary(usageIndex, '0x2002');
       expect(decoded, equals([2]));
     });
 
     test('3', () {
-      final decoded = codec.decodeBinary(registry.use('BitVec<u8>'), '0x2003');
+      final decoded = codec.decodeBinary(usageIndex, '0x2003');
       expect(decoded, equals([3]));
     });
   });

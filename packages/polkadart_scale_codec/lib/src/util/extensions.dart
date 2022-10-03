@@ -1,7 +1,6 @@
 part of utils;
 
 extension IntConverter on int {
-  ///
   /// Converts `int` to BigInt.
   ///
   /// ```

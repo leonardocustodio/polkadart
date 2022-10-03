@@ -1,41 +1,34 @@
 import 'dart:math';
-
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
-    as scale_codec;
-import 'package:polkadart_scale_codec/src/util/utils.dart';
-import 'package:substrate_metadata/old/type_registry.dart';
-import 'package:substrate_metadata/old/types.dart' as old_types;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/test.dart';
 
 void main() {
   final registry = OldTypeRegistry(
-    old_types.OldTypes(
-      types: <String, dynamic>{
-        'Codec': {
-          'vec_u8': 'Vec<u8>',
-          'option_u8': 'Option<u8>',
-          'DoNotConstruct': 'DoNotConstruct',
-          'primitive_char': 'char',
-          'primitive__compact_u8': 'Compact<u8>',
-          'primitive_i8': 'i8',
-          'primitive_i16': 'i16',
-          'primitive_i32': 'i32',
-          'primitive_i64': 'i64',
-          'primitive_i128': 'i128',
-          'primitive_i256': 'i256',
-          'primitive_u8': 'u8',
-          'primitive_u16': 'u16',
-          'primitive_u32': 'u32',
-          'primitive_u64': 'u64',
-          'primitive_u128': 'u128',
-          'primitive_u256': 'u256',
-        },
+    types: <String, dynamic>{
+      'Codec': {
+        'vec_u8': 'Vec<u8>',
+        'option_u8': 'Option<u8>',
+        'DoNotConstruct': 'DoNotConstruct',
+        'primitive_char': 'char',
+        'primitive__compact_u8': 'Compact<u8>',
+        'primitive_i8': 'i8',
+        'primitive_i16': 'i16',
+        'primitive_i32': 'i32',
+        'primitive_i64': 'i64',
+        'primitive_i128': 'i128',
+        'primitive_i256': 'i256',
+        'primitive_u8': 'u8',
+        'primitive_u16': 'u16',
+        'primitive_u32': 'u32',
+        'primitive_u64': 'u64',
+        'primitive_u128': 'u128',
+        'primitive_u256': 'u256',
       },
-    ),
+    },
   );
-  registry.use('Codec');
+  registry.select('Codec');
   final types = registry.getTypes();
-  final codec = scale_codec.Codec(types);
+  final codec = Codec(types);
 
   {
     //
@@ -46,13 +39,13 @@ void main() {
     group('Exception Vec:', () {
       test('List<int> is empty', () {
         expect(
-            () => codec.decodeBinary(registry.use('Vec<u8>'), <int>[]),
+            () => codec.decodeBinary(registry.getIndex('Vec<u8>'), <int>[]),
             throwsA(predicate((e) =>
                 e is EOFException && e.toString() == 'Unexpected EOF.')));
       });
       test('List<dynamic>', () {
         expect(
-            () => codec.decodeBinary(registry.use('Vec<u8>'), []),
+            () => codec.decodeBinary(registry.getIndex('Vec<u8>'), []),
             throwsA(predicate((e) =>
                 e is AssertionException &&
                 e.toString() ==
@@ -70,21 +63,22 @@ void main() {
     group('Exception Option:', () {
       test('Flag at 2', () {
         expect(
-            () => codec.decodeBinary(registry.use('Option<u8>'), '0x0208'),
+            () => codec.decodeBinary(registry.getIndex('Option<u8>'), '0x0208'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
                 e.toString() == 'Unexpected case: 2.')));
       });
       test('Flag at 3', () {
         expect(
-            () => codec.decodeBinary(registry.use('Option<u8>'), '0x0308'),
+            () => codec.decodeBinary(registry.getIndex('Option<u8>'), '0x0308'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
                 e.toString() == 'Unexpected case: 3.')));
       });
       test('Flag at 4', () {
         expect(
-            () => codec.decodeBinary(registry.use('Option<u8>'), '0x04015231'),
+            () => codec.decodeBinary(
+                registry.getIndex('Option<u8>'), '0x04015231'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
                 e.toString() == 'Unexpected case: 4.')));
@@ -110,18 +104,20 @@ void main() {
             // lowest accepted value
             var lowest = multiplier * poweredValue;
 
-            var encodedLow = codec.encodeToHex(registry.use(bitSize), lowest);
+            var encodedLow =
+                codec.encodeToHex(registry.getIndex(bitSize), lowest);
             var decodedLow =
-                codec.decodeBinary(registry.use(bitSize), encodedLow);
+                codec.decodeBinary(registry.getIndex(bitSize), encodedLow);
 
             expect(lowest, equals(decodedLow));
 
             // highest accepted value
             var highest = poweredValue - 1;
 
-            var encodedHigh = codec.encodeToHex(registry.use(bitSize), highest);
+            var encodedHigh =
+                codec.encodeToHex(registry.getIndex(bitSize), highest);
             var decodedHigh =
-                codec.decodeBinary(registry.use(bitSize), encodedHigh);
+                codec.decodeBinary(registry.getIndex(bitSize), encodedHigh);
 
             expect(highest, equals(decodedHigh));
           });
@@ -152,7 +148,7 @@ void main() {
             var lowest = (multiplier * poweredValue) - 1;
 
             expect(
-                () => codec.encodeToHex(registry.use(bitSize), lowest),
+                () => codec.encodeToHex(registry.getIndex(bitSize), lowest),
                 throwsA(predicate((e) =>
                     e is InvalidSizeException &&
                     e.toString() ==
@@ -161,7 +157,7 @@ void main() {
             var highest = poweredValue * (bit == 'u' ? 2 : 1);
 
             expect(
-                () => codec.encodeToHex(registry.use(bitSize), highest),
+                () => codec.encodeToHex(registry.getIndex(bitSize), highest),
                 throwsA(predicate((e) =>
                     e is InvalidSizeException &&
                     e.toString() ==
@@ -213,14 +209,15 @@ void main() {
     group('Exception at DoNotConstruct:', () {
       test('Encode', () {
         expect(
-            () => codec.encodeToHex(registry.use('DoNotConstruct'), 'A'),
+            () => codec.encodeToHex(registry.getIndex('DoNotConstruct'), 'A'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
                 e.toString() == 'Unexpected case: TypeKind.DoNotConstruct.')));
       });
       test('Decode', () {
         expect(
-            () => codec.decodeBinary(registry.use('DoNotConstruct'), '0x01'),
+            () =>
+                codec.decodeBinary(registry.getIndex('DoNotConstruct'), '0x01'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
                 e.toString() == 'Unexpected case: TypeKind.DoNotConstruct.')));
@@ -235,14 +232,14 @@ void main() {
     group('Exception at Primitive.Char:', () {
       test('Encode', () {
         expect(
-            () => codec.encodeToHex(registry.use('char'), 'A'),
+            () => codec.encodeToHex(registry.getIndex('char'), 'A'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
                 e.toString() == 'Unexpected case: Primitive.Char.')));
       });
       test('Decode', () {
         expect(
-            () => codec.decodeBinary(registry.use('char'), '0x01'),
+            () => codec.decodeBinary(registry.getIndex('char'), '0x01'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
                 e.toString() == 'Unexpected case: Primitive.Char.')));
@@ -287,7 +284,7 @@ void main() {
         // Invalid int compacting
         //
         expect(
-            () => codec.encodeToHex(registry.use('Compact<u8>'), -1),
+            () => codec.encodeToHex(registry.getIndex('Compact<u8>'), -1),
             throwsA(predicate((e) =>
                 e is InvalidCompactException &&
                 e.toString() == 'Value can\'t be less than 0.')));
@@ -296,8 +293,8 @@ void main() {
         // Invalid BigInt compacting
         //
         expect(
-            () =>
-                codec.encodeToHex(registry.use('Compact<u8>'), BigInt.from(-1)),
+            () => codec.encodeToHex(
+                registry.getIndex('Compact<u8>'), BigInt.from(-1)),
             throwsA(predicate((e) =>
                 e is InvalidCompactException &&
                 e.toString() == 'Value can\'t be less than 0.')));
@@ -306,7 +303,7 @@ void main() {
         // Invalid Type Compacting
         //
         expect(
-            () => codec.encodeToHex(registry.use('Compact<u8>'), 'A'),
+            () => codec.encodeToHex(registry.getIndex('Compact<u8>'), 'A'),
             throwsA(predicate((e) =>
                 e is UnexpectedTypeException &&
                 e.toString() ==
@@ -317,7 +314,8 @@ void main() {
         //
         BigInt invalidValue = 2.toBigInt.pow(536.toBigInt.toInt());
         expect(
-            () => codec.encodeToHex(registry.use('Compact<u8>'), invalidValue),
+            () => codec.encodeToHex(
+                registry.getIndex('Compact<u8>'), invalidValue),
             throwsA(predicate((e) =>
                 e is IncompatibleCompactException &&
                 e.toString() ==
@@ -328,7 +326,7 @@ void main() {
         //
         expect(
             () => codec.encodeToHex(
-                registry.use('Compact<u8>'), invalidValue.toInt()),
+                registry.getIndex('Compact<u8>'), invalidValue.toInt()),
             throwsA(predicate((e) =>
                 e is IncompatibleCompactException &&
                 e.toString() ==
@@ -356,18 +354,20 @@ void main() {
             // lowest accepted value
             var lowest = multiplier * poweredValue;
 
-            var encodedLow = codec.encodeToHex(registry.use(bitSize), lowest);
+            var encodedLow =
+                codec.encodeToHex(registry.getIndex(bitSize), lowest);
             var decodedLow =
-                codec.decodeBinary(registry.use(bitSize), encodedLow);
+                codec.decodeBinary(registry.getIndex(bitSize), encodedLow);
 
             expect(lowest, equals(decodedLow));
 
             // highest accepted value
             var highest = poweredValue - 1.toBigInt;
 
-            var encodedHigh = codec.encodeToHex(registry.use(bitSize), highest);
+            var encodedHigh =
+                codec.encodeToHex(registry.getIndex(bitSize), highest);
             var decodedHigh =
-                codec.decodeBinary(registry.use(bitSize), encodedHigh);
+                codec.decodeBinary(registry.getIndex(bitSize), encodedHigh);
 
             expect(highest, equals(decodedHigh));
           });

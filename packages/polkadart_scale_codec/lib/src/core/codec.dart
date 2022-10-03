@@ -9,10 +9,7 @@ class Codec {
   ///
   /// Example:
   /// ```dart
-  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'as scale_codec;
-  /// import 'package:substrate_metadata/old/types.dart' as old_types;
-  /// import 'package:substrate_metadata/old/type_registry.dart';
-  ///
+  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
   /// var registry = OldTypeRegistry(
@@ -46,7 +43,7 @@ class Codec {
   /// var types = registry.getTypes();
   ///
   /// // Initializing Scale-Codec object
-  /// var codec = scale_codec.Codec(types);
+  /// var codec = Codec(types);
   /// ```
   Codec(List<Type> types) {
     _types = types.toCodecTypes();
@@ -56,10 +53,7 @@ class Codec {
   ///
   /// Example:
   /// ```dart
-  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'as scale_codec;
-  /// import 'package:substrate_metadata/old/types.dart' as old_types;
-  /// import 'package:substrate_metadata/old/type_registry.dart';
-  ///
+  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
   /// var registry = OldTypeRegistry(
@@ -93,7 +87,7 @@ class Codec {
   /// var types = registry.getTypes();
   ///
   /// // Initializing Scale-Codec object
-  /// var codec = scale_codec.Codec(types);
+  /// var codec = Codec(types);
   ///
   /// var result = codec.decodeBinary(registry.use('Option<u8>'), '0x0108'); // 8
   /// ```
@@ -108,10 +102,7 @@ class Codec {
   ///
   /// Example:
   /// ```dart
-  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'as scale_codec;
-  /// import 'package:substrate_metadata/old/types.dart' as old_types;
-  /// import 'package:substrate_metadata/old/type_registry.dart';
-  ///
+  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
   /// var registry = OldTypeRegistry(
@@ -145,7 +136,7 @@ class Codec {
   /// var types = registry.getTypes();
   ///
   /// // Initializing Scale-Codec object
-  /// var codec = scale_codec.Codec(types);
+  /// var codec = Codec(types);
   ///
   /// var result = codec.encodeToHex(registry.use('Option<u8>'), 8); // '0x0108'
   /// ```

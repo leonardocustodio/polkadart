@@ -1,6 +1,5 @@
 part of polkadart_scale_codec_core;
 
-/// TODO: Write Unit Test Cases for this in future.
 extension TypeConverter on List<Type> {
   Type getUnwrappedType(int index) {
     Type def = this[index];

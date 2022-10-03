@@ -53,64 +53,111 @@ enum Primitive {
 ///
 /// PrimitiveType
 class PrimitiveType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
+
   /// Value from [Primitive] enum which denotes the type of value from Primitives enums
   final Primitive primitive;
-  const PrimitiveType({required this.primitive})
+  PrimitiveType({required this.primitive, super.path, super.docs})
       : super(kind: TypeKind.Primitive);
 }
 
 ///
 /// CompactType
 class CompactType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
+
   /// type which this Type denotes
   final int type;
-  const CompactType({required this.type}) : super(kind: TypeKind.Compact);
+  CompactType({required this.type, super.path, super.docs})
+      : super(kind: TypeKind.Compact);
 }
 
 ///
 /// SequenceType
 class SequenceType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
+
   /// type which this sequence denotes
   final int type;
-  const SequenceType({required this.type}) : super(kind: TypeKind.Sequence);
+  SequenceType({required this.type, super.path, super.docs})
+      : super(kind: TypeKind.Sequence);
 }
 
 ///
 /// BitSequenceType
 class BitSequenceType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
   final int bitStoreType;
   final int bitOrderType;
-  const BitSequenceType(
-      {required this.bitStoreType, required this.bitOrderType})
+  BitSequenceType(
+      {required this.bitStoreType,
+      required this.bitOrderType,
+      super.path,
+      super.docs})
       : super(kind: TypeKind.BitSequence);
 }
 
 ///
 /// ArrayType
 class ArrayType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
+
   /// length of this array
   final int len;
 
   /// type which this array denotes
   final int type;
-  const ArrayType({required this.len, required this.type})
+  ArrayType({required this.len, required this.type, super.path, super.docs})
       : super(kind: TypeKind.Array);
 }
 
 ///
 /// TupleType
 class TupleType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
+
   /// [Optional] tuple
   final List<int> tuple;
-  const TupleType({this.tuple = const <int>[]}) : super(kind: TypeKind.Tuple);
+  TupleType({this.tuple = const <int>[], super.path, super.docs})
+      : super(kind: TypeKind.Tuple);
 }
 
 ///
 /// CompositeType
 class CompositeType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
+
   /// [Optional] fields
   final List<Field> fields;
-  const CompositeType({this.fields = const <Field>[]})
+  CompositeType({this.fields = const <Field>[], super.path, super.docs})
       : super(kind: TypeKind.Composite);
 }
 
@@ -122,15 +169,22 @@ class Field {
 
   /// type which this Field denotes
   final int type;
-  const Field({required this.type, this.name});
+  final List<String>? docs;
+  Field({required this.type, this.name, this.docs});
 }
 
 ///
 /// VariantType
 class VariantType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
+
   /// Variants it can hold
   final List<Variant> variants;
-  const VariantType({this.variants = const <Variant>[]})
+  VariantType({this.variants = const <Variant>[], super.path, super.docs})
       : super(kind: TypeKind.Variant);
 }
 
@@ -145,28 +199,43 @@ class Variant {
 
   /// [Optional] fields
   final List<Field> fields;
-  const Variant(
-      {this.fields = const <Field>[], required this.index, required this.name});
+  List<String>? docs;
+  Variant(
+      {this.fields = const <Field>[],
+      required this.index,
+      required this.name,
+      this.docs});
 }
 
 ///
 /// OptionType
 class OptionType extends Type with CodecType {
+  @override
+  List<String>? docs;
+
+  @override
+  List<String>? path;
+
   /// type which this Optional Value denotes
   final int type;
-  const OptionType({required this.type}) : super(kind: TypeKind.Option);
+  OptionType({required this.type, super.path, super.docs})
+      : super(kind: TypeKind.Option);
 }
 
 ///
 /// DoNotConstructType
 class DoNotConstructType extends Type with CodecType {
-  const DoNotConstructType() : super(kind: TypeKind.DoNotConstruct);
+  DoNotConstructType() : super(kind: TypeKind.DoNotConstruct);
 }
 
 ///
 /// Generic `Type` Class which helps to define TypeKind and helps to handle sub-types easily
 abstract class Type {
+  List<String>? path;
+
+  List<String>? docs;
+
   /// `TypeKind` to tell which child `Type Class` is being referenced.
   final TypeKind kind;
-  const Type({required this.kind});
+  Type({required this.kind, this.path, this.docs});
 }

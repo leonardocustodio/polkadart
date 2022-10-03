@@ -9,14 +9,9 @@ environment:
 dependencies:
   utility: ^1.0.3 # MIT
   convert: ^3.0.2 # BSD-3-Clause
+  equatable: ^2.0.5 # MIT
 
 dev_dependencies:
   build_runner: ^2.2.1 # BSD-3-Clause
   lints: ^2.0.0 # BSD-3-Clause
-  path: ^1.8.2 # BSD-3-Clause
-  substrate_metadata:
-    git:
-      url: https://github.com/rankanizer/polkadart.git
-      ref: feature/substrate_metadata
-      path: packages/substrate_metadata
   test: ^1.16.0 # BSD-3-Clause
