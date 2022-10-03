@@ -1,11 +1,12 @@
 import 'dart:mirrors';
+
 import 'package:polkadart_scale_codec/src/core/core.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void testCompact(String hex, dynamic val) {
   test('Src.compact: $hex == $val', () {
-    var src = Src(hex);
+    var src = Source(hex);
     expect(src.compact(), equals(val));
 
     // This should not throw error.
@@ -26,7 +27,7 @@ void testPrimitiveTypes(String method, dynamic arg) {
     var mirrorSink = reflect(sink);
     mirrorSink.invoke(Symbol(method), [arg]);
 
-    var src = Src(mirrorSink.invoke(Symbol('toHex'), []).reflectee);
+    var src = Source(mirrorSink.invoke(Symbol('toHex'), []).reflectee);
 
     var mirrorSrc = reflect(src);
     var decoded = mirrorSrc.invoke(Symbol(method), []).reflectee;

@@ -1,10 +1,10 @@
 part of polkadart_scale_codec_core;
 
-class Src {
+class Source {
   int _idx = 0;
   late Uint8List _data;
 
-  Src(dynamic data) {
+  Source(dynamic data) {
     assertionCheck(data is String || data is List<int> || data is Uint8List,
         'Src(data) -> `data` should be either String, List<int> or Uint8List.');
     if (data is String) {

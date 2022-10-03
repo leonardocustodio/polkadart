@@ -98,7 +98,7 @@ class Codec {
   /// var result = codec.decodeBinary(registry.use('Option<u8>'), '0x0108'); // 8
   /// ```
   dynamic decodeBinary(int type, dynamic data) {
-    Src src = Src(data);
+    Source src = Source(data);
     var val = decode(type, src);
     src.assertEOF();
     return val;
@@ -167,7 +167,7 @@ class Codec {
     return sink.toBytes();
   }
 
-  /// Decodes the [data] wrapped in [Src] object
+  /// Decodes the [data] wrapped in [Source] object
   ///
   ///Example:
   /// ```dart
@@ -176,7 +176,7 @@ class Codec {
   /// ```
   ///
   /// Throws `UnexpectedCaseException` if the type is not recognised.
-  dynamic decode(int type, Src src) {
+  dynamic decode(int type, Source src) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
@@ -207,7 +207,7 @@ class Codec {
   }
 
   /// Decodes Array
-  List<dynamic> _decodeArray(ArrayType def, Src src) {
+  List<dynamic> _decodeArray(ArrayType def, Source src) {
     int len = def.len;
     int type = def.type;
     List<dynamic> result = <dynamic>[]..length = len;
@@ -219,7 +219,7 @@ class Codec {
   }
 
   /// Decodes Bit Sequence
-  List<dynamic> _decodeSequence(SequenceType def, Src src) {
+  List<dynamic> _decodeSequence(SequenceType def, Source src) {
     int len = src.compactLength();
     List<dynamic> result = <dynamic>[]..length = len;
     for (var i = 0; i < len; i++) {
@@ -229,7 +229,7 @@ class Codec {
   }
 
   /// Decodes Tuple
-  List<dynamic>? _decodeTuple(TupleType def, Src src) {
+  List<dynamic>? _decodeTuple(TupleType def, Source src) {
     if (def.tuple.isEmpty) {
       return null;
     }
@@ -241,7 +241,7 @@ class Codec {
   }
 
   /// Decodes Struct
-  Map<String, dynamic> _decodeStruct(CodecStructType def, Src src) {
+  Map<String, dynamic> _decodeStruct(CodecStructType def, Source src) {
     Map<String, dynamic> result = <String, dynamic>{};
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
@@ -251,7 +251,7 @@ class Codec {
   }
 
   /// Decodes Variant
-  Map<String, dynamic> _decodeVariant(CodecVariantType def, Src src) {
+  Map<String, dynamic> _decodeVariant(CodecVariantType def, Source src) {
     var idx = src.u8();
     CodecVariant? variant =
         idx < def.variants.length ? def.variants[idx] : null;
@@ -282,7 +282,7 @@ class Codec {
   }
 
   /// Decodes Option
-  dynamic _decodeOption(OptionType def, Src src) {
+  dynamic _decodeOption(OptionType def, Source src) {
     int byte = src.u8();
     switch (byte) {
       case 0:
@@ -432,7 +432,7 @@ class Codec {
 
   ///
   /// Decodes Bytes
-  Uint8List _decodeBytes(Src src) {
+  Uint8List _decodeBytes(Source src) {
     int len = src.compactLength();
     return src.bytes(len);
   }
@@ -455,7 +455,7 @@ class Codec {
 
   ///
   /// Decodes Bit Sequence
-  Uint8List _decodeBitSequence(Src src) {
+  Uint8List _decodeBitSequence(Source src) {
     var len = (src.compactLength() / 8).ceil();
     return src.bytes(len);
   }
@@ -470,7 +470,7 @@ class Codec {
 
   ///
   /// Returns: `BigInt` | `int`
-  dynamic _decodeCompact(CodecCompactType type, Src src) {
+  dynamic _decodeCompact(CodecCompactType type, Source src) {
     var n = src.compact();
 
     // n is either [BigInt] or [int]
@@ -485,7 +485,7 @@ class Codec {
   }
 
   /// Decodes [src] object when Primitive is known.
-  dynamic _decodePrimitiveFromSrc(Primitive type, Src src) {
+  dynamic _decodePrimitiveFromSrc(Primitive type, Source src) {
     switch (type) {
       case Primitive.I8:
         return src.i8();
