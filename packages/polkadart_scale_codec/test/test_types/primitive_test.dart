@@ -56,7 +56,7 @@ void main() {
             throwsA(predicate((e) =>
                 e is AssertionException &&
                 e.toString() ==
-                    'Src(data) -> `data` should be either String, List<int> or Uint8List.')));
+                    'Source(data) -> `data` should be either String, List<int> or Uint8List.')));
       });
     });
   }

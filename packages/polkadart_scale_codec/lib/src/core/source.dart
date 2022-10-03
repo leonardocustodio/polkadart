@@ -6,7 +6,7 @@ class Source {
 
   Source(dynamic data) {
     assertionCheck(data is String || data is List<int> || data is Uint8List,
-        'Src(data) -> `data` should be either String, List<int> or Uint8List.');
+        'Source(data) -> `data` should be either String, List<int> or Uint8List.');
     if (data is String) {
       _data = decodeHex(data);
     } else {

@@ -171,7 +171,7 @@ class Codec {
   ///
   ///Example:
   /// ```dart
-  /// Src src = Src('0x0108');
+  /// Src src = Source('0x0108');
   /// var result = codec.decode(registry.use('Option<u8>'), src); // 8
   /// ```
   ///
@@ -180,7 +180,8 @@ class Codec {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
-        return _decodePrimitiveFromSrc((def as PrimitiveType).primitive, src);
+        return _decodePrimitiveFromSource(
+            (def as PrimitiveType).primitive, src);
       case TypeKind.Compact:
         return _decodeCompact((def as CodecCompactType), src);
       case TypeKind.BitSequence:
@@ -485,7 +486,7 @@ class Codec {
   }
 
   /// Decodes [src] object when Primitive is known.
-  dynamic _decodePrimitiveFromSrc(Primitive type, Source src) {
+  dynamic _decodePrimitiveFromSource(Primitive type, Source src) {
     switch (type) {
       case Primitive.I8:
         return src.i8();
