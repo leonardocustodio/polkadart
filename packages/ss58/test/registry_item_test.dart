@@ -70,4 +70,30 @@ void main() {
 
     expect(registryItem.symbols, json['symbols']);
   });
+
+  test('Should return all props of RegistryItem', () {
+    final Map<String, dynamic> json = {
+      'prefix': 2,
+      "network": "kusama",
+      "displayName": "Kusama Relay Chain",
+      "symbols": ["KSM"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://kusama.network"
+    };
+
+    final registryItem = RegistryItem.fromJson(json);
+    final registryItemProps = registryItem.props;
+
+    expect(registryItemProps, isList);
+    expect(registryItemProps.length, 7);
+
+    expect(registryItemProps[0], json['prefix']);
+    expect(registryItemProps[1], json['network']);
+    expect(registryItemProps[2], json['displayName']);
+    expect(registryItemProps[3], json['symbols']);
+    expect(registryItemProps[4], json['decimals']);
+    expect(registryItemProps[5], json['standardAccount']);
+    expect(registryItemProps[6], json['website']);
+  });
 }
