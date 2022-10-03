@@ -1,11 +1,38 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ss58_codec/src/exceptions.dart';
 import 'package:ss58_codec/ss58_codec.dart';
 import 'package:test/test.dart';
+import 'test_extension.dart';
 
 void main() {
-  group('SS58Codec encode method exception testing', () {
+  group('SS58Codec encode method', () {
+    test('Should encode all addresses sucessfully', () {
+      final address1 =
+          Address(prefix: 0, bytes: Uint8List.fromList([1, 2, 3, 4]));
+      final address2 = Address(prefix: 64, bytes: Uint8List.fromList([1, 2]));
+      final address3 = Address(prefix: 16383, bytes: Uint8List.fromList([2]));
+
+      expect(() => SS58Codec.encode(address1), returnsNormally);
+      expect(() => SS58Codec.encode(address2), returnsNormally);
+      expect(() => SS58Codec.encode(address3), returnsNormally);
+    });
+
+    test(
+        'Should encode the address and then re-decode that encoded object to match with original bytes passed',
+        () {
+      final originalAddress = Address(
+          prefix: 64, bytes: Uint8List.fromList(List<int>.filled(32, 32)));
+
+      final String encodedAddress = SS58Codec.encode(originalAddress);
+
+      final Address decodedAddress = SS58Codec.decode(encodedAddress);
+
+      decodedAddress.isEqual(originalAddress);
+    });
+  });
+  group('SS58Codec encode exception', () {
     test(
         'Should throw InvalidPrefixException when an address has negative prefix',
         () {
@@ -104,4 +131,8 @@ void main() {
       }
     });
   });
+}
+
+int randomInt(int max) {
+  return Random.secure().nextInt(max);
 }
