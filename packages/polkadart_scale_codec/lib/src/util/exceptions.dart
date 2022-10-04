@@ -2,12 +2,12 @@ part of utils;
 
 /// UnexpectedCaseException
 class UnexpectedCaseException implements Exception {
-  const UnexpectedCaseException([this.value]);
+  const UnexpectedCaseException([this.msg]);
 
-  final dynamic value;
+  final String? msg;
 
   @override
-  String toString() => 'Unexpected case${value == null ? '' : ': $value'}.';
+  String toString() => msg ?? 'Unexpected Case.';
 }
 
 /// EOFException

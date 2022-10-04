@@ -146,18 +146,6 @@ class Codec {
     return sink.toHex();
   }
 
-  /// Encodes the [val] and outputs `Uint8List`
-  ///
-  ///Example:
-  /// ```dart
-  /// var result = codec.encodeToBinary(registry.use('Option<u8>'), 8); // [1, 8]
-  /// ```
-  Uint8List encodeToBinary(int type, dynamic val) {
-    var sink = ByteSink();
-    encode(type, val, sink);
-    return sink.toBytes();
-  }
-
   /// Decodes the [data] wrapped in [Source] object
   ///
   ///Example:
@@ -194,7 +182,8 @@ class Codec {
       case TypeKind.BytesArray:
         return src.bytes((def as CodecBytesArrayType).len);
       default:
-        throw UnexpectedCaseException((def as Type).kind);
+        throw UnexpectedCaseException(
+            'Unexpected TypeKind: ${(def as Type).kind.name}.');
     }
   }
 
@@ -282,7 +271,7 @@ class Codec {
       case 1:
         return decode(def.type, src);
       default:
-        throw UnexpectedCaseException(byte);
+        throw UnexpectedCaseException('Unexpcted byte: $byte.');
     }
   }
 
@@ -290,19 +279,13 @@ class Codec {
   ///
   ///Example:
   /// ```dart
-  /// // Byte ScaleCodecSink
-  /// var byteSink = ByteSink();
-  /// codec.encode(registry.use('Option<u8>'), 8, byteSink);
-  /// byteSink.toBytes(); // [1, 8]
-  ///
-  /// //or
-  /// // Hex ScaleCodecSink
+  /// // Hex HexSink
   /// var hexSink = HexSink();
   /// codec.encode(registry.use('Option<u8>'), 8, hexSink);
   /// hexSink.toHex(); // '0x0108'
   ///
   /// ```
-  void encode(int type, dynamic val, ScaleCodecSink sink) {
+  void encode(int type, dynamic val, HexSink sink) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
@@ -339,13 +322,13 @@ class Codec {
         _encodeOption((def as OptionType), val, sink);
         break;
       default:
-        throw UnexpectedCaseException(def.kind);
+        throw UnexpectedCaseException('Unexpected TypeKind: ${def.kind.name}.');
     }
   }
 
   ///
   /// Encodes Array
-  void _encodeArray(ArrayType def, dynamic val, ScaleCodecSink sink) {
+  void _encodeArray(ArrayType def, dynamic val, HexSink sink) {
     assertionCheck(val is List && val.length == def.len);
 
     for (var i = 0; i < val.length; i++) {
@@ -355,7 +338,7 @@ class Codec {
 
   ///
   /// Encodes Bit Sequence
-  void _encodeSequence(SequenceType def, dynamic val, ScaleCodecSink sink) {
+  void _encodeSequence(SequenceType def, dynamic val, HexSink sink) {
     assertionCheck(val is List);
     sink.compact((val as List).length);
     for (var i = 0; i < val.length; i++) {
@@ -365,7 +348,7 @@ class Codec {
 
   ///
   /// Encodes Tuple
-  void _encodeTuple(TupleType def, dynamic val, ScaleCodecSink sink) {
+  void _encodeTuple(TupleType def, dynamic val, HexSink sink) {
     if (def.tuple.isEmpty) {
       assert(val == null);
       return;
@@ -378,7 +361,7 @@ class Codec {
 
   ///
   /// Encodes Struct
-  void _encodeStruct(CodecStructType def, dynamic val, ScaleCodecSink sink) {
+  void _encodeStruct(CodecStructType def, dynamic val, HexSink sink) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
       encode(f.type, val[f.name], sink);
@@ -387,7 +370,7 @@ class Codec {
 
   ///
   /// Encodes Variant
-  void _encodeVariant(CodecVariantType def, dynamic val, ScaleCodecSink sink) {
+  void _encodeVariant(CodecVariantType def, dynamic val, HexSink sink) {
     assertionCheck(val is Map<String, dynamic>);
     assertionCheck(val['__kind'] is String, 'not a variant type value');
 
@@ -413,7 +396,7 @@ class Codec {
 
   ///
   /// Encodes Option
-  void _encodeOption(OptionType def, dynamic val, ScaleCodecSink sink) {
+  void _encodeOption(OptionType def, dynamic val, HexSink sink) {
     if (val == null) {
       sink.u8(0);
     } else {
@@ -431,7 +414,7 @@ class Codec {
 
   ///
   /// Encodes Bytes
-  void _encodeBytes(dynamic val, ScaleCodecSink sink) {
+  void _encodeBytes(dynamic val, HexSink sink) {
     assertionCheck(val is List);
     sink.compact(val.length);
     sink.bytes(val);
@@ -439,8 +422,7 @@ class Codec {
 
   ///
   /// Encodes Bytes Array
-  void _encodeBytesArray(
-      CodecBytesArrayType def, dynamic val, ScaleCodecSink sink) {
+  void _encodeBytesArray(CodecBytesArrayType def, dynamic val, HexSink sink) {
     assertionCheck(val is List && val.length == def.len);
     sink.bytes(val);
   }
@@ -454,8 +436,9 @@ class Codec {
 
   ///
   /// Encodes Bit Sequence
-  void _encodeBitSequence(dynamic bits, ScaleCodecSink sink) {
-    assertionCheck(bits is List);
+  void _encodeBitSequence(dynamic bits, HexSink sink) {
+    assertionCheck(
+        bits is List<int>, 'BitSequence can have bits of type List<int> only.');
     sink.compact(bits.length * 8);
     sink.bytes(bits);
   }
@@ -508,12 +491,13 @@ class Codec {
       case Primitive.Str:
         return src.str();
       default:
-        throw UnexpectedCaseException(type);
+        throw UnexpectedCaseException(
+            'Unexpected PrimitiveType: ${type.name}.');
     }
   }
 
   /// Encodes [src] object to `sink` when [Primitive] is know
-  void _encodePrimitive(Primitive type, dynamic val, ScaleCodecSink sink) {
+  void _encodePrimitive(Primitive type, dynamic val, HexSink sink) {
     switch (type) {
       case Primitive.I8:
         sink.i8(val);
@@ -558,7 +542,8 @@ class Codec {
         sink.str(val);
         break;
       default:
-        throw UnexpectedCaseException(type);
+        throw UnexpectedCaseException(
+            'Unexpected PrimitiveType: ${type.name}.');
     }
   }
 }

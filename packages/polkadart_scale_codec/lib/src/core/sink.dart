@@ -1,13 +1,13 @@
 part of polkadart_scale_codec_core;
 
 ///
-/// Abstract class to laydown the defined set of instructions when making a [HexSink] or [ByteSink]
+/// Abstract class to laydown the defined set of instructions when making a [HexSink]
 abstract class ScaleCodecSink {
   /// process and append the byte to the data
   void write(int byte);
 
   /// append the list of bytes to the data.
-  void bytes(List b);
+  void bytes(List<int> b);
 
   void _uncheckedU16(int val) {
     write(val & 0xff);
@@ -110,7 +110,7 @@ abstract class ScaleCodecSink {
   void str(String val) {
     List<int> encodedBytes = utf8Encoder(val);
     compact(encodedBytes.length);
-    bytes(Uint8List.fromList(encodedBytes));
+    bytes(Uint8List.fromList(encodedBytes).toList());
   }
 
   /// write boolean value to data as `int`.
@@ -207,49 +207,12 @@ class HexSink extends ScaleCodecSink {
   }
 
   @override
-  void bytes(List b) {
+  void bytes(List<int> b) {
     _hex += encodeHex(b.cast<int>()).replaceFirst(RegExp(r'0x'), '');
   }
 
   /// Return current hex data
   String toHex() {
     return _hex;
-  }
-}
-
-///
-/// `ByteSink` to write the `byte` or a group of `bytes` and append to the existing result as buffer only.
-class ByteSink extends ScaleCodecSink {
-  /// Fixed length buffer [_data].
-  Uint8List _data = Uint8List(128);
-  int _pos = 0;
-
-  void _alloc(int size) {
-    if (_data.length - _pos < size) {
-      Uint8List newData = Uint8List(max(size, _data.length) * 2);
-      newData.setAll(0, _data);
-      _data = newData;
-    }
-  }
-
-  /// allocate a byte space if the [_data] is full and then append the [byte] to the buffer
-  @override
-  void write(int byte) {
-    _alloc(1);
-    _data[_pos] = byte;
-    _pos += 1;
-  }
-
-  /// allocate space for `b-length` buffer, if the [_data] is full and then append buffer: [b] to the [_data]
-  @override
-  void bytes(List b) {
-    _alloc(b.length);
-    _data.setAll(_pos, b.cast<int>());
-    _pos += b.length;
-  }
-
-  /// Returns current Buffer data
-  Uint8List toBytes() {
-    return _data.sublist(0, _pos);
   }
 }
