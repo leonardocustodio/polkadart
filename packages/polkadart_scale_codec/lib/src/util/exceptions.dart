@@ -47,7 +47,7 @@ class IncompatibleCompactException implements Exception {
   final String size;
 
   @override
-  String toString() => '$size is too large for a compact';
+  String toString() => '$size is too large for a compact.';
 }
 
 /// InvalidCompactException
