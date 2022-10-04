@@ -112,7 +112,7 @@ class SS58Codec {
         hashLen = 2;
         break;
       default:
-        throw BadAddressLengthException();
+        throw BadAddressLengthException(address.toString());
     }
     late Uint8List data;
     late int offset;
