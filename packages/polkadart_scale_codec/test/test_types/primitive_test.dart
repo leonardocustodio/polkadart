@@ -321,7 +321,7 @@ void main() {
             throwsA(predicate((e) =>
                 e is IncompatibleCompactException &&
                 e.toString() ==
-                    '${invalidValue.toRadixString(16)} is too large for a compact')));
+                    '${invalidValue.toRadixString(16)} is too large for a compact.')));
 
         //
         // Exceeding int Compacting value range: 2 ** 536
@@ -332,7 +332,7 @@ void main() {
             throwsA(predicate((e) =>
                 e is IncompatibleCompactException &&
                 e.toString() ==
-                    '${invalidValue.toInt().toRadixString(16)} is too large for a compact')));
+                    '${invalidValue.toInt().toRadixString(16)} is too large for a compact.')));
       });
     });
   }

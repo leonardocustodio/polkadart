@@ -13,7 +13,8 @@ class OldTypeRegistry {
 
   /// [Private]
   ///
-  /// HashMap to store already looked typeExp
+  /// HashMap to store index of already looked ([typeExp] as String).
+  /// So as to look back and quickly pin-point the index of the desired types to be used.
   final Map<String, int> _fastLookup = <String, int>{};
 
   Map<String, Map<String, String>>? typesAlias;
@@ -289,7 +290,7 @@ class OldTypeRegistry {
       _types.add(DoNotConstructType());
       index = _types.length - 1;
       _lookup[key] = index;
-      _fastLookup[key] = index;
+      _fastLookup[typeExp is String ? typeExp : key] = index;
       _types[index] = _buildScaleType(type);
     }
     return index;

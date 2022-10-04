@@ -92,76 +92,152 @@ void main() {
 
   {
     //
-    // Compact<u8>
+    // Encode Compact<u8>
     group('Encode Compact<u8>:', () {
-      test('0 when compacted must return \'0x00\'', () {
-        final compacted =
-            codec.encodeToHex(registry.getIndex('Compact<u8>'), 0);
-        expect('0x00', equals(compacted));
+      test('0 when encoded must return \'0x00\'', () {
+        final encoded = codec.encodeToHex(registry.getIndex('Compact<u8>'), 0);
+        expect('0x00', equals(encoded));
       });
-      test('256 when compacted must return \'0x0104\'', () {
-        final compacted =
+      test('256 when encoded must return \'0x0104\'', () {
+        final encoded =
             codec.encodeToHex(registry.getIndex('Compact<u8>'), 256);
-        expect('0x0104', equals(compacted));
+        expect('0x0104', equals(encoded));
       });
     });
 
     //
-    // Compact<u16>
+    // Encode Compact<u16>
     group('Encode Compact<u16>:', () {
-      test('\'pow(2, 16) - 1\' when compacted must return \'0x02000400\'', () {
-        final compacted = codec.encodeToHex(
+      test('\'pow(2, 16) - 1\' when encoded must return \'0xfeff0300\'', () {
+        final encoded = codec.encodeToHex(
             registry.getIndex('Compact<u16>'), pow(2, 16) - 1);
-        expect('0xfeff0300', equals(compacted));
+        expect('0xfeff0300', equals(encoded));
       });
     });
 
     //
-    // Compact<u32>
+    // Encode Compact<u32>
     group('Encode Compact<u32>:', () {
-      test('\'pow(2, 32) - 1\' when compacted must return \'0x03ffffffff\'',
-          () {
-        final compacted = codec.encodeToHex(
+      test('\'pow(2, 32) - 1\' when encoded must return \'0x03ffffffff\'', () {
+        final encoded = codec.encodeToHex(
             registry.getIndex('Compact<u32>'), pow(2, 32) - 1);
-        expect('0x03ffffffff', equals(compacted));
+        expect('0x03ffffffff', equals(encoded));
       });
     });
 
     //
-    // Compact<u64>
+    // Encode Compact<u64>
     group('Encode Compact<u64>:', () {
       test(
-          'BigInt.from(2).pow(64) - BigInt.from(1) when compacted must return \'0x13ffffffffffffffff\'',
+          '\'BigInt.from(2).pow(64) - BigInt.from(1)\' when encoded must return \'0x13ffffffffffffffff\'',
           () {
-        final compacted = codec.encodeToHex(registry.getIndex('Compact<u64>'),
+        final encoded = codec.encodeToHex(registry.getIndex('Compact<u64>'),
             BigInt.from(2).pow(64) - BigInt.from(1));
-        expect('0x13ffffffffffffffff', equals(compacted));
+        expect('0x13ffffffffffffffff', equals(encoded));
       });
     });
 
     //
-    // Compact<u128>
-    group('Encode/Decode Compact<u128>:', () {
+    // Encode Compact<u128>
+    group('Encode Compact<u128>:', () {
       test(
-          'BigInt.from(2).pow(128) - BigInt.from(1) when compacted must return \'0x33ffffffffffffffffffffffffffffffff\'',
+          '\'BigInt.from(2).pow(128) - BigInt.from(1)\' when encoded must return \'0x33ffffffffffffffffffffffffffffffff\'',
           () {
-        final compacted = codec.encodeToHex(registry.getIndex('Compact<u128>'),
+        final encoded = codec.encodeToHex(registry.getIndex('Compact<u128>'),
             BigInt.from(2).pow(128) - BigInt.from(1));
-        expect('0x33ffffffffffffffffffffffffffffffff', equals(compacted));
+        expect('0x33ffffffffffffffffffffffffffffffff', equals(encoded));
       });
     });
 
     //
-    // Compact<u256>
+    // Encode Compact<u256>
     group('Encode Compact<u256>:', () {
       test(
-          'BigInt.from(2).pow(256) - BigInt.from(1) when compacted must return \'0x73ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\'',
+          '\'BigInt.from(2).pow(256) - BigInt.from(1)\' when encoded must return \'0x73ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\'',
           () {
-        final compacted = codec.encodeToHex(registry.getIndex('Compact<u256>'),
+        final encoded = codec.encodeToHex(registry.getIndex('Compact<u256>'),
             BigInt.from(2).pow(256) - BigInt.from(1));
         expect(
             '0x73ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-            equals(compacted));
+            equals(encoded));
+      });
+    });
+  }
+
+  {
+    //
+    // Decode Compact<u8>
+    group('Decode Compact<u8>:', () {
+      test('\'0x00\' when decoded must return 0', () {
+        final decoded =
+            codec.decodeBinary(registry.getIndex('Compact<u8>'), '0x00');
+        expect(0, equals(decoded));
+      });
+      test('\'0x0104\' when decoded must return 256', () {
+        final decoded =
+            codec.decodeBinary(registry.getIndex('Compact<u8>'), '0x0104');
+        expect(256, equals(decoded));
+      });
+    });
+
+    //
+    // Decode Compact<u16>
+    group('Decode Compact<u16>:', () {
+      test('\'0xfeff0300\' when decoded must return \'pow(2, 16) - 1\'', () {
+        final actualValue = pow(2, 16) - 1;
+        final decoded =
+            codec.decodeBinary(registry.getIndex('Compact<u8>'), '0xfeff0300');
+        expect(actualValue, equals(decoded));
+      });
+    });
+
+    //
+    // Decode Compact<u32>
+    group('Decode Compact<u32>:', () {
+      test('\'0x03ffffffff\' when decoded must return \'pow(2, 32) - 1\'', () {
+        final actualValue = pow(2, 32) - 1;
+        final decoded = codec.decodeBinary(
+            registry.getIndex('Compact<u32>'), '0x03ffffffff');
+        expect(actualValue, equals(decoded));
+      });
+    });
+
+    //
+    // Decode Compact<u64>
+    group('Decode Compact<u64>:', () {
+      test(
+          '\'0x13ffffffffffffffff\' when decoded must return \'BigInt.from(2).pow(64) - BigInt.from(1)\'',
+          () {
+        final actualValue = BigInt.from(2).pow(64) - BigInt.from(1);
+        final decoded = codec.decodeBinary(
+            registry.getIndex('Compact<u64>'), '0x13ffffffffffffffff');
+        expect(actualValue, equals(decoded));
+      });
+    });
+
+    //
+    // Decode Compact<u128>
+    group('Decode Compact<u128>:', () {
+      test(
+          '\'0x33ffffffffffffffffffffffffffffffff\' when decoded must return \'BigInt.from(2).pow(128) - BigInt.from(1)\'',
+          () {
+        final actualValue = BigInt.from(2).pow(128) - BigInt.from(1);
+        final decoded = codec.decodeBinary(registry.getIndex('Compact<u128>'),
+            '0x33ffffffffffffffffffffffffffffffff');
+        expect(actualValue, equals(decoded));
+      });
+    });
+
+    //
+    // Decode Compact<u256>
+    group('Decode Compact<u256>:', () {
+      test(
+          '\'0x73ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\' when decoded must return \'BigInt.from(2).pow(256) - BigInt.from(1)\'',
+          () {
+        final actualValue = BigInt.from(2).pow(256) - BigInt.from(1);
+        final decoded = codec.decodeBinary(registry.getIndex('Compact<u256>'),
+            '0x73ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+        expect(actualValue, equals(decoded));
       });
     });
   }
