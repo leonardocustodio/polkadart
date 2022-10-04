@@ -63,18 +63,6 @@ class Registry {
     return item;
   }
 
-  ///
-  /// Finding the Registry Items by the name of the network
-  RegistryItem? findByNetwork(String network) {
-    return _byNetwork[network];
-  }
-
-  ///
-  /// Finding the Registry Items by the prefix of the network
-  RegistryItem? findByPrefix(int prefix) {
-    return _byPrefix[prefix];
-  }
-
   /// Registry Item getter
   ///
   /// this getter is important to make _items un-modifiable
