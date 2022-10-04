@@ -62,3 +62,14 @@ class InvalidAddressPrefixException implements Exception {
     return 'Expected an address with prefix $prefix, but $encodedAddress has prefix ${address.prefix}';
   }
 }
+
+class InvalidPrefixException implements Exception {
+  const InvalidPrefixException(this.prefix);
+
+  final int prefix;
+
+  @override
+  String toString() {
+    return 'Invalid prefix: $prefix.';
+  }
+}

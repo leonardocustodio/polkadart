@@ -4,17 +4,20 @@ import 'package:ss58/src/registry.dart';
 import 'package:ss58/util/ss58_registry_json.dart' as reg;
 import 'package:ss58_codec/ss58_codec.dart';
 
-final registry = Registry.fromJsonString(reg.jsonRegistryData);
-
 class Codec {
-  late int prefix;
+  final int prefix;
 
   /// Initialize Codec from the network prefix
-  Codec(this.prefix) : assert(prefix >= 0 && prefix < 16384, 'invalid prefix');
+  Codec(this.prefix) {
+    if (prefix <= 0 || prefix > 16383) {
+      throw InvalidPrefixException(prefix);
+    }
+  }
 
   /// Initialize Codec from network name
-  Codec.fromNetwork(String network) {
-    Codec(registry.getByNetwork(network).prefix);
+  factory Codec.fromNetwork(String network) {
+    final registry = Registry.fromJsonString(reg.jsonRegistryData);
+    return Codec(registry.getByNetwork(network).prefix);
   }
 
   /// Encode the bytes
