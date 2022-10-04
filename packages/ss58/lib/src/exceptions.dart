@@ -1,6 +1,5 @@
 import 'package:ss58_codec/ss58_codec.dart';
 
-/// DuplicatePrefixException
 class DuplicatePrefixException implements Exception {
   const DuplicatePrefixException(this.prefix);
 
@@ -12,7 +11,6 @@ class DuplicatePrefixException implements Exception {
   }
 }
 
-/// DuplicateNetworkException
 class DuplicateNetworkException implements Exception {
   const DuplicateNetworkException(this.network);
 
