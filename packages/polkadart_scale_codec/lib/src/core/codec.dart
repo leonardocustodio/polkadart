@@ -271,7 +271,7 @@ class Codec {
       case 1:
         return decode(def.type, src);
       default:
-        throw UnexpectedCaseException('Unexpcted byte: $byte.');
+        throw InvalidOptionByteException('Invalid Option byte: $byte.');
     }
   }
 

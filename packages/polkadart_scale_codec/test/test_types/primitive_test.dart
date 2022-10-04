@@ -7,7 +7,6 @@ void main() {
     types: <String, dynamic>{
       'Codec': {
         'vec_u8': 'Vec<u8>',
-        'option_u8': 'Option<u8>',
         'DoNotConstruct': 'DoNotConstruct',
         'primitive_char': 'char',
         'primitive__compact_u8': 'Compact<u8>',
@@ -50,38 +49,6 @@ void main() {
                 e is AssertionException &&
                 e.toString() ==
                     'Source(data) -> `data` should be either String, List<int> or Uint8List.')));
-      });
-    });
-  }
-
-  {
-    //
-    // Exception when setting Option Flag to greator than `1`.
-    //
-    // Option flag can be `0` or `1`.
-    //
-    group('Exception Option:', () {
-      test('Flag at 2', () {
-        expect(
-            () => codec.decodeBinary(registry.getIndex('Option<u8>'), '0x0208'),
-            throwsA(predicate((e) =>
-                e is UnexpectedCaseException &&
-                e.toString() == 'Unexpcted byte: 2.')));
-      });
-      test('Flag at 3', () {
-        expect(
-            () => codec.decodeBinary(registry.getIndex('Option<u8>'), '0x0308'),
-            throwsA(predicate((e) =>
-                e is UnexpectedCaseException &&
-                e.toString() == 'Unexpcted byte: 3.')));
-      });
-      test('Flag at 4', () {
-        expect(
-            () => codec.decodeBinary(
-                registry.getIndex('Option<u8>'), '0x04015231'),
-            throwsA(predicate((e) =>
-                e is UnexpectedCaseException &&
-                e.toString() == 'Unexpcted byte: 4.')));
       });
     });
   }

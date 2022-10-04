@@ -28,6 +28,16 @@ class AssertionException implements Exception {
   String toString() => msg ?? 'Assertion Exception';
 }
 
+///
+/// AssertionException
+class InvalidOptionByteException implements Exception {
+  const InvalidOptionByteException(this.msg);
+
+  final String msg;
+  @override
+  String toString() => msg;
+}
+
 /// InvalidSizeException
 class InvalidSizeException implements Exception {
   const InvalidSizeException([this.msg]);
