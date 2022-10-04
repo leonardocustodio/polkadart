@@ -14,9 +14,10 @@ class Codec {
     }
   }
 
+  static final registry = Registry.fromJsonString(reg.jsonRegistryData);
+
   /// Initialize Codec from network name
   factory Codec.fromNetwork(String network) {
-    final registry = Registry.fromJsonString(reg.jsonRegistryData);
     return Codec(registry.getByNetwork(network).prefix);
   }
 
