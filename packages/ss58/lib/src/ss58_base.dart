@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:ss58/src/exceptions.dart';
 import 'package:ss58/src/registry.dart';
 import 'package:ss58/util/ss58_registry_json.dart' as reg;
 import 'package:ss58_codec/ss58_codec.dart';
@@ -6,7 +7,7 @@ import 'package:ss58_codec/ss58_codec.dart';
 final registry = Registry.fromJsonString(reg.jsonRegistryData);
 
 class Codec {
-  int prefix = -1;
+  late int prefix;
 
   /// Initialize Codec from the network prefix
   Codec(this.prefix) : assert(prefix >= 0 && prefix < 16384, 'invalid prefix');
@@ -23,11 +24,14 @@ class Codec {
   }
 
   /// Decode the Address
-  List<int> decode(String s) {
-    var address = SS58Codec.decode(s);
+  List<int> decode(String encodedAddress) {
+    final Address address = SS58Codec.decode(encodedAddress);
     if (address.prefix != prefix) {
-      throw Exception(
-          'Expected an address with prefix $prefix, but $s has prefix ${address.prefix}');
+      throw InvalidAddressPrefixException(
+        prefix: prefix,
+        address: address,
+        encodedAddress: encodedAddress,
+      );
     }
     return address.bytes;
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ss58/src/exceptions.dart';
 import 'package:ss58/src/registry_item.dart';
 
 class Registry {
@@ -13,12 +14,12 @@ class Registry {
     _items.addAll(items);
     for (var item in items) {
       if (_byPrefix[item.prefix] != null) {
-        throw Exception('Duplicate prefix ${item.prefix}');
+        throw DuplicatePrefixException(item.prefix);
       } else {
         _byPrefix[item.prefix] = item;
       }
       if (_byNetwork[item.network] != null) {
-        throw Exception('Duplicate network ${item.network}');
+        throw DuplicateNetworkException(item.network);
       } else {
         _byNetwork[item.network] = item;
       }
@@ -27,7 +28,7 @@ class Registry {
 
   ///
   /// Initialize the registry with the jsonString and process the jsonString to find list of registries.
-  static Registry fromJsonString(String jsonString) {
+  factory Registry.fromJsonString(String jsonString) {
     List<dynamic> dynamicItems =
         jsonDecode(jsonString)['registry'] as List<dynamic>;
     List<RegistryItem> convertedItems = dynamicItems.map((value) {
@@ -45,7 +46,7 @@ class Registry {
   RegistryItem getByNetwork(String network) {
     var item = _byNetwork[network];
     if (item == null) {
-      throw Exception('No entry for network $network');
+      throw NoEntryForNetworkException(network);
     }
     return item;
   }
@@ -57,7 +58,7 @@ class Registry {
   RegistryItem getByPrefix(int prefix) {
     var item = _byPrefix[prefix];
     if (item == null) {
-      throw Exception('No entry for prefix $prefix');
+      throw NoEntryForPrefixException(prefix);
     }
     return item;
   }
