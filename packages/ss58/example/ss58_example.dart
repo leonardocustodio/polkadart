@@ -1,21 +1,23 @@
 import 'package:ss58/ss58.dart';
 
 void main() {
+  // get registry info of given `network`
+  final kusamaRegistry = Codec.registry.getByNetwork('kusama');
+  print('kusama registry: $kusamaRegistry');
+
+  // get registry info of given `prefix`
+  final polkadotRegistry = Codec.registry.getByPrefix(0);
+  print('polkadot registry: $polkadotRegistry');
+
+  // decoding substrate address
   final String originalEncodedAddress =
       '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
-
-  // Decoding the address to produce bytes
-  final List<int> decodedBytes = Codec(42).decode(originalEncodedAddress);
+  final List<int> decodedBytes =
+      Codec.fromNetwork('substrate').decode(originalEncodedAddress);
+  print('Substrate address bytes: $decodedBytes');
 
   // Encoding the decodedBytes to produce back encodedAddress.
-  final encodedAddress = Codec(42).encode(decodedBytes);
-
-  if (encodedAddress == originalEncodedAddress) {
-    print('decoded bytes: $decodedBytes');
-    print('original address: $encodedAddress');
-    print('encoded address:  $encodedAddress');
-    print('decoding and encoding back and forth is awesome');
-  } else {
-    throw Exception('Something went wrong');
-  }
+  final int substrateAddressPrefix = 42;
+  final encodedAddress = Codec(substrateAddressPrefix).encode(decodedBytes);
+  print(encodedAddress);
 }
