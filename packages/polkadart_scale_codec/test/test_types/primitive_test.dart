@@ -66,7 +66,7 @@ void main() {
           var bitSize = '$bit$size';
           test(bitSize, () {
             // 2 ** (8 || 16 || 32)
-            var poweredValue = pow(2, size - 1);
+            var poweredValue = pow(2, size - (bit == 'i' ? 1 : 0));
 
             // lowest accepted value
             var lowest = multiplier * poweredValue;
