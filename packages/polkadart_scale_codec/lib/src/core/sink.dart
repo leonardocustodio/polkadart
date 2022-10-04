@@ -114,7 +114,9 @@ abstract class ScaleCodecSink {
   }
 
   /// write boolean value to data as `int`.
-  void boolean(bool val) {
+  void boolean(dynamic val) {
+    assertionCheck(
+        val is bool, 'bool can have input as \'true\' or \'false\'.');
     write(val ? 1 : 0);
   }
 
