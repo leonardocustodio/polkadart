@@ -99,7 +99,7 @@ bool checkSignedInt(int val, int bitSize) {
       max = 0x7fffffff;
       break;
     default:
-      throw UnexpectedCaseException('Unexpected BigSize: $bitSize.');
+      throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
   return checkInt(val, 'I', bitSize, min, max);
 }
@@ -137,7 +137,7 @@ bool checkSignedBigInt(BigInt val, int bitSize) {
       max = value - 1.toBigInt;
       break;
     default:
-      throw UnexpectedCaseException('Unexpected BigSize: $bitSize.');
+      throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
   return checkBigInt(val, 'I', bitSize, min, max);
 }
@@ -166,7 +166,7 @@ bool checkUnsignedInt(int val, int bitSize) {
       max = 0xffffffff;
       break;
     default:
-      throw UnexpectedCaseException('Unexpected BigSize: $bitSize.');
+      throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
   return checkInt(val, 'U', bitSize, 0, max);
 }
@@ -191,7 +191,7 @@ bool checkUnsignedBigInt(BigInt val, int bitSize) {
       max = calculateBigIntPow(2, bitSize) - 1.toBigInt;
       break;
     default:
-      throw UnexpectedCaseException('Unexpected BigSize: $bitSize.');
+      throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
   return checkBigInt(val, 'U', bitSize, 0.toBigInt, max);
 }

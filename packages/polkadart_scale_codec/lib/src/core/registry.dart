@@ -434,7 +434,8 @@ class OldTypeRegistry {
       case 'tuple':
         return _buildTuple(type as RegistryTupleType);
       default:
-        throw UnexpectedCaseException(type.kind);
+        throw UnexpectedCaseException(
+            'Unexpected RegistryTypeKind: ${type.kind}.');
     }
   }
 

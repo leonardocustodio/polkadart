@@ -66,14 +66,14 @@ void main() {
             () => codec.decodeBinary(registry.getIndex('Option<u8>'), '0x0208'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
-                e.toString() == 'Unexpected case: 2.')));
+                e.toString() == 'Unexpcted byte: 2.')));
       });
       test('Flag at 3', () {
         expect(
             () => codec.decodeBinary(registry.getIndex('Option<u8>'), '0x0308'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
-                e.toString() == 'Unexpected case: 3.')));
+                e.toString() == 'Unexpcted byte: 3.')));
       });
       test('Flag at 4', () {
         expect(
@@ -81,7 +81,7 @@ void main() {
                 registry.getIndex('Option<u8>'), '0x04015231'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
-                e.toString() == 'Unexpected case: 4.')));
+                e.toString() == 'Unexpcted byte: 4.')));
       });
     });
   }
@@ -179,7 +179,7 @@ void main() {
               () => checkUnsignedInt(1, size),
               throwsA(predicate((e) =>
                   e is UnexpectedCaseException &&
-                  e.toString() == 'Unexpected case: $size.')));
+                  e.toString() == 'Unexpected BitSize: $size.')));
         });
       }
     });
@@ -196,7 +196,7 @@ void main() {
               () => checkSignedInt(1, size),
               throwsA(predicate((e) =>
                   e is UnexpectedCaseException &&
-                  e.toString() == 'Unexpected case: $size.')));
+                  e.toString() == 'Unexpected BitSize: $size.')));
         });
       }
     });
@@ -212,7 +212,8 @@ void main() {
             () => codec.encodeToHex(registry.getIndex('DoNotConstruct'), 'A'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
-                e.toString() == 'Unexpected case: TypeKind.DoNotConstruct.')));
+                e.toString() ==
+                    'Unexpected TypeKind: TypeKind.DoNotConstruct.')));
       });
       test('Decode', () {
         expect(
@@ -220,7 +221,8 @@ void main() {
                 codec.decodeBinary(registry.getIndex('DoNotConstruct'), '0x01'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
-                e.toString() == 'Unexpected case: TypeKind.DoNotConstruct.')));
+                e.toString() ==
+                    'Unexpected TypeKind: TypeKind.DoNotConstruct.')));
       });
     });
   }
@@ -235,14 +237,14 @@ void main() {
             () => codec.encodeToHex(registry.getIndex('char'), 'A'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
-                e.toString() == 'Unexpected case: Primitive.Char.')));
+                e.toString() == 'Unexpected PrimitiveType: Primitive.Char.')));
       });
       test('Decode', () {
         expect(
             () => codec.decodeBinary(registry.getIndex('char'), '0x01'),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
-                e.toString() == 'Unexpected case: Primitive.Char.')));
+                e.toString() == 'Unexpected PrimitiveType: Primitive.Char.')));
       });
     });
   }
@@ -263,12 +265,12 @@ void main() {
               () => toSignedBigInt('1', bitSize),
               throwsA(predicate((e) =>
                   e is UnexpectedCaseException &&
-                  e.toString() == 'Unexpected case: $bitSize.')));
+                  e.toString() == 'Unexpected BitSize: $bitSize.')));
           expect(
               () => toUnsignedBigInt('1', bitSize),
               throwsA(predicate((e) =>
                   e is UnexpectedCaseException &&
-                  e.toString() == 'Unexpected case: $bitSize.')));
+                  e.toString() == 'Unexpected BitSize: $bitSize.')));
         });
       }
     });

@@ -183,7 +183,7 @@ class Codec {
         return src.bytes((def as CodecBytesArrayType).len);
       default:
         throw UnexpectedCaseException(
-            'Unexpected TypeKind: ${(def as Type).kind.name}.');
+            'Unexpected TypeKind: ${(def as Type).kind}.');
     }
   }
 
@@ -237,7 +237,7 @@ class Codec {
     CodecVariant? variant =
         idx < def.variants.length ? def.variants[idx] : null;
     if (variant == null) {
-      throw UnexpectedCaseException('unknown variant index: $idx');
+      throw UnexpectedCaseException('Unknown variant index: $idx');
     }
     switch (variant.kind) {
       case CodecVariantKind.empty:
@@ -322,7 +322,7 @@ class Codec {
         _encodeOption((def as OptionType), val, sink);
         break;
       default:
-        throw UnexpectedCaseException('Unexpected TypeKind: ${def.kind.name}.');
+        throw UnexpectedCaseException('Unexpected TypeKind: ${def.kind}.');
     }
   }
 
@@ -491,8 +491,7 @@ class Codec {
       case Primitive.Str:
         return src.str();
       default:
-        throw UnexpectedCaseException(
-            'Unexpected PrimitiveType: ${type.name}.');
+        throw UnexpectedCaseException('Unexpected PrimitiveType: $type.');
     }
   }
 
@@ -542,8 +541,7 @@ class Codec {
         sink.str(val);
         break;
       default:
-        throw UnexpectedCaseException(
-            'Unexpected PrimitiveType: ${type.name}.');
+        throw UnexpectedCaseException('Unexpected PrimitiveType: $type.');
     }
   }
 }

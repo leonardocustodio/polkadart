@@ -25,7 +25,7 @@ void main() {
             () => Codec(types),
             throwsA(predicate((e) =>
                 e is UnexpectedCaseException &&
-                e.toString() == 'Unexpected case: TypeKind.Sequence.')));
+                e.toString() == 'Unexpected TypeKind: TypeKind.Sequence.')));
       });
     });
   }

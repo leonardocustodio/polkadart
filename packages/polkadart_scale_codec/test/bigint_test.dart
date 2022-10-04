@@ -397,7 +397,7 @@ void main() {
   {
     group('checkUnsignedBigInt must throw "UnexpectedCaseException":', () {
       test('at bitsize: 20', () {
-        final exceptionMessage = 'Unexpected case: 20.';
+        final exceptionMessage = 'Unexpected BitSize: 20.';
         expect(
             () => checkUnsignedBigInt(BigInt.from(0), 20),
             throwsA(predicate((e) =>
@@ -405,7 +405,7 @@ void main() {
                 e.toString() == exceptionMessage)));
       });
       test('at bitsize: 0', () {
-        final exceptionMessage = 'Unexpected case: 0.';
+        final exceptionMessage = 'Unexpected BitSize: 0.';
         expect(
             () => checkUnsignedBigInt(BigInt.from(0), 0),
             throwsA(predicate((e) =>
@@ -413,7 +413,7 @@ void main() {
                 e.toString() == exceptionMessage)));
       });
       test('at bitsize: 120', () {
-        final exceptionMessage = 'Unexpected case: 120.';
+        final exceptionMessage = 'Unexpected BitSize: 120.';
         expect(
             () => checkUnsignedBigInt(BigInt.from(0), 120),
             throwsA(predicate((e) =>
@@ -421,7 +421,7 @@ void main() {
                 e.toString() == exceptionMessage)));
       });
       test('at bitsize: 255', () {
-        final exceptionMessage = 'Unexpected case: 255.';
+        final exceptionMessage = 'Unexpected BitSize: 255.';
         expect(
             () => checkUnsignedBigInt(BigInt.from(0), 255),
             throwsA(predicate((e) =>
@@ -447,7 +447,7 @@ void main() {
   {
     group('checkSignedBigInt must throw "UnexpectedCaseException":', () {
       test('at bitsize: 20', () {
-        final exceptionMessage = 'Unexpected case: 20.';
+        final exceptionMessage = 'Unexpected BitSize: 20.';
         expect(
             () => checkSignedBigInt(BigInt.from(0), 20),
             throwsA(predicate((e) =>
@@ -455,7 +455,7 @@ void main() {
                 e.toString() == exceptionMessage)));
       });
       test('at bitsize: 0', () {
-        final exceptionMessage = 'Unexpected case: 0.';
+        final exceptionMessage = 'Unexpected BitSize: 0.';
         expect(
             () => checkSignedBigInt(BigInt.from(0), 0),
             throwsA(predicate((e) =>
@@ -463,7 +463,7 @@ void main() {
                 e.toString() == exceptionMessage)));
       });
       test('at bitsize: 120', () {
-        final exceptionMessage = 'Unexpected case: 120.';
+        final exceptionMessage = 'Unexpected BitSize: 120.';
         expect(
             () => checkSignedBigInt(BigInt.from(0), 120),
             throwsA(predicate((e) =>
@@ -471,7 +471,7 @@ void main() {
                 e.toString() == exceptionMessage)));
       });
       test('at bitsize: 255', () {
-        final exceptionMessage = 'Unexpected case: 255.';
+        final exceptionMessage = 'Unexpected BitSize: 255.';
         expect(
             () => checkSignedBigInt(BigInt.from(0), 255),
             throwsA(predicate((e) =>
@@ -562,12 +562,12 @@ void main() {
               () => toSignedBigInt('1', bitSize),
               throwsA(predicate((e) =>
                   e is UnexpectedCaseException &&
-                  e.toString() == 'Unexpected case: $bitSize.')));
+                  e.toString() == 'Unexpected BitSize: $bitSize.')));
           expect(
               () => toUnsignedBigInt('1', bitSize),
               throwsA(predicate((e) =>
                   e is UnexpectedCaseException &&
-                  e.toString() == 'Unexpected case: $bitSize.')));
+                  e.toString() == 'Unexpected BitSize: $bitSize.')));
         }
       });
     }

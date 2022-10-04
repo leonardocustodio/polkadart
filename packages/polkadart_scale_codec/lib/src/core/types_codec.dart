@@ -71,7 +71,7 @@ extension TypeConverter on List<Type> {
             assertionCheck((type as PrimitiveType).primitive.name[0] == 'U');
             return CodecCompactType(integer: type.primitive);
           default:
-            throw UnexpectedCaseException('${type.kind}');
+            throw UnexpectedCaseException('Unexpected TypeKind: ${type.kind}.');
         }
 
       case TypeKind.Composite:
