@@ -24,8 +24,7 @@ class Codec {
     }
   }
 
-  /// Returns a [Registry] instance from `ss58-registry-json`
-  /// with all known SS58 account types.
+  /// Returns a [Registry] instance with all known SS58 account types
   static final registry = Registry.fromJsonString(reg.jsonRegistryData);
 
   /// Initialize Codec from address network name.
