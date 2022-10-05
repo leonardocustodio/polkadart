@@ -35,13 +35,6 @@ jobs:
       - name: Analyze project source
         run: dart analyze
 
-      #- name: Upload Code Coverage
-      #  uses: codecov/codecov-action@v3
-      #  with:
-      #    token: ${{ secrets.CODECOV_TOKEN }}
-      #    flags: ${{ inputs.codecov-flag }}
-      #    verbose: true]
-
       - name: Codeclimate
         uses: nschloe/action-cached-lfs-checkout@v1.1.2
       - uses: paambaati/codeclimate-action@v3.0.0
