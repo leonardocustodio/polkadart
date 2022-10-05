@@ -18,7 +18,7 @@ jobs:
       run:
         working-directory: ${{ inputs.working-directory }}
     steps:
-      - name: Check out code
+      - name: Check out code (LFS)
         uses: nschloe/action-cached-lfs-checkout@v1.1.2
 
       # Get latest stable version of dart-lang
@@ -35,11 +35,21 @@ jobs:
       - name: Analyze project source
         run: dart analyze
 
-      - name: Codeclimate
-      - uses: paambaati/codeclimate-action@v3.0.0
-      - run: dart run test --coverage=./coverage
-      - run: dart pub global activate coverage
-        env:
-          CC_TEST_REPORTER_ID: 945dfb58a832d233a3caeb84e3e6d3be212e8c7abcb48117fce63b9adcb43647
+      # Your project will need to have tests in test/ and a dependency on
+      # package:test for this step to succeed. Note that Flutter projects will
+      # want to change this to 'flutter test'.
+      - name: Run tests
+        run: dart run test --coverage=./coverage
+
+      - name: Activate coverage
+        run: dart pub global activate coverage
+
+      - name: Create coverage
+        run: dart pub global run coverage:format_coverage --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage
+
+      - name: Upload Code Coverage
+        uses: codecov/codecov-action@v3
         with:
-          coverageCommand: dart pub global run coverage:format_coverage --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ inputs.codecov-flag }}
+          verbose: true]
