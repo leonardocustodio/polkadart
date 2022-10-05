@@ -186,7 +186,7 @@ class OldTypeRegistry {
       if (type.kind == TypeKind.Option &&
           _isUnitType(types.getUnwrappedType((type as OptionType).type))) {
         return PrimitiveType(
-          primitive: Primitive.Bool,
+          primitive: Primitive.Boolean,
           path: type.path,
           docs: type.docs,
         );
@@ -690,9 +690,11 @@ Primitive? asPrimitive(String name) {
       return Primitive.I256;
     case 'u256':
       return Primitive.U256;
+    case 'boolean':
     case 'bool':
-      return Primitive.Bool;
+      return Primitive.Boolean;
     case 'str':
+    case 'string':
     case 'text':
       return Primitive.Str;
     case 'char':

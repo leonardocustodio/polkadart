@@ -40,7 +40,8 @@ void main() {
         expect(
             () => codec.decodeBinary(registry.getIndex('Vec<u8>'), <int>[]),
             throwsA(predicate((e) =>
-                e is EOFException && e.toString() == 'Unexpected EOF.')));
+                e is EOFException &&
+                e.toString() == 'Unexpected end of file/source exception.')));
       });
       test('List<dynamic>', () {
         expect(

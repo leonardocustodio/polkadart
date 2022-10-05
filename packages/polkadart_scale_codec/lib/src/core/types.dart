@@ -41,7 +41,7 @@ enum Primitive {
   U256,
 
   /// Boolean
-  Bool,
+  Boolean,
 
   /// String
   Str,

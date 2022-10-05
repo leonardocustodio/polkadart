@@ -42,11 +42,11 @@ void main() {
   });
 
   // Exception when encoding at different value: bool
-  final exceptionMessage = 'bool can have input as \'true\' or \'false\'.';
   group('Exception on encoding: bool:', () {
     test(
         'should throw \'AssertionException\' when encoding \'integer\' value on bool type.',
         () {
+      final exceptionMessage = 'Needed val of type \'bool\' but found int.';
       expect(
           () => codec.encodeToHex(registryIndex, 0),
           throwsA(predicate((e) =>
@@ -55,6 +55,7 @@ void main() {
     test(
         'should throw \'AssertionException\' when encoding \'null\' value on bool type.',
         () {
+      final exceptionMessage = 'Needed val of type \'bool\' but found Null.';
       expect(
           () => codec.encodeToHex(registryIndex, null),
           throwsA(predicate((e) =>

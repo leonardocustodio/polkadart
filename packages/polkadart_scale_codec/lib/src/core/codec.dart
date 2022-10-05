@@ -490,7 +490,7 @@ class Codec {
         return src.i256();
       case Primitive.U256:
         return src.u256();
-      case Primitive.Bool:
+      case Primitive.Boolean:
         return src.boolean();
       case Primitive.Str:
         return src.str();
@@ -503,49 +503,36 @@ class Codec {
   void _encodePrimitive(Primitive type, dynamic val, HexSink sink) {
     switch (type) {
       case Primitive.I8:
-        sink.i8(val);
-        break;
       case Primitive.U8:
-        sink.u8(val);
-        break;
       case Primitive.I16:
-        sink.i16(val);
-        break;
       case Primitive.U16:
-        sink.u16(val);
-        break;
       case Primitive.I32:
-        sink.i32(val);
-        break;
       case Primitive.U32:
-        sink.u32(val);
+        assertionCheck(val is int,
+            'Needed val of type \'int\' but found ${val.runtimeType}.');
         break;
       case Primitive.I64:
-        sink.i64(val);
-        break;
       case Primitive.U64:
-        sink.u64(val);
-        break;
       case Primitive.I128:
-        sink.i128(val);
-        break;
       case Primitive.U128:
-        sink.u128(val);
-        break;
       case Primitive.I256:
-        sink.i256(val);
-        break;
       case Primitive.U256:
-        sink.u256(val);
+        assertionCheck(val is BigInt,
+            'Needed val of type \'BigInt\' but found ${val.runtimeType}.');
         break;
-      case Primitive.Bool:
-        sink.boolean(val);
+      case Primitive.Boolean:
+        assertionCheck(val is bool,
+            'Needed val of type \'bool\' but found ${val.runtimeType}.');
         break;
       case Primitive.Str:
-        sink.str(val);
+        assertionCheck(val is String,
+            'Needed val of type \'String\' but found ${val.runtimeType}.');
         break;
       default:
         throw UnexpectedCaseException('Unexpected PrimitiveType: $type.');
     }
+
+    var mirrorSink = reflect(sink);
+    mirrorSink.invoke(Symbol(type.name.toLowerCase()), [val]);
   }
 }
