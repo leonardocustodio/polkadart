@@ -39,13 +39,10 @@ jobs:
       # package:test for this step to succeed. Note that Flutter projects will
       # want to change this to 'flutter test'.
       - name: Run tests
-        run: dart test
+        run: dart run test --coverage=./coverage
 
       - name: Activate coverage
         run: dart pub global activate coverage
-
-      - name: Run Code Coverage
-        run: dart pub global run coverage:test_with_coverage
 
       - name: Upload Code Coverage
         uses: codecov/codecov-action@v3
@@ -56,13 +53,8 @@ jobs:
 
       - name: Codeclimate
         uses: actions/setup-node@master
-        with:
-          node-version: '12'
-      - run: npm install -g yarn
-      - run: yarn install
-      - run: yarn build
       - uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: 945dfb58a832d233a3caeb84e3e6d3be212e8c7abcb48117fce63b9adcb43647
         with:
-          coverageCommand: yarn coverage
+          coverageCommand: dart pub global run coverage:format_coverage --packages=.dart_tool/package_config.json --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage
