@@ -23,7 +23,7 @@ extension StringConverter on String {
     try {
       return BigInt.parse(trim());
     } catch (_) {
-      throw UnexpectedCaseException('Can\'t convert $this string to BigInt.');
+      throw UnexpectedCaseException('Can\'t convert \'$this\' to BigInt.');
     }
   }
 }
