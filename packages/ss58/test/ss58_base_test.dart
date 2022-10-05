@@ -45,6 +45,16 @@ void main() {
       expect(Codec(prefix).encode(bytes), address);
     });
 
+    test('Should return correct address when prefix is zero', () {
+      final String address = '15oF4uVJwmo4TdGW7VfQxNLavjCXviqxT9S1MgbjMNHr6Sp5';
+      final int prefix = 0;
+
+      final List<int> bytes = hex.decode(
+          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
+
+      expect(Codec(prefix).encode(bytes), address);
+    });
+
     test('Should throw when given prefix is negative', () {
       final int prefix = -42;
 
