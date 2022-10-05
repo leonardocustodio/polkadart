@@ -44,12 +44,12 @@ jobs:
       - name: Activate coverage
         run: dart pub global activate coverage
 
-      - name: Upload Code Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ inputs.codecov-flag }}
-          verbose: true]
+      #- name: Upload Code Coverage
+      #  uses: codecov/codecov-action@v3
+      #  with:
+      #    token: ${{ secrets.CODECOV_TOKEN }}
+      #    flags: ${{ inputs.codecov-flag }}
+      #    verbose: true]
 
       - name: Codeclimate
         uses: actions/setup-node@master
