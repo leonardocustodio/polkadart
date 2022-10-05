@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.1.0
 
       - name: Link check
         uses: gaurav-nelson/github-action-markdown-link-check@v1
@@ -38,10 +38,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.1.0
 
       - name: Check TOML Format
-        uses: dprint/check@v2.0
+        uses: dprint/check@v2.1
 
   ss58_codec:
     name: Test ss58_codec
