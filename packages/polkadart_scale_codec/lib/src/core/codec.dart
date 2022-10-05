@@ -244,13 +244,11 @@ class Codec {
         return <String, dynamic>{'__kind': variant.name};
       case CodecVariantKind.tuple:
         return <String, dynamic>{
-          '__kind': variant.name,
-          'value': _decodeTuple((variant as CodecTupleVariant).def, src)
+          variant.name: _decodeTuple((variant as CodecTupleVariant).def, src)
         };
       case CodecVariantKind.value:
         return <String, dynamic>{
-          '__kind': variant.name,
-          'value': decode((variant as CodecValueVariant).type, src)
+          variant.name: decode((variant as CodecValueVariant).type, src)
         };
       case CodecVariantKind.struct:
         {
@@ -372,25 +370,26 @@ class Codec {
   /// Encodes Variant
   void _encodeVariant(CodecVariantType def, dynamic val, HexSink sink) {
     assertionCheck(val is Map<String, dynamic>);
-    assertionCheck(val['__kind'] is String, 'not a variant type value');
 
-    CodecVariant? variant = def.variantsByName[val['__kind']];
-    if (variant == null) {
-      throw Exception('Unknown variant: ${val['__kind']}');
-    }
-    sink.u8(variant.index);
-    switch (variant.kind) {
-      case CodecVariantKind.empty:
-        break;
-      case CodecVariantKind.value:
-        encode((variant as CodecValueVariant).type, val['value'], sink);
-        break;
-      case CodecVariantKind.tuple:
-        _encodeTuple((variant as CodecTupleVariant).def, val['value'], sink);
-        break;
-      case CodecVariantKind.struct:
-        _encodeStruct((variant as CodecStructVariant).def, val, sink);
-        break;
+    for (var key in (val as Map<String, dynamic>).keys) {
+      CodecVariant? variant = def.variantsByName[key];
+      if (variant != null) {
+        sink.u8(variant.index);
+        switch (variant.kind) {
+          case CodecVariantKind.empty:
+            break;
+          case CodecVariantKind.value:
+            encode((variant as CodecValueVariant).type, val[key], sink);
+            break;
+          case CodecVariantKind.tuple:
+            _encodeTuple(
+                (variant as CodecTupleVariant).def, val['value'], sink);
+            break;
+          case CodecVariantKind.struct:
+            _encodeStruct((variant as CodecStructVariant).def, val, sink);
+            break;
+        }
+      }
     }
   }
 
