@@ -18,11 +18,11 @@ jobs:
       run:
         working-directory: ${{ inputs.working-directory }}
     steps:
-      - name: Cached LFS checkout
-        uses: nschloe/action-cached-lfs-checkout@v1.1.2
+      - name: Check out code
+        uses: actions/checkout@v3.1.0
 
       # Get latest stable version of dart-lang
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
 
       - name: Install dependencies
         run: dart pub get
@@ -35,20 +35,34 @@ jobs:
       - name: Analyze project source
         run: dart analyze
 
-      # Run the test cases and output the coverage file
+      # Your project will need to have tests in test/ and a dependency on
+      # package:test for this step to succeed. Note that Flutter projects will
+      # want to change this to 'flutter test'.
       - name: Run tests
-        run: dart run test --no-chain-stack-traces --no-run-skipped --coverage=./coverage
+        run: dart test
 
       - name: Activate coverage
         run: dart pub global activate coverage
 
-      - name: Format the coverage and generate lcov.info
-        run: dart pub global run coverage:format_coverage --packages=.dart_tool/package_config.json --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage/
-
+      - name: Run Code Coverage
+        run: dart pub global run coverage:test_with_coverage
 
       - name: Upload Code Coverage
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ inputs.codecov-flag }}
-          verbose: true
+          verbose: true]
+
+      - name: Codeclimate
+        uses: actions/setup-node@master
+        with:
+          node-version: '12'
+      - run: npm install -g yarn
+      - run: yarn install
+      - run: yarn build
+      - uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: 945dfb58a832d233a3caeb84e3e6d3be212e8c7abcb48117fce63b9adcb43647
+        with:
+          coverageCommand: yarn coverage
