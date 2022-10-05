@@ -55,8 +55,7 @@ jobs:
           verbose: true]
 
       - name: Codeclimate
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+        uses: actions/setup-node@master
         with:
           node-version: '12'
       - run: npm install -g yarn
