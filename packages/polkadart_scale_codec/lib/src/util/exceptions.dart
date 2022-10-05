@@ -15,7 +15,7 @@ class EOFException implements Exception {
   const EOFException();
 
   @override
-  String toString() => 'Unexpected EOF.';
+  String toString() => 'Unexpected end of file/source exception.';
 }
 
 ///

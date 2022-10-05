@@ -407,15 +407,19 @@ class Codec {
 
   ///
   /// Decodes Bytes
-  Uint8List _decodeBytes(Source src) {
+  String _decodeBytes(Source src) {
     int len = src.compactLength();
-    return src.bytes(len);
+    return encodeHex(src.bytes(len).toList());
   }
 
   ///
   /// Encodes Bytes
   void _encodeBytes(dynamic val, HexSink sink) {
-    assertionCheck(val is List);
+    if (val is String) {
+      val = decodeHex(val).toList();
+    }
+    assertionCheck(val is List,
+        'Unable to encode due to invalid byte type, Try to pass \'Hex String\' or \'List<int>\'.');
     sink.compact(val.length);
     sink.bytes(val);
   }
