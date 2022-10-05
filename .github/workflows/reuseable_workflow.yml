@@ -52,7 +52,7 @@ jobs:
       #    verbose: true]
 
       - name: Codeclimate
-        uses: actions/setup-node@master
+        uses: nschloe/action-cached-lfs-checkout@v1.1.2
       - uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: 945dfb58a832d233a3caeb84e3e6d3be212e8c7abcb48117fce63b9adcb43647
