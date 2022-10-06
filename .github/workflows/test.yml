@@ -59,18 +59,18 @@ jobs:
       codecov-flag: "ss58"
       working-directory: "./packages/ss58"
 
-  polkadart_scale_codec:
-    name: Test polkadart_scale_codec
-    needs: [lints, markdown-link-check]
-    uses: ./.github/workflows/reuseable_workflow.yml
-    with:
-      codecov-flag: "polkadart_scale_codec"
-      working-directory: "./packages/polkadart_scale_codec"
-
-  polkadart:
-    name: Test polkadart
-    needs: [lints, markdown-link-check]
-    uses: ./.github/workflows/reuseable_workflow.yml
-    with:
-      codecov-flag: "polkadart"
-      working-directory: "./polkadart"
+#  polkadart_scale_codec:
+#    name: Test polkadart_scale_codec
+#    needs: [lints, markdown-link-check]
+#    uses: ./.github/workflows/reuseable_workflow.yml
+#    with:
+#      codecov-flag: "polkadart_scale_codec"
+#      working-directory: "./packages/polkadart_scale_codec"
+#
+#  polkadart:
+#    name: Test polkadart
+#    needs: [lints, markdown-link-check]
+#    uses: ./.github/workflows/reuseable_workflow.yml
+#    with:
+#      codecov-flag: "polkadart"
+#      working-directory: "./polkadart"
