@@ -52,4 +52,23 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ inputs.codecov-flag }}
-          verbose: true]
+          verbose: true
+
+      - name: Activate Dart Code Metrics
+        run: dart pub global activate dart_code_metrics
+
+      - name: Run Dart Code Metrics
+        run: dart pub global run dart_code_metrics:metrics analyze lib
+
+      - name: Codeclimate
+        uses: actions/setup-node@master
+        with:
+          node-version: '12'
+      - run: npm install -g yarn
+      - run: yarn install
+      - run: yarn build
+      - uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: 945dfb58a832d233a3caeb84e3e6d3be212e8c7abcb48117fce63b9adcb43647
+        with:
+          coverageCommand: yarn coverage
