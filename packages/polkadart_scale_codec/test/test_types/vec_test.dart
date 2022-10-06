@@ -1,4 +1,5 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
+import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void main() {
@@ -26,7 +27,31 @@ void main() {
   // Initializing Scale-Codec object
   final codec = Codec(types);
 
-  group('Test Vec<(u32, u32, u16)>', () {
-    test('', () {});
+
+
+  group('Encode Test Vec<(u32, u32, u16)>', () {
+    test(
+        '[[716, 47054848, 0], [256, 0, 0]] when encoded should produce result: \'0x08cc0200000000ce02000000010000000000000000\'',
+        () {
+      var encoded =
+          codec.encodeToHex(registry.getIndex('Vec<(u32, u32, u16)>'), [
+        [716, 47054848, 0],
+        [256, 0, 0]
+      ]);
+      expect('0x08cc0200000000ce02000000010000000000000000', encoded);
+    });
+  });
+
+  group('Encode Test Vec<(u32, u32, u16)>', () {
+    test(
+        '[[716, 47054848, 0], [256, 0, 0]] when encoded should produce result: \'0x08cc0200000000ce02000000010000000000000000\'',
+        () {
+      var encoded =
+          codec.encodeToHex(registry.getIndex('Vec<(u32, u32, u16)>'), [
+        [716, 47054848, 0],
+        [256, 0, 0]
+      ]);
+      expect('0x08cc0200000000ce02000000010000000000000000', encoded);
+    });
   });
 }
