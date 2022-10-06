@@ -19,10 +19,10 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.1.0
 
       # Get latest stable version of dart-lang
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
 
       - name: Install dependencies
         run: dart pub get
@@ -52,4 +52,17 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ inputs.codecov-flag }}
-          verbose: true
+          verbose: true]
+
+      - name: Codeclimate
+        uses: actions/setup-node@master
+        with:
+          node-version: '12'
+      - run: npm install -g yarn
+      - run: yarn install
+      - run: yarn build
+      - uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: 945dfb58a832d233a3caeb84e3e6d3be212e8c7abcb48117fce63b9adcb43647
+        with:
+          coverageCommand: yarn coverage
