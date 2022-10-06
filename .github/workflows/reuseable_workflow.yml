@@ -47,19 +47,6 @@ jobs:
       - name: Create coverage
         run: dart pub global run coverage:format_coverage --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage
 
-      - name: Upload Code Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ inputs.codecov-flag }}
-          verbose: true
-
-      - name: Activate Dart Code Metrics
-        run: dart pub global activate dart_code_metrics
-
-      - name: Run Dart Code Metrics
-        run: dart pub global run dart_code_metrics:metrics analyze lib
-
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.0.0
         env:
