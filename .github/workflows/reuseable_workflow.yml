@@ -51,7 +51,7 @@ jobs:
         run: dart pub global activate dart_code_metrics
 
       - name: Run Dart Code Metrics
-        run: dart pub global run dart_code_metrics:metrics analyze --reporter=codeclimate lib
+        run: dart pub global run dart_code_metrics:metrics analyze --reporter=codeclimate .
 
       - name: Test & publish code coverage
         uses: paambaati/codeclimate-action@v3.0.0

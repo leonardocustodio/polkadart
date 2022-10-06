@@ -58,7 +58,7 @@ jobs:
     with:
       codecov-flag: "ss58"
       working-directory: "./packages/ss58"
-#
+
 #  polkadart_scale_codec:
 #    name: Test polkadart_scale_codec
 #    needs: [lints, markdown-link-check]
