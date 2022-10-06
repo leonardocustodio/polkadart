@@ -1,5 +1,8 @@
 ///
-/// Data of para-chains
+/// Data of para-chains.
+///
+/// Updated in 04/08/2022 from https://github.com/paritytech/ss58-registry/blob/main/ss58-registry.json
+// TODO: load ss58-registry.json from paritytech github
 const jsonRegistryData = '''{
   "specification": "https://github.com/paritytech/substrate/wiki/External-Address-Format-(SS58)",
   "schema": {
@@ -184,6 +187,15 @@ const jsonRegistryData = '''{
       "website": "https://darwinia.network/"
     },
     {
+      "prefix": 19,
+      "network": "watr",
+      "displayName": "Watr Protocol",
+      "symbols": ["WATR"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://www.watr.org"
+    },
+    {
       "prefix": 20,
       "network": "stafi",
       "displayName": "Stafi",
@@ -193,17 +205,8 @@ const jsonRegistryData = '''{
       "website": "https://stafi.io"
     },
     {
-      "prefix": 21,
-      "network": "dock-testnet",
-      "displayName": "Dock Testnet",
-      "symbols": ["DCK"],
-      "decimals": [6],
-      "standardAccount": "*25519",
-      "website": "https://dock.io"
-    },
-    {
       "prefix": 22,
-      "network": "dock-mainnet",
+      "network": "dock-pos-mainnet",
       "displayName": "Dock Mainnet",
       "symbols": ["DCK"],
       "decimals": [6],
@@ -341,16 +344,16 @@ const jsonRegistryData = '''{
       "network": "nodle",
       "displayName": "Nodle Chain",
       "symbols": ["NODL"],
-      "decimals": [18],
+      "decimals": [11],
       "standardAccount": "*25519",
       "website": "https://nodle.io/"
     },
     {
       "prefix": 38,
       "network": "kilt",
-      "displayName": "KILT Chain",
+      "displayName": "KILT Spiritnet",
       "symbols": ["KILT"],
-      "decimals": [18],
+      "decimals": [15],
       "standardAccount": "*25519",
       "website": "https://kilt.io/"
     },
@@ -466,8 +469,8 @@ const jsonRegistryData = '''{
       "prefix": 51,
       "network": "oak",
       "displayName": "OAK Network",
-      "symbols": ["OAK"],
-      "decimals": [10],
+      "symbols": ["OAK", "TUR"],
+      "decimals": [10, 10],
       "standardAccount": "*25519",
       "website": "https://oak.tech"
     },
@@ -490,6 +493,15 @@ const jsonRegistryData = '''{
       "website": "https://dico.io"
     },
     {
+      "prefix": 54,
+      "network": "cere",
+      "displayName": "Cere Network",
+      "symbols": ["CERE"],
+      "decimals": [10],
+      "standardAccount": "*25519",
+      "website": "https://cere.network"
+    },
+    {
       "prefix": 55,
       "network": "xxnetwork",
       "displayName": "xx network",
@@ -497,6 +509,24 @@ const jsonRegistryData = '''{
       "decimals": [9],
       "standardAccount": "*25519",
       "website": "https://xx.network"
+    },
+    {
+      "prefix": 56,
+      "network": "pendulum",
+      "displayName": "Pendulum chain",
+      "symbols": ["PEN"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://pendulumchain.org/"
+    },
+    {
+      "prefix": 57,
+      "network": "amplitude",
+      "displayName": "Amplitude chain",
+      "symbols": ["AMPE"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://pendulumchain.org/"
     },
     {
       "prefix": 63,
@@ -553,6 +583,24 @@ const jsonRegistryData = '''{
       "website": "https://sora.org"
     },
     {
+      "prefix": 71,
+      "network": "p3d",
+      "displayName": "3DP network",
+      "symbols": ["P3D"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://3dpass.org"
+    },
+    {
+      "prefix": 72,
+      "network": "p3dt",
+      "displayName": "3DP test network",
+      "symbols": ["P3Dt"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://3dpass.org"
+    },
+    {
       "prefix": 73,
       "network": "zeitgeist",
       "displayName": "Zeitgeist",
@@ -589,6 +637,33 @@ const jsonRegistryData = '''{
       "website": "https://polkadex.trade"
     },
     {
+      "prefix": 89,
+      "network": "polkadexparachain",
+      "displayName": "Polkadex Parachain",
+      "symbols": ["PDEX"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://polkadex.trade"
+    },
+    {
+      "prefix": 92,
+      "network": "anmol",
+      "displayName": "Anmol Network",
+      "symbols": ["ANML"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://anmol.network/"
+    },
+    {
+      "prefix": 93,
+      "network": "fragnova",
+      "displayName": "Fragnova Network",
+      "symbols": ["NOVA"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://fragnova.com"
+    },
+    {
       "prefix": 98,
       "network": "polkasmith",
       "displayName": "PolkaSmith Canary Network",
@@ -607,13 +682,22 @@ const jsonRegistryData = '''{
       "website": "https://polkafoundry.com"
     },
     {
+      "prefix": 100,
+      "network": "ibtida",
+      "displayName": "Anmol Network Ibtida Canary network",
+      "symbols": ["IANML"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://anmol.network/"
+    },
+    {
       "prefix": 101,
       "network": "origintrail-parachain",
       "displayName": "OriginTrail Parachain",
-      "symbols": ["TRAC"],
-      "decimals": [18],
-      "standardAccount": "secp256k1",
-      "website": "https://origintrail.io"
+      "symbols": ["OTP"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://parachain.origintrail.io/"
     },
     {
       "prefix": 105,
@@ -643,6 +727,24 @@ const jsonRegistryData = '''{
       "website": "https://integritee.network"
     },
     {
+      "prefix": 117,
+      "network": "tinker",
+      "displayName": "Tinker",
+      "symbols": ["TNKR"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://invarch.network"
+    },
+    {
+      "prefix": 126,
+      "network": "joystream",
+      "displayName": "Joystream",
+      "symbols": ["JOY"],
+      "decimals": [10],
+      "standardAccount": "*25519",
+      "website": "https://www.joystream.org"
+    },
+    {
       "prefix": 128,
       "network": "clover",
       "displayName": "Clover Finance",
@@ -650,6 +752,15 @@ const jsonRegistryData = '''{
       "decimals": [18],
       "standardAccount": "*25519",
       "website": "https://clover.finance"
+    },
+    {
+      "prefix": 129,
+      "network": "dorafactory-polkadot",
+      "displayName": "Dorafactory Polkadot Network",
+      "symbols": ["DORA"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://dorafactory.org"
     },
     {
       "prefix": 131,
@@ -692,7 +803,7 @@ const jsonRegistryData = '''{
       "network": "quartz_mainnet",
       "displayName": "QUARTZ by UNIQUE",
       "symbols": ["QTZ"],
-      "decimals": [15],
+      "decimals": [18],
       "standardAccount": "*25519",
       "website": "https://unique.network"
     },
@@ -729,8 +840,26 @@ const jsonRegistryData = '''{
       "displayName": "Efinity",
       "symbols": ["EFI"],
       "decimals": [18],
-      "standardAccount": "Sr25519",
+      "standardAccount": "*25519",
       "website": "https://efinity.io/"
+    },
+    {
+      "prefix": 1221,
+      "network": "peaq",
+      "displayName": "Peaq Network",
+      "symbols": ["PEAQ"],
+      "decimals": [18],
+      "standardAccount": "Sr25519",
+      "website": "https://www.peaq.network/"
+    },
+    {
+      "prefix": 1222,
+      "network": "apex",
+      "displayName": "Apex Network",
+      "symbols": ["APEX"],
+      "decimals": [18],
+      "standardAccount": "Sr25519",
+      "website": "https://www.peaq.network/"
     },
     {
       "prefix": 1284,
@@ -751,13 +880,31 @@ const jsonRegistryData = '''{
       "website": "https://moonbeam.network"
     },
     {
-      "prefix": 1337,
+      "prefix": 1328,
       "network": "ajuna",
       "displayName": "Ajuna Network",
       "symbols": ["AJUN"],
       "decimals": [12],
-      "standardAccount": "Sr25519",
+      "standardAccount": "*25519",
       "website": "https://ajuna.io"
+    },
+    {
+      "prefix": 1337,
+      "network": "bajun",
+      "displayName": "Bajun Network",
+      "symbols": ["BAJU"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://ajuna.io"
+    },
+    {
+      "prefix": 1985,
+      "network": "seals",
+      "displayName": "Seals Network",
+      "symbols": ["SEAL"],
+      "decimals": [9],
+      "standardAccount": "*25519",
+      "website": "https://seals.app"
     },
     {
       "prefix": 2007,
@@ -767,6 +914,15 @@ const jsonRegistryData = '''{
       "decimals": [12],
       "standardAccount": "*25519",
       "website": "https://totemaccounting.com"
+    },
+    {
+      "prefix": 2009,
+      "network": "cloudwalk_mainnet",
+      "displayName": "CloudWalk Network Mainnet",
+      "symbols": ["CWN"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://explorer.mainnet.cloudwalk.io"
     },
     {
       "prefix": 2032,
@@ -787,6 +943,51 @@ const jsonRegistryData = '''{
       "website": "https://interlay.io/"
     },
     {
+      "prefix": 2106,
+      "network": "bitgreen",
+      "displayName": "Bitgreen",
+      "symbols": ["BBB"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://bitgreen.org/"
+    },
+    {
+      "prefix": 2112,
+      "network": "chainflip",
+      "displayName": "Chainflip",
+      "symbols": ["FLIP"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://chainflip.io/"
+    },
+    {
+      "prefix": 2114,
+      "network": "Turing",
+      "displayName": "Turing Network",
+      "symbols": ["TUR"],
+      "decimals": [10],
+      "standardAccount": "*25519",
+      "website": "https://oak.tech/turing/home/"
+    },
+    {
+      "prefix": 2207,
+      "network": "SNOW",
+      "displayName": "SNOW: ICE Canary Network",
+      "symbols": ["ICZ"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://icenetwork.io"
+    },
+    {
+      "prefix": 2208,
+      "network": "ICE",
+      "displayName": "ICE Network",
+      "symbols": ["ICY"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://icenetwork.io"
+    },
+    {
       "prefix": 2254,
       "network": "subspace_testnet",
       "displayName": "Subspace testnet",
@@ -794,6 +995,51 @@ const jsonRegistryData = '''{
       "decimals": [18],
       "standardAccount": "*25519",
       "website": "https://subspace.network"
+    },    
+    {
+      "prefix": 3000,
+      "network": "hashed",
+      "displayName": "Hashed Network",
+      "symbols": ["HASH"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://hashed.network"
+    },
+    {
+      "prefix": 4000,
+      "network": "luhn",
+      "displayName": "Luhn Network",
+      "symbols": ["LUHN"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://luhn.network"
+    },
+    {
+      "prefix": 4006,
+      "network": "tangle",
+      "displayName": "Tangle Network",
+      "symbols": ["TNT"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://www.webb.tools/"
+    },
+    {
+      "prefix": 4450,
+      "network": "g1",
+      "displayName": "Ğ1",
+      "symbols": ["G1"],
+      "decimals": [2],
+      "standardAccount": "*25519",
+      "website": "https://duniter.org"
+    },
+    {
+      "prefix": 5234,
+      "network": "humanode",
+      "displayName": "Humanode Network",
+      "symbols": ["HMND"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://humanode.io"
     },
     {
       "prefix": 6094,
@@ -805,6 +1051,24 @@ const jsonRegistryData = '''{
       "website": "https://subspace.network"
     },
     {
+      "prefix": 7007,
+      "network": "tidefi",
+      "displayName": "Tidefi",
+      "symbols": ["TDFY"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://tidefi.com"
+    },
+    {
+      "prefix": 7013,
+      "network": "gm",
+      "displayName": "GM",
+      "symbols": ["FREN", "GM", "GN"],
+      "decimals": [12, 0, 0],
+      "standardAccount": "*25519",
+      "website": "https://gmordie.com"
+    },
+    {
       "prefix": 7391,
       "network": "unique_mainnet",
       "displayName": "Unique Network",
@@ -812,6 +1076,24 @@ const jsonRegistryData = '''{
       "decimals": [18],
       "standardAccount": "*25519",
       "website": "https://unique.network"
+    },
+    {
+      "prefix": 8883,
+      "network": "sapphire_mainnet",
+      "displayName": "Sapphire by Unique",
+      "symbols": ["QTZ"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://unique.network"
+    },
+    {
+      "prefix": 9807,
+      "network": "dentnet",
+      "displayName": "DENTNet",
+      "symbols": ["DENTX"],
+      "decimals": [18],
+      "standardAccount": "*25519",
+      "website": "https://www.dentnet.io"
     },
     {
       "prefix": 10041,
@@ -848,6 +1130,15 @@ const jsonRegistryData = '''{
       "decimals": [18],
       "standardAccount": "*25519",
       "website": "https://ata.network"
+    },
+    {
+      "prefix": 12191,
+      "network": "nftmart",
+      "displayName": "NFTMart",
+      "symbols": ["NMT"],
+      "decimals": [12],
+      "standardAccount": "*25519",
+      "website": "https://nftmart.io"
     }
   ]
 }
