@@ -66,7 +66,7 @@ jobs:
     with:
       codecov-flag: "polkadart_scale_codec"
       working-directory: "./packages/polkadart_scale_codec"
-
+#
 #  polkadart:
 #    name: Test polkadart
 #    needs: [lints, markdown-link-check]
