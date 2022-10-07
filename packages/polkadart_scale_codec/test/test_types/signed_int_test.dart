@@ -102,7 +102,8 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should throw InvalidSizeException when value is smaller than -32768',
+      test(
+          'Should throw InvalidSizeException when value is smaller than -32768',
           () {
         int value = -32769;
         int registryIndex = registry.getIndex('i16');
@@ -125,8 +126,8 @@ void main() {
       });
     });
 
-  group('fixed-length 32bit', (){
-    test('Should encode and return correct value ', () {
+    group('fixed-length 32bit', () {
+      test('Should encode and return correct value ', () {
         int value = 16777215;
         String expectedResult = '0xffffff00';
 
@@ -153,7 +154,8 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should throw InvalidSizeException when value is smaller than -2147483648',
+      test(
+          'Should throw InvalidSizeException when value is smaller than -2147483648',
           () {
         int value = -2147483649;
         int registryIndex = registry.getIndex('i32');
@@ -164,7 +166,8 @@ void main() {
         );
       });
 
-      test('Should throw InvalidSizeException when value is greater than 2147483647',
+      test(
+          'Should throw InvalidSizeException when value is greater than 2147483647',
           () {
         int value = 2147483648;
         int registryIndex = registry.getIndex('i32');

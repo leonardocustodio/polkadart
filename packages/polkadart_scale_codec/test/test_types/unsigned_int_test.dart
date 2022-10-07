@@ -124,8 +124,8 @@ void main() {
       });
     });
 
-  group('fixed-length 32bit', (){
-    test('Should encode and return correct value ', () {
+    group('fixed-length 32bit', () {
+      test('Should encode and return correct value ', () {
         int value = 16777215;
         String expectedResult = '0xffffff00';
 
@@ -163,7 +163,8 @@ void main() {
         );
       });
 
-      test('Should throw InvalidSizeException when value is greater than 2147483647',
+      test(
+          'Should throw InvalidSizeException when value is greater than 2147483647',
           () {
         int value = 2147483648;
         int registryIndex = registry.getIndex('u32');
