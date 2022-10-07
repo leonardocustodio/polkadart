@@ -63,9 +63,8 @@ void main() {
       testPrimitiveUncompact('u8', '0x00', 0);
 
       // highest acceptable possible
-      // TODO: Fix these tests
-      // testPrimitiveCompact('u8', 127, '0x7f');
-      // testPrimitiveUncompact('u8', '0x7f', 127);
+      testPrimitiveCompact('u8', 127, '0x7f');
+      testPrimitiveUncompact('u8', '0x7f', 127);
     }
 
     // u16
@@ -75,9 +74,8 @@ void main() {
       testPrimitiveUncompact('u16', '0x0000', 0);
 
       // highest acceptable possible
-      // TODO: fix these tests
-      // testPrimitiveCompact('u16', 32767, '0x7fff');
-      // testPrimitiveUncompact('u16', '0x7fff', 32767);
+      testPrimitiveCompact('u16', 32767, '0xff7f');
+      testPrimitiveUncompact('u16', '0xff7f', 32767);
     }
 
     // u32
@@ -87,9 +85,8 @@ void main() {
       testPrimitiveUncompact('u32', '0x00000000', 0);
 
       // highest acceptable possible
-      // TODO: fix these tests
-      // testPrimitiveCompact('u32', 2147483647, '0x7fffffff');
-      // testPrimitiveUncompact('u32', '0x7fffffff', 2147483647);
+      testPrimitiveCompact('u32', 2147483647, '0xffffff7f');
+      testPrimitiveUncompact('u32', '0xffffff7f', 2147483647);
     }
 
     // Signed Bits

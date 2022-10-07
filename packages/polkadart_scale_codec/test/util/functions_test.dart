@@ -3,7 +3,7 @@ import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void main() {
-  group('functions checkSignedInt() tests', () {
+  group('functions checkSignedInt()', () {
     test('Should returns normally when bitSize is 8', () {
       int bitSize = 8;
       int value = 10;
@@ -44,7 +44,48 @@ void main() {
     });
   });
 
-  group('functions checkInt() tests', () {
+  group('functions checkUnsignedInt()', () {
+    test('Should returns normally when bitSize is 8', () {
+      int bitSize = 8;
+      int value = 10;
+
+      expect(() => checkUnsignedInt(value, bitSize), returnsNormally);
+    });
+
+    test('Should returns normally when bitSize is 16', () {
+      int bitSize = 16;
+      int value = 10;
+
+      expect(() => checkUnsignedInt(value, bitSize), returnsNormally);
+    });
+
+    test('Should returns normally when bitSize is 32', () {
+      int bitSize = 16;
+      int value = 10;
+
+      expect(() => checkUnsignedInt(value, bitSize), returnsNormally);
+    });
+
+    test(
+        'Should throw UnexpectedCaseException when bitSize is different from defined values',
+        () {
+      int bitSize = 15;
+      int value = 10;
+
+      final expectedErrorMessage = 'Unexpected BitSize: 15.';
+
+      expect(
+        () => checkUnsignedInt(value, bitSize),
+        throwsA(
+          predicate((exception) =>
+              exception is UnexpectedCaseException &&
+              exception.toString() == expectedErrorMessage),
+        ),
+      );
+    });
+  });
+
+  group('functions checkInt()', () {
     test('Should return true when value is in range', () {
       final int min = 0;
       final int max = 100;
@@ -53,9 +94,7 @@ void main() {
       final String sign = 'u';
       final int value = 50;
 
-      final result = checkInt(value, sign, bitSize, min, max);
-
-      expect(result, true);
+      expect(checkInt(value, sign, bitSize, min, max), true);
     });
 
     test('Should return true when value is in range and equal to min', () {
@@ -66,9 +105,7 @@ void main() {
       final String sign = 'u';
       final int value = 0;
 
-      final result = checkInt(value, sign, bitSize, min, max);
-
-      expect(result, true);
+      expect(checkInt(value, sign, bitSize, min, max), true);
     });
 
     test('Should return true when value is in range and equal to max', () {
@@ -79,9 +116,7 @@ void main() {
       final String sign = 'u';
       final int value = 100;
 
-      final result = checkInt(value, sign, bitSize, min, max);
-
-      expect(result, true);
+      expect(checkInt(value, sign, bitSize, min, max), true);
     });
 
     test('Should throw InvalidSizeException when value is out of range', () {

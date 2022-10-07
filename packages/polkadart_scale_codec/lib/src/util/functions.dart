@@ -163,7 +163,7 @@ bool checkUnsignedInt(int val, int bitSize) {
       max = 0x7fff;
       break;
     case 32:
-      max = 0x7ffffff;
+      max = 0x7fffffff;
       break;
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
