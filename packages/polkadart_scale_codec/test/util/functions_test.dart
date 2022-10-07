@@ -44,7 +44,7 @@ void main() {
     });
   });
 
-   group('functions checkSignedBigInt()', () {
+  group('functions checkSignedBigInt()', () {
     test('Should returns normally when bitSize is 64', () {
       int bitSize = 64;
       BigInt value = BigInt.from(10);
