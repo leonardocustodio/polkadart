@@ -48,6 +48,24 @@ void main() {
       });
     });
   }
+  {
+    //
+    // Testing with Vec<Option<u8>>
+    //
+    group('Test Vec<u8>:', () {
+      test('[255, null] when encoded should produce result: \'0x0801ff00\'', () {
+        var encoded =
+            codec.encodeToHex(registry.getIndex('Vec<Option<u8>>'), [255, null]);
+        expect('0x0801ff00', encoded);
+      });
+
+      test('0x0801ff00 when decoded should produce result: [255, null]', () {
+        var decoded =
+            codec.decodeBinary(registry.getIndex('Vec<Option<u8>>'), '0x0801ff00');
+        expect([255, null], decoded);
+      });
+    });
+  }
 
   {
     //
