@@ -8,6 +8,9 @@ void main() {
         'a': 'u8',
         'b': 'u16',
         'c': 'u32',
+        'd': 'u64',
+        'e': 'u128',
+        'f': 'u256',
       },
     };
     // Creates the registry for parsing the types and selecting particular schema.
@@ -41,9 +44,9 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should return correct encoded data when value is 127', () {
-        int value = 127;
-        String expectedResult = '0x7f';
+      test('Should return correct encoded data when value is 255', () {
+        int value = 255;
+        String expectedResult = '0xff';
 
         int registryIndex = registry.getIndex('u8');
 
@@ -61,9 +64,9 @@ void main() {
         );
       });
 
-      test('Should throw InvalidSizeException when value is greater than 127',
+      test('Should throw InvalidSizeException when value is greater than 256',
           () {
-        int value = 128;
+        int value = 256;
         int registryIndex = registry.getIndex('u8');
 
         expect(
@@ -92,9 +95,9 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should return correct encoded data when value is 32767', () {
-        int value = 32767;
-        String expectedResult = '0xff7f';
+      test('Should return correct encoded data when value is 65535', () {
+        int value = 65535;
+        String expectedResult = '0xffff';
 
         int registryIndex = registry.getIndex('u16');
 
@@ -112,9 +115,9 @@ void main() {
         );
       });
 
-      test('Should throw InvalidSizeException when value is greater than 32767',
+      test('Should throw InvalidSizeException when value is greater than 65535',
           () {
-        int value = 32768;
+        int value = 65536;
         int registryIndex = registry.getIndex('u16');
 
         expect(
@@ -143,9 +146,9 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should return correct encoded data when value is 2147483647', () {
-        int value = 2147483647;
-        String expectedResult = '0xffffff7f';
+      test('Should return correct encoded data when value is 4294967295', () {
+        int value = 4294967295;
+        String expectedResult = '0xffffffff';
 
         int registryIndex = registry.getIndex('u32');
 
@@ -164,9 +167,9 @@ void main() {
       });
 
       test(
-          'Should throw InvalidSizeException when value is greater than 2147483647',
+          'Should throw InvalidSizeException when value is greater than 4294967295',
           () {
-        int value = 2147483648;
+        int value = 4294967296;
         int registryIndex = registry.getIndex('u32');
 
         expect(
@@ -175,5 +178,173 @@ void main() {
         );
       });
     });
+
+    group('fixed-length 64bit', () {
+      test('Should encode and return correct value ', () {
+        BigInt value = BigInt.from(16777215);
+        String expectedResult = '0xffffff0000000000';
+
+        int registryIndex = registry.getIndex('u64');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is zero', () {
+        BigInt value = BigInt.from(0);
+        String expectedResult = '0x0000000000000000';
+
+        int registryIndex = registry.getIndex('u64');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test(
+          'Should return correct encoded data when value is 18446744073709551615',
+          () {
+        BigInt value = BigInt.parse('18446744073709551615');
+        String expectedResult = '0xffffffffffffffff';
+
+        int registryIndex = registry.getIndex('u64');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should throw InvalidSizeException when value is smaller than zero',
+          () {
+        BigInt value = BigInt.from(-1);
+        int registryIndex = registry.getIndex('u64');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<InvalidSizeException>()),
+        );
+      });
+
+      test(
+          'Should throw InvalidSizeException when value is greater than 18446744073709551615',
+          () {
+        BigInt value = BigInt.parse('18446744073709551616');
+        int registryIndex = registry.getIndex('u64');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<InvalidSizeException>()),
+        );
+      });
+    });
+
+    group('fixed-length 128bit', () {
+      test('Should encode and return correct value ', () {
+        BigInt value = BigInt.from(16777215);
+        String expectedResult = '0xffffff00000000000000000000000000';
+
+        int registryIndex = registry.getIndex('u128');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is zero', () {
+        BigInt value = BigInt.from(0);
+        String expectedResult = '0x00000000000000000000000000000000';
+
+        int registryIndex = registry.getIndex('u128');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test(
+          'Should return correct encoded data when value is 340282366920938463463374607431768211455',
+          () {
+        BigInt value = BigInt.parse('340282366920938463463374607431768211455');
+        String expectedResult = '0xffffffffffffffffffffffffffffffff';
+
+        int registryIndex = registry.getIndex('u128');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should throw InvalidSizeException when value is smaller than zero',
+          () {
+        BigInt value = BigInt.from(-1);
+        int registryIndex = registry.getIndex('u128');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<InvalidSizeException>()),
+        );
+      });
+
+      test(
+          'Should throw InvalidSizeException when value is greater than 340282366920938463463374607431768211455',
+          () {
+        BigInt value = BigInt.parse('340282366920938463463374607431768211456');
+        int registryIndex = registry.getIndex('u128');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<InvalidSizeException>()),
+        );
+      });
+    });
+
+    group('fixed-length 256bit', () {
+      test('Should encode and return correct value ', () {
+        BigInt value = BigInt.from(16777215);
+        String expectedResult =
+            '0xffffff0000000000000000000000000000000000000000000000000000000000';
+
+        int registryIndex = registry.getIndex('u256');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is zero', () {
+        BigInt value = BigInt.from(0);
+        String expectedResult =
+            '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+        int registryIndex = registry.getIndex('u256');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test(
+          'Should return correct encoded data when value is 115792089237316195423570985008687907853269984665640564039457584007913129639935',
+          () {
+        BigInt value = BigInt.parse(
+            '115792089237316195423570985008687907853269984665640564039457584007913129639935');
+        String expectedResult =
+            '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+
+        int registryIndex = registry.getIndex('u256');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should throw InvalidSizeException when value is smaller than zero',
+          () {
+        BigInt value = BigInt.from(-1);
+        int registryIndex = registry.getIndex('u256');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<InvalidSizeException>()),
+        );
+      });
+
+      test(
+          'Should throw InvalidSizeException when value is greater than 115792089237316195423570985008687907853269984665640564039457584007913129639935',
+          () {
+        BigInt value = BigInt.parse(
+            '115792089237316195423570985008687907853269984665640564039457584007913129639936');
+        int registryIndex = registry.getIndex('u256');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<InvalidSizeException>()),
+        );
+      });
+    });
+  
   });
 }
