@@ -19,16 +19,16 @@ void main() {
   group('Encode Bytes:', () {
     test('\'0xffff\' when encoded must produce result \'0x08ffff\'', () {
       final encoded = codec.encodeToHex(usageIndex, '0xffff');
-      expect(encoded, equals('0x08ffff'));
+      expect('0x08ffff', encoded);
     });
   });
 
   //
   // Decode type: `Bytes`
   group('Decode Bytes:', () {
-    test('\'0x08ffff\' when decoded must produce result \'0xffff\'', () {
+    test('\'0x08ffff\' when decoded must produce result \'[255, 255]\'', () {
       final decoded = codec.decodeBinary(usageIndex, '0x08ffff');
-      expect(decoded, equals('0xffff'));
+      expect([255, 255], decoded);
     });
   });
 

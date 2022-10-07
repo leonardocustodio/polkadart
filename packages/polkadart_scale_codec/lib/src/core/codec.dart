@@ -411,9 +411,9 @@ class Codec {
 
   ///
   /// Decodes Bytes
-  String _decodeBytes(Source src) {
+  List<int> _decodeBytes(Source src) {
     int len = src.compactLength();
-    return encodeHex(src.bytes(len).toList());
+    return src.bytes(len).toList();
   }
 
   ///
