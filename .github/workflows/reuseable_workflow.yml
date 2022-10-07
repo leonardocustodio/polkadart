@@ -19,7 +19,7 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - name: Check out code (LFS)
-        uses: nschloe/action-cached-lfs-checkout@v1.1.2
+        uses: nschloe/action-cached-lfs-checkout@v1.1.3
 
       # Get latest stable version of dart-lang
       - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
@@ -47,9 +47,17 @@ jobs:
       - name: Create coverage
         run: dart pub global run coverage:format_coverage --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage
 
-      - name: Upload Code Coverage
-        uses: codecov/codecov-action@v3
+      - name: Activate Dart Code Metrics
+        run: dart pub global activate dart_code_metrics
+
+      - name: Run Dart Code Metrics
+        run: dart pub global run dart_code_metrics:metrics analyze --reporter=codeclimate .
+
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: f62061f125a8fc1425670a787b7cac15d2d9f73d7ec4878c0e4d07575156ccc1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ inputs.codecov-flag }}
-          verbose: true]
+          coverageLocations: |
+            ${{ inputs.working-directory }}/coverage/lcov.info:lcov
+

@@ -19,7 +19,6 @@ linter:
   rules:
     constant_identifier_names: false
     overridden_fields: false
-    non_constant_identifier_names: false
 # analyzer:
 #   exclude:
 
