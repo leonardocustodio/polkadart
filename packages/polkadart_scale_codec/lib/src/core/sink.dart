@@ -129,13 +129,13 @@ abstract class ScaleCodecSink {
   void compact(dynamic val) {
     if (val is int) {
       if (val < 0) {
-        throw InvalidCompactException('Value can\'t be less than 0.');
+        throw IncompatibleCompactException('Value can\'t be less than 0.');
       }
       _compactFromInt(val);
       return;
     } else if (val is BigInt) {
       if (val.toInt() < 0) {
-        throw InvalidCompactException('Value can\'t be less than 0.');
+        throw IncompatibleCompactException('Value can\'t be less than 0.');
       }
       _compactFromBigInt(val);
       return;
@@ -166,7 +166,7 @@ abstract class ScaleCodecSink {
         value = value >> 8.toBigInt.toInt();
       }
     } else {
-      throw IncompatibleCompactException(value.toRadixString(16));
+      throw IncompatibleCompactException('$value is too large for a compact.');
     }
   }
 
@@ -192,7 +192,7 @@ abstract class ScaleCodecSink {
         copiedValue = copiedValue >> 8.toBigInt.toInt();
       }
     } else {
-      throw IncompatibleCompactException(value.toRadixString(16));
+      throw IncompatibleCompactException('$value is too large for a compact.');
     }
   }
 }
