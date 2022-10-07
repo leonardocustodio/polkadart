@@ -174,9 +174,9 @@ class Source {
 
   String address() {
     final accountLength = _byte();
-    switch (encodeHex([accountLength])) {
+    switch (hex.encode([accountLength])) {
       case "ff":
-        return encodeHex(bytes(32));
+        return hex.encode(bytes(32));
       case "fc":
         bytes(2);
         break;
