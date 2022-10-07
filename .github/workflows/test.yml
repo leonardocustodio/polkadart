@@ -46,7 +46,7 @@ jobs:
   ss58_codec:
     name: Test ss58_codec
     needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/polkadart_scale_codec
+    uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "ss58_codec"
       working-directory: "./packages/ss58_codec"
@@ -54,23 +54,23 @@ jobs:
   ss58:
     name: Test ss58
     needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/polkadart_scale_codec
+    uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "ss58"
       working-directory: "./packages/ss58"
 
-  polkadart_scale_codec:
-    name: Test polkadart_scale_codec
-    needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/polkadart_scale_codec
-    with:
-      codecov-flag: "polkadart_scale_codec"
-      working-directory: "./packages/polkadart_scale_codec"
-
-  polkadart:
-    name: Test polkadart
-    needs: [lints, markdown-link-check]
-    uses: rankanizer/polkadart/.github/workflows/reuseable_workflow.yml@feature/polkadart_scale_codec
-    with:
-      codecov-flag: "polkadart"
-      working-directory: "./polkadart"
+#  polkadart_scale_codec:
+#    name: Test polkadart_scale_codec
+#    needs: [lints, markdown-link-check]
+#    uses: ./.github/workflows/reuseable_workflow.yml
+#    with:
+#      codecov-flag: "polkadart_scale_codec"
+#      working-directory: "./packages/polkadart_scale_codec"
+#
+#  polkadart:
+#    name: Test polkadart
+#    needs: [lints, markdown-link-check]
+#    uses: ./.github/workflows/reuseable_workflow.yml
+#    with:
+#      codecov-flag: "polkadart"
+#      working-directory: "./polkadart"

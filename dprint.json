@@ -5,12 +5,12 @@
   ],
   "excludes": [
     "build/",
-    "**/*.{jsonl}",
-    "block-numbers.json",
+    "chain/",
     "coverage/",
     ".dart_tool/",
     ".packages/",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "pull_request_template.md"
   ],
   "plugins": [
     "https://plugins.dprint.dev/markdown-0.13.2.wasm",
