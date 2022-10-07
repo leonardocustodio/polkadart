@@ -9,6 +9,9 @@ abstract class ScaleCodecSink {
   /// append the list of bytes to the data.
   void bytes(List<int> b);
 
+  /// append custom hex to the already processed _hex.
+  void append(String hex);
+
   void _uncheckedU16(int val) {
     write(val & 0xff);
     write(val >>> 8);
@@ -76,6 +79,16 @@ abstract class ScaleCodecSink {
     int base = pow(2, 16).toInt();
     val = (val + base) % base;
     _uncheckedU16(val);
+  }
+
+  void address(String address) {
+    address = address.replaceFirst('0x', '');
+    if (address.length == 64) {
+      append('ff$address');
+    } else {
+      throw InvalidAddressException(
+          'Address not support AccountIndex or param not AccountId');
+    }
   }
 
   void i32(int val) {
@@ -206,6 +219,11 @@ class HexSink extends ScaleCodecSink {
   void write(int byte) {
     _hex += (byte >>> 4).toRadixString(16);
     _hex += (byte & 15).toRadixString(16);
+  }
+
+  @override
+  void append(String hex) {
+    _hex += hex;
   }
 
   @override

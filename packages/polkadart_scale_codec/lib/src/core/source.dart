@@ -149,13 +149,13 @@ class Source {
     return utf8.decode(buf.toList());
   }
 
-  Uint8List bytes(int len) {
+  List<int> bytes(int len) {
     var beg = _idx;
     var end = _idx += len;
     if (_data.length < end) {
       throw EOFException();
     }
-    return _data.sublist(beg, end);
+    return _data.sublist(beg, end).toList();
   }
 
   bool boolean() {
@@ -170,5 +170,23 @@ class Source {
     if (hasBytes()) {
       throw Exception('Unprocessed data left');
     }
+  }
+
+  String address() {
+    final accountLength = _byte();
+    switch (encodeHex([accountLength])) {
+      case "ff":
+        return encodeHex(bytes(32));
+      case "fc":
+        bytes(2);
+        break;
+      case "fe":
+        bytes(8);
+        break;
+      case "fd":
+        bytes(4);
+        break;
+    }
+    return '';
   }
 }

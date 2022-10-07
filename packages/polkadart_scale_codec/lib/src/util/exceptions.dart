@@ -1,5 +1,15 @@
 part of utils;
 
+/// InvalidAddressException
+class InvalidAddressException implements Exception {
+  const InvalidAddressException(this.msg);
+
+  final String msg;
+
+  @override
+  String toString() => msg;
+}
+
 /// UnexpectedCaseException
 class UnexpectedCaseException implements Exception {
   const UnexpectedCaseException([this.msg]);

@@ -46,6 +46,9 @@ enum Primitive {
   /// String
   Str,
 
+  /// Address
+  Address,
+
   /// Single Character
   Char,
 }

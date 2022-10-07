@@ -693,6 +693,8 @@ Primitive? asPrimitive(String name) {
     case 'boolean':
     case 'bool':
       return Primitive.Boolean;
+    case 'address':
+      return Primitive.Address;
     case 'str':
     case 'string':
     case 'text':
