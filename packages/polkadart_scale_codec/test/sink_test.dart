@@ -6,8 +6,9 @@ import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void testCompact(String expectedHex, dynamic val) {
-  test('On compacting $val should produce result: $expectedHex', () {
+  test('When $val is compact, it should produce result: $expectedHex.', () {
     final sink = HexSink();
+
     sink.compact(val);
 
     final computedHex = sink.toHex();
@@ -33,11 +34,16 @@ void testCompact(String expectedHex, dynamic val) {
 ///
 /// expect(computedHex, expectedHex);
 /// ```
-void testPrimitiveCompact(String method, dynamic args, String expectedHex) {
-  test('$method($args) must produce result: $expectedHex.', () {
+void testPrimitiveCompact(
+    {required String methodName,
+    required dynamic args,
+    required String expectedHex}) {
+  test(
+      'When $methodName() is provided with $args, it must produce result: $expectedHex.',
+      () {
     var sink = HexSink();
     var mirrorSink = reflect(sink);
-    mirrorSink.invoke(Symbol(method), [args]);
+    mirrorSink.invoke(Symbol(methodName), [args]);
 
     var computedHex = mirrorSink.invoke(Symbol('toHex'), []).reflectee;
     expect(computedHex, expectedHex);
@@ -45,7 +51,10 @@ void testPrimitiveCompact(String method, dynamic args, String expectedHex) {
 }
 
 void main() {
-  group('Test Compact:', () {
+  group('Test Compact from Sink Object:', () {
+    //
+    // Supported Compact values can range from 0 - (2 ^ 536)
+    //
     testCompact('0x00', 0);
     testCompact('0x04', 1);
     testCompact('0xa8', 42);
@@ -63,188 +72,214 @@ void main() {
 
   group('Exception on Compact:', () {
     test(
-        'sink.compact( highest BigInt ) should throw \'IncompatibleCompactException\' when compacted with highest + 1 value.',
+        'When compacted with highest + 1 value as int, it will throw \'IncompatibleCompactException\'',
         () {
       // highest + 1 value
       final val = 2.toBigInt.pow(536.toBigInt.toInt());
 
-      final exceptionMessage = '$val is too large for a compact.';
-
       // Sink Object
       final sink = HexSink();
 
       // Match exception
-      expect(
-          () => sink.compact(val),
-          throwsA(predicate((e) =>
-              e is IncompatibleCompactException &&
-              e.toString() == exceptionMessage)));
+      expect(() => sink.compact(val),
+          throwsA(isA<IncompatibleCompactException>()));
     });
     test(
-        'sink.compact( highest int ) should throw \'IncompatibleCompactException\' when compacted with highest + 1 value.',
+        'When compacted with highest + 1 value as BigInt, it will throw \'IncompatibleCompactException\'',
         () {
       // highest + 1 value
       final val = 2.toBigInt.pow(536.toBigInt.toInt()).toInt();
 
-      final exceptionMessage = '$val is too large for a compact.';
-
       // Sink Object
       final sink = HexSink();
 
       // Match exception
-      expect(
-          () => sink.compact(val),
-          throwsA(predicate((e) =>
-              e is IncompatibleCompactException &&
-              e.toString() == exceptionMessage)));
+      expect(() => sink.compact(val),
+          throwsA(isA<IncompatibleCompactException>()));
     });
     test(
-        'sink.compact(-1) should throw \'IncompatibleCompactException\' when compacted with \'-1\' value.',
+        'When compacted with -1 value, it will throw \'IncompatibleCompactException\'',
         () {
       // lowest - 1 value
       final val = -1;
-      final exceptionMessage = 'Value can\'t be less than 0.';
       // Sink Object
       final sink = HexSink();
 
       // Match exception
-      expect(
-          () => sink.compact(val),
-          throwsA(predicate((e) =>
-              e is IncompatibleCompactException &&
-              e.toString() == exceptionMessage)));
+      expect(() => sink.compact(val),
+          throwsA(isA<IncompatibleCompactException>()));
     });
   });
 
-  group('Testing primitives:', () {
+  group('Testing Primitives with Sink:', () {
     // Unsigned Bits
     // u8
     {
       // lowest acceptable possible
-      testPrimitiveCompact('u8', 0, '0x00');
+      testPrimitiveCompact(methodName: 'u8', args: 0, expectedHex: '0x00');
 
       // highest acceptable possible
-      testPrimitiveCompact('u8', 255, '0xff');
+      testPrimitiveCompact(methodName: 'u8', args: 255, expectedHex: '0xff');
     }
 
     // u16
     {
       // lowest acceptable possible
-      testPrimitiveCompact('u16', 0, '0x0000');
+      testPrimitiveCompact(methodName: 'u16', args: 0, expectedHex: '0x0000');
 
       // highest acceptable possible
-      testPrimitiveCompact('u16', 65535, '0xffff');
+      testPrimitiveCompact(
+          methodName: 'u16', args: 65535, expectedHex: '0xffff');
     }
 
     // u32
     {
       // lowest acceptable possible
-      testPrimitiveCompact('u32', 0, '0x00000000');
+      testPrimitiveCompact(
+          methodName: 'u32', args: 0, expectedHex: '0x00000000');
 
       // highest acceptable possible
-      testPrimitiveCompact('u32', pow(2, 32) - 1, '0xffffffff');
+      testPrimitiveCompact(
+          methodName: 'u32', args: pow(2, 32) - 1, expectedHex: '0xffffffff');
     }
 
     // u64
     {
       // lowest acceptable possible
-      testPrimitiveCompact('u64', BigInt.from(0), '0x0000000000000000');
+      testPrimitiveCompact(
+          methodName: 'u64',
+          args: BigInt.from(0),
+          expectedHex: '0x0000000000000000');
 
       // highest acceptable possible
       testPrimitiveCompact(
-          'u64', 2.toBigInt.pow(64) - 1.toBigInt, '0xffffffffffffffff');
+          methodName: 'u64',
+          args: 2.toBigInt.pow(64) - 1.toBigInt,
+          expectedHex: '0xffffffffffffffff');
     }
 
     // u128
     {
       // lowest acceptable possible
       testPrimitiveCompact(
-          'u128', BigInt.from(0), '0x00000000000000000000000000000000');
+          methodName: 'u128',
+          args: BigInt.from(0),
+          expectedHex: '0x00000000000000000000000000000000');
 
       // highest acceptable possible
-      testPrimitiveCompact('u128', 2.toBigInt.pow(128) - 1.toBigInt,
-          '0xffffffffffffffffffffffffffffffff');
+      testPrimitiveCompact(
+          methodName: 'u128',
+          args: 2.toBigInt.pow(128) - 1.toBigInt,
+          expectedHex: '0xffffffffffffffffffffffffffffffff');
     }
 
     // u256
     {
       // lowest acceptable possible
-      testPrimitiveCompact('u256', BigInt.from(0),
-          '0x0000000000000000000000000000000000000000000000000000000000000000');
+      testPrimitiveCompact(
+          methodName: 'u256',
+          args: BigInt.from(0),
+          expectedHex:
+              '0x0000000000000000000000000000000000000000000000000000000000000000');
 
       // highest acceptable possible
-      testPrimitiveCompact('u256', 2.toBigInt.pow(128) - 1.toBigInt,
-          '0xffffffffffffffffffffffffffffffff00000000000000000000000000000000');
+      testPrimitiveCompact(
+          methodName: 'u256',
+          args: 2.toBigInt.pow(128) - 1.toBigInt,
+          expectedHex:
+              '0xffffffffffffffffffffffffffffffff00000000000000000000000000000000');
     }
 
     // Signed Bits
     //i8
     {
       // i8 lowest acceptable possible
-      testPrimitiveCompact('i8', -128, '0x80');
+      testPrimitiveCompact(methodName: 'i8', args: -128, expectedHex: '0x80');
 
       // i8 highest acceptable possible
-      testPrimitiveCompact('i8', 127, '0x7f');
+      testPrimitiveCompact(methodName: 'i8', args: 127, expectedHex: '0x7f');
     }
 
     // i16
     {
       // lowest acceptable possible
-      testPrimitiveCompact('i16', -32768, '0x0080');
+      testPrimitiveCompact(
+          methodName: 'i16', args: -32768, expectedHex: '0x0080');
 
       // highest acceptable possible
-      testPrimitiveCompact('i16', 32767, '0xff7f');
+      testPrimitiveCompact(
+          methodName: 'i16', args: 32767, expectedHex: '0xff7f');
     }
 
     // i32
     {
       // lowest acceptable possible
-      testPrimitiveCompact('i32', -2147483648, '0x00000080');
+      testPrimitiveCompact(
+          methodName: 'i32', args: -2147483648, expectedHex: '0x00000080');
 
       // highest acceptable possilbe
-      testPrimitiveCompact('i32', 2147483647, '0xffffff7f');
+      testPrimitiveCompact(
+          methodName: 'i32', args: 2147483647, expectedHex: '0xffffff7f');
     }
 
     // i64
     {
       // lowest acceptable possible
       testPrimitiveCompact(
-          'i64', -2.toBigInt.pow(64 - 1), '0x0000000000000080');
+          methodName: 'i64',
+          args: -2.toBigInt.pow(64 - 1),
+          expectedHex: '0x0000000000000080');
 
       // highest acceptable possible
       testPrimitiveCompact(
-          'i64', 2.toBigInt.pow(64 - 1) - 1.toBigInt, '0xffffffffffffff7f');
+          methodName: 'i64',
+          args: 2.toBigInt.pow(64 - 1) - 1.toBigInt,
+          expectedHex: '0xffffffffffffff7f');
     }
 
     // i128
     {
       // lowest acceptable possible
-      testPrimitiveCompact('i128', -2.toBigInt.pow(128 - 1),
-          '0x00000000000000000000000000000080');
+      testPrimitiveCompact(
+          methodName: 'i128',
+          args: -2.toBigInt.pow(128 - 1),
+          expectedHex: '0x00000000000000000000000000000080');
 
       // highest acceptable possible
-      testPrimitiveCompact('i128', 2.toBigInt.pow(128 - 1) - 1.toBigInt,
-          '0xffffffffffffffffffffffffffffff7f');
+      testPrimitiveCompact(
+          methodName: 'i128',
+          args: 2.toBigInt.pow(128 - 1) - 1.toBigInt,
+          expectedHex: '0xffffffffffffffffffffffffffffff7f');
     }
 
     // i256
     {
       // lowest acceptable possible
-      testPrimitiveCompact('i256', -2.toBigInt.pow(256 - 1),
-          '0x0000000000000000000000000000000000000000000000000000000000000080');
+      testPrimitiveCompact(
+          methodName: 'i256',
+          args: -2.toBigInt.pow(256 - 1),
+          expectedHex:
+              '0x0000000000000000000000000000000000000000000000000000000000000080');
 
       // highest acceptable possible
-      testPrimitiveCompact('i256', 2.toBigInt.pow(256 - 1) - 1.toBigInt,
-          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
+      testPrimitiveCompact(
+          methodName: 'i256',
+          args: 2.toBigInt.pow(256 - 1) - 1.toBigInt,
+          expectedHex:
+              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
     }
 
     // Bool
     // true
-    testPrimitiveCompact('boolean', true, '0x01');
+    testPrimitiveCompact(
+        methodName: 'boolean', args: true, expectedHex: '0x01');
     // false
-    testPrimitiveCompact('boolean', false, '0x00');
+    testPrimitiveCompact(
+        methodName: 'boolean', args: false, expectedHex: '0x00');
 
     testPrimitiveCompact(
-        'str', 'github: justkawal', '0x446769746875623a206a7573746b6177616c');
+        methodName: 'str',
+        args: 'github: justkawal',
+        expectedHex: '0x446769746875623a206a7573746b6177616c');
   });
 }
