@@ -5,6 +5,7 @@
   ],
   "excludes": [
     "build/",
+    "chain/",
     "coverage/",
     ".dart_tool/",
     ".packages/",
