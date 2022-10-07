@@ -6,7 +6,7 @@ import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void testCompact(String expectedHex, dynamic val) {
-  test('When $val is compact, it should produce result: $expectedHex.', () {
+  test('When $val is compacted, it should produce result: $expectedHex.', () {
     final sink = HexSink();
 
     sink.compact(val);
