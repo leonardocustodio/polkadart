@@ -181,8 +181,8 @@ void main() {
         );
       });
     });
-    
-     group('fixed-length 64bit', () {
+
+    group('fixed-length 64bit', () {
       test('Should encode and return correct value ', () {
         BigInt value = BigInt.from(16777215);
         String expectedResult = '0xffffff0000000000';
@@ -192,7 +192,9 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should return correct encoded data when value is -9223372036854775808', () {
+      test(
+          'Should return correct encoded data when value is -9223372036854775808',
+          () {
         BigInt value = BigInt.from(-9223372036854775808);
         String expectedResult = '0x0000000000000080';
 
@@ -212,7 +214,8 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should throw InvalidSizeException when value is smaller than -9223372036854775808',
+      test(
+          'Should throw InvalidSizeException when value is smaller than -9223372036854775808',
           () {
         BigInt value = BigInt.parse('-9223372036854775809');
         int registryIndex = registry.getIndex('i64');
@@ -246,7 +249,9 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should return correct encoded data when value is -170141183460469231731687303715884105728', () {
+      test(
+          'Should return correct encoded data when value is -170141183460469231731687303715884105728',
+          () {
         BigInt value = BigInt.parse('-170141183460469231731687303715884105728');
         String expectedResult = '0x00000000000000000000000000000080';
 
@@ -266,7 +271,8 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should throw InvalidSizeException when value is smaller than -170141183460469231731687303715884105728',
+      test(
+          'Should throw InvalidSizeException when value is smaller than -170141183460469231731687303715884105728',
           () {
         BigInt value = BigInt.parse('-170141183460469231731687303715884105729');
         int registryIndex = registry.getIndex('i128');
@@ -290,7 +296,7 @@ void main() {
       });
     });
 
-     group('fixed-length 256bit', () {
+    group('fixed-length 256bit', () {
       test('Should encode and return correct value ', () {
         BigInt value = BigInt.from(16777215);
         String expectedResult =
@@ -301,8 +307,11 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should return correct encoded data when value is -57896044618658097711785492504343953926634992332820282019728792003956564819968', () {
-        BigInt value = BigInt.parse('-57896044618658097711785492504343953926634992332820282019728792003956564819968');
+      test(
+          'Should return correct encoded data when value is -57896044618658097711785492504343953926634992332820282019728792003956564819968',
+          () {
+        BigInt value = BigInt.parse(
+            '-57896044618658097711785492504343953926634992332820282019728792003956564819968');
         String expectedResult =
             '0x0000000000000000000000000000000000000000000000000000000000000080';
 
@@ -324,9 +333,11 @@ void main() {
         expect(codec.encodeToHex(registryIndex, value), expectedResult);
       });
 
-      test('Should throw InvalidSizeException when value is smaller than -57896044618658097711785492504343953926634992332820282019728792003956564819968',
+      test(
+          'Should throw InvalidSizeException when value is smaller than -57896044618658097711785492504343953926634992332820282019728792003956564819968',
           () {
-        BigInt value = BigInt.parse('-57896044618658097711785492504343953926634992332820282019728792003956564819969');
+        BigInt value = BigInt.parse(
+            '-57896044618658097711785492504343953926634992332820282019728792003956564819969');
         int registryIndex = registry.getIndex('i256');
 
         expect(
@@ -348,6 +359,5 @@ void main() {
         );
       });
     });
-  
   });
 }
