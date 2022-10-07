@@ -145,9 +145,9 @@ bool checkSignedBigInt(BigInt val, int bitSize) {
 /// Returns `true` if the Unsigned int `val` is in range of [min, max] according to `bitSize`.
 ///
 /// bitsize ranges are:
-/// - 8 -> [0, 127]
-/// - 16 -> [0, 32767]
-/// - 32 -> [0, 2147483647]
+/// - 8 -> [0, 255]
+/// - 16 -> [0, 65535]
+/// - 32 -> [0, 4294967295]
 ///
 /// Exceptions:
 /// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
@@ -157,13 +157,13 @@ bool checkUnsignedInt(int val, int bitSize) {
   late int max;
   switch (bitSize) {
     case 8:
-      max = 0x7f;
+      max = 0xff;
       break;
     case 16:
-      max = 0x7fff;
+      max = 0xffff;
       break;
     case 32:
-      max = 0x7fffffff;
+      max = 0xffffffff;
       break;
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
