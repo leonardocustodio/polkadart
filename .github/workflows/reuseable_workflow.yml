@@ -18,15 +18,15 @@ jobs:
       run:
         working-directory: ${{ inputs.working-directory }}
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3.1.0
+      - name: Check out code (LFS)
+        uses: nschloe/action-cached-lfs-checkout@v1.1.3
 
       # Get latest stable version of dart-lang
       - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
 
       - name: Install dependencies
         run: dart pub get
-        
+
       # Uncomment this step to verify the use of 'dart format' on each commit.
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
@@ -39,30 +39,25 @@ jobs:
       # package:test for this step to succeed. Note that Flutter projects will
       # want to change this to 'flutter test'.
       - name: Run tests
-        run: dart test
+        run: dart run test --coverage=./coverage
 
       - name: Activate coverage
         run: dart pub global activate coverage
 
-      - name: Run Code Coverage
-        run: dart pub global run coverage:test_with_coverage
+      - name: Create coverage
+        run: dart pub global run coverage:format_coverage --report-on=lib --lcov -o ./coverage/lcov.info -i ./coverage
 
-      - name: Upload Code Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ inputs.codecov-flag }}
-          verbose: true]
+      - name: Activate Dart Code Metrics
+        run: dart pub global activate dart_code_metrics
 
-      - name: Codeclimate
-        uses: actions/setup-node@master
-        with:
-          node-version: '12'
-      - run: npm install -g yarn
-      - run: yarn install
-      - run: yarn build
-      - uses: paambaati/codeclimate-action@v3.0.0
+      - name: Run Dart Code Metrics
+        run: dart pub global run dart_code_metrics:metrics analyze --reporter=codeclimate .
+
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
-          CC_TEST_REPORTER_ID: 945dfb58a832d233a3caeb84e3e6d3be212e8c7abcb48117fce63b9adcb43647
+          CC_TEST_REPORTER_ID: f62061f125a8fc1425670a787b7cac15d2d9f73d7ec4878c0e4d07575156ccc1
         with:
-          coverageCommand: yarn coverage
+          coverageLocations: |
+            ${{ inputs.working-directory }}/coverage/lcov.info:lcov
+

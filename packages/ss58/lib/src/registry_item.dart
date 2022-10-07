@@ -57,7 +57,7 @@ class RegistryItem extends Equatable {
   }
 
   /// Initialize Registry Item from the Json
-  static RegistryItem fromJson(Map<String, dynamic> json) {
+  factory RegistryItem.fromJson(Map<String, dynamic> json) {
     return RegistryItem._(
       prefix: json['prefix'],
       network: json['network'],
@@ -86,7 +86,7 @@ class RegistryItem extends Equatable {
   List<int> get decimals => List<int>.from(_decimals);
 
   /// Creating a new object as a copy of symbols to make it [unmodifiable]
-  List<int> get symbols => List<int>.from(_symbols);
+  List<String> get symbols => List<String>.from(_symbols);
 
   /// Used to match and calculate hashcode with equality
   @override
