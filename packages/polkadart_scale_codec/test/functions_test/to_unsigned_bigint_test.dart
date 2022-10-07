@@ -12,48 +12,82 @@ void main() {
   {
     group('Unsigned BigInt 64 bit:', () {
       test(
-          'toSignedBigInt will pass with lowest value: `0` and must return the same value as output.',
+          'Given the lowest supported value, it should be converted to string.',
           () {
         final lowestValue = 0;
-        expect(toUnsignedBigInt(lowestValue, 64).toInt(), equals(lowestValue));
+
+        final expectedConvertedValue = 0;
+
+        final actualConvertedValue = toUnsignedBigInt(lowestValue, 64).toInt();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
       test(
-          'toSignedBigInt will pass with highest value: `18446744073709551615` and must return the same value as output.',
+          'Given the highest supported value, it should be converted to string.',
           () {
         final highestValue = '18446744073709551615';
-        expect(toUnsignedBigInt(highestValue, 64).toString(),
-            equals(highestValue));
+
+        final expectedConvertedValue = '18446744073709551615';
+
+        final actualConvertedValue =
+            toUnsignedBigInt(highestValue, 64).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
     });
 
     group('Unsigned BigInt 128 bit:', () {
       test(
-          'toSignedBigInt will pass with lowest value: `0` and must return the same value as output.',
+          'Given the lowest supported value, it should be converted to string.',
           () {
         final lowestValue = 0;
-        expect(toUnsignedBigInt(lowestValue, 128).toInt(), equals(lowestValue));
+
+        final expectedConvertedValue = 0;
+
+        final actualConvertedValue = toUnsignedBigInt(lowestValue, 128).toInt();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
       test(
-          'toSignedBigInt will pass with highest value: `340282366920938463463374607431768211455` and must return the same value as output.',
+          'Given the highest supported value, it should be converted to string.',
           () {
         final highestValue = '340282366920938463463374607431768211455';
-        expect(toUnsignedBigInt(highestValue, 128).toString(),
-            equals(highestValue));
+
+        final expectedConvertedValue =
+            '340282366920938463463374607431768211455';
+
+        final actualConvertedValue =
+            toUnsignedBigInt(highestValue, 128).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
     });
 
     group('Unsigned BigInt 256 bit:', () {
-      test('Lowest value `0` must pass', () {
+      test(
+          'Given the lowest supported value, it should be converted to string.',
+          () {
         final lowestValue = 0;
-        expect(toUnsignedBigInt(lowestValue, 256).toInt(), equals(lowestValue));
+
+        final expectedConvertedValue = 0;
+
+        final actualConvertedValue = toUnsignedBigInt(lowestValue, 256).toInt();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
       test(
-          'Highest value `115792089237316195423570985008687907853269984665640564039457584007913129639935` must pass',
+          'Given the highest supported value, it should be converted to string.',
           () {
         final highestValue =
             '115792089237316195423570985008687907853269984665640564039457584007913129639935';
-        expect(toUnsignedBigInt(highestValue, 256).toString(),
-            equals(highestValue));
+
+        final expectedConvertedValue =
+            '115792089237316195423570985008687907853269984665640564039457584007913129639935';
+
+        final actualConvertedValue =
+            toUnsignedBigInt(highestValue, 256).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
     });
   }
@@ -64,87 +98,65 @@ void main() {
   {
     group('Throws Exception on Unsigned 64 bit:', () {
       test(
-          'toUnsignedBigInt will throw \'InvalidSizeException\' when value is -1.',
+          'When value is lowest - 1 then, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage = 'Invalid U64: -1';
-        expect(
-            () => toUnsignedBigInt(-1, 64),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 64;
+        final value = -1;
+
+        expect(() => toUnsignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
       test(
-          'toUnsignedBigInt will throw \'InvalidSizeException\' when value is 18446744073709551616.',
+          'When value is highest + 1 then, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage = 'Invalid U64: 18446744073709551616';
-        expect(
-            () => toUnsignedBigInt('18446744073709551616', 64),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 64;
+        final value = '18446744073709551616';
+
+        expect(() => toUnsignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
     });
 
     group('Throws Exception on Unsigned 128 bit:', () {
       test(
-          'toUnsignedBigInt will throw \'InvalidSizeException\' when value is -1.',
+          'When value is lowest - 1 then, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage = 'Invalid U128: -1';
-        expect(
-            () => toUnsignedBigInt(-1, 128),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 128;
+        final value = -1;
+
+        expect(() => toUnsignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
       test(
-          'toUnsignedBigInt will throw \'InvalidSizeException\' when value is 340282366920938463463374607431768211456.',
+          'When value is highest + 1 then, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage =
-            'Invalid U128: 340282366920938463463374607431768211456';
-        expect(
-            () => toUnsignedBigInt(
-                '340282366920938463463374607431768211456', 128),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 128;
+        final value = '340282366920938463463374607431768211456';
+
+        expect(() => toUnsignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
     });
 
     group('Throws Exception on Unsigned 256 bit:', () {
       test(
-          'toUnsignedBigInt will throw \'InvalidSizeException\' when value is -1.',
+          'When value is lowest - 1 then, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage = 'Invalid U256: -1';
-        expect(
-            () => toUnsignedBigInt(-1, 256),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 256;
+        final value = -1;
+
+        expect(() => toUnsignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
       test(
-          'toUnsignedBigInt will throw \'InvalidSizeException\' when value is 115792089237316195423570985008687907853269984665640564039457584007913129639936.',
+          'When value is highest + 1 then, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage =
-            'Invalid U256: 115792089237316195423570985008687907853269984665640564039457584007913129639936';
-        expect(
-            () => toUnsignedBigInt(
-                '115792089237316195423570985008687907853269984665640564039457584007913129639936',
-                256),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 256;
+        final value =
+            '115792089237316195423570985008687907853269984665640564039457584007913129639936';
+
+        expect(() => toUnsignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
     });
   }
@@ -152,31 +164,29 @@ void main() {
   // This test will throw `UnexpectedTypeException`
   {
     group('UnexpectedTypeException', () {
-      final exceptionMessage = 'Only `String` and `int` are valid parameters.';
       test(
-          'toUnsignedBigInt will throw \'UnexpectedTypeException\' when value of type BigInt is passed as an argument.',
+          'When value of type BigInt is provided to toUnsignedBigInt, then it will throw \'UnexpectedTypeException\'.',
           () {
-        expect(
-            () => toUnsignedBigInt(BigInt.parse('57896045664819967'), 64),
-            throwsA(predicate((e) =>
-                e is UnexpectedTypeException &&
-                e.toString() == exceptionMessage)));
+        final bitsize = 64;
+        final value = BigInt.parse('57896045664819967');
+
+        expect(() => toUnsignedBigInt(value, bitsize),
+            throwsA(isA<UnexpectedTypeException>()));
       });
     });
   }
 
-  // This test will throw `UnexpectedCaseException` when unknow bit-size is passed as an argument
+  // When unknown bit-size is passed as an argument then it will throw `UnexpectedCaseException`
   {
     group('UnexpectedCaseException', () {
-      final exceptionMessage = 'Unexpected BitSize: 20.';
       test(
-          'toUnsignedBigInt will throw \'UnexpectedCaseException\' when unknow bit-size: \'20\' is passed as an argument',
+          'When unknown bit-size: 20 is passed to: toUnsignedBigInt, it will throw \'UnexpectedCaseException\'.',
           () {
-        expect(
-            () => toUnsignedBigInt(200, 20),
-            throwsA(predicate((e) =>
-                e is UnexpectedCaseException &&
-                e.toString() == exceptionMessage)));
+        final bitsize = 20;
+        final value = 200;
+
+        expect(() => toUnsignedBigInt(value, bitsize),
+            throwsA(isA<UnexpectedCaseException>()));
       });
     });
   }

@@ -145,9 +145,9 @@ bool checkSignedBigInt(BigInt val, int bitSize) {
 /// Returns `true` if the Unsigned int `val` is in range of [min, max] according to `bitSize`.
 ///
 /// bitsize ranges are:
-/// - 8 -> [0, 127]
-/// - 16 -> [0, 32767]
-/// - 32 -> [0, 2147483647]
+/// - 8 -> [0, 255]
+/// - 16 -> [0, 65535]
+/// - 32 -> [0, 4294967295]
 ///
 /// Exceptions:
 /// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)

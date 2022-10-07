@@ -12,53 +12,87 @@ void main() {
   {
     group('Signed BigInt 64 bit:', () {
       test(
-          'toSignedBigInt will pass with lowest value: `-9223372036854775808` and must return the same value as output.',
+          'Given the lowest supported value, it should be converted to string.',
           () {
-        final lowestValue = -9223372036854775808;
-        expect(toSignedBigInt(lowestValue, 64).toInt(), equals(lowestValue));
+        final lowestValue = '-9223372036854775808';
+
+        final expectedConvertedValue = '-9223372036854775808';
+
+        final actualConvertedValue = toSignedBigInt(lowestValue, 64).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
       test(
-          'toSignedBigInt will pass with highest value: \'9223372036854775807\' and must return the same value as output.',
+          'Given the highest supported value, it should be converted to string.',
           () {
         final highestValue = '9223372036854775807';
-        expect(
-            toSignedBigInt(highestValue, 64).toString(), equals(highestValue));
+
+        final expectedConvertedValue = '9223372036854775807';
+
+        final actualConvertedValue =
+            toSignedBigInt(highestValue, 64).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
     });
 
     group('Signed BigInt 128 bit:', () {
       test(
-          'toSignedBigInt will pass with lowest value: `-170141183460469231731687303715884105728` and must return the same value as output.',
+          'Given the lowest supported value, it should be converted to string.',
           () {
         final lowestValue = '-170141183460469231731687303715884105728';
-        expect(
-            toSignedBigInt(lowestValue, 128).toString(), equals(lowestValue));
+
+        final expectedConvertedValue =
+            '-170141183460469231731687303715884105728';
+
+        final actualConvertedValue =
+            toSignedBigInt(lowestValue, 128).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
       test(
-          'toSignedBigInt will pass with highest value: `170141183460469231731687303715884105727` and must return the same value as output.',
+          'Given the highest supported value, it should be converted to string.',
           () {
         final highestValue = '170141183460469231731687303715884105727';
-        expect(
-            toSignedBigInt(highestValue, 128).toString(), equals(highestValue));
+
+        final expectedConvertedValue =
+            '170141183460469231731687303715884105727';
+
+        final actualConvertedValue =
+            toSignedBigInt(highestValue, 128).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
     });
 
     group('Signed BigInt 256 bit:', () {
       test(
-          'toSignedBigInt will pass with lowest value: `-57896044618658097711785492504343953926634992332820282019728792003956564819968` and must return the same value as output.',
+          'Given the lowest supported value, it should be converted to string.',
           () {
         final lowestValue =
             '-57896044618658097711785492504343953926634992332820282019728792003956564819968';
-        expect(
-            toSignedBigInt(lowestValue, 256).toString(), equals(lowestValue));
+
+        final expectedConvertedValue =
+            '-57896044618658097711785492504343953926634992332820282019728792003956564819968';
+
+        final actualConvertedValue =
+            toSignedBigInt(lowestValue, 256).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
       test(
-          'toSignedBigInt will pass with highest value: `57896044618658097711785492504343953926634992332820282019728792003956564819967` and must return the same value as output.',
+          'Given the highest supported value, it should be converted to string.',
           () {
         final highestValue =
             '57896044618658097711785492504343953926634992332820282019728792003956564819967';
-        expect(
-            toSignedBigInt(highestValue, 256).toString(), equals(highestValue));
+
+        final expectedConvertedValue =
+            '57896044618658097711785492504343953926634992332820282019728792003956564819967';
+
+        final actualConvertedValue =
+            toSignedBigInt(highestValue, 256).toString();
+
+        expect(actualConvertedValue, equals(expectedConvertedValue));
       });
     });
   }
@@ -68,93 +102,62 @@ void main() {
   // - 1 greater than highest acceptable
   {
     group('Throws Exception on Signed 64 bit:', () {
-      test(
-          'toSignedBigInt will throw \'InvalidSizeException\' when value is -9223372036854775809.',
+      test('When value is lowest - 1, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage = 'Invalid I64: -9223372036854775809';
-        expect(
-            () => toSignedBigInt('-9223372036854775809', 64),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 64;
+        final value = '-9223372036854775809';
+
+        expect(() => toSignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
-      test(
-          'toSignedBigInt will throw \'InvalidSizeException\' when value is 9223372036854775808.',
+      test('When value is highest + 1, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage = 'Invalid I64: 9223372036854775808';
-        expect(
-            () => toSignedBigInt('9223372036854775808', 64),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 64;
+        final value = '9223372036854775808';
+
+        expect(() => toSignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
     });
 
     group('Throws Exception on Signed 128 bit:', () {
-      test(
-          'toSignedBigInt will throw \'InvalidSizeException\' when value is -170141183460469231731687303715884105729.',
+      test('When value is lowest - 1, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage =
-            'Invalid I128: -170141183460469231731687303715884105729';
-        expect(
-            () =>
-                toSignedBigInt('-170141183460469231731687303715884105729', 128),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 128;
+        final value = '-170141183460469231731687303715884105729';
+
+        expect(() => toSignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
-      test(
-          'toSignedBigInt will throw \'InvalidSizeException\' when value is 170141183460469231731687303715884105728.',
+
+      test('When value is highest + 1, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage =
-            'Invalid I128: 170141183460469231731687303715884105728';
-        expect(
-            () =>
-                toSignedBigInt('170141183460469231731687303715884105728', 128),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 128;
+        final value = '170141183460469231731687303715884105728';
+
+        expect(() => toSignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
     });
 
     group('Throws Exception on Signed 256 bit:', () {
-      test(
-          'toSignedBigInt will throw \'InvalidSizeException\' when value is -57896044618658097711785492504343953926634992332820282019728792003956564819969.',
+      test('When value is lowest - 1, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage =
-            'Invalid I256: -57896044618658097711785492504343953926634992332820282019728792003956564819969';
-        expect(
-            () => toSignedBigInt(
-                '-57896044618658097711785492504343953926634992332820282019728792003956564819969',
-                256),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 256;
+        final value =
+            '-57896044618658097711785492504343953926634992332820282019728792003956564819969';
+
+        expect(() => toSignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
-      test(
-          'toSignedBigInt will throw \'InvalidSizeException\' when value is 57896044618658097711785492504343953926634992332820282019728792003956564819968.',
+      test('When value is highest + 1, it will throw \'InvalidSizeException\'.',
           () {
-        final exceptionMessage =
-            'Invalid I256: 57896044618658097711785492504343953926634992332820282019728792003956564819968';
-        expect(
-            () => toSignedBigInt(
-                '57896044618658097711785492504343953926634992332820282019728792003956564819968',
-                256),
-            throwsA(
-              predicate((e) =>
-                  e is InvalidSizeException &&
-                  e.toString() == exceptionMessage),
-            ));
+        final bitsize = 256;
+        final value =
+            '57896044618658097711785492504343953926634992332820282019728792003956564819968';
+
+        expect(() => toSignedBigInt(value, bitsize),
+            throwsA(isA<InvalidSizeException>()));
       });
     });
   }
@@ -162,31 +165,29 @@ void main() {
   // This test will throw `UnexpectedTypeException`
   {
     group('UnexpectedTypeException', () {
-      final exceptionMessage = 'Only `String` and `int` are valid parameters.';
       test(
-          'toSignedBigInt will throw \'UnexpectedTypeException\' when value of type BigInt is passes are argument.',
+          'When value of type BigInt is passed to toSignedBigInt, it will throw \'UnexpectedTypeException\'.',
           () {
-        expect(
-            () => toSignedBigInt(BigInt.from(429496726), 64),
-            throwsA(predicate((e) =>
-                e is UnexpectedTypeException &&
-                e.toString() == exceptionMessage)));
+        final bitsize = 64;
+        final value = BigInt.from(429496726);
+
+        expect(() => toSignedBigInt(value, bitsize),
+            throwsA(isA<UnexpectedTypeException>()));
       });
     });
   }
 
-  // This test will throw `UnexpectedCaseException` when unknow bit-size is passed as an argument
+  // When unknow bit-size is passed as an argument it should throw UnexpectedCaseException
   {
     group('UnexpectedCaseException', () {
-      final exceptionMessage = 'Unexpected BitSize: 20.';
       test(
-          'toSignedBigInt will throw \'UnexpectedCaseException\' when unknow bit-size: \'20\' is passed as an argument',
+          'When unknown Bit-size: 20 is passed to toSignedBigInt, it will throw \'UnexpectedCaseException\'.',
           () {
-        expect(
-            () => toSignedBigInt(200, 20),
-            throwsA(predicate((e) =>
-                e is UnexpectedCaseException &&
-                e.toString() == exceptionMessage)));
+        final bitsize = 20;
+        final value = 200;
+
+        expect(() => toSignedBigInt(value, bitsize),
+            throwsA(isA<UnexpectedCaseException>()));
       });
     });
   }
