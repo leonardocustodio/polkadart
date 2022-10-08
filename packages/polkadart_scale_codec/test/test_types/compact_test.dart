@@ -293,8 +293,7 @@ void main() {
           'should throw \'InvalidCompactException\' when encoding BigInt.from(2).pow(536) with Compact<u8>',
           () {
         final BigInt invalidValue = BigInt.from(2).pow(536);
-        final exceptionMessage =
-            '$invalidValue is too large for a compact.';
+        final exceptionMessage = '$invalidValue is too large for a compact.';
         expect(
             () => codec.encodeToHex(
                 registry.getIndex('Compact<u8>'), invalidValue),
@@ -310,8 +309,7 @@ void main() {
         // Using help of BigInt to calculate 2 ^ (536) as BigInt and then converting to int.
         // as normal pow(2, 536) returns 0.
         final int invalidValue = BigInt.from(2).pow(536).toInt();
-        final exceptionMessage =
-            '$invalidValue is too large for a compact.';
+        final exceptionMessage = '$invalidValue is too large for a compact.';
         expect(
             () => codec.encodeToHex(
                 registry.getIndex('Compact<u8>'), invalidValue),

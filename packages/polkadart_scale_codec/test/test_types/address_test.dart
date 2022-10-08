@@ -14,26 +14,30 @@ void main() {
   // Initializing Scale-Codec object
   final codec = Codec(types);
 
-  // Test type: `Address`
   group('Test Address:', () {
     // Encode
     test(
-        'Address:\'1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318\' when encoded should produce output \'0xff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318\'',
+        'When Address:\'1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318\' is encoded then it should produce output: \'0xff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318\'',
         () {
-      final encoded = codec.encodeToHex(usageIndex,
+      final expectedValue =
+          '0xff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318';
+
+      final encodedValue = codec.encodeToHex(usageIndex,
           '1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318');
-      expect(
-          '0xff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318',
-          encoded);
+
+      expect(expectedValue, encodedValue);
     });
     // Decode
     test(
-        '\'0xff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318\' when decoded should give the output address as: \'1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318\'',
+        'When \'0xff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318\' is decoded then it should give the output in Address',
         () {
-      final decoded = codec.decodeBinary(usageIndex,
+      final expectedValue =
+          '1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318';
+
+      final decodedValue = codec.decodeBinary(usageIndex,
           '0xff1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318');
-      expect('1fa9d1bd1db014b65872ee20aee4fd4d3a942d95d3357f463ea6c799130b6318',
-          decoded);
+
+      expect(expectedValue, decodedValue);
     });
   });
 }
