@@ -18,11 +18,11 @@ void testCompact(String expectedHex, dynamic val) {
 
 ///
 /// What this function does ?
-/// [method] : It's the name of the method to execute.
+/// [methodName] : It's the name of the method to execute.
 ///
 /// ```dart
 /// // What's happening here ?
-/// // [method]      : 'u8'
+/// // [methodName]  : 'u8'
 /// // [args]        : 1
 /// // [expectedHex] : '0x04'
 /// // Below code is similar to
@@ -66,8 +66,6 @@ void main() {
     testCompact(
         '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         2.toBigInt.pow(536.toBigInt.toInt()) - 1.toBigInt);
-    testCompact('0x13feffffffffffff7f',
-        2.toBigInt.pow(536.toBigInt.toInt()).toInt() - 1);
   });
 
   group('Exception on Compact:', () {
