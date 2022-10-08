@@ -39,7 +39,7 @@ void testPrimitiveCompact(
     required dynamic args,
     required String expectedHex}) {
   test(
-      'When $methodName() is provided with $args, it must produce result: $expectedHex.',
+      'When $methodName() is provided with args: $args, it must produce result: $expectedHex.',
       () {
     var sink = HexSink();
     var mirrorSink = reflect(sink);
