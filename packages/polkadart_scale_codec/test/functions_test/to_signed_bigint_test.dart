@@ -2,13 +2,6 @@ import 'package:polkadart_scale_codec/src/util/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
-  //
-  // Signed BigInt
-  //
-  // This test will pass at the boundaries of max and min values of BigInt according to bitsize
-  //
-  // All the test cases will pass with [low, high] values with low and high being inclusive
-  //
   {
     group('Signed BigInt 64 bit:', () {
       test(
@@ -97,9 +90,6 @@ void main() {
     });
   }
 
-  // throws `InvalidSizeException` when value is:
-  // - 1 less than lowest acceptable or
-  // - 1 greater than highest acceptable
   {
     group('Throws Exception on Signed 64 bit:', () {
       test('When value is lowest - 1, it will throw \'InvalidSizeException\'.',
@@ -162,7 +152,6 @@ void main() {
     });
   }
 
-  // This test will throw `UnexpectedTypeException`
   {
     group('UnexpectedTypeException', () {
       test(
@@ -177,7 +166,6 @@ void main() {
     });
   }
 
-  // When unknow bit-size is passed as an argument it should throw UnexpectedCaseException
   {
     group('UnexpectedCaseException', () {
       test(
