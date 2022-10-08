@@ -31,58 +31,71 @@ void main() {
   final codec = Codec(types);
 
   {
-    //
-    // Testing with Vec<u8>
-    //
     group('Test Vec<u8>:', () {
-      test('[255, 255] when encoded should produce result: \'0x08ffff\'', () {
-        var encoded =
-            codec.encodeToHex(registry.getIndex('Vec<u8>'), [255, 255]);
-        expect('0x08ffff', encoded);
-      });
-
-      test('0x08ffff when decoded should produce result: [255, 255]', () {
-        var decoded =
-            codec.decodeBinary(registry.getIndex('Vec<u8>'), '0x08ffff');
-        expect([255, 255], decoded);
-      });
-    });
-  }
-  {
-    //
-    // Testing with Vec<Option<u8>>
-    //
-    group('Test Vec<u8>:', () {
-      test('[255, null] when encoded should produce result: \'0x0801ff00\'',
+      // Encode
+      test(
+          'When [255, 255] is encoded then it should produce result: \'0x08ffff\'',
           () {
-        var encoded = codec
-            .encodeToHex(registry.getIndex('Vec<Option<u8>>'), [255, null]);
-        expect('0x0801ff00', encoded);
+        final String expectedValue = '0x08ffff';
+        final String encodedValue =
+            codec.encodeToHex(registry.getIndex('Vec<u8>'), [255, 255]);
+        expect(expectedValue, encodedValue);
       });
 
-      test('0x0801ff00 when decoded should produce result: [255, null]', () {
-        var decoded = codec.decodeBinary(
-            registry.getIndex('Vec<Option<u8>>'), '0x0801ff00');
-        expect([255, null], decoded);
+      // Decode
+      test('When 0x08ffff is decoded then it should produce result: [255, 255]',
+          () {
+        final expectedValue = [255, 255];
+        final decodedValue =
+            codec.decodeBinary(registry.getIndex('Vec<u8>'), '0x08ffff');
+        expect(expectedValue, decodedValue);
       });
     });
   }
 
   {
-    //
-    // Testing with Vec<u256>
-    //
+    group('Test Vec<u8>:', () {
+      // Encode
+      test(
+          'When [255, null] is encoded then it should produce result: \'0x0801ff00\'',
+          () {
+        final String expectedValue = '0x0801ff00';
+
+        final String encodedValue = codec
+            .encodeToHex(registry.getIndex('Vec<Option<u8>>'), [255, null]);
+
+        expect(expectedValue, encodedValue);
+      });
+
+      // Decode
+      test(
+          'When 0x0801ff00 is decoded then it should produce result: [255, null]',
+          () {
+        final expectedValue = [255, null];
+
+        final decodedValue = codec.decodeBinary(
+            registry.getIndex('Vec<Option<u8>>'), '0x0801ff00');
+
+        expect(expectedValue, decodedValue);
+      });
+    });
+  }
+
+  {
     group('Test Vec<u256>:', () {
       final values = [0.toBigInt, 2.toBigInt.pow(255) - 1.toBigInt];
-      test(
-          '$values when encoded should produce result: \'0x080000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f\'',
-          () {
-        var encoded = codec.encodeToHex(registry.getIndex('Vec<u256>'), values);
-        expect(
-            '0x080000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f',
-            encoded);
+      // Encode
+      test('When $values are encoded then it should pass easily', () {
+        final expectedValue =
+            '0x080000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f';
+
+        final encodedValue =
+            codec.encodeToHex(registry.getIndex('Vec<u256>'), values);
+
+        expect(expectedValue, encodedValue);
       });
 
+      // Decode
       test(
           '0x080000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f when decoded should produce result: $values',
           () {
@@ -93,252 +106,277 @@ void main() {
     });
   }
   {
-    //
-    // Testing with Vec<i256>
-    //
     group('Test Vec<i256>:', () {
       final values = [-2.toBigInt.pow(255 - 1), 2.toBigInt.pow(255 - 1)];
-      test(
-          '$values when encoded should produce result: \'0x0800000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000040\'',
-          () {
-        var encoded = codec.encodeToHex(registry.getIndex('Vec<i256>'), values);
-        expect(
-            '0x0800000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000040',
-            encoded);
+      // Encode
+      test('When $values is encoded should pass easily', () {
+        final expectedValue =
+            '0x0800000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000040';
+
+        final encoded =
+            codec.encodeToHex(registry.getIndex('Vec<i256>'), values);
+
+        expect(expectedValue, encoded);
       });
 
+      // Decode
       test(
           '0x0800000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000040 when decoded should produce result: $values',
           () {
-        var decoded = codec.decodeBinary(registry.getIndex('Vec<i256>'),
+        final expectedValue = values;
+        final decodedvalue = codec.decodeBinary(registry.getIndex('Vec<i256>'),
             '0x0800000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000040');
-        expect(values, decoded);
+        expect(expectedValue, decodedvalue);
       });
     });
   }
 
   {
-    //
-    // Testing with Vec<bool>
-    //
     group('Test Vec<bool>:', () {
       // Encode
       test(
-          '[false, true, true] when encoded should produce result: \'0x0c000101\'',
+          'When [false, true, true] is encoded then it should produce result: \'0x0c000101\'',
           () {
-        var encoded = codec
+        final expectedValue = '0x0c000101';
+
+        final encodedValue = codec
             .encodeToHex(registry.getIndex('Vec<bool>'), [false, true, true]);
-        expect('0x0c000101', encoded);
+
+        expect(expectedValue, encodedValue);
       });
-      test('[] when encoded should produce result: \'0x00\'', () {
-        var encoded = codec.encodeToHex(registry.getIndex('Vec<bool>'), []);
-        expect('0x00', encoded);
+      test('When [] is encoded then it should produce result: \'0x00\'', () {
+        final expectedValue = '0x00';
+
+        final encodedValue =
+            codec.encodeToHex(registry.getIndex('Vec<bool>'), []);
+
+        expect(expectedValue, encodedValue);
       });
 
       // Decode
-      test('0x0c000101 when decoded should produce result: [false, true, true]',
+      test(
+          'When 0x0c000101 is decoded then it should produce result: [false, true, true]',
           () {
-        var decoded =
+        final expectedValue = [false, true, true];
+
+        final decodedValue =
             codec.decodeBinary(registry.getIndex('Vec<bool>'), '0x0c000101');
-        expect([false, true, true], decoded);
+
+        expect(expectedValue, decodedValue);
       });
     });
   }
 
   {
-    //
-    // Testing with Vec<Option<bool>>
-    //
     group('Test Vec<Option<bool>>:', () {
       // Encode
       test(
-          '[false, true, true] when encoded should produce result: \'0x0c000101\'',
+          'When [false, true, true] is encoded then it should produce result: \'0x0c000101\'',
           () {
-        var encoded = codec.encodeToHex(
+        final expectedValue = '0x1001000101000101';
+
+        final encodedValue = codec.encodeToHex(
             registry.getIndex('Vec<Option<bool>>'), [false, true, null, true]);
-        expect('0x1001000101000101', encoded);
+
+        expect(expectedValue, encodedValue);
       });
 
       // Decode
       test(
-          '0x1001000101000101 when decoded should produce result: [false, true, null, true]',
+          'When 0x1001000101000101 is decoded then it should produce result: [false, true, null, true]',
           () {
-        var decoded = codec.decodeBinary(
+        final expectedValue = [false, true, null, true];
+
+        final decodedValue = codec.decodeBinary(
             registry.getIndex('Vec<Option<bool>>'), '0x1001000101000101');
-        expect([false, true, null, true], decoded);
+
+        expect(expectedValue, decodedValue);
       });
     });
   }
 
   {
-    //
-    // Testing with Vec<Vec<u8>>
-    //
     group('Test Vec<Vec<u8>>:', () {
       // Encode
       test(
-          '[[255, 255], [1, 2, 3, 4]] when encoded should produce result: \'0x0808ffff1001020304\'',
+          'When [[255, 255], [1, 2, 3, 4]] is encoded then it should produce result: \'0x0808ffff1001020304\'',
           () {
-        var encoded = codec.encodeToHex(registry.getIndex('Vec<Vec<u8>>'), [
+        final expectedValue = '0x0808ffff1001020304';
+
+        final encodedValue =
+            codec.encodeToHex(registry.getIndex('Vec<Vec<u8>>'), [
           [255, 255],
           [1, 2, 3, 4]
         ]);
-        expect('0x0808ffff1001020304', encoded);
+
+        expect(expectedValue, encodedValue);
       });
 
       // Decode
       test(
-          '0x0808ffff1001020304 when decoded should produce result: [[255, 255], [1, 2, 3, 4]]',
+          'When 0x0808ffff1001020304 is decoded then it should produce result: [[255, 255], [1, 2, 3, 4]]',
           () {
-        var decoded = codec.decodeBinary(
-            registry.getIndex('Vec<Vec<u8>>'), '0x0808ffff1001020304');
-        expect([
+        final expectedValue = [
           [255, 255],
           [1, 2, 3, 4]
-        ], decoded);
+        ];
+
+        final decodedValue = codec.decodeBinary(
+            registry.getIndex('Vec<Vec<u8>>'), '0x0808ffff1001020304');
+
+        expect(expectedValue, decodedValue);
       });
     });
   }
 
   {
-    //
-    // Testing with Vec<Text>
-    //
     group('Test Vec<Text>:', () {
       // Encode
       test(
-          '["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"] when encoded should pass easily.',
+          'When ["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"] is encoded then it should pass easily.',
           () {
-        var encoded = codec.encodeToHex(registry.getIndex('Vec<Text>'),
+        final expectedValue =
+            '0x101848616d6c657450d092d0bed0b9d0bdd0b020d0b820d0bcd0b8d18030e4b889e59bbde6bc94e4b989bcd8a3d98ed984d992d98120d984d98ed98ad992d984d98ed8a920d988d98ed984d98ed98ad992d984d98ed8a9e2808e';
+
+        final encodedValue = codec.encodeToHex(registry.getIndex('Vec<Text>'),
             ["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"]);
-        expect(
-            '0x101848616d6c657450d092d0bed0b9d0bdd0b020d0b820d0bcd0b8d18030e4b889e59bbde6bc94e4b989bcd8a3d98ed984d992d98120d984d98ed98ad992d984d98ed8a920d988d98ed984d98ed98ad992d984d98ed8a9e2808e',
-            encoded);
+
+        expect(expectedValue, encodedValue);
       });
 
       // Decode
       test(
-          ' when decoded should produce result: ["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"]',
+          'When \'0x101848616d6c657450d092d0bed0b9d0bdd0b020d0b820d0bcd0b8d18030e4b889e59bbde6bc94e4b989bcd8a3d98ed984d992d98120d984d98ed98ad992d984d98ed8a920d988d98ed984d98ed98ad992d984d98ed8a9e2808e\' is decoded then it should produce result: ["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"]',
           () {
-        var decoded = codec.decodeBinary(registry.getIndex('Vec<Text>'),
+        final expectedValue = [
+          "Hamlet",
+          "Война и мир",
+          "三国演义",
+          "أَلْف لَيْلَة وَلَيْلَة‎"
+        ];
+
+        final decodedValue = codec.decodeBinary(registry.getIndex('Vec<Text>'),
             '0x101848616d6c657450d092d0bed0b9d0bdd0b020d0b820d0bcd0b8d18030e4b889e59bbde6bc94e4b989bcd8a3d98ed984d992d98120d984d98ed98ad992d984d98ed8a920d988d98ed984d98ed98ad992d984d98ed8a9e2808e');
-        expect(["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"],
-            decoded);
+
+        expect(expectedValue, decodedValue);
       });
     });
 
     group('Exception Test Vec<Text>:', () {
       test(
-          '["Hamlet", "Война и мир", "三国演义", true] when encoded should pass easily.',
+          'When ["Hamlet", "Война и мир", "三国演义", true] is encoded then it should throw \'AssertionException\'',
           () {
-        final exceptionMessage =
-            'Needed val of type \'String\' but found bool.';
         expect(
             () => codec.encodeToHex(registry.getIndex('Vec<Text>'),
                 ["Hamlet", "Война и мир", "三国演义", true]),
-            throwsA(predicate((e) =>
-                e is AssertionException && e.toString() == exceptionMessage)));
+            throwsA(isA<AssertionException>()));
       });
       test(
-          'decodeBinary should throw exception \'EOFException\' when decoded with incorrect length at first 2 bytes of hex.',
+          'When decoded with incorrect length at first 2 bytes of hex, then it should throw exception \'EOFException\'',
           () {
         final encodedHex =
             '0x201848616d6c657450d092d0bed0b9d0bdd0b020d0b820d0bcd0b8d18030e4b889e59bbde6bc94e4b989bcd8a3d98ed984d992d98120d984d98ed98ad992d984d98ed8a920d988d98ed984d98ed98ad992d984d98ed8a9e2808e';
 
-        final exceptionMessage = 'Unexpected end of file/source exception.';
         expect(
             () =>
                 codec.decodeBinary(registry.getIndex('Vec<Text>'), encodedHex),
-            throwsA(predicate(
-                (e) => e is EOFException && e.toString() == exceptionMessage)));
+            throwsA(isA<EOFException>()));
       });
     });
   }
 
   {
-    //
-    // Testing with Vec<(u32, Option<bool>)>
-    //
     group('Test Vec<(u32, Option<bool>)>:', () {
       test(
-          '[[716, null], [256, true]] when encoded should produce result: \'0x08cc02000000000100000101\'',
+          'When [[716, null], [256, true]] is encoded then it should produce result: \'0x08cc02000000000100000101\'',
           () {
-        var encoded =
+        final expectedValue = '0x08cc02000000000100000101';
+
+        final encodedValue =
             codec.encodeToHex(registry.getIndex('Vec<(u32, Option<bool>)>'), [
           [716, null],
           [256, true]
         ]);
-        expect('0x08cc02000000000100000101', encoded);
+
+        expect(expectedValue, encodedValue);
       });
       test(
-          '\'0x08cc02000000000100000101\' when decoded should produce result: [[716, null], [256, true]]',
+          'When \'0x08cc02000000000100000101\' is decoded then it should produce result: [[716, null], [256, true]]',
           () {
-        var decoded = codec.decodeBinary(
-            registry.getIndex('Vec<(u32, Option<bool>)>'),
-            '0x08cc02000000000100000101');
-        expect([
+        final expectedValue = [
           [716, null],
           [256, true]
-        ], decoded);
+        ];
+
+        final decodedValue = codec.decodeBinary(
+            registry.getIndex('Vec<(u32, Option<bool>)>'),
+            '0x08cc02000000000100000101');
+
+        expect(expectedValue, decodedValue);
       });
     });
 
     group('Encode Exception Test Vec<(u32, Option<bool>)>:', () {
       test(
-          '[[716, null], [256, true]] should throw \'AssertionException\' with message: \'Incorrect length of values to unwrap to tuple.\'.',
+          'When [[716, \'null\', 123], [256, true]] is encoded it should throw \'AssertionException\'',
           () {
-        final exceptionMessage =
-            'Incorrect length of values to unwrap to tuple.';
+        final value = [
+          [716, 'null', 123],
+          [256, true]
+        ];
+
         expect(
             () => codec.encodeToHex(
-                    registry.getIndex('Vec<(u32, Option<bool>)>'), [
-                  [716, 'null', 123],
-                  [256, true]
-                ]),
-            throwsA(predicate((e) =>
-                e is AssertionException && e.toString() == exceptionMessage)));
+                registry.getIndex('Vec<(u32, Option<bool>)>'), value),
+            throwsA(isA<AssertionException>()));
       });
 
       test(
-          '[[716, null], [256, true]] should throw \'AssertionException\' with message: \'Needed val of type \'int\' but found String.\'.',
+          'When [[716, 252], [256, true]] is encoded it should throw \'AssertionException\'',
           () {
-        final exceptionMessage = 'Needed val of type \'bool\' but found int.';
+        final value = [
+          [716, 252],
+          [256, true]
+        ];
+
         expect(
             () => codec.encodeToHex(
-                    registry.getIndex('Vec<(u32, Option<bool>)>'), [
-                  [716, 252],
-                  [256, true]
-                ]),
-            throwsA(predicate((e) =>
-                e is AssertionException && e.toString() == exceptionMessage)));
+                registry.getIndex('Vec<(u32, Option<bool>)>'), value),
+            throwsA(isA<AssertionException>()));
       });
     });
   }
   {
-    //
-    // Testing with Vec<(String, bool)>
-    //
     group('Test Vec<(String, bool)>:', () {
+      // Encode
       test(
-          '[[\'true\', true], [\'false\', false]] when encoded should produce result: \'0x081074727565011466616c736500\'',
+          'When [[\'true\', true], [\'false\', false]] is encoded then it should produce result: \'0x081074727565011466616c736500\'',
           () {
-        var encoded =
+        final expectedValue = '0x081074727565011466616c736500';
+
+        final encodedValue =
             codec.encodeToHex(registry.getIndex('Vec<(String, bool)>'), [
           ['true', true],
           ['false', false]
         ]);
-        expect('0x081074727565011466616c736500', encoded);
+
+        expect(expectedValue, encodedValue);
       });
+
+      // Decode
       test(
-          '\'0x081074727565011466616c736500\' when decoded should produce result: [[\'true\', true], [\'false\', false]]',
+          'When \'0x081074727565011466616c736500\' is decoded then it should produce result: [[\'true\', true], [\'false\', false]]',
           () {
-        var decoded = codec.decodeBinary(
-            registry.getIndex('Vec<(String, bool)>'),
-            '0x081074727565011466616c736500');
-        expect([
+        final expectedValue = [
           ['true', true],
           ['false', false]
-        ], decoded);
+        ];
+
+        final decodedValue = codec.decodeBinary(
+            registry.getIndex('Vec<(String, bool)>'),
+            '0x081074727565011466616c736500');
+
+        expect(expectedValue, decodedValue);
       });
     });
   }
@@ -349,54 +387,55 @@ void main() {
     //
     group('Test Vec<(u32, u32, u16)>:', () {
       test(
-          '[[716, 47054848, 0], [256, 0, 0]] when encoded should produce result: \'0x08cc0200000000ce02000000010000000000000000\'',
+          'When [[716, 47054848, 0], [256, 0, 0]] is encoded then it should produce result: \'0x08cc0200000000ce02000000010000000000000000\'',
           () {
-        var encoded =
+        final expectedValue = '0x08cc0200000000ce02000000010000000000000000';
+
+        final encodedValue =
             codec.encodeToHex(registry.getIndex('Vec<(u32, u32, u16)>'), [
           [716, 47054848, 0],
           [256, 0, 0]
         ]);
-        expect('0x08cc0200000000ce02000000010000000000000000', encoded);
+
+        expect(expectedValue, encodedValue);
       });
       test(
-          '\'0x08cc0200000000ce02000000010000000000000000\' when decoded should produce result: [[716, 47054848, 0], [256, 0, 0]]',
+          'When \'0x08cc0200000000ce02000000010000000000000000\' is decoded then it should produce result: [[716, 47054848, 0], [256, 0, 0]]',
           () {
-        var decoded = codec.decodeBinary(
-            registry.getIndex('Vec<(u32, u32, u16)>'),
-            '0x08cc0200000000ce02000000010000000000000000');
-        expect([
+        final expectedValue = [
           [716, 47054848, 0],
           [256, 0, 0]
-        ], decoded);
+        ];
+
+        final decodedValue = codec.decodeBinary(
+            registry.getIndex('Vec<(u32, u32, u16)>'),
+            '0x08cc0200000000ce02000000010000000000000000');
+
+        expect(expectedValue, decodedValue);
       });
     });
 
     group('Encode Exception Test Vec<(u32, u32, u16)>:', () {
       test(
-          '[[716, 47054848], [256, 0, 0]] should throw \'AssertionException\' with message: \'Incorrect length of values to unwrap to tuple.\'.',
+          'When [[716, 47054848], [256, 0, 0]] is encoded then it should throw \'AssertionException\'',
           () {
-        final exceptionMessage =
-            'Incorrect length of values to unwrap to tuple.';
         expect(
             () => codec.encodeToHex(registry.getIndex('Vec<(u32, u32, u16)>'), [
                   [716, 47054848],
                   [256, 0, 0]
                 ]),
-            throwsA(predicate((e) =>
-                e is AssertionException && e.toString() == exceptionMessage)));
+            throwsA(isA<AssertionException>()));
       });
 
       test(
-          '[[716, 47054848, \'0\'], [256, \'0\', \'0\']] should throw \'AssertionException\' with message: \'Needed val of type \'int\' but found String.\'.',
+          'When [[716, 47054848, \'0\'], [256, \'0\', \'0\']] is encoded then it should throw \'AssertionException\'',
           () {
-        final exceptionMessage = 'Needed val of type \'int\' but found String.';
         expect(
             () => codec.encodeToHex(registry.getIndex('Vec<(u32, u32, u16)>'), [
                   [716, 47054848, '0'],
                   ['256', '0', '0']
                 ]),
-            throwsA(predicate((e) =>
-                e is AssertionException && e.toString() == exceptionMessage)));
+            throwsA(isA<AssertionException>()));
       });
     });
   }
