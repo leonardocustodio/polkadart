@@ -11,14 +11,10 @@ on:
       - reopened
       - synchronize
       - ready_for_review
-    paths-ignore:
-      - '**.md'
   push:
     branches:
       - master
       - main
-    paths-ignore:
-      - '**.md'
 
 # Declare default permissions as read only.
 permissions: read-all
