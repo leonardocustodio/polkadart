@@ -39,7 +39,7 @@ void main() {
         final String expectedValue = '0x08ffff';
         final String encodedValue =
             codec.encodeToHex(registry.getIndex('Vec<u8>'), [255, 255]);
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
 
       // Decode
@@ -48,7 +48,7 @@ void main() {
         final expectedValue = [255, 255];
         final decodedValue =
             codec.decodeBinary(registry.getIndex('Vec<u8>'), '0x08ffff');
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
   }
@@ -64,7 +64,7 @@ void main() {
         final String encodedValue = codec
             .encodeToHex(registry.getIndex('Vec<Option<u8>>'), [255, null]);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
 
       // Decode
@@ -76,7 +76,7 @@ void main() {
         final decodedValue = codec.decodeBinary(
             registry.getIndex('Vec<Option<u8>>'), '0x0801ff00');
 
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
   }
@@ -92,7 +92,7 @@ void main() {
         final encodedValue =
             codec.encodeToHex(registry.getIndex('Vec<u256>'), values);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
 
       // Decode
@@ -101,7 +101,7 @@ void main() {
           () {
         var decoded = codec.decodeBinary(registry.getIndex('Vec<u256>'),
             '0x080000000000000000000000000000000000000000000000000000000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
-        expect(values, decoded);
+        expect(decoded, values);
       });
     });
   }
@@ -116,7 +116,7 @@ void main() {
         final encoded =
             codec.encodeToHex(registry.getIndex('Vec<i256>'), values);
 
-        expect(expectedValue, encoded);
+        expect(encoded, expectedValue);
       });
 
       // Decode
@@ -126,7 +126,7 @@ void main() {
         final expectedValue = values;
         final decodedvalue = codec.decodeBinary(registry.getIndex('Vec<i256>'),
             '0x0800000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000040');
-        expect(expectedValue, decodedvalue);
+        expect(decodedvalue, expectedValue);
       });
     });
   }
@@ -142,7 +142,7 @@ void main() {
         final encodedValue = codec
             .encodeToHex(registry.getIndex('Vec<bool>'), [false, true, true]);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
       test('When [] is encoded then it should produce result: \'0x00\'', () {
         final expectedValue = '0x00';
@@ -150,7 +150,7 @@ void main() {
         final encodedValue =
             codec.encodeToHex(registry.getIndex('Vec<bool>'), []);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
 
       // Decode
@@ -162,7 +162,7 @@ void main() {
         final decodedValue =
             codec.decodeBinary(registry.getIndex('Vec<bool>'), '0x0c000101');
 
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
   }
@@ -178,7 +178,7 @@ void main() {
         final encodedValue = codec.encodeToHex(
             registry.getIndex('Vec<Option<bool>>'), [false, true, null, true]);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
 
       // Decode
@@ -190,7 +190,7 @@ void main() {
         final decodedValue = codec.decodeBinary(
             registry.getIndex('Vec<Option<bool>>'), '0x1001000101000101');
 
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
   }
@@ -209,7 +209,7 @@ void main() {
           [1, 2, 3, 4]
         ]);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
 
       // Decode
@@ -224,7 +224,7 @@ void main() {
         final decodedValue = codec.decodeBinary(
             registry.getIndex('Vec<Vec<u8>>'), '0x0808ffff1001020304');
 
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
   }
@@ -241,7 +241,7 @@ void main() {
         final encodedValue = codec.encodeToHex(registry.getIndex('Vec<Text>'),
             ["Hamlet", "Война и мир", "三国演义", "أَلْف لَيْلَة وَلَيْلَة‎"]);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
 
       // Decode
@@ -258,7 +258,7 @@ void main() {
         final decodedValue = codec.decodeBinary(registry.getIndex('Vec<Text>'),
             '0x101848616d6c657450d092d0bed0b9d0bdd0b020d0b820d0bcd0b8d18030e4b889e59bbde6bc94e4b989bcd8a3d98ed984d992d98120d984d98ed98ad992d984d98ed8a920d988d98ed984d98ed98ad992d984d98ed8a9e2808e');
 
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
 
@@ -298,7 +298,7 @@ void main() {
           [256, true]
         ]);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
       test(
           'When \'0x08cc02000000000100000101\' is decoded then it should produce result: [[716, null], [256, true]]',
@@ -312,7 +312,7 @@ void main() {
             registry.getIndex('Vec<(u32, Option<bool>)>'),
             '0x08cc02000000000100000101');
 
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
 
@@ -360,7 +360,7 @@ void main() {
           ['false', false]
         ]);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
 
       // Decode
@@ -376,7 +376,7 @@ void main() {
             registry.getIndex('Vec<(String, bool)>'),
             '0x081074727565011466616c736500');
 
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
   }
@@ -397,7 +397,7 @@ void main() {
           [256, 0, 0]
         ]);
 
-        expect(expectedValue, encodedValue);
+        expect(encodedValue, expectedValue);
       });
       test(
           'When \'0x08cc0200000000ce02000000010000000000000000\' is decoded then it should produce result: [[716, 47054848, 0], [256, 0, 0]]',
@@ -411,7 +411,7 @@ void main() {
             registry.getIndex('Vec<(u32, u32, u16)>'),
             '0x08cc0200000000ce02000000010000000000000000');
 
-        expect(expectedValue, decodedValue);
+        expect(decodedValue, expectedValue);
       });
     });
 
