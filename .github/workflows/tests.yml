@@ -11,10 +11,14 @@ on:
       - reopened
       - synchronize
       - ready_for_review
+    paths-ignore:
+      - '**.md'
   push:
     branches:
       - master
       - main
+    paths-ignore:
+      - '**.md'
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -32,7 +36,7 @@ jobs:
 
   ss58_codec:
     name: Test ss58_codec
-    needs: [lints, markdown-link-check]
+    needs: [lints]
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "ss58_codec"
@@ -40,7 +44,7 @@ jobs:
 
   ss58:
     name: Test ss58
-    needs: [lints, markdown-link-check]
+    needs: [lints]
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "ss58"
@@ -48,12 +52,12 @@ jobs:
 
   polkadart_scale_codec:
     name: Test polkadart_scale_codec
-    needs: [lints, markdown-link-check]
+    needs: [lints]
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "polkadart_scale_codec"
       working-directory: "./packages/polkadart_scale_codec"
-#
+
 #  polkadart:
 #    name: Test polkadart
 #    needs: [lints, markdown-link-check]
