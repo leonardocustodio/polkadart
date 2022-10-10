@@ -348,6 +348,7 @@ class Codec {
   /// Encodes Tuple
   void _encodeTuple(TupleType def, dynamic val, HexSink sink) {
     if (def.tuple.isEmpty) {
+      assertNotNull(val == null);
       return;
     }
     assertionCheck(val is List,
