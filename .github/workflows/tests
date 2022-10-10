@@ -1,0 +1,63 @@
+name: Tests
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+      - develop
+      - release-v*
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  push:
+    branches:
+      - master
+      - main
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  lints:
+    name: Check code lints
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3.1.0
+
+      - name: Check TOML Format
+        uses: dprint/check@v2.1
+
+  ss58_codec:
+    name: Test ss58_codec
+    needs: [lints, markdown-link-check]
+    uses: ./.github/workflows/reuseable_workflow.yml
+    with:
+      codecov-flag: "ss58_codec"
+      working-directory: "./packages/ss58_codec"
+
+  ss58:
+    name: Test ss58
+    needs: [lints, markdown-link-check]
+    uses: ./.github/workflows/reuseable_workflow.yml
+    with:
+      codecov-flag: "ss58"
+      working-directory: "./packages/ss58"
+
+  polkadart_scale_codec:
+    name: Test polkadart_scale_codec
+    needs: [lints, markdown-link-check]
+    uses: ./.github/workflows/reuseable_workflow.yml
+    with:
+      codecov-flag: "polkadart_scale_codec"
+      working-directory: "./packages/polkadart_scale_codec"
+#
+#  polkadart:
+#    name: Test polkadart
+#    needs: [lints, markdown-link-check]
+#    uses: ./.github/workflows/reuseable_workflow.yml
+#    with:
+#      codecov-flag: "polkadart"
+#      working-directory: "./polkadart"
