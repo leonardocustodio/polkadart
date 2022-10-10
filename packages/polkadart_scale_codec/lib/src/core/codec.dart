@@ -92,9 +92,9 @@ class Codec {
   /// var result = codec.decode(registry.use('Option<u8>'), '0x0108'); // 8
   /// ```
   dynamic decode(int type, dynamic data) {
-    Source src = Source(data);
-    var val = _decode(type, src);
-    src.assertEOF();
+    Source source = Source(data);
+    var val = _decodeFromSource(type, source);
+    source.assertEOF();
     return val;
   }
 
@@ -142,7 +142,7 @@ class Codec {
   /// ```
   String encode(int type, dynamic val) {
     var sink = HexSink();
-    _encode(type, val, sink);
+    _encodeWithHexSink(type, val, sink);
     return sink.toHex();
   }
 
@@ -150,37 +150,37 @@ class Codec {
   ///
   ///Example:
   /// ```dart
-  /// Src src = Source('0x0108');
-  /// var result = codec._decode(registry.use('Option<u8>'), src); // 8
+  /// Source source = Source('0x0108');
+  /// var result = codec._decode(registry.use('Option<u8>'), source); // 8
   /// ```
   ///
   /// Throws `UnexpectedCaseException` if the type is not recognised.
-  dynamic _decode(int type, Source src) {
+  dynamic _decodeFromSource(int type, Source source) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
         return _decodePrimitiveFromSource(
-            (def as PrimitiveType).primitive, src);
+            (def as PrimitiveType).primitive, source);
       case TypeKind.Compact:
-        return _decodeCompact((def as CodecCompactType), src);
+        return _decodeCompact((def as CodecCompactType), source);
       case TypeKind.BitSequence:
-        return _decodeBitSequence(src);
+        return _decodeBitSequence(source);
       case TypeKind.Array:
-        return _decodeArray((def as ArrayType), src);
+        return _decodeArray((def as ArrayType), source);
       case TypeKind.Sequence:
-        return _decodeSequence((def as SequenceType), src);
+        return _decodeSequence((def as SequenceType), source);
       case TypeKind.Tuple:
-        return _decodeTuple((def as TupleType), src);
+        return _decodeTuple((def as TupleType), source);
       case TypeKind.Struct:
-        return _decodeStruct((def as CodecStructType), src);
+        return _decodeStruct((def as CodecStructType), source);
       case TypeKind.Variant:
-        return _decodeVariant((def as CodecVariantType), src);
+        return _decodeVariant((def as CodecVariantType), source);
       case TypeKind.Option:
-        return _decodeOption((def as OptionType), src);
+        return _decodeOption((def as OptionType), source);
       case TypeKind.Bytes:
-        return _decodeBytes(src);
+        return _decodeBytes(source);
       case TypeKind.BytesArray:
-        return src.bytes((def as CodecBytesArrayType).len);
+        return source.bytes((def as CodecBytesArrayType).len);
       default:
         throw UnexpectedCaseException(
             'Unexpected TypeKind: ${(def as Type).kind}.');
@@ -188,52 +188,52 @@ class Codec {
   }
 
   /// Decodes Array
-  List<dynamic> _decodeArray(ArrayType def, Source src) {
+  List<dynamic> _decodeArray(ArrayType def, Source source) {
     int len = def.len;
     int type = def.type;
     List<dynamic> result = <dynamic>[]..length = len;
 
     for (var i = 0; i < len; i++) {
-      result[i] = _decode(type, src);
+      result[i] = _decodeFromSource(type, source);
     }
     return result;
   }
 
   /// Decodes Bit Sequence
-  List<dynamic> _decodeSequence(SequenceType def, Source src) {
-    int len = src.compactLength();
+  List<dynamic> _decodeSequence(SequenceType def, Source source) {
+    int len = source.compactLength();
     List<dynamic> result = <dynamic>[]..length = len;
     for (var i = 0; i < len; i++) {
-      result[i] = _decode(def.type, src);
+      result[i] = _decodeFromSource(def.type, source);
     }
     return result;
   }
 
   /// Decodes Tuple
-  List<dynamic>? _decodeTuple(TupleType def, Source src) {
+  List<dynamic>? _decodeTuple(TupleType def, Source source) {
     if (def.tuple.isEmpty) {
       return null;
     }
     List<dynamic> result = <dynamic>[]..length = def.tuple.length;
     for (var i = 0; i < def.tuple.length; i++) {
-      result[i] = _decode(def.tuple[i], src);
+      result[i] = _decodeFromSource(def.tuple[i], source);
     }
     return result;
   }
 
   /// Decodes Struct
-  Map<String, dynamic> _decodeStruct(CodecStructType def, Source src) {
+  Map<String, dynamic> _decodeStruct(CodecStructType def, Source source) {
     Map<String, dynamic> result = <String, dynamic>{};
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
-      result[f.name] = _decode(f.type, src);
+      result[f.name] = _decodeFromSource(f.type, source);
     }
     return result;
   }
 
   /// Decodes Variant
-  Map<String, dynamic> _decodeVariant(CodecVariantType def, Source src) {
-    var idx = src.u8();
+  Map<String, dynamic> _decodeVariant(CodecVariantType def, Source source) {
+    var idx = source.u8();
     CodecVariant? variant =
         idx < def.variants.length ? def.variants[idx] : null;
     if (variant == null) {
@@ -244,16 +244,16 @@ class Codec {
         return <String, dynamic>{'__kind': variant.name};
       case CodecVariantKind.tuple:
         return <String, dynamic>{
-          variant.name: _decodeTuple((variant as CodecTupleVariant).def, src)
+          variant.name: _decodeTuple((variant as CodecTupleVariant).def, source)
         };
       case CodecVariantKind.value:
         return <String, dynamic>{
-          variant.name: _decode((variant as CodecValueVariant).type, src)
+          variant.name: _decodeFromSource((variant as CodecValueVariant).type, source)
         };
       case CodecVariantKind.struct:
         {
           Map<String, dynamic> value =
-              _decodeStruct((variant as CodecStructVariant).def, src);
+              _decodeStruct((variant as CodecStructVariant).def, source);
           value['__kind'] = variant.name;
           return value;
         }
@@ -261,13 +261,13 @@ class Codec {
   }
 
   /// Decodes Option
-  dynamic _decodeOption(OptionType def, Source src) {
-    int byte = src.u8();
+  dynamic _decodeOption(OptionType def, Source source) {
+    int byte = source.u8();
     switch (byte) {
       case 0:
         return null;
       case 1:
-        return _decode(def.type, src);
+        return _decodeFromSource(def.type, source);
       default:
         throw InvalidOptionByteException('Invalid Option byte: $byte.');
     }
@@ -283,7 +283,7 @@ class Codec {
   /// hexSink.toHex(); // '0x0108'
   ///
   /// ```
-  void _encode(int type, dynamic val, HexSink sink) {
+  void _encodeWithHexSink(int type, dynamic val, HexSink sink) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
@@ -330,7 +330,7 @@ class Codec {
     assertionCheck(val is List && val.length == def.len);
 
     for (var i = 0; i < val.length; i++) {
-      _encode(def.type, val[i], sink);
+      _encodeWithHexSink(def.type, val[i], sink);
     }
   }
 
@@ -340,7 +340,7 @@ class Codec {
     assertionCheck(val is List);
     sink.compact((val as List).length);
     for (var i = 0; i < val.length; i++) {
-      _encode(def.type, val[i], sink);
+      _encodeWithHexSink(def.type, val[i], sink);
     }
   }
 
@@ -356,7 +356,7 @@ class Codec {
     assertionCheck(def.tuple.length == val.length,
         'Incorrect length of values to unwrap to tuple.');
     for (var i = 0; i < val.length; i++) {
-      _encode(def.tuple[i], val[i], sink);
+      _encodeWithHexSink(def.tuple[i], val[i], sink);
     }
   }
 
@@ -365,7 +365,7 @@ class Codec {
   void _encodeStruct(CodecStructType def, dynamic val, HexSink sink) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
-      _encode(f.type, val[f.name], sink);
+      _encodeWithHexSink(f.type, val[f.name], sink);
     }
   }
 
@@ -382,7 +382,7 @@ class Codec {
           case CodecVariantKind.empty:
             break;
           case CodecVariantKind.value:
-            _encode((variant as CodecValueVariant).type, val[key], sink);
+            _encodeWithHexSink((variant as CodecValueVariant).type, val[key], sink);
             break;
           case CodecVariantKind.tuple:
             _encodeTuple(
@@ -403,15 +403,15 @@ class Codec {
       sink.u8(0);
     } else {
       sink.u8(1);
-      _encode(def.type, val, sink);
+      _encodeWithHexSink(def.type, val, sink);
     }
   }
 
   ///
   /// Decodes Bytes
-  List<int> _decodeBytes(Source src) {
-    int len = src.compactLength();
-    return src.bytes(len).toList();
+  List<int> _decodeBytes(Source source) {
+    int len = source.compactLength();
+    return source.bytes(len).toList();
   }
 
   ///
@@ -435,9 +435,9 @@ class Codec {
 
   ///
   /// Decodes Bit Sequence
-  Uint8List _decodeBitSequence(Source src) {
-    var len = (src.compactLength() / 8).ceil();
-    return src.bytes(len);
+  Uint8List _decodeBitSequence(Source source) {
+    var len = (source.compactLength() / 8).ceil();
+    return source.bytes(len);
   }
 
   ///
@@ -451,8 +451,8 @@ class Codec {
 
   ///
   /// Returns: `BigInt` | `int`
-  dynamic _decodeCompact(CodecCompactType type, Source src) {
-    var n = src.compact();
+  dynamic _decodeCompact(CodecCompactType type, Source source) {
+    var n = source.compact();
 
     // n is either [BigInt] or [int]
     switch (type.integer) {
@@ -465,43 +465,43 @@ class Codec {
     }
   }
 
-  /// Decodes [src] object when Primitive is known.
-  dynamic _decodePrimitiveFromSource(Primitive type, Source src) {
+  /// Decodes [source] object when Primitive is known.
+  dynamic _decodePrimitiveFromSource(Primitive type, Source source) {
     switch (type) {
       case Primitive.I8:
-        return src.i8();
+        return source.i8();
       case Primitive.U8:
-        return src.u8();
+        return source.u8();
       case Primitive.I16:
-        return src.i16();
+        return source.i16();
       case Primitive.U16:
-        return src.u16();
+        return source.u16();
       case Primitive.I32:
-        return src.i32();
+        return source.i32();
       case Primitive.U32:
-        return src.u32();
+        return source.u32();
       case Primitive.I64:
-        return src.i64();
+        return source.i64();
       case Primitive.U64:
-        return src.u64();
+        return source.u64();
       case Primitive.I128:
-        return src.i128();
+        return source.i128();
       case Primitive.U128:
-        return src.u128();
+        return source.u128();
       case Primitive.I256:
-        return src.i256();
+        return source.i256();
       case Primitive.U256:
-        return src.u256();
+        return source.u256();
       case Primitive.Boolean:
-        return src.boolean();
+        return source.boolean();
       case Primitive.Str:
-        return src.str();
+        return source.str();
       default:
         throw UnexpectedCaseException('Unexpected PrimitiveType: $type.');
     }
   }
 
-  /// Encodes [src] object to `sink` when [Primitive] is know
+  /// Encodes [source] object to `sink` when [Primitive] is know
   void _encodePrimitive(Primitive type, dynamic val, HexSink sink) {
     switch (type) {
       case Primitive.I8:
