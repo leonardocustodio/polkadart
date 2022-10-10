@@ -11,7 +11,7 @@ void unCompactHexFromSource(String compactedHex, dynamic expectedVal) {
       () {
     final source = Source(compactedHex);
 
-    var computedVal = source.compact();
+    var computedVal = source.uncompact();
 
     expect(computedVal, expectedVal);
   });
@@ -65,47 +65,6 @@ void main() {
     unCompactHexFromSource(
         '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         2.toBigInt.pow(536.toBigInt.toInt()) - 1.toBigInt);
-  });
-
-  group('Exception on Compact:', () {
-    test(
-        'When compacted with highest + 1 value as int, it will throw \'IncompatibleCompactException\'',
-        () {
-      // highest + 1 value
-      final val = 2.toBigInt.pow(536.toBigInt.toInt());
-
-      // Sink Object
-      final sink = HexSink();
-
-      // Match exception
-      expect(() => sink.compact(val),
-          throwsA(isA<IncompatibleCompactException>()));
-    });
-    test(
-        'When compacted with highest + 1 value as BigInt, it will throw \'IncompatibleCompactException\'',
-        () {
-      // highest + 1 value
-      final val = 2.toBigInt.pow(536.toBigInt.toInt()).toInt();
-
-      // Sink Object
-      final sink = HexSink();
-
-      // Match exception
-      expect(() => sink.compact(val),
-          throwsA(isA<IncompatibleCompactException>()));
-    });
-    test(
-        'When compacted with -1 value, it will throw \'IncompatibleCompactException\'',
-        () {
-      // lowest - 1 value
-      final val = -1;
-      // Sink Object
-      final sink = HexSink();
-
-      // Match exception
-      expect(() => sink.compact(val),
-          throwsA(isA<IncompatibleCompactException>()));
-    });
   });
 
   group('Testing Primitives with Sink:', () {

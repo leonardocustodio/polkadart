@@ -454,7 +454,7 @@ class Codec {
   ///
   /// Returns: `BigInt` | `int`
   dynamic _decodeCompact(CodecCompactType type, Source source) {
-    var n = source.compact();
+    var n = source.uncompact();
 
     // n is either [BigInt] or [int]
     switch (type.integer) {
