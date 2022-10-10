@@ -248,7 +248,8 @@ class Codec {
         };
       case CodecVariantKind.value:
         return <String, dynamic>{
-          variant.name: _decodeFromSource((variant as CodecValueVariant).type, source)
+          variant.name:
+              _decodeFromSource((variant as CodecValueVariant).type, source)
         };
       case CodecVariantKind.struct:
         {
@@ -382,7 +383,8 @@ class Codec {
           case CodecVariantKind.empty:
             break;
           case CodecVariantKind.value:
-            _encodeWithHexSink((variant as CodecValueVariant).type, val[key], sink);
+            _encodeWithHexSink(
+                (variant as CodecValueVariant).type, val[key], sink);
             break;
           case CodecVariantKind.tuple:
             _encodeTuple(
