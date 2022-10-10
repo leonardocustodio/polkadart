@@ -81,3 +81,10 @@ class UnexpectedTypeException implements Exception {
   @override
   String toString() => msg ?? 'Unexpected type.';
 }
+
+class UnprocessedDataLeftException implements Exception {
+  const UnprocessedDataLeftException();
+
+  @override
+  String toString() => 'Unprocessed data left';
+}
