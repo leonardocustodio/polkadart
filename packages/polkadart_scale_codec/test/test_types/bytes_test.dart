@@ -18,7 +18,7 @@ void main() {
   // Encode type: `Bytes`
   group('Encode Bytes:', () {
     test('\'0xffff\' when encoded must produce result \'0x08ffff\'', () {
-      final encoded = codec.encodeToHex(usageIndex, '0xffff');
+      final encoded = codec.encode(usageIndex, '0xffff');
       expect('0x08ffff', encoded);
     });
   });
@@ -27,7 +27,7 @@ void main() {
   // Decode type: `Bytes`
   group('Decode Bytes:', () {
     test('\'0x08ffff\' when decoded must produce result \'[255, 255]\'', () {
-      final decoded = codec.decodeBinary(usageIndex, '0x08ffff');
+      final decoded = codec.decode(usageIndex, '0x08ffff');
       expect([255, 255], decoded);
     });
   });
@@ -39,7 +39,7 @@ void main() {
       final exceptionMessage =
           'Unable to encode due to invalid byte type, Try to pass \'Hex String\' or \'List<int>\'.';
       expect(
-          () => codec.encodeToHex(usageIndex, 0),
+          () => codec.encode(usageIndex, 0),
           throwsA(predicate((e) =>
               e is AssertionException && e.toString() == exceptionMessage)));
     });
@@ -47,7 +47,7 @@ void main() {
     test('should throw \'EOFException\' when trying to decode \'0x08ff\'', () {
       final exceptionMessage = 'Unexpected end of file/source exception.';
       expect(
-          () => codec.decodeBinary(usageIndex, '0x08ff'),
+          () => codec.decode(usageIndex, '0x08ff'),
           throwsA(predicate(
               (e) => e is EOFException && e.toString() == exceptionMessage)));
     });
