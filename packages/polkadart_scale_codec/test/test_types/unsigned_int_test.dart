@@ -26,7 +26,9 @@ void main() {
     final codec = Codec(types);
 
     group('fixed-length 8bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         int value = 69;
         String expectedResult = '0x45';
 
@@ -74,10 +76,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        int? value;
+        int registryIndex = registry.getIndex('u8');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is a BigInt', () {
+        BigInt value = 5.toBigInt;
+        int registryIndex = registry.getIndex('u8');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not an Integer', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('u8');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 16bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         int value = 42;
         String expectedResult = '0x2a00';
 
@@ -125,10 +159,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        int? value;
+        int registryIndex = registry.getIndex('u16');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is a BigInt', () {
+        BigInt value = 5.toBigInt;
+        int registryIndex = registry.getIndex('u16');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not an Integer', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('u16');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 32bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         int value = 16777215;
         String expectedResult = '0xffffff00';
 
@@ -177,10 +243,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        int? value;
+        int registryIndex = registry.getIndex('u32');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is a BigInt', () {
+        BigInt value = 5.toBigInt;
+        int registryIndex = registry.getIndex('u32');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not an Integer', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('u32');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 64bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         BigInt value = BigInt.from(16777215);
         String expectedResult = '0xffffff0000000000';
 
@@ -231,10 +329,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        BigInt? value;
+        int registryIndex = registry.getIndex('u64');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is an Integer', () {
+        int value = 5;
+        int registryIndex = registry.getIndex('u64');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not an BigInt', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('u64');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 128bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         BigInt value = BigInt.from(16777215);
         String expectedResult = '0xffffff00000000000000000000000000';
 
@@ -285,10 +415,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        int? value;
+        int registryIndex = registry.getIndex('u128');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is an Integer', () {
+        int value = 5;
+        int registryIndex = registry.getIndex('u128');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not a BigInt', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('u128');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 256bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         BigInt value = BigInt.from(16777215);
         String expectedResult =
             '0xffffff0000000000000000000000000000000000000000000000000000000000';
@@ -342,6 +504,36 @@ void main() {
         expect(
           () => codec.encodeToHex(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is null', () {
+        BigInt? value;
+        int registryIndex = registry.getIndex('u256');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is a Integer', () {
+        int value = 5;
+        int registryIndex = registry.getIndex('u256');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not a BigInt', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('u256');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
         );
       });
     });

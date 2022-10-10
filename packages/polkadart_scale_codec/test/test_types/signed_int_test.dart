@@ -27,9 +27,20 @@ void main() {
     final codec = Codec(types);
 
     group('fixed-length 8bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         int value = 69;
         String expectedResult = '0x45';
+
+        int registryIndex = registry.getIndex('i8');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is zero', () {
+        int value = 0;
+        String expectedResult = '0x00';
 
         int registryIndex = registry.getIndex('i8');
 
@@ -75,10 +86,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        int? value;
+        int registryIndex = registry.getIndex('i8');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is a BigInt', () {
+        BigInt value = 5.toBigInt;
+        int registryIndex = registry.getIndex('i8');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not an Integer', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('i8');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 16bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         int value = 42;
         String expectedResult = '0x2a00';
 
@@ -90,6 +133,15 @@ void main() {
       test('Should return correct encoded data when value is -32768', () {
         int value = -32768;
         String expectedResult = '0x0080';
+
+        int registryIndex = registry.getIndex('i16');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is zero', () {
+        int value = 0;
+        String expectedResult = '0x0000';
 
         int registryIndex = registry.getIndex('i16');
 
@@ -127,10 +179,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        int? value;
+        int registryIndex = registry.getIndex('i16');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is a BigInt', () {
+        BigInt value = 5.toBigInt;
+        int registryIndex = registry.getIndex('i16');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not an Integer', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('i16');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 32bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         int value = 16777215;
         String expectedResult = '0xffffff00';
 
@@ -142,6 +226,15 @@ void main() {
       test('Should return correct encoded data when value is -2147483648', () {
         int value = -2147483648;
         String expectedResult = '0x00000080';
+
+        int registryIndex = registry.getIndex('i32');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is 0', () {
+        int value = 0;
+        String expectedResult = '0x00000000';
 
         int registryIndex = registry.getIndex('i32');
 
@@ -180,10 +273,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        int? value;
+        int registryIndex = registry.getIndex('i32');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is a BigInt', () {
+        BigInt value = 5.toBigInt;
+        int registryIndex = registry.getIndex('i32');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not an Integer', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('i32');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 64bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         BigInt value = BigInt.from(16777215);
         String expectedResult = '0xffffff0000000000';
 
@@ -197,6 +322,15 @@ void main() {
           () {
         BigInt value = BigInt.from(-9223372036854775808);
         String expectedResult = '0x0000000000000080';
+
+        int registryIndex = registry.getIndex('i64');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is zero', () {
+        BigInt value = BigInt.from(0);
+        String expectedResult = '0x0000000000000000';
 
         int registryIndex = registry.getIndex('i64');
 
@@ -237,10 +371,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        BigInt? value;
+        int registryIndex = registry.getIndex('i64');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is an Integer', () {
+        int value = 5;
+        int registryIndex = registry.getIndex('i64');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not an BigInt', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('i64');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 128bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         BigInt value = BigInt.from(16777215);
         String expectedResult = '0xffffff00000000000000000000000000';
 
@@ -254,6 +420,15 @@ void main() {
           () {
         BigInt value = BigInt.parse('-170141183460469231731687303715884105728');
         String expectedResult = '0x00000000000000000000000000000080';
+
+        int registryIndex = registry.getIndex('i128');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is zero', () {
+        BigInt value = BigInt.from(0);
+        String expectedResult = '0x00000000000000000000000000000000';
 
         int registryIndex = registry.getIndex('i128');
 
@@ -294,10 +469,42 @@ void main() {
           throwsA(isA<InvalidSizeException>()),
         );
       });
+
+      test('Should throw AssertionException when value is null', () {
+        int? value;
+        int registryIndex = registry.getIndex('i128');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is an Integer', () {
+        int value = 5;
+        int registryIndex = registry.getIndex('i128');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not a BigInt', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('i128');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
     });
 
     group('fixed-length 256bit', () {
-      test('Should encode and return correct value ', () {
+      test(
+          'Given a positive integer when it is within range it should be encoded',
+          () {
         BigInt value = BigInt.from(16777215);
         String expectedResult =
             '0xffffff0000000000000000000000000000000000000000000000000000000000';
@@ -314,6 +521,16 @@ void main() {
             '-57896044618658097711785492504343953926634992332820282019728792003956564819968');
         String expectedResult =
             '0x0000000000000000000000000000000000000000000000000000000000000080';
+
+        int registryIndex = registry.getIndex('i256');
+
+        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      });
+
+      test('Should return correct encoded data when value is zero', () {
+        BigInt value = BigInt.from(0);
+        String expectedResult =
+            '0x0000000000000000000000000000000000000000000000000000000000000000';
 
         int registryIndex = registry.getIndex('i256');
 
@@ -356,6 +573,36 @@ void main() {
         expect(
           () => codec.encodeToHex(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is null', () {
+        BigInt? value;
+        int registryIndex = registry.getIndex('i256');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is a Integer', () {
+        int value = 5;
+        int registryIndex = registry.getIndex('i256');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
+        );
+      });
+
+      test('Should throw AssertionException when value is not a BigInt', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('i256');
+
+        expect(
+          () => codec.encodeToHex(registryIndex, value),
+          throwsA(isA<AssertionException>()),
         );
       });
     });

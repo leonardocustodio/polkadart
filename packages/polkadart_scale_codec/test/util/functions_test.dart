@@ -4,22 +4,22 @@ import 'package:test/scaffolding.dart';
 
 void main() {
   group('functions checkSignedInt()', () {
-    test('Should returns normally when bitSize is 8', () {
+    test('Given bitSize is 8 and value is within range check should pass', () {
       int bitSize = 8;
       int value = 10;
 
       expect(() => checkSignedInt(value, bitSize), returnsNormally);
     });
 
-    test('Should returns normally when bitSize is 16', () {
+    test('Given bitSize is 16 and value is within range check should pass', () {
       int bitSize = 16;
       int value = 10;
 
       expect(() => checkSignedInt(value, bitSize), returnsNormally);
     });
 
-    test('Should returns normally when bitSize is 32', () {
-      int bitSize = 16;
+    test('Given bitSize is 32 and value is within range check should pass', () {
+      int bitSize = 32;
       int value = 10;
 
       expect(() => checkSignedInt(value, bitSize), returnsNormally);
@@ -45,21 +45,23 @@ void main() {
   });
 
   group('functions checkSignedBigInt()', () {
-    test('Should returns normally when bitSize is 64', () {
+    test('Given bitSize is 64 and value is within range check should pass', () {
       int bitSize = 64;
       BigInt value = BigInt.from(10);
 
       expect(() => checkSignedBigInt(value, bitSize), returnsNormally);
     });
 
-    test('Should returns normally when bitSize is 128', () {
+    test('Given bitSize is 128 and value is within range check should pass',
+        () {
       int bitSize = 128;
       BigInt value = BigInt.from(10);
 
       expect(() => checkSignedBigInt(value, bitSize), returnsNormally);
     });
 
-    test('Should returns normally when bitSize is 256', () {
+    test('Given bitSize is 256 and value is within range check should pass',
+        () {
       int bitSize = 256;
       BigInt value = BigInt.from(10);
 
