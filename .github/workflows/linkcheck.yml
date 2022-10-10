@@ -1,0 +1,37 @@
+name: Link Check
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+      - develop
+      - release-v*
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths-ignore:
+      - '**.md'
+  push:
+    branches:
+      - master
+      - main
+    paths-ignore:
+      - '**.md'
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  markdown-link-check:
+    name: Markdown link checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3.1.0
+
+      - name: Link check
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: "yes"
