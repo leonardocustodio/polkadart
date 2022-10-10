@@ -1,4 +1,4 @@
-final typesAlias = <String, Map<String, String>>{
+final substrateTypesAlias = <String, Map<String, String>>{
   'assets': {
     'Approval': 'AssetApproval',
     'ApprovalKey': 'AssetApprovalKey',

@@ -1,4 +1,4 @@
-const types = {
+const substrateTypes = {
   'GenericAccountId': '[u8; 32]',
   'GenericAccountIndex': 'u32',
   'GenericLookupSource': 'DoNotConstruct',
