@@ -351,10 +351,8 @@ class Codec {
       assert(val == null);
       return;
     }
-    if (val is! List) {
-      throw UnexpectedCaseException(
-          'List of values need to unwrap to tuple, but found \'${val.runtimeType}\'.');
-    }
+    assertionCheck(val is List,
+        'List of values need to unwrap to tuple, but found \'${val.runtimeType}\'.');
     assertionCheck(def.tuple.length == val.length,
         'Incorrect length of values to unwrap to tuple.');
     for (var i = 0; i < val.length; i++) {
