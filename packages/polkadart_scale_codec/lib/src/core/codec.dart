@@ -89,11 +89,11 @@ class Codec {
   /// // Initializing Scale-Codec object
   /// var codec = Codec(types);
   ///
-  /// var result = codec.decodeBinary(registry.use('Option<u8>'), '0x0108'); // 8
+  /// var result = codec.decode(registry.use('Option<u8>'), '0x0108'); // 8
   /// ```
-  dynamic decodeBinary(int type, dynamic data) {
+  dynamic decode(int type, dynamic data) {
     Source src = Source(data);
-    var val = decode(type, src);
+    var val = _decode(type, src);
     src.assertEOF();
     return val;
   }
@@ -138,11 +138,11 @@ class Codec {
   /// // Initializing Scale-Codec object
   /// var codec = Codec(types);
   ///
-  /// var result = codec.encodeToHex(registry.use('Option<u8>'), 8); // '0x0108'
+  /// var result = codec.encode(registry.use('Option<u8>'), 8); // '0x0108'
   /// ```
-  String encodeToHex(int type, dynamic val) {
+  String encode(int type, dynamic val) {
     var sink = HexSink();
-    encode(type, val, sink);
+    _encode(type, val, sink);
     return sink.toHex();
   }
 
@@ -151,11 +151,11 @@ class Codec {
   ///Example:
   /// ```dart
   /// Src src = Source('0x0108');
-  /// var result = codec.decode(registry.use('Option<u8>'), src); // 8
+  /// var result = codec._decode(registry.use('Option<u8>'), src); // 8
   /// ```
   ///
   /// Throws `UnexpectedCaseException` if the type is not recognised.
-  dynamic decode(int type, Source src) {
+  dynamic _decode(int type, Source src) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
@@ -194,7 +194,7 @@ class Codec {
     List<dynamic> result = <dynamic>[]..length = len;
 
     for (var i = 0; i < len; i++) {
-      result[i] = decode(type, src);
+      result[i] = _decode(type, src);
     }
     return result;
   }
@@ -204,7 +204,7 @@ class Codec {
     int len = src.compactLength();
     List<dynamic> result = <dynamic>[]..length = len;
     for (var i = 0; i < len; i++) {
-      result[i] = decode(def.type, src);
+      result[i] = _decode(def.type, src);
     }
     return result;
   }
@@ -216,7 +216,7 @@ class Codec {
     }
     List<dynamic> result = <dynamic>[]..length = def.tuple.length;
     for (var i = 0; i < def.tuple.length; i++) {
-      result[i] = decode(def.tuple[i], src);
+      result[i] = _decode(def.tuple[i], src);
     }
     return result;
   }
@@ -226,7 +226,7 @@ class Codec {
     Map<String, dynamic> result = <String, dynamic>{};
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
-      result[f.name] = decode(f.type, src);
+      result[f.name] = _decode(f.type, src);
     }
     return result;
   }
@@ -248,7 +248,7 @@ class Codec {
         };
       case CodecVariantKind.value:
         return <String, dynamic>{
-          variant.name: decode((variant as CodecValueVariant).type, src)
+          variant.name: _decode((variant as CodecValueVariant).type, src)
         };
       case CodecVariantKind.struct:
         {
@@ -267,7 +267,7 @@ class Codec {
       case 0:
         return null;
       case 1:
-        return decode(def.type, src);
+        return _decode(def.type, src);
       default:
         throw InvalidOptionByteException('Invalid Option byte: $byte.');
     }
@@ -279,11 +279,11 @@ class Codec {
   /// ```dart
   /// // Hex HexSink
   /// var hexSink = HexSink();
-  /// codec.encode(registry.use('Option<u8>'), 8, hexSink);
+  /// codec._encode(registry.use('Option<u8>'), 8, hexSink);
   /// hexSink.toHex(); // '0x0108'
   ///
   /// ```
-  void encode(int type, dynamic val, HexSink sink) {
+  void _encode(int type, dynamic val, HexSink sink) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
@@ -330,7 +330,7 @@ class Codec {
     assertionCheck(val is List && val.length == def.len);
 
     for (var i = 0; i < val.length; i++) {
-      encode(def.type, val[i], sink);
+      _encode(def.type, val[i], sink);
     }
   }
 
@@ -340,7 +340,7 @@ class Codec {
     assertionCheck(val is List);
     sink.compact((val as List).length);
     for (var i = 0; i < val.length; i++) {
-      encode(def.type, val[i], sink);
+      _encode(def.type, val[i], sink);
     }
   }
 
@@ -356,7 +356,7 @@ class Codec {
     assertionCheck(def.tuple.length == val.length,
         'Incorrect length of values to unwrap to tuple.');
     for (var i = 0; i < val.length; i++) {
-      encode(def.tuple[i], val[i], sink);
+      _encode(def.tuple[i], val[i], sink);
     }
   }
 
@@ -365,7 +365,7 @@ class Codec {
   void _encodeStruct(CodecStructType def, dynamic val, HexSink sink) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
-      encode(f.type, val[f.name], sink);
+      _encode(f.type, val[f.name], sink);
     }
   }
 
@@ -382,7 +382,7 @@ class Codec {
           case CodecVariantKind.empty:
             break;
           case CodecVariantKind.value:
-            encode((variant as CodecValueVariant).type, val[key], sink);
+            _encode((variant as CodecValueVariant).type, val[key], sink);
             break;
           case CodecVariantKind.tuple:
             _encodeTuple(
@@ -403,7 +403,7 @@ class Codec {
       sink.u8(0);
     } else {
       sink.u8(1);
-      encode(def.type, val, sink);
+      _encode(def.type, val, sink);
     }
   }
 
