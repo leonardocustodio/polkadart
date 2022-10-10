@@ -205,12 +205,14 @@ class HexSink extends ScaleCodecSink {
   @override
   void write(int byte) {
     _hex += (byte >>> 4).toRadixString(16);
+    print('1) $byte: $_hex');
     _hex += (byte & 15).toRadixString(16);
+    print('2) $byte: $_hex');
   }
 
   @override
   void bytes(List<int> b) {
-    _hex += encodeHex(b.cast<int>()).replaceFirst(RegExp(r'0x'), '');
+    _hex += encodeHex(b).replaceFirst(RegExp(r'0x'), '');
   }
 
   /// Return current hex data

@@ -68,6 +68,93 @@ void main() {
         2.toBigInt.pow(536.toBigInt.toInt()) - 1.toBigInt);
   });
 
+  group('Sink write() Test', () {
+    test('When passed any positive integer, then it generates hex easily.', () {
+      final sink = HexSink();
+
+      sink.write(pow(2, 62) as int);
+
+      final expectedHex = '0x4000000000000000';
+
+      final calculatedHex = sink.toHex();
+
+      expect(calculatedHex, expectedHex);
+    });
+
+    test('When passed any negative integer, then it generates hex easily.', () {
+      final sink = HexSink();
+
+      sink.write(-pow(2, 62) as int);
+
+      final expectedHex = '0xc000000000000000';
+
+      final calculatedHex = sink.toHex();
+      expect(calculatedHex, expectedHex);
+    });
+  });
+
+  group('Sink bytes() Test', () {
+    test('When passed with correct bytes, then it calculates hex easily.', () {
+      final sink = HexSink();
+
+      sink.bytes([
+        68,
+        103,
+        105,
+        116,
+        104,
+        117,
+        98,
+        58,
+        32,
+        106,
+        117,
+        115,
+        116,
+        107,
+        97,
+        119,
+        97,
+        108
+      ]);
+
+      final expectedHex = '0x446769746875623a206a7573746b6177616c';
+
+      final calculatedHex = sink.toHex();
+
+      expect(calculatedHex, expectedHex);
+    });
+
+    test(
+        'When passed with incorrect bytes, then it throws \'UnexpectedCaseException\'',
+        () {
+      final sink = HexSink();
+
+      final bytesValue = [
+        68,
+        103,
+        105,
+        -9,
+        104,
+        117,
+        98,
+        58,
+        32,
+        117,
+        115,
+        116,
+        107,
+        97,
+        119,
+        97,
+        108
+      ];
+
+      expect(() => sink.bytes(bytesValue),
+          throwsA(isA<UnexpectedCaseException>()));
+    });
+  });
+
   group('Exception on Compact:', () {
     test(
         'When compacted with highest + 1 value as int, it will throw \'IncompatibleCompactException\'',

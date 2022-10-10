@@ -25,12 +25,12 @@ void main() {
   group('Encode Result<u8, bool>:', () {
     test('\'{"Ok": 42}\' when encoded must produce result \'0x002a\'', () {
       final encoded =
-          codec.encodeToHex(registry.getIndex('Result<u8, bool>'), {"Ok": 42});
+          codec.encode(registry.getIndex('Result<u8, bool>'), {"Ok": 42});
       expect(encoded, equals('0x002a'));
     });
     test('\'{"Err": 42}\' when encoded must produce result \'0x0100\'', () {
-      final encoded = codec
-          .encodeToHex(registry.getIndex('Result<u8, bool>'), {"Err": false});
+      final encoded =
+          codec.encode(registry.getIndex('Result<u8, bool>'), {"Err": false});
       expect(encoded, equals('0x0100'));
     });
   });
@@ -40,12 +40,12 @@ void main() {
   group('Decode String:', () {
     test('\'0x002a\' when encoded must produce result \'{"Ok": 42}\'', () {
       final decoded =
-          codec.decodeBinary(registry.getIndex('Result<u8, bool>'), '0x002a');
+          codec.decode(registry.getIndex('Result<u8, bool>'), '0x002a');
       expect({"Ok": 42}, equals(decoded));
     });
     test('\'0x0100\' when encoded must produce result \'{"Err": false}\'', () {
       final decoded =
-          codec.decodeBinary(registry.getIndex('Result<u8, bool>'), '0x0100');
+          codec.decode(registry.getIndex('Result<u8, bool>'), '0x0100');
       expect({"Err": false}, equals(decoded));
     });
   });
