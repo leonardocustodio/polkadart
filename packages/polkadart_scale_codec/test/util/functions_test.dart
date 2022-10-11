@@ -163,113 +163,98 @@ void main() {
     });
   });
 
-  group('functions checkInt()', () {
-    test('Should return true when value is in range', () {
-      final int min = 0;
-      final int max = 100;
+  group('functions compare()', () {
+    test(
+        'Should return true when an integer value is within the integers range',
+        () {
+      final min = 0;
+      final max = 100;
 
-      final int bitSize = 16;
-      final String sign = 'u';
-      final int value = 50;
+      final value = 50;
 
-      expect(checkInt(value, sign, bitSize, min, max), true);
+      expect(compare(value, min, max), true);
     });
 
-    test('Should return true when value is in range and equal to min', () {
-      final int min = 0;
-      final int max = 100;
+    test(
+        'Should return true an integer value is within the integers range and is equal to min',
+        () {
+      final min = 0;
+      final max = 100;
 
-      final int bitSize = 16;
-      final String sign = 'u';
-      final int value = 0;
+      final value = 0;
 
-      expect(checkInt(value, sign, bitSize, min, max), true);
+      expect(compare(value, min, max), true);
     });
 
-    test('Should return true when value is in range and equal to max', () {
-      final int min = 0;
-      final int max = 100;
+    test(
+        'Should return true when an integer value is whitin the range and is equal to max',
+        () {
+      final min = 0;
+      final max = 100;
 
-      final int bitSize = 16;
-      final String sign = 'u';
-      final int value = 100;
+      final value = 100;
 
-      expect(checkInt(value, sign, bitSize, min, max), true);
+      expect(compare(value, min, max), true);
     });
 
-    test('Should throw InvalidSizeException when value is out of range', () {
-      final int min = 0;
-      final int max = 100;
+    test('Should return false when an integer value is out of the range', () {
+      final min = 0;
+      final max = 100;
 
-      final int bitSize = 16;
-      final String sign = 'u';
-      final int value = 150;
+      final value = 110;
 
-      final String expectedErrorMessage = 'Invalid u16: 150';
-
-      expect(
-        () => checkInt(value, sign, bitSize, min, max),
-        throwsA(
-          predicate((exception) =>
-              exception is InvalidSizeException &&
-              exception.toString() == expectedErrorMessage),
-        ),
-      );
-    });
-  });
-
-  group('functions checkBigInt()', () {
-    test('Should return true when value is in range', () {
-      final BigInt min = BigInt.from(0);
-      final BigInt max = BigInt.from(100);
-
-      final int bitSize = 16;
-      final String sign = 'u';
-      final BigInt value = BigInt.from(50);
-
-      expect(checkBigInt(value, sign, bitSize, min, max), true);
+      expect(compare(value, min, max), false);
     });
 
-    test('Should return true when value is in range and equal to min', () {
-      final BigInt min = BigInt.from(0);
-      final BigInt max = BigInt.from(100);
+    test('Should throw TypeError when values have different types', () {
+      final min = 0;
+      final max = BigInt.from(100);
 
-      final int bitSize = 16;
-      final String sign = 'u';
-      final BigInt value = BigInt.from(0);
+      final value = 150;
 
-      expect(checkBigInt(value, sign, bitSize, min, max), true);
+      expect(() => compare(value, min, max), throwsA(isA<TypeError>()));
     });
 
-    test('Should return true when value is in range and equal to max', () {
-      final BigInt min = BigInt.from(0);
-      final BigInt max = BigInt.from(100);
+    test('Should return true when a BigInt value is within the BigInts range',
+        () {
+      final min = BigInt.from(0);
+      final max = BigInt.from(100);
 
-      final int bitSize = 16;
-      final String sign = 'u';
-      final BigInt value = BigInt.from(100);
+      final value = BigInt.from(50);
 
-      expect(checkBigInt(value, sign, bitSize, min, max), true);
+      expect(compare(value, min, max), true);
     });
 
-    test('Should throw InvalidSizeException when value is out of range', () {
-      final BigInt min = BigInt.from(0);
-      final BigInt max = BigInt.from(100);
+    test(
+        'Should return true a BigInt value is within the BigInts range and is equal to min',
+        () {
+      final min = BigInt.from(0);
+      final max = BigInt.from(100);
 
-      final int bitSize = 16;
-      final String sign = 'u';
-      final BigInt value = BigInt.from(150);
+      final value = BigInt.from(0);
 
-      final String expectedErrorMessage = 'Invalid u16: 150';
+      expect(compare(value, min, max), true);
+    });
 
-      expect(
-        () => checkBigInt(value, sign, bitSize, min, max),
-        throwsA(
-          predicate((exception) =>
-              exception is InvalidSizeException &&
-              exception.toString() == expectedErrorMessage),
-        ),
-      );
+    test(
+        'Should return true when a BigInt value is whitin the BigInts range and is equal to max',
+        () {
+      final min = BigInt.from(0);
+      final max = BigInt.from(100);
+
+      final value = BigInt.from(100);
+
+      expect(compare(value, min, max), true);
+    });
+
+    test('Should return false when a BigInt value is out of the BigInt range',
+        () {
+      final min = BigInt.from(0);
+      final max = BigInt.from(100);
+
+      final value = BigInt.from(110);
+
+      expect(compare(value, min, max), false);
     });
   });
 }

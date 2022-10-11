@@ -43,46 +43,28 @@ void assertionCheck(bool val, [String? msg]) {
 
 /// Returns `true` if the val is `num` and is in range of [min, max] with `min` and `max` being inclusive.
 ///
-/// Throws `InvalidSizeException` if the above condition is `false`.
+/// Otherwise, returns `false`.
 ///
-/// Sign:
-/// - u --> unsigned
-/// - i --> signed
-bool checkInt(int val, String sign, int bitSize, int min, int max) {
-  final bool ok = min <= val && max >= val;
-  if (!ok) {
-    throw InvalidSizeException('Invalid $sign$bitSize: $val');
-  }
-  return ok;
+/// The [value] argument must be a value that is comparable to
+/// [min] and [max] objects so the method won't fail in run-time.
+///
+/// See also: [Comparable]
+bool compare(Comparable value, Comparable min, Comparable max) {
+  return value.compareTo(min) >= 0 && value.compareTo(max) <= 0;
 }
 
-/// Returns `true` if the val is in range of [min, max] with `min` and `max` being inclusive.
+/// Checks if the Signed `int` [value] is in range of [min, max] according to [bitSize].
 ///
-/// Throws `InvalidSizeException` if the above condition is `false`.
-///
-/// Sign:
-/// - u --> unsigned
-/// - i --> signed
-bool checkBigInt(BigInt val, String sign, int bitSize, BigInt min, BigInt max) {
-  final bool ok = min <= val && max >= val;
-  if (!ok) {
-    throw InvalidSizeException('Invalid $sign$bitSize: $val');
-  }
-  return ok;
-}
-
-/// Returns `true` if the Signed int `val` is in range of [min, max] according to `bitSize`.
-///
-/// bitsize ranges are:
+/// [bitSize] ranges are:
 /// - 8 -> [-128, 127]
 /// - 16 -> [-32768, 32767]
 /// - 32 -> [-2147483648, 2147483647]
 ///
 /// Exceptions:
-/// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
-/// - `InvalidSizeException` if the val is not in range.
+/// - [UnexpectedCaseException] if the [bitSize] is not `(8 || 16 || 32)`.
+/// - [InvalidSizeException] if the [value] is not in range.
 ///
-bool checkSignedInt(int val, int bitSize) {
+void checkSignedInt(int value, int bitSize) {
   late int min;
   late int max;
   switch (bitSize) {
@@ -101,7 +83,11 @@ bool checkSignedInt(int val, int bitSize) {
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
-  return checkInt(val, 'I', bitSize, min, max);
+
+  if (!compare(value, min, max)) {
+    throw InvalidSizeException(
+        'Invalid value. $value is out of range $min - $max.');
+  }
 }
 
 /// Calculates BigInt power.
@@ -114,18 +100,18 @@ BigInt calculateBigIntPow(int number, int exponent) {
   return number.toBigInt.pow(exponent.toBigInt.toInt());
 }
 
-/// Returns `true` if the Signed BigInt `val` is in range of [min, max] according to `bitSize`.
+/// Checks if the Signed `BigInt` [value] is in range of [min, max] according to [bitSize].
 ///
-/// bitsize ranges are:
+/// [bitSize] ranges are:
 /// - 64 -> [-9223372036854775808, 9223372036854775807]
 /// - 128 -> [-170141183460469231731687303715884105728, 170141183460469231731687303715884105727]
 /// - 256 -> [-57896044618658097711785492504343953926634992332820282019728792003956564819968, 57896044618658097711785492504343953926634992332820282019728792003956564819967]
 ///
 /// Exceptions:
-/// - `UnexpectedCaseException` if the `bitsize` is not (64 || 128 || 256)
-/// - `InvalidSizeException` if the val is not in range.
+/// - [UnexpectedCaseException] if the [bitsize] is not `(64 || 128 || 256)`.
+/// - [InvalidSizeException] if the [value] is not in range.
 ///
-bool checkSignedBigInt(BigInt val, int bitSize) {
+void checkSignedBigInt(BigInt value, int bitSize) {
   late BigInt min;
   late BigInt max;
   switch (bitSize) {
@@ -139,21 +125,25 @@ bool checkSignedBigInt(BigInt val, int bitSize) {
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
-  return checkBigInt(val, 'I', bitSize, min, max);
+
+  if (!compare(value, min, max)) {
+    throw InvalidSizeException(
+        'Invalid value. $value is out of range $min - $max.');
+  }
 }
 
-/// Returns `true` if the Unsigned int `val` is in range of [min, max] according to `bitSize`.
+/// Checks if the Unsigned `int` [value] is in range of [min, max] according to [bitSize].
 ///
-/// bitsize ranges are:
+/// [bitSize] ranges are:
 /// - 8 -> [0, 255]
 /// - 16 -> [0, 65535]
 /// - 32 -> [0, 4294967295]
 ///
 /// Exceptions:
-/// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
-/// - `InvalidSizeException` if the val is not in range.
+/// - [UnexpectedCaseException] if the [bitSize] is not `(8 || 16 || 32)`.
+/// - [InvalidSizeException] if the [value] is not in range.
 ///
-bool checkUnsignedInt(int val, int bitSize) {
+void checkUnsignedInt(int value, int bitSize) {
   late int max;
   switch (bitSize) {
     case 8:
@@ -168,21 +158,25 @@ bool checkUnsignedInt(int val, int bitSize) {
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
-  return checkInt(val, 'U', bitSize, 0, max);
+
+  if (!compare(value, 0, max)) {
+    throw InvalidSizeException(
+        'Invalid value. $value is out of range 0 - $max.');
+  }
 }
 
-/// Returns `true` if the Signed BigInt `val` is in range of [min, max] according to `bitSize`.
+/// Checks if the Unsigned `BigInt` [value] is in range of [min, max] according to [bitSize].
 ///
-/// bitsize ranges are:
+/// [bitSize] ranges are:
 /// - 64 -> [0, 18446744073709551615]
 /// - 128 -> [0, 340282366920938463463374607431768211455]
 /// - 256 -> [0, 115792089237316195423570985008687907853269984665640564039457584007913129639935]
 ///
 /// Exceptions:
-/// - `UnexpectedCaseException` if the `bitsize` is not (64 || 128 || 256)
-/// - `InvalidSizeException` if the val is not in range.
+/// - [UnexpectedCaseException] if the [bitSize] is not `(64 || 128 || 256)`
+/// - [InvalidSizeException] if the val is not in range.
 ///
-bool checkUnsignedBigInt(BigInt val, int bitSize) {
+void checkUnsignedBigInt(BigInt value, int bitSize) {
   late BigInt max;
   switch (bitSize) {
     case 64:
@@ -193,7 +187,11 @@ bool checkUnsignedBigInt(BigInt val, int bitSize) {
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
-  return checkBigInt(val, 'U', bitSize, 0.toBigInt, max);
+
+  if (!compare(value, 0.toBigInt, max)) {
+    throw InvalidSizeException(
+        'Invalid value. $value is out of range min - $max.');
+  }
 }
 
 ///
