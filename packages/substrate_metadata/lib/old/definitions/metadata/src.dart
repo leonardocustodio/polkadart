@@ -1,11 +1,4 @@
-import '../../types.dart';
-import './base.dart';
-import './v9.dart';
-import './v10.dart';
-import './v11.dart';
-import './v12.dart';
-import './v13.dart';
-import './v14.dart';
+part of metadata;
 
 final types = OldTypes(types: <String, dynamic>{
   'Type': 'Str',

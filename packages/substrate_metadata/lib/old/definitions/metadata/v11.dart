@@ -2,6 +2,8 @@
 ///
 /// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/metadata/v11.ts
 
+part of metadata;
+
 const V11 = <String, dynamic>{
   'ErrorMetadataV11': 'ErrorMetadataV10',
   'EventMetadataV11': 'EventMetadataV10',

@@ -2,6 +2,8 @@
 ///
 /// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/metadata/base.ts
 
+part of metadata;
+
 const Si1Variant = <String, String>{
   'name': 'Text',
   'fields': 'Vec<Si1Field>',

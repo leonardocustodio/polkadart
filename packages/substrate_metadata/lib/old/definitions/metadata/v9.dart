@@ -2,8 +2,9 @@
 ///
 /// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/metadata/v9.ts
 
+part of metadata;
+
 const V9 = <String, dynamic>{
-  // v9
   'ErrorMetadataV9': {'name': 'Text', 'docs': 'Vec<Text>'},
   'EventMetadataV9': {'name': 'Text', 'args': 'Vec<Type>', 'docs': 'Vec<Text>'},
   'FunctionArgumentMetadataV9': {'name': 'Text', 'type': 'Type'},

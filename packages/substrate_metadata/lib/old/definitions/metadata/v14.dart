@@ -2,7 +2,7 @@
 ///
 /// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/metadata/v14.ts
 
-import './base.dart';
+part of metadata;
 
 const V14 = <String, dynamic>{
   'MetadataV14': {
