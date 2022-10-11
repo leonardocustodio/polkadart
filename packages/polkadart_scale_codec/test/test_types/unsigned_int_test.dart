@@ -707,7 +707,7 @@ void main() {
         final expectedResult = BigInt.from(16777215);
         const value = '0xffffff0000000000';
 
-        final registryIndex = registry.getIndex('i64');
+        final registryIndex = registry.getIndex('u64');
 
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
@@ -718,7 +718,7 @@ void main() {
         final expectedResult = BigInt.from(0);
         const value = '0x0000000000000000';
 
-        final registryIndex = registry.getIndex('i64');
+        final registryIndex = registry.getIndex('u64');
 
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
@@ -754,7 +754,7 @@ void main() {
         final expectedResult = BigInt.from(16777215);
         const value = '0xffffff00000000000000000000000000';
 
-        final registryIndex = registry.getIndex('i128');
+        final registryIndex = registry.getIndex('u128');
 
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
@@ -765,7 +765,7 @@ void main() {
         final expectedResult = BigInt.from(0);
         const value = '0x00000000000000000000000000000000';
 
-        final registryIndex = registry.getIndex('i128');
+        final registryIndex = registry.getIndex('u128');
 
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
@@ -802,7 +802,7 @@ void main() {
         const value =
             '0xffffff0000000000000000000000000000000000000000000000000000000000';
 
-        final registryIndex = registry.getIndex('i256');
+        final registryIndex = registry.getIndex('u256');
 
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
@@ -812,7 +812,7 @@ void main() {
         const value =
             '0x0000000000000000000000000000000000000000000000000000000000000000';
 
-        final registryIndex = registry.getIndex('i256');
+        final registryIndex = registry.getIndex('u256');
 
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
