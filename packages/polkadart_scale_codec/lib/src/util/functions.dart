@@ -86,7 +86,7 @@ void checkSignedInt(int value, int bitSize) {
 
   if (!compare(value, min, max)) {
     throw InvalidSizeException(
-        'Invalid value. $value is out of range $min - $max.');
+        'Invalid value at i$bitSize. $value is out of range $min - $max.');
   }
 }
 
@@ -128,7 +128,7 @@ void checkSignedBigInt(BigInt value, int bitSize) {
 
   if (!compare(value, min, max)) {
     throw InvalidSizeException(
-        'Invalid value. $value is out of range $min - $max.');
+        'Invalid value at i$bitSize. $value is out of range $min - $max.');
   }
 }
 
@@ -161,7 +161,7 @@ void checkUnsignedInt(int value, int bitSize) {
 
   if (!compare(value, 0, max)) {
     throw InvalidSizeException(
-        'Invalid value. $value is out of range 0 - $max.');
+        'Invalid value at u$bitSize. $value is out of range 0 - $max.');
   }
 }
 
@@ -190,7 +190,7 @@ void checkUnsignedBigInt(BigInt value, int bitSize) {
 
   if (!compare(value, 0.toBigInt, max)) {
     throw InvalidSizeException(
-        'Invalid value. $value is out of range min - $max.');
+        'Invalid value at u$bitSize. $value is out of range min - $max.');
   }
 }
 
