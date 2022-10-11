@@ -11,27 +11,19 @@ on:
       - reopened
       - synchronize
       - ready_for_review
+    paths-ignore:
+      - '**.md'
   push:
     branches:
       - master
       - main
+    paths-ignore:
+      - '**.md'
 
 # Declare default permissions as read only.
 permissions: read-all
 
 jobs:
-  markdown-link-check:
-    name: Markdown link checks
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3.1.0
-
-      - name: Link check
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
-        with:
-          use-quiet-mode: "yes"
-
   lints:
     name: Check code lints
     runs-on: ubuntu-latest
@@ -44,7 +36,7 @@ jobs:
 
   ss58_codec:
     name: Test ss58_codec
-    needs: [lints, markdown-link-check]
+    needs: [lints]
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "ss58_codec"
@@ -52,7 +44,7 @@ jobs:
 
   ss58:
     name: Test ss58
-    needs: [lints, markdown-link-check]
+    needs: [lints]
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "ss58"
@@ -60,12 +52,12 @@ jobs:
 
   polkadart_scale_codec:
     name: Test polkadart_scale_codec
-    needs: [lints, markdown-link-check]
+    needs: [lints]
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "polkadart_scale_codec"
       working-directory: "./packages/polkadart_scale_codec"
-#
+
 #  polkadart:
 #    name: Test polkadart
 #    needs: [lints, markdown-link-check]
