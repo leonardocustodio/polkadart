@@ -74,15 +74,9 @@ void main() {
       int bitSize = 15;
       BigInt value = BigInt.from(10);
 
-      final expectedErrorMessage = 'Unexpected BitSize: 15.';
-
       expect(
         () => checkSignedBigInt(value, bitSize),
-        throwsA(
-          predicate((exception) =>
-              exception is UnexpectedCaseException &&
-              exception.toString() == expectedErrorMessage),
-        ),
+        throwsA(isA<UnexpectedCaseException>()),
       );
     });
   });
