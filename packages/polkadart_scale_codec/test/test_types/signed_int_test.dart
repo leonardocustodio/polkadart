@@ -632,9 +632,7 @@ void main() {
     final codec = Codec(types);
 
     group('fixed-length 8bit', () {
-      test(
-          'Given an encoded string `0x45` it should return 69',
-          () {
+      test('Given an encoded string `0x45` it should return 69', () {
         const value = '0x45';
         const expectedResult = 69;
 
@@ -670,7 +668,8 @@ void main() {
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
-      test('Given an encoded string with length > 4 it should throw UnprocessedDataLeftException',
+      test(
+          'Given an encoded string with length > 4 it should throw UnprocessedDataLeftException',
           () {
         const value = '0xff7f';
         final registryIndex = registry.getIndex('i8');
@@ -683,9 +682,7 @@ void main() {
     });
 
     group('fixed-length 16bit', () {
-      test(
-          'Given an encoded string `0x2a00` it should be decoded to 42',
-          () {
+      test('Given an encoded string `0x2a00` it should be decoded to 42', () {
         const value = '0x2a00';
         const expectedResult = 42;
 
@@ -694,7 +691,8 @@ void main() {
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
-      test('Given an encoded string `0x0080` it should be decoded to -32768', () {
+      test('Given an encoded string `0x0080` it should be decoded to -32768',
+          () {
         const value = '0x0080';
         const expectedResult = -32768;
 
@@ -712,7 +710,8 @@ void main() {
         expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
-      test('Given an encoded string `0xff7f` it should be decoded to 32767', () {
+      test('Given an encoded string `0xff7f` it should be decoded to 32767',
+          () {
         const value = '0xff7f';
         const expectedResult = 32767;
 
@@ -736,396 +735,256 @@ void main() {
 
     group('fixed-length 32bit', () {
       test(
-          'Given a positive integer when it is within range it should be encoded',
+          'Given an encoded string 0xffffff00 it should be decoded to 16777215',
           () {
-        int value = 16777215;
-        String expectedResult = '0xffffff00';
+        const value = '0xffffff00';
+        const expectedResult = 16777215;
 
-        int registryIndex = registry.getIndex('i32');
+        final registryIndex = registry.getIndex('i32');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
-      });
-
-      test('Should return correct encoded data when value is -2147483648', () {
-        int value = -2147483648;
-        String expectedResult = '0x00000080';
-
-        int registryIndex = registry.getIndex('i32');
-
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
-      });
-
-      test('Should return correct encoded data when value is 0', () {
-        int value = 0;
-        String expectedResult = '0x00000000';
-
-        int registryIndex = registry.getIndex('i32');
-
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
-      });
-
-      test('Should return correct encoded data when value is 2147483647', () {
-        int value = 2147483647;
-        String expectedResult = '0xffffff7f';
-
-        int registryIndex = registry.getIndex('i32');
-
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should throw InvalidSizeException when value is smaller than -2147483648',
+          'Given an encoded string 0x00000080 it should be decoded to -2147483648',
           () {
-        int value = -2147483649;
-        int registryIndex = registry.getIndex('i32');
+        const expectedResult = -2147483648;
+        const value = '0x00000080';
 
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<InvalidSizeException>()),
-        );
+        final registryIndex = registry.getIndex('i32');
+
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+      });
+
+      test('Given an encoded string 0x00000000 it should be decoded to 0', () {
+        const expectedResult = 0;
+        const value = '0x00000000';
+
+        final registryIndex = registry.getIndex('i32');
+
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should throw InvalidSizeException when value is greater than 2147483647',
+          'Given an encoded string 0xffffff7f it should be decoded to 2147483647',
           () {
-        int value = 2147483648;
-        int registryIndex = registry.getIndex('i32');
+        const expectedResult = 2147483647;
+        const value = '0xffffff7f';
 
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<InvalidSizeException>()),
-        );
+        final registryIndex = registry.getIndex('i32');
+
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
-      test('Should throw AssertionException when value is null', () {
-        int? value;
-        int registryIndex = registry.getIndex('i32');
+      test(
+          'Given an encoded string which decoded value is not in range it should throw UnprocessedDataLeftException',
+          () {
+        const value = '0x80000000'; //-2147483648
+        final registryIndex = registry.getIndex('i16');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is a BigInt', () {
-        BigInt value = 5.toBigInt;
-        int registryIndex = registry.getIndex('i32');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is not an Integer', () {
-        String value = '5';
-        int registryIndex = registry.getIndex('i32');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
+          () => codec.decodeBinary(registryIndex, value),
+          throwsA(isA<UnprocessedDataLeftException>()),
         );
       });
     });
 
     group('fixed-length 64bit', () {
       test(
-          'Given a positive integer when it is within range it should be encoded',
+          'Given an encoded string 0xffffff0000000000 it should decoded to 16777215',
           () {
-        BigInt value = BigInt.from(16777215);
-        String expectedResult = '0xffffff0000000000';
+        final expectedResult = BigInt.from(16777215);
+        const value = '0xffffff0000000000';
 
-        int registryIndex = registry.getIndex('i64');
+        final registryIndex = registry.getIndex('i64');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should return correct encoded data when value is -9223372036854775808',
+          'Given an encoded string 0x0000000000000080 it should be decoded to -9223372036854775808',
           () {
-        BigInt value = BigInt.from(-9223372036854775808);
-        String expectedResult = '0x0000000000000080';
+        final expectedResult = BigInt.from(-9223372036854775808);
+        const value = '0x0000000000000080';
 
-        int registryIndex = registry.getIndex('i64');
+        final registryIndex = registry.getIndex('i64');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
-      });
-
-      test('Should return correct encoded data when value is zero', () {
-        BigInt value = BigInt.from(0);
-        String expectedResult = '0x0000000000000000';
-
-        int registryIndex = registry.getIndex('i64');
-
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should return correct encoded data when value is 9223372036854775807',
+          'Given an encoded string 0x0000000000000000 it should be decoded to zero',
           () {
-        BigInt value = BigInt.parse('9223372036854775807');
-        String expectedResult = '0xffffffffffffff7f';
+        final expectedResult = BigInt.from(0);
+        const value = '0x0000000000000000';
 
-        int registryIndex = registry.getIndex('i64');
+        final registryIndex = registry.getIndex('i64');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should throw InvalidSizeException when value is smaller than -9223372036854775808',
+          'Given an encoded string 0xffffffffffffff7f it should be decoded to 9223372036854775807',
           () {
-        BigInt value = BigInt.parse('-9223372036854775809');
-        int registryIndex = registry.getIndex('i64');
+        final expectedResult = BigInt.parse('9223372036854775807');
+        const value = '0xffffffffffffff7f';
 
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<InvalidSizeException>()),
-        );
+        final registryIndex = registry.getIndex('i64');
+
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should throw InvalidSizeException when value is greater than 9223372036854775807',
+          'Given an encoded string which represents a value out of i64 range it should throw UnexpectedCaseException',
           () {
-        BigInt value = BigInt.parse('9223372036854775808');
-        int registryIndex = registry.getIndex('i64');
+        final value = '-9223372036854775809';
+        final registryIndex = registry.getIndex('i64');
+
+        final expectedErrorMessage =
+            'Invalid byte, unable to decode -9223372036854775809.';
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<InvalidSizeException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is null', () {
-        BigInt? value;
-        int registryIndex = registry.getIndex('i64');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is an Integer', () {
-        int value = 5;
-        int registryIndex = registry.getIndex('i64');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is not an BigInt', () {
-        String value = '5';
-        int registryIndex = registry.getIndex('i64');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
+          () => codec.decodeBinary(registryIndex, value),
+          throwsA(
+            predicate((exception) =>
+                exception is UnexpectedCaseException &&
+                exception.toString() == expectedErrorMessage),
+          ),
         );
       });
     });
 
     group('fixed-length 128bit', () {
       test(
-          'Given a positive integer when it is within range it should be encoded',
+          'Given an encoded string 0xffffff00000000000000000000000000 it should be decoded to 16777215',
           () {
-        BigInt value = BigInt.from(16777215);
-        String expectedResult = '0xffffff00000000000000000000000000';
+        final expectedResult = BigInt.from(16777215);
+        const value = '0xffffff00000000000000000000000000';
 
-        int registryIndex = registry.getIndex('i128');
+        final registryIndex = registry.getIndex('i128');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should return correct encoded data when value is -170141183460469231731687303715884105728',
+          'Given an encoded string 0x00000000000000000000000000000080 it should be decoded to -170141183460469231731687303715884105728',
           () {
-        BigInt value = BigInt.parse('-170141183460469231731687303715884105728');
-        String expectedResult = '0x00000000000000000000000000000080';
+        final expectedResult =
+            BigInt.parse('-170141183460469231731687303715884105728');
+        const value = '0x00000000000000000000000000000080';
 
-        int registryIndex = registry.getIndex('i128');
+        final registryIndex = registry.getIndex('i128');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
-      });
-
-      test('Should return correct encoded data when value is zero', () {
-        BigInt value = BigInt.from(0);
-        String expectedResult = '0x00000000000000000000000000000000';
-
-        int registryIndex = registry.getIndex('i128');
-
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should return correct encoded data when value is 170141183460469231731687303715884105727',
+          'Given an encoded string 0x00000000000000000000000000000000 it should be decoded to zero',
           () {
-        BigInt value = BigInt.parse('170141183460469231731687303715884105727');
-        String expectedResult = '0xffffffffffffffffffffffffffffff7f';
+        final expectedResult = BigInt.from(0);
+        const value = '0x00000000000000000000000000000000';
 
-        int registryIndex = registry.getIndex('i128');
+        final registryIndex = registry.getIndex('i128');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should throw InvalidSizeException when value is smaller than -170141183460469231731687303715884105728',
+          'Given an encoded string 0xffffffffffffffffffffffffffffff7f it should be decoded to 170141183460469231731687303715884105727',
           () {
-        BigInt value = BigInt.parse('-170141183460469231731687303715884105729');
-        int registryIndex = registry.getIndex('i128');
+        final expectedResult =
+            BigInt.parse('170141183460469231731687303715884105727');
+        const value = '0xffffffffffffffffffffffffffffff7f';
 
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<InvalidSizeException>()),
-        );
+        final registryIndex = registry.getIndex('i128');
+
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should throw InvalidSizeException when value is greater than 170141183460469231731687303715884105727',
+          'Given an encoded string which represents a value out of i128 range it should throw UnexpectedCaseException',
           () {
-        BigInt value = BigInt.parse('170141183460469231731687303715884105728');
-        int registryIndex = registry.getIndex('i128');
+        final value = '-170141183460469231731687303715884105729';
+        final registryIndex = registry.getIndex('i128');
+
+        final expectedErrorMessage =
+            'Invalid byte, unable to decode -170141183460469231731687303715884105729.';
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<InvalidSizeException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is null', () {
-        int? value;
-        int registryIndex = registry.getIndex('i128');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is an Integer', () {
-        int value = 5;
-        int registryIndex = registry.getIndex('i128');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is not a BigInt', () {
-        String value = '5';
-        int registryIndex = registry.getIndex('i128');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
+          () => codec.decodeBinary(registryIndex, value),
+          throwsA(
+            predicate((exception) =>
+                exception is UnexpectedCaseException &&
+                exception.toString() == expectedErrorMessage),
+          ),
         );
       });
     });
 
     group('fixed-length 256bit', () {
-      test(
-          'Given a positive integer when it is within range it should be encoded',
-          () {
-        BigInt value = BigInt.from(16777215);
-        String expectedResult =
+      test('Given an encoded string it should be decoded to 16777215', () {
+        final expectedResult = BigInt.from(16777215);
+        const value =
             '0xffffff0000000000000000000000000000000000000000000000000000000000';
 
-        int registryIndex = registry.getIndex('i256');
+        final registryIndex = registry.getIndex('i256');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should return correct encoded data when value is -57896044618658097711785492504343953926634992332820282019728792003956564819968',
+          'Given an encoded string it should be decoded to -57896044618658097711785492504343953926634992332820282019728792003956564819968',
           () {
-        BigInt value = BigInt.parse(
+        final expectedResult = BigInt.parse(
             '-57896044618658097711785492504343953926634992332820282019728792003956564819968');
-        String expectedResult =
+        const value =
             '0x0000000000000000000000000000000000000000000000000000000000000080';
 
-        int registryIndex = registry.getIndex('i256');
+        final registryIndex = registry.getIndex('i256');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
-      test('Should return correct encoded data when value is zero', () {
-        BigInt value = BigInt.from(0);
-        String expectedResult =
+      test('Given an encoded string it should be decoded to zero', () {
+        final expectedResult = BigInt.from(0);
+        const value =
             '0x0000000000000000000000000000000000000000000000000000000000000000';
 
-        int registryIndex = registry.getIndex('i256');
+        final registryIndex = registry.getIndex('i256');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should return correct encoded data when value is 57896044618658097711785492504343953926634992332820282019728792003956564819967',
+          'Given an encoded string it should be decoded to 57896044618658097711785492504343953926634992332820282019728792003956564819967',
           () {
-        BigInt value = BigInt.parse(
+        final expectedResult = BigInt.parse(
             '57896044618658097711785492504343953926634992332820282019728792003956564819967');
-        String expectedResult =
+        const value =
             '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f';
 
-        int registryIndex = registry.getIndex('i256');
+        final registryIndex = registry.getIndex('i256');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.decodeBinary(registryIndex, value), expectedResult);
       });
 
       test(
-          'Should throw InvalidSizeException when value is smaller than -57896044618658097711785492504343953926634992332820282019728792003956564819968',
+          'Given an encoded string which represents a value out of i256 range it should throw UnexpectedCaseException',
           () {
-        BigInt value = BigInt.parse(
-            '-57896044618658097711785492504343953926634992332820282019728792003956564819969');
-        int registryIndex = registry.getIndex('i256');
+        final value =
+            '-57896044618658097711785492504343953926634992332820282019728792003956564819969';
+        final registryIndex = registry.getIndex('i256');
+
+        final expectedErrorMessage =
+            'Invalid byte, unable to decode -57896044618658097711785492504343953926634992332820282019728792003956564819969.';
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<InvalidSizeException>()),
-        );
-      });
-
-      test(
-          'Should throw InvalidSizeException when value is greater than 57896044618658097711785492504343953926634992332820282019728792003956564819967',
-          () {
-        BigInt value = BigInt.parse(
-            '57896044618658097711785492504343953926634992332820282019728792003956564819968');
-        int registryIndex = registry.getIndex('i256');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<InvalidSizeException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is null', () {
-        BigInt? value;
-        int registryIndex = registry.getIndex('i256');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is a Integer', () {
-        int value = 5;
-        int registryIndex = registry.getIndex('i256');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
-        );
-      });
-
-      test('Should throw AssertionException when value is not a BigInt', () {
-        String value = '5';
-        int registryIndex = registry.getIndex('i256');
-
-        expect(
-          () => codec.encodeToHex(registryIndex, value),
-          throwsA(isA<AssertionException>()),
+          () => codec.decodeBinary(registryIndex, value),
+          throwsA(
+            predicate((exception) =>
+                exception is UnexpectedCaseException &&
+                exception.toString() == expectedErrorMessage),
+          ),
         );
       });
     });
