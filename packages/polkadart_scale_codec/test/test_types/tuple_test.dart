@@ -5,7 +5,6 @@ import 'package:test/scaffolding.dart';
 void main() {
   final typesRegistry = <String, dynamic>{
     'Codec': {
-      'a': '()',
       'b': '(Compact<u8>, bool)',
       'c': '(Compact<u8>, bool, String)',
     },
@@ -24,7 +23,7 @@ void main() {
   final codec = Codec(types);
   group('encode tuple tests ', () {
     test(
-        'Given a serie with compact unsigned integer and boolean it should be encoded to correct value',
+        'Given a list with compact unsigned integer and boolean it should be encoded to correct value',
         () {
       const value = [3, true];
       const expectedResult = '0x0c01';
@@ -35,7 +34,7 @@ void main() {
     });
 
     test(
-        'Given a serie with compact unsigned integer, boolean and a String it should be encoded to correct value',
+        'Given a list with compact unsigned integer, boolean and a String it should be encoded to correct value',
         () {
       const value = [42, false, 'Tuple'];
       const expectedResult = '0xa800145475706c65';
@@ -45,7 +44,7 @@ void main() {
       expect(codec.encode(registryIndex, value), expectedResult);
     });
 
-    test('Given an empty serie it should throw AssertionException', () {
+    test('Given an empty list it should throw AssertionException', () {
       const value = [];
 
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
@@ -56,7 +55,7 @@ void main() {
       );
     });
 
-    test('Given a null serie it should throw AssertionException', () {
+    test('Given a null list it should throw AssertionException', () {
       const value = null;
 
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
@@ -68,7 +67,7 @@ void main() {
     });
 
     test(
-        'Given an serie bigger than tuple length it should throw AssertionException',
+        'Given a list bigger than tuple length it should throw AssertionException',
         () {
       const value = [3, false, 3];
 
@@ -81,7 +80,7 @@ void main() {
     });
 
     test(
-        'Given an serie smaller than tuple length it should throw AssertionException',
+        'Given a list smaller than tuple length it should throw AssertionException',
         () {
       const value = [3, false];
 
@@ -90,19 +89,6 @@ void main() {
       expect(
         () => codec.encode(registryIndex, value),
         throwsA(isA<AssertionException>()),
-      );
-    });
-
-    test(
-        'Should throw AssertionError when tuple is empty and value is not null',
-        () {
-      const value = [3, false];
-
-      final registryIndex = registry.getIndex('()');
-
-      expect(
-        () => codec.encode(registryIndex, value),
-        throwsA(isA<AssertionError>()),
       );
     });
   });
