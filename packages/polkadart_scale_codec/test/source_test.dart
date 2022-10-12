@@ -261,7 +261,9 @@ void main() {
 
       expect(() => source.str(), throwsA(isA<EOFException>()));
     });
+  });
 
+  group('Test\'AssertionException\'', () {
     // When the bytes are invalid in form of hexa-decimal and identifier of BigInt length is used then it throws AssertionException.
     test(
         'When invalid Hexa-decimal like: \'0x1700007014057fd8b806\' is passed as an argument then it should throw \'AssertionException\'.',
