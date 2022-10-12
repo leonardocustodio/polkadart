@@ -35,7 +35,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i8');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test('Should return correct encoded data when value is zero', () {
@@ -44,7 +44,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i8');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -55,7 +55,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i8');
 
-        expect(codec.encodeToHex(registryIndex, smallestSupportedValue),
+        expect(codec.encode(registryIndex, smallestSupportedValue),
             expectedResult);
       });
 
@@ -67,8 +67,8 @@ void main() {
 
         int registryIndex = registry.getIndex('i8');
 
-        expect(codec.encodeToHex(registryIndex, largestSupportedValue),
-            expectedResult);
+        expect(
+            codec.encode(registryIndex, largestSupportedValue), expectedResult);
       });
 
       test('Should throw InvalidSizeException when value is smaller than -128',
@@ -77,7 +77,7 @@ void main() {
         int registryIndex = registry.getIndex('i8');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -88,7 +88,7 @@ void main() {
         int registryIndex = registry.getIndex('i8');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -98,7 +98,7 @@ void main() {
         int registryIndex = registry.getIndex('i8');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -108,7 +108,7 @@ void main() {
         int registryIndex = registry.getIndex('i8');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -118,7 +118,7 @@ void main() {
         int registryIndex = registry.getIndex('i8');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -133,7 +133,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i16');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -144,7 +144,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i16');
 
-        expect(codec.encodeToHex(registryIndex, smallestSupportedValue),
+        expect(codec.encode(registryIndex, smallestSupportedValue),
             expectedResult);
       });
 
@@ -154,7 +154,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i16');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -165,8 +165,8 @@ void main() {
 
         int registryIndex = registry.getIndex('i16');
 
-        expect(codec.encodeToHex(registryIndex, largestSupportedValue),
-            expectedResult);
+        expect(
+            codec.encode(registryIndex, largestSupportedValue), expectedResult);
       });
 
       test(
@@ -176,7 +176,7 @@ void main() {
         int registryIndex = registry.getIndex('i16');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -187,7 +187,7 @@ void main() {
         int registryIndex = registry.getIndex('i16');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -197,7 +197,7 @@ void main() {
         int registryIndex = registry.getIndex('i16');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -207,7 +207,7 @@ void main() {
         int registryIndex = registry.getIndex('i16');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -217,7 +217,7 @@ void main() {
         int registryIndex = registry.getIndex('i16');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -232,7 +232,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i32');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -243,7 +243,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i32');
 
-        expect(codec.encodeToHex(registryIndex, smallestSupportedValue),
+        expect(codec.encode(registryIndex, smallestSupportedValue),
             expectedResult);
       });
 
@@ -253,7 +253,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i32');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -264,8 +264,8 @@ void main() {
 
         int registryIndex = registry.getIndex('i32');
 
-        expect(codec.encodeToHex(registryIndex, largestSupportedValue),
-            expectedResult);
+        expect(
+            codec.encode(registryIndex, largestSupportedValue), expectedResult);
       });
 
       test(
@@ -275,7 +275,7 @@ void main() {
         int registryIndex = registry.getIndex('i32');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -287,7 +287,7 @@ void main() {
         int registryIndex = registry.getIndex('i32');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -297,7 +297,7 @@ void main() {
         int registryIndex = registry.getIndex('i32');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -307,7 +307,7 @@ void main() {
         int registryIndex = registry.getIndex('i32');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -317,7 +317,7 @@ void main() {
         int registryIndex = registry.getIndex('i32');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -332,7 +332,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i64');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -343,7 +343,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i64');
 
-        expect(codec.encodeToHex(registryIndex, smallestSupportedValue),
+        expect(codec.encode(registryIndex, smallestSupportedValue),
             expectedResult);
       });
 
@@ -353,7 +353,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i64');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -364,8 +364,8 @@ void main() {
 
         int registryIndex = registry.getIndex('i64');
 
-        expect(codec.encodeToHex(registryIndex, largestSupportedValue),
-            expectedResult);
+        expect(
+            codec.encode(registryIndex, largestSupportedValue), expectedResult);
       });
 
       test(
@@ -375,7 +375,7 @@ void main() {
         int registryIndex = registry.getIndex('i64');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -387,7 +387,7 @@ void main() {
         int registryIndex = registry.getIndex('i64');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -397,7 +397,7 @@ void main() {
         int registryIndex = registry.getIndex('i64');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -407,7 +407,7 @@ void main() {
         int registryIndex = registry.getIndex('i64');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -417,7 +417,7 @@ void main() {
         int registryIndex = registry.getIndex('i64');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -432,7 +432,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i128');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -444,7 +444,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i128');
 
-        expect(codec.encodeToHex(registryIndex, smallestSupportedValue),
+        expect(codec.encode(registryIndex, smallestSupportedValue),
             expectedResult);
       });
 
@@ -454,7 +454,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i128');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -466,8 +466,8 @@ void main() {
 
         int registryIndex = registry.getIndex('i128');
 
-        expect(codec.encodeToHex(registryIndex, largestSupportedValue),
-            expectedResult);
+        expect(
+            codec.encode(registryIndex, largestSupportedValue), expectedResult);
       });
 
       test(
@@ -477,7 +477,7 @@ void main() {
         int registryIndex = registry.getIndex('i128');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -489,7 +489,7 @@ void main() {
         int registryIndex = registry.getIndex('i128');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -499,7 +499,7 @@ void main() {
         int registryIndex = registry.getIndex('i128');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -509,7 +509,7 @@ void main() {
         int registryIndex = registry.getIndex('i128');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -519,7 +519,7 @@ void main() {
         int registryIndex = registry.getIndex('i128');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -535,7 +535,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i256');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -548,7 +548,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i256');
 
-        expect(codec.encodeToHex(registryIndex, smallestSupportedValue),
+        expect(codec.encode(registryIndex, smallestSupportedValue),
             expectedResult);
       });
 
@@ -559,7 +559,7 @@ void main() {
 
         int registryIndex = registry.getIndex('i256');
 
-        expect(codec.encodeToHex(registryIndex, value), expectedResult);
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -572,8 +572,8 @@ void main() {
 
         int registryIndex = registry.getIndex('i256');
 
-        expect(codec.encodeToHex(registryIndex, largestSupportedValue),
-            expectedResult);
+        expect(
+            codec.encode(registryIndex, largestSupportedValue), expectedResult);
       });
 
       test(
@@ -584,7 +584,7 @@ void main() {
         int registryIndex = registry.getIndex('i256');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -597,7 +597,7 @@ void main() {
         int registryIndex = registry.getIndex('i256');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
@@ -607,7 +607,7 @@ void main() {
         int registryIndex = registry.getIndex('i256');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -617,7 +617,7 @@ void main() {
         int registryIndex = registry.getIndex('i256');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -627,7 +627,7 @@ void main() {
         int registryIndex = registry.getIndex('i256');
 
         expect(
-          () => codec.encodeToHex(registryIndex, value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<AssertionException>()),
         );
       });
@@ -664,7 +664,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i8');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test('Given an encoded string `0x00` it should return zero', () {
@@ -673,7 +673,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i8');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test('Given an encoded string `0x80` it should return -128', () {
@@ -682,7 +682,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i8');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test('Given an encoded string `0x7f` it should return 127', () {
@@ -691,7 +691,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i8');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -701,7 +701,7 @@ void main() {
         final registryIndex = registry.getIndex('i8');
 
         expect(
-          () => codec.decodeBinary(registryIndex, value),
+          () => codec.decode(registryIndex, value),
           throwsA(isA<UnprocessedDataLeftException>()),
         );
       });
@@ -714,7 +714,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i16');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test('Given an encoded string `0x0080` it should be decoded to -32768',
@@ -724,7 +724,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i16');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test('Given an encoded string `0x0000` it should be decoded to zero', () {
@@ -733,7 +733,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i16');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test('Given an encoded string `0xff7f` it should be decoded to 32767',
@@ -743,7 +743,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i16');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -753,7 +753,7 @@ void main() {
         final registryIndex = registry.getIndex('i16');
 
         expect(
-          () => codec.decodeBinary(registryIndex, value),
+          () => codec.decode(registryIndex, value),
           throwsA(isA<UnprocessedDataLeftException>()),
         );
       });
@@ -768,7 +768,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i32');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -779,7 +779,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i32');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test('Given an encoded string 0x00000000 it should be decoded to 0', () {
@@ -788,7 +788,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i32');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -799,7 +799,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i32');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -809,7 +809,7 @@ void main() {
         final registryIndex = registry.getIndex('i16');
 
         expect(
-          () => codec.decodeBinary(registryIndex, value),
+          () => codec.decode(registryIndex, value),
           throwsA(isA<UnprocessedDataLeftException>()),
         );
       });
@@ -824,7 +824,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i64');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -835,7 +835,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i64');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -846,7 +846,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i64');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -857,7 +857,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i64');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -870,7 +870,7 @@ void main() {
             'Invalid byte, unable to decode -9223372036854775809.';
 
         expect(
-          () => codec.decodeBinary(registryIndex, value),
+          () => codec.decode(registryIndex, value),
           throwsA(
             predicate((exception) =>
                 exception is UnexpectedCaseException &&
@@ -889,7 +889,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i128');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -901,7 +901,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i128');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -912,7 +912,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i128');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -924,7 +924,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i128');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -937,7 +937,7 @@ void main() {
             'Invalid byte, unable to decode -170141183460469231731687303715884105729.';
 
         expect(
-          () => codec.decodeBinary(registryIndex, value),
+          () => codec.decode(registryIndex, value),
           throwsA(
             predicate((exception) =>
                 exception is UnexpectedCaseException &&
@@ -955,7 +955,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i256');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -968,7 +968,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i256');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test('Given an encoded string it should be decoded to zero', () {
@@ -978,7 +978,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i256');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -991,7 +991,7 @@ void main() {
 
         final registryIndex = registry.getIndex('i256');
 
-        expect(codec.decodeBinary(registryIndex, value), expectedResult);
+        expect(codec.decode(registryIndex, value), expectedResult);
       });
 
       test(
@@ -1005,7 +1005,7 @@ void main() {
             'Invalid byte, unable to decode -57896044618658097711785492504343953926634992332820282019728792003956564819969.';
 
         expect(
-          () => codec.decodeBinary(registryIndex, value),
+          () => codec.decode(registryIndex, value),
           throwsA(
             predicate((exception) =>
                 exception is UnexpectedCaseException &&

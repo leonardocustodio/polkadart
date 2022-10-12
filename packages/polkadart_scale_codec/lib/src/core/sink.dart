@@ -129,13 +129,13 @@ abstract class ScaleCodecSink {
   void compact(dynamic val) {
     if (val is int) {
       if (val < 0) {
-        throw InvalidCompactException('Value can\'t be less than 0.');
+        throw IncompatibleCompactException('Value can\'t be less than 0.');
       }
       _compactFromInt(val);
       return;
     } else if (val is BigInt) {
       if (val.toInt() < 0) {
-        throw InvalidCompactException('Value can\'t be less than 0.');
+        throw IncompatibleCompactException('Value can\'t be less than 0.');
       }
       _compactFromBigInt(val);
       return;
@@ -166,7 +166,7 @@ abstract class ScaleCodecSink {
         value = value >> 8.toBigInt.toInt();
       }
     } else {
-      throw IncompatibleCompactException(value.toRadixString(16));
+      throw IncompatibleCompactException('$value is too large for a compact.');
     }
   }
 
@@ -192,7 +192,7 @@ abstract class ScaleCodecSink {
         copiedValue = copiedValue >> 8.toBigInt.toInt();
       }
     } else {
-      throw IncompatibleCompactException(value.toRadixString(16));
+      throw IncompatibleCompactException('$value is too large for a compact.');
     }
   }
 }
@@ -205,12 +205,14 @@ class HexSink extends ScaleCodecSink {
   @override
   void write(int byte) {
     _hex += (byte >>> 4).toRadixString(16);
+    print('1) $byte: $_hex');
     _hex += (byte & 15).toRadixString(16);
+    print('2) $byte: $_hex');
   }
 
   @override
   void bytes(List<int> b) {
-    _hex += encodeHex(b.cast<int>()).replaceFirst(RegExp(r'0x'), '');
+    _hex += encodeHex(b).replaceFirst(RegExp(r'0x'), '');
   }
 
   /// Return current hex data
