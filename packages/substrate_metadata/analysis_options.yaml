@@ -13,10 +13,6 @@
 
 include: package:lints/recommended.yaml
 
-linter:
-  rules:
-    constant_identifier_names: false
-
 
 # For more information about the core and recommended set of lints, see
 # https://dart.dev/go/core-lints
