@@ -1,5 +1,5 @@
-import 'package:test/test.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
+import 'package:test/test.dart';
 
 void main() {
   // Creates the registry for parsing the types and selecting particular schema.
@@ -16,12 +16,12 @@ void main() {
   // Encodes: bool
   group('encodes bool:', () {
     test('true on encoding should be \'0x01\'', () {
-      final encoded = codec.encodeToHex(registryIndex, true);
+      final encoded = codec.encode(registryIndex, true);
 
       expect('0x01', equals(encoded));
     });
     test('false on encoding should be \'0x00\'', () {
-      final encoded = codec.encodeToHex(registryIndex, false);
+      final encoded = codec.encode(registryIndex, false);
 
       expect('0x00', equals(encoded));
     });
@@ -30,12 +30,12 @@ void main() {
   // Decodes: bool
   group('decodes bool:', () {
     test('\'0x01\' on decoding should be true', () {
-      final decoded = codec.decodeBinary(registryIndex, '0x01');
+      final decoded = codec.decode(registryIndex, '0x01');
 
       expect(true, equals(decoded));
     });
     test('\'0x00\' on decoding should be false', () {
-      final encoded = codec.decodeBinary(registryIndex, '0x00');
+      final encoded = codec.decode(registryIndex, '0x00');
 
       expect(false, equals(encoded));
     });
@@ -48,7 +48,7 @@ void main() {
         () {
       final exceptionMessage = 'Needed val of type \'bool\' but found int.';
       expect(
-          () => codec.encodeToHex(registryIndex, 0),
+          () => codec.encode(registryIndex, 0),
           throwsA(predicate((e) =>
               e is AssertionException && e.toString() == exceptionMessage)));
     });
@@ -57,7 +57,7 @@ void main() {
         () {
       final exceptionMessage = 'Needed val of type \'bool\' but found Null.';
       expect(
-          () => codec.encodeToHex(registryIndex, null),
+          () => codec.encode(registryIndex, null),
           throwsA(predicate((e) =>
               e is AssertionException && e.toString() == exceptionMessage)));
     });
