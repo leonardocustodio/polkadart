@@ -19,14 +19,14 @@ void main() {
   group('Encode BitVec<u8>:', () {
     test('Lowest acceptable value is [0] and the output should be \'0x2000\'',
         () {
-      final encoded = codec.encodeToHex(usageIndex, [0]);
+      final encoded = codec.encode(usageIndex, [0]);
       expect(encoded, equals('0x2000'));
     });
 
     test(
         'Highest acceptable value is \'[255]\' and the output should be \'0x20ff\'',
         () {
-      final encoded = codec.encodeToHex(usageIndex, [255]);
+      final encoded = codec.encode(usageIndex, [255]);
       expect(encoded, equals('0x20ff'));
     });
   });
@@ -35,13 +35,13 @@ void main() {
   // Decodes type: `BitVec<u8>`
   group('Decode BitVec<u8>:', () {
     test('On decoding \'0x2000\' we must get lowest acceptable value: [0]', () {
-      final decoded = codec.decodeBinary(usageIndex, '0x2000');
+      final decoded = codec.decode(usageIndex, '0x2000');
       expect(decoded, equals([0]));
     });
 
     test('On decoding \'0x20ff\' we must get lowest acceptable value: [255]',
         () {
-      final decoded = codec.decodeBinary(usageIndex, '0x20ff');
+      final decoded = codec.decode(usageIndex, '0x20ff');
       expect(decoded, equals([255]));
     });
   });
@@ -53,7 +53,7 @@ void main() {
         'should throw exception \'UnexpectedCaseException\' when encoding [-1] which is 1 lesser than lowest acceptable.',
         () {
       expect(
-          () => codec.encodeToHex(usageIndex, [-1]),
+          () => codec.encode(usageIndex, [-1]),
           throwsA(predicate((e) =>
               e is UnexpectedCaseException &&
               e.toString() == 'Invalid byte, unable to encode [-1].')));
@@ -63,7 +63,7 @@ void main() {
         'should throw exception \'UnexpectedCaseException\' when encoding [256] which is 1 greater tham highest acceptable.',
         () {
       expect(
-          () => codec.encodeToHex(usageIndex, [256]),
+          () => codec.encode(usageIndex, [256]),
           throwsA(predicate((e) =>
               e is UnexpectedCaseException &&
               e.toString() == 'Invalid byte, unable to encode [256].')));
@@ -79,7 +79,7 @@ void main() {
       final exceptionMessage =
           'Source(data) -> `data` should be either String, List<int> or Uint8List.';
       expect(
-          () => codec.decodeBinary(usageIndex, 0),
+          () => codec.decode(usageIndex, 0),
           throwsA(predicate((e) =>
               e is AssertionException && e.toString() == exceptionMessage)));
     });
@@ -90,7 +90,7 @@ void main() {
       final exceptionMessage =
           'Source(data) -> `data` should be either String, List<int> or Uint8List.';
       expect(
-          () => codec.decodeBinary(usageIndex, 0.0),
+          () => codec.decode(usageIndex, 0.0),
           throwsA(predicate((e) =>
               e is AssertionException && e.toString() == exceptionMessage)));
     });
@@ -105,7 +105,7 @@ void main() {
       final exceptionMessage =
           'BitSequence can have bits of type List<int> only.';
       expect(
-          () => codec.encodeToHex(usageIndex, 0),
+          () => codec.encode(usageIndex, 0),
           throwsA(predicate((e) =>
               e is AssertionException && e.toString() == exceptionMessage)));
     });
@@ -116,7 +116,7 @@ void main() {
       final exceptionMessage =
           'BitSequence can have bits of type List<int> only.';
       expect(
-          () => codec.encodeToHex(usageIndex, 0.0),
+          () => codec.encode(usageIndex, 0.0),
           throwsA(predicate((e) =>
               e is AssertionException && e.toString() == exceptionMessage)));
     });

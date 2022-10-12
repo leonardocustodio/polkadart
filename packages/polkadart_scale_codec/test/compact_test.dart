@@ -5,12 +5,12 @@ import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void testCompact(String hex, dynamic val) {
-  test('Src.compact: $hex == $val', () {
-    var src = Source(hex);
-    expect(src.compact(), equals(val));
+  test('Source.compact: $hex == $val', () {
+    var source = Source(hex);
+    expect(source.compact(), equals(val));
 
     // This should not throw error.
-    expect(() => src.assertEOF(), returnsNormally);
+    expect(() => source.assertEOF(), returnsNormally);
   });
 
   test('Sink.compact: $hex == $val', () {
@@ -34,10 +34,10 @@ void testPrimitiveCompact(String method, dynamic args, String expectedHex) {
 
 void testPrimitiveUncompact(String method, String args, dynamic expectedValue) {
   test('Source(\'$args\').$method() must return value $expectedValue.', () {
-    var src = Source(args);
+    var source = Source(args);
 
-    var mirrorSrc = reflect(src);
-    var decoded = mirrorSrc.invoke(Symbol(method), []).reflectee;
+    var mirrorSource = reflect(source);
+    var decoded = mirrorSource.invoke(Symbol(method), []).reflectee;
     expect(decoded, equals(expectedValue));
   });
 }
