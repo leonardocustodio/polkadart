@@ -249,4 +249,28 @@ void main() {
         expectedValue: 'github: justkawal',
         compactedHex: '0x446769746875623a206a7573746b6177616c');
   });
+
+  group('Test\'EOFException\'', () {
+    // When the bytes are invalid in form of hexa-decimal and length is greater than bytes then it throws EOFException.
+    test(
+        'When invalid Hexa-decimal like: \'0x08ff\' is passed as an argument then it should throw \'EOFException\'.',
+        () {
+      final value = '0x08ff';
+
+      final source = Source(value);
+
+      expect(() => source.str(), throwsA(isA<EOFException>()));
+    });
+
+    // When the bytes are invalid in form of hexa-decimal and identifier of BigInt length is used then it throws AssertionException.
+    test(
+        'When invalid Hexa-decimal like: \'0x1700007014057fd8b806\' is passed as an argument then it should throw \'AssertionException\'.',
+        () {
+      final value = '0x1700007014057fd8b806';
+
+      final source = Source(value);
+
+      expect(() => source.str(), throwsA(isA<AssertionException>()));
+    });
+  });
 }
