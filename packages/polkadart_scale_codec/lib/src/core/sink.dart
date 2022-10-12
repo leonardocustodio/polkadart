@@ -205,9 +205,7 @@ class HexSink extends ScaleCodecSink {
   @override
   void write(int byte) {
     _hex += (byte >>> 4).toRadixString(16);
-    print('1) $byte: $_hex');
     _hex += (byte & 15).toRadixString(16);
-    print('2) $byte: $_hex');
   }
 
   @override
