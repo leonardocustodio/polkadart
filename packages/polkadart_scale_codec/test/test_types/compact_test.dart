@@ -256,7 +256,7 @@ void main() {
         expect(
             () => codec.encode(registry.getIndex('Compact<u8>'), -1),
             throwsA(predicate((e) =>
-                e is InvalidCompactException &&
+                e is IncompatibleCompactException &&
                 e.toString() == exceptionMessage)));
       });
 
@@ -269,7 +269,7 @@ void main() {
             () =>
                 codec.encode(registry.getIndex('Compact<u8>'), BigInt.from(-1)),
             throwsA(predicate((e) =>
-                e is InvalidCompactException &&
+                e is IncompatibleCompactException &&
                 e.toString() == exceptionMessage)));
       });
 
@@ -291,8 +291,7 @@ void main() {
           'should throw \'InvalidCompactException\' when encoding BigInt.from(2).pow(536) with Compact<u8>',
           () {
         final BigInt invalidValue = BigInt.from(2).pow(536);
-        final exceptionMessage =
-            '${invalidValue.toRadixString(16)} is too large for a compact.';
+        final exceptionMessage = '$invalidValue is too large for a compact.';
         expect(
             () => codec.encode(registry.getIndex('Compact<u8>'), invalidValue),
             throwsA(predicate((e) =>
@@ -307,8 +306,7 @@ void main() {
         // Using help of BigInt to calculate 2 ^ (536) as BigInt and then converting to int.
         // as normal pow(2, 536) returns 0.
         final int invalidValue = BigInt.from(2).pow(536).toInt();
-        final exceptionMessage =
-            '${invalidValue.toRadixString(16)} is too large for a compact.';
+        final exceptionMessage = '$invalidValue is too large for a compact.';
         expect(
             () => codec.encode(registry.getIndex('Compact<u8>'), invalidValue),
             throwsA(predicate((e) =>
