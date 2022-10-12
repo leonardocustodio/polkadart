@@ -3,27 +3,26 @@ import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void main() {
+  final typesRegistry = <String, dynamic>{
+    'Codec': {
+      'a': '()',
+      'b': '(Compact<u8>, bool)',
+      'c': '(Compact<u8>, bool, String)',
+    },
+  };
+
+  // Creates the registry for parsing the types
+  final registry = OldTypeRegistry(types: typesRegistry);
+
+  // specifying which type to use
+  registry.select('Codec');
+
+  // fetching the parsed types from `Json` to `Type``
+  final types = registry.getTypes();
+
+  // Initializing Scale-Codec object
+  final codec = Codec(types);
   group('encode tuple tests ', () {
-    final typesRegistry = <String, dynamic>{
-      'Codec': {
-        'a': '()',
-        'b': '(Compact<u8>, bool)',
-        'c': '(Compact<u8>, bool, String)',
-      },
-    };
-
-    // Creates the registry for parsing the types
-    final registry = OldTypeRegistry(types: typesRegistry);
-
-    // specifying which type to use
-    registry.select('Codec');
-
-    // fetching the parsed types from `Json` to `Type``
-    final types = registry.getTypes();
-
-    // Initializing Scale-Codec object
-    final codec = Codec(types);
-
     test(
         'Given a serie with compact unsigned integer and boolean it should be encoded to correct value',
         () {
@@ -32,7 +31,7 @@ void main() {
 
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
 
-      expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      expect(codec.encode(registryIndex, value), expectedResult);
     });
 
     test(
@@ -43,7 +42,7 @@ void main() {
 
       final registryIndex = registry.getIndex('(Compact<u8>, bool, String)');
 
-      expect(codec.encodeToHex(registryIndex, value), expectedResult);
+      expect(codec.encode(registryIndex, value), expectedResult);
     });
 
     test('Given an empty serie it should throw AssertionException', () {
@@ -52,7 +51,7 @@ void main() {
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
 
       expect(
-        () => codec.encodeToHex(registryIndex, value),
+        () => codec.encode(registryIndex, value),
         throwsA(isA<AssertionException>()),
       );
     });
@@ -63,7 +62,7 @@ void main() {
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
 
       expect(
-        () => codec.encodeToHex(registryIndex, value),
+        () => codec.encode(registryIndex, value),
         throwsA(isA<AssertionException>()),
       );
     });
@@ -76,7 +75,7 @@ void main() {
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
 
       expect(
-        () => codec.encodeToHex(registryIndex, value),
+        () => codec.encode(registryIndex, value),
         throwsA(isA<AssertionException>()),
       );
     });
@@ -89,7 +88,7 @@ void main() {
       final registryIndex = registry.getIndex('(Compact<u8>, bool, String)');
 
       expect(
-        () => codec.encodeToHex(registryIndex, value),
+        () => codec.encode(registryIndex, value),
         throwsA(isA<AssertionException>()),
       );
     });
@@ -102,32 +101,13 @@ void main() {
       final registryIndex = registry.getIndex('()');
 
       expect(
-        () => codec.encodeToHex(registryIndex, value),
+        () => codec.encode(registryIndex, value),
         throwsA(isA<AssertionError>()),
       );
     });
   });
 
   group('decode tuple tests ', () {
-    final typesRegistry = <String, dynamic>{
-      'Codec': {
-        'b': '(Compact<u8>, bool)',
-        'c': '(Compact<u8>, bool, String)',
-      },
-    };
-
-    // Creates the registry for parsing the types
-    final registry = OldTypeRegistry(types: typesRegistry);
-
-    // specifying which type to use
-    registry.select('Codec');
-
-    // fetching the parsed types from `Json` to `Type``
-    final types = registry.getTypes();
-
-    // Initializing Scale-Codec object
-    final codec = Codec(types);
-
     test('Given an encoded string it should decode to correct 2 values list',
         () {
       const expectedResult = [3, true];
@@ -135,7 +115,7 @@ void main() {
 
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
 
-      expect(codec.decodeBinary(registryIndex, value), expectedResult);
+      expect(codec.decode(registryIndex, value), expectedResult);
     });
 
     test('Given an encoded string it should decode to correct 3 values list',
@@ -145,7 +125,7 @@ void main() {
 
       final registryIndex = registry.getIndex('(Compact<u8>, bool, String)');
 
-      expect(codec.decodeBinary(registryIndex, value), expectedResult);
+      expect(codec.decode(registryIndex, value), expectedResult);
     });
 
     test('Given an empty encoded string it should throw AssertionException',
@@ -155,7 +135,7 @@ void main() {
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
 
       expect(
-        () => codec.decodeBinary(registryIndex, value),
+        () => codec.decode(registryIndex, value),
         throwsA(isA<EOFException>()),
       );
     });
@@ -165,7 +145,7 @@ void main() {
       final registryIndex = registry.getIndex('(Compact<u8>, bool, String)');
 
       expect(
-        () => codec.decodeBinary(registryIndex, value),
+        () => codec.decode(registryIndex, value),
         throwsA(isA<EOFException>()),
       );
     });
