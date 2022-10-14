@@ -24,3 +24,4 @@ part 'registry.dart';
 // `Scale Codec` types
 part '../types/codec_u8.dart';
 part '../types/codec_u16.dart';
+part '../types/codec_u32.dart';
