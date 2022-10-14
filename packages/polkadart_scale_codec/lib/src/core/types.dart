@@ -245,6 +245,11 @@ abstract class Type {
 /// Supported types:
 /// ```dart
 /// CodecU8();
+/// CodecU16();
+/// CodecU32();
+/// CodecU64();
+/// CodecU128();
+/// CodecU256();
 /// ```
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
