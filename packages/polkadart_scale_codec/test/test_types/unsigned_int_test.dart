@@ -1,5 +1,4 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:polkadart_scale_codec/src/types/codec_u8.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -30,71 +29,81 @@ void main() {
       test(
           'Given a positive integer when it is within range it should be encoded',
           () {
-        const value = 69;
-        const expectedResult = '0x45';
+        int value = 69;
+        String expectedResult = '0x45';
 
-        expect(CodecU8().encodeToHex(value), expectedResult);
+        int registryIndex = registry.getIndex('u8');
+
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test('Should return correct encoded data when value is zero', () {
-        const value = 0;
-        const expectedResult = '0x00';
+        int value = 0;
+        String expectedResult = '0x00';
 
-        expect(CodecU8().encodeToHex(value), expectedResult);
+        int registryIndex = registry.getIndex('u8');
+
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test('Should return correct encoded data when value is 255', () {
-        const value = 255;
-        const expectedResult = '0xff';
+        int value = 255;
+        String expectedResult = '0xff';
 
-        expect(CodecU8().encodeToHex(value), expectedResult);
+        int registryIndex = registry.getIndex('u8');
+
+        expect(codec.encode(registryIndex, value), expectedResult);
       });
 
       test('Should throw InvalidSizeException when value is smaller than zero',
           () {
-        const value = -1;
+        int value = -1;
+        int registryIndex = registry.getIndex('u8');
 
         expect(
-          () => CodecU8().encodeToHex(value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
 
       test('Should throw InvalidSizeException when value is greater than 256',
           () {
-        const value = 256;
+        int value = 256;
+        int registryIndex = registry.getIndex('u8');
 
         expect(
-          () => CodecU8().encodeToHex(value),
+          () => codec.encode(registryIndex, value),
           throwsA(isA<InvalidSizeException>()),
         );
       });
 
-      test('Should throw UnexpectedTypeException when value is null', () {
+      test('Should throw AssertionException when value is null', () {
         int? value;
+        int registryIndex = registry.getIndex('u8');
 
         expect(
-          () => CodecU8().encodeToHex(value),
-          throwsA(isA<UnexpectedTypeException>()),
+          () => codec.encode(registryIndex, value),
+          throwsA(isA<AssertionException>()),
         );
       });
 
-      test('Should throw UnexpectedTypeException when value is a BigInt', () {
-        final value = 5.toBigInt;
+      test('Should throw AssertionException when value is a BigInt', () {
+        BigInt value = 5.toBigInt;
+        int registryIndex = registry.getIndex('u8');
 
         expect(
-          () => CodecU8().encodeToHex(value),
-          throwsA(isA<UnexpectedTypeException>()),
+          () => codec.encode(registryIndex, value),
+          throwsA(isA<AssertionException>()),
         );
       });
 
-      test('Should throw UnexpectedTypeException when value is not an Integer',
-          () {
-        const value = '5';
+      test('Should throw AssertionException when value is not an Integer', () {
+        String value = '5';
+        int registryIndex = registry.getIndex('u8');
 
         expect(
-          () => CodecU8().encodeToHex(value),
-          throwsA(isA<UnexpectedTypeException>()),
+          () => codec.encode(registryIndex, value),
+          throwsA(isA<AssertionException>()),
         );
       });
     });

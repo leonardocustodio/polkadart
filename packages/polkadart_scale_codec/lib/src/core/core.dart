@@ -20,3 +20,7 @@ part 'types_codec.dart';
 part 'types.dart';
 part 'type_exp.dart';
 part 'registry.dart';
+
+// `Scale Codec` types
+part '../types/codec_u8.dart';
+part '../types/codec_u16.dart';

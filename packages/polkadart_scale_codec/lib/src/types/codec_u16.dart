@@ -1,17 +1,17 @@
 part of '../core/core.dart';
 
-/// [CodecType] class to encode `unsigned 8-bit` integers.
+/// [CodecType] class to encode `unsigned 16-bit` integers.
 ///
 /// Basic integers are encoded using a fixed-width little-endian (LE) format.
 ///
 /// Example:
 /// ```
-/// final encodedU8Int = CodecU8.encode(69);
-/// final decodedU8Int = CodecU8.decode("0x45");
+/// final encodedU8Int = CodecU16.encode(42);
+/// final decodedU8Int = CodecU16.decode("0x2a00");
 /// ```
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-class CodecU8 implements NewCodecType {
+class CodecU16 implements NewCodecType {
   @override
   String encodeToHex(value) {
     if (value is! int) {
@@ -22,7 +22,7 @@ class CodecU8 implements NewCodecType {
     }
 
     var sink = HexSink();
-    sink.u8(value);
+    sink.u16(value);
     return sink.toHex();
   }
 
@@ -30,9 +30,11 @@ class CodecU8 implements NewCodecType {
   int decodeFromHex(String encodedData) {
     final Uint8List data = decodeHex(encodedData);
 
-    if (data.isEmpty) {
+    if (data.length < 2) {
       throw EOFException();
     }
-    return data[0];
+
+    final result = data[0] + data[1] * (pow(2, 8) as int);
+    return result;
   }
 }
