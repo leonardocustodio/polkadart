@@ -25,3 +25,4 @@ part 'registry.dart';
 part '../types/codec_u8.dart';
 part '../types/codec_u16.dart';
 part '../types/codec_u32.dart';
+part '../types/codec_u64.dart';
