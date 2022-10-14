@@ -28,16 +28,7 @@ class CodecU32 implements NewCodecType {
 
   @override
   int decodeFromHex(String encodedData) {
-    final Uint8List data = decodeHex(encodedData);
-
-    if (data.length < 4) {
-      throw EOFException();
-    }
-
-    final result = data[0] +
-        data[1] * (pow(2, 8) as int) +
-        data[2] * (pow(2, 16) as int) +
-        data[3] * (pow(2, 24) as int);
-    return result;
+    Source source = Source(encodedData);
+    return source.u32();
   }
 }

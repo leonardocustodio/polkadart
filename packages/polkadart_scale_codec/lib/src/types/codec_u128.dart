@@ -1,17 +1,17 @@
 part of '../core/core.dart';
 
-/// [CodecType] class to encode `unsigned 64-bit` integers.
+/// [CodecType] class to encode `unsigned 128-bit` integers.
 ///
 /// Basic integers are encoded using a fixed-width little-endian (LE) format.
 ///
 /// Example:
 /// ```
-/// final encoded = CodecU64.encode(16777215);
-/// final decoded = CodecU64.decode("0xffffff00");
+/// final encoded = CodecU128.encode(16777215);
+/// final decoded = CodecU128.decode("0xffffff00000000000000000000000000");
 /// ```
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-class CodecU64 implements NewCodecType {
+class CodecU128 implements NewCodecType {
   @override
   String encodeToHex(value) {
     if (value is! BigInt) {
@@ -22,13 +22,13 @@ class CodecU64 implements NewCodecType {
     }
 
     var sink = HexSink();
-    sink.u64(value);
+    sink.u128(value);
     return sink.toHex();
   }
 
   @override
   BigInt decodeFromHex(String encodedData) {
     Source source = Source(encodedData);
-    return source.u64();
+    return source.u128();
   }
 }

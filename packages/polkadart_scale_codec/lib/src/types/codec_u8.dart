@@ -28,11 +28,7 @@ class CodecU8 implements NewCodecType {
 
   @override
   int decodeFromHex(String encodedData) {
-    final Uint8List data = decodeHex(encodedData);
-
-    if (data.isEmpty) {
-      throw EOFException();
-    }
-    return data[0];
+    Source source = Source(encodedData);
+    return source.u8();
   }
 }
