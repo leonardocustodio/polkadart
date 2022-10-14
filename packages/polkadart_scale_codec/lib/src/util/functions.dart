@@ -19,7 +19,10 @@ bool isNotEmpty(dynamic value) {
   } else if (value is List) {
     return value.isNotEmpty;
   }
-  throw UnexpectedTypeException();
+  throw throw UnexpectedTypeException(
+    expectedType: '`String`, `num`, `List`, `Map`, `bool`',
+    receivedType: value.runtimeType.toString(),
+  );
 }
 
 /// Asserts if the `T` value is null or not.
@@ -197,52 +200,56 @@ bool checkUnsignedBigInt(BigInt val, int bitSize) {
 }
 
 ///
-/// Accepts `val` as `int` or `String`.
+/// Accepts `value` as `int` or `String`.
 ///
-/// Throws `UnexpectedTypeException` when val is not `int` or `String`.
+/// Throws `UnexpectedTypeException` when value is not `int` or `String`.
 ///
 ///Example:
 /// ```dart
 ///BigInt val = toSignedBigInt(2, 64);
-///// val = 2;
+///// value = 2;
 ///```
-BigInt toSignedBigInt(dynamic val, int bitSize) {
-  late BigInt value;
-  if (val is String) {
-    value = BigInt.parse(val);
-  } else if (val is int) {
-    value = BigInt.from(val);
+BigInt toSignedBigInt(dynamic value, int bitSize) {
+  late BigInt result;
+  if (value is String) {
+    result = BigInt.parse(value);
+  } else if (value is int) {
+    result = BigInt.from(value);
   } else {
     throw UnexpectedTypeException(
-        'Only `String` and `int` are valid parameters.');
+      expectedType: '`String` or `int`',
+      receivedType: value.runtimeType.toString(),
+    );
   }
 
-  checkSignedBigInt(value, bitSize);
-  return value;
+  checkSignedBigInt(result, bitSize);
+  return result;
 }
 
 ///
-/// Accepts `val` as `int` or `String`.
+/// Accepts `value` as `int` or `String`.
 ///
-/// Throws `UnexpectedTypeException` when val is not `int` or `String`.
+/// Throws `UnexpectedTypeException` when value is not `int` or `String`.
 ///
 ///Example:
 /// ```dart
-///BigInt val = toUnsignedBigInt(2, 64);
-///// val = 2;
+///BigInt value = toUnsignedBigInt(2, 64);
+///// value = 2;
 ///```
-BigInt toUnsignedBigInt(dynamic val, int bitSize) {
-  late BigInt value;
-  if (val is String) {
-    value = BigInt.parse(val);
-  } else if (val is int) {
-    value = BigInt.from(val);
+BigInt toUnsignedBigInt(dynamic value, int bitSize) {
+  late BigInt result;
+  if (value is String) {
+    result = BigInt.parse(value);
+  } else if (value is int) {
+    result = BigInt.from(value);
   } else {
     throw UnexpectedTypeException(
-        'Only `String` and `int` are valid parameters.');
+      expectedType: '`String` or `int`',
+      receivedType: value.runtimeType.toString(),
+    );
   }
-  checkUnsignedBigInt(value, bitSize);
-  return value;
+  checkUnsignedBigInt(result, bitSize);
+  return result;
 }
 
 /// Encodes UTF-8 String

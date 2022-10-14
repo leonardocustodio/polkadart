@@ -126,22 +126,24 @@ abstract class ScaleCodecSink {
   /// throw UnexpectedTypeException: when (val is not either (int or BigInt))
   /// throw InvalidCompactException: when (val < 0) || (value > calculateBigIntPow(2, 536))
   /// ```
-  void compact(dynamic val) {
-    if (val is int) {
-      if (val < 0) {
+  void compact(dynamic value) {
+    if (value is int) {
+      if (value < 0) {
         throw IncompatibleCompactException('Value can\'t be less than 0.');
       }
-      _compactFromInt(val);
+      _compactFromInt(value);
       return;
-    } else if (val is BigInt) {
-      if (val.toInt() < 0) {
+    } else if (value is BigInt) {
+      if (value.toInt() < 0) {
         throw IncompatibleCompactException('Value can\'t be less than 0.');
       }
-      _compactFromBigInt(val);
+      _compactFromBigInt(value);
       return;
     } else {
       throw UnexpectedTypeException(
-          'Expected `int` or `BigInt`, but found ${val.runtimeType}.');
+        expectedType: '`int` or `BigInt`',
+        receivedType: value.runtimeType.toString(),
+      );
     }
   }
 
@@ -205,9 +207,7 @@ class HexSink extends ScaleCodecSink {
   @override
   void write(int byte) {
     _hex += (byte >>> 4).toRadixString(16);
-    print('1) $byte: $_hex');
     _hex += (byte & 15).toRadixString(16);
-    print('2) $byte: $_hex');
   }
 
   @override
