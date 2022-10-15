@@ -199,7 +199,7 @@ abstract class ScaleCodecEncoder {
   }
 }
 
-///
+//TODO: Refactor [ScaleCodecEncoder] and [HexEncoder]
 /// `HexEncoder` to write the bytes and parallely write the result as Hex.
 class HexEncoder extends ScaleCodecEncoder {
   String _hex = '0x';
