@@ -192,7 +192,7 @@ abstract class ScaleCodecSink {
         copiedValue = copiedValue >> 8.toBigInt.toInt();
       }
     } else {
-      throw IncompatibleCompactException('$value is too large for a compact.');
+      throw IncompatibleCompactException('$bigIntValue is too large for a compact.');
     }
   }
 }
