@@ -13,27 +13,25 @@ class Codec {
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
   /// var registry = TypeRegistry(
-  ///   old_types.OldTypes(
-  ///     types: <String, dynamic>{
-  ///       'Codec': {
-  ///         'vec_u8': 'Vec<u8>',
-  ///         'option_u8': 'Option<u8>',
-  ///         'primitive_compact_u8': 'Compact<u8>',
-  ///         'primitive_i8': 'i8',
-  ///         'primitive_i16': 'i16',
-  ///         'primitive_i32': 'i32',
-  ///         'primitive_i64': 'i64',
-  ///         'primitive_i128': 'i128',
-  ///         'primitive_i256': 'i256',
-  ///         'primitive_u8': 'u8',
-  ///         'primitive_u16': 'u16',
-  ///         'primitive_u32': 'u32',
-  ///         'primitive_u64': 'u64',
-  ///         'primitive_u128': 'u128',
-  ///         'primitive_u256': 'u256',
-  ///       },
+  ///   types: <String, dynamic>{
+  ///     'Codec': {
+  ///       'vec_u8': 'Vec<u8>',
+  ///       'option_u8': 'Option<u8>',
+  ///       'primitive_compact_u8': 'Compact<u8>',
+  ///       'primitive_i8': 'i8',
+  ///       'primitive_i16': 'i16',
+  ///       'primitive_i32': 'i32',
+  ///       'primitive_i64': 'i64',
+  ///       'primitive_i128': 'i128',
+  ///       'primitive_i256': 'i256',
+  ///       'primitive_u8': 'u8',
+  ///       'primitive_u16': 'u16',
+  ///       'primitive_u32': 'u32',
+  ///       'primitive_u64': 'u64',
+  ///       'primitive_u128': 'u128',
+  ///       'primitive_u256': 'u256',
   ///     },
-  ///   ),
+  ///   },
   /// );
   ///
   /// // specifying which schema type to use when creating types
@@ -57,27 +55,25 @@ class Codec {
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
   /// var registry = TypeRegistry(
-  ///   old_types.OldTypes(
-  ///     types: <String, dynamic>{
-  ///       'Codec': {
-  ///         'vec_u8': 'Vec<u8>',
-  ///         'option_u8': 'Option<u8>',
-  ///         'primitive_compact_u8': 'Compact<u8>',
-  ///         'primitive_i8': 'i8',
-  ///         'primitive_i16': 'i16',
-  ///         'primitive_i32': 'i32',
-  ///         'primitive_i64': 'i64',
-  ///         'primitive_i128': 'i128',
-  ///         'primitive_i256': 'i256',
-  ///         'primitive_u8': 'u8',
-  ///         'primitive_u16': 'u16',
-  ///         'primitive_u32': 'u32',
-  ///         'primitive_u64': 'u64',
-  ///         'primitive_u128': 'u128',
-  ///         'primitive_u256': 'u256',
-  ///       },
+  ///   types: <String, dynamic>{
+  ///     'Codec': {
+  ///       'vec_u8': 'Vec<u8>',
+  ///       'option_u8': 'Option<u8>',
+  ///       'primitive_compact_u8': 'Compact<u8>',
+  ///       'primitive_i8': 'i8',
+  ///       'primitive_i16': 'i16',
+  ///       'primitive_i32': 'i32',
+  ///       'primitive_i64': 'i64',
+  ///       'primitive_i128': 'i128',
+  ///       'primitive_i256': 'i256',
+  ///       'primitive_u8': 'u8',
+  ///       'primitive_u16': 'u16',
+  ///       'primitive_u32': 'u32',
+  ///       'primitive_u64': 'u64',
+  ///       'primitive_u128': 'u128',
+  ///       'primitive_u256': 'u256',
   ///     },
-  ///   ),
+  ///   },
   /// );
   ///
   /// // specifying which schema type to use when creating types
@@ -106,27 +102,25 @@ class Codec {
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
   /// var registry = TypeRegistry(
-  ///   old_types.OldTypes(
-  ///     types: <String, dynamic>{
-  ///       'Codec': {
-  ///         'vec_u8': 'Vec<u8>',
-  ///         'option_u8': 'Option<u8>',
-  ///         'primitive_compact_u8': 'Compact<u8>',
-  ///         'primitive_i8': 'i8',
-  ///         'primitive_i16': 'i16',
-  ///         'primitive_i32': 'i32',
-  ///         'primitive_i64': 'i64',
-  ///         'primitive_i128': 'i128',
-  ///         'primitive_i256': 'i256',
-  ///         'primitive_u8': 'u8',
-  ///         'primitive_u16': 'u16',
-  ///         'primitive_u32': 'u32',
-  ///         'primitive_u64': 'u64',
-  ///         'primitive_u128': 'u128',
-  ///         'primitive_u256': 'u256',
-  ///       },
+  ///   types: <String, dynamic>{
+  ///     'Codec': {
+  ///       'vec_u8': 'Vec<u8>',
+  ///       'option_u8': 'Option<u8>',
+  ///       'primitive_compact_u8': 'Compact<u8>',
+  ///       'primitive_i8': 'i8',
+  ///       'primitive_i16': 'i16',
+  ///       'primitive_i32': 'i32',
+  ///       'primitive_i64': 'i64',
+  ///       'primitive_i128': 'i128',
+  ///       'primitive_i256': 'i256',
+  ///       'primitive_u8': 'u8',
+  ///       'primitive_u16': 'u16',
+  ///       'primitive_u32': 'u32',
+  ///       'primitive_u64': 'u64',
+  ///       'primitive_u128': 'u128',
+  ///       'primitive_u256': 'u256',
   ///     },
-  ///   ),
+  ///   },
   /// );
   ///
   /// // specifying which schema type to use when creating types
