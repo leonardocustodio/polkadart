@@ -21,7 +21,7 @@ class CodecU64 implements NewCodecType {
       );
     }
 
-    var sink = HexSink();
+    var sink = HexEncoder();
     sink.u64(value);
     return sink.toHex();
   }

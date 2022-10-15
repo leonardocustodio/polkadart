@@ -21,7 +21,7 @@ class CodecU128 implements NewCodecType {
       );
     }
 
-    var sink = HexSink();
+    var sink = HexEncoder();
     sink.u128(value);
     return sink.toHex();
   }

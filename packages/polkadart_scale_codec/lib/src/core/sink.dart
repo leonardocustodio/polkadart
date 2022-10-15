@@ -1,8 +1,8 @@
 part of polkadart_scale_codec_core;
 
 ///
-/// Abstract class to laydown the defined set of instructions when making a [HexSink]
-abstract class ScaleCodecSink {
+/// Abstract class to laydown the defined set of instructions when making a [HexEncoder]
+abstract class ScaleCodecEncoder {
   /// process and append the byte to the data
   void write(int byte);
 
@@ -200,8 +200,8 @@ abstract class ScaleCodecSink {
 }
 
 ///
-/// `HexSink` to write the bytes and parallely write the result as Hex.
-class HexSink extends ScaleCodecSink {
+/// `HexEncoder` to write the bytes and parallely write the result as Hex.
+class HexEncoder extends ScaleCodecEncoder {
   String _hex = '0x';
 
   @override

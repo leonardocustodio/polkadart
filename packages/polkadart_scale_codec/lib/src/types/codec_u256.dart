@@ -21,7 +21,7 @@ class CodecU256 implements NewCodecType {
       );
     }
 
-    var sink = HexSink();
+    var sink = HexEncoder();
     sink.u256(value);
     return sink.toHex();
   }

@@ -141,8 +141,8 @@ class Codec {
   /// var result = codec.encode(registry.use('Option<u8>'), 8); // '0x0108'
   /// ```
   String encode(int type, dynamic val) {
-    var sink = HexSink();
-    _encodeWithHexSink(type, val, sink);
+    var sink = HexEncoder();
+    _encodeWithHexEncoder(type, val, sink);
     return sink.toHex();
   }
 
@@ -278,13 +278,13 @@ class Codec {
   ///
   ///Example:
   /// ```dart
-  /// // Hex HexSink
-  /// var hexSink = HexSink();
-  /// codec._encode(registry.use('Option<u8>'), 8, hexSink);
-  /// hexSink.toHex(); // '0x0108'
+  /// // Hex HexEncoder
+  /// var HexEncoder = HexEncoder();
+  /// codec._encode(registry.use('Option<u8>'), 8, HexEncoder);
+  /// HexEncoder.toHex(); // '0x0108'
   ///
   /// ```
-  void _encodeWithHexSink(int type, dynamic val, HexSink sink) {
+  void _encodeWithHexEncoder(int type, dynamic val, HexEncoder sink) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
@@ -327,27 +327,27 @@ class Codec {
 
   ///
   /// Encodes Array
-  void _encodeArray(ArrayType def, dynamic val, HexSink sink) {
+  void _encodeArray(ArrayType def, dynamic val, HexEncoder sink) {
     assertionCheck(val is List && val.length == def.len);
 
     for (var i = 0; i < val.length; i++) {
-      _encodeWithHexSink(def.type, val[i], sink);
+      _encodeWithHexEncoder(def.type, val[i], sink);
     }
   }
 
   ///
   /// Encodes Bit Sequence
-  void _encodeSequence(SequenceType def, dynamic val, HexSink sink) {
+  void _encodeSequence(SequenceType def, dynamic val, HexEncoder sink) {
     assertionCheck(val is List);
     sink.compact((val as List).length);
     for (var i = 0; i < val.length; i++) {
-      _encodeWithHexSink(def.type, val[i], sink);
+      _encodeWithHexEncoder(def.type, val[i], sink);
     }
   }
 
   ///
   /// Encodes Tuple
-  void _encodeTuple(TupleType def, dynamic val, HexSink sink) {
+  void _encodeTuple(TupleType def, dynamic val, HexEncoder sink) {
     if (def.tuple.isEmpty) {
       assertNotNull(val == null);
       return;
@@ -357,22 +357,22 @@ class Codec {
     assertionCheck(def.tuple.length == val.length,
         'Incorrect length of values to unwrap to tuple.');
     for (var i = 0; i < val.length; i++) {
-      _encodeWithHexSink(def.tuple[i], val[i], sink);
+      _encodeWithHexEncoder(def.tuple[i], val[i], sink);
     }
   }
 
   ///
   /// Encodes Struct
-  void _encodeStruct(CodecStructType def, dynamic val, HexSink sink) {
+  void _encodeStruct(CodecStructType def, dynamic val, HexEncoder sink) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
-      _encodeWithHexSink(f.type, val[f.name], sink);
+      _encodeWithHexEncoder(f.type, val[f.name], sink);
     }
   }
 
   ///
   /// Encodes Variant
-  void _encodeVariant(CodecVariantType def, dynamic val, HexSink sink) {
+  void _encodeVariant(CodecVariantType def, dynamic val, HexEncoder sink) {
     assertionCheck(val is Map<String, dynamic>);
 
     for (var key in (val as Map<String, dynamic>).keys) {
@@ -383,7 +383,7 @@ class Codec {
           case CodecVariantKind.empty:
             break;
           case CodecVariantKind.value:
-            _encodeWithHexSink(
+            _encodeWithHexEncoder(
                 (variant as CodecValueVariant).type, val[key], sink);
             break;
           case CodecVariantKind.tuple:
@@ -400,12 +400,12 @@ class Codec {
 
   ///
   /// Encodes Option
-  void _encodeOption(OptionType def, dynamic val, HexSink sink) {
+  void _encodeOption(OptionType def, dynamic val, HexEncoder sink) {
     if (val == null) {
       sink.u8(0);
     } else {
       sink.u8(1);
-      _encodeWithHexSink(def.type, val, sink);
+      _encodeWithHexEncoder(def.type, val, sink);
     }
   }
 
@@ -418,7 +418,7 @@ class Codec {
 
   ///
   /// Encodes Bytes
-  void _encodeBytes(dynamic val, HexSink sink) {
+  void _encodeBytes(dynamic val, HexEncoder sink) {
     if (val is String) {
       val = decodeHex(val).toList();
     }
@@ -430,7 +430,8 @@ class Codec {
 
   ///
   /// Encodes Bytes Array
-  void _encodeBytesArray(CodecBytesArrayType def, dynamic val, HexSink sink) {
+  void _encodeBytesArray(
+      CodecBytesArrayType def, dynamic val, HexEncoder sink) {
     assertionCheck(val is List && val.length == def.len);
     sink.bytes(val);
   }
@@ -444,7 +445,7 @@ class Codec {
 
   ///
   /// Encodes Bit Sequence
-  void _encodeBitSequence(dynamic bits, HexSink sink) {
+  void _encodeBitSequence(dynamic bits, HexEncoder sink) {
     assertionCheck(
         bits is List<int>, 'BitSequence can have bits of type List<int> only.');
     sink.compact(bits.length * 8);
@@ -504,7 +505,7 @@ class Codec {
   }
 
   /// Encodes [source] object to `sink` when [Primitive] is know
-  void _encodePrimitive(Primitive type, dynamic val, HexSink sink) {
+  void _encodePrimitive(Primitive type, dynamic val, HexEncoder sink) {
     switch (type) {
       case Primitive.I8:
       case Primitive.U8:

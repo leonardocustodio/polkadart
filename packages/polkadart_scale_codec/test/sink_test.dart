@@ -7,7 +7,7 @@ import 'package:test/scaffolding.dart';
 
 void testCompact(String expectedHex, dynamic val) {
   test('When $val is compacted, it should produce result: $expectedHex.', () {
-    final sink = HexSink();
+    final sink = HexEncoder();
 
     sink.compact(val);
 
@@ -27,7 +27,7 @@ void testCompact(String expectedHex, dynamic val) {
 /// // [expectedHex] : '0x04'
 /// // Below code is similar to
 ///
-/// var sink = HexSink();
+/// var sink = HexEncoder();
 /// sink.u8(1);
 ///
 /// var computedHex = sink.toHex();
@@ -41,7 +41,7 @@ void testPrimitiveCompact(
   test(
       'When $methodName() is provided with args: $args, it must produce result: $expectedHex.',
       () {
-    var sink = HexSink();
+    var sink = HexEncoder();
     var mirrorSink = reflect(sink);
     mirrorSink.invoke(Symbol(methodName), [args]);
 
@@ -70,7 +70,7 @@ void main() {
 
   group('Sink write() Test', () {
     test('When passed any positive integer, then it generates hex easily.', () {
-      final sink = HexSink();
+      final sink = HexEncoder();
 
       sink.write(pow(2, 62) as int);
 
@@ -82,7 +82,7 @@ void main() {
     });
 
     test('When passed any negative integer, then it generates hex easily.', () {
-      final sink = HexSink();
+      final sink = HexEncoder();
 
       sink.write(-pow(2, 62) as int);
 
@@ -95,7 +95,7 @@ void main() {
 
   group('Sink bytes() Test', () {
     test('When passed with correct bytes, then it calculates hex easily.', () {
-      final sink = HexSink();
+      final sink = HexEncoder();
 
       sink.bytes([
         68,
@@ -128,7 +128,7 @@ void main() {
     test(
         'When passed with incorrect bytes, then it throws \'UnexpectedCaseException\'',
         () {
-      final sink = HexSink();
+      final sink = HexEncoder();
 
       final bytesValue = [
         68,
@@ -163,7 +163,7 @@ void main() {
       final val = 2.toBigInt.pow(536.toBigInt.toInt());
 
       // Sink Object
-      final sink = HexSink();
+      final sink = HexEncoder();
 
       // Match exception
       expect(() => sink.compact(val),
@@ -176,7 +176,7 @@ void main() {
       final val = 2.toBigInt.pow(536.toBigInt.toInt()).toInt();
 
       // Sink Object
-      final sink = HexSink();
+      final sink = HexEncoder();
 
       // Match exception
       expect(() => sink.compact(val),
@@ -188,7 +188,7 @@ void main() {
       // lowest - 1 value
       final val = -1;
       // Sink Object
-      final sink = HexSink();
+      final sink = HexEncoder();
 
       // Match exception
       expect(() => sink.compact(val),

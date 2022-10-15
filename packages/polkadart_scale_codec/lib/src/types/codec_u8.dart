@@ -21,7 +21,7 @@ class CodecU8 implements NewCodecType {
       );
     }
 
-    var sink = HexSink();
+    var sink = HexEncoder();
     sink.u8(value);
     return sink.toHex();
   }

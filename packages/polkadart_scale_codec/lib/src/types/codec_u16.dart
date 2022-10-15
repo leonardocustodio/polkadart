@@ -21,7 +21,7 @@ class CodecU16 implements NewCodecType {
       );
     }
 
-    var sink = HexSink();
+    var sink = HexEncoder();
     sink.u16(value);
     return sink.toHex();
   }
