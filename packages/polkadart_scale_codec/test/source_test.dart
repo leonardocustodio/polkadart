@@ -5,7 +5,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
-void unCompactHexFromSource(String compactedHex, dynamic expectedValue) {
+void decodeCompactHexFromSource(String compactedHex, dynamic expectedValue) {
   test(
       'When a hex:$compactedHex is compacted, it should produce result: $expectedValue.',
       () {
@@ -34,7 +34,7 @@ void unCompactHexFromSource(String compactedHex, dynamic expectedValue) {
 ///
 /// expect(computedValue, expectedValue);
 /// ```
-void testPrimitiveUnCompactingFromSource(
+void testPrimitiveDecodeCompactingFromSource(
     {required String methodName,
     required String compactedHex,
     required dynamic expectedValue}) {
@@ -54,15 +54,15 @@ void main() {
     //
     // Supported Compact values can range from  0 - ((2 ^ 536) - 1)
     //
-    unCompactHexFromSource('0x00', 0);
-    unCompactHexFromSource('0x04', 1);
-    unCompactHexFromSource('0xa8', 42);
-    unCompactHexFromSource('0x1501', 69);
-    unCompactHexFromSource('0xfeff0300', 65535);
-    unCompactHexFromSource('0x0b00407a10f35a', 100000000000000);
-    unCompactHexFromSource(
+    decodeCompactHexFromSource('0x00', 0);
+    decodeCompactHexFromSource('0x04', 1);
+    decodeCompactHexFromSource('0xa8', 42);
+    decodeCompactHexFromSource('0x1501', 69);
+    decodeCompactHexFromSource('0xfeff0300', 65535);
+    decodeCompactHexFromSource('0x0b00407a10f35a', 100000000000000);
+    decodeCompactHexFromSource(
         '0x1700007014057fd8b806', BigInt.parse('124000000000000000000'));
-    unCompactHexFromSource(
+    decodeCompactHexFromSource(
         '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         2.toBigInt.pow(536.toBigInt.toInt()) - 1.toBigInt);
   });
@@ -72,33 +72,33 @@ void main() {
     // u8
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u8', expectedValue: 0, compactedHex: '0x00');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u8', expectedValue: 255, compactedHex: '0xff');
     }
 
     // u16
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u16', expectedValue: 0, compactedHex: '0x0000');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u16', expectedValue: 65535, compactedHex: '0xffff');
     }
 
     // u32
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u32', expectedValue: 0, compactedHex: '0x00000000');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u32',
           expectedValue: pow(2, 32) - 1,
           compactedHex: '0xffffffff');
@@ -107,13 +107,13 @@ void main() {
     // u64
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u64',
           expectedValue: BigInt.from(0),
           compactedHex: '0x0000000000000000');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u64',
           expectedValue: 2.toBigInt.pow(64) - 1.toBigInt,
           compactedHex: '0xffffffffffffffff');
@@ -122,13 +122,13 @@ void main() {
     // u128
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u128',
           expectedValue: BigInt.from(0),
           compactedHex: '0x00000000000000000000000000000000');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u128',
           expectedValue: 2.toBigInt.pow(128) - 1.toBigInt,
           compactedHex: '0xffffffffffffffffffffffffffffffff');
@@ -137,14 +137,14 @@ void main() {
     // u256
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u256',
           expectedValue: BigInt.from(0),
           compactedHex:
               '0x0000000000000000000000000000000000000000000000000000000000000000');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'u256',
           expectedValue: 2.toBigInt.pow(128) - 1.toBigInt,
           compactedHex:
@@ -155,35 +155,35 @@ void main() {
     //i8
     {
       // i8 lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i8', expectedValue: -128, compactedHex: '0x80');
 
       // i8 highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i8', expectedValue: 127, compactedHex: '0x7f');
     }
 
     // i16
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i16', expectedValue: -32768, compactedHex: '0x0080');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i16', expectedValue: 32767, compactedHex: '0xff7f');
     }
 
     // i32
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i32',
           expectedValue: -2147483648,
           compactedHex: '0x00000080');
 
       // highest acceptable possilbe
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i32',
           expectedValue: 2147483647,
           compactedHex: '0xffffff7f');
@@ -192,13 +192,13 @@ void main() {
     // i64
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i64',
           expectedValue: -2.toBigInt.pow(64 - 1),
           compactedHex: '0x0000000000000080');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i64',
           expectedValue: 2.toBigInt.pow(64 - 1) - 1.toBigInt,
           compactedHex: '0xffffffffffffff7f');
@@ -207,13 +207,13 @@ void main() {
     // i128
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i128',
           expectedValue: -2.toBigInt.pow(128 - 1),
           compactedHex: '0x00000000000000000000000000000080');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i128',
           expectedValue: 2.toBigInt.pow(128 - 1) - 1.toBigInt,
           compactedHex: '0xffffffffffffffffffffffffffffff7f');
@@ -222,14 +222,14 @@ void main() {
     // i256
     {
       // lowest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i256',
           expectedValue: -2.toBigInt.pow(256 - 1),
           compactedHex:
               '0x0000000000000000000000000000000000000000000000000000000000000080');
 
       // highest acceptable possible
-      testPrimitiveUnCompactingFromSource(
+      testPrimitiveDecodeCompactingFromSource(
           methodName: 'i256',
           expectedValue: 2.toBigInt.pow(256 - 1) - 1.toBigInt,
           compactedHex:
@@ -238,13 +238,13 @@ void main() {
 
     // Bool
     // true
-    testPrimitiveUnCompactingFromSource(
+    testPrimitiveDecodeCompactingFromSource(
         methodName: 'boolean', expectedValue: true, compactedHex: '0x01');
     // false
-    testPrimitiveUnCompactingFromSource(
+    testPrimitiveDecodeCompactingFromSource(
         methodName: 'boolean', expectedValue: false, compactedHex: '0x00');
 
-    testPrimitiveUnCompactingFromSource(
+    testPrimitiveDecodeCompactingFromSource(
         methodName: 'str',
         expectedValue: 'github: justkawal',
         compactedHex: '0x446769746875623a206a7573746b6177616c');
