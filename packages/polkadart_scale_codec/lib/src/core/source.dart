@@ -96,7 +96,7 @@ class Source {
 
   ///
   /// Returns: `BigInt` | `int`
-  dynamic uncompact() {
+  dynamic decodeCompact() {
     int b = _byte();
     var mode = b & 3;
     switch (mode) {
@@ -138,7 +138,7 @@ class Source {
   }
 
   int lengthOfCompact() {
-    var length = uncompact();
+    var length = decodeCompact();
     assertionCheck(length is int);
     return length;
   }

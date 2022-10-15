@@ -5,15 +5,15 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
-void unCompactHexFromSource(String compactedHex, dynamic expectedVal) {
+void unCompactHexFromSource(String compactedHex, dynamic expectedValue) {
   test(
-      'When a hex:$compactedHex is compacted, it should produce result: $expectedVal.',
+      'When a hex:$compactedHex is compacted, it should produce result: $expectedValue.',
       () {
     final source = Source(compactedHex);
 
-    var computedVal = source.uncompact();
+    var computedValue = source.decodeCompact();
 
-    expect(computedVal, expectedVal);
+    expect(computedValue, expectedValue);
   });
 }
 
@@ -25,14 +25,14 @@ void unCompactHexFromSource(String compactedHex, dynamic expectedVal) {
 /// // What's happening here ?
 /// // [methodName]   : 'u8'
 /// // [compactedHex] : '0x04'
-/// // [expectedVal]  : 1
+/// // [expectedValue]  : 1
 /// // Below code is similar to
 ///
 /// var source = Source('0x04');
 ///
-/// final computedVal = source.u8();
+/// final computedValue = source.u8();
 ///
-/// expect(computedVal, expectedVal);
+/// expect(computedValue, expectedValue);
 /// ```
 void testPrimitiveUnCompactingFromSource(
     {required String methodName,
