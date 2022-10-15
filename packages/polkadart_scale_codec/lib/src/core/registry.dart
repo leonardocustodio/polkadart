@@ -301,7 +301,7 @@ class OldTypeRegistry {
       case "array":
         return RegistryArrayType(
           item: _normalizeType((type as RegistryArrayType).item, pallet),
-          len: type.len,
+          length: type.length,
         );
       case "tuple":
         return RegistryTupleType(
@@ -388,12 +388,12 @@ class OldTypeRegistry {
         {
           var list = assertTwoParams(type);
           var key = list[0];
-          var val = list[1];
+          var value = list[1];
           return _normalizeType(
               RegistryNamedType(
                 name: 'Vec',
                 params: [
-                  RegistryTupleType(params: [key, val])
+                  RegistryTupleType(params: [key, value])
                 ],
               ),
               pallet);
@@ -510,19 +510,19 @@ class OldTypeRegistry {
   }
 
   int _buildSet(dynamic def) {
-    var len =
+    var length =
         (def?['_set']?['_bitLength'] ?? 0) == 0 ? 8 : def['_set']['_bitLength'];
-    switch (len) {
+    switch (length) {
       case 8:
       case 16:
       case 32:
       case 64:
       case 128:
       case 256:
-        return _use('U$len');
+        return _use('U$length');
       default:
-        assertionCheck(len % 8 == 0, 'bit length must me aligned');
-        return _use('[u8; ${len / 8}]');
+        assertionCheck(length % 8 == 0, 'bit length must me aligned');
+        return _use('[u8; ${length / 8}]');
     }
   }
 
@@ -573,7 +573,7 @@ class OldTypeRegistry {
   }
 
   Type _buildArray(RegistryArrayType type) {
-    return ArrayType(type: _use(type.item), len: type.len);
+    return ArrayType(type: _use(type.item), length: type.length);
   }
 
   Type _buildTuple(RegistryTupleType type) {

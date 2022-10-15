@@ -46,7 +46,7 @@ void main() {
     test(
         'should throw \'AssertionException\' when encoding \'integer\' value on bool type.',
         () {
-      final exceptionMessage = 'Needed val of type \'bool\' but found int.';
+      final exceptionMessage = 'Needed value of type \'bool\' but found int.';
       expect(
           () => codec.encode(registryIndex, 0),
           throwsA(predicate((e) =>
@@ -55,7 +55,7 @@ void main() {
     test(
         'should throw \'AssertionException\' when encoding \'null\' value on bool type.',
         () {
-      final exceptionMessage = 'Needed val of type \'bool\' but found Null.';
+      final exceptionMessage = 'Needed value of type \'bool\' but found Null.';
       expect(
           () => codec.encode(registryIndex, null),
           throwsA(predicate((e) =>

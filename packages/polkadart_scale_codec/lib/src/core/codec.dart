@@ -93,9 +93,9 @@ class Codec {
   /// ```
   dynamic decode(int type, dynamic data) {
     Source source = Source(data);
-    var val = decodeFromSource(type, source);
+    var value = decodeFromSource(type, source);
     source.assertEOF();
-    return val;
+    return value;
   }
 
   /// Encodes the value to hex
@@ -140,9 +140,9 @@ class Codec {
   ///
   /// var result = codec.encode(registry.use('Option<u8>'), 8); // '0x0108'
   /// ```
-  String encode(int type, dynamic val) {
+  String encode(int type, dynamic value) {
     var sink = HexSink();
-    encodeWithHexSink(type, val, sink);
+    encodeWithHexSink(type, value, sink);
     return sink.toHex();
   }
 
@@ -180,7 +180,7 @@ class Codec {
       case TypeKind.Bytes:
         return _decodeBytes(source);
       case TypeKind.BytesArray:
-        return source.bytes((def as CodecBytesArrayType).len);
+        return source.bytes((def as CodecBytesArrayType).length);
       default:
         throw UnexpectedCaseException(
             'Unexpected TypeKind: ${(def as Type).kind}.');
@@ -189,11 +189,11 @@ class Codec {
 
   /// Decodes Array
   List<dynamic> _decodeArray(ArrayType def, Source source) {
-    int len = def.len;
+    int length = def.length;
     int type = def.type;
-    List<dynamic> result = <dynamic>[]..length = len;
+    List<dynamic> result = <dynamic>[]..length = length;
 
-    for (var i = 0; i < len; i++) {
+    for (var i = 0; i < length; i++) {
       result[i] = decodeFromSource(type, source);
     }
     return result;
@@ -201,9 +201,9 @@ class Codec {
 
   /// Decodes Bit Sequence
   List<dynamic> _decodeSequence(SequenceType def, Source source) {
-    int len = source.lengthOfCompact();
-    List<dynamic> result = <dynamic>[]..length = len;
-    for (var i = 0; i < len; i++) {
+    int length = source.lengthOfCompact();
+    List<dynamic> result = <dynamic>[]..length = length;
+    for (var i = 0; i < length; i++) {
       result[i] = decodeFromSource(def.type, source);
     }
     return result;
@@ -274,7 +274,7 @@ class Codec {
     }
   }
 
-  /// Encodes the [val] and writes the result to [sink] object
+  /// Encodes the [value] and writes the result to [sink] object
   ///
   ///Example:
   /// ```dart
@@ -284,41 +284,41 @@ class Codec {
   /// hexSink.toHex(); // '0x0108'
   ///
   /// ```
-  void encodeWithHexSink(int type, dynamic val, HexSink sink) {
+  void encodeWithHexSink(int type, dynamic value, HexSink sink) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
-        _encodePrimitive((def as PrimitiveType).primitive, val, sink);
+        _encodePrimitive((def as PrimitiveType).primitive, value, sink);
         break;
       case TypeKind.Compact:
-        sink.compact(val);
+        sink.compact(value);
         break;
       case TypeKind.BitSequence:
-        _encodeBitSequence(val, sink);
+        _encodeBitSequence(value, sink);
         break;
       case TypeKind.Array:
-        _encodeArray((def as ArrayType), val, sink);
+        _encodeArray((def as ArrayType), value, sink);
         break;
       case TypeKind.Sequence:
-        _encodeSequence((def as SequenceType), val, sink);
+        _encodeSequence((def as SequenceType), value, sink);
         break;
       case TypeKind.Tuple:
-        _encodeTuple((def as TupleType), val, sink);
+        _encodeTuple((def as TupleType), value, sink);
         break;
       case TypeKind.Struct:
-        _encodeStruct((def as CodecStructType), val, sink);
+        _encodeStruct((def as CodecStructType), value, sink);
         break;
       case TypeKind.Variant:
-        _encodeVariant((def as CodecVariantType), val, sink);
+        _encodeVariant((def as CodecVariantType), value, sink);
         break;
       case TypeKind.BytesArray:
-        _encodeBytesArray((def as CodecBytesArrayType), val, sink);
+        _encodeBytesArray((def as CodecBytesArrayType), value, sink);
         break;
       case TypeKind.Bytes:
-        _encodeBytes(val, sink);
+        _encodeBytes(value, sink);
         break;
       case TypeKind.Option:
-        _encodeOption((def as OptionType), val, sink);
+        _encodeOption((def as OptionType), value, sink);
         break;
       default:
         throw UnexpectedCaseException('Unexpected TypeKind: ${def.kind}.');
@@ -327,55 +327,55 @@ class Codec {
 
   ///
   /// Encodes Array
-  void _encodeArray(ArrayType def, dynamic val, HexSink sink) {
-    assertionCheck(val is List && val.length == def.len);
+  void _encodeArray(ArrayType def, dynamic value, HexSink sink) {
+    assertionCheck(value is List && value.length == def.length);
 
-    for (var i = 0; i < val.length; i++) {
-      encodeWithHexSink(def.type, val[i], sink);
+    for (var i = 0; i < value.length; i++) {
+      encodeWithHexSink(def.type, value[i], sink);
     }
   }
 
   ///
   /// Encodes Bit Sequence
-  void _encodeSequence(SequenceType def, dynamic val, HexSink sink) {
-    assertionCheck(val is List);
-    sink.compact((val as List).length);
-    for (var i = 0; i < val.length; i++) {
-      encodeWithHexSink(def.type, val[i], sink);
+  void _encodeSequence(SequenceType def, dynamic value, HexSink sink) {
+    assertionCheck(value is List);
+    sink.compact((value as List).length);
+    for (var i = 0; i < value.length; i++) {
+      encodeWithHexSink(def.type, value[i], sink);
     }
   }
 
   ///
   /// Encodes Tuple
-  void _encodeTuple(TupleType def, dynamic val, HexSink sink) {
+  void _encodeTuple(TupleType def, dynamic value, HexSink sink) {
     if (def.tuple.isEmpty) {
-      assertNotNull(val == null);
+      assertNotNull(value == null);
       return;
     }
-    assertionCheck(val is List,
-        'List of values need to unwrap to tuple, but found \'${val.runtimeType}\'.');
-    assertionCheck(def.tuple.length == val.length,
+    assertionCheck(value is List,
+        'List of values need to unwrap to tuple, but found \'${value.runtimeType}\'.');
+    assertionCheck(def.tuple.length == value.length,
         'Incorrect length of values to unwrap to tuple.');
-    for (var i = 0; i < val.length; i++) {
-      encodeWithHexSink(def.tuple[i], val[i], sink);
+    for (var i = 0; i < value.length; i++) {
+      encodeWithHexSink(def.tuple[i], value[i], sink);
     }
   }
 
   ///
   /// Encodes Struct
-  void _encodeStruct(CodecStructType def, dynamic val, HexSink sink) {
+  void _encodeStruct(CodecStructType def, dynamic value, HexSink sink) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
-      encodeWithHexSink(f.type, val[f.name], sink);
+      encodeWithHexSink(f.type, value[f.name], sink);
     }
   }
 
   ///
   /// Encodes Variant
-  void _encodeVariant(CodecVariantType def, dynamic val, HexSink sink) {
-    assertionCheck(val is Map<String, dynamic>);
+  void _encodeVariant(CodecVariantType def, dynamic value, HexSink sink) {
+    assertionCheck(value is Map<String, dynamic>);
 
-    for (var key in (val as Map<String, dynamic>).keys) {
+    for (var key in (value as Map<String, dynamic>).keys) {
       CodecVariant? variant = def.variantsByName[key];
       if (variant != null) {
         sink.u8(variant.index);
@@ -384,14 +384,14 @@ class Codec {
             break;
           case CodecVariantKind.value:
             encodeWithHexSink(
-                (variant as CodecValueVariant).type, val[key], sink);
+                (variant as CodecValueVariant).type, value[key], sink);
             break;
           case CodecVariantKind.tuple:
             _encodeTuple(
-                (variant as CodecTupleVariant).def, val['value'], sink);
+                (variant as CodecTupleVariant).def, value['value'], sink);
             break;
           case CodecVariantKind.struct:
-            _encodeStruct((variant as CodecStructVariant).def, val, sink);
+            _encodeStruct((variant as CodecStructVariant).def, value, sink);
             break;
         }
       }
@@ -400,46 +400,46 @@ class Codec {
 
   ///
   /// Encodes Option
-  void _encodeOption(OptionType def, dynamic val, HexSink sink) {
-    if (val == null) {
+  void _encodeOption(OptionType def, dynamic value, HexSink sink) {
+    if (value == null) {
       sink.u8(0);
     } else {
       sink.u8(1);
-      encodeWithHexSink(def.type, val, sink);
+      encodeWithHexSink(def.type, value, sink);
     }
   }
 
   ///
   /// Decodes Bytes
   List<int> _decodeBytes(Source source) {
-    int len = source.lengthOfCompact();
-    return source.bytes(len).toList();
+    int length = source.lengthOfCompact();
+    return source.bytes(length).toList();
   }
 
   ///
   /// Encodes Bytes
-  void _encodeBytes(dynamic val, HexSink sink) {
-    if (val is String) {
-      val = decodeHex(val).toList();
+  void _encodeBytes(dynamic value, HexSink sink) {
+    if (value is String) {
+      value = decodeHex(value).toList();
     }
-    assertionCheck(val is List,
+    assertionCheck(value is List,
         'Unable to encode due to invalid byte type, Try to pass \'Hex String\' or \'List<int>\'.');
-    sink.compact(val.length);
-    sink.bytes(val);
+    sink.compact(value.length);
+    sink.bytes(value);
   }
 
   ///
   /// Encodes Bytes Array
-  void _encodeBytesArray(CodecBytesArrayType def, dynamic val, HexSink sink) {
-    assertionCheck(val is List && val.length == def.len);
-    sink.bytes(val);
+  void _encodeBytesArray(CodecBytesArrayType def, dynamic value, HexSink sink) {
+    assertionCheck(value is List && value.length == def.length);
+    sink.bytes(value);
   }
 
   ///
   /// Decodes Bit Sequence
   Uint8List _decodeBitSequence(Source source) {
-    var len = (source.lengthOfCompact() / 8).ceil();
-    return source.bytes(len);
+    var length = (source.lengthOfCompact() / 8).ceil();
+    return source.bytes(length);
   }
 
   ///
@@ -504,7 +504,7 @@ class Codec {
   }
 
   /// Encodes [source] object to `sink` when [Primitive] is know
-  void _encodePrimitive(Primitive type, dynamic val, HexSink sink) {
+  void _encodePrimitive(Primitive type, dynamic value, HexSink sink) {
     switch (type) {
       case Primitive.I8:
       case Primitive.U8:
@@ -512,8 +512,8 @@ class Codec {
       case Primitive.U16:
       case Primitive.I32:
       case Primitive.U32:
-        assertionCheck(val is int,
-            'Needed val of type \'int\' but found ${val.runtimeType}.');
+        assertionCheck(value is int,
+            'Needed value of type \'int\' but found ${value.runtimeType}.');
         break;
       case Primitive.I64:
       case Primitive.U64:
@@ -521,22 +521,22 @@ class Codec {
       case Primitive.U128:
       case Primitive.I256:
       case Primitive.U256:
-        assertionCheck(val is BigInt,
-            'Needed val of type \'BigInt\' but found ${val.runtimeType}.');
+        assertionCheck(value is BigInt,
+            'Needed value of type \'BigInt\' but found ${value.runtimeType}.');
         break;
       case Primitive.Boolean:
-        assertionCheck(val is bool,
-            'Needed val of type \'bool\' but found ${val.runtimeType}.');
+        assertionCheck(value is bool,
+            'Needed value of type \'bool\' but found ${value.runtimeType}.');
         break;
       case Primitive.Str:
-        assertionCheck(val is String,
-            'Needed val of type \'String\' but found ${val.runtimeType}.');
+        assertionCheck(value is String,
+            'Needed value of type \'String\' but found ${value.runtimeType}.');
         break;
       default:
         throw UnexpectedCaseException('Unexpected PrimitiveType: $type.');
     }
 
     var mirrorSink = reflect(sink);
-    mirrorSink.invoke(Symbol(type.name.toLowerCase()), [val]);
+    mirrorSink.invoke(Symbol(type.name.toLowerCase()), [value]);
   }
 }

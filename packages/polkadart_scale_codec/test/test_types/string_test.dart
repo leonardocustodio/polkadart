@@ -43,7 +43,7 @@ void main() {
   // Exception at type: `String`
   group('Exception String:', () {
     test('should throw \'AssertionException\' when trying to encode 0', () {
-      final exceptionMessage = 'Needed val of type \'String\' but found int.';
+      final exceptionMessage = 'Needed value of type \'String\' but found int.';
 
       expect(
           () => codec.encode(registry.getIndex('String'), 0),
