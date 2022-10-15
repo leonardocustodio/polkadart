@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   // Creates the registry for parsing the types and selecting particular schema.
-  final registry = OldTypeRegistry();
+  final registry = TypeRegistry();
   // specifying which schema key to select and use
   final registryIndex = registry.getIndex('bool');
 

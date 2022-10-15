@@ -1,6 +1,6 @@
 part of polkadart_scale_codec_core;
 
-class OldTypeRegistry {
+class TypeRegistry {
   /// [Private]
   ///
   /// Allowed list types: `Type` or `TypeAlias`
@@ -21,8 +21,8 @@ class OldTypeRegistry {
   Map<String, dynamic>? types;
 
   ///
-  /// Constructor to initialize OldTypeRegistry Object
-  OldTypeRegistry({this.types, this.typesAlias});
+  /// Constructor to initialize TypeRegistry Object
+  TypeRegistry({this.types, this.typesAlias});
 
   void select(dynamic typeExp, {String? pallet}) =>
       _use(typeExp, pallet: pallet);

@@ -14,7 +14,7 @@ void main() {
       },
     };
     // Creates the registry for parsing the types and selecting particular schema.
-    final registry = OldTypeRegistry(types: typesRegistry);
+    final registry = TypeRegistry(types: typesRegistry);
 
     // specifyng which schema type to use
     registry.select('Codec');

@@ -12,7 +12,7 @@ class Codec {
   /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
-  /// var registry = OldTypeRegistry(
+  /// var registry = TypeRegistry(
   ///   old_types.OldTypes(
   ///     types: <String, dynamic>{
   ///       'Codec': {
@@ -56,7 +56,7 @@ class Codec {
   /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
-  /// var registry = OldTypeRegistry(
+  /// var registry = TypeRegistry(
   ///   old_types.OldTypes(
   ///     types: <String, dynamic>{
   ///       'Codec': {
@@ -105,7 +105,7 @@ class Codec {
   /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   ///
   /// // Creates the registry for parsing the types and selecting particular schema.
-  /// var registry = OldTypeRegistry(
+  /// var registry = TypeRegistry(
   ///   old_types.OldTypes(
   ///     types: <String, dynamic>{
   ///       'Codec': {
