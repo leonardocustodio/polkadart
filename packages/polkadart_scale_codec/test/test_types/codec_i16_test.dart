@@ -102,7 +102,7 @@ void main() {
       const value = '0xffff7fff';
 
       expect(
-        () => CodecI8().decodeFromHex(value),
+        () => CodecI16().decodeFromHex(value),
         throwsA(isA<Exception>()),
       );
     });
