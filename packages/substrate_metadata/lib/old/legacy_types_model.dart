@@ -1,30 +1,30 @@
-class OldTypes {
+class LegacyTypes {
   Map<String, dynamic>? types;
   Map<String, Map<String, String>>? typesAlias;
   Map<String, String>? signedExtensions;
 
-  OldTypes({this.types, this.typesAlias, this.signedExtensions});
+  LegacyTypes({this.types, this.typesAlias, this.signedExtensions});
 
-  static OldTypes fromMap(Map<String, dynamic> map) {
-    return OldTypes(
+  static LegacyTypes fromMap(Map<String, dynamic> map) {
+    return LegacyTypes(
         types: map['types'],
         typesAlias: map['typesAlias'],
         signedExtensions: map['signedExtensions']);
   }
 }
 
-class OldTypesWithSpecVersionRange extends OldTypes {
+class LegacyTypesWithSpecVersionRange extends LegacyTypes {
   /// minmax ~ ( min and max -> range of Spec-Version )
   final List<int?> minmax;
 
-  OldTypesWithSpecVersionRange(
+  LegacyTypesWithSpecVersionRange(
       {required this.minmax,
       super.types,
       super.typesAlias,
       super.signedExtensions});
 
-  static OldTypesWithSpecVersionRange fromMap(Map<String, dynamic> map) {
-    return OldTypesWithSpecVersionRange(
+  static LegacyTypesWithSpecVersionRange fromMap(Map<String, dynamic> map) {
+    return LegacyTypesWithSpecVersionRange(
         minmax: (map['minmax'] as List).cast<int?>(),
         types: map['types'],
         typesAlias: map['typesAlias'],
@@ -32,21 +32,21 @@ class OldTypesWithSpecVersionRange extends OldTypes {
   }
 }
 
-class OldTypesBundle extends OldTypes {
-  List<OldTypesWithSpecVersionRange>? versions;
+class LegacyTypesBundle extends LegacyTypes {
+  List<LegacyTypesWithSpecVersionRange>? versions;
 
-  OldTypesBundle(
+  LegacyTypesBundle(
       {this.versions, super.types, super.typesAlias, super.signedExtensions});
 
-  static OldTypesBundle fromMap(Map<String, dynamic> map) {
-    var obj = OldTypesBundle(
+  static LegacyTypesBundle fromMap(Map<String, dynamic> map) {
+    var obj = LegacyTypesBundle(
         types: map['types'],
         typesAlias: map['typesAlias'],
         signedExtensions: map['signedExtensions']);
 
     if (map['versions'] != null) {
       obj.versions = (map['versions'] as List)
-          .map((value) => OldTypesWithSpecVersionRange.fromMap(value))
+          .map((value) => LegacyTypesWithSpecVersionRange.fromMap(value))
           .toList();
     }
 
