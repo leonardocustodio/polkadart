@@ -28,8 +28,7 @@ void main() {
       expect(CodecU8().encodeToHex(largestSupportedValue), expectedResult);
     });
 
-    test('Should throw InvalidSizeException when value is smaller than zero',
-        () {
+    test('Should throw InvalidSizeException when value is negative', () {
       const value = -1;
 
       expect(

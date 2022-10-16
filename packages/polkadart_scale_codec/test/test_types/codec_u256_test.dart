@@ -32,8 +32,7 @@ void main() {
       expect(CodecU256().encodeToHex(largestSupportedValue), expectedResult);
     });
 
-    test('Should throw InvalidSizeException when value is smaller than zero',
-        () {
+    test('Should throw InvalidSizeException when value is negative', () {
       final value = BigInt.from(-1);
 
       expect(

@@ -28,8 +28,7 @@ void main() {
       expect(CodecU16().encodeToHex(largestSupportedValue), expectedResult);
     });
 
-    test('Should throw InvalidSizeException when value is smaller than zero',
-        () {
+    test('Should throw InvalidSizeException when value is negative', () {
       const value = -1;
 
       expect(
@@ -53,7 +52,7 @@ void main() {
       int? value;
 
       expect(
-        () => CodecU8().encodeToHex(value),
+        () => CodecU16().encodeToHex(value),
         throwsA(isA<UnexpectedTypeException>()),
       );
     });
@@ -62,7 +61,7 @@ void main() {
       final value = 5.toBigInt;
 
       expect(
-        () => CodecU8().encodeToHex(value),
+        () => CodecU16().encodeToHex(value),
         throwsA(isA<UnexpectedTypeException>()),
       );
     });
@@ -72,7 +71,7 @@ void main() {
       const value = '5';
 
       expect(
-        () => CodecU8().encodeToHex(value),
+        () => CodecU16().encodeToHex(value),
         throwsA(isA<UnexpectedTypeException>()),
       );
     });
