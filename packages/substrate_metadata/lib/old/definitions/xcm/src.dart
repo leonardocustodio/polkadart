@@ -1,6 +1,10 @@
+/// (From Tag: @subsquid/substrate-metadata_v1.1.0)
+///
+/// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/xcm/index.ts
+
 part of xcm;
 
-final types = OldTypes(
+final types = LegacyTypes(
   types: <String, dynamic>{
     ...V0,
     ...V1,
