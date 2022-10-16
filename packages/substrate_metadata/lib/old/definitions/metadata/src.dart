@@ -1,6 +1,6 @@
 part of metadata;
 
-final types = OldTypes(types: <String, dynamic>{
+final types = LegacyTypes(types: <String, dynamic>{
   'Type': 'Str',
   ...ScaleInfoTypes,
   ...V9,

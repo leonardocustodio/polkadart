@@ -1,6 +1,6 @@
 library metadata;
 
-import 'package:substrate_metadata/old/types.dart';
+import 'package:substrate_metadata/old/legacy_types_model.dart';
 
 part 'base.dart';
 part 'src.dart';

@@ -2,6 +2,8 @@
 ///
 /// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/metadata/base.ts
 
+// ignore_for_file: constant_identifier_names
+
 part of metadata;
 
 const Si1Variant = <String, String>{
