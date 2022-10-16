@@ -19,11 +19,13 @@ void main() {
       expect(CodecU8().encodeToHex(value), expectedResult);
     });
 
-    test('Should return correct encoded data when value is 255', () {
-      const value = 255;
+    test(
+        'Should return correct encoded data when value fits 8 bits and is positive',
+        () {
+      const largestSupportedValue = 255;
       const expectedResult = '0xff';
 
-      expect(CodecU8().encodeToHex(value), expectedResult);
+      expect(CodecU8().encodeToHex(largestSupportedValue), expectedResult);
     });
 
     test('Should throw InvalidSizeException when value is smaller than zero',
@@ -36,7 +38,8 @@ void main() {
       );
     });
 
-    test('Should throw InvalidSizeException when value is greater than 256',
+    test(
+        "Given an 8 bit decoder when value is positive and can't be represented it should throw",
         () {
       const value = 256;
 

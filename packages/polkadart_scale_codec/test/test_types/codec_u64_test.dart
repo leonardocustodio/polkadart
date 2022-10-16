@@ -20,12 +20,12 @@ void main() {
     });
 
     test(
-        'Should return correct encoded data when value is 18446744073709551615',
+        'Should return correct encoded data when value fits 64 bits and is positive',
         () {
-      final value = BigInt.parse('18446744073709551615');
+      final largestSupportedValue = BigInt.parse('18446744073709551615');
       const expectedResult = '0xffffffffffffffff';
 
-      expect(CodecU64().encodeToHex(value), expectedResult);
+      expect(CodecU64().encodeToHex(largestSupportedValue), expectedResult);
     });
 
     test('Should throw InvalidSizeException when value is smaller than zero',
@@ -39,7 +39,7 @@ void main() {
     });
 
     test(
-        'Should throw InvalidSizeException when value is greater than 18446744073709551615',
+        "Given an 64 bit decoder when value is positive and can't be represented it should throw",
         () {
       final value = BigInt.parse('18446744073709551616');
 
@@ -53,7 +53,7 @@ void main() {
       BigInt? value;
 
       expect(
-        () => CodecU8().encodeToHex(value),
+        () => CodecU64().encodeToHex(value),
         throwsA(isA<UnexpectedTypeException>()),
       );
     });
@@ -62,7 +62,7 @@ void main() {
       final value = 5.toBigInt;
 
       expect(
-        () => CodecU8().encodeToHex(value),
+        () => CodecU64().encodeToHex(value),
         throwsA(isA<UnexpectedTypeException>()),
       );
     });
@@ -72,7 +72,7 @@ void main() {
       const value = '5';
 
       expect(
-        () => CodecU8().encodeToHex(value),
+        () => CodecU64().encodeToHex(value),
         throwsA(isA<UnexpectedTypeException>()),
       );
     });
