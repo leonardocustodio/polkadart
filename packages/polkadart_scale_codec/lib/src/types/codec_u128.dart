@@ -11,7 +11,7 @@ part of '../core/core.dart';
 /// ```
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-class CodecU128 implements NewCodecType {
+class CodecU128 implements ScaleCodecType {
   @override
   String encodeToHex(value) {
     if (value is! BigInt) {

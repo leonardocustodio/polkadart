@@ -1,6 +1,6 @@
 part of '../core/core.dart';
 
-/// [CodecType] class to encode `unsigned 8-bit` integers.
+/// [ScaleCodecType] class to encode `unsigned 8-bit` integers.
 ///
 /// Basic integers are encoded using a fixed-width little-endian (LE) format.
 ///
@@ -11,7 +11,7 @@ part of '../core/core.dart';
 /// ```
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-class CodecU8 implements NewCodecType {
+class CodecU8 implements ScaleCodecType {
   @override
   String encodeToHex(value) {
     if (value is! int) {
