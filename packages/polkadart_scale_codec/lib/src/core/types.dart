@@ -253,8 +253,8 @@ abstract class Type {
 /// ```
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-abstract class ScaleCodecType {
-  String encodeToHex(value);
+abstract class ScaleCodecType<T> {
+  String encodeToHex(T value);
 
-  dynamic decodeFromHex(String encodedData);
+  T decodeFromHex(String encodedData);
 }

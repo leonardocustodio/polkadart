@@ -1,6 +1,6 @@
 part of '../core/core.dart';
 
-/// [CodecType] class to encode `unsigned 256-bit` integers.
+/// [ScaleCodecType] class to encode `unsigned 256-bit` integers.
 ///
 /// Basic integers are encoded using a fixed-width little-endian (LE) format.
 ///
@@ -11,16 +11,9 @@ part of '../core/core.dart';
 /// ```
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-class CodecU256 implements ScaleCodecType {
+class CodecU256 implements ScaleCodecType<BigInt> {
   @override
   String encodeToHex(value) {
-    if (value is! BigInt) {
-      throw UnexpectedTypeException(
-        expectedType: 'BigInt',
-        receivedType: value.runtimeType.toString(),
-      );
-    }
-
     var sink = HexEncoder();
     sink.u256(value);
     return sink.toHex();
