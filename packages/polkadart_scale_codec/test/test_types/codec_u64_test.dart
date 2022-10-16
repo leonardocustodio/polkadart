@@ -58,8 +58,8 @@ void main() {
       );
     });
 
-    test('Should throw UnexpectedTypeException when value is a BigInt', () {
-      final value = 5.toBigInt;
+    test('Should throw UnexpectedTypeException when value is a int', () {
+      final value = 5;
 
       expect(
         () => CodecU64().encodeToHex(value),
