@@ -137,14 +137,14 @@ class Source {
     return n;
   }
 
-  int lengthOfCompact() {
+  int compactLength() {
     var length = decodeCompact();
     assertionCheck(length is int);
     return length;
   }
 
   String str() {
-    var length = lengthOfCompact();
+    var length = compactLength();
     var buf = bytes(length);
     return utf8.decode(buf.toList());
   }

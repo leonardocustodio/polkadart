@@ -195,7 +195,7 @@ class Codec {
 
   /// Decodes Bit Sequence
   List<dynamic> _decodeSequence(SequenceType def, Source source) {
-    int length = source.lengthOfCompact();
+    int length = source.compactLength();
     List<dynamic> result = <dynamic>[]..length = length;
     for (var i = 0; i < length; i++) {
       result[i] = decodeFromSource(def.type, source);
@@ -406,7 +406,7 @@ class Codec {
   ///
   /// Decodes Bytes
   List<int> _decodeBytes(Source source) {
-    int length = source.lengthOfCompact();
+    int length = source.compactLength();
     return source.bytes(length).toList();
   }
 
@@ -432,7 +432,7 @@ class Codec {
   ///
   /// Decodes Bit Sequence
   Uint8List _decodeBitSequence(Source source) {
-    var length = (source.lengthOfCompact() / 8).ceil();
+    var length = (source.compactLength() / 8).ceil();
     return source.bytes(length);
   }
 
