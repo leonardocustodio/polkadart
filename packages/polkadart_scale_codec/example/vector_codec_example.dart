@@ -48,7 +48,7 @@ void main() {
   encoded =
       codec.encode(registry.getIndex('Vec<Option<bool>>'), [true, false, true]);
   final decodedVecOptionBool =
-      codec.decode(registry.getIndex('Vec<bool>'), encoded);
+      codec.decode(registry.getIndex('Vec<Option<bool>>'), encoded);
 
   // encoding and decoding [[0,1], [2,3], [4,5]] as Vec<Vec<u8>>
   encoded = codec.encode(registry.getIndex('Vec<Vec<u8>>'), [
