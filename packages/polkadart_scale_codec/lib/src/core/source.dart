@@ -34,8 +34,8 @@ class Source {
   }
 
   int i16() {
-    var val = u16();
-    return (val | (val & (pow(2, 15) as int)) * 0x1fffe).toSigned(16);
+    var value = u16();
+    return (value | (value & (pow(2, 15) as int)) * 0x1fffe).toSigned(16);
   }
 
   int u16() {
@@ -96,7 +96,7 @@ class Source {
 
   ///
   /// Returns: `BigInt` | `int`
-  dynamic compact() {
+  dynamic decodeCompact() {
     int b = _byte();
     var mode = b & 3;
     switch (mode) {
@@ -117,9 +117,9 @@ class Source {
 
   ///
   /// Returns: `BigInt` | `int`
-  dynamic _bigCompact(num len) {
+  dynamic _bigCompact(num length) {
     var i = u32();
-    switch (len) {
+    switch (length) {
       case 0:
         return i;
       case 1:
@@ -129,7 +129,7 @@ class Source {
     }
     var n = BigInt.from(i);
     var base = BigInt.from(32);
-    while (len-- != 0) {
+    while (length-- != 0) {
       n += BigInt.from(_byte()) << base.toInt();
       base += BigInt.from(8);
     }
@@ -138,20 +138,20 @@ class Source {
   }
 
   int compactLength() {
-    var len = compact();
-    assertionCheck(len is int);
-    return len;
+    var length = decodeCompact();
+    assertionCheck(length is int);
+    return length;
   }
 
   String str() {
-    var len = compactLength();
-    var buf = bytes(len);
+    var length = compactLength();
+    var buf = bytes(length);
     return utf8.decode(buf.toList());
   }
 
-  Uint8List bytes(int len) {
+  Uint8List bytes(int length) {
     var beg = _idx;
-    var end = _idx += len;
+    var end = _idx += length;
     if (_data.length < end) {
       throw EOFException();
     }
