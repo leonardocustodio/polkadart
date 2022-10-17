@@ -277,13 +277,8 @@ void main() {
       test(
           'should throw \'InvalidCompactException\' when encoding \'A\' with Compact<u8>',
           () {
-        final exceptionMessage =
-            'Expected `int` or `BigInt`, but found String.';
-        expect(
-            () => codec.encode(registry.getIndex('Compact<u8>'), 'A'),
-            throwsA(predicate((e) =>
-                e is UnexpectedTypeException &&
-                e.toString() == exceptionMessage)));
+        expect(() => codec.encode(registry.getIndex('Compact<u8>'), 'A'),
+            throwsA(isA<UnexpectedTypeException>()));
       });
 
       // Exceeding BigInt Compacting value range: 2 ** 536
