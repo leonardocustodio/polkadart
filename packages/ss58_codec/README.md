@@ -1,6 +1,6 @@
 ## SS58 Codec
 
-Provides encoder and decoder used by [SS58] to parse [substrate](https://docs.substrate.io/fundamentals/accounts-addresses-keys/) addresses.
+Provides encoder and decoder used by [SS58](https://github.com/rankanizer/polkadart/tree/main/packages/ss58) to parse [substrate](https://docs.substrate.io/fundamentals/accounts-addresses-keys/) addresses.
 
 ## Usage
 
