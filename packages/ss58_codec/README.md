@@ -21,5 +21,4 @@ void main() {
   String encodedAddress = SS58Codec.encode(address);
   print('Encoded address: $encodedAddress');
 }
-
 ```
