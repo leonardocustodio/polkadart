@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:ss58_codec/ss58_codec.dart';
 
 void main() {
@@ -9,4 +11,10 @@ void main() {
   // Encoding an Address Object
   String encodedAddress = SS58Codec.encode(address);
   print('Encoded address: $encodedAddress');
+
+  // Encoding with a custom prefix
+  Address customAddress =
+      Address(prefix: 0, bytes: Uint8List.fromList([1, 2, 3, 4]));
+  String encodedCustomAddress = SS58Codec.encode(customAddress);
+  print('Custom address encoded: $encodedCustomAddress');
 }
