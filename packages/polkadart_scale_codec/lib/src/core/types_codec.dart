@@ -57,7 +57,7 @@ extension TypeConverter on List<Type> {
         }
       case TypeKind.Array:
         if (isPrimitive(Primitive.U8, (def as ArrayType).type)) {
-          return CodecBytesArrayType(len: def.len);
+          return CodecBytesArrayType(length: def.length);
         } else {
           return def;
         }
@@ -89,15 +89,15 @@ extension TypeConverter on List<Type> {
           throw Exception('Variant type $index has duplicate case indexes');
         }
 
-        var len = 0;
+        var length = 0;
         if (variants.isNotEmpty) {
           variants.map((v) => v.index).forEach((index) {
-            len = max(len, index);
+            length = max(length, index);
           });
-          len += 1;
+          length += 1;
         }
 
-        List<CodecVariant?> placedVariants = <CodecVariant?>[]..length = len;
+        List<CodecVariant?> placedVariants = <CodecVariant?>[]..length = length;
         for (var v in variants) {
           late CodecVariant cv;
           if (v.fields.isEmpty || v.fields[0].name == null) {
