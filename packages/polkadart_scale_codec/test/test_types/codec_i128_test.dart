@@ -84,7 +84,7 @@ void main() {
     });
 
     test(
-        "Given an encoded string when it represents a integer that don't fit 64 bits it should throw",
+        "Given an encoded string when it represents a integer that don't fit 128 bits it should throw",
         () {
       const value =
           '0xffffff0000000000000000000000000000000000000000000000000000000000';
