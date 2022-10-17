@@ -123,11 +123,11 @@ class ArrayType extends Type with CodecType {
   List<String>? path;
 
   /// length of this array
-  final int len;
+  final int length;
 
   /// type which this array denotes
   final int type;
-  ArrayType({required this.len, required this.type, super.path, super.docs})
+  ArrayType({required this.length, required this.type, super.path, super.docs})
       : super(kind: TypeKind.Array);
 }
 
