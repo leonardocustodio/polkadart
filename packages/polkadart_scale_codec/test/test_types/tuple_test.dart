@@ -135,7 +135,7 @@ void main() {
 
       expect(
         () => codec.encode(registryIndex, value),
-        throwsA(isA<AssertionException>()),
+        throwsA(isA<RangeError>()),
       );
     });
   });
@@ -213,16 +213,6 @@ void main() {
       const value = '';
 
       final registryIndex = registry.getIndex('(Compact<u8>, bool)');
-
-      expect(
-        () => codec.decode(registryIndex, value),
-        throwsA(isA<EOFException>()),
-      );
-    });
-    test('Should throw EOFExpection when encoded string is invalid', () {
-      const value = '0xa8';
-
-      final registryIndex = registry.getIndex('(Compact<u8>, bool, String)');
 
       expect(
         () => codec.decode(registryIndex, value),
