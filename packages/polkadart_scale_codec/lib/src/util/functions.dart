@@ -19,7 +19,10 @@ bool isNotEmpty(dynamic value) {
   } else if (value is List) {
     return value.isNotEmpty;
   }
-  throw UnexpectedTypeException();
+  throw throw UnexpectedTypeException(
+    expectedType: '`String`, `num`, `List`, `Map`, `bool`',
+    receivedType: value.runtimeType.toString(),
+  );
 }
 
 /// Asserts if the `T` value is null or not.
@@ -215,7 +218,9 @@ BigInt toSignedBigInt(dynamic value, int bitSize) {
     bigIntValue = BigInt.from(value);
   } else {
     throw UnexpectedTypeException(
-        'Only `String` and `int` are valid parameters.');
+      expectedType: '`String` or `int`',
+      receivedType: value.runtimeType.toString(),
+    );
   }
 
   checkSignedBigInt(bigIntValue, bitSize);
@@ -240,7 +245,9 @@ BigInt toUnsignedBigInt(dynamic value, int bitSize) {
     bigIntValue = BigInt.from(value);
   } else {
     throw UnexpectedTypeException(
-        'Only `String` and `int` are valid parameters.');
+      expectedType: '`String` or `int`',
+      receivedType: value.runtimeType.toString(),
+    );
   }
   checkUnsignedBigInt(bigIntValue, bitSize);
   return bigIntValue;
