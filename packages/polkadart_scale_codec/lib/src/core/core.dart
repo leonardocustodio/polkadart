@@ -14,9 +14,17 @@ part 'codec_type.dart';
 part 'codec_variant.dart';
 part 'codec.dart';
 part 'source.dart';
-part 'sink.dart';
+part 'encoder.dart';
 part 'type_kind.dart';
 part 'types_codec.dart';
 part 'types.dart';
 part 'type_exp.dart';
 part 'registry.dart';
+
+// `Scale Codec` types
+part '../types/codec_u8.dart';
+part '../types/codec_u16.dart';
+part '../types/codec_u32.dart';
+part '../types/codec_u64.dart';
+part '../types/codec_u128.dart';
+part '../types/codec_u256.dart';

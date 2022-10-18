@@ -1,4 +1,3 @@
-
 /// Legacy Types used to hold the types for metadata version older than v14.
 class LegacyTypes {
   Map<String, dynamic>? types;
