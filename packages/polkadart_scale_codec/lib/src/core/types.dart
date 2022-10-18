@@ -239,3 +239,22 @@ abstract class Type {
   final TypeKind kind;
   Type({required this.kind, this.path, this.docs});
 }
+
+/// All `Scale Codec` supported types implements [ScaleCodecType]
+///
+/// Supported types:
+/// ```dart
+/// CodecU8();
+/// CodecU16();
+/// CodecU32();
+/// CodecU64();
+/// CodecU128();
+/// CodecU256();
+/// ```
+///
+/// See also: https://docs.substrate.io/reference/scale-codec/
+abstract class ScaleCodecType {
+  String encodeToHex(value);
+
+  dynamic decodeFromHex(String encodedData);
+}
