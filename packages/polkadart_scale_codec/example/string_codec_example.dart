@@ -26,9 +26,10 @@ void main() {
   // encoding and decoding "scale codec" as Vec<Text>
   String encoded =
       codec.encode(registry.getIndex('Vec<Text>'), ['scale codec']);
-  String decoded = codec.decode(registry.getIndex('Vec<Text>'), encoded);
+  List<dynamic> decodedList =
+      codec.decode(registry.getIndex('Vec<Text>'), encoded);
 
   // encoding and decoding "scale codec" as String
   encoded = codec.encode(registry.getIndex('String'), 'scale codec');
-  decoded = codec.decode(registry.getIndex('String'), encoded);
+  final decodedString = codec.decode(registry.getIndex('String'), encoded);
 }

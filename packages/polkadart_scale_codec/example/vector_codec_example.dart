@@ -33,11 +33,13 @@ void main() {
   final decodedVecU8 = codec.decode(registry.getIndex('Vec<u8>'), encoded);
 
   // encoding and decoding [0, 133999773] as Vec<u256>
-  encoded = codec.encode(registry.getIndex('Vec<u256>'), [0, 133999773]);
+  encoded = codec
+      .encode(registry.getIndex('Vec<u256>'), [0.toBigInt, 133999773.toBigInt]);
   final decodedVecU256 = codec.decode(registry.getIndex('Vec<u256>'), encoded);
 
   // encoding and decoding [0, -133999773] as Vec<i256>
-  encoded = codec.encode(registry.getIndex('Vec<i256>'), [0, -133999773]);
+  encoded = codec.encode(
+      registry.getIndex('Vec<i256>'), [0.toBigInt, (-133999773).toBigInt]);
   final decodedVecI256 = codec.decode(registry.getIndex('Vec<i256>'), encoded);
 
   // encoding and decoding [true, false, true] as Vec<bool>
@@ -57,21 +59,20 @@ void main() {
     [4, 5],
   ]);
   final decodecVecVecU8 =
-      codec.decode(registry.getIndex('Vec<Vec<u8>'), encoded);
+      codec.decode(registry.getIndex('Vec<Vec<u8>>'), encoded);
 
   // encoding and decoding ["Scale", "Codec"] as Vec<String>
-  encoded = codec.encode(registry.getIndex('Vec<String>'), [
-    [0, 1],
-    [2, 3],
-    [4, 5],
-  ]);
+  encoded = codec.encode(
+    registry.getIndex('Vec<String>'),
+    ["Scale", "Codec"],
+  );
   final decodecVecString =
       codec.decode(registry.getIndex('Vec<String>'), encoded);
 
   // encoding and decoding [[716, 100], [256, true]] as Vec<(u32, Option<bool>)>
   encoded = codec.encode(registry.getIndex('Vec<(u32, Option<bool>)>'), [
-    [716, 100],
-    [256, true],
+    [716, false],
+    [255, true],
   ]);
   final decodedVecTuple =
       codec.decode(registry.getIndex('Vec<(u32, Option<bool>)>'), encoded);
