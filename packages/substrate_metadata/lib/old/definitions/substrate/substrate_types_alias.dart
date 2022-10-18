@@ -1,6 +1,6 @@
 /// (From Tag: @subsquid/substrate-metadata_v1.1.0)
 ///
-/// Referenced from: https://github.com/subsquid/squid/blob/a63118033545063130359318410ee56e3778a37a/substrate-metadata/src/old/definitions/substrate/typesAlias.ts#L4
+/// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/substrate/typesAlias.ts
 
 final substrateTypesAlias = <String, Map<String, String>>{
   'assets': {
