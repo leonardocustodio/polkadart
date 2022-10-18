@@ -2,8 +2,6 @@ import 'dart:math';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
 import 'package:weak_map/weak_map.dart';
-
-import '../utils/common_utils.dart';
 import 'utils/utils.dart';
 
 // ignore: non_constant_identifier_names

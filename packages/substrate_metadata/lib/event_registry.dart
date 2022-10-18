@@ -2,9 +2,8 @@
 
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
-import 'package:substrate_metadata/utils/common_utils.dart';
 import 'types_hashing.dart' show getTypeHash;
-import 'utils/utils.dart' show sha256;
+import 'utils/utils.dart';
 
 class Definition extends scale_codec.Variant {
   final String pallet;
