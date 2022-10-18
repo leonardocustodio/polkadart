@@ -123,11 +123,11 @@ class ArrayType extends Type with CodecType {
   List<String>? path;
 
   /// length of this array
-  final int len;
+  final int length;
 
   /// type which this array denotes
   final int type;
-  ArrayType({required this.len, required this.type, super.path, super.docs})
+  ArrayType({required this.length, required this.type, super.path, super.docs})
       : super(kind: TypeKind.Array);
 }
 
@@ -238,4 +238,23 @@ abstract class Type {
   /// `TypeKind` to tell which child `Type Class` is being referenced.
   final TypeKind kind;
   Type({required this.kind, this.path, this.docs});
+}
+
+/// All `Scale Codec` supported types implements [ScaleCodecType]
+///
+/// Supported types:
+/// ```dart
+/// CodecU8();
+/// CodecU16();
+/// CodecU32();
+/// CodecU64();
+/// CodecU128();
+/// CodecU256();
+/// ```
+///
+/// See also: https://docs.substrate.io/reference/scale-codec/
+abstract class ScaleCodecType {
+  String encodeToHex(value);
+
+  dynamic decodeFromHex(String encodedData);
 }

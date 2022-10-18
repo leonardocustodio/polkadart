@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   // Creates the registry for parsing the types
-  final registry = OldTypeRegistry(
+  final registry = TypeRegistry(
     types: {
       'Codec': {
         'a': 'Vec<Text>',
@@ -43,7 +43,7 @@ void main() {
   // Exception at type: `String`
   group('Exception String:', () {
     test('should throw \'AssertionException\' when trying to encode 0', () {
-      final exceptionMessage = 'Needed val of type \'String\' but found int.';
+      final exceptionMessage = 'Needed value of type \'String\' but found int.';
 
       expect(
           () => codec.encode(registry.getIndex('String'), 0),
