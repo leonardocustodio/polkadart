@@ -1,12 +1,12 @@
 part of exceptions;
 
 class AssertionException implements Exception {
-  const AssertionException(this.msg);
+  const AssertionException(this.message);
 
-  final dynamic msg;
+  final dynamic message;
 
   @override
   String toString() {
-    return msg;
+    return message;
   }
 }

@@ -21,9 +21,9 @@ bool isNotEmpty(dynamic value) {
 /// Asserts if the `T` value is null or not.
 ///
 /// Returns `T` if not null otherwise throws `AssertionException`
-T assertNotNull<T>(T? val, [String? msg]) {
+T assertNotNull<T>(T? val, [String? message]) {
   if (val == null) {
-    throw AssertionException(msg ?? 'Assertion Error occured.');
+    throw AssertionException(message ?? 'Assertion Error occured.');
   }
   return val;
 }
@@ -31,8 +31,8 @@ T assertNotNull<T>(T? val, [String? msg]) {
 /// Asserts if the [val] value is true or not
 ///
 /// Throws `AssertionException` if `false`
-void assertionCheck(bool val, [String? msg]) {
+void assertionCheck(bool val, [String? message]) {
   if (!val) {
-    throw AssertionError(msg ?? 'Assertion Error occured.');
+    throw AssertionError(message ?? 'Assertion Error occured.');
   }
 }

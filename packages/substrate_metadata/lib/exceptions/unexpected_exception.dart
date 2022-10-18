@@ -2,38 +2,38 @@ part of exceptions;
 
 /// UnexpectedTypeException
 class UnexpectedTypeException implements Exception {
-  const UnexpectedTypeException(this.msg);
+  const UnexpectedTypeException(this.message);
 
   // Unexpected type
-  final String msg;
+  final String message;
 
   @override
   String toString() {
-    return msg;
+    return message;
   }
 }
 
 /// UnexpectedKindException
 class UnexpectedKindException implements Exception {
-  const UnexpectedKindException(this.msg);
+  const UnexpectedKindException(this.message);
 
   // Unexpected type
-  final String msg;
+  final String message;
 
   @override
   String toString() {
-    return msg;
+    return message;
   }
 }
 
 /// UnexpectedCaseException
 class UnexpectedCaseException implements Exception {
-  const UnexpectedCaseException(this.msg);
+  const UnexpectedCaseException(this.message);
 
-  final String msg;
+  final String message;
 
   @override
   String toString() {
-    return msg;
+    return message;
   }
 }

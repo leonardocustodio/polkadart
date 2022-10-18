@@ -1,12 +1,12 @@
 part of exceptions;
 
 class SpecFileException implements Exception {
-  const SpecFileException(this.msg);
+  const SpecFileException(this.message);
 
-  final String msg;
+  final String message;
 
   @override
   String toString() {
-    return msg;
+    return message;
   }
 }
