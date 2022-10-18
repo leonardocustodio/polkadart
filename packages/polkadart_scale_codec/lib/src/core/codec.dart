@@ -226,7 +226,7 @@ class Codec {
   }
 
   /// Decodes Variant
-  Map<String, dynamic> _decodeVariant(CodecVariantType def, Source source) {
+  dynamic _decodeVariant(CodecVariantType def, Source source) {
     var idx = source.u8();
     CodecVariant? variant =
         idx < def.variants.length ? def.variants[idx] : null;
@@ -235,7 +235,7 @@ class Codec {
     }
     switch (variant.kind) {
       case CodecVariantKind.empty:
-        return <String, dynamic>{variant.name: null};
+        return variant.name;
       case CodecVariantKind.tuple:
         return <String, dynamic>{
           variant.name: _decodeTuple((variant as CodecTupleVariant).def, source)
@@ -367,9 +367,16 @@ class Codec {
   /// Encodes Variant
   void _encodeVariant(
       CodecVariantType def, dynamic value, ScaleCodecEncoder encoder) {
-    assertionCheck(value is Map<String, dynamic>, 'not a variant type value');
+    assertionCheck(value is Map<String, dynamic> || value is String,
+        'not a variant type value');
 
-    final String key = (value as Map<String, dynamic>).keys.first;
+    late String key;
+
+    if (value is Map<String, dynamic>) {
+      key = value.keys.first;
+    } else {
+      key = value;
+    }
 
     final CodecVariant? variant = def.variantsByName[key];
     if (variant == null) {
