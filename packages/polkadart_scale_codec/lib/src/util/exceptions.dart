@@ -60,13 +60,27 @@ class IncompatibleCompactException implements Exception {
   String toString() => msg;
 }
 
-/// UnexpectedTypeException
+/// Exception thrown when [receivedType] is different than
+/// [expectedType].
+///
+/// Example:
+/// ```
+/// String encodeIntToHex (dynamic value) {
+///   if (value is! int) {
+///     throw UnexpectedTypeException(
+///             expectedType: 'int',
+///             receivedType: value.runtimeType.toString(),
+///           );
+///   }
+/// }
+/// ```
 class UnexpectedTypeException implements Exception {
-  const UnexpectedTypeException([this.msg]);
+  const UnexpectedTypeException(
+      {required this.expectedType, required this.receivedType});
 
-  // Unexpected type
-  final dynamic msg;
+  final String expectedType;
+  final String receivedType;
 
   @override
-  String toString() => msg ?? 'Unexpected type.';
+  String toString() => 'Expecting `$expectedType`, but found `$receivedType`';
 }
