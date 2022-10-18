@@ -5,13 +5,16 @@ import 'package:test/scaffolding.dart';
 void main() {
   final typesRegistry = <String, dynamic>{
     'Codec': {
-      'b': '(Compact<u8>, bool)',
-      'c': '(Compact<u8>, bool, String)',
+      'a': '(Compact<u8>, bool)',
+      'b': '(String, u8)',
+      'c': '(BitVec, Bytes, Option<bool>)',
+      'd': '(i256, Result<u8, bool>)',
+      'e': '(Vec<String>, Vec<u8>)',
     },
   };
 
   // Creates the registry for parsing the types
-  final registry = OldTypeRegistry(types: typesRegistry);
+  final registry = TypeRegistry(types: typesRegistry);
 
   // specifying which type to use
   registry.select('Codec');
@@ -21,7 +24,7 @@ void main() {
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  group('encode tuple tests ', () {
+  group('encode tuple to hex ', () {
     test(
         'Given a list with compact unsigned integer and boolean it should be encoded to correct value',
         () {
@@ -34,12 +37,56 @@ void main() {
     });
 
     test(
-        'Given a list with compact unsigned integer, boolean and a String it should be encoded to correct value',
+        'Given a list of one String and one unsigned 8bit integer it should be encoded to correct value',
         () {
-      const value = [42, false, 'Tuple'];
-      const expectedResult = '0xa800145475706c65';
+      const value = ['Tuple', 133];
+      const expectedResult = '0x145475706c6585';
 
-      final registryIndex = registry.getIndex('(Compact<u8>, bool, String)');
+      final registryIndex = registry.getIndex('(String, u8)');
+
+      expect(codec.encode(registryIndex, value), expectedResult);
+    });
+
+    test(
+        'Given a list of one BitVec, one Bytes and one Option<bool> it should be encoded to correct value',
+        () {
+      const value = [
+        [0],
+        [255, 255],
+        true
+      ];
+      const expectedResult = '0x200008ffff0101';
+
+      final registryIndex = registry.getIndex('(BitVec, Bytes, Option<bool>)');
+
+      expect(codec.encode(registryIndex, value), expectedResult);
+    });
+
+    test(
+        'Given a list of one signed 256 bits integer and one Result<u8> it should be encoded to correct value',
+        () {
+      final value = [
+        (-313113131423413).toBigInt,
+        {'Ok': 42}
+      ];
+      const expectedResult =
+          '0x4be906ab39e3feffffffffffffffffffffffffffffffffffffffffffffffffff002a';
+
+      final registryIndex = registry.getIndex('(i256, Result<u8, bool>)');
+
+      expect(codec.encode(registryIndex, value), expectedResult);
+    });
+
+    test(
+        'Given a list of one Vec<String> it should be encoded to correct value',
+        () {
+      final value = [
+        ['tuple', 'test'],
+        [100, 10]
+      ];
+      const expectedResult = '0x08147475706c65107465737408640a';
+
+      final registryIndex = registry.getIndex('(Vec<String>, Vec<u8>)');
 
       expect(codec.encode(registryIndex, value), expectedResult);
     });
@@ -94,7 +141,8 @@ void main() {
   });
 
   group('decode tuple tests ', () {
-    test('Given an encoded string it should decode to correct 2 values list',
+    test(
+        'Given an encoded string when it represents a list of [Compact<u8>, bool] it should be decoded',
         () {
       const expectedResult = [3, true];
       const value = '0x0c01';
@@ -104,12 +152,58 @@ void main() {
       expect(codec.decode(registryIndex, value), expectedResult);
     });
 
-    test('Given an encoded string it should decode to correct 3 values list',
+    test(
+        'Given an encoded string when it represents a list of [String, u8] it should decoded',
         () {
-      const expectedResult = [42, true, 'Test'];
-      const value = '0xa8011054657374';
+      const expectedResult = ['Tuple', 133];
+      const value = '0x145475706c6585';
 
-      final registryIndex = registry.getIndex('(Compact<u8>, bool, String)');
+      final registryIndex = registry.getIndex('(String, u8)');
+
+      expect(codec.decode(registryIndex, value), expectedResult);
+    });
+
+    test(
+        'Given an encoded string when it represents a list of [BitVec, Bytes, Option<bool>] it should decoded',
+        () {
+      const expectedResult = [
+        [0],
+        [255, 255],
+        true
+      ];
+      const value = '0x200008ffff0101';
+
+      final registryIndex = registry.getIndex('(BitVec, Bytes, Option<bool>)');
+
+      expect(codec.decode(registryIndex, value), expectedResult);
+    });
+
+    test(
+        'Given an encoded string when it represents a list of [i256, Result<u8, bool>] it should decoded',
+        () {
+      final expectedResult = [
+        (-313113131423413).toBigInt,
+        {'Ok': 42}
+      ];
+      const value =
+          '0x4be906ab39e3feffffffffffffffffffffffffffffffffffffffffffffffffff002a';
+
+      final registryIndex = registry.getIndex('(i256, Result<u8, bool>)');
+
+      expect(codec.decode(registryIndex, value), expectedResult);
+    });
+
+    test(
+        'Given an encoded string when it represents a list of [Vec<String>, Vec<u8>] it should decoded',
+        () {
+      final expectedResult = [
+        ['tuple', 'test'],
+        [100, 10]
+      ];
+
+      const value = '0x08147475706c65107465737408640a';
+
+      final registryIndex = registry.getIndex('(Vec<String>, Vec<u8>)');
 
       expect(codec.decode(registryIndex, value), expectedResult);
     });
