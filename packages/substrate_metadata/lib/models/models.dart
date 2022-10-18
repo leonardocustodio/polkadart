@@ -10,12 +10,14 @@ import 'package:substrate_metadata/spec_version/spec_version.model.dart';
 
 part './metadata/metadata_base.dart';
 part './metadata/metadata_versions.dart';
-part './extrinsics/extrinsics.dart';
+part 'extrinsics/signed_extrinsics_metadata.dart';
+part 'extrinsics/extrinsics_metadata.dart';
 part './pallet/pallets.dart';
 part './portable/portables.dart';
 part './si0_type/si0_type.dart';
 part './si1_type/si1_type.dart';
-part './storage/storage.dart';
+part './storage/storage_entry_modifier.dart';
+part './storage/storage_hasher.dart';
 part './events/events.dart';
 part './function/function.dart';
 part './module_metadata/module_metadata.dart';

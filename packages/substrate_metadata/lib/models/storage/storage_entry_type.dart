@@ -2,11 +2,7 @@
 
 part of models;
 
-///
-///
 /// Storage Entry Type [V9]
-///
-///
 class StorageEntryTypeV9 {
   final String kind;
   const StorageEntryTypeV9({required this.kind});
@@ -82,11 +78,7 @@ class StorageEntryTypeV9_DoubleMap extends StorageEntryTypeV9 {
           key2Hasher: StorageHasherV9.fromJson(map['key2Hasher']));
 }
 
-///
-///
 /// Storage Entry Type [V10]
-///
-///
 class StorageEntryTypeV10 {
   final String kind;
   const StorageEntryTypeV10({required this.kind});
@@ -162,11 +154,7 @@ class StorageEntryTypeV10_DoubleMap extends StorageEntryTypeV10 {
           key2Hasher: StorageHasherV10.fromJson(map['key2Hasher']));
 }
 
-///
-///
 /// Storage Entry Type [V11]
-///
-///
 class StorageEntryTypeV11 {
   final String kind;
   const StorageEntryTypeV11({required this.kind});
@@ -238,11 +226,7 @@ class StorageEntryTypeV11_DoubleMap extends StorageEntryTypeV11 {
           key2Hasher: StorageHasherV11.fromJson(map['key2Hasher']));
 }
 
-///
-///
 /// Storage Entry Type [V13]
-///
-///
 class StorageEntryTypeV13 {
   final String kind;
   const StorageEntryTypeV13({required this.kind});

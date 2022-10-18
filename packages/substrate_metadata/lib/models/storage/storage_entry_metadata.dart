@@ -1,10 +1,6 @@
 part of models;
 
-///
-///
 /// Storage Entry Metadata [V9]
-///
-///
 class StorageEntryMetadataV9 {
   final String name;
   final StorageEntryModifierV9 modifier;
@@ -30,11 +26,7 @@ class StorageEntryMetadataV9 {
       );
 }
 
-///
-///
 /// Storage Entry Metadata [V10]
-///
-///
 class StorageEntryMetadataV10 {
   final String name;
   final StorageEntryModifierV9 modifier;
@@ -60,11 +52,7 @@ class StorageEntryMetadataV10 {
       );
 }
 
-///
-///
 /// Storage Entry Metadata [V11]
-///
-///
 class StorageEntryMetadataV11 {
   final String name;
   final StorageEntryModifierV9 modifier;
@@ -90,11 +78,7 @@ class StorageEntryMetadataV11 {
       );
 }
 
-///
-///
 /// Storage Entry Metadata [V13]
-///
-///
 class StorageEntryMetadataV13 {
   final String name;
   final StorageEntryModifierV9 modifier;
