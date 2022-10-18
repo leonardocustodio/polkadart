@@ -380,7 +380,7 @@ class Codec {
 
     final CodecVariant? variant = def.variantsByName[key];
     if (variant == null) {
-      throw Exception('Unknown variant: $key');
+      throw UnknownVariantException('Unknown variant: $key');
     }
 
     encoder.u8(variant.index);

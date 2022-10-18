@@ -22,7 +22,7 @@ void main() {
 
     group('Encode FavouriteColorEnum:', () {
       test(
-          'When \'Red\' of \'FavouriteColorEnum\' are encoded then it produces desired results.',
+          'When \'Red\' of \'FavouriteColorEnum\' is encoded then it produces desired results.',
           () {
         final value = 'Red';
         final expectedResult = '0x00';
@@ -32,7 +32,7 @@ void main() {
         expect(encoded, expectedResult);
       });
       test(
-          'When \'Orange\' of \'FavouriteColorEnum\' are encoded then it produces desired results.',
+          'When \'Orange\' of \'FavouriteColorEnum\' is encoded then it produces desired results.',
           () {
         final value = 'Orange';
         final expectedResult = '0x01';
@@ -63,6 +63,17 @@ void main() {
         final encoded = codec.decode(typeIndex, value);
 
         expect(encoded, expectedResult);
+      });
+    });
+
+    group('Exception on encoding with wrong enum.', () {
+      test(
+          'When Unknown enum value: \'White\' is encoded then it throws \'UnknownVariantException\'.',
+          () {
+        final value = 'White';
+
+        expect(() => codec.encode(typeIndex, value),
+            throwsA(isA<UnknownVariantException>()));
       });
     });
   }
@@ -150,6 +161,17 @@ void main() {
         final decoded = codec.decode(typeIndex, value);
 
         expect(decoded, expectedResult);
+      });
+    });
+
+    group('Exception on encoding with wrong type.', () {
+      test(
+          'When \'u8\' is used instead of \'Text\' is encoded then it throws \'AssertionException\'.',
+          () {
+        final value = {'Plain': 0};
+
+        expect(() => codec.encode(typeIndex, value),
+            throwsA(isA<AssertionException>()));
       });
     });
   }
