@@ -1,3 +1,4 @@
+/// Spec Version Record holds the block and other info of the parachains.
 class SpecVersionRecord {
   final String specName;
   final int specVersion;
@@ -34,6 +35,7 @@ class SpecVersionRecord {
   }
 }
 
+/// `Spec Version` holds the metadata of the parachains with `Spec Version Record`.
 class SpecVersion extends SpecVersionRecord {
   /// Chain metadata for this version of spec
   final String metadata;

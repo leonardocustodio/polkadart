@@ -1,3 +1,5 @@
+
+/// Legacy Types used to hold the types for metadata version older than v14.
 class LegacyTypes {
   Map<String, dynamic>? types;
   Map<String, Map<String, String>>? typesAlias;
@@ -13,6 +15,7 @@ class LegacyTypes {
   }
 }
 
+/// `LegacyTypesWithSpecVersionRange` holds (min and max) spec-version.
 class LegacyTypesWithSpecVersionRange extends LegacyTypes {
   /// minmax ~ ( min and max -> range of Spec-Version )
   final List<int?> minmax;
@@ -32,6 +35,7 @@ class LegacyTypesWithSpecVersionRange extends LegacyTypes {
   }
 }
 
+/// `Legacy Types Bundle` holds optional array of (min and max) spec-version with `Legacy Types`
 class LegacyTypesBundle extends LegacyTypes {
   List<LegacyTypesWithSpecVersionRange>? versions;
 
