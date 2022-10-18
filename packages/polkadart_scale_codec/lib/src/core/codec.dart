@@ -136,7 +136,7 @@ class Codec {
   /// ```
   String encode(int type, dynamic value) {
     var encoder = HexEncoder();
-    encodeWithHexEncoder(type, value, encoder);
+    encodeWithEncoder(type, value, encoder);
     return encoder.toHex();
   }
 
@@ -235,7 +235,7 @@ class Codec {
     }
     switch (variant.kind) {
       case CodecVariantKind.empty:
-        return <String, dynamic>{'__kind': variant.name};
+        return <String, dynamic>{variant.name: null};
       case CodecVariantKind.tuple:
         return <String, dynamic>{
           variant.name: _decodeTuple((variant as CodecTupleVariant).def, source)
@@ -246,12 +246,10 @@ class Codec {
               decodeFromSource((variant as CodecValueVariant).type, source)
         };
       case CodecVariantKind.struct:
-        {
-          Map<String, dynamic> value =
-              _decodeStruct((variant as CodecStructVariant).def, source);
-          value['__kind'] = variant.name;
-          return value;
-        }
+        return {
+          variant.name:
+              _decodeStruct((variant as CodecStructVariant).def, source)
+        };
     }
   }
 
@@ -273,12 +271,11 @@ class Codec {
   ///Example:
   /// ```dart
   /// // Hex HexEncoder
-  /// var HexEncoder = HexEncoder();
-  /// codec.encodeWithHexEncoder(registry.use('Option<u8>'), 8, HexEncoder);
-  /// HexEncoder.toHex(); // '0x0108'
-  ///
+  /// var encoder = HexEncoder();
+  /// codec.encodeWithEncoder(registry.use('Option<u8>'), 8, HexEncoder);
+  /// encoder.toHex(); // '0x0108'
   /// ```
-  void encodeWithHexEncoder(int type, dynamic value, HexEncoder encoder) {
+  void encodeWithEncoder(int type, dynamic value, ScaleCodecEncoder encoder) {
     var def = _types[type];
     switch (def.kind) {
       case TypeKind.Primitive:
@@ -321,27 +318,28 @@ class Codec {
 
   ///
   /// Encodes Array
-  void _encodeArray(ArrayType def, dynamic value, HexEncoder encoder) {
+  void _encodeArray(ArrayType def, dynamic value, ScaleCodecEncoder encoder) {
     assertionCheck(value is List && value.length == def.length);
 
     for (var i = 0; i < value.length; i++) {
-      encodeWithHexEncoder(def.type, value[i], encoder);
+      encodeWithEncoder(def.type, value[i], encoder);
     }
   }
 
   ///
   /// Encodes Bit Sequence
-  void _encodeSequence(SequenceType def, dynamic value, HexEncoder encoder) {
+  void _encodeSequence(
+      SequenceType def, dynamic value, ScaleCodecEncoder encoder) {
     assertionCheck(value is List);
     encoder.compact((value as List).length);
     for (var i = 0; i < value.length; i++) {
-      encodeWithHexEncoder(def.type, value[i], encoder);
+      encodeWithEncoder(def.type, value[i], encoder);
     }
   }
 
   ///
   /// Encodes Tuple
-  void _encodeTuple(TupleType def, dynamic value, HexEncoder encoder) {
+  void _encodeTuple(TupleType def, dynamic value, ScaleCodecEncoder encoder) {
     if (def.tuple.isEmpty) {
       assertNotNull(value == null);
       return;
@@ -351,55 +349,58 @@ class Codec {
     assertionCheck(def.tuple.length == value.length,
         'Incorrect length of values to unwrap to tuple.');
     for (var i = 0; i < value.length; i++) {
-      encodeWithHexEncoder(def.tuple[i], value[i], encoder);
+      encodeWithEncoder(def.tuple[i], value[i], encoder);
     }
   }
 
   ///
   /// Encodes Struct
-  void _encodeStruct(CodecStructType def, dynamic value, HexEncoder encoder) {
+  void _encodeStruct(
+      CodecStructType def, dynamic value, ScaleCodecEncoder encoder) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
-      encodeWithHexEncoder(f.type, value[f.name], encoder);
+      encodeWithEncoder(f.type, value[f.name], encoder);
     }
   }
 
   ///
   /// Encodes Variant
-  void _encodeVariant(CodecVariantType def, dynamic value, HexEncoder encoder) {
-    assertionCheck(value is Map<String, dynamic>);
+  void _encodeVariant(
+      CodecVariantType def, dynamic value, ScaleCodecEncoder encoder) {
+    assertionCheck(value is Map<String, dynamic>, 'not a variant type value');
 
-    for (var key in (value as Map<String, dynamic>).keys) {
-      CodecVariant? variant = def.variantsByName[key];
-      if (variant != null) {
-        encoder.u8(variant.index);
-        switch (variant.kind) {
-          case CodecVariantKind.empty:
-            break;
-          case CodecVariantKind.value:
-            encodeWithHexEncoder(
-                (variant as CodecValueVariant).type, value[key], encoder);
-            break;
-          case CodecVariantKind.tuple:
-            _encodeTuple(
-                (variant as CodecTupleVariant).def, value['value'], encoder);
-            break;
-          case CodecVariantKind.struct:
-            _encodeStruct((variant as CodecStructVariant).def, value, encoder);
-            break;
-        }
-      }
+    final String key = (value as Map<String, dynamic>).keys.first;
+
+    final CodecVariant? variant = def.variantsByName[key];
+    if (variant == null) {
+      throw Exception('Unknown variant: $key');
+    }
+
+    encoder.u8(variant.index);
+    switch (variant.kind) {
+      case CodecVariantKind.empty:
+        break;
+      case CodecVariantKind.value:
+        encodeWithEncoder(
+            (variant as CodecValueVariant).type, value[key], encoder);
+        break;
+      case CodecVariantKind.tuple:
+        _encodeTuple((variant as CodecTupleVariant).def, value[key], encoder);
+        break;
+      case CodecVariantKind.struct:
+        _encodeStruct((variant as CodecStructVariant).def, value[key], encoder);
+        break;
     }
   }
 
   ///
   /// Encodes Option
-  void _encodeOption(OptionType def, dynamic value, HexEncoder encoder) {
+  void _encodeOption(OptionType def, dynamic value, ScaleCodecEncoder encoder) {
     if (value == null) {
       encoder.u8(0);
     } else {
       encoder.u8(1);
-      encodeWithHexEncoder(def.type, value, encoder);
+      encodeWithEncoder(def.type, value, encoder);
     }
   }
 
@@ -412,7 +413,7 @@ class Codec {
 
   ///
   /// Encodes Bytes
-  void _encodeBytes(dynamic value, HexEncoder encoder) {
+  void _encodeBytes(dynamic value, ScaleCodecEncoder encoder) {
     if (value is String) {
       value = decodeHex(value).toList();
     }
@@ -425,7 +426,7 @@ class Codec {
   ///
   /// Encodes Bytes Array
   void _encodeBytesArray(
-      CodecBytesArrayType def, dynamic value, HexEncoder encoder) {
+      CodecBytesArrayType def, dynamic value, ScaleCodecEncoder encoder) {
     assertionCheck(value is List && value.length == def.length);
     encoder.bytes(value);
   }
@@ -439,7 +440,7 @@ class Codec {
 
   ///
   /// Encodes Bit Sequence
-  void _encodeBitSequence(dynamic bits, HexEncoder encoder) {
+  void _encodeBitSequence(dynamic bits, ScaleCodecEncoder encoder) {
     assertionCheck(
         bits is List<int>, 'BitSequence can have bits of type List<int> only.');
     encoder.compact(bits.length * 8);
@@ -499,7 +500,8 @@ class Codec {
   }
 
   /// Encodes [source] object to `encoder` when [Primitive] is know
-  void _encodePrimitive(Primitive type, dynamic value, HexEncoder encoder) {
+  void _encodePrimitive(
+      Primitive type, dynamic value, ScaleCodecEncoder encoder) {
     switch (type) {
       case Primitive.I8:
       case Primitive.U8:

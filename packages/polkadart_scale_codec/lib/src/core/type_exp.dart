@@ -7,6 +7,10 @@ abstract class RegistryType extends Equatable {
 
   @override
   String toString() {
+    return getFormattedString();
+  }
+
+  String getFormattedString() {
     switch (kind) {
       case 'array':
         var type = (this as RegistryArrayType);
@@ -39,8 +43,9 @@ class RegistryNamedType extends RegistryType with EquatableMixin {
   @override
   List<Object?> get props => [name, params, 'named'];
 
+  // We can't call super.toString() because it will end up calling toString() defined in the Equatable class.
   @override
-  String toString() => super.toString();
+  String toString() => super.getFormattedString();
 }
 
 class RegistryArrayType extends RegistryType with EquatableMixin {
@@ -52,8 +57,9 @@ class RegistryArrayType extends RegistryType with EquatableMixin {
   @override
   List<Object?> get props => [item, length, 'array'];
 
+  // We can't call super.toString() because it will end up calling toString() defined in the Equatable class.
   @override
-  String toString() => super.toString();
+  String toString() => super.getFormattedString();
 }
 
 class RegistryTupleType extends RegistryType with EquatableMixin {
@@ -63,8 +69,9 @@ class RegistryTupleType extends RegistryType with EquatableMixin {
   @override
   List<Object?> get props => [params, 'tuple'];
 
+  // We can't call super.toString() because it will end up calling toString() defined in the Equatable class.
   @override
-  String toString() => super.toString();
+  String toString() => super.getFormattedString();
 }
 
 class TypeExpParser {

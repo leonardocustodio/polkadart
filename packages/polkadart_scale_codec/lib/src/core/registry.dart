@@ -1,5 +1,7 @@
 part of polkadart_scale_codec_core;
 
+typedef TypeCallback = Type Function();
+
 class TypeRegistry {
   /// [Private]
   ///
@@ -17,6 +19,11 @@ class TypeRegistry {
   /// So as to look back and quickly pin-point the index of the desired types to be used.
   final Map<String, int> _fastLookup = <String, int>{};
 
+  /// [Private]
+  ///
+  /// Allows to add custom Definitions by
+  final Map<String, TypeCallback> _definitions = <String, TypeCallback>{};
+
   Map<String, Map<String, String>>? typesAlias;
   Map<String, dynamic>? types;
 
@@ -32,10 +39,10 @@ class TypeRegistry {
 
   List<Type> getTypes() {
     _replaceAliases();
-    return _normalizeMetadataTypes(_types.cast<Type>());
+    return normalizeMetadataTypes(_types.cast<Type>());
   }
 
-  List<Type> _normalizeMetadataTypes(List<Type> types) {
+  List<Type> normalizeMetadataTypes(List<Type> types) {
     types = _fixWrapperKeepOpaqueTypes(types);
     types = _introduceOptionType(types);
     types = _removeUnitFieldsFromStructs(types);
@@ -244,6 +251,10 @@ class TypeRegistry {
     }).toList();
   }
 
+  void define(String typeName, TypeCallback fn) {
+    _definitions[typeName] = fn;
+  }
+
   void _replaceAliases() {
     var types = _types;
     var seen = <int>{};
@@ -441,6 +452,9 @@ class TypeRegistry {
   }
 
   dynamic _buildNamedType(RegistryNamedType type) {
+    if (_definitions[type.name] != null) {
+      return _definitions[type.name]!();
+    }
     var def = types?[type.name];
     if (def != null) {
       return _buildFromDefinition(type.name, def);
