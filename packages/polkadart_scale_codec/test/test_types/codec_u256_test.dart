@@ -53,4 +53,38 @@ void main() {
       );
     });
   });
+
+  group('decode unsigned 256-bit integers', () {
+    test('Given an encoded string when it represents zero it should be decoded',
+        () {
+      const value =
+          '0x0000000000000000000000000000000000000000000000000000000000000000';
+      final expectedResult = 0.toBigInt;
+
+      expect(CodecU256().decodeFromHex(value), expectedResult);
+    });
+
+    test(
+        'Given an encoded string when it represents the largest supported value it should be decoded',
+        () {
+      const largestSupportedValue =
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f';
+      final expectedResult =
+          '57896044618658097711785492504343953926634992332820282019728792003956564819967'
+              .toBigInt;
+
+      expect(CodecU256().decodeFromHex(largestSupportedValue), expectedResult);
+    });
+
+    test(
+        "Given an encoded string when it represents a integer that don't fit 256 bits it should throw",
+        () {
+      const value = '0xffff';
+
+      expect(
+        () => CodecU256().decodeFromHex(value),
+        throwsA(isA<Exception>()),
+      );
+    });
+  });
 }

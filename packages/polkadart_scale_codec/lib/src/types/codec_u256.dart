@@ -32,6 +32,9 @@ class CodecU256 implements ScaleCodecType<BigInt> {
   @override
   BigInt decodeFromHex(String encodedData) {
     Source source = Source(encodedData);
-    return source.u256();
+    final result = source.u256();
+    source.assertEOF();
+
+    return result;
   }
 }
