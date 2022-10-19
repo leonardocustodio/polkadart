@@ -48,4 +48,34 @@ void main() {
       );
     });
   });
+
+  group('decode unsigned 16-bit integers', () {
+    test('Given an encoded string when it represents zero it should be decoded',
+        () {
+      const value = '0x0000';
+      const expectedResult = 0;
+
+      expect(CodecU16().decodeFromHex(value), expectedResult);
+    });
+
+    test(
+        'Given an encoded string when it represents the largest supported value it should be decoded',
+        () {
+      const largestSupportedValue = '0xffff';
+      const expectedResult = 65535;
+
+      expect(CodecU16().decodeFromHex(largestSupportedValue), expectedResult);
+    });
+
+    test(
+        "Given an encoded string when it represents a integer that don't fit 16 bits it should throw",
+        () {
+      const value = '0xff7fff';
+
+      expect(
+        () => CodecU16().decodeFromHex(value),
+        throwsA(isA<Exception>()),
+      );
+    });
+  });
 }
