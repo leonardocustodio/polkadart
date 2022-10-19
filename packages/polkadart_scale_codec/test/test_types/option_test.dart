@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   // Creates the registry for parsing the types
-  final registry = OldTypeRegistry(
+  final registry = TypeRegistry(
     types: <String, dynamic>{
       'Codec': {
         'a': 'Option<bool>',
