@@ -1,39 +1,59 @@
 import 'dart:typed_data';
-
+import 'models/models.dart' as model;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
-
 import 'package:substrate_metadata/old/definitions/metadata/metadata.dart'
     as metadata_definitions;
-import 'models/models.dart' as model;
 
-/// (Singleton Class)
+/// (Singleton)
 ///
 /// It helps to create a single instance of [MetadataDecoder] which helps to decode Metadata.
-///
-/// ```dart
-/// var decodedMetadata = MetadataDecode.decode('0x090820....');
-/// ```
 class MetadataDecoder {
-  static final MetadataDecoder _singleton = MetadataDecoder._internal();
+  static final MetadataDecoder instance = MetadataDecoder._internal();
 
   /// Used to store single created instance of Scale-Codec
-  static late scale.Codec _codec;
+  late scale.Codec _codec;
 
   /// Used to store versions of metadata
-  static late List<int> _versions;
+  late List<int> _versions;
 
-  factory MetadataDecoder() => _singleton;
+  factory MetadataDecoder() => instance;
 
   MetadataDecoder._internal() {
     _createScaleCodec();
   }
 
+  /// Decodes metadata and returns `Metadata` model
   ///
-  /// Decodes metadata and returns [Metadata] model
+  /// [data] can be: (Hexa-Decimal [String] || [Uint8List] bytes)
   ///
-  /// [data] can be ( Hexa-Decimal [String] || [Uint8List] bytes )
+  /// ```dart
+  /// final decoderInstance = MetadataDecoder.instance;
   ///
-  static model.Metadata decode(dynamic data) {
+  /// final Metadata decodedMetadata = decoderInstance.decodeAsMetadata('0x090820....');
+  /// ```
+  model.Metadata decodeAsMetadata(dynamic data) {
+    final result = _decodePrivate(data);
+    final version = result['version'];
+    final metadata = result['metadata'];
+    return model.Metadata.fromVersion(version, metadata);
+  }
+
+  /// Decodes metadata and returns `Map<String, dynamic>`
+  ///
+  /// [data] can be: (Hexa-Decimal [String] || [Uint8List] bytes)
+  ///
+  /// ```dart
+  /// final decoderInstance = MetadataDecoder.instance;
+  ///
+  /// Map<String, dynamic> decodedMetadataMap = decoderInstance.decode('0x090820....');
+  /// ```
+  Map<String, dynamic> decode(dynamic data) {
+    final result = _decodePrivate(data);
+    return result['metadata'];
+  }
+
+  /// Private method to decode metadata
+  Map<String, dynamic> _decodePrivate(dynamic data) {
     scale.assertionCheck(data is String || data is Uint8List);
     late Uint8List content;
     if (data is String) {
@@ -51,11 +71,14 @@ class MetadataDecoder {
     scale.assertionCheck(
         9 <= version && version < 15, 'Invalid metadata version');
 
-    // Kusama Hack
+    // Kusama Hack :o
     // See https://github.com/polkadot-js/api/commit/a9211690be6b68ad6c6dad7852f1665cadcfa5b2
     // for why try-catch and version decoding stuff is here
     try {
-      return _decode(version, source);
+      return {
+        'version': version,
+        'metadata': _decode(version, source),
+      };
     } catch (e) {
       if (version != 9) {
         rethrow;
@@ -64,7 +87,10 @@ class MetadataDecoder {
         source = scale.Source(content);
         source.u32();
         source.u8();
-        return _decode(10, source);
+        return {
+          'version': 10,
+          'metadata': _decode(10, source),
+        };
       } catch (unknownError) {
         rethrow;
       }
@@ -84,10 +110,9 @@ class MetadataDecoder {
   }
 
   /// decodes metadata from the correct match of the metadata version
-  static model.Metadata _decode(int version, scale.Source source) {
-    var metadataVal = _codec.decodeFromSource(_versions[version - 9], source);
+  Map<String, dynamic> _decode(int version, scale.Source source) {
+    var metadataMap = _codec.decodeFromSource(_versions[version - 9], source);
     source.assertEOF();
-    var meta = model.Metadata.fromVersion(metadataVal, version);
-    return meta;
+    return metadataMap;
   }
 }
