@@ -6,21 +6,14 @@ part of '../core/core.dart';
 ///
 /// Example:
 /// ```
-/// final encodedU8Int = CodecU8.encode(69);
-/// final decodedU8Int = CodecU8.decode("0x45");
+/// final encoded = CodecU8.encode(69);
+/// final decoded = CodecU8.decode("0x45");
 /// ```
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-class CodecU8 implements ScaleCodecType {
+class CodecU8 implements ScaleCodecType<int> {
   @override
   String encodeToHex(value) {
-    if (value is! int) {
-      throw UnexpectedTypeException(
-        expectedType: 'int',
-        receivedType: value.runtimeType.toString(),
-      );
-    }
-
     var sink = HexEncoder();
     sink.u8(value);
     return sink.toHex();
