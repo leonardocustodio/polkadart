@@ -19,15 +19,16 @@ void main() {
       expect(CodecU16().encodeToHex(value), expectedResult);
     });
 
-    test('Should return correct encoded data when value is 65535', () {
-      const value = 65535;
+    test(
+        'Should return correct encoded data when value fits 16 bits and is positive',
+        () {
+      const largestSupportedValue = 65535;
       const expectedResult = '0xffff';
 
-      expect(CodecU16().encodeToHex(value), expectedResult);
+      expect(CodecU16().encodeToHex(largestSupportedValue), expectedResult);
     });
 
-    test('Should throw InvalidSizeException when value is smaller than zero',
-        () {
+    test('Should throw InvalidSizeException when value is negative', () {
       const value = -1;
 
       expect(
@@ -36,7 +37,8 @@ void main() {
       );
     });
 
-    test('Should throw InvalidSizeException when value is greater than 65535',
+    test(
+        "Given an 16 bit decoder when value is positive and can't be represented it should throw",
         () {
       const value = 65536;
 

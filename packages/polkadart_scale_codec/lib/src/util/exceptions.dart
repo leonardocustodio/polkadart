@@ -1,13 +1,22 @@
 part of utils;
 
-/// UnexpectedCaseException
-class UnexpectedCaseException implements Exception {
-  const UnexpectedCaseException([this.msg]);
+class UnknownVariantException implements Exception {
+  const UnknownVariantException(this.message);
 
-  final String? msg;
+  final String message;
 
   @override
-  String toString() => msg ?? 'Unexpected Case.';
+  String toString() => message;
+}
+
+/// UnexpectedCaseException
+class UnexpectedCaseException implements Exception {
+  const UnexpectedCaseException([this.message]);
+
+  final String? message;
+
+  @override
+  String toString() => message ?? 'Unexpected Case.';
 }
 
 /// EOFException
@@ -21,43 +30,43 @@ class EOFException implements Exception {
 ///
 /// AssertionException
 class AssertionException implements Exception {
-  const AssertionException([this.msg]);
+  const AssertionException([this.message]);
 
-  final String? msg;
+  final String? message;
   @override
-  String toString() => msg ?? 'Assertion Exception';
+  String toString() => message ?? 'Assertion Exception';
 }
 
 ///
 /// AssertionException
 class InvalidOptionByteException implements Exception {
-  const InvalidOptionByteException(this.msg);
+  const InvalidOptionByteException(this.message);
 
-  final String msg;
+  final String message;
   @override
-  String toString() => msg;
+  String toString() => message;
 }
 
 /// InvalidSizeException
 class InvalidSizeException implements Exception {
-  const InvalidSizeException([this.msg]);
+  const InvalidSizeException([this.message]);
 
   // Custom exception message
-  final String? msg;
+  final String? message;
 
   @override
-  String toString() => msg ?? 'Invalid size.';
+  String toString() => message ?? 'Invalid size.';
 }
 
 /// IncompatibleCompactException
 class IncompatibleCompactException implements Exception {
-  const IncompatibleCompactException(this.msg);
+  const IncompatibleCompactException(this.message);
 
   // Custom exception message
-  final String msg;
+  final String message;
 
   @override
-  String toString() => msg;
+  String toString() => message;
 }
 
 /// Exception thrown when [receivedType] is different than

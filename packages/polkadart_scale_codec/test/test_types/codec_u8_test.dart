@@ -38,43 +38,13 @@ void main() {
     });
 
     test(
-        "Given an 8 bit decoder when value is negative and can't be represented it should throw",
+        "Given an 8 bit decoder when value is positive and can't be represented it should throw",
         () {
       const value = 256;
 
       expect(
         () => CodecU8().encodeToHex(value),
         throwsA(isA<InvalidSizeException>()),
-      );
-    });
-  });
-
-  group('decode unsigned 8-bit integers', () {
-    test('Given an encoded string when it represents zero it should be decoded',
-        () {
-      const value = '0x00';
-      const expectedResult = 0;
-
-      expect(CodecU8().decodeFromHex(value), expectedResult);
-    });
-
-    test(
-        'Given an encoded string when it represents the biggest supported value it should be decoded',
-        () {
-      const biggestSupportedValue = '0xff';
-      const expectedResult = 255;
-
-      expect(CodecU8().decodeFromHex(biggestSupportedValue), expectedResult);
-    });
-
-    test(
-        "Given an encoded string when it represents a integer that don't fit 8 bits it should throw",
-        () {
-      const value = '0xff7f';
-
-      expect(
-        () => CodecU8().decodeFromHex(value),
-        throwsA(isA<Exception>()),
       );
     });
   });

@@ -50,8 +50,8 @@ class CodecBytesType with CodecType {
 ///
 /// CodecBytesArrayType
 class CodecBytesArrayType with CodecType {
-  final int len;
-  const CodecBytesArrayType({required this.len});
+  final int length;
+  const CodecBytesArrayType({required this.length});
 
   @override
   TypeKind get kind => TypeKind.BytesArray;
