@@ -47,33 +47,5 @@ void main() {
         throwsA(isA<InvalidSizeException>()),
       );
     });
-
-    test('Should throw UnexpectedTypeException when value is null', () {
-      int? value;
-
-      expect(
-        () => CodecU8().encodeToHex(value),
-        throwsA(isA<UnexpectedTypeException>()),
-      );
-    });
-
-    test('Should throw UnexpectedTypeException when value is a BigInt', () {
-      final value = 5.toBigInt;
-
-      expect(
-        () => CodecU8().encodeToHex(value),
-        throwsA(isA<UnexpectedTypeException>()),
-      );
-    });
-
-    test('Should throw UnexpectedTypeException when value is not an Integer',
-        () {
-      const value = '5';
-
-      expect(
-        () => CodecU8().encodeToHex(value),
-        throwsA(isA<UnexpectedTypeException>()),
-      );
-    });
   });
 }

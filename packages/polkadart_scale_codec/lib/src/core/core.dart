@@ -28,3 +28,7 @@ part '../types/codec_u32.dart';
 part '../types/codec_u64.dart';
 part '../types/codec_u128.dart';
 part '../types/codec_u256.dart';
+part '../types/codec_i8.dart';
+part '../types/codec_i16.dart';
+part '../types/codec_i32.dart';
+part '../types/codec_i64.dart';
