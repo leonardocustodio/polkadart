@@ -240,17 +240,17 @@ abstract class Type {
   Type({required this.kind, this.path, this.docs});
 }
 
-/// All `Scale Codec` supported types implements [ScaleCodecType]
+/// All `Scale Codec` supported types implements [ScaleCodecType].
 ///
 /// Supported types:
-/// ```dart
-/// CodecU8();
-/// CodecU16();
-/// CodecU32();
-/// CodecU64();
-/// CodecU128();
-/// CodecU256();
-/// ```
+///
+/// Unsigned integers:
+/// [CodecU8], [CodecU16], [CodecU32], [CodecU64], [CodecU128], [CodecU256].
+///
+/// Signed integers:
+/// [CodecI8], [CodecI16], [CodecI32], [CodecI64], [CodecI128], [CodecI256].
+///
+/// Strings: [CodecString].
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
 abstract class ScaleCodecType<T> {
