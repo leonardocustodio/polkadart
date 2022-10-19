@@ -11,7 +11,7 @@ class CodecString implements ScaleCodecType<String> {
   ///
   /// Example:
   /// ```
-  /// final encoded = CodecString.encodeToHex("Test"); //"0x1054657374"
+  /// final encoded = CodecString().encodeToHex("Test"); //"0x1054657374"
   /// ```
   @override
   String encodeToHex(value) {
@@ -25,7 +25,7 @@ class CodecString implements ScaleCodecType<String> {
   ///
   /// Example:
   /// ```
-  /// final decoded = CodecString.decodeFromHex("0x1054657374"); //Test
+  /// final decoded = CodecString().decodeFromHex("0x1054657374"); //Test
   /// ```
   @override
   String decodeFromHex(String encodedData) {
