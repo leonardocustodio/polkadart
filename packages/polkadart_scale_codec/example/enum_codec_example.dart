@@ -7,11 +7,21 @@ void main() {
       'FavouriteColorEnum': {
         '_enum': ['Red', 'Orange']
       },
+      'CustomComplexEnum': {
+        '_enum': {
+          'Plain': 'Text',
+          'ExtraData': {
+            'index': 'u8',
+            'name': 'Text',
+            'customTuple': '(FavouriteColorEnum, bool)'
+          }
+        }
+      },
     },
   );
 
   // specifying which schema key to select and use
-  final registryIndex = registry.getIndex('FavouriteColorEnum');
+  final registryIndexComplexEnum = registry.getIndex('CustomComplexEnum');
 
   // fetching the parsed types from `Json` to `Type`
   final types = registry.getTypes();
@@ -19,10 +29,38 @@ void main() {
   // Initializing Scale-Codec object
   final codec = Codec(types);
 
-  final value = 'Red';
+  final plainComplex = {
+    'Plain': 'scale-codec',
+  };
 
-  // encoding and decoding zero as BitVec<u8>
-  String encoded = codec.encode(registryIndex, value);
-  String decoded = codec.decode(registryIndex, encoded);
-  assert(decoded == value);
+  final plainEncoded = codec.encode(registryIndexComplexEnum, plainComplex);
+  final plainDecoded = codec.decode(registryIndexComplexEnum, plainEncoded);
+  print(plainDecoded);
+  assert(plainComplex == plainDecoded);
+
+  final extraDataComplex = {
+    'ExtraData': {
+      'index': 1,
+      'name': 'polkadart',
+      'customTuple': ['Red', true]
+    },
+  };
+
+  final extraDataEncoded =
+      codec.encode(registryIndexComplexEnum, extraDataComplex);
+  final extraDataDecoded =
+      codec.decode(registryIndexComplexEnum, extraDataEncoded);
+  print(extraDataDecoded);
+  assert(extraDataComplex == extraDataDecoded);
+
+  final registryIndexFavouriteColorEnum =
+      registry.getIndex('FavouriteColorEnum');
+
+  final value = 'Red';
+  // encoding and decoding
+  String encodedColor = codec.encode(registryIndexFavouriteColorEnum, value);
+  String decodedColor =
+      codec.decode(registryIndexFavouriteColorEnum, encodedColor);
+  print(decodedColor);
+  assert(decodedColor == value);
 }
