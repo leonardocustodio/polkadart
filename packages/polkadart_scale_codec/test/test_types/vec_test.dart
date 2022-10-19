@@ -4,7 +4,7 @@ import 'package:test/scaffolding.dart';
 
 void main() {
   // Creates the registry for parsing the types and selecting particular schema.
-  final registry = OldTypeRegistry(
+  final registry = TypeRegistry(
     types: <String, dynamic>{
       'Codec': {
         'a': 'Vec<u8>',

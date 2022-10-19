@@ -20,16 +20,16 @@ void main() {
     });
 
     test(
-        'Should return correct encoded data when value is 340282366920938463463374607431768211455',
+        'Should return correct encoded data when value fits 128 bits and is positive',
         () {
-      final value = BigInt.parse('340282366920938463463374607431768211455');
+      final largestSupportedValue =
+          BigInt.parse('340282366920938463463374607431768211455');
       const expectedResult = '0xffffffffffffffffffffffffffffffff';
 
-      expect(CodecU128().encodeToHex(value), expectedResult);
+      expect(CodecU128().encodeToHex(largestSupportedValue), expectedResult);
     });
 
-    test('Should throw InvalidSizeException when value is smaller than zero',
-        () {
+    test('Should throw InvalidSizeException when value is negative', () {
       final value = BigInt.from(-1);
 
       expect(
@@ -39,7 +39,7 @@ void main() {
     });
 
     test(
-        'Should throw InvalidSizeException when value is greater than 340282366920938463463374607431768211455',
+        "Given an 128 bit decoder when value is positive and can't be represented it should throw",
         () {
       final value = BigInt.parse('340282366920938463463374607431768211456');
 
