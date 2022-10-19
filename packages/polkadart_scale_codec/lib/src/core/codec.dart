@@ -231,7 +231,7 @@ class Codec {
     CodecVariant? variant =
         idx < def.variants.length ? def.variants[idx] : null;
     if (variant == null) {
-      throw UnexpectedCaseException('Unknown variant index: $idx');
+      throw UnknownVariantException('Unknown variant index: $idx');
     }
     switch (variant.kind) {
       case CodecVariantKind.empty:
