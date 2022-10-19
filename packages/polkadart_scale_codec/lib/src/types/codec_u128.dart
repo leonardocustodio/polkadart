@@ -30,6 +30,9 @@ class CodecU128 implements ScaleCodecType<BigInt> {
   @override
   BigInt decodeFromHex(String encodedData) {
     Source source = Source(encodedData);
-    return source.u128();
+    final result = source.u128();
+    source.assertEOF();
+
+    return result;
   }
 }
