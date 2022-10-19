@@ -11,7 +11,7 @@ class CodecU64 implements ScaleCodecType<BigInt> {
   ///
   /// Example:
   /// ```
-  /// final encoded = CodecI64.encodeToHex(9223372036854775807.toBigInt); // "0xffffffffffffff7f"
+  /// final encoded = CodecU64.encodeToHex(9223372036854775807.toBigInt); // "0xffffffffffffff7f"
   /// ```
   @override
   String encodeToHex(value) {
@@ -25,7 +25,7 @@ class CodecU64 implements ScaleCodecType<BigInt> {
   ///
   /// Example:
   /// ```
-  /// final decoded = CodecI64.decodeFromHex("0xffffffffffffff7f"); // 9223372036854775807
+  /// final decoded = CodecU64.decodeFromHex("0xffffffffffffff7f"); // 9223372036854775807
   /// ```
   @override
   BigInt decodeFromHex(String encodedData) {

@@ -48,4 +48,34 @@ void main() {
       );
     });
   });
+
+  group('decode unsigned 64-bit integers', () {
+    test('Given an encoded string when it represents zero it should be decoded',
+        () {
+      const value = '0x0000000000000000';
+      const expectedResult = 0;
+
+      expect(CodecU64().decodeFromHex(value), expectedResult);
+    });
+
+    test(
+        'Given an encoded string when it represents the largest supported value it should be decoded',
+        () {
+      const largestSupportedValue = '0xffffffffffffffff';
+      final expectedResult = '18446744073709551615'.toBigInt;
+
+      expect(CodecU64().decodeFromHex(largestSupportedValue), expectedResult);
+    });
+
+    test(
+        "Given an encoded string when it represents a integer that don't fit 64 bits it should throw",
+        () {
+      const value = '0xffff';
+
+      expect(
+        () => CodecU64().decodeFromHex(value),
+        throwsA(isA<Exception>()),
+      );
+    });
+  });
 }
