@@ -11,7 +11,7 @@ class CodecI32 implements ScaleCodecType<int> {
   ///
   /// Example:
   /// ```
-  /// final encoded = CodecI32.encode(-32768); // "0x0080"
+  /// final encoded = CodecI32.encode(16777215); // "0xffffff00"
   /// ```
   @override
   String encodeToHex(value) {
@@ -21,11 +21,11 @@ class CodecI32 implements ScaleCodecType<int> {
   }
 
   /// Returns an `int` value which the hex-decimal `string`
-  /// [encodedData] reprents, using [Source] methods.
+  /// [encodedData] represents, using [Source] methods.
   ///
   /// Example:
   /// ```
-  /// final decoded = CodecI32.decode("0x0080"); // -32768
+  /// final decoded = CodecI32.decode("0xffffff00"); // 16777215
   /// ```
   @override
   int decodeFromHex(String encodedData) {
