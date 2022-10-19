@@ -42,25 +42,25 @@ class HashNode {
 }
 
 ///
-///Computes hashes of substrate types for the purpose of equality derivation.
+/// Computes hashes of substrate types for the purpose of equality derivation.
 ///
-///Substrate types form a cyclic directed graph.
-///Two types are equal when their depth-first traversal trees are equal.
-///Inline with equality, we define a type hash to be a merkel hash of it's depth-first traversal.
+/// Substrate types form a cyclic directed graph.
+/// Two types are equal when their depth-first traversal trees are equal.
+/// Inline with equality, we define a type hash to be a merkel hash of it's depth-first traversal.
 ///
-///Note, that unlike a classic tree case we might need
-///to visit mutually recursive type nodes more than once.
+/// Note, that unlike a classic tree case we might need
+/// to visit mutually recursive type nodes more than once.
 ///
-///Naive approach of performing a depth-first traversal for each node might not work,
-///as we typically have around 10^3 nodes in a graph. This is on a verge of being slow.
+/// Naive approach of performing a depth-first traversal for each node might not work,
+/// as we typically have around 10^3 nodes in a graph. This is on a verge of being slow.
 ///
-///Hence, the following procedure:
+/// Hence, the following procedure:
 /// 1. We embed Tarjan's strongly connected components algorithm in our hash computation to discover and
 /// persist information about strongly connected components.
-/// 2. For each strongly connected component, we cache the resulting hash per entry point.
+///  2. For each strongly connected component, we cache the resulting hash per entry point.
 ///
-///This allows us to visit non-mutually recursive types only once and makes the overall procedure
-///quadratic only on the size of a maximal strongly connected component, which practically should not be big.
+/// This allows us to visit non-mutually recursive types only once and makes the overall procedure
+/// quadratic only on the size of a maximal strongly connected component, which practically should not be big.
 ///
 class TypeHasher {
   List<String> _cache = <String>[];
