@@ -5,6 +5,7 @@
 # Lets Get Started
 
 ### 1. Depend on it
+
 Add this to your package's `pubspec.yaml` file:
 
 ```yaml
@@ -19,18 +20,18 @@ You can install packages from the command line:
 with `pub`:
 
 ```css
-$  dart pub get
+  dart pub get
 ```
 
 with `Flutter`:
 
 ```css
-$  flutter pub get
+  flutter pub get
 ```
 
 ### 3. Import it
 
-Now in your `Dart` code, you can use: 
+Now in your `Dart` code, you can use:
 
 ```dart
     import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
@@ -52,16 +53,14 @@ Now in your `Dart` code, you can use:
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  
+
   final value = 69;
-  
+
   // 0x45
   var encoded = codec.encode(registryIndex, value);
-  
+
   // 69
   var decoded = codec.decode(registryIndex, encoded);
-  
-  assert(decoded, value);
 ```
 
 ### Unsigned Integers ( u64 | u128 | u256 )
@@ -78,16 +77,14 @@ Now in your `Dart` code, you can use:
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  
+
   final value = BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935');
-  
+
   // 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   var encoded = codec.encode(registryIndex, value);
-  
+
   // _BigIntImpl (115792089237316195423570985008687907853269984665640564039457584007913129639935)
   var decoded = codec.decode(registryIndex, encoded);
-  
-  assert(decoded, value);
 ```
 
 ### Signed Integers ( i8 | i16 | i32 )
@@ -104,16 +101,14 @@ Now in your `Dart` code, you can use:
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  
+
   final value = -128;
-  
+
   // 0x80
   var encoded = codec.encode(registryIndex, value);
-  
+
   // -128
   var decoded = codec.decode(registryIndex, encoded);
-  
-  assert(decoded, value);
 ```
 
 ### Signed Integers ( i64 | i128 | i256 )
@@ -130,16 +125,14 @@ Now in your `Dart` code, you can use:
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  
+
   final value = BigInt.parse('-9223372036854775808');
-  
+
   // 0x0000000000000080
   var encoded = codec.encode(registryIndex, value);
-  
-  // _BigIntImpl (-9223372036854775808) 
+
+  // _BigIntImpl (-9223372036854775808)
   var decoded = codec.decode(registryIndex, encoded);
-  
-  assert(decoded, value);
 ```
 
 ### Result<Ok, Err>
@@ -156,30 +149,27 @@ Now in your `Dart` code, you can use:
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  
+
   final value = {'Ok': 42};
-  
+
   // 0x002a
   var encoded = codec.encode(registryIndex, value);
-  
+
   // {'Ok': 42}
   var decoded = codec.decode(registryIndex, encoded);
-  assert(decoded, value);
-  
-  
-  
+
+
   // or
-  // 
+  //
   // For Err field
   //
   final value = {'Err': false};
-  
+
   // 0x0100
   var encoded = codec.encode(registryIndex, value);
-  
+
   // {'Err': false}
   var decoded = codec.decode(registryIndex, encoded);
-  assert(decoded, value);
 ```
 
 ### Compact
@@ -196,15 +186,14 @@ Now in your `Dart` code, you can use:
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  
+
   final value = 69;
-  
+
   // 0x1501
   var encoded = codec.encode(registryIndex, value);
-  
+
   // 69
   var decoded = codec.decode(registryIndex, encoded);
-  assert(decoded, value);
 ```
 
 ### Option
@@ -221,27 +210,24 @@ Now in your `Dart` code, you can use:
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  
+
   final value = true;
-  
+
   // 0x0101
   var encoded = codec.encode(registryIndex, value);
-  
+
   // true
   var decoded = codec.decode(registryIndex, encoded);
-  assert(decoded, value);
-  
 
   // or
   // null
   final value = null;
-  
+
   // 0x00
   var encoded = codec.encode(registryIndex, value);
-  
+
   // null
   var decoded = codec.decode(registryIndex, encoded);
-  assert(decoded, value);
 ```
 
 ### Bytes
@@ -258,13 +244,84 @@ Now in your `Dart` code, you can use:
 
   // Initializing Scale-Codec object
   final codec = Codec(types);
-  
+
   final value = [255, 255];
-  
+
   // 0x08ffff
   var encoded = codec.encode(registryIndex, value);
-  
-  // true
+
+  // [255, 255]
   var decoded = codec.decode(registryIndex, encoded);
-  assert(decoded, value);
+```
+
+### BitVec
+
+```dart
+  // Creates the registry for parsing the types
+  final registry = TypeRegistry();
+
+  // specifying which type to use.
+  final registryIndex = registry.getIndex('BitVec');
+
+  // fetching the parsed types from `Json` to `Type`
+  final types = registry.getTypes();
+
+  // Initializing Scale-Codec object
+  final codec = Codec(types);
+
+  final value = [255, 255];
+
+  // 0x40ffff
+  var encoded = codec.encode(registryIndex, value);
+
+  // [255, 255]
+  var decoded = codec.decode(registryIndex, encoded);
+```
+
+### Enum
+
+```dart
+  // Creates the registry for parsing the types
+  final registry = TypeRegistry(
+    types: {
+      'FavouriteColorEnum': {
+        '_enum': ['Red', 'Orange']
+      },
+      'CustomComplexEnum': {
+        '_enum': {
+          'Plain': 'Text',
+          'ExtraData': {
+            'index': 'u8',
+            'name': 'Text',
+            'customTuple': '(FavouriteColorEnum, bool)'
+          }
+        }
+      },
+    },
+  );
+  // specifying which type to use.
+  var typeIndex = registry.getIndex('CustomComplexEnum');
+
+  // fetching the parsed types from `Json` to `Type`
+  final types = registry.getTypes();
+
+  // Initializing Scale-Codec object
+  final codec = Codec(types);
+
+  final extraDataComplex = {
+    'ExtraData': {
+      'index': 1,
+      'name': 'polkadart',
+      'customTuple': ['Red', true]
+    },
+  };
+  // 0x01
+  var encoded = codec.encode(typeIndex, value);
+
+  // 'ExtraData': {
+  //   'index': 1,
+  //   'name': 'polkadart',
+  //   'customTuple': ['Red', true]
+  // },
+  var decoded = codec.decode(typeIndex, encoded);
 ```
