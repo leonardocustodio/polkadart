@@ -53,7 +53,7 @@ void main() {
     test('Given an encoded string when it represents zero it should be decoded',
         () {
       const value = '0x0000000000000000';
-      const expectedResult = 0;
+      final expectedResult = 0.toBigInt;
 
       expect(CodecU64().decodeFromHex(value), expectedResult);
     });
