@@ -14,7 +14,7 @@ part 'codec_type.dart';
 part 'codec_variant.dart';
 part 'codec.dart';
 part 'source.dart';
-part 'sink.dart';
+part 'encoder.dart';
 part 'type_kind.dart';
 part 'types_codec.dart';
 part 'types.dart';

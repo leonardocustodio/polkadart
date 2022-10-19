@@ -7,10 +7,14 @@ abstract class RegistryType extends Equatable {
 
   @override
   String toString() {
+    return getFormattedString();
+  }
+
+  String getFormattedString() {
     switch (kind) {
       case 'array':
         var type = (this as RegistryArrayType);
-        return '[${type.item.toString()}; ${type.len}]';
+        return '[${type.item.toString()}; ${type.length}]';
       case 'tuple':
         return '(${(this as RegistryTupleType).params.map((RegistryType t) => t.toString()).join(', ')})';
       case 'named':
@@ -39,21 +43,23 @@ class RegistryNamedType extends RegistryType with EquatableMixin {
   @override
   List<Object?> get props => [name, params, 'named'];
 
+  // We can't call super.toString() because it will end up calling toString() defined in the Equatable class.
   @override
-  String toString() => super.toString();
+  String toString() => super.getFormattedString();
 }
 
 class RegistryArrayType extends RegistryType with EquatableMixin {
   final RegistryType item;
-  final int len;
-  const RegistryArrayType({required this.item, required this.len})
+  final int length;
+  const RegistryArrayType({required this.item, required this.length})
       : super(kind: 'array');
 
   @override
-  List<Object?> get props => [item, len, 'array'];
+  List<Object?> get props => [item, length, 'array'];
 
+  // We can't call super.toString() because it will end up calling toString() defined in the Equatable class.
   @override
-  String toString() => super.toString();
+  String toString() => super.getFormattedString();
 }
 
 class RegistryTupleType extends RegistryType with EquatableMixin {
@@ -63,8 +69,9 @@ class RegistryTupleType extends RegistryType with EquatableMixin {
   @override
   List<Object?> get props => [params, 'tuple'];
 
+  // We can't call super.toString() because it will end up calling toString() defined in the Equatable class.
   @override
-  String toString() => super.toString();
+  String toString() => super.getFormattedString();
 }
 
 class TypeExpParser {
@@ -165,13 +172,13 @@ class TypeExpParser {
 
     var item = _assert(_anyType());
     _assertTok(';');
-    var len = _assertNat();
+    var length = _assertNat();
     if (isNotEmpty(_tok(';'))) {
       _assertName();
     }
     _assertTok(']');
 
-    return RegistryArrayType(item: item, len: len);
+    return RegistryArrayType(item: item, length: length);
   }
 
   RegistryNamedType? _namedType() {
@@ -255,11 +262,11 @@ class TypeExpParser {
     throw Exception('Invalid type expression: $_typeExp');
   }
 
-  dynamic _assert(dynamic val) {
-    if (val == null || (val is bool && val == false)) {
+  dynamic _assert(dynamic value) {
+    if (value == null || (value is bool && value == false)) {
       _abort();
     } else {
-      return val;
+      return value;
     }
   }
 

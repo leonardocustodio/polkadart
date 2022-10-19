@@ -5,11 +5,11 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
-void testCompact(String expectedHex, dynamic val) {
-  test('When $val is compacted, it should produce result: $expectedHex.', () {
+void testCompact(String expectedHex, dynamic value) {
+  test('When $value is compacted, it should produce result: $expectedHex.', () {
     final sink = HexEncoder();
 
-    sink.compact(val);
+    sink.compact(value);
 
     final computedHex = sink.toHex();
     expect(computedHex, expectedHex);
@@ -160,38 +160,38 @@ void main() {
         'When compacted with highest + 1 value as int, it will throw \'IncompatibleCompactException\'',
         () {
       // highest + 1 value
-      final val = 2.toBigInt.pow(536.toBigInt.toInt());
+      final value = 2.toBigInt.pow(536.toBigInt.toInt());
 
       // Sink Object
       final sink = HexEncoder();
 
       // Match exception
-      expect(() => sink.compact(val),
+      expect(() => sink.compact(value),
           throwsA(isA<IncompatibleCompactException>()));
     });
     test(
         'When compacted with highest + 1 value as BigInt, it will throw \'IncompatibleCompactException\'',
         () {
       // highest + 1 value
-      final val = 2.toBigInt.pow(536.toBigInt.toInt()).toInt();
+      final value = 2.toBigInt.pow(536.toBigInt.toInt()).toInt();
 
       // Sink Object
       final sink = HexEncoder();
 
       // Match exception
-      expect(() => sink.compact(val),
+      expect(() => sink.compact(value),
           throwsA(isA<IncompatibleCompactException>()));
     });
     test(
         'When compacted with -1 value, it will throw \'IncompatibleCompactException\'',
         () {
       // lowest - 1 value
-      final val = -1;
+      final value = -1;
       // Sink Object
       final sink = HexEncoder();
 
       // Match exception
-      expect(() => sink.compact(val),
+      expect(() => sink.compact(value),
           throwsA(isA<IncompatibleCompactException>()));
     });
   });
