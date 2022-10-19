@@ -1,22 +1,20 @@
 import 'dart:typed_data';
 
-import 'package:convert/convert.dart';
 import 'package:ss58_codec/ss58_codec.dart';
 
 void main() {
-  // Decoding an Polkadot Address Object
-  Address decodedAddress =
+  // Decoding a Polkadot Address Object
+  Address address =
       SS58Codec.decode('1zugcag7cJVBtVRnFxv5Qftn7xKAnR6YJ9x4x3XLgGgmNnS');
-  print('Decoding Polkadot Address');
-  print('$decodedAddress\n');
+  print('Address: $address');
 
-  // Encoding an Address Object
-  Address addressObject = Address(
-      prefix: 42,
-      bytes: Uint8List.fromList(hex.decode(
-          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d')));
-  String encodedAddress = SS58Codec.encode(addressObject);
+  // Encoding previous Address object
+  String encodedAddress = SS58Codec.encode(address);
+  print('Encoded address: $encodedAddress');
 
-  // expected: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
-  print('Encode Address Object: $encodedAddress');
+  // Encoding with a custom prefix
+  Address customAddress =
+      Address(prefix: 0, bytes: Uint8List.fromList([1, 2, 3, 4]));
+  String encodedCustomAddress = SS58Codec.encode(customAddress);
+  print('Custom address encoded: $encodedCustomAddress');
 }
