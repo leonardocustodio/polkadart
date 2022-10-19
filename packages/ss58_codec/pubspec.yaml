@@ -1,5 +1,5 @@
 name: ss58_codec
-description: Provides encoder and decoder used to parse substrate addresses.
+description: Encodes and decodes substrate addresses.
 version: 1.0.0
 homepage: https://github.com/rankanizer/polkadart
 
