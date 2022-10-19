@@ -63,7 +63,7 @@ void main() {
       const value = 2147483648;
 
       expect(
-        () => CodecI16().encodeToHex(value),
+        () => CodecI32().encodeToHex(value),
         throwsA(isA<InvalidSizeException>()),
       );
     });

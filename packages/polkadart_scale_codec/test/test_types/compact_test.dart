@@ -12,7 +12,7 @@ void main() {
       test(
           'On using Compact<Vec<u8>> as Types then Codec initialization should throw UnexpectedCaseException',
           () {
-        final registry = OldTypeRegistry();
+        final registry = TypeRegistry();
 
         // specifying which schema type to use.
         registry.select('Compact<Vec<u8>>');
@@ -30,7 +30,7 @@ void main() {
       test(
           'On using Compact<i8> as Types then Codec initialization should throw AssertionException',
           () {
-        final registry = OldTypeRegistry();
+        final registry = TypeRegistry();
 
         // specifying which schema type to use.
         registry.select('Compact<i8>');
@@ -49,7 +49,7 @@ void main() {
       test(
           'On using Compact<i16> as Types then Codec initialization should throw \'AssertionException\'',
           () {
-        final registry = OldTypeRegistry();
+        final registry = TypeRegistry();
 
         // specifying which schema type to use.
         registry.select('Compact<i16>');
@@ -68,7 +68,7 @@ void main() {
   }
 
   // Creates the registry for parsing the types and selecting particular schema.
-  final registry = OldTypeRegistry(
+  final registry = TypeRegistry(
     types: <String, dynamic>{
       'Codec': {
         'a': 'Compact<u8>',

@@ -28,53 +28,54 @@ bool isNotEmpty(dynamic value) {
 /// Asserts if the `T` value is null or not.
 ///
 /// Returns `T` if not null otherwise throws `AssertionException`
-T assertNotNull<T>(T? val, [String? msg]) {
-  if (val == null) {
+T assertNotNull<T>(T? value, [String? msg]) {
+  if (value == null) {
     throw AssertionException(msg ?? 'Assertion Error occured.');
   }
-  return val;
+  return value;
 }
 
-/// Asserts if the [val] value is true or not
+/// Asserts if the [value] value is true or not
 ///
 /// Throws `AssertionException` if `false`
-void assertionCheck(bool val, [String? msg]) {
-  if (!val) {
+void assertionCheck(bool value, [String? msg]) {
+  if (!value) {
     throw AssertionException(msg ?? 'Assertion Error occured.');
   }
 }
 
-/// Returns `true` if the val is `num` and is in range of [min, max] with `min` and `max` being inclusive.
+/// Returns `true` if the value is `num` and is in range of [min, max] with `min` and `max` being inclusive.
 ///
 /// Throws `InvalidSizeException` if the above condition is `false`.
 ///
 /// Sign:
 /// - u --> unsigned
 /// - i --> signed
-bool checkInt(int val, String sign, int bitSize, int min, int max) {
-  final bool ok = min <= val && max >= val;
+bool checkInt(int value, String sign, int bitSize, int min, int max) {
+  final bool ok = min <= value && max >= value;
   if (!ok) {
-    throw InvalidSizeException('Invalid $sign$bitSize: $val');
+    throw InvalidSizeException('Invalid $sign$bitSize: $value');
   }
   return ok;
 }
 
-/// Returns `true` if the val is in range of [min, max] with `min` and `max` being inclusive.
+/// Returns `true` if the value is in range of [min, max] with `min` and `max` being inclusive.
 ///
 /// Throws `InvalidSizeException` if the above condition is `false`.
 ///
 /// Sign:
 /// - u --> unsigned
 /// - i --> signed
-bool checkBigInt(BigInt val, String sign, int bitSize, BigInt min, BigInt max) {
-  final bool ok = min <= val && max >= val;
+bool checkBigInt(
+    BigInt value, String sign, int bitSize, BigInt min, BigInt max) {
+  final bool ok = min <= value && max >= value;
   if (!ok) {
-    throw InvalidSizeException('Invalid $sign$bitSize: $val');
+    throw InvalidSizeException('Invalid $sign$bitSize: $value');
   }
   return ok;
 }
 
-/// Returns `true` if the Signed int `val` is in range of [min, max] according to `bitSize`.
+/// Returns `true` if the Signed int `value` is in range of [min, max] according to `bitSize`.
 ///
 /// bitsize ranges are:
 /// - 8 -> [-128, 127]
@@ -83,9 +84,9 @@ bool checkBigInt(BigInt val, String sign, int bitSize, BigInt min, BigInt max) {
 ///
 /// Exceptions:
 /// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
-/// - `InvalidSizeException` if the val is not in range.
+/// - `InvalidSizeException` if the value is not in range.
 ///
-bool checkSignedInt(int val, int bitSize) {
+bool checkSignedInt(int value, int bitSize) {
   late int min;
   late int max;
   switch (bitSize) {
@@ -104,7 +105,7 @@ bool checkSignedInt(int val, int bitSize) {
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
-  return checkInt(val, 'I', bitSize, min, max);
+  return checkInt(value, 'I', bitSize, min, max);
 }
 
 /// Calculates BigInt power.
@@ -117,7 +118,7 @@ BigInt calculateBigIntPow(int number, int exponent) {
   return number.toBigInt.pow(exponent.toBigInt.toInt());
 }
 
-/// Returns `true` if the Signed BigInt `val` is in range of [min, max] according to `bitSize`.
+/// Returns `true` if the Signed BigInt `value` is in range of [min, max] according to `bitSize`.
 ///
 /// bitsize ranges are:
 /// - 64 -> [-9223372036854775808, 9223372036854775807]
@@ -126,9 +127,9 @@ BigInt calculateBigIntPow(int number, int exponent) {
 ///
 /// Exceptions:
 /// - `UnexpectedCaseException` if the `bitsize` is not (64 || 128 || 256)
-/// - `InvalidSizeException` if the val is not in range.
+/// - `InvalidSizeException` if the value is not in range.
 ///
-bool checkSignedBigInt(BigInt val, int bitSize) {
+bool checkSignedBigInt(BigInt value, int bitSize) {
   late BigInt min;
   late BigInt max;
   switch (bitSize) {
@@ -142,10 +143,10 @@ bool checkSignedBigInt(BigInt val, int bitSize) {
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
-  return checkBigInt(val, 'I', bitSize, min, max);
+  return checkBigInt(value, 'I', bitSize, min, max);
 }
 
-/// Returns `true` if the Unsigned int `val` is in range of [min, max] according to `bitSize`.
+/// Returns `true` if the Unsigned int `value` is in range of [min, max] according to `bitSize`.
 ///
 /// bitsize ranges are:
 /// - 8 -> [0, 255]
@@ -154,9 +155,9 @@ bool checkSignedBigInt(BigInt val, int bitSize) {
 ///
 /// Exceptions:
 /// - `UnexpectedCaseException` if the `bitsize` is not (8 || 16 || 32)
-/// - `InvalidSizeException` if the val is not in range.
+/// - `InvalidSizeException` if the value is not in range.
 ///
-bool checkUnsignedInt(int val, int bitSize) {
+bool checkUnsignedInt(int value, int bitSize) {
   late int max;
   switch (bitSize) {
     case 8:
@@ -171,10 +172,10 @@ bool checkUnsignedInt(int val, int bitSize) {
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
-  return checkInt(val, 'U', bitSize, 0, max);
+  return checkInt(value, 'U', bitSize, 0, max);
 }
 
-/// Returns `true` if the Signed BigInt `val` is in range of [min, max] according to `bitSize`.
+/// Returns `true` if the Signed BigInt `value` is in range of [min, max] according to `bitSize`.
 ///
 /// bitsize ranges are:
 /// - 64 -> [0, 18446744073709551615]
@@ -183,9 +184,9 @@ bool checkUnsignedInt(int val, int bitSize) {
 ///
 /// Exceptions:
 /// - `UnexpectedCaseException` if the `bitsize` is not (64 || 128 || 256)
-/// - `InvalidSizeException` if the val is not in range.
+/// - `InvalidSizeException` if the value is not in range.
 ///
-bool checkUnsignedBigInt(BigInt val, int bitSize) {
+bool checkUnsignedBigInt(BigInt value, int bitSize) {
   late BigInt max;
   switch (bitSize) {
     case 64:
@@ -196,7 +197,7 @@ bool checkUnsignedBigInt(BigInt val, int bitSize) {
     default:
       throw UnexpectedCaseException('Unexpected BitSize: $bitSize.');
   }
-  return checkBigInt(val, 'U', bitSize, 0.toBigInt, max);
+  return checkBigInt(value, 'U', bitSize, 0.toBigInt, max);
 }
 
 ///
@@ -206,15 +207,15 @@ bool checkUnsignedBigInt(BigInt val, int bitSize) {
 ///
 ///Example:
 /// ```dart
-///BigInt val = toSignedBigInt(2, 64);
+///BigInt value = toSignedBigInt(2, 64);
 ///// value = 2;
 ///```
 BigInt toSignedBigInt(dynamic value, int bitSize) {
-  late BigInt result;
+  late BigInt bigIntValue;
   if (value is String) {
-    result = BigInt.parse(value);
+    bigIntValue = BigInt.parse(value);
   } else if (value is int) {
-    result = BigInt.from(value);
+    bigIntValue = BigInt.from(value);
   } else {
     throw UnexpectedTypeException(
       expectedType: '`String` or `int`',
@@ -222,8 +223,8 @@ BigInt toSignedBigInt(dynamic value, int bitSize) {
     );
   }
 
-  checkSignedBigInt(result, bitSize);
-  return result;
+  checkSignedBigInt(bigIntValue, bitSize);
+  return bigIntValue;
 }
 
 ///
@@ -237,19 +238,19 @@ BigInt toSignedBigInt(dynamic value, int bitSize) {
 ///// value = 2;
 ///```
 BigInt toUnsignedBigInt(dynamic value, int bitSize) {
-  late BigInt result;
+  late BigInt bigIntValue;
   if (value is String) {
-    result = BigInt.parse(value);
+    bigIntValue = BigInt.parse(value);
   } else if (value is int) {
-    result = BigInt.from(value);
+    bigIntValue = BigInt.from(value);
   } else {
     throw UnexpectedTypeException(
       expectedType: '`String` or `int`',
       receivedType: value.runtimeType.toString(),
     );
   }
-  checkUnsignedBigInt(result, bitSize);
-  return result;
+  checkUnsignedBigInt(bigIntValue, bitSize);
+  return bigIntValue;
 }
 
 /// Encodes UTF-8 String
@@ -258,20 +259,20 @@ BigInt toUnsignedBigInt(dynamic value, int bitSize) {
 ///
 ///Example:
 /// ```dart
-/// var val = utf8Encoder('polkadot');
-/// // val = [112, 111, 108, 107, 97, 100, 111, 116]
+/// var value = utf8Encoder('polkadot');
+/// // value = [112, 111, 108, 107, 97, 100, 111, 116]
 /// ```
 List<int> utf8Encoder(String input) => Utf8Codec().encode(input);
 
 ///
-/// Counts the shifts made to the the bits of [val] to the right by shiftAmount:`8` before becoming `0`.
-int unsignedIntByteLength(BigInt val) {
-  int len = 0;
+/// Counts the shifts made to the the bits of [value] to the right by shiftAmount:`8` before becoming `0`.
+int unsignedIntByteLength(BigInt value) {
+  int length = 0;
   BigInt bigInt0 = 0.toBigInt;
   int bigInt8 = 8.toBigInt.toInt();
-  while (val > bigInt0) {
-    val = val >> bigInt8;
-    len += 1;
+  while (value > bigInt0) {
+    value = value >> bigInt8;
+    length += 1;
   }
-  return len;
+  return length;
 }
