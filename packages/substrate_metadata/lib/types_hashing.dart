@@ -17,7 +17,7 @@ TypeHasher getTypeHasher(List<scale_codec.Type> types) {
 }
 
 ///
-///Get a strong hash of substrate type, which can be used for equality derivation
+/// Get a strong hash of substrate type, which can be used for equality derivation
 String getTypeHash(List<scale_codec.Type> types, int typeIndex) {
   return getTypeHasher(types).getHash(typeIndex);
 }
