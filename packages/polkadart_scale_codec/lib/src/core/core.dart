@@ -34,3 +34,4 @@ part '../types/codec_i32.dart';
 part '../types/codec_i64.dart';
 part '../types/codec_i128.dart';
 part '../types/codec_i256.dart';
+part '../types/codec_boolean.dart';
