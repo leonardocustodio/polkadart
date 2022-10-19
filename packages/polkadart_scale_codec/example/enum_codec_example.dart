@@ -36,7 +36,6 @@ void main() {
   final plainEncoded = codec.encode(registryIndexComplexEnum, plainComplex);
   final plainDecoded = codec.decode(registryIndexComplexEnum, plainEncoded);
   print(plainDecoded);
-  assert(plainComplex == plainDecoded);
 
   final extraDataComplex = {
     'ExtraData': {
@@ -51,7 +50,6 @@ void main() {
   final extraDataDecoded =
       codec.decode(registryIndexComplexEnum, extraDataEncoded);
   print(extraDataDecoded);
-  assert(extraDataComplex == extraDataDecoded);
 
   final registryIndexFavouriteColorEnum =
       registry.getIndex('FavouriteColorEnum');
@@ -62,5 +60,4 @@ void main() {
   String decodedColor =
       codec.decode(registryIndexFavouriteColorEnum, encodedColor);
   print(decodedColor);
-  assert(decodedColor == value);
 }
