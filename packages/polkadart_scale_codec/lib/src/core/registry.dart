@@ -517,7 +517,7 @@ class TypeRegistry {
     } else if (def is Map && def['_set'] != null) {
       return _types[_buildSet(def)];
     } else {
-      result = _buildStruct(def);
+      result = _buildStruct(def['_struct']);
     }
     result.path = [typeName];
     return result;
