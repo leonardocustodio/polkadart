@@ -35,7 +35,7 @@ class MetadataDecoder {
     final result = _decodePrivate(data);
     final version = result['version'];
     final metadata = result['metadata'];
-    return model.Metadata.fromVersion(version, metadata);
+    return model.Metadata.fromVersion(metadata, version);
   }
 
   /// Decodes metadata and returns `Map<String, dynamic>`
