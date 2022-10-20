@@ -11,7 +11,7 @@ class CodecU16 implements ScaleCodecType<int> {
   ///
   /// Example:
   /// ```
-  /// final encoded = CodecU16.encodeToHex(42) // "0x2a00";
+  /// final encoded = CodecU16().encodeToHex(42) // "0x2a00";
   /// ```
   @override
   String encodeToHex(value) {
@@ -25,7 +25,7 @@ class CodecU16 implements ScaleCodecType<int> {
   ///
   /// Example:
   /// ```
-  /// final decoded = CodecU16.decodeFromHex("0x2a00") // 42;
+  /// final decoded = CodecU16().decodeFromHex("0x2a00") // 42;
   /// ```
   @override
   int decodeFromHex(String encodedData) {
