@@ -107,5 +107,14 @@ void main() {
 
       expect(CodecCompact<BigInt>().decodeFromHex(value), expectedResult);
     });
+
+    test(
+        "Given an invalid encoded when it don't fit valid bytes it should throw",
+        () {
+      final value = '0xff';
+
+      expect(() => CodecCompact<int>().decodeFromHex(value),
+          throwsA(isA<EOFException>()));
+    });
   });
 }
