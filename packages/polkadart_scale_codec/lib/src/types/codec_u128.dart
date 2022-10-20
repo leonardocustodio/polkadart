@@ -11,7 +11,7 @@ class CodecU128 implements ScaleCodecType<BigInt> {
   ///
   /// Example:
   /// ```
-  /// final encoded = CodecU128.encodeToHex(16777215.toBigInt); // "0xffffff00000000000000000000000000"
+  /// final encoded = CodecU128().encodeToHex(16777215.toBigInt); // "0xffffff00000000000000000000000000"
   /// ```
   @override
   String encodeToHex(value) {
@@ -25,7 +25,7 @@ class CodecU128 implements ScaleCodecType<BigInt> {
   ///
   /// Example:
   /// ```
-  /// final decoded = CodecU128.decodeFromHex("0xffffff00000000000000000000000000"); // 16777215
+  /// final decoded = CodecU128().decodeFromHex("0xffffff00000000000000000000000000"); // 16777215
   /// ```
   @override
   BigInt decodeFromHex(String encodedData) {
