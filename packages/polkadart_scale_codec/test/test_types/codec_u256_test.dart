@@ -77,7 +77,19 @@ void main() {
     });
 
     test(
-        "Given an encoded string when it represents a integer that don't fit 256 bits it should throw",
+        "Given an encoded string when it represents a integer larger than 256 bits it should throw",
+        () {
+      const value =
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7fff';
+
+      expect(
+        () => CodecU256().decodeFromHex(value),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test(
+        "Given an encoded string when it represents a integer smaller than 256 bits it should throw",
         () {
       const value = '0xffff';
 
