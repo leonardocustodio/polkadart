@@ -68,13 +68,24 @@ void main() {
     });
 
     test(
-        "Given an encoded string when it represents a integer that don't fit 64 bits it should throw",
+        "Given an encoded string when it represents a integer larger than 64 bits it should throw",
+        () {
+      const value = '0xffffffffffffffffffffffffffffffff';
+
+      expect(
+        () => CodecU64().decodeFromHex(value),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test(
+        "Given an encoded string when it represents a integer smaller than 64 bits it should throw",
         () {
       const value = '0xffff';
 
       expect(
         () => CodecU64().decodeFromHex(value),
-        throwsA(isA<Exception>()),
+        throwsA(isA<EOFException>()),
       );
     });
   });
