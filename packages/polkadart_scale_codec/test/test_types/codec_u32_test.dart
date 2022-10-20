@@ -68,13 +68,24 @@ void main() {
     });
 
     test(
-        "Given an encoded string when it represents a integer that don't fit 32 bits it should throw",
+        "Given an encoded string when it represents a integer larger than 32 bits it should throw",
+        () {
+      const value = '0xffffffffffff';
+
+      expect(
+        () => CodecU32().decodeFromHex(value),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test(
+        "Given an encoded string when it represents a integer smaller than 32 bits it should throw",
         () {
       const value = '0xffff';
 
       expect(
         () => CodecU32().decodeFromHex(value),
-        throwsA(isA<Exception>()),
+        throwsA(isA<EOFException>()),
       );
     });
   });
