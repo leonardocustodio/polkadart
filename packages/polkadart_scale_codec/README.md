@@ -1,6 +1,6 @@
 # polkadart_scale_codec
 
-### [polkadart_scale_codec](https://www.pub.dev/packages/polkadart_scale_codec) is a flutter and dart library for encoding and decoding types supported by **polkadot**.
+[polkadart_scale_codec](https://www.pub.dev/packages/polkadart_scale_codec) is a flutter and dart library for encoding and decoding types supported by **polkadot**.
 
 # Lets Get Started
 
@@ -20,13 +20,13 @@ You can install packages from the command line:
 with `pub`:
 
 ```css
-  dart pub get
+dart pub get
 ```
 
 with `Flutter`:
 
 ```css
-  flutter pub get
+flutter pub get
 ```
 
 ### 3. Import it
@@ -34,7 +34,7 @@ with `Flutter`:
 Now in your `Dart` code, you can use:
 
 ```dart
-    import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 ```
 
 ### Supported types: 
