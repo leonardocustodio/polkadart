@@ -69,13 +69,25 @@ void main() {
     });
 
     test(
-        "Given an encoded string when it represents a integer that don't fit 128 bits it should throw",
+        "Given an encoded string when it represents a integer larger fit 128 bits it should throw",
+        () {
+      const value =
+          '0xffffffffffffffffffffffffffffff7fffffffffffffffffffffffffffffff7f';
+
+      expect(
+        () => CodecU128().decodeFromHex(value),
+        throwsA(isA<Exception>()),
+      );
+    });
+
+    test(
+        "Given an encoded string when it represents a integer smaller 128 bits it should throw",
         () {
       const value = '0xffff';
 
       expect(
         () => CodecU128().decodeFromHex(value),
-        throwsA(isA<Exception>()),
+        throwsA(isA<EOFException>()),
       );
     });
   });
