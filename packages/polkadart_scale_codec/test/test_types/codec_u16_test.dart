@@ -68,13 +68,24 @@ void main() {
     });
 
     test(
-        "Given an encoded string when it represents a integer that don't fit 16 bits it should throw",
+        "Given an encoded string when it represents a integer bigger than 16 bits it should throw",
         () {
       const value = '0xff7fff';
 
       expect(
         () => CodecU16().decodeFromHex(value),
         throwsA(isA<Exception>()),
+      );
+    });
+
+    test(
+        "Given an encoded string when it represents a integer that don't fit 16 bits it should throw",
+        () {
+      const value = '0xff';
+
+      expect(
+        () => CodecU16().decodeFromHex(value),
+        throwsA(isA<EOFException>()),
       );
     });
   });
