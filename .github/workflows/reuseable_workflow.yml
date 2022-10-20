@@ -54,7 +54,7 @@ jobs:
         run: dart pub global run dart_code_metrics:metrics analyze --reporter=codeclimate .
 
       - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.1.0
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: f62061f125a8fc1425670a787b7cac15d2d9f73d7ec4878c0e4d07575156ccc1
         with:
