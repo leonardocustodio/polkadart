@@ -49,6 +49,7 @@ Bytes | `Bytes`
 Compact | `Compact<T>`
 Enum | `_enum`
 Struct | `_struct`
+FixedVec | `[u8, length]`
 BitVec | `BitVec`
 Option | `Option<T>`
 Tuple | `(K, V, T....)`
