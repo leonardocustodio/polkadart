@@ -64,10 +64,10 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   // Preferred to provide all the available Spec-Version information.
   chain.initSpecVersionFromFile('../chain/versions.json');
 
-  final rawBlock = RawBlock.fromJson( { blockJson } );
+  final RawBlock rawBlock = RawBlock.fromJson( { blockJson } );
 
   // DecodedBlockExtrinsics
-  final decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
+  final DecodedBlockExtrinsics decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
 ```
 
 ### Encode Extrinsic
@@ -80,13 +80,13 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   // Preferred to provide all the available Spec-Version information.
   chain.initSpecVersionFromFile('../chain/versions.json');
 
-  final rawBlock = RawBlock.fromJson( { blockJson } );
+  final RawBlock rawBlock = RawBlock.fromJson( { blockJson } );
 
   // DecodedBlockExtrinsics
-  final decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
+  final DecodedBlockExtrinsics decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
 
   // encodedRawBlock.hashCode == rawBlock
-  final encodedRawBlock = chain.encodeExtrinsic(decodedExtrinsic);
+  final RawBlock encodedRawBlock = chain.encodeExtrinsic(decodedExtrinsic);
 ```
 
 ### Decode Events
@@ -99,10 +99,10 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   // Preferred to provide all the available Spec-Version information.
   chain.initSpecVersionFromFile('../chain/versions.json');
 
-  final rawBlockEvents = RawBlockEvents.fromJson( { blockJson } );
+  final RawBlockEvents rawBlockEvents = RawBlockEvents.fromJson( { blockJson } );
 
   // DecodedBlockEvents
-  final decodedEvents = chain.decodeEvents(rawBlockEvents);
+  final DecodedBlockEvents decodedEvents = chain.decodeEvents(rawBlockEvents);
 ```
 
 ### Encode Events
@@ -118,10 +118,10 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   final rawBlockEvents = RawBlockEvents.fromJson( { blockJson } );
 
   // DecodedBlockEvents
-  final decodedEvents = chain.decodeEvents(rawBlockEvents);
+  final DecodedBlockEvents decodedEvents = chain.decodeEvents(rawBlockEvents);
 
   // encodedBlockEvents.hashCode == rawBlockEvents.hashCode
-  final encodedBlockEvents = chain.encodeEvents(decodedEvents);
+  final RawBlockEvents encodedBlockEvents = chain.encodeEvents(decodedEvents);
 ```
 
 ### Create Chain Description from SpecVersion
@@ -134,9 +134,9 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 
   final specJson = {'specName': 'polkadot', 'specVersion':......};
 
-  final specVersion = SpecVersion.fromJson(specJson);
+  final SpecVersion specVersion = SpecVersion.fromJson(specJson);
 
-  final chainDescription = chainObject.getChainDescriptionFromSpecVersion(specVersion);
+  final ChainDescription chainDescription = chainObject.getChainDescriptionFromSpecVersion(specVersion);
 ```
 
 ### Decode Constants
@@ -149,7 +149,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   // Preferred to provide all the available Spec-Version information.
   chain.initSpecVersionFromFile('../chain/versions.json');
 
-  final chainDescription = chain.getChainDescriptionFromSpecVersion()
+  final ChainDescription chainDescription = chain.getChainDescriptionFromSpecVersion()
 
   // Map<String, Map<String, dynamic>> containing mapped pallets and names
   final constants = chain.decodeConstants(chainDescription);
