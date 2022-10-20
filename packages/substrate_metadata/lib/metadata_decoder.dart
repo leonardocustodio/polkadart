@@ -4,21 +4,16 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
 import 'package:substrate_metadata/old/definitions/metadata/metadata.dart'
     as metadata_definitions;
 
-/// (Singleton)
 ///
 /// It helps to create a single instance of [MetadataDecoder] which helps to decode Metadata.
 class MetadataDecoder {
-  static final MetadataDecoder instance = MetadataDecoder._internal();
-
   /// Used to store single created instance of Scale-Codec
   late scale.Codec _codec;
 
   /// Used to store versions of metadata
   late List<int> _versions;
 
-  factory MetadataDecoder() => instance;
-
-  MetadataDecoder._internal() {
+  MetadataDecoder() {
     _createScaleCodec();
   }
 
