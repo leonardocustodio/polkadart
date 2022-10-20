@@ -1,6 +1,6 @@
 part of '../core/core.dart';
 
-/// [ScaleCodecType] class to encode and decode `signed 8-bit` integers.
+/// [ScaleCodecType] class to encode and decode `compact` integers.
 ///
 /// A "compact" or general integer encoding is sufficient for encoding
 /// large integers (up to 2**536) and is more efficient at encoding most
