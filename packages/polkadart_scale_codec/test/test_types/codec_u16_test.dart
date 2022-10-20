@@ -68,7 +68,7 @@ void main() {
     });
 
     test(
-        "Given an encoded string when it represents a integer bigger than 16 bits it should throw",
+        "Given an encoded string when it represents a integer larger than 16 bits it should throw",
         () {
       const value = '0xff7fff';
 
