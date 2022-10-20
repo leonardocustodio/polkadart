@@ -89,6 +89,17 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   final RawBlock encodedRawBlock = chain.encodeExtrinsic(decodedExtrinsic);
 ```
 
+### Add SpecVersion
+
+```dart
+  final specJson = {'specName': 'polkadot', 'specVersion':......};
+
+  final specVersion = SpecVersion.fromJson(specJson);
+  
+  // specVersion gets added to support decoding the blocks.
+  chainObject.addSpecVersion(specVersion);
+```
+
 ### Decode Events
 
 ```dart
