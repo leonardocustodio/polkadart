@@ -137,7 +137,7 @@ class Chain {
       return;
     }
 
-    final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
+    final MetadataDecoder metadataDecoder = MetadataDecoder();
 
     final Metadata metadata =
         metadataDecoder.decodeAsMetadata(specVersion.metadata);
