@@ -11,7 +11,7 @@ class CodecU256 implements ScaleCodecType<BigInt> {
   ///
   /// Example:
   /// ```
-  /// final encoded = CodecU256.encodeToHex(16777215.toBigInt);
+  /// final encoded = CodecU256().encodeToHex(16777215.toBigInt);
   /// // "0xffffff0000000000000000000000000000000000000000000000000000000000"
   /// ```
   @override
@@ -26,7 +26,7 @@ class CodecU256 implements ScaleCodecType<BigInt> {
   ///
   /// Example:
   /// ```
-  /// final decoded = CodecU256.decodeFromHex("0xffffff0000000000000000000000000000000000000000000000000000000000");
+  /// final decoded = CodecU256().decodeFromHex("0xffffff0000000000000000000000000000000000000000000000000000000000");
   /// // 16777215
   /// ```
   @override
