@@ -10,6 +10,10 @@ environment:
   sdk: ">=2.17.6 <3.0.0"
 
 dependencies:
+  cryptography: ^2.0.5 # Apache-2.0
+  polkadart_scale_codec:
+    path: ../polkadart_scale_codec
+  weak_map: ^2.1.0 # BSD-2-Clause
 
 dev_dependencies:
   lints: ^2.0.0
