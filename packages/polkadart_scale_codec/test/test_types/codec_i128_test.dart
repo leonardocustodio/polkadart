@@ -45,7 +45,6 @@ void main() {
         "Given an 128 bit decoder when value is positive and can't be represented it should throw",
         () {
       final value = BigInt.parse('170141183460469231731687303715884105728');
-      ;
 
       expect(
         () => CodecI128().encodeToHex(value),
