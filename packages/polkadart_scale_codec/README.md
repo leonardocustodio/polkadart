@@ -37,23 +37,23 @@ Now in your `Dart` code, you can use:
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 ```
 
-### Supported types: 
-Types | Sign
---- | ---
+### Supported types:
+Types| Sign
+-|-
 Unsigned Int | `u8, u16, u32, u64, u128, u256`
-Signed Int | `i8, i16, i32, i64, i128, i256`
-String | `Text`
-Boolean | `bool`
-Address | `Address`
-Bytes | `Bytes`
-Compact | `Compact<T>`
-Enum | `_enum`
-Struct | `_struct`
-FixedVec | `[u8, length]`
-BitVec | `BitVec`
-Option | `Option<T>`
-Tuple | `(K, V, T....)`
-Result | `Result<Ok, Err>`
+Signed Int| `i8, i16, i32, i64, i128, i256`
+String| `Text`
+Boolean| `bool`
+Address| `Address`
+Bytes| `Bytes`
+Compact| `Compact<T>`
+Enum| `_enum`
+Struct| `_struct`
+FixedVec| `[u8, length]`
+BitVec| `BitVec`
+Option| `Option<T>`
+Tuple| `(K, V, T....)`
+Result| `Result<Ok, Err>`
 
 # Usage
 
