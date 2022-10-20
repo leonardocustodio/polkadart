@@ -11,7 +11,7 @@ class CodecU32 implements ScaleCodecType<int> {
   ///
   /// Example:
   /// ```
-  /// final encoded = CodecU32.encodeToHex(16777215); // "0xffffff00"
+  /// final encoded = CodecU32().encodeToHex(16777215); // "0xffffff00"
   /// ```
   @override
   String encodeToHex(value) {
@@ -25,7 +25,7 @@ class CodecU32 implements ScaleCodecType<int> {
   ///
   /// Example:
   /// ```
-  /// final decoded = CodecU32.decodeFromHex("0xffffff00"); // 16777215
+  /// final decoded = CodecU32().decodeFromHex("0xffffff00"); // 16777215
   /// ```
   @override
   int decodeFromHex(String encodedData) {
