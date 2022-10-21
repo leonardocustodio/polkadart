@@ -50,7 +50,6 @@ void main() {
         () {
       final value = BigInt.parse(
           '57896044618658097711785492504343953926634992332820282019728792003956564819968');
-      ;
 
       expect(
         () => CodecI256().encodeToHex(value),
