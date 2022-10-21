@@ -8,17 +8,8 @@ part of '../core/core.dart';
 /// the fixed-width integer is never worse.)
 ///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-class CodecCompact<T extends Object> implements ScaleCodecType<T> {
-  /// Default constructor used to limit [T] types.
-  /// Only `int` and `BigInt` are supported.
-  CodecCompact() {
-    if ((T != int && T != BigInt)) {
-      throw UnexpectedTypeException(
-          expectedType: 'int or BigInt', receivedType: T.toString());
-    }
-  }
-
-  /// Returns an encoded hex-decimal `string` from `int` or `BigInt`[value]
+class CodecCompact implements ScaleCodecType<BigInt> {
+  /// Returns an encoded hex-decimal `string` from `BigInt`[value]
   /// using [HexEncoder] methods.
   ///
   /// Compact/general integers are encoded with the two least significant bits
@@ -36,15 +27,14 @@ class CodecCompact<T extends Object> implements ScaleCodecType<T> {
   ///
   /// Example:
   /// ```
-  /// final intEncoded = CodecCompact<int>().encodeToHex(65535); //"0xfeff0300"
-  /// final bigIntEncoded = CodecCompact<BigInt>().encodeToHex(18446744073709551615.toBigInt);
+  /// String example1 = CodecCompact().encodeToHex('65535'.toBigInt); //"0xfeff0300"
+  /// String example2 = CodecCompact().encodeToHex(18446744073709551615.toBigInt);
   /// //0x13ffffffffffffffff
   /// ```
   @override
   String encodeToHex(value) {
     var sink = HexEncoder();
-
-    var convertedValue = value is int ? value : (value as BigInt).toInt();
+    int convertedValue = value.toInt();
 
     if (convertedValue < 0) {
       throw IncompatibleCompactException("Value can't be less than 0.");
@@ -60,7 +50,7 @@ class CodecCompact<T extends Object> implements ScaleCodecType<T> {
       sink.write((convertedValue >>> 6) & 0xff);
       sink._uncheckedU16(convertedValue >>> 14);
     } else if (convertedValue < calculateBigIntPow(2, 536).toInt()) {
-      final bigIntValue = BigInt.from(convertedValue);
+      final bigIntValue = value;
       sink.write(unsignedIntByteLength(bigIntValue) * 4 - 13);
       while (convertedValue > 0) {
         sink.write(convertedValue & '0xff'.toBigInt.toInt());
@@ -72,27 +62,21 @@ class CodecCompact<T extends Object> implements ScaleCodecType<T> {
     return sink.toHex();
   }
 
-  /// Returns an `int`|`BigInt` value which the hex-decimal `string`
+  /// Returns a `BigInt` value which the hex-decimal `string`
   /// [encodedData] represents, using [Source] methods.
   ///
   /// Example:
   /// ```
-  /// final intDecoded = CodecCompact<int>().decodeFromHex("0xfeff0300"); //65535
-  /// final bigIntDecoded = CodecCompact<BigInt>().decodeFromHex("0x13ffffffffffffffff");
+  /// BigInt decoded = CodecCompact().decodeFromHex("0x13ffffffffffffffff");
   /// //18446744073709551615
+  /// int decodedToInt = CodecCompact().decodeFromHex("0xfeff0300").toInt(); //65535
   /// ```
   @override
-  T decodeFromHex(String encodedData) {
+  BigInt decodeFromHex(String encodedData) {
     Source source = Source(encodedData);
     var result = source.decodeCompact();
     source.assertEOF();
 
-    if (T == int) {
-      result = result is int ? result : (result as BigInt).toInt();
-    } else {
-      result = result is BigInt ? result : BigInt.from(result);
-    }
-
-    return result;
+    return result is BigInt ? result : BigInt.from(result);
   }
 }
