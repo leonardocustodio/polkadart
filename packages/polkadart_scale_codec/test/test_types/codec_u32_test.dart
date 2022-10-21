@@ -74,7 +74,7 @@ void main() {
 
       expect(
         () => CodecU32().decodeFromHex(value),
-        throwsA(isA<Exception>()),
+        throwsA(isA<UnprocessedDataLeftException>()),
       );
     });
 
