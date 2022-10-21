@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:polkadart/homepage.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,15 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Polkadart Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        body: Container(
-          color: Colors.red,
+        title: 'Polkadart Example',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
-      ),
-    );
+        home: HomePage());
   }
 }

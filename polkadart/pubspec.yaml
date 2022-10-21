@@ -3,12 +3,17 @@ description: polkadart
 version: 0.0.1
 homepage: https://pub.dev
 
+# TODO: Remove this when polkadart_scale_codec is published
+publish_to: none
+
 environment:
   sdk: ">=2.17.6 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  substrate_metadata: 
+    path: ../packages/substrate_metadata
 
 dev_dependencies:
   lints: ^2.0.0
