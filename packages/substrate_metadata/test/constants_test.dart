@@ -29,7 +29,9 @@ void main() {
       //
       // Look on constants of chain description
       for (var palletName in chainDescription.constants.keys) {
-        test('Testing Constants for pallet: $palletName', () {
+        test(
+            'When pallet $palletName is decoded and encoded back then it matches the original pallet value.',
+            () {
           final pallet = chainDescription.constants[palletName]!;
 
           //
