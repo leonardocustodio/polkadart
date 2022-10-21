@@ -1,3 +1,7 @@
+/// (From Tag: @subsquid/substrate-metadata_v1.1.0)
+///
+/// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/polkadot.ts
+
 const sharedTypes = <String, dynamic>{
   'CompactAssignments': 'CompactAssignmentsWith16',
   'RawSolution': 'RawSolutionWith16',
