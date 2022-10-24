@@ -48,4 +48,45 @@ void main() {
       );
     });
   });
+
+  group('decode unsigned 32-bit integers', () {
+    test('Given an encoded string when it represents zero it should be decoded',
+        () {
+      const value = '0x00000000';
+      const expectedResult = 0;
+
+      expect(CodecU32().decodeFromHex(value), expectedResult);
+    });
+
+    test(
+        'Given an encoded string when it represents the largest supported value it should be decoded',
+        () {
+      const largestSupportedValue = '0xffffffff';
+      const expectedResult = 4294967295;
+
+      expect(CodecU32().decodeFromHex(largestSupportedValue), expectedResult);
+    });
+
+    test(
+        "Given an encoded string when it represents a integer larger than 32 bits it should throw",
+        () {
+      const value = '0xffffffffffff';
+
+      expect(
+        () => CodecU32().decodeFromHex(value),
+        throwsA(isA<UnprocessedDataLeftException>()),
+      );
+    });
+
+    test(
+        "Given an encoded string when it represents a integer smaller than 32 bits it should throw",
+        () {
+      const value = '0xffff';
+
+      expect(
+        () => CodecU32().decodeFromHex(value),
+        throwsA(isA<EOFException>()),
+      );
+    });
+  });
 }
