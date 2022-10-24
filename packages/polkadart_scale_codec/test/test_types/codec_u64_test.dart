@@ -13,7 +13,7 @@ void main() {
     });
 
     test('Should return correct encoded data when value is zero', () {
-      final value = BigInt.from(0);
+      final value = BigInt.zero;
       const expectedResult = '0x0000000000000000';
 
       expect(CodecU64().encodeToHex(value), expectedResult);
@@ -22,14 +22,14 @@ void main() {
     test(
         'Should return correct encoded data when value fits 64 bits and is positive',
         () {
-      final largestSupportedValue = BigInt.parse('18446744073709551615');
+      final largestSupportedValue = '18446744073709551615'.toBigInt;
       const expectedResult = '0xffffffffffffffff';
 
       expect(CodecU64().encodeToHex(largestSupportedValue), expectedResult);
     });
 
     test('Should throw InvalidSizeException when value is negative', () {
-      final value = BigInt.from(-1);
+      final value = (-1).toBigInt;
 
       expect(
         () => CodecU64().encodeToHex(value),
@@ -40,7 +40,7 @@ void main() {
     test(
         "Given an 64 bit decoder when value is positive and can't be represented it should throw",
         () {
-      final value = BigInt.parse('18446744073709551616');
+      final value = '18446744073709551616'.toBigInt;
 
       expect(
         () => CodecU64().encodeToHex(value),
@@ -53,7 +53,7 @@ void main() {
     test('Given an encoded string when it represents zero it should be decoded',
         () {
       const value = '0x0000000000000000';
-      final expectedResult = 0.toBigInt;
+      final expectedResult = BigInt.zero;
 
       expect(CodecU64().decodeFromHex(value), expectedResult);
     });
@@ -74,7 +74,7 @@ void main() {
 
       expect(
         () => CodecU64().decodeFromHex(value),
-        throwsA(isA<Exception>()),
+        throwsA(isA<UnprocessedDataLeftException>()),
       );
     });
 
