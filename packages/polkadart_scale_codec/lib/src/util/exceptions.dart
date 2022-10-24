@@ -93,3 +93,18 @@ class UnexpectedTypeException implements Exception {
   @override
   String toString() => 'Expecting `$expectedType`, but found `$receivedType`';
 }
+
+/// Exception thrown in [Source] `assertEOF` when decoded bytes data
+/// is larger and don't fit in its type.
+///
+/// Example:
+/// ```
+/// final value = "0xffffff";
+/// final decoded = CodecU16().decodeFromHex(value); // will throw!
+/// ```
+class UnprocessedDataLeftException implements Exception {
+  const UnprocessedDataLeftException();
+
+  @override
+  String toString() => 'Unprocessed data left';
+}
