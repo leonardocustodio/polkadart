@@ -1,6 +1,6 @@
 # substrate_metadata
 
-[substrate_metadata](https://www.pub.dev/packages/substrate_metadata) is a flutter and dart library for encoding and decoding chain **metadata**, **constants**, **extrinsic** and **events** of blocks.
+[substrate_metadata](https://www.pub.dev/packages/substrate_metadata) is a flutter and dart library for encoding and decoding chain **metadata**, **constants**, **extrinsics** and **events** of blocks.
 
 # Lets Get Started
 
@@ -10,7 +10,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  substrate_metadata: 0.0.2
+  substrate_metadata: any
 ```
 
 ### 2. Install it
@@ -29,20 +29,12 @@ with `Flutter`:
 flutter pub get
 ```
 
-### 3. Import it
-
-Now in your `Dart` code, you can use:
-
-```dart
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-```
-
 # Usage
 
 ### Decode Metadata
 
 ```dart
-  // create MetadataDecoder signleton instance
+  // create MetadataDecoder instance
   final decoderInstance = MetadataDecoder.instance;
 
   // decode metadata
