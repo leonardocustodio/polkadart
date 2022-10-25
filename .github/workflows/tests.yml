@@ -12,13 +12,13 @@ on:
       - synchronize
       - ready_for_review
     paths-ignore:
-      - '**.md'
+      - "**.md"
   push:
     branches:
       - master
       - main
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -58,6 +58,13 @@ jobs:
       codecov-flag: "polkadart_scale_codec"
       working-directory: "./packages/polkadart_scale_codec"
 
+  substrate_metadata:
+    name: Test substrate_metadata
+    needs: [lints]
+    uses: ./.github/workflows/reuseable_workflow.yml
+    with:
+      codecov-flag: "substrate_metadata"
+      working-directory: "./packages/substrate_metadata"
 #  polkadart:
 #    name: Test polkadart
 #    needs: [lints, markdown-link-check]

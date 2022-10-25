@@ -7,8 +7,7 @@ class StorageHasherV9 {
   const StorageHasherV9({required this.kind});
 
   /// Creates Class Object from `Json`
-  static StorageHasherV9 fromJson(Map<String, dynamic> map) {
-    final key = map.keys.first;
+  static StorageHasherV9 fromKey(String key) {
     switch (key) {
       case 'Blake2_128':
         return StorageHasherV9_Blake2_128();
@@ -51,8 +50,7 @@ class StorageHasherV10 {
   const StorageHasherV10({required this.kind});
 
   /// Creates Class Object from `Json`
-  static StorageHasherV10 fromJson(Map<String, dynamic> map) {
-    final key = map.keys.first;
+  static StorageHasherV10 fromKey(String key) {
     switch (key) {
       case 'Blake2_128':
         return StorageHasherV10_Blake2_128();
@@ -101,8 +99,7 @@ class StorageHasherV11 {
   const StorageHasherV11({required this.kind});
 
   /// Creates Class Object from `Json`
-  static StorageHasherV11 fromJson(Map<String, dynamic> map) {
-    final key = map.keys.first;
+  static StorageHasherV11 fromKey(String key) {
     switch (key) {
       case 'Blake2_128':
         return StorageHasherV11_Blake2_128();
