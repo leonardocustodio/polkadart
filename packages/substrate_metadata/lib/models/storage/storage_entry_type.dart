@@ -48,7 +48,7 @@ class StorageEntryTypeV9_Map extends StorageEntryTypeV9 {
   static StorageEntryTypeV9_Map fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV9_Map(
         key: map['key'],
-        hasher: StorageHasherV9.fromJson(map['hasher']),
+        hasher: StorageHasherV9.fromKey(map['hasher']),
         value: map['value'],
         linked: map['linked'],
       );
@@ -71,11 +71,11 @@ class StorageEntryTypeV9_DoubleMap extends StorageEntryTypeV9 {
   /// Creates Class Object from `Json`
   static StorageEntryTypeV9_DoubleMap fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV9_DoubleMap(
-          hasher: StorageHasherV9.fromJson(map['hasher']),
+          hasher: StorageHasherV9.fromKey(map['hasher']),
           key1: map['key1'],
           key2: map['key2'],
           value: map['value'],
-          key2Hasher: StorageHasherV9.fromJson(map['key2Hasher']));
+          key2Hasher: StorageHasherV9.fromKey(map['key2Hasher']));
 }
 
 /// Storage Entry Type [V10]
@@ -124,7 +124,7 @@ class StorageEntryTypeV10_Map extends StorageEntryTypeV10 {
   static StorageEntryTypeV10_Map fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV10_Map(
         key: map['key'],
-        hasher: StorageHasherV10.fromJson(map['hasher']),
+        hasher: StorageHasherV10.fromKey(map['hasher']),
         value: map['value'],
         linked: map['linked'],
       );
@@ -147,11 +147,11 @@ class StorageEntryTypeV10_DoubleMap extends StorageEntryTypeV10 {
   /// Creates Class Object from `Json`
   static StorageEntryTypeV10_DoubleMap fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV10_DoubleMap(
-          hasher: StorageHasherV10.fromJson(map['hasher']),
+          hasher: StorageHasherV10.fromKey(map['hasher']),
           key1: map['key1'],
           key2: map['key2'],
           value: map['value'],
-          key2Hasher: StorageHasherV10.fromJson(map['key2Hasher']));
+          key2Hasher: StorageHasherV10.fromKey(map['key2Hasher']));
 }
 
 /// Storage Entry Type [V11]
@@ -196,7 +196,7 @@ class StorageEntryTypeV11_Map extends StorageEntryTypeV11 {
   static StorageEntryTypeV11_Map fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV11_Map(
         key: map['key'],
-        hasher: StorageHasherV11.fromJson(map['hasher']),
+        hasher: StorageHasherV11.fromKey(map['hasher']),
         value: map['value'],
         linked: map['linked'],
       );
@@ -219,11 +219,11 @@ class StorageEntryTypeV11_DoubleMap extends StorageEntryTypeV11 {
   /// Creates Class Object from `Json`
   static StorageEntryTypeV11_DoubleMap fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV11_DoubleMap(
-          hasher: StorageHasherV11.fromJson(map['hasher']),
+          hasher: StorageHasherV11.fromKey(map['hasher']),
           key1: map['key1'],
           key2: map['key2'],
           value: map['value'],
-          key2Hasher: StorageHasherV11.fromJson(map['key2Hasher']));
+          key2Hasher: StorageHasherV11.fromKey(map['key2Hasher']));
 }
 
 /// Storage Entry Type [V13]
@@ -270,7 +270,7 @@ class StorageEntryTypeV13_Map extends StorageEntryTypeV13 {
   static StorageEntryTypeV13_Map fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV13_Map(
         key: map['key'],
-        hasher: StorageHasherV11.fromJson(map['hasher']),
+        hasher: StorageHasherV11.fromKey(map['hasher']),
         value: map['value'],
         linked: map['linked'],
       );
@@ -293,11 +293,11 @@ class StorageEntryTypeV13_DoubleMap extends StorageEntryTypeV13 {
   /// Creates Class Object from `Json`
   static StorageEntryTypeV13_DoubleMap fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV13_DoubleMap(
-          hasher: StorageHasherV11.fromJson(map['hasher']),
+          hasher: StorageHasherV11.fromKey(map['hasher']),
           key1: map['key1'],
           key2: map['key2'],
           value: map['value'],
-          key2Hasher: StorageHasherV11.fromJson(map['key2Hasher']));
+          key2Hasher: StorageHasherV11.fromKey(map['key2Hasher']));
 }
 
 class StorageEntryTypeV13_NMap extends StorageEntryTypeV13 {
@@ -314,7 +314,7 @@ class StorageEntryTypeV13_NMap extends StorageEntryTypeV13 {
   static StorageEntryTypeV13_NMap fromJson(Map<String, dynamic> map) =>
       StorageEntryTypeV13_NMap(
         hashers: (map['hashers'] as List)
-            .map((value) => StorageHasherV11.fromJson(value))
+            .map((value) => StorageHasherV11.fromKey(value))
             .toList(),
         keyVec: (map['keyVec'] as List).cast<String>(),
         value: map['value'],
