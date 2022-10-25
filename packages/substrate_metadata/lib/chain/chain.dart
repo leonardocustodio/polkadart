@@ -106,8 +106,8 @@ class Chain {
   /// final encodedExtrinsic = chain.encodeExtrinsics(decodedExtrinsic);
   /// print(rawBlock == encodedExtrinsic);
   /// ```
-  RawBlock encodeExtrinsics(DecodedBlockExtrinsics decodedBlockExtrinsics) {
-    final blockNumber = decodedBlockExtrinsics.blockNumber;
+  RawBlock encodeExtrinsics(DecodedBlockExtrinsics decodedBlock) {
+    final blockNumber = decodedBlock.blockNumber;
 
     final VersionDescription? versionDescription =
         getVersionDescription(blockNumber);
@@ -119,7 +119,7 @@ class Chain {
     }
 
     final List<String> extrinsics =
-        decodedBlockExtrinsics.extrinsics.map((extrinsic) {
+        decodedBlock.extrinsics.map((extrinsic) {
       return scale_codec.encodeHex(Extrinsic.encodeExtrinsic(
           extrinsic, versionDescription.description, versionDescription.codec));
     }).toList();
