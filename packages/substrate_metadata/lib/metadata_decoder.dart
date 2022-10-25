@@ -47,12 +47,14 @@ class MetadataDecoder {
     var source = scale.Source(content);
 
     var magic = source.u32();
-    scale.assertionCheck(
-        magic == 0x6174656d, 'No magic number 0x6174656d at the start of data');
+    scale.assertionCheck(magic == 0x6174656d,
+        'Expected magic number 0x6174656d, but got $magic');
 
     var version = source.u8();
-    scale.assertionCheck(
-        9 <= version && version < 15, 'Invalid metadata version');
+    scale.assertionCheck(9 <= version,
+        'Expected version greater then 9, but got $version. Versions below 9 are not supported by this lib');
+    scale.assertionCheck(15 > version,
+        'Expected version less then 15, but got $version. Versions above 15 are not supported by this lib');
 
     // Kusama Hack :o
     // See https://github.com/polkadot-js/api/commit/a9211690be6b68ad6c6dad7852f1665cadcfa5b2
