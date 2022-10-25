@@ -49,7 +49,9 @@ void main() {
     //
     // Looping through every block
     for (var originalRawBlock in rawBlocksList) {
-      test('At block: ${originalRawBlock.blockNumber}', () {
+      test(
+          'When original extrinsic is decoded and encoded back then it matches the original extrinsic value.',
+          () {
         //
         // Decoding the Raw Block
         final DecodedBlockExtrinsics decodedExtrinsic =

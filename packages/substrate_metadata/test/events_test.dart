@@ -49,7 +49,9 @@ void main() {
     //
     // Looping through every block
     for (var originalEvent in rawBlocksList) {
-      test('At block: ${originalEvent.blockNumber}', () {
+      test(
+          'When original event is decoded and encoded back then it matches the provided event value.',
+          () {
         //
         // Decoding the `Raw Block Events`
         final DecodedBlockEvents decodedBlockEvents =
