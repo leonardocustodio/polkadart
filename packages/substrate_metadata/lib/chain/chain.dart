@@ -118,8 +118,7 @@ class Chain {
           'Metadata not found for block: $blockNumber.');
     }
 
-    final List<String> extrinsics =
-        decodedBlock.extrinsics.map((extrinsic) {
+    final List<String> extrinsics = decodedBlock.extrinsics.map((extrinsic) {
       return scale_codec.encodeHex(Extrinsic.encodeExtrinsic(
           extrinsic, versionDescription.description, versionDescription.codec));
     }).toList();
