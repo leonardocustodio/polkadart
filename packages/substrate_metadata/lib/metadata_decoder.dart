@@ -4,32 +4,16 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
 import 'package:substrate_metadata/old/definitions/metadata/metadata.dart'
     as metadata_definitions;
 
-/// (Singleton)
 ///
 /// It helps to create a single instance of [MetadataDecoder] which helps to decode Metadata.
 class MetadataDecoder {
-  static final MetadataDecoder instance = MetadataDecoder._internal();
-
-  /// Used to store single created instance of Scale-Codec
-  late scale.Codec _codec;
-
-  /// Used to store versions of metadata
-  late List<int> _versions;
-
-  factory MetadataDecoder() => instance;
-
-  MetadataDecoder._internal() {
-    _createScaleCodec();
-  }
-
   /// Decodes metadata and returns `Metadata` model
   ///
   /// [data] can be: (Hexa-Decimal [String] || [Uint8List] bytes)
   ///
   /// ```dart
-  /// final decoderInstance = MetadataDecoder.instance;
   ///
-  /// final Metadata decodedMetadata = decoderInstance.decodeAsMetadata('0x090820....');
+  /// final Metadata decodedMetadata =  MetadataDecoder().decodeAsMetadata('0x090820....');
   /// ```
   model.Metadata decodeAsMetadata(dynamic data) {
     final result = _decodePrivate(data);
@@ -43,9 +27,8 @@ class MetadataDecoder {
   /// [data] can be: (Hexa-Decimal [String] || [Uint8List] bytes)
   ///
   /// ```dart
-  /// final decoderInstance = MetadataDecoder.instance;
   ///
-  /// Map<String, dynamic> decodedMetadataMap = decoderInstance.decode('0x090820....');
+  /// Map<String, dynamic> decodedMetadataMap =  MetadataDecoder().decode('0x090820....');
   /// ```
   Map<String, dynamic> decode(dynamic data) {
     final result = _decodePrivate(data);
@@ -97,22 +80,29 @@ class MetadataDecoder {
     }
   }
 
-  /// Create scale codec to help in decoding the [Source]
-  void _createScaleCodec() {
-    var registry = scale.TypeRegistry(types: metadata_definitions.types.types);
-    var versions = List<int>.filled(6, 0);
-    for (var i = 9; i < 15; i++) {
-      versions[i - 9] = registry.getIndex('MetadataV$i');
-    }
-
-    _codec = scale.Codec(registry.getTypes());
-    _versions = versions;
-  }
-
   /// decodes metadata from the correct match of the metadata version
   Map<String, dynamic> _decode(int version, scale.Source source) {
     var metadataMap = _codec.decodeFromSource(_versions[version - 9], source);
     source.assertEOF();
     return metadataMap;
   }
+}
+
+Map<String, dynamic> _objectMap = _createScaleCodec();
+
+List<int> _versions = _objectMap['versions'];
+scale.Codec _codec = _objectMap['scale_codec'];
+
+/// Create scale codec to help in decoding the [Source]
+Map<String, dynamic> _createScaleCodec() {
+  var registry = scale.TypeRegistry(types: metadata_definitions.types.types);
+  var versions = List<int>.filled(6, 0);
+  for (var i = 9; i < 15; i++) {
+    versions[i - 9] = registry.getIndex('MetadataV$i');
+  }
+
+  return {
+    'versions': versions,
+    'scale_codec': scale.Codec(registry.getTypes())
+  };
 }
