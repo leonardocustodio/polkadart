@@ -16,7 +16,7 @@ class Chain {
   /// Chain([LegacyTypesBundle? typesBundleDefinition])
   ///
   /// When:
-  /// `typesBundleDefinition` == null and `specVersion.metadata` == V14, it throws UnsupportedMetadataException
+  /// `typesBundleDefinition` == null and `specVersion.metadata` != V14, it throws UnsupportedMetadataException
   ///
   /// ```dart
   /// final typesBundleDefinition = LegacyTypesBundle.fromJson(chainDefinitionJson);
