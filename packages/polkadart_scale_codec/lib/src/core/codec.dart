@@ -258,9 +258,9 @@ class Codec {
     int byte = source.u8();
     switch (byte) {
       case 0:
-        return null;
+        return None;
       case 1:
-        return decodeFromSource(def.type, source);
+        return Some(decodeFromSource(def.type, source));
       default:
         throw InvalidOptionByteException('Invalid Option byte: $byte.');
     }
@@ -359,6 +359,10 @@ class Codec {
       CodecStructType def, dynamic value, ScaleCodecEncoder encoder) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
+      if (value is! Map) {
+        throw UnknownVariantException(
+            'Needed variant \'value\' of type Map<String, dynamic> but found: ${value.runtimeType}');
+      }
       encodeWithEncoder(f.type, value[f.name], encoder);
     }
   }
@@ -403,11 +407,13 @@ class Codec {
   ///
   /// Encodes Option
   void _encodeOption(OptionType def, dynamic value, ScaleCodecEncoder encoder) {
-    if (value == null) {
+    assertionCheck(value is _Option || value is Some || value == None,
+        'Unable to encode due to invalid value type. Needed value either Some() or None, but found of type: \'${value.runtimeType}\'.');
+    if (value == None) {
       encoder.u8(0);
     } else {
       encoder.u8(1);
-      encodeWithEncoder(def.type, value, encoder);
+      encodeWithEncoder(def.type, (value as Some).value, encoder);
     }
   }
 
@@ -440,9 +446,9 @@ class Codec {
 
   ///
   /// Decodes Bit Sequence
-  Uint8List _decodeBitSequence(Source source) {
+  List<int> _decodeBitSequence(Source source) {
     var length = (source.compactLength() / 8).ceil();
-    return source.bytes(length);
+    return source.bytes(length).toList();
   }
 
   ///

@@ -6,7 +6,9 @@ void main() {
   final typesRegistry = <String, dynamic>{
     'Codec': {
       'a': 'Option<bool>',
-      'c': 'Option<u128>',
+      'b': 'Option<Option<bool>>',
+      'c': 'Option<Option<Option<bool>>>',
+      'd': 'Option<u128>',
       'e': 'Option<Compact<u8>>',
       'f': 'Option<BitVec<u8>>',
     },
@@ -41,4 +43,19 @@ void main() {
   encoded = codec.encode(registry.getIndex('Option<BitVec<u8>>'), [0]);
   final decodedBitVec =
       codec.decode(registry.getIndex('Option<BitVec<u8>>'), encoded);
+
+  // encoding and decoding
+  String encodedTwoOptions =
+      codec.encode(registry.getIndex('Option<Option<bool>>'), Some(None));
+
+  final decodedTwoBool = codec.decode(
+      registry.getIndex('Option<Option<bool>>'), encodedTwoOptions);
+
+  // encoding and decoding
+  String encodedThreeOptions = codec.encode(
+      registry.getIndex('Option<Option<Option<bool>>>'),
+      Some(Some(Some(true))));
+
+  final decodedThreeBool = codec.decode(
+      registry.getIndex('Option<Option<Option<bool>>>'), encodedThreeOptions);
 }

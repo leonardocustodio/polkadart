@@ -53,7 +53,7 @@ void main() {
       const value = [
         [0],
         [255, 255],
-        true
+        Some(true)
       ];
       const expectedResult = '0x200008ffff0101';
 
@@ -169,7 +169,7 @@ void main() {
       const expectedResult = [
         [0],
         [255, 255],
-        true
+        Some(true)
       ];
       const value = '0x200008ffff0101';
 
