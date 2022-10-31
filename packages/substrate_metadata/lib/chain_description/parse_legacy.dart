@@ -16,7 +16,19 @@ abstract class ParseLegacy implements _$ParseLegacy {
   factory ParseLegacy(Metadata metadata, LegacyTypes legacyTypes) =
       _ParseLegacy;
 
+  void _defineCalls() {
+    _registry = scale_codec.TypeRegistry(
+        types: legacyTypes.types, typesAlias: legacyTypes.typesAlias);
+    _defineGenericExtrinsicEra();
+    _defineGenericLookupSource();
+    _defineOriginCaller();
+    _defineGenericCall();
+    _defineGenericEvent();
+    _defineGenericSignature();
+  }
+
   ChainDescription getChainDescription() {
+    _defineCalls();
     var signature = _registry.getIndex('GenericSignature');
     var call = _registry.getIndex('GenericCall');
     var digest = _registry.getIndex('Digest');
