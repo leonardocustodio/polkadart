@@ -10,6 +10,10 @@ on:
       working-directory:
         required: true
         type: string
+      generate-code:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build:
@@ -28,6 +32,7 @@ jobs:
         run: dart pub get
 
       - name: Generate Code (Library Generated Code)
+        if: ${{ inputs.generate-code }}
         run: dart pub run build_runner build
 
       # Uncomment this step to verify the use of 'dart format' on each commit.

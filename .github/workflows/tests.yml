@@ -64,6 +64,7 @@ jobs:
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "substrate_metadata"
+      generate-code: true
       working-directory: "./packages/substrate_metadata"
 #  polkadart:
 #    name: Test polkadart
