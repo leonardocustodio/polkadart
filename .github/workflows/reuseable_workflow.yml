@@ -23,7 +23,7 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - name: Check out code (LFS)
-        uses: nschloe/action-cached-lfs-checkout@v1.1.3
+        uses: nschloe/action-cached-lfs-checkout@v1.2.0
 
       # Get latest stable version of dart-lang
       - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
