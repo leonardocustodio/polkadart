@@ -12,7 +12,7 @@
 You can run all tests from the library by running `docker compose up`. You can find the tests in the following paths:
 | Package  | Path
 |----------|----------|
-| polkadart_scale_codec | [Tests](./packages/polkadart_scale_codec/test) |
-| ss58 | [Tests](./packages/ss58/test) |
-| ss58_codec | [Tests](./packages/ss58_codec/test) |
-| substrate_metadata | [Tests](./packages/substrate_metadata/test) |
+| polkadart_scale_codec | [packages/polkadart_scale_codec/test](./packages/polkadart_scale_codec/test) |
+| ss58 | [packages/ss58/test](./packages/ss58/test) |
+| ss58_codec | [packages/ss58_codec/test](./packages/ss58_codec/test) |
+| substrate_metadata | [packages/substrate_metadata/test](./packages/substrate_metadata/test) |
