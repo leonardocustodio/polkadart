@@ -1,5 +1,19 @@
 import 'package:cached_annotation/cached_annotation.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    show
+        Type,
+        TypeKind,
+        CompactType,
+        BitSequenceType,
+        TupleType,
+        CompositeType,
+        VariantType,
+        SequenceType,
+        PrimitiveType,
+        ArrayType,
+        Field,
+        TypeRegistry;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
 import 'package:substrate_metadata/exceptions/exceptions.dart';
 import 'package:substrate_metadata/models/models.dart';
@@ -36,12 +50,12 @@ abstract class ParseV14 implements _$ParseV14 {
   @Cached()
   int _digestItem() {
     var digest = _types()[_digest()];
-    assertionCheck(digest.kind == scale_codec.TypeKind.Composite);
-    for (var field in (digest as scale_codec.CompositeType).fields) {
+    assertionCheck(digest.kind == TypeKind.Composite);
+    for (var field in (digest as CompositeType).fields) {
       if (field.name == 'logs') {
         var seq = _types()[field.type];
-        assertionCheck(seq.kind == scale_codec.TypeKind.Sequence);
-        return (seq as scale_codec.SequenceType).type;
+        assertionCheck(seq.kind == TypeKind.Sequence);
+        return (seq as SequenceType).type;
       }
     }
     throw Exception('Can\'t extract DigestItem from Digest');
@@ -50,9 +64,9 @@ abstract class ParseV14 implements _$ParseV14 {
   @Cached()
   int _event() {
     var rec = _types()[_eventRecord()];
-    assertionCheck(rec.kind == scale_codec.TypeKind.Composite);
-    scale_codec.Field? eventField;
-    for (var f in (rec as scale_codec.CompositeType).fields) {
+    assertionCheck(rec.kind == TypeKind.Composite);
+    Field? eventField;
+    for (var f in (rec as CompositeType).fields) {
       if (f.name == 'event') {
         eventField = f;
         break;
@@ -67,8 +81,8 @@ abstract class ParseV14 implements _$ParseV14 {
     var types = _types();
     var eventRecordList = _eventRecordList();
     var seq = types[eventRecordList];
-    assertionCheck(seq.kind == scale_codec.TypeKind.Sequence);
-    return (seq as scale_codec.SequenceType).type;
+    assertionCheck(seq.kind == TypeKind.Sequence);
+    return (seq as SequenceType).type;
   }
 
   @Cached()
@@ -76,10 +90,10 @@ abstract class ParseV14 implements _$ParseV14 {
     return _getStorageItem('System', 'Events').value;
   }
 
-  bool _isUnitType(scale_codec.Type type) {
-    if (type.kind == scale_codec.TypeKind.Tuple) {
+  bool _isUnitType(Type type) {
+    if (type.kind == TypeKind.Tuple) {
       try {
-        return (type as scale_codec.TupleType).tuple.isEmpty;
+        return (type as TupleType).tuple.isEmpty;
       } catch (e) {
         rethrow;
       }
@@ -91,11 +105,11 @@ abstract class ParseV14 implements _$ParseV14 {
   int _signature() {
     var types = _types();
 
-    scale_codec.Type signedExtensionsType = scale_codec.CompositeType(
+    Type signedExtensionsType = CompositeType(
       path: ['SignedExtensions'],
       fields: metadata.extrinsic!.signedExtensions
           .map((ext) {
-            return scale_codec.Field(name: ext.identifier, type: ext.type!);
+            return Field(name: ext.identifier, type: ext.type!);
           })
           .where((f) => !_isUnitType(types.getUnwrappedType(f.type)))
           .toList(),
@@ -105,16 +119,16 @@ abstract class ParseV14 implements _$ParseV14 {
 
     var signedExtensions = types.length - 1;
 
-    scale_codec.Type signatureType = scale_codec.CompositeType(fields: [
-      scale_codec.Field(
+    Type signatureType = CompositeType(fields: [
+      Field(
         name: 'address',
         type: _address(),
       ),
-      scale_codec.Field(
+      Field(
         name: 'signature',
         type: _extrinsicSignature(),
       ),
-      scale_codec.Field(name: 'signedExtensions', type: signedExtensions),
+      Field(name: 'signedExtensions', type: signedExtensions),
     ], path: [
       'ExtrinsicSignature'
     ]);
@@ -191,9 +205,9 @@ abstract class ParseV14 implements _$ParseV14 {
               keys = [(e.type as StorageEntryTypeV14_Map).key];
             } else {
               var keyDef = _types()[(e.type as StorageEntryTypeV14_Map).key];
-              assertionCheck(keyDef.kind == scale_codec.TypeKind.Tuple);
-              assertionCheck((keyDef as scale_codec.TupleType).tuple.length ==
-                  hashers.length);
+              assertionCheck(keyDef.kind == TypeKind.Tuple);
+              assertionCheck(
+                  (keyDef as TupleType).tuple.length == hashers.length);
               keys = keyDef.tuple;
             }
             break;
@@ -226,69 +240,68 @@ abstract class ParseV14 implements _$ParseV14 {
   }
 
   @Cached()
-  List<scale_codec.Type> _types() {
-    List<scale_codec.Type> typesValue =
-        metadata.lookup?.types.map((PortableTypeV14 t) {
-              var info = {'path': t.type.path, 'docs': t.type.docs};
-              var def = t.type.def;
-              switch (def.kind) {
-                case 'Primitive':
-                  return scale_codec.PrimitiveType(
-                    primitive: (def as Si1TypeDef_Primitive).value.kind,
-                    path: info['path'],
-                    docs: info['docs'],
-                  );
-                case 'Compact':
-                  // ignore: unnecessary_cast
-                  return scale_codec.CompactType(
-                    type: (def as Si1TypeDef_Compact).value.type,
-                    path: info['path'],
-                    docs: info['docs'],
-                  ) as scale_codec.Type;
-                case 'Sequence':
-                  return scale_codec.SequenceType(
-                    type: (def as Si1TypeDef_Sequence).value.type,
-                    path: info['path'],
-                    docs: info['docs'],
-                  );
-                case 'BitSequence':
-                  return scale_codec.BitSequenceType(
-                    bitStoreType:
-                        (def as Si1TypeDef_BitSequence).value.bitStoreType,
-                    bitOrderType: def.value.bitOrderType,
-                    path: info['path'],
-                    docs: info['docs'],
-                  );
-                case 'Array':
-                  return scale_codec.ArrayType(
-                    type: (def as Si1TypeDef_Array).value.type,
-                    length: def.value.len,
-                    path: info['path'],
-                    docs: info['docs'],
-                  );
-                case 'Tuple':
-                  return scale_codec.TupleType(
-                    tuple: (def as Si1TypeDef_Tuple).value,
-                    path: info['path'],
-                    docs: info['docs'],
-                  );
-                case 'Composite':
-                  return scale_codec.CompositeType(
-                    fields: (def as Si1TypeDef_Composite).value.fields,
-                    path: info['path'],
-                    docs: info['docs'],
-                  );
-                case 'Variant':
-                  return scale_codec.VariantType(
-                    variants: (def as Si1TypeDef_Variant).value.variants,
-                    path: info['path'],
-                    docs: info['docs'],
-                  );
-                default:
-                  throw UnexpectedCaseException(def.kind);
-              }
-            }).toList() ??
-            <scale_codec.Type>[];
-    return scale_codec.TypeRegistry().normalizeMetadataTypes(typesValue);
+  List<Type> _types() {
+    List<Type> typesValue = metadata.lookup?.types.map((PortableTypeV14 t) {
+          var info = {'path': t.type.path, 'docs': t.type.docs};
+          var def = t.type.def;
+          switch (def.kind) {
+            case 'Primitive':
+              return PrimitiveType(
+                primitive: (def as Si1TypeDef_Primitive).value.kind,
+                path: info['path'],
+                docs: info['docs'],
+              );
+            case 'Compact':
+              // ignore: unnecessary_cast
+              return CompactType(
+                type: (def as Si1TypeDef_Compact).value.type,
+                path: info['path'],
+                docs: info['docs'],
+              ) as Type;
+            case 'Sequence':
+              return SequenceType(
+                type: (def as Si1TypeDef_Sequence).value.type,
+                path: info['path'],
+                docs: info['docs'],
+              );
+            case 'BitSequence':
+              return BitSequenceType(
+                bitStoreType:
+                    (def as Si1TypeDef_BitSequence).value.bitStoreType,
+                bitOrderType: def.value.bitOrderType,
+                path: info['path'],
+                docs: info['docs'],
+              );
+            case 'Array':
+              return ArrayType(
+                type: (def as Si1TypeDef_Array).value.type,
+                length: def.value.len,
+                path: info['path'],
+                docs: info['docs'],
+              );
+            case 'Tuple':
+              return TupleType(
+                tuple: (def as Si1TypeDef_Tuple).value,
+                path: info['path'],
+                docs: info['docs'],
+              );
+            case 'Composite':
+              return CompositeType(
+                fields: (def as Si1TypeDef_Composite).value.fields,
+                path: info['path'],
+                docs: info['docs'],
+              );
+            case 'Variant':
+              return VariantType(
+                variants: (def as Si1TypeDef_Variant).value.variants,
+                path: info['path'],
+                docs: info['docs'],
+              );
+            default:
+              throw UnexpectedCaseException(def.kind);
+          }
+        }).toList() ??
+        <Type>[];
+    return TypeRegistry().normalizeMetadataTypes(typesValue);
   }
 }

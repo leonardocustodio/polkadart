@@ -1,0 +1,26 @@
+name: polkadart_example
+description: A new Flutter project.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.4 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  polkadart_scale_codec:
+    path: ../../packages/polkadart_scale_codec
+  ss58:
+    path: ../../packages/ss58
+  ss58_codec:
+    path: ../../packages/ss58_codec
+  substrate_metadata:
+    path: ../../packages/substrate_metadata
+
+dev_dependencies:
+  test: ^1.16.0
+
+flutter:
+  uses-material-design: true

@@ -16,7 +16,7 @@ class Chain {
   /// Chain([LegacyTypesBundle? typesBundleDefinition])
   ///
   /// When:
-  /// `typesBundleDefinition` == null and `specVersion.metadata` == V14, it throws UnsupportedMetadataException
+  /// `typesBundleDefinition` == null and `specVersion.metadata` != V14, it throws UnsupportedMetadataException
   ///
   /// ```dart
   /// final typesBundleDefinition = LegacyTypesBundle.fromJson(chainDefinitionJson);
@@ -108,8 +108,8 @@ class Chain {
   /// // rawBlock.hashCode == encodedExtrinsic.hashCode
   /// final encodedExtrinsic = chain.encodeExtrinsics(decodedExtrinsic);
   /// ```
-  RawBlock encodeExtrinsics(DecodedBlockExtrinsics decodedBlockExtrinsics) {
-    final blockNumber = decodedBlockExtrinsics.blockNumber;
+  RawBlock encodeExtrinsics(DecodedBlockExtrinsics decodedBlock) {
+    final blockNumber = decodedBlock.blockNumber;
 
     final VersionDescription? versionDescription =
         getVersionDescription(blockNumber);
@@ -119,8 +119,7 @@ class Chain {
       throw _throwBlockNotFound(blockNumber);
     }
 
-    final List<String> extrinsics =
-        decodedBlockExtrinsics.extrinsics.map((extrinsic) {
+    final List<String> extrinsics = decodedBlock.extrinsics.map((extrinsic) {
       return scale_codec.encodeHex(Extrinsic.encodeExtrinsic(
           extrinsic, versionDescription.description, versionDescription.codec));
     }).toList();
@@ -231,7 +230,7 @@ class Chain {
       return;
     }
 
-    final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
+    final MetadataDecoder metadataDecoder = MetadataDecoder();
 
     final Metadata metadata =
         metadataDecoder.decodeAsMetadata(specVersion.metadata);

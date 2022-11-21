@@ -168,7 +168,7 @@ class Source {
 
   void assertEOF() {
     if (hasBytes()) {
-      throw Exception('Unprocessed data left');
+      throw UnprocessedDataLeftException();
     }
   }
 }

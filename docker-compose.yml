@@ -1,0 +1,7 @@
+version: "3.9"
+
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
