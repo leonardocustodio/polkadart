@@ -342,7 +342,7 @@ abstract class ParseLegacy implements _$ParseLegacy {
       case 'V11':
         var index = 0;
         for (var mod in metadata.value.modules) {
-          if (filter != null && !isNotEmpty(filter(mod))) {
+          if (filter?.call(mod) == null) {
             continue;
           }
           cb(mod, index);
@@ -353,7 +353,7 @@ abstract class ParseLegacy implements _$ParseLegacy {
       case 'V12':
       case 'V13':
         for (var mod in metadata.value.modules) {
-          if (filter != null && !isNotEmpty(filter(mod))) {
+          if (filter?.call(mod) == null) {
             continue;
           }
           cb(mod, mod.index);
