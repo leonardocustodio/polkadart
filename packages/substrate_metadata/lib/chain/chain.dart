@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:substrate_metadata/chain_description/chain_description.model.dart';
 import 'package:substrate_metadata/event_registry.dart';
 import 'package:substrate_metadata/exceptions/exceptions.dart';
@@ -7,6 +9,7 @@ import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/old/types_bundle.dart';
 import 'package:substrate_metadata/old/legacy_types_model.dart';
 import 'package:substrate_metadata/spec_version/spec_version.model.dart';
+import 'package:substrate_metadata/utils/byte_encoder.dart';
 import 'package:substrate_metadata/utils/spec_version_maker.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
@@ -37,6 +40,11 @@ class Chain {
   ///
   /// To hold the parsed spec versions and metadata related information
   final _versionDescriptionMap = <int, VersionDescription>{};
+
+  ///
+  /// Returns `List<VersionDescription>`
+  List<VersionDescription> get versioDescriptionList =>
+      List<VersionDescription>.from(_versionDescriptionMap.values);
 
   ///
   /// Initialize the SpecVersions from a Json file path containing spec-versions
@@ -114,7 +122,7 @@ class Chain {
   }
 
   ///
-  /// ## Decodes Constants from `ChainDescription`.
+  /// ## Decodes Constants from `ChainDescription`
   ///
   /// ```dart
   /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
@@ -148,6 +156,58 @@ class Chain {
   }
 
   ///
+  /// ## Decodes Constants from `Constant Object`
+  ///
+  /// ```dart
+  /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
+  ///
+  /// final chain = Chain(chainDefinitions);
+  ///
+  /// final specVersion = SpecVersion.fromJson()
+  ///
+  /// final versionDescription = chain.addSpecVersion(specVersion);
+  ///
+  /// final chainDescription = versionDescription.description;
+  ///
+  /// final Constant constant = chainDescription.constants[palletName][name];
+  ///
+  /// final decoded = chain.decodeConstant(constant, chainDescription);
+  /// ```
+  dynamic decodeFromConstant(
+      Constant constant, ChainDescription chainDescription) {
+    return scale_codec.Codec(chainDescription.types)
+        .decode(constant.type, constant.value);
+  }
+
+  ///
+  /// ## Decodes Constants from `Constant Object`
+  ///
+  /// ```dart
+  /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
+  ///
+  /// final chain = Chain(chainDefinitions);
+  ///
+  /// final specVersion = SpecVersion.fromJson()
+  ///
+  /// final versionDescription = chain.addSpecVersion(specVersion);
+  ///
+  /// final chainDescription = versionDescription.description;
+  ///
+  /// final Constant constant = chainDescription.constants[palletName][name];
+  ///
+  /// final decoded = chain.decodeConstant(constant, chainDescription);
+  ///
+  /// final encodedUint8List = chain.encodeConstantsValue(chain.type, decoded, chainDescription);
+  /// ```
+  Uint8List encodeConstantsValue(
+      int type, dynamic value, ChainDescription chainDescription) {
+    final bytesSink = ByteEncoder();
+    scale_codec.Codec(chainDescription.types)
+        .encodeWithEncoder(type, value, bytesSink);
+    return bytesSink.toBytes();
+  }
+
+  ///
   /// ## Encodes Extrinsic from DecodedBlockExtrinsics
   /// ```dart
   /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
@@ -164,8 +224,8 @@ class Chain {
   /// // rawBlock.extrinsics == encodedExtrinsic.extrinsics
   /// final encodedExtrinsic = chain.encodeExtrinsics(decodedExtrinsic);
   /// ```
-  RawBlock encodeExtrinsics(DecodedBlockExtrinsics decodedBlock) {
-    final blockNumber = decodedBlock.blockNumber;
+  RawBlock encodeExtrinsics(DecodedBlockExtrinsics decodedBlockExtrinsics) {
+    final blockNumber = decodedBlockExtrinsics.blockNumber;
 
     final VersionDescription? versionDescription =
         getVersionDescription(blockNumber);
@@ -175,7 +235,8 @@ class Chain {
       throw BlockNotFoundException(blockNumber);
     }
 
-    final List<String> extrinsics = decodedBlock.extrinsics.map((extrinsic) {
+    final List<String> extrinsics =
+        decodedBlockExtrinsics.extrinsics.map((extrinsic) {
       return scale_codec.encodeHex(Extrinsic.encodeExtrinsic(
           extrinsic, versionDescription.description, versionDescription.codec));
     }).toList();
@@ -262,9 +323,9 @@ class Chain {
   ///
   /// chainObject.addSpecVersion(specVersion);
   /// ```
-  void addSpecVersion(SpecVersion specVersion) {
+  VersionDescription addSpecVersion(SpecVersion specVersion) {
     if (_versionDescriptionMap[specVersion.blockNumber] != null) {
-      return;
+      return _versionDescriptionMap[specVersion.blockNumber]!;
     }
 
     final chainDescription = getChainDescriptionFromSpecVersion(specVersion);
@@ -284,6 +345,7 @@ class Chain {
       blockHash: specVersion.blockHash,
     );
     _versionDescriptionMap[versionDescription.blockNumber] = versionDescription;
+    return versionDescription;
   }
 
   ///

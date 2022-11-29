@@ -103,7 +103,7 @@ abstract class ParseV14 implements _$ParseV14 {
 
   @Cached()
   int _signature() {
-    var types = _types();
+    List<Type> types = _types();
 
     Type signedExtensionsType = CompositeType(
       path: ['SignedExtensions'],
