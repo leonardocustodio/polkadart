@@ -79,7 +79,7 @@ class Chain {
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
-      throw _throwBlockNotFound(blockNumber);
+      throw BlockNotFoundException(blockNumber);
     }
 
     final List<dynamic> extrinsics = rawBlock.extrinsics.map((hex) {
@@ -116,7 +116,7 @@ class Chain {
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
-      throw _throwBlockNotFound(blockNumber);
+      throw BlockNotFoundException(blockNumber);
     }
 
     final List<String> extrinsics = decodedBlock.extrinsics.map((extrinsic) {
@@ -150,7 +150,7 @@ class Chain {
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
-      throw _throwBlockNotFound(blockNumber);
+      throw BlockNotFoundException(blockNumber);
     }
 
     final events = versionDescription.codec.decode(
@@ -184,32 +184,13 @@ class Chain {
 
     // Check if this is not empty, throw UnexpectedCaseException if it is.
     if (versionDescription == null) {
-      throw _throwBlockNotFound(blockNumber);
+      throw BlockNotFoundException(blockNumber);
     }
 
     final String events = versionDescription.codec.encode(
         versionDescription.description.eventRecordList,
         decodedBlockEvents.events);
     return RawBlockEvents(blockNumber: blockNumber, events: events);
-  }
-
-  //
-  // Private function to provide Exception with Message
-  UnexpectedCaseException _throwBlockNotFound(int blockNumber) {
-    return UnexpectedCaseException('''
-          Exception: Metadata not found for block: $blockNumber.'
-
-          Try adding the SpecVersion for blockNumber: $blockNumber.
-          ```
-            chainObject.initSpecVersionFromFile('../../versions.json');
-            
-            or
-
-            final specVersion = SpecVersion.fromJson( { specJson } );
-            
-            chainObject.addSpecVersion(specVersion);
-          ```
-          ''');
   }
 
   ///
