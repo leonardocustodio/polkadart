@@ -40,7 +40,7 @@ Now in your `Dart` code, you can use:
 import 'package:ss58/ss58.dart';
 ```
 
-## Registry Info by Network
+### Registry Info by Network
 
 ```dart
   // get registry info of given `network`
@@ -50,7 +50,7 @@ import 'package:ss58/ss58.dart';
   print('kusama registry: $kusamaRegistry');
 ```
 
-## Registry Info by Prefix
+### Registry Info by Prefix
 
 ```dart
   // get registry info of given `prefix`
@@ -60,7 +60,7 @@ import 'package:ss58/ss58.dart';
   print('polkadot registry: $polkadotRegistry');
 ```
 
-## Decoding Substrate Address
+### Decoding Substrate Address
 
 ```dart
   // decoding substrate address
@@ -72,7 +72,7 @@ import 'package:ss58/ss58.dart';
   print('Substrate address bytes: $decodedBytes');
 ```
 
-## Encoding bytes to produce address
+### Encoding bytes to produce address
 
 ```dart
   // Encoding the decodedBytes to produce back encodedAddress.
