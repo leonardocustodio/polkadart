@@ -4,38 +4,6 @@
 
 # Lets Get Started
 
-### 1. Depend on it
-
-Add `polkadart_scale_codec` with command:
-
-```css
-dart pub add polkadart_scale_codec
-```
-
-### 2. Install it
-
-You can install packages from the command line:
-
-with `pub`:
-
-```css
-dart pub get
-```
-
-with `Flutter`:
-
-```css
-flutter pub get
-```
-
-### 3. Import it
-
-Now in your `Dart` code, you can use:
-
-```dart
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-```
-
 ### Supported types:
 
 | Types        | Sign                            |

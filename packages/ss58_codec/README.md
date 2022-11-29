@@ -2,42 +2,7 @@
 
 Provides encoder and decoder used by [SS58](https://github.com/rankanizer/polkadart/tree/main/packages/ss58) to parse [substrate](https://docs.substrate.io/fundamentals/accounts-addresses-keys/) addresses.
 
-## Usage
-
 # Lets Get Started
-
-### 1. Depend on it
-
-Add `ss58_codec` with command:
-
-```css
-dart pub add ss58_codec
-```
-
-### 2. Install it
-
-You can install packages from the command line:
-
-with `pub`:
-
-```css
-dart pub get
-```
-
-with `Flutter`:
-
-```css
-flutter pub get
-```
-
-### 3. Import it
-
-Now in your `Dart` code, you can use:
-
-```dart
-import 'dart:typed_data';
-import 'package:ss58_codec/ss58_codec.dart';
-```
 
 ### Decoding
 

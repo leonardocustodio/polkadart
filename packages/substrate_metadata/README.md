@@ -4,32 +4,6 @@
 
 # Lets Get Started
 
-### 1. Depend on it
-
-Add `substrate_metadata` with command:
-
-```css
-dart pub add substrate_metadata
-```
-
-### 2. Install it
-
-You can install packages from the command line:
-
-with `pub`:
-
-```css
-dart pub get
-```
-
-with `Flutter`:
-
-```css
-flutter pub get
-```
-
-# Usage
-
 ### Decode Metadata
 
 ```dart
