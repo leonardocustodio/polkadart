@@ -31,6 +31,12 @@ flutter pub get
 
 # Usage
 
+### Generating Cached Classes
+```bash
+$ flutter packages pub get
+$ flutter pub run build_runner watch --delete-conflicting-outputs
+```
+
 ### Decode Metadata
 
 ```dart
