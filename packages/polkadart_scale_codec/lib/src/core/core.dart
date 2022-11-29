@@ -3,6 +3,8 @@ library polkadart_scale_codec_core;
 /// imports
 import 'dart:math';
 import 'dart:mirrors';
+import 'dart:core' as core;
+import 'dart:core';
 import 'dart:typed_data';
 import 'package:utility/utility.dart';
 import 'package:equatable/equatable.dart';
@@ -12,6 +14,7 @@ import 'dart:convert';
 /// part files
 part 'codec_type.dart';
 part 'codec_variant.dart';
+part 'option_type.dart';
 part 'codec.dart';
 part 'source.dart';
 part 'encoder.dart';

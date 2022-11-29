@@ -401,3 +401,10 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   
   print(decoded);
 ```
+
+## Resources
+
+- [substrate.dev](https://substrate.dev/docs/en/knowledgebase/advanced/codec)
+- [Parity-scale-codec](https://github.com/paritytech/parity-scale-codec)
+- [Polkadot.js](http://polkadot.js.org/)
+- [Squid](https://github.com/subsquid/squid)

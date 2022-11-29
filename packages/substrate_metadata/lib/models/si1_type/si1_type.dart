@@ -33,7 +33,7 @@ class Si1TypeParameter {
 
   /// Creates Class Object from `Json`
   static Si1TypeParameter fromJson(Map<String, dynamic> map) =>
-      Si1TypeParameter(name: map['name'], type: map['type']);
+      Si1TypeParameter(name: map['name'], type: map['type'].value);
 }
 
 class Si1TypeDef {
@@ -214,9 +214,9 @@ class Si1Field extends scale_codec.Field {
 
   /// Creates Class Object from `Json`
   static Si1Field fromJson(Map<String, dynamic> map) => Si1Field(
-        name: map['name'],
+        name: map['name'].value,
         type: map['type'],
-        typeName: map['typeName'],
+        typeName: map['typeName'].value,
         docs: (map['docs'] as List).cast<String>(),
       );
 }
