@@ -27,20 +27,28 @@ class PalletMetadataV14 {
             .map((value) => PalletConstantMetadataV14.fromJson(value))
             .toList());
 
-    if (map['storage'] != null) {
-      obj.storage = PalletStorageMetadataV14.fromJson(map['storage']);
+    if (map['storage'] != null &&
+        map['storage'] is scale_codec.Some &&
+        (map['storage'] as scale_codec.Some).value != null) {
+      obj.storage = PalletStorageMetadataV14.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null) {
-      obj.calls = PalletCallMetadataV14.fromJson(map['calls']);
+    if (map['calls'] != null &&
+        map['calls'] is scale_codec.Some &&
+        (map['calls'] as scale_codec.Some).value != null) {
+      obj.calls = PalletCallMetadataV14.fromJson(map['calls'].value);
     }
 
-    if (map['events'] != null) {
-      obj.events = PalletEventMetadataV14.fromJson(map['events']);
+    if (map['events'] != null &&
+        map['events'] is scale_codec.Some &&
+        (map['events'] as scale_codec.Some).value != null) {
+      obj.events = PalletEventMetadataV14.fromJson(map['events'].value);
     }
 
-    if (map['errors'] != null) {
-      obj.errors = PalletErrorMetadataV14.fromJson(map['errors']);
+    if (map['errors'] != null &&
+        map['errors'] is scale_codec.Some &&
+        (map['errors'] as scale_codec.Some).value != null) {
+      obj.errors = PalletErrorMetadataV14.fromJson(map['errors'].value);
     }
 
     return obj;
