@@ -230,22 +230,22 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   // Initializing Scale-Codec object
   final codec = Codec(types);
 
-  final value = true;
+  final value = Some(true);
 
   // 0x0101
   var encoded = codec.encode(registryIndex, value);
 
-  // true
+  // Some(true)
   var decoded = codec.decode(registryIndex, encoded);
 
   // or
-  // null
-  final value = null;
+  // None
+  final value = None;
 
   // 0x00
   var encoded = codec.encode(registryIndex, value);
 
-  // null
+  // None
   var decoded = codec.decode(registryIndex, encoded);
 ```
 
@@ -382,7 +382,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
     'Juice': 'Kiwi',
     'Ounces': {
       'ounces': 1,
-      'Remarks': 'This is the first order.',
+      'Remarks': Some('This is the first order.'),
     }
   };
   
@@ -394,7 +394,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
   //   'Juice': 'Kiwi',
   //   'Ounces': {
   //     'ounces': 1,
-  //     'Remarks': 'This is the first order.',
+  //     'Remarks': Some('This is the first order.'),
   //   }
   // }
   final decoded = codec.decode(typeIndex, encoded);
