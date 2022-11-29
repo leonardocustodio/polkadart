@@ -10,7 +10,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  polkadart_scale_codec: 1.0.0
+  polkadart_scale_codec: any
 ```
 
 ### 2. Install it
