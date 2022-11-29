@@ -51,18 +51,24 @@ class ModuleMetadataV9 extends AnyLegacyModule {
           .toList(),
     );
 
-    if (map['storage'] != null) {
-      obj.storage = StorageMetadataV9.fromJson(map['storage']);
+    if (map['storage'] != null &&
+        map['storage'] is scale_codec.Some &&
+        (map['storage'] as scale_codec.Some).value != null) {
+      obj.storage = StorageMetadataV9.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null) {
-      obj.calls = (map['calls'] as List)
+    if (map['calls'] != null &&
+        map['calls'] is scale_codec.Some &&
+        (map['calls'] as scale_codec.Some).value != null) {
+      obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
-    if (map['events'] != null) {
-      obj.events = (map['events'] as List)
+    if (map['events'] != null &&
+        map['events'] is scale_codec.Some &&
+        (map['events'] as scale_codec.Some).value != null) {
+      obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
@@ -104,18 +110,24 @@ class ModuleMetadataV10 extends AnyLegacyModule {
           .toList(),
     );
 
-    if (map['storage'] != null) {
-      obj.storage = StorageMetadataV10.fromJson(map['storage']);
+    if (map['storage'] != null &&
+        map['storage'] is scale_codec.Some &&
+        (map['storage'] as scale_codec.Some).value != null) {
+      obj.storage = StorageMetadataV10.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null) {
-      obj.calls = (map['calls'] as List)
+    if (map['calls'] != null &&
+        map['calls'] is scale_codec.Some &&
+        (map['calls'] as scale_codec.Some).value != null) {
+      obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
-    if (map['events'] != null) {
-      obj.events = (map['events'] as List)
+    if (map['events'] != null &&
+        map['events'] is scale_codec.Some &&
+        (map['events'] as scale_codec.Some).value != null) {
+      obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
@@ -157,18 +169,24 @@ class ModuleMetadataV11 extends AnyLegacyModule {
           .toList(),
     );
 
-    if (map['storage'] != null) {
-      obj.storage = StorageMetadataV11.fromJson(map['storage']);
+    if (map['storage'] != null &&
+        map['storage'] is scale_codec.Some &&
+        (map['storage'] as scale_codec.Some).value != null) {
+      obj.storage = StorageMetadataV11.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null) {
-      obj.calls = (map['calls'] as List)
+    if (map['calls'] != null &&
+        map['calls'] is scale_codec.Some &&
+        (map['calls'] as scale_codec.Some).value != null) {
+      obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
-    if (map['events'] != null) {
-      obj.events = (map['events'] as List)
+    if (map['events'] != null &&
+        map['events'] is scale_codec.Some &&
+        (map['events'] as scale_codec.Some).value != null) {
+      obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
@@ -213,18 +231,24 @@ class ModuleMetadataV12 extends AnyLegacyModule {
           .toList(),
     );
 
-    if (map['storage'] != null) {
-      obj.storage = StorageMetadataV11.fromJson(map['storage']);
+    if (map['storage'] != null &&
+        map['storage'] is scale_codec.Some &&
+        (map['storage'] as scale_codec.Some).value != null) {
+      obj.storage = StorageMetadataV11.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null) {
-      obj.calls = (map['calls'] as List)
+    if (map['calls'] != null &&
+        map['calls'] is scale_codec.Some &&
+        (map['calls'] as scale_codec.Some).value != null) {
+      obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
-    if (map['events'] != null) {
-      obj.events = (map['events'] as List)
+    if (map['events'] != null &&
+        map['events'] is scale_codec.Some &&
+        (map['events'] as scale_codec.Some).value != null) {
+      obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
@@ -269,18 +293,24 @@ class ModuleMetadataV13 extends AnyLegacyModule {
           .toList(),
     );
 
-    if (map['storage'] != null) {
-      obj.storage = StorageMetadataV13.fromJson(map['storage']);
+    if (map['storage'] != null &&
+        map['storage'] is scale_codec.Some &&
+        (map['storage'] as scale_codec.Some).value != null) {
+      obj.storage = StorageMetadataV13.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null) {
-      obj.calls = (map['calls'] as List)
+    if (map['calls'] != null &&
+        map['calls'] is scale_codec.Some &&
+        (map['calls'] as scale_codec.Some).value != null) {
+      obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
-    if (map['events'] != null) {
-      obj.events = (map['events'] as List)
+    if (map['events'] != null &&
+        map['events'] is scale_codec.Some &&
+        (map['events'] as scale_codec.Some).value != null) {
+      obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }

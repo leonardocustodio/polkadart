@@ -57,21 +57,21 @@ void main() {
     group('Test Vec<u8>:', () {
       // Encode
       test(
-          'When [255, null] is encoded then it should produce result: \'0x0801ff00\'',
+          'When [Some(255), None] is encoded then it should produce result: \'0x0801ff00\'',
           () {
         final String expectedValue = '0x0801ff00';
 
-        final String encodedValue =
-            codec.encode(registry.getIndex('Vec<Option<u8>>'), [255, null]);
+        final String encodedValue = codec
+            .encode(registry.getIndex('Vec<Option<u8>>'), [Some(255), None]);
 
         expect(encodedValue, expectedValue);
       });
 
       // Decode
       test(
-          'When 0x0801ff00 is decoded then it should produce result: [255, null]',
+          'When 0x0801ff00 is decoded then it should produce result: [Some(255), None]',
           () {
-        final expectedValue = [255, null];
+        final expectedValue = [Some(255), None];
 
         final decodedValue =
             codec.decode(registry.getIndex('Vec<Option<u8>>'), '0x0801ff00');
@@ -169,26 +169,27 @@ void main() {
     group('Test Vec<Option<bool>>:', () {
       // Encode
       test(
-          'When [false, true, true] is encoded then it should produce result: \'0x0c000101\'',
+          'When [Some(false), Some(true), None, Some(true)] is encoded then it should produce result: \'0x0c000101\'',
           () {
         final expectedValue = '0x1001000101000101';
 
         final encodedValue = codec.encode(
-            registry.getIndex('Vec<Option<bool>>'), [false, true, null, true]);
+            registry.getIndex('Vec<Option<bool>>'),
+            [Some(false), Some(true), None, Some(true)]);
 
         expect(encodedValue, expectedValue);
       });
 
       // Decode
       test(
-          'When 0x1001000101000101 is decoded then it should produce result: [false, true, null, true]',
+          'When 0x1001000101000101 is decoded then it should produce result: [Some(false), Some(true), None, Some(true)]',
           () {
-        final expectedValue = [false, true, null, true];
+        final expectedValue = [Some(false), Some(true), None, Some(true)];
 
         final decodedValue = codec.decode(
             registry.getIndex('Vec<Option<bool>>'), '0x1001000101000101');
 
-        expect(decodedValue, expectedValue);
+        expect(decodedValue, equals(expectedValue));
       });
     });
   }
@@ -283,24 +284,24 @@ void main() {
   {
     group('Test Vec<(u32, Option<bool>)>:', () {
       test(
-          'When [[716, null], [256, true]] is encoded then it should produce result: \'0x08cc02000000000100000101\'',
+          'When [[716, None], [256, Some(true)]] is encoded then it should produce result: \'0x08cc02000000000100000101\'',
           () {
         final expectedValue = '0x08cc02000000000100000101';
 
         final encodedValue =
             codec.encode(registry.getIndex('Vec<(u32, Option<bool>)>'), [
-          [716, null],
-          [256, true]
+          [716, None],
+          [256, Some(true)]
         ]);
 
         expect(encodedValue, expectedValue);
       });
       test(
-          'When \'0x08cc02000000000100000101\' is decoded then it should produce result: [[716, null], [256, true]]',
+          'When \'0x08cc02000000000100000101\' is decoded then it should produce result: [[716, None], [256, Some(true)]]',
           () {
         final expectedValue = [
-          [716, null],
-          [256, true]
+          [716, None],
+          [256, Some(true)]
         ];
 
         final decodedValue = codec.decode(

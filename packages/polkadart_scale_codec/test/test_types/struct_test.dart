@@ -39,7 +39,7 @@ void main() {
           'Juice': 'Kiwi',
           'Ounces': {
             'ounces': 1,
-            'Remarks': 'First order.',
+            'Remarks': Some('First order.'),
           }
         };
         final expectedResult =
@@ -57,7 +57,7 @@ void main() {
           'Juice': 'Kiwi',
           'Ounces': {
             'ounces': 1,
-            'Remarks': null,
+            'Remarks': None,
           }
         };
         final expectedResult = '0x0838546869732069732061206e6f7465020100';
@@ -79,7 +79,7 @@ void main() {
           'Juice': 'Kiwi',
           'Ounces': {
             'ounces': 1,
-            'Remarks': 'First order.',
+            'Remarks': Some('First order.'),
           }
         };
         final value =
@@ -98,7 +98,7 @@ void main() {
           'Juice': 'Kiwi',
           'Ounces': {
             'ounces': 1,
-            'Remarks': null,
+            'Remarks': None,
           }
         };
         final value = '0x0838546869732069732061206e6f7465020100';

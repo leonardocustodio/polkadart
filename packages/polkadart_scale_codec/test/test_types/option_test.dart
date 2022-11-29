@@ -27,16 +27,18 @@ void main() {
   {
     // Encode Option<bool> with values
     group('Encode Option<bool>:', () {
-      test('\'true\' should encode to \'0x0101\'', () {
-        final encoded = codec.encode(registry.getIndex('Option<bool>'), true);
+      test('Some(true) should encode to \'0x0101\'', () {
+        final encoded =
+            codec.encode(registry.getIndex('Option<bool>'), Some(true));
         expect('0x0101', equals(encoded));
       });
-      test('\'false\' should encode to \'0x0100\'', () {
-        final encoded = codec.encode(registry.getIndex('Option<bool>'), false);
+      test('Some(false) should encode to \'0x0100\'', () {
+        final encoded =
+            codec.encode(registry.getIndex('Option<bool>'), Some(false));
         expect('0x0100', equals(encoded));
       });
-      test('\'null\' should encode to \'0x00\'', () {
-        final encoded = codec.encode(registry.getIndex('Option<bool>'), null);
+      test('None should encode to \'0x00\'', () {
+        final encoded = codec.encode(registry.getIndex('Option<bool>'), None);
         expect('0x00', equals(encoded));
       });
     });
@@ -45,19 +47,19 @@ void main() {
   {
     // Decode Option<bool> with values
     group('Decode Option<bool>:', () {
-      test('\'0x0101\' should decode to \'true\'', () {
+      test('\'0x0101\' should decode to Some(true)', () {
         final decoded =
             codec.decode(registry.getIndex('Option<bool>'), '0x0101');
-        expect(true, equals(decoded));
+        expect(Some(true), decoded);
       });
-      test('\'0x0100\' should decode to \'false\'', () {
+      test('\'0x0100\' should decode to Some(false)', () {
         final decoded =
             codec.decode(registry.getIndex('Option<bool>'), '0x0100');
-        expect(false, equals(decoded));
+        expect(Some(false), decoded);
       });
-      test('\'0x00\' should decode to \'null\'', () {
+      test('\'0x00\' should decode to None', () {
         final decoded = codec.decode(registry.getIndex('Option<bool>'), '0x00');
-        expect(null, equals(decoded));
+        expect(None, equals(decoded));
       });
     });
   }
@@ -65,14 +67,15 @@ void main() {
   {
     // Encode Option<u128> with values
     group('Encode Option<u128>:', () {
-      test('\'1\' should encode to \'0x0101000000000000000000000000000000\'',
+      test(
+          'Some(BigInt.from(1)) should encode to \'0x0101000000000000000000000000000000\'',
           () {
-        final encoded =
-            codec.encode(registry.getIndex('Option<u128>'), BigInt.from(1));
+        final encoded = codec.encode(
+            registry.getIndex('Option<u128>'), Some(BigInt.from(1)));
         expect('0x0101000000000000000000000000000000', equals(encoded));
       });
       test('\'null\' should encode to \'0x00\'', () {
-        final encoded = codec.encode(registry.getIndex('Option<u128>'), null);
+        final encoded = codec.encode(registry.getIndex('Option<u128>'), None);
         expect('0x00', equals(encoded));
       });
     });
@@ -81,15 +84,16 @@ void main() {
   {
     // Decode Option<u128> with values
     group('Decode Option<u128>:', () {
-      test('\'0x0101000000000000000000000000000000\' should decode to \'1\'',
+      test(
+          '\'0x0101000000000000000000000000000000\' should decode to Some(BigInt.from(1))',
           () {
         final decoded = codec.decode(registry.getIndex('Option<u128>'),
             '0x0101000000000000000000000000000000');
-        expect(BigInt.from(1), equals(decoded));
+        expect(Some(BigInt.from(1)), decoded);
       });
-      test('\'0x00\' should decode to \'null\'', () {
+      test('\'0x00\' should decode to None', () {
         final decoded = codec.decode(registry.getIndex('Option<u128>'), '0x00');
-        expect(null, equals(decoded));
+        expect(None, equals(decoded));
       });
     });
   }
@@ -97,14 +101,14 @@ void main() {
   {
     // Encode Option<Compact<u8>> with values
     group('Encode Option<Compact<u8>>:', () {
-      test('\'63\' should encode to \'0x01fc\'', () {
+      test('Some(63) should encode to \'0x01fc\'', () {
         final encoded =
-            codec.encode(registry.getIndex('Option<Compact<u8>>'), 63);
+            codec.encode(registry.getIndex('Option<Compact<u8>>'), Some(63));
         expect('0x01fc', equals(encoded));
       });
-      test('\'null\' should encode to \'0x00\'', () {
+      test('None should encode to \'0x00\'', () {
         final encoded =
-            codec.encode(registry.getIndex('Option<Compact<u8>>'), null);
+            codec.encode(registry.getIndex('Option<Compact<u8>>'), None);
         expect('0x00', equals(encoded));
       });
     });
@@ -113,15 +117,15 @@ void main() {
   {
     // Decode Option<u128> with values
     group('Decode Option<Compact<u8>>:', () {
-      test('\'0x01fc\' should decode to \'63\'', () {
+      test('\'0x01fc\' should decode to Some(63)', () {
         final decoded =
             codec.decode(registry.getIndex('Option<Compact<u8>>'), '0x01fc');
-        expect(63, equals(decoded));
+        expect(Some(63), decoded);
       });
-      test('\'0x00\' should decode to \'null\'', () {
+      test('\'0x00\' should decode to None', () {
         final decoded =
             codec.decode(registry.getIndex('Option<Compact<u8>>'), '0x00');
-        expect(null, equals(decoded));
+        expect(None, equals(decoded));
       });
     });
   }
@@ -129,24 +133,25 @@ void main() {
   //
   // Encodes type: `Option<BitVec<u8>>`
   group('Encode Option<BitVec<u8>>:', () {
-    test('Lowest acceptable value is [0] and the output should be \'0x012000\'',
+    test(
+        'Lowest acceptable value is Some([0]) and the output should be \'0x012000\'',
         () {
       final encoded =
-          codec.encode(registry.getIndex('Option<BitVec<u8>>'), [0]);
+          codec.encode(registry.getIndex('Option<BitVec<u8>>'), Some([0]));
       expect(encoded, equals('0x012000'));
     });
 
     test(
-        'Highest acceptable value is \'[255]\' and the output should be \'0x0120ff\'',
+        'Highest acceptable value is Some([255]) and the output should be \'0x0120ff\'',
         () {
       final encoded =
-          codec.encode(registry.getIndex('Option<BitVec<u8>>'), [255]);
+          codec.encode(registry.getIndex('Option<BitVec<u8>>'), Some([255]));
       expect(encoded, equals('0x0120ff'));
     });
 
-    test('\'null\' should encode to \'0x00\'', () {
+    test('None should encode to \'0x00\'', () {
       final encoded =
-          codec.encode(registry.getIndex('Option<BitVec<u8>>'), null);
+          codec.encode(registry.getIndex('Option<BitVec<u8>>'), None);
       expect('0x00', equals(encoded));
     });
   });
@@ -154,24 +159,26 @@ void main() {
   //
   // Decodes type: `Option<BitVec<u8>>`
   group('Decode Option<BitVec<u8>>:', () {
-    test('On decoding \'0x012000\' we must get lowest acceptable value: [0]',
+    test(
+        'On decoding \'0x012000\' we must get lowest acceptable value: Some([0])',
         () {
       final decoded =
           codec.decode(registry.getIndex('Option<BitVec<u8>>'), '0x012000');
-      expect(decoded, equals([0]));
+      expect(Some([0]), decoded);
     });
 
-    test('On decoding \'0x0120ff\' we must get lowest acceptable value: [255]',
+    test(
+        'On decoding \'0x0120ff\' we must get lowest acceptable value: Some([255])',
         () {
       final decoded =
           codec.decode(registry.getIndex('Option<BitVec<u8>>'), '0x0120ff');
-      expect(decoded, equals([255]));
+      expect(Some([255]), decoded);
     });
 
-    test('\'0x00\' should decode to \'null\'', () {
+    test('\'0x00\' should decode to None', () {
       final decoded =
           codec.decode(registry.getIndex('Option<BitVec<u8>>'), '0x00');
-      expect(null, equals(decoded));
+      expect(None, decoded);
     });
   });
 
