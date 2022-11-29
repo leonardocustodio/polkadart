@@ -15,10 +15,7 @@ dependencies:
   # TODO: When publishing remove git reference by removing 'publish_to' in line 7
   # and change 'ss58_codec': to the pub.dev published version.
   ss58_codec:
-    git:
-      url: https://github.com/rankanizer/polkadart.git
-      ref: feature/ss58_codec
-      path: packages/ss58_codec
+    path: ../ss58_codec
 
 dev_dependencies:
   convert: ^3.0.2 # BSD-3-Clause

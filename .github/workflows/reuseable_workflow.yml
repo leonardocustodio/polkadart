@@ -10,6 +10,10 @@ on:
       working-directory:
         required: true
         type: string
+      generate-code:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build:
@@ -19,13 +23,17 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
     steps:
       - name: Check out code (LFS)
-        uses: nschloe/action-cached-lfs-checkout@v1.1.3
+        uses: nschloe/action-cached-lfs-checkout@v1.2.0
 
       # Get latest stable version of dart-lang
       - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
 
       - name: Install dependencies
         run: dart pub get
+
+      - name: Generate Code (Library Generated Code)
+        if: ${{ inputs.generate-code }}
+        run: dart pub run build_runner build --delete-conflicting-outputs
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
       - name: Verify formatting
@@ -54,7 +62,7 @@ jobs:
         run: dart pub global run dart_code_metrics:metrics analyze --reporter=codeclimate .
 
       - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3.1.0
+        uses: paambaati/codeclimate-action@v3.2.0
         env:
           CC_TEST_REPORTER_ID: f62061f125a8fc1425670a787b7cac15d2d9f73d7ec4878c0e4d07575156ccc1
         with:

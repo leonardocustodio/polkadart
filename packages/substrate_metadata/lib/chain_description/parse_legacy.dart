@@ -16,10 +16,7 @@ abstract class ParseLegacy implements _$ParseLegacy {
   factory ParseLegacy(Metadata metadata, LegacyTypes legacyTypes) =
       _ParseLegacy;
 
-  /* 
-   TODO: find a way to generate constructor with initialization
-
-   ParseLegacy(this.metadata, this.legacyTypes) {
+  void _defineCalls() {
     _registry = scale_codec.TypeRegistry(
         types: legacyTypes.types, typesAlias: legacyTypes.typesAlias);
     _defineGenericExtrinsicEra();
@@ -28,10 +25,10 @@ abstract class ParseLegacy implements _$ParseLegacy {
     _defineGenericCall();
     _defineGenericEvent();
     _defineGenericSignature();
-   }
-   */
+  }
 
   ChainDescription getChainDescription() {
+    _defineCalls();
     var signature = _registry.getIndex('GenericSignature');
     var call = _registry.getIndex('GenericCall');
     var digest = _registry.getIndex('Digest');
