@@ -360,7 +360,7 @@ void main() {
     {
       // i8 lowest acceptable possible
       test(
-          'When i8() is provided with args -128, it must produce result: 0x80.',
+          'it should convert lowest acceptable possible 8 bit value',
           () {
         final expectedResult = '0x80';
 
