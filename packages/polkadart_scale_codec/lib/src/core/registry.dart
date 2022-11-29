@@ -516,6 +516,8 @@ class TypeRegistry {
       result = _buildEnum(def);
     } else if (def is Map && def['_set'] != null) {
       return _types[_buildSet(def)];
+    } else if (def is Map && def['_struct'] != null) {
+      return _buildStruct(def['_struct']);
     } else {
       result = _buildStruct(def);
     }

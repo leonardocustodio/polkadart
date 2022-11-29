@@ -14,16 +14,7 @@ abstract class _$ParseLegacy {
 }
 
 class _ParseLegacy with ParseLegacy implements _$ParseLegacy {
-  _ParseLegacy(this.metadata, this.legacyTypes) {
-    _registry = scale_codec.TypeRegistry(
-        types: legacyTypes.types, typesAlias: legacyTypes.typesAlias);
-    _defineGenericExtrinsicEra();
-    _defineGenericLookupSource();
-    _defineOriginCaller();
-    _defineGenericCall();
-    _defineGenericEvent();
-    _defineGenericSignature();
-  }
+  _ParseLegacy(this.metadata, this.legacyTypes);
 
   @override
   final Metadata metadata;
