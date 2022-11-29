@@ -13,6 +13,8 @@ dependencies:
   cached: ^1.2.2 # MIT
   cached_annotation: ^1.2.0 # MIT
   cryptography: ^2.0.5 # Apache-2.0
+  equatable: ^2.0.5 # MIT
+  json_schema2: ^2.0.2+9 # MIT
   polkadart_scale_codec:
     path: ../polkadart_scale_codec
   weak_map: ^2.1.0 # BSD-2-Clause

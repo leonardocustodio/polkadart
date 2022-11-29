@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:substrate_metadata/exceptions/exceptions.dart';
 import 'package:substrate_metadata/storage/storage_item.model.dart';
 import 'package:substrate_metadata/chain_description/parse_legacy.dart';
 import 'package:substrate_metadata/chain_description/parse_v14.dart';
@@ -47,7 +48,8 @@ class ChainDescription {
       case 'V14':
         return ParseV14((metadata as Metadata_V14).value).getChainDescription();
       default:
-        throw Exception('Unsupported metadata version: ${metadata.kind}');
+        throw UnsupportedMetadataException(
+            'Unsupported metadata version: ${metadata.kind}');
     }
   }
 }

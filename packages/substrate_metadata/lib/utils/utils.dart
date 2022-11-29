@@ -22,6 +22,16 @@ bool isNotEmpty(dynamic value) {
   throw UnexpectedTypeException('Unexpected Type: $value.');
 }
 
+List<Map<String, dynamic>> flatten(List<List<Map<String, dynamic>>> list) {
+  var result = <Map<String, dynamic>>[];
+  for (var value in list) {
+    for (var val in value) {
+      result.add(val);
+    }
+  }
+  return result;
+}
+
 /// Asserts if the `T` value is null or not.
 ///
 /// Returns `T` if not null otherwise throws `AssertionException`
