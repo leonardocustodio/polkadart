@@ -359,9 +359,7 @@ void main() {
     //i8
     {
       // i8 lowest acceptable possible
-      test(
-          'it should convert lowest acceptable possible 8 bit value',
-          () {
+      test('it should convert lowest acceptable possible 8 bit value', () {
         final expectedResult = '0x80';
 
         final encoder = HexEncoder();
