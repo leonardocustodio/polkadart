@@ -8,11 +8,10 @@ Provides encoder and decoder used by [SS58](https://github.com/rankanizer/polkad
 
 ### 1. Depend on it
 
-Add this to your package's `pubspec.yaml` file:
+Add `ss58_codec` with command:
 
-```yaml
-dependencies:
-  ss58_codec: any
+```css
+dart pub add ss58_codec
 ```
 
 ### 2. Install it

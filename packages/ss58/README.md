@@ -9,11 +9,10 @@ SS58 account examples can be finded in [ss58-Registry](https://github.com/parity
 
 ### 1. Depend on it
 
-Add this to your package's `pubspec.yaml` file:
+Add `ss58` with command:
 
-```yaml
-dependencies:
-  ss58: any
+```css
+dart pub add ss58
 ```
 
 ### 2. Install it

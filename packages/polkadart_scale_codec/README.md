@@ -6,11 +6,10 @@
 
 ### 1. Depend on it
 
-Add this to your package's `pubspec.yaml` file:
+Add `polkadart_scale_codec` with command:
 
-```yaml
-dependencies:
-  polkadart_scale_codec: any
+```css
+dart pub add polkadart_scale_codec
 ```
 
 ### 2. Install it
