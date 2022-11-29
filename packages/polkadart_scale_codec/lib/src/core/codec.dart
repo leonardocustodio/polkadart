@@ -359,6 +359,10 @@ class Codec {
       CodecStructType def, dynamic value, ScaleCodecEncoder encoder) {
     for (var i = 0; i < def.fields.length; i++) {
       CodecStructTypeFields f = def.fields[i];
+      if (value is! Map) {
+        throw UnknownVariantException(
+            'Needed variant \'value\' of type Map<String, dynamic> but found: ${value.runtimeType}');
+      }
       encodeWithEncoder(f.type, value[f.name], encoder);
     }
   }

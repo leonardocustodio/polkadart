@@ -4,31 +4,36 @@ part of '../core/core.dart';
 ///
 /// Basic integers are encoded using a fixed-width little-endian (LE) format.
 ///
-/// Example:
-/// ```
-/// final encodedU8Int = CodecU8.encode(69);
-/// final decodedU8Int = CodecU8.decode("0x45");
-/// ```
-///
 /// See also: https://docs.substrate.io/reference/scale-codec/
-class CodecU8 implements ScaleCodecType {
+class CodecU8 implements ScaleCodecType<int> {
+  /// Returns an encoded hex-decimal `string` from `int` [value]
+  /// using [HexEncoder] methods.
+  ///
+  /// Example:
+  /// ```
+  /// final encoded = CodecU8.encodeToHex(69); //"0x45"
+  /// ```
   @override
   String encodeToHex(value) {
-    if (value is! int) {
-      throw UnexpectedTypeException(
-        expectedType: 'int',
-        receivedType: value.runtimeType.toString(),
-      );
-    }
-
     var sink = HexEncoder();
     sink.u8(value);
     return sink.toHex();
   }
 
+  /// Returns an `int` value which represents
+  /// the [encodedData] hex-decimal `string`
+  /// using [Source] methods.
+  ///
+  /// Example:
+  /// ```
+  /// final decoded = CodecU8.decodeFromHex("0x45"); //69
+  /// ```
   @override
   int decodeFromHex(String encodedData) {
     Source source = Source(encodedData);
-    return source.u8();
+    final result = source.u8();
+    source.assertEOF();
+
+    return result;
   }
 }
