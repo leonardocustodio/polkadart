@@ -53,7 +53,29 @@ class Chain {
   ///
   /// If the `blockNumber` is not having any related `VersionDescription` then it returns `null`.
   VersionDescription? getVersionDescription(int blockNumber) {
-    return _versionDescriptionMap[blockNumber];
+    // List of block numbers
+    final blockNumberList = _versionDescriptionMap.keys.toList();
+
+    int next = -1;
+    for (var index = 0; index < blockNumberList.length; index++) {
+      if (blockNumberList[index] >= blockNumber) {
+        next = index;
+        break;
+      }
+    }
+    VersionDescription? vd;
+
+    if (blockNumberList.isNotEmpty &&
+        next != 0 &&
+        next < blockNumberList.length) {
+      // get the blocknumber from the index
+      final int resultBlockNumber = next < 0
+          ? blockNumberList[blockNumberList.length - 1]
+          : blockNumberList[next - 1];
+
+      vd = _versionDescriptionMap[resultBlockNumber];
+    }
+    return vd;
   }
 
   ///
@@ -139,7 +161,7 @@ class Chain {
   ///
   /// final decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
   ///
-  /// // rawBlock.hashCode == encodedExtrinsic.hashCode
+  /// // rawBlock.extrinsics == encodedExtrinsic.extrinsics
   /// final encodedExtrinsic = chain.encodeExtrinsics(decodedExtrinsic);
   /// ```
   RawBlock encodeExtrinsics(DecodedBlockExtrinsics decodedBlock) {
