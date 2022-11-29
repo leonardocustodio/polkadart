@@ -1,24 +1,36 @@
 part of models;
 
-class RpcBlockDigest {
+class RpcBlockDigest implements Equatable {
   final List<String> logs;
   const RpcBlockDigest({required this.logs});
 
-  static RpcBlockDigest fromMap(Map<String, dynamic> map) =>
+  static RpcBlockDigest fromJson(Map<String, dynamic> map) =>
       RpcBlockDigest(logs: (map['logs'] as List).cast<String>());
+
+  @override
+  List<Object?> get props => [logs];
+
+  @override
+  bool? get stringify => true;
 }
 
-class RpcBlockHeader {
+class RpcBlockHeader implements Equatable {
   final String number;
   final String parentHash;
   final RpcBlockDigest digest;
   const RpcBlockHeader(
       {required this.number, required this.parentHash, required this.digest});
 
-  static RpcBlockHeader fromMap(Map<String, dynamic> map) => RpcBlockHeader(
+  static RpcBlockHeader fromJson(Map<String, dynamic> map) => RpcBlockHeader(
       number: map['number'],
       parentHash: map['parentHash'],
-      digest: RpcBlockDigest.fromMap(map['digest']));
+      digest: RpcBlockDigest.fromJson(map['digest']));
+
+  @override
+  List<Object?> get props => [number, parentHash, digest];
+
+  @override
+  bool? get stringify => true;
 }
 
 abstract class RpcBlock {
@@ -28,7 +40,7 @@ abstract class RpcBlock {
   const RpcBlock({this.header, required this.extrinsics});
 }
 
-class RawBlock extends RpcBlock {
+class RawBlock extends RpcBlock implements Equatable {
   final int blockNumber;
   const RawBlock(
       {required this.blockNumber,
@@ -36,11 +48,17 @@ class RawBlock extends RpcBlock {
       required List<String> extrinsics})
       : super(header: header, extrinsics: extrinsics);
 
-  static RawBlock fromMap(Map<String, dynamic> map) => RawBlock(
+  static RawBlock fromJson(Map<String, dynamic> map) => RawBlock(
         blockNumber: map['blockNumber'],
         header: map['header'] == null
             ? null
-            : RpcBlockHeader.fromMap(map['header']),
+            : RpcBlockHeader.fromJson(map['header']),
         extrinsics: (map['extrinsics'] as List).cast<String>(),
       );
+
+  @override
+  List<Object?> get props => [blockNumber, header, extrinsics];
+
+  @override
+  bool? get stringify => true;
 }
