@@ -1,17 +1,17 @@
 part of models;
 
-class RawBlockEvents {
+/// Holds the blockNumber with the encoded events from the chain.
+class RawBlockEvents extends Equatable {
   final int blockNumber;
   final String events;
   const RawBlockEvents({required this.blockNumber, required this.events});
 
-  @override
-  bool operator ==(Object other) {
-    return other is RawBlockEvents &&
-        blockNumber == other.blockNumber &&
-        events == other.events;
-  }
+  // Create RawBlockEvents Object
+  static RawBlockEvents fromJson(Map<String, dynamic> map) => RawBlockEvents(
+        blockNumber: map['blockNumber'],
+        events: map['events'],
+      );
 
   @override
-  int get hashCode => blockNumber.hashCode ^ events.hashCode;
+  List<Object?> get props => [blockNumber, events];
 }

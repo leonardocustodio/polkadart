@@ -53,11 +53,33 @@ class Chain {
   ///
   /// If the `blockNumber` is not having any related `VersionDescription` then it returns `null`.
   VersionDescription? getVersionDescription(int blockNumber) {
-    return _versionDescriptionMap[blockNumber];
+    // List of block numbers
+    final blockNumberList = _versionDescriptionMap.keys.toList();
+
+    int next = -1;
+    for (var index = 0; index < blockNumberList.length; index++) {
+      if (blockNumberList[index] >= blockNumber) {
+        next = index;
+        break;
+      }
+    }
+    VersionDescription? vd;
+
+    if (blockNumberList.isNotEmpty &&
+        next != 0 &&
+        next < blockNumberList.length) {
+      // get the blocknumber from the index
+      final int resultBlockNumber = next < 0
+          ? blockNumberList[blockNumberList.length - 1]
+          : blockNumberList[next - 1];
+
+      vd = _versionDescriptionMap[resultBlockNumber];
+    }
+    return vd;
   }
 
   ///
-  /// Decodes Extrinsic from RawBlock
+  /// ## Decodes Extrinsic from RawBlock
   ///
   /// ```dart
   /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
@@ -72,13 +94,14 @@ class Chain {
   /// final decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
   /// ```
   DecodedBlockExtrinsics decodeExtrinsics(RawBlock rawBlock) {
+    final blockNumber = rawBlock.blockNumber;
+
     final VersionDescription? versionDescription =
         getVersionDescription(rawBlock.blockNumber);
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
-      throw UnexpectedCaseException(
-          'Metadata not found for block: ${rawBlock.blockNumber}.');
+      throw BlockNotFoundException(blockNumber);
     }
 
     final List<dynamic> extrinsics = rawBlock.extrinsics.map((hex) {
@@ -91,6 +114,41 @@ class Chain {
   }
 
   ///
+  /// ## Decodes Constants from `ChainDescription`.
+  ///
+  /// ```dart
+  /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
+  ///
+  /// final chain = Chain(chainDefinitions);
+  ///
+  /// // Preferred to provide all the available Spec-Version information.
+  /// chain.initSpecVersionFromFile('../chain/versions.json');
+  ///
+  /// final chainDescription = chain.getChainDescriptionFromSpecVersion()
+  ///
+  /// final constants = chain.decodeConstants(chainDescription);
+  /// ```
+  Map<String, Map<String, dynamic>> decodeConstants(
+      ChainDescription chainDescription) {
+    final result = <String, Map<String, dynamic>>{};
+
+    for (var pallet in chainDescription.constants.keys) {
+      result[pallet] ??= <String, dynamic>{};
+
+      for (var name in chainDescription.constants[pallet]!.keys) {
+        final Constant? def = chainDescription.constants[pallet]![name];
+
+        final decodedValue = scale_codec.Codec(chainDescription.types)
+            .decode(def!.type, def.value);
+
+        result[pallet]![name] = decodedValue;
+      }
+    }
+    return result;
+  }
+
+  ///
+  /// ## Encodes Extrinsic from DecodedBlockExtrinsics
   /// ```dart
   /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
   ///
@@ -103,8 +161,8 @@ class Chain {
   ///
   /// final decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
   ///
+  /// // rawBlock.extrinsics == encodedExtrinsic.extrinsics
   /// final encodedExtrinsic = chain.encodeExtrinsics(decodedExtrinsic);
-  /// print(rawBlock == encodedExtrinsic);
   /// ```
   RawBlock encodeExtrinsics(DecodedBlockExtrinsics decodedBlock) {
     final blockNumber = decodedBlock.blockNumber;
@@ -114,8 +172,7 @@ class Chain {
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
-      throw UnexpectedCaseException(
-          'Metadata not found for block: $blockNumber.');
+      throw BlockNotFoundException(blockNumber);
     }
 
     final List<String> extrinsics = decodedBlock.extrinsics.map((extrinsic) {
@@ -127,15 +184,121 @@ class Chain {
   }
 
   ///
+  /// ## Decodes Events from RawBlockEvents
+  ///
+  /// ```dart
+  /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
+  ///
+  /// final chain = Chain(chainDefinitions);
+  ///
+  /// // Preferred to provide all the available Spec-Version information.
+  /// chain.initSpecVersionFromFile('../chain/versions.json');
+  ///
+  /// final rawBlockEvents = RawBlockEvents.fromJson( { blockJson } );
+  ///
+  /// final decodedEvents = chain.decodeEvents(rawBlockEvents);
+  /// ```
+  DecodedBlockEvents decodeEvents(RawBlockEvents rawBlockEvents) {
+    final blockNumber = rawBlockEvents.blockNumber;
+
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
+
+    // Check if this is not empty, throw Exception if it is.
+    if (versionDescription == null) {
+      throw BlockNotFoundException(blockNumber);
+    }
+
+    final events = versionDescription.codec.decode(
+        versionDescription.description.eventRecordList, rawBlockEvents.events);
+    return DecodedBlockEvents(blockNumber: blockNumber, events: events);
+  }
+
+  ///
+  /// ## Decodes Events from RawBlockEvents
+  ///
+  /// ```dart
+  /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
+  ///
+  /// final chain = Chain(chainDefinitions);
+  ///
+  /// // Preferred to provide all the available Spec-Version information.
+  /// chain.initSpecVersionFromFile('../chain/versions.json');
+  ///
+  /// RawBlockEvents rawBlockEvents = RawBlockEvents.fromJson( { blockJson } );
+  ///
+  /// DecodedBlockEvents decodedEvents = chain.decodeEvents(rawBlockEvents);
+  ///
+  /// // rawBlockEvents.hashCode == encodedEvents.hashCode
+  /// RawBlockEvents encodedEvents = chain.encodeEvents(decodedEvents);
+  /// ```
+  RawBlockEvents encodeEvents(DecodedBlockEvents decodedBlockEvents) {
+    final int blockNumber = decodedBlockEvents.blockNumber;
+
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
+
+    // Check if this is not empty, throw UnexpectedCaseException if it is.
+    if (versionDescription == null) {
+      throw BlockNotFoundException(blockNumber);
+    }
+
+    final String events = versionDescription.codec.encode(
+        versionDescription.description.eventRecordList,
+        decodedBlockEvents.events);
+    return RawBlockEvents(blockNumber: blockNumber, events: events);
+  }
+
+  ///
   /// [SpecVersion]
   ///
   /// Processes the SpecVersion
   /// Creates VersionDescription from its Metadata and adds it to `_versionDescriptionMap`
+  ///
+  /// ```dart
+  /// final specJson = {'specName': 'polkadot', 'specVersion':......};
+  ///
+  /// final specVersion = SpecVersion.fromJson(specJson);
+  ///
+  /// chainObject.addSpecVersion(specVersion);
+  /// ```
   void addSpecVersion(SpecVersion specVersion) {
     if (_versionDescriptionMap[specVersion.blockNumber] != null) {
       return;
     }
 
+    final chainDescription = getChainDescriptionFromSpecVersion(specVersion);
+
+    final versionDescription = VersionDescription(
+      /// local to class params
+      description: chainDescription,
+      codec: scale_codec.Codec(chainDescription.types),
+      events: EventRegistry(chainDescription.types, chainDescription.event),
+      calls: EventRegistry(chainDescription.types, chainDescription.call),
+
+      /// passing params for super-class i.e. SpecVersion
+      metadata: specVersion.metadata,
+      specName: specVersion.specName,
+      specVersion: specVersion.specVersion,
+      blockNumber: specVersion.blockNumber,
+      blockHash: specVersion.blockHash,
+    );
+    _versionDescriptionMap[versionDescription.blockNumber] = versionDescription;
+  }
+
+  ///
+  /// ## Create `ChainDescription` from `SpecVersion`
+  ///
+  /// Parses the SpecVersion and creates Chain Description
+  ///
+  /// ```dart
+  /// final specJson = {'specName': 'polkadot', 'specVersion':......};
+  ///
+  /// final specVersion = SpecVersion.fromJson(specJson);
+  ///
+  /// final chainDescription = chainObject.getChainDescriptionFromSpecVersion(specVersion);
+  /// ```
+  ChainDescription getChainDescriptionFromSpecVersion(SpecVersion specVersion) {
     final MetadataDecoder metadataDecoder = MetadataDecoder();
 
     final Metadata metadata =
@@ -147,20 +310,6 @@ class Chain {
     final ChainDescription description =
         ChainDescription.getFromMetadata(metadata, types);
 
-    final versionDescription = VersionDescription(
-      /// local to class params
-      description: description,
-      codec: scale_codec.Codec(description.types),
-      events: EventRegistry(description.types, description.event),
-      calls: EventRegistry(description.types, description.call),
-
-      /// passing params for super-class i.e. SpecVersion
-      metadata: specVersion.metadata,
-      specName: specVersion.specName,
-      specVersion: specVersion.specVersion,
-      blockNumber: specVersion.blockNumber,
-      blockHash: specVersion.blockHash,
-    );
-    _versionDescriptionMap[versionDescription.blockNumber] = versionDescription;
+    return description;
   }
 }
