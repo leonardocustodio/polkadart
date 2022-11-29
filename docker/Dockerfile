@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:bionic@sha256:eb1392bbdde63147bc2b4ff1a4053dcfe6d15e4dfd3cce29e9b9f52a4f88bc74
 
 RUN apt-get update
 RUN apt-get install -y curl git wget unzip libglu1-mesa
@@ -13,7 +13,6 @@ RUN flutter upgrade
 
 RUN mkdir /app/
 COPY .. /app/
-WORKDIR /app/
 
-RUN ["chmod", "+x", "/app/docker/run_tests.sh"]
-ENTRYPOINT [ "/app/docker/run_tests.sh"]
+WORKDIR /app/
+ENTRYPOINT [ "./run_tests.sh"]
