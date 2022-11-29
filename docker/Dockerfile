@@ -13,7 +13,6 @@ RUN flutter upgrade
 
 RUN mkdir /app/
 COPY .. /app/
-WORKDIR /app/
 
-RUN ["chmod", "+x", "/app/docker/run_tests.sh"]
-ENTRYPOINT [ "/app/docker/run_tests.sh"]
+WORKDIR /app/
+ENTRYPOINT [ "./run_tests.sh"]
