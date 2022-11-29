@@ -6,6 +6,12 @@ class RawBlockEvents extends Equatable {
   final String events;
   const RawBlockEvents({required this.blockNumber, required this.events});
 
+  // Create RawBlockEvents Object
+  static RawBlockEvents fromJson(Map<String, dynamic> map) => RawBlockEvents(
+        blockNumber: map['blockNumber'],
+        events: map['events'],
+      );
+
   @override
   List<Object?> get props => [blockNumber, events];
 }
