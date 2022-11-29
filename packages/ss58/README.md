@@ -5,6 +5,41 @@ addresses.
 
 SS58 account examples can be finded in [ss58-Registry](https://github.com/paritytech/ss58-registry).
 
+# Lets Get Started
+
+### 1. Depend on it
+
+Add this to your package's `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  ss58: any
+```
+
+### 2. Install it
+
+You can install packages from the command line:
+
+with `pub`:
+
+```css
+dart pub get
+```
+
+with `Flutter`:
+
+```css
+flutter pub get
+```
+
+### 3. Import it
+
+Now in your `Dart` code, you can use:
+
+```dart
+import 'package:ss58/ss58.dart';
+```
+
 ## Example
 
 ```dart

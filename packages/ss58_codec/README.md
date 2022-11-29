@@ -4,7 +4,40 @@ Provides encoder and decoder used by [SS58](https://github.com/rankanizer/polkad
 
 ## Usage
 
-To use this package, add `ss58_codec` as a [dependency in your pubspec.yaml file](https://docs.flutter.dev/development/platform-integration/platform-channels).
+# Lets Get Started
+
+### 1. Depend on it
+
+Add this to your package's `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  ss58_codec: any
+```
+
+### 2. Install it
+
+You can install packages from the command line:
+
+with `pub`:
+
+```css
+dart pub get
+```
+
+with `Flutter`:
+
+```css
+flutter pub get
+```
+
+### 3. Import it
+
+Now in your `Dart` code, you can use:
+
+```dart
+import 'package:ss58_codec/ss58_codec.dart';
+```
 
 ### Example
 
