@@ -92,7 +92,7 @@ class Chain {
   }
 
   ///
-  /// ## Decodes Constants from `ChainDescription`
+  /// ## Decodes Constants from `ChainDescription`.
   ///
   /// ```dart
   /// final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
