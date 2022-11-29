@@ -1,7 +1,8 @@
 library models;
 
 import 'dart:typed_data';
-import 'package:substrate_metadata/chain/chain_description.model.dart';
+import 'package:equatable/equatable.dart';
+import 'package:substrate_metadata/chain_description/chain_description.model.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
 import 'package:substrate_metadata/event_registry.dart';

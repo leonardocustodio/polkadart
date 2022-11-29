@@ -6,7 +6,7 @@ class LegacyTypes {
 
   LegacyTypes({this.types, this.typesAlias, this.signedExtensions});
 
-  static LegacyTypes fromMap(Map<String, dynamic> map) {
+  static LegacyTypes fromJson(Map<String, dynamic> map) {
     return LegacyTypes(
         types: map['types'],
         typesAlias: map['typesAlias'],
@@ -25,7 +25,7 @@ class LegacyTypesWithSpecVersionRange extends LegacyTypes {
       super.typesAlias,
       super.signedExtensions});
 
-  static LegacyTypesWithSpecVersionRange fromMap(Map<String, dynamic> map) {
+  static LegacyTypesWithSpecVersionRange fromJson(Map<String, dynamic> map) {
     return LegacyTypesWithSpecVersionRange(
         minmax: (map['minmax'] as List).cast<int?>(),
         types: map['types'],
@@ -41,7 +41,7 @@ class LegacyTypesBundle extends LegacyTypes {
   LegacyTypesBundle(
       {this.versions, super.types, super.typesAlias, super.signedExtensions});
 
-  static LegacyTypesBundle fromMap(Map<String, dynamic> map) {
+  static LegacyTypesBundle fromJson(Map<String, dynamic> map) {
     var obj = LegacyTypesBundle(
         types: map['types'],
         typesAlias: map['typesAlias'],
@@ -49,7 +49,7 @@ class LegacyTypesBundle extends LegacyTypes {
 
     if (map['versions'] != null) {
       obj.versions = (map['versions'] as List)
-          .map((value) => LegacyTypesWithSpecVersionRange.fromMap(value))
+          .map((value) => LegacyTypesWithSpecVersionRange.fromJson(value))
           .toList();
     }
 

@@ -7,8 +7,7 @@ class Si0TypeDefPrimitive {
   const Si0TypeDefPrimitive({required this.kind});
 
   /// Creates Class Object from `Json`
-  static Si0TypeDefPrimitive fromJson(Map<String, dynamic> map) {
-    final key = map.keys.first;
+  static Si0TypeDefPrimitive fromKey(String key) {
     switch (key) {
       case 'Bool':
         return Si0TypeDefPrimitive_Bool();
