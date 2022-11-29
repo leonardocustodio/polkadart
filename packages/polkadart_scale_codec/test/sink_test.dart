@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:mirrors';
 
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/expect.dart';
@@ -12,40 +11,6 @@ void testCompact(String expectedHex, dynamic value) {
     sink.compact(value);
 
     final computedHex = sink.toHex();
-    expect(computedHex, expectedHex);
-  });
-}
-
-///
-/// What this function does ?
-/// [methodName] : It's the name of the method to execute.
-///
-/// ```dart
-/// // What's happening here ?
-/// // [methodName]  : 'u8'
-/// // [args]        : 1
-/// // [expectedHex] : '0x04'
-/// // Below code is similar to
-///
-/// var sink = HexEncoder();
-/// sink.u8(1);
-///
-/// var computedHex = sink.toHex();
-///
-/// expect(computedHex, expectedHex);
-/// ```
-void testPrimitiveCompact(
-    {required String methodName,
-    required dynamic args,
-    required String expectedHex}) {
-  test(
-      'When $methodName() is provided with args: $args, it must produce result: $expectedHex.',
-      () {
-    var sink = HexEncoder();
-    var mirrorSink = reflect(sink);
-    mirrorSink.invoke(Symbol(methodName), [args]);
-
-    var computedHex = mirrorSink.invoke(Symbol('toHex'), []).reflectee;
     expect(computedHex, expectedHex);
   });
 }
@@ -201,170 +166,427 @@ void main() {
     // u8
     {
       // lowest acceptable possible
-      testPrimitiveCompact(methodName: 'u8', args: 0, expectedHex: '0x00');
+
+      test('When u8() is provided with args 0, it must produce result: 0x00.',
+          () {
+        final expectedResult = '0x00';
+
+        final encoder = HexEncoder();
+        encoder.u8(0);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(methodName: 'u8', args: 255, expectedHex: '0xff');
+
+      test('When u8() is provided with args 255, it must produce result: 0xff.',
+          () {
+        final expectedResult = '0xff';
+
+        final encoder = HexEncoder();
+        encoder.u8(255);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // u16
     {
       // lowest acceptable possible
-      testPrimitiveCompact(methodName: 'u16', args: 0, expectedHex: '0x0000');
+
+      test(
+          'When u16() is provided with args 0, it must produce result: 0x0000.',
+          () {
+        final expectedResult = '0x0000';
+
+        final encoder = HexEncoder();
+        encoder.u16(0);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u16', args: 65535, expectedHex: '0xffff');
+
+      test(
+          'When u16() is provided with args 65535, it must produce result: 0xffff.',
+          () {
+        final expectedResult = '0xffff';
+
+        final encoder = HexEncoder();
+        encoder.u16(65535);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // u32
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u32', args: 0, expectedHex: '0x00000000');
+
+      test(
+          'When u32() is provided with args 0, it must produce result: 0x00000000.',
+          () {
+        final expectedResult = '0x00000000';
+
+        final encoder = HexEncoder();
+        encoder.u32(0);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u32', args: pow(2, 32) - 1, expectedHex: '0xffffffff');
+      test(
+          'When u32() is provided with args 4294967295, it must produce result: 0xffffffff.',
+          () {
+        final expectedResult = '0xffffffff';
+
+        final encoder = HexEncoder();
+        final value = pow(2, 32) - 1;
+        encoder.u32(value as int);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // u64
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u64',
-          args: BigInt.from(0),
-          expectedHex: '0x0000000000000000');
+      test(
+          'When u64() is provided with args 0, it must produce result: 0x0000000000000000.',
+          () {
+        final expectedResult = '0x0000000000000000';
+
+        final encoder = HexEncoder();
+        encoder.u64(BigInt.from(0));
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u64',
-          args: 2.toBigInt.pow(64) - 1.toBigInt,
-          expectedHex: '0xffffffffffffffff');
+      test(
+          'When u64() is provided with args 18446744073709551615, it must produce result: 0xffffffffffffffff.',
+          () {
+        final expectedResult = '0xffffffffffffffff';
+
+        final encoder = HexEncoder();
+        encoder.u64(2.toBigInt.pow(64) - 1.toBigInt);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // u128
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u128',
-          args: BigInt.from(0),
-          expectedHex: '0x00000000000000000000000000000000');
+      test(
+          'When u128() is provided with args 0, it must produce result: 0x00000000000000000000000000000000.',
+          () {
+        final expectedResult = '0x00000000000000000000000000000000';
+
+        final encoder = HexEncoder();
+        encoder.u128(BigInt.from(0));
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u128',
-          args: 2.toBigInt.pow(128) - 1.toBigInt,
-          expectedHex: '0xffffffffffffffffffffffffffffffff');
+      test(
+          'When u128() is provided with args 340282366920938463463374607431768211455, it must produce result: 0xffffffffffffffffffffffffffffffff.',
+          () {
+        final expectedResult = '0xffffffffffffffffffffffffffffffff';
+
+        final encoder = HexEncoder();
+        encoder.u128(2.toBigInt.pow(128) - 1.toBigInt);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // u256
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u256',
-          args: BigInt.from(0),
-          expectedHex:
-              '0x0000000000000000000000000000000000000000000000000000000000000000');
+      test(
+          'When u256() is provided with args 0, it must produce result: 0x0000000000000000000000000000000000000000000000000000000000000000.',
+          () {
+        final expectedResult =
+            '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+        final encoder = HexEncoder();
+        encoder.u256(BigInt.from(0));
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'u256',
-          args: 2.toBigInt.pow(128) - 1.toBigInt,
-          expectedHex:
-              '0xffffffffffffffffffffffffffffffff00000000000000000000000000000000');
+      test(
+          'When u256() is provided with args 115792089237316195423570985008687907853269984665640564039457584007913129639935, it must produce result: 0xffffffffffffffffffffffffffffffff00000000000000000000000000000000.',
+          () {
+        final expectedResult =
+            '0xffffffffffffffffffffffffffffffff00000000000000000000000000000000';
+
+        final encoder = HexEncoder();
+        encoder.u256(2.toBigInt.pow(128) - 1.toBigInt);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // Signed Bits
     //i8
     {
       // i8 lowest acceptable possible
-      testPrimitiveCompact(methodName: 'i8', args: -128, expectedHex: '0x80');
+      test(
+          'When i8() is provided with args -128, it must produce result: 0x80.',
+          () {
+        final expectedResult = '0x80';
+
+        final encoder = HexEncoder();
+        encoder.i8(-128);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // i8 highest acceptable possible
-      testPrimitiveCompact(methodName: 'i8', args: 127, expectedHex: '0x7f');
+
+      test('When i8() is provided with args 127, it must produce result: 0x7f.',
+          () {
+        final expectedResult = '0x7f';
+
+        final encoder = HexEncoder();
+        encoder.i8(127);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // i16
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i16', args: -32768, expectedHex: '0x0080');
+      test(
+          'When i16() is provided with args -32768, it must produce result: 0x0080.',
+          () {
+        final expectedResult = '0x0080';
+
+        final encoder = HexEncoder();
+        encoder.i16(-32768);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i16', args: 32767, expectedHex: '0xff7f');
+
+      test(
+          'When i16() is provided with args 32767, it must produce result: 0xff7f.',
+          () {
+        final expectedResult = '0xff7f';
+
+        final encoder = HexEncoder();
+        encoder.i16(32767);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // i32
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i32', args: -2147483648, expectedHex: '0x00000080');
+      test(
+          'When i32() is provided with args -2147483648, it must produce result: 0x00000080.',
+          () {
+        final expectedResult = '0x00000080';
+
+        final encoder = HexEncoder();
+        encoder.i32(-2147483648);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possilbe
-      testPrimitiveCompact(
-          methodName: 'i32', args: 2147483647, expectedHex: '0xffffff7f');
+
+      test(
+          'When i32() is provided with args 2147483647, it must produce result: 0xffffff7f.',
+          () {
+        final expectedResult = '0xffffff7f';
+
+        final encoder = HexEncoder();
+        encoder.i32(2147483647);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // i64
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i64',
-          args: -2.toBigInt.pow(64 - 1),
-          expectedHex: '0x0000000000000080');
+      test(
+          'When i64() is provided with args -9223372036854775808, it must produce result: 0x0000000000000080.',
+          () {
+        final expectedResult = '0x0000000000000080';
+
+        final encoder = HexEncoder();
+        encoder.i64(-2.toBigInt.pow(64 - 1));
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i64',
-          args: 2.toBigInt.pow(64 - 1) - 1.toBigInt,
-          expectedHex: '0xffffffffffffff7f');
+      test(
+          'When i64() is provided with args 9223372036854775807, it must produce result: 0xffffffffffffff7f.',
+          () {
+        final expectedResult = '0xffffffffffffff7f';
+
+        final encoder = HexEncoder();
+        encoder.i64(2.toBigInt.pow(64 - 1) - 1.toBigInt);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // i128
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i128',
-          args: -2.toBigInt.pow(128 - 1),
-          expectedHex: '0x00000000000000000000000000000080');
+      test(
+          'When i128() is provided with args -170141183460469231731687303715884105728, it must produce result: 0x00000000000000000000000000000080.',
+          () {
+        final expectedResult = '0x00000000000000000000000000000080';
+
+        final encoder = HexEncoder();
+        encoder.i128(-2.toBigInt.pow(128 - 1));
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i128',
-          args: 2.toBigInt.pow(128 - 1) - 1.toBigInt,
-          expectedHex: '0xffffffffffffffffffffffffffffff7f');
+      test(
+          'When i128() is provided with args 170141183460469231731687303715884105727, it must produce result: 0xffffffffffffffffffffffffffffff7f.',
+          () {
+        final expectedResult = '0xffffffffffffffffffffffffffffff7f';
+
+        final encoder = HexEncoder();
+        encoder.i128(2.toBigInt.pow(128 - 1) - 1.toBigInt);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // i256
     {
       // lowest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i256',
-          args: -2.toBigInt.pow(256 - 1),
-          expectedHex:
-              '0x0000000000000000000000000000000000000000000000000000000000000080');
+      test(
+          'When i256() is provided with args -57896044618658097711785492504343953926634992332820282019728792003956564819968, it must produce result: 0x0000000000000000000000000000000000000000000000000000000000000080.',
+          () {
+        final expectedResult =
+            '0x0000000000000000000000000000000000000000000000000000000000000080';
+
+        final encoder = HexEncoder();
+        encoder.i256(-2.toBigInt.pow(256 - 1));
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
 
       // highest acceptable possible
-      testPrimitiveCompact(
-          methodName: 'i256',
-          args: 2.toBigInt.pow(256 - 1) - 1.toBigInt,
-          expectedHex:
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
+      test(
+          'When i256() is provided with args 57896044618658097711785492504343953926634992332820282019728792003956564819967, it must produce result: 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f.',
+          () {
+        final expectedResult =
+            '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f';
+
+        final encoder = HexEncoder();
+        encoder.i256(2.toBigInt.pow(256 - 1) - 1.toBigInt);
+
+        final computedHex = encoder.toHex();
+
+        expect(computedHex, expectedResult);
+      });
     }
 
     // Bool
     // true
-    testPrimitiveCompact(
-        methodName: 'boolean', args: true, expectedHex: '0x01');
-    // false
-    testPrimitiveCompact(
-        methodName: 'boolean', args: false, expectedHex: '0x00');
 
-    testPrimitiveCompact(
-        methodName: 'str',
-        args: 'github: justkawal',
-        expectedHex: '0x446769746875623a206a7573746b6177616c');
+    test(
+        'When boolean() is provided with args true, it must produce result: 0x01.',
+        () {
+      final expectedResult = '0x01';
+
+      final encoder = HexEncoder();
+      encoder.boolean(true);
+
+      final computedHex = encoder.toHex();
+
+      expect(computedHex, expectedResult);
+    });
+    // false
+
+    test(
+        'When boolean() is provided with args false, it must produce result: 0x00.',
+        () {
+      final expectedResult = '0x00';
+
+      final encoder = HexEncoder();
+      encoder.boolean(false);
+
+      final computedHex = encoder.toHex();
+
+      expect(computedHex, expectedResult);
+    });
+
+    test(
+        'When str() is provided with args github: justkawal, it must produce result: 0x446769746875623a206a7573746b6177616c.',
+        () {
+      final expectedResult = '0x446769746875623a206a7573746b6177616c';
+
+      final encoder = HexEncoder();
+      encoder.str('github: justkawal');
+
+      final computedHex = encoder.toHex();
+
+      expect(computedHex, expectedResult);
+    });
   });
 }
