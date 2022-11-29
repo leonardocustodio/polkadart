@@ -19,7 +19,7 @@ class Chain {
   /// Chain([LegacyTypesBundle? typesBundleDefinition])
   ///
   /// When:
-  /// `typesBundleDefinition` == null and `specVersion.metadata` == V14, it throws UnsupportedMetadataException
+  /// `typesBundleDefinition` == null and `specVersion.metadata` != V14, it throws UnsupportedMetadataException
   ///
   /// ```dart
   /// final typesBundleDefinition = LegacyTypesBundle.fromJson(chainDefinitionJson);
@@ -109,7 +109,7 @@ class Chain {
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
-      throw _throwBlockNotFound(blockNumber);
+      throw BlockNotFoundException(blockNumber);
     }
 
     final List<dynamic> extrinsics = rawBlock.extrinsics.map((hex) {
@@ -232,7 +232,7 @@ class Chain {
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
-      throw _throwBlockNotFound(blockNumber);
+      throw BlockNotFoundException(blockNumber);
     }
 
     final List<String> extrinsics =
@@ -267,7 +267,7 @@ class Chain {
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
-      throw _throwBlockNotFound(blockNumber);
+      throw BlockNotFoundException(blockNumber);
     }
 
     final events = versionDescription.codec.decode(
@@ -301,32 +301,13 @@ class Chain {
 
     // Check if this is not empty, throw UnexpectedCaseException if it is.
     if (versionDescription == null) {
-      throw _throwBlockNotFound(blockNumber);
+      throw BlockNotFoundException(blockNumber);
     }
 
     final String events = versionDescription.codec.encode(
         versionDescription.description.eventRecordList,
         decodedBlockEvents.events);
     return RawBlockEvents(blockNumber: blockNumber, events: events);
-  }
-
-  //
-  // Private function to provide Exception with Message
-  UnexpectedCaseException _throwBlockNotFound(int blockNumber) {
-    return UnexpectedCaseException('''
-          Exception: Metadata not found for block: $blockNumber.'
-
-          Try adding the SpecVersion for blockNumber: $blockNumber.
-          ```
-            chainObject.initSpecVersionFromFile('../../versions.json');
-            
-            or
-
-            final specVersion = SpecVersion.fromJson( { specJson } );
-            
-            chainObject.addSpecVersion(specVersion);
-          ```
-          ''');
   }
 
   ///
@@ -380,7 +361,7 @@ class Chain {
   /// final chainDescription = chainObject.getChainDescriptionFromSpecVersion(specVersion);
   /// ```
   ChainDescription getChainDescriptionFromSpecVersion(SpecVersion specVersion) {
-    final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
+    final MetadataDecoder metadataDecoder = MetadataDecoder();
 
     final Metadata metadata =
         metadataDecoder.decodeAsMetadata(specVersion.metadata);

@@ -30,7 +30,7 @@ class _ParseV14 with ParseV14 implements _$ParseV14 {
   final __uncheckedExtrinsicCached = <String, int>{};
   final __storageCached = <String, Map<String, Map<String, StorageItem>>>{};
   final __constantsCached = <String, Map<String, Map<String, Constant>>>{};
-  final __typesCached = <String, List<scale_codec.Type>>{};
+  final __typesCached = <String, List<Type>>{};
 
   @override
   int _digest() {
@@ -285,10 +285,10 @@ class _ParseV14 with ParseV14 implements _$ParseV14 {
   }
 
   @override
-  List<scale_codec.Type> _types() {
+  List<Type> _types() {
     final cachedValue = __typesCached[""];
     if (cachedValue == null) {
-      final List<scale_codec.Type> toReturn;
+      final List<Type> toReturn;
       try {
         final result = super._types();
 
