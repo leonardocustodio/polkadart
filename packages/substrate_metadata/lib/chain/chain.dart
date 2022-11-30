@@ -9,7 +9,6 @@ import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/old/types_bundle.dart';
 import 'package:substrate_metadata/old/legacy_types_model.dart';
 import 'package:substrate_metadata/spec_version/spec_version.model.dart';
-import 'package:substrate_metadata/utils/byte_encoder.dart';
 import 'package:substrate_metadata/utils/spec_version_maker.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
@@ -201,7 +200,7 @@ class Chain {
   /// ```
   Uint8List encodeConstantsValue(
       int type, dynamic value, ChainDescription chainDescription) {
-    final bytesSink = ByteEncoder();
+    final bytesSink = scale_codec.ByteEncoder();
     scale_codec.Codec(chainDescription.types)
         .encodeWithEncoder(type, value, bytesSink);
     return bytesSink.toBytes();

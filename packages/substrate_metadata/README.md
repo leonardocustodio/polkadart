@@ -4,33 +4,6 @@
 
 # Lets Get Started
 
-### 1. Depend on it
-
-Add this to your package's `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  substrate_metadata: any
-```
-
-### 2. Install it
-
-You can install packages from the command line:
-
-with `pub`:
-
-```css
-dart pub get
-```
-
-with `Flutter`:
-
-```css
-flutter pub get
-```
-
-# Usage
-
 ### Decode Metadata
 
 ```dart
@@ -87,7 +60,7 @@ flutter pub get
   final specJson = {'specName': 'polkadot', 'specVersion':......};
 
   final specVersion = SpecVersion.fromJson(specJson);
-  
+
   // specVersion gets added to support decoding the blocks.
   chainObject.addSpecVersion(specVersion);
 ```
