@@ -575,12 +575,12 @@ void main() {
     });
 
     test(
-        'When str() is provided with args github: justkawal, it must produce result: 0x446769746875623a206a7573746b6177616c.',
+        'When str() is provided with args \'This is polkadart_scale_codec 🔥🚀\', it must produce result: 0x985468697320697320706f6c6b61646172745f7363616c655f636f64656320f09f94a5f09f9a80.',
         () {
-      final expectedResult = '0x446769746875623a206a7573746b6177616c';
+      final expectedResult = '0x985468697320697320706f6c6b61646172745f7363616c655f636f64656320f09f94a5f09f9a80';
 
       final encoder = HexEncoder();
-      encoder.str('github: justkawal');
+      encoder.str('This is polkadart_scale_codec 🔥🚀');
 
       final computedHex = encoder.toHex();
 

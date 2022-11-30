@@ -390,11 +390,12 @@ void main() {
     });
 
     test(
-        'When Source(\'0x446769746875623a206a7573746b6177616c\').str() is executed, then it should return result: github: justkawal.',
+        'When Source(\'0x985468697320697320706f6c6b61646172745f7363616c655f636f64656320f09f94a5f09f9a80\').str() is executed, then it should return result: \'This is polkadart_scale_codec 🔥🚀\'',
         () {
-      final expectedResult = 'github: justkawal';
+      final expectedResult = 'This is polkadart_scale_codec 🔥🚀';
 
-      final source = Source('0x446769746875623a206a7573746b6177616c');
+      final source = Source(
+          '0x985468697320697320706f6c6b61646172745f7363616c655f636f64656320f09f94a5f09f9a80');
       final computedValue = source.str();
 
       expect(computedValue, expectedResult);
