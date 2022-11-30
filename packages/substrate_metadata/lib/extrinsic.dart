@@ -1,7 +1,6 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
 import 'package:substrate_metadata/chain_description/chain_description.model.dart';
-import 'package:substrate_metadata/utils/byte_encoder.dart';
 import 'package:substrate_metadata/utils/utils.dart';
 
 class Extrinsic {
@@ -42,7 +41,7 @@ class Extrinsic {
       ChainDescription chainDescription, scale_codec.Codec? codec) {
     assertionCheck(extrinsic['version'] == 4, 'unsupported extrinsic version');
     codec = codec ?? scale_codec.Codec(chainDescription.types);
-    var encoder = ByteEncoder();
+    var encoder = scale_codec.ByteEncoder();
 
     var meta = 4;
     if (extrinsic['signature'] != null) {
@@ -59,7 +58,7 @@ class Extrinsic {
     codec.encodeWithEncoder(chainDescription.call, extrinsic['call'], encoder);
 
     var bytes = encoder.toBytes();
-    encoder = ByteEncoder();
+    encoder = scale_codec.ByteEncoder();
     encoder.compact(bytes.length);
     encoder.bytes(bytes);
     return encoder.toBytes();

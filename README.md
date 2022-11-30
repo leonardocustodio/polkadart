@@ -5,14 +5,10 @@
 
 # polkadart
 
-## Starting point
-
-## Run tests
-
-You can run all tests from the library by running `docker compose up`. You can find the tests in the following paths:
+You can run all tests from the library by running `docker compose up`. You can find the **documentation** and **tests** in the following paths:
 | Package | Path
 |----------|----------|
-| polkadart_scale_codec | [packages/polkadart_scale_codec/test](./packages/polkadart_scale_codec/test) |
-| ss58 | [packages/ss58/test](./packages/ss58/test) |
-| ss58_codec | [packages/ss58_codec/test](./packages/ss58_codec/test) |
-| substrate_metadata | [packages/substrate_metadata/test](./packages/substrate_metadata/test) |
+| polkadart_scale_codec | [packages/polkadart_scale_codec/](./packages/polkadart_scale_codec/) |
+| ss58 | [packages/ss58/](./packages/ss58/) |
+| ss58_codec | [packages/ss58_codec/](./packages/ss58_codec/) |
+| substrate_metadata | [packages/substrate_metadata/](./packages/substrate_metadata/) |
