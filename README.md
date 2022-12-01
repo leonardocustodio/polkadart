@@ -6,26 +6,32 @@
 # polkadart
 
 ## Requirements
+
 You need to have `git-lfs` installed to run the tests. Download from [Github](https://git-lfs.github.com)
 
 On Mac OS X:
+
 ```bash
 brew install git-lfs
 ```
 
 On Ubuntu:
+
 ```bash
 sudo apt-get install git-lfs
 ```
 
 ## Fetching files
+
 To ensure the `git-lfs files` are fetched inside the cloned git repository. Run these commands from the root of `polkadart repo`.
+
 ```bash
 git lfs fetch
 git lfs checkout
 ```
 
 ## Documentation and Tests
+
 You can run all tests from the library by running `docker compose up`.
 | Package | Path
 |----------|----------|
