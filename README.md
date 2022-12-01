@@ -5,7 +5,28 @@
 
 # polkadart
 
-You can run all tests from the library by running `docker compose up`. You can find the **documentation** and **tests** in the following paths:
+## Requirements
+You need to have `git-lfs` installed to run the tests. Download from [Github](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage)
+
+On Mac OS X:
+```bash
+brew install git-lfs
+```
+
+On Ubuntu:
+```bash
+sudo apt-get install git-lfs
+```
+
+## Fetching files
+To ensure the `git-lfs files` are fetched inside the cloned git repository. Run these commands from the root of `polkadart repo`.
+```bash
+git lfs fetch
+git lfs checkout
+```
+
+## Documentation and Tests
+You can run all tests from the library by running `docker compose up`.
 | Package | Path
 |----------|----------|
 | polkadart_scale_codec | [packages/polkadart_scale_codec/](./packages/polkadart_scale_codec/) |
