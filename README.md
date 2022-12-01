@@ -6,7 +6,7 @@
 # polkadart
 
 ## Requirements
-You need to have `git-lfs` installed to run the tests. Download from [Github](https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage)
+You need to have `git-lfs` installed to run the tests. Download from [Github](https://git-lfs.github.com)
 
 On Mac OS X:
 ```bash
