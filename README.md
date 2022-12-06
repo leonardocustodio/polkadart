@@ -4,6 +4,37 @@
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frankanizer%2Fpolkadart.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frankanizer%2Fpolkadart?ref=badge_shield) <!-- markdown-link-check-disable-line -->
 
 # polkadart
+This library provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node.
+
+## Road map and current state
+
+✅ = Supported and mostly stable<br/>
+🟡 = Partially implemented and under active development.<br/>
+🔴 = Not supported yet but on-deck to be implemented soon.
+
+|                      | Status  |
+| -------------------- |:-------:|
+| ScaleCodec Encoder   | ✅      |
+| ScaleCodec Decoder   | ✅      |
+| SS58 Format          | ✅      |
+| Parse Metadata v14   | ✅      |
+| Coverage and Tests   | ✅      |
+| Substrate Metadata   | 🟡      |
+| RPC                  | 🔴      |
+| Websockets           | 🔴      |
+| Crypto               | 🔴      |
+
+### Substrate Metadata
+|                      | Status  |
+| -------------------- |:-------:|
+| Parse Metadata v14   | ✅      |
+| JSON-RPC             | 🔴      |
+| Constants            | 🔴      |
+| Read Storage         | 🔴      |
+| Extrinsics           | 🔴      |
+| Events               | 🔴      |
+| Errors               | 🔴      |
+| SmartContracts       | 🔴      |
 
 ## Requirements
 
