@@ -10,10 +10,10 @@ All code is made available with a [permissive Apache-2.0 license](./LICENSE).
 
 
 ## [polkadart-scale-codec](./packages/polkadart_scale_codec/)
-Substrate uses a lightweight and efficient encoding and decoding program to optimize how data is sent and received over the network. The program used to serialize and deserialize data is called the SCALE codec, with SCALE being an acronym for simple concatenated aggregate little-endian.
+A Dart implementation of [SCALE](https://docs.substrate.io/reference/scale-codec/), Substrate uses a lightweight and efficient encoding and decoding program to optimize how data is sent and received over the network. The program used to serialize and deserialize data is called the SCALE codec, with SCALE being an acronym for simple concatenated aggregate little-endian.
 
 ## [ss58](./packages/ss58/)
-The SS58 is the default Substrate address format, this encoded address format is based on the Bitcoin Base-58-check format, but with a few modification specifically designed to suite Substrate-based chains. You can use other address formats for Substrate-based chains. However, the SS58 address format provides a base-58 encoded value that can identify a specific account on any Substrate chain. Because different chains can have different ways of identifying accounts, the SS58 address is designed to be extensible.
+A Dart implementation of [SS58](https://docs.substrate.io/reference/address-formats/). The SS58 is the default Substrate address format, this encoded address format is based on the Bitcoin Base-58-check format, but with a few modification specifically designed to suite Substrate-based chains. You can use other address formats for Substrate-based chains. However, the SS58 address format provides a base-58 encoded value that can identify a specific account on any Substrate chain. Because different chains can have different ways of identifying accounts, the SS58 address is designed to be extensible.
 
 ### Basic format
 ```
