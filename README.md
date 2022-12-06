@@ -4,37 +4,15 @@
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frankanizer%2Fpolkadart.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frankanizer%2Fpolkadart?ref=badge_shield) <!-- markdown-link-check-disable-line -->
 
 # polkadart
-This library provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node.
+This library provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node, this API provides application developers the ability to query a node and interact with the Polkadot or Substrate chains using Dart.
 
-## Road map and current state
+All code is made available with a [permissive Apache-2.0 license](https://github.com/rankanizer/polkadart/blob/main/LICENSE).
 
-✅ = Supported and mostly stable<br/>
-🟡 = Partially implemented and under active development.<br/>
-🔴 = Not supported yet but on-deck to be implemented soon.
 
-|                      | Status  |
-| -------------------- |:-------:|
-| Scale Codec Encoder  | ✅      |
-| Scale Codec Decoder  | ✅      |
-| SS58 Format          | ✅      |
-| Parse Metadata v14   | ✅      |
-| Coverage and Tests   | ✅      |
-| Substrate Metadata   | 🟡      |
-| RPC                  | 🔴      |
-| Websockets           | 🔴      |
-| Crypto               | 🔴      |
+## [Polkadart-scale-codec](./packages/polkadart_scale_codec/)
+Substrate uses a lightweight and efficient encoding and decoding program to optimize how data is sent and received over the network. The program used to serialize and deserialize data is called the SCALE codec, with SCALE being an acronym for simple concatenated aggregate little-endian.
 
-### Substrate Metadata
-|                      | Status  |
-| -------------------- |:-------:|
-| Parse Metadata v14   | ✅      |
-| JSON-RPC             | 🔴      |
-| Constants            | 🔴      |
-| Read Storage         | 🔴      |
-| Extrinsics           | 🔴      |
-| Events               | 🔴      |
-| Errors               | 🔴      |
-| SmartContracts       | 🔴      |
+One of the most important things to understand about the **polkadart** is that most interfaces are actually generated automatically when it connects to a running node. This is quite a departure from other APIs in projects where the interfaces are static. While sounding quite scary, it actually is a powerful concept that exists in both Polkadot and Substrate chains, and allows the API to be used in environments where the chain is customized.
 
 ## Requirements
 
@@ -70,3 +48,33 @@ You can run all tests from the library by running `docker compose up`.
 | ss58 | [packages/ss58/](./packages/ss58/) |
 | ss58_codec | [packages/ss58_codec/](./packages/ss58_codec/) |
 | substrate_metadata | [packages/substrate_metadata/](./packages/substrate_metadata/) |
+
+## Road map and current state
+
+✅ = Supported and mostly stable<br/>
+🟡 = Partially implemented and under active development.<br/>
+🔴 = Not supported yet but on-deck to be implemented soon.
+
+|                      | Status  |
+| -------------------- |:-------:|
+| Scale Codec Encoder  | ✅      |
+| Scale Codec Decoder  | ✅      |
+| SS58 Format          | ✅      |
+| Parse Metadata v14   | ✅      |
+| Coverage and Tests   | ✅      |
+| Substrate Metadata   | 🟡      |
+| RPC                  | 🔴      |
+| Websockets           | 🔴      |
+| Crypto               | 🔴      |
+
+### Substrate Metadata
+|                      | Status  |
+| -------------------- |:-------:|
+| Parse Metadata v14   | ✅      |
+| JSON-RPC             | 🔴      |
+| Constants            | 🔴      |
+| Read Storage         | 🔴      |
+| Extrinsics           | 🔴      |
+| Events               | 🔴      |
+| Errors               | 🔴      |
+| SmartContracts       | 🔴      |
