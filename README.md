@@ -9,9 +9,10 @@ This library provides a clean wrapper around all the methods exposed by a Polkad
 All code is made available with a [permissive Apache-2.0 license](https://github.com/rankanizer/polkadart/blob/main/LICENSE).
 
 
-## [Polkadart-scale-codec](./packages/polkadart_scale_codec/)
+## [polkadart-scale-codec](./packages/polkadart_scale_codec/)
 Substrate uses a lightweight and efficient encoding and decoding program to optimize how data is sent and received over the network. The program used to serialize and deserialize data is called the SCALE codec, with SCALE being an acronym for simple concatenated aggregate little-endian.
 
+## [substrate-metadata](./packages/m/)
 One of the most important things to understand about the **polkadart** is that most interfaces are actually generated automatically when it connects to a running node. This is quite a departure from other APIs in projects where the interfaces are static. While sounding quite scary, it actually is a powerful concept that exists in both Polkadot and Substrate chains, and allows the API to be used in environments where the chain is customized.
 
 ## Requirements
