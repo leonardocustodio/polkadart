@@ -14,8 +14,8 @@ This library provides a clean wrapper around all the methods exposed by a Polkad
 
 |                      | Status  |
 | -------------------- |:-------:|
-| ScaleCodec Encoder   | ✅      |
-| ScaleCodec Decoder   | ✅      |
+| Scale Codec Encoder  | ✅      |
+| Scale Codec Decoder  | ✅      |
 | SS58 Format          | ✅      |
 | Parse Metadata v14   | ✅      |
 | Coverage and Tests   | ✅      |
