@@ -5,7 +5,7 @@
 
 ## PolkaDart
 
-This library provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node, this API provides application developers the ability to query a node and interact with the Polkadot or Substrate chains using Dart.
+This library provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node, this API provides developers the ability to query a node and interact with the Polkadot or Substrate chains using Dart.
 		
 All code is made available with a [permissive Apache-2.0 license](./LICENSE).
 		
