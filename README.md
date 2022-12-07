@@ -3,25 +3,30 @@
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-purple.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frankanizer%2Fpolkadart.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frankanizer%2Fpolkadart?ref=badge_shield) <!-- markdown-link-check-disable-line -->
 
-# polkadart
+## PolkaDart
+
 This library provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node, this API provides application developers the ability to query a node and interact with the Polkadot or Substrate chains using Dart.
-
+		
 All code is made available with a [permissive Apache-2.0 license](./LICENSE).
-
-
+		
 ## [polkadart-scale-codec](./packages/polkadart_scale_codec/)
+
 A Dart implementation of [SCALE](https://docs.substrate.io/reference/scale-codec/), Substrate uses a lightweight and efficient encoding and decoding program to optimize how data is sent and received over the network. The program used to serialize and deserialize data is called the SCALE codec, with SCALE being an acronym for simple concatenated aggregate little-endian.
 
 ## [ss58](./packages/ss58/)
-A Dart implementation of [SS58](https://docs.substrate.io/reference/address-formats/). The SS58 is the default Substrate address format, this encoded address format is based on the Bitcoin Base-58-check format, but with a few modification specifically designed to suite Substrate-based chains. You can use other address formats for Substrate-based chains. However, the SS58 address format provides a base-58 encoded value that can identify a specific account on any Substrate chain. Because different chains can have different ways of identifying accounts, the SS58 address is designed to be extensible.
+
+A Dart implementation of [SS58](https://docs.substrate.io/reference/address-formats/). The SS58 is the default Substrate address format, this encoded address format is based on the Bitcoin Base-58-check format, but with a few modifications specifically designed to suit Substrate-based chains. You can use other address formats for Substrate-based chains. However, the SS58 address format provides a base-58 encoded value that can identify a specific account on any Substrate chain. Because different chains can have different ways of identifying accounts, the SS58 address is designed to be extensible.
+		
 
 ### Basic format
+
 ```
 base58encode ( concat ( <address-type>, <address>, <checksum> ) )
 ```
 
 ## [substrate-metadata](./packages/substrate_metadata/)
-One of the most important things to understand about **polkadart** is that most interfaces are actually generated automatically when it connects to a running node. This is quite a departure from other APIs in projects where the interfaces are static. While sounding quite scary, it actually is a powerful concept that exists in both Polkadot and Substrate chains, and allows the API to be used in environments where the chain is customized.
+
+One of the most important things to understand about **polkadart** is that most interfaces are generated automatically when it connects to a running node. This is quite a departure from other APIs in projects where the interfaces are static. While sounding quite scary, it is a powerful concept that exists in both Polkadot and Substrate chains and allows the API to be used in environments where the chain is customized.
 
 ## Requirements
 
@@ -77,13 +82,14 @@ You can run all tests from the library by running `docker compose up`.
 | Crypto               | 🔴      |
 
 ### Substrate Metadata
-|                      | Status  |
-| -------------------- |:-------:|
-| Parse Metadata v14   | ✅      |
-| JSON-RPC             | 🔴      |
-| Constants            | 🔴      |
-| Read Storage         | 🔴      |
-| Extrinsics           | 🔴      |
-| Events               | 🔴      |
-| Errors               | 🔴      |
-| SmartContracts       | 🔴      |
+|                         | Status  |
+| ----------------------- |:-------:|
+| Parse Metadata v14      | ✅      |
+| Parse Metadata pre-v14  | ✅      |
+| JSON-RPC                | 🔴      |
+| Constants               | 🔴      |
+| Read Storage            | 🔴      |
+| Extrinsics              | 🔴      |
+| Events                  | 🔴      |
+| Errors                  | 🔴      |
+| SmartContracts          | 🔴      |
