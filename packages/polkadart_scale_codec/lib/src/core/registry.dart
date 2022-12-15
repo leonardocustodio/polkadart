@@ -152,6 +152,32 @@ class TypeRegistry {
         v1.fields[0].name == null;
   }
 
+  List<Type> _eliminateOptionsChain(List<Type> types) {
+    return types.map((Type type) {
+      if (type.kind != TypeKind.Option) {
+        return type;
+      }
+      final int param = (type as OptionType).type;
+      if (types[param].kind != TypeKind.Option) {
+        return type;
+      }
+      return VariantType(
+        variants: [
+          Variant(
+            name: 'None',
+            index: 0,
+            fields: [],
+          ),
+          Variant(
+            name: 'Some',
+            index: 1,
+            fields: [Field(type: param)],
+          ),
+        ],
+      );
+    }).toList();
+  }
+
   List<Type> _removeUnitFieldsFromStructs(List<Type> types) {
     var changed = true;
     while (changed) {
@@ -190,6 +216,9 @@ class TypeRegistry {
                   }).toList();
 
                   if (fields.length == v.fields.length) {
+                    return v;
+                  }
+                  if (fields.isNotEmpty && v.fields[0].name == null) {
                     return v;
                   }
                   changed = true;

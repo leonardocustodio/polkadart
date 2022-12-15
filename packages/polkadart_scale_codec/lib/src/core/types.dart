@@ -53,7 +53,6 @@ enum Primitive {
 ///
 /// PrimitiveType
 class PrimitiveType extends Type with CodecType {
-
   /// Value from [Primitive] enum which denotes the type of value from Primitives enums
   final Primitive primitive;
   PrimitiveType({required this.primitive, super.path, super.docs})
@@ -63,7 +62,6 @@ class PrimitiveType extends Type with CodecType {
 ///
 /// CompactType
 class CompactType extends Type with CodecType {
-
   /// type which this Type denotes
   final int type;
   CompactType({required this.type, super.path, super.docs})
@@ -73,7 +71,6 @@ class CompactType extends Type with CodecType {
 ///
 /// SequenceType
 class SequenceType extends Type with CodecType {
-
   /// type which this sequence denotes
   final int type;
   SequenceType({required this.type, super.path, super.docs})
@@ -96,7 +93,6 @@ class BitSequenceType extends Type with CodecType {
 ///
 /// ArrayType
 class ArrayType extends Type with CodecType {
-
   /// length of this array
   final int length;
 
@@ -109,7 +105,6 @@ class ArrayType extends Type with CodecType {
 ///
 /// TupleType
 class TupleType extends Type with CodecType {
-
   /// [Optional] tuple
   final List<int> tuple;
   TupleType({this.tuple = const <int>[], super.path, super.docs})
@@ -119,7 +114,6 @@ class TupleType extends Type with CodecType {
 ///
 /// CompositeType
 class CompositeType extends Type with CodecType {
-
   /// [Optional] fields
   final List<Field> fields;
   CompositeType({this.fields = const <Field>[], super.path, super.docs})
