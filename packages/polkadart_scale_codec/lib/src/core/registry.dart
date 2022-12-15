@@ -44,7 +44,9 @@ class TypeRegistry {
 
   List<Type> normalizeMetadataTypes(List<Type> types) {
     types = _fixWrapperKeepOpaqueTypes(types);
+    types = _fixU256Structs(types);
     types = _introduceOptionType(types);
+    types = _eliminateOptionsChain(types);
     types = _removeUnitFieldsFromStructs(types);
     types = _replaceUnitOptionWithBoolean(types);
     types = _normalizeFieldNames(types);
@@ -78,6 +80,44 @@ class TypeRegistry {
       types.add(PrimitiveType(primitive: Primitive.U8));
     }
     return types;
+  }
+
+  List<Type> _fixU256Structs(List<Type> types) {
+    return types.map((type) {
+      bool isU256 = false;
+      //
+      // Check if type.path is not null and not empty
+      if (type.path != null && type.path!.isNotEmpty) {
+        //
+        // Check if the last element of type.path is 'U256'
+        // and type.kind is TypeKind.Composite
+        // and type.fields.length is 1
+        if (type.path!.last == 'U256' &&
+            type.kind == TypeKind.Composite &&
+            (type as CompositeType).fields.length == 1) {
+          final Type field = types[type.fields[0].type];
+          //
+          // Check if field.kind is TypeKind.Array
+          // and field.length is 4
+          if (field.kind == TypeKind.Array &&
+              (field as ArrayType).length == 4) {
+            final Type element = types[field.type];
+            //
+            // Check if element.kind is TypeKind.Primitive
+            // and element.primitive is Primitive.U64
+            if (element.kind == TypeKind.Primitive &&
+                (element as PrimitiveType).primitive == Primitive.U64) {
+              isU256 = true;
+            }
+          }
+        }
+      }
+
+      if (isU256) {
+        return PrimitiveType(primitive: Primitive.U256);
+      }
+      return type;
+    }).toList();
   }
 
   List<Type> _introduceOptionType(List<Type> types) {
