@@ -36,17 +36,29 @@ class ChainDescription {
 
   static ChainDescription getFromMetadata(
       Metadata metadata, LegacyTypes? legacyTypes) {
+    switch (isPreV14(metadata)) {
+      case true:
+        assertionCheck(legacyTypes != null,
+            'Type definitions are required for metadata ${metadata.kind}');
+        return ParseLegacy(metadata, legacyTypes!).getChainDescription();
+      case false:
+        return ParseV14((metadata as Metadata_V14).value).getChainDescription();
+      default:
+        throw UnsupportedMetadataException(
+            'Unsupported metadata version: ${metadata.kind}');
+    }
+  }
+
+  static bool isPreV14(Metadata metadata) {
     switch (metadata.kind) {
       case 'V9':
       case 'V10':
       case 'V11':
       case 'V12':
       case 'V13':
-        assertionCheck(legacyTypes != null,
-            'Type definitions are required for metadata ${metadata.kind}');
-        return ParseLegacy(metadata, legacyTypes!).getChainDescription();
+        return true;
       case 'V14':
-        return ParseV14((metadata as Metadata_V14).value).getChainDescription();
+        return false;
       default:
         throw UnsupportedMetadataException(
             'Unsupported metadata version: ${metadata.kind}');

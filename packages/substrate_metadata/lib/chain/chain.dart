@@ -364,10 +364,17 @@ class Chain {
 
     final Metadata metadata =
         metadataDecoder.decodeAsMetadata(specVersion.metadata);
-    final LegacyTypes? types = typesBundleDefinition != null
-        ? getLegacyTypesFromBundle(
-            typesBundleDefinition!, specVersion.specVersion)
-        : null;
+
+    final bool isPreV14 = ChainDescription.isPreV14(metadata);
+
+    LegacyTypes? types;
+
+    // Pre checking helps to avoid extra computation for processing LegacyTypesBundle.
+    if (isPreV14 && typesBundleDefinition != null) {
+      types = getLegacyTypesFromBundle(
+          typesBundleDefinition!, specVersion.specVersion);
+    }
+
     final ChainDescription description =
         ChainDescription.getFromMetadata(metadata, types);
 
