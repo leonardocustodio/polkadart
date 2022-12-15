@@ -44,9 +44,8 @@ class RawBlock extends RpcBlock implements Equatable {
   final int blockNumber;
   const RawBlock(
       {required this.blockNumber,
-      RpcBlockHeader? header,
-      required List<String> extrinsics})
-      : super(header: header, extrinsics: extrinsics);
+      super.header,
+      required super.extrinsics});
 
   static RawBlock fromJson(Map<String, dynamic> map) => RawBlock(
         blockNumber: map['blockNumber'],
