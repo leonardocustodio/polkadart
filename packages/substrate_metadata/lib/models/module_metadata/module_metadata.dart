@@ -18,26 +18,15 @@ abstract class AnyLegacyModule {
 }
 
 class ModuleMetadataV9 extends AnyLegacyModule {
-  @override
-  final String name;
   StorageMetadataV9? storage;
-  @override
-  List<FunctionMetadataV9>? calls;
-  @override
-  List<EventMetadataV9>? events;
-  @override
-  List<ModuleConstantMetadataV9> constants;
-  @override
-  List<ErrorMetadataV9> errors;
 
   ModuleMetadataV9(
-      {required this.name,
+      {required super.name,
       this.storage,
       super.calls,
       super.events,
-      required this.constants,
-      required this.errors})
-      : super(name: name, constants: constants, errors: errors);
+      required super.constants,
+      required super.errors});
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV9 fromJson(Map<String, dynamic> map) {
@@ -77,26 +66,15 @@ class ModuleMetadataV9 extends AnyLegacyModule {
 }
 
 class ModuleMetadataV10 extends AnyLegacyModule {
-  @override
-  final String name;
   StorageMetadataV10? storage;
-  @override
-  List<FunctionMetadataV9>? calls;
-  @override
-  List<EventMetadataV9>? events;
-  @override
-  final List<ModuleConstantMetadataV9> constants;
-  @override
-  final List<ErrorMetadataV9> errors;
 
   ModuleMetadataV10(
-      {required this.name,
+      {required super.name,
       this.storage,
       super.calls,
       super.events,
-      required this.constants,
-      required this.errors})
-      : super(name: name, constants: constants, errors: errors);
+      required super.constants,
+      required super.errors});
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV10 fromJson(Map<String, dynamic> map) {
@@ -136,26 +114,15 @@ class ModuleMetadataV10 extends AnyLegacyModule {
 }
 
 class ModuleMetadataV11 extends AnyLegacyModule {
-  @override
-  final String name;
   StorageMetadataV11? storage;
-  @override
-  List<FunctionMetadataV9>? calls;
-  @override
-  List<EventMetadataV9>? events;
-  @override
-  List<ModuleConstantMetadataV9> constants;
-  @override
-  List<ErrorMetadataV9> errors;
 
   ModuleMetadataV11(
-      {required this.name,
+      {required super.name,
       this.storage,
       super.calls,
       super.events,
-      required this.constants,
-      required this.errors})
-      : super(name: name, constants: constants, errors: errors);
+      required super.constants,
+      required super.errors});
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV11 fromJson(Map<String, dynamic> map) {
@@ -195,28 +162,17 @@ class ModuleMetadataV11 extends AnyLegacyModule {
 }
 
 class ModuleMetadataV12 extends AnyLegacyModule {
-  @override
-  final String name;
   final int index;
   StorageMetadataV11? storage;
-  @override
-  List<FunctionMetadataV9>? calls;
-  @override
-  List<EventMetadataV9>? events;
-  @override
-  List<ModuleConstantMetadataV9> constants;
-  @override
-  List<ErrorMetadataV9> errors;
 
   ModuleMetadataV12(
-      {required this.name,
+      {required super.name,
       required this.index,
       this.storage,
       super.calls,
       super.events,
-      required this.constants,
-      required this.errors})
-      : super(name: name, constants: constants, errors: errors);
+      required super.constants,
+      required super.errors});
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV12 fromJson(Map<String, dynamic> map) {
@@ -257,28 +213,17 @@ class ModuleMetadataV12 extends AnyLegacyModule {
 }
 
 class ModuleMetadataV13 extends AnyLegacyModule {
-  @override
-  final String name;
   final int index;
   StorageMetadataV13? storage;
-  @override
-  List<FunctionMetadataV9>? calls;
-  @override
-  List<EventMetadataV9>? events;
-  @override
-  final List<ModuleConstantMetadataV9> constants;
-  @override
-  final List<ErrorMetadataV9> errors;
 
   ModuleMetadataV13(
-      {required this.name,
+      {required super.name,
       required this.index,
       this.storage,
       super.calls,
       super.events,
-      required this.constants,
-      required this.errors})
-      : super(name: name, constants: constants, errors: errors);
+      required super.constants,
+      required super.errors});
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV13 fromJson(Map<String, dynamic> map) {

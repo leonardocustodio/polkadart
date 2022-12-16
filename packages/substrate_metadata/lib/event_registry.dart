@@ -7,18 +7,13 @@ import 'utils/utils.dart';
 
 class Definition extends scale_codec.Variant {
   final String pallet;
-
-  @override
-  List<scale_codec.Field> fields;
-  @override
-  List<String>? docs;
-  Definition(
-      {this.fields = const <scale_codec.Field>[],
-      required int index,
-      required this.pallet,
-      required String name,
-      this.docs})
-      : super(fields: fields, docs: docs, index: index, name: name);
+  Definition({
+    super.fields = const <scale_codec.Field>[],
+    required super.index,
+    required this.pallet,
+    required super.name,
+    super.docs,
+  });
 }
 
 /// Event Registry
