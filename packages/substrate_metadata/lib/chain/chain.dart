@@ -1,17 +1,17 @@
 import 'dart:typed_data';
 
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    as scale_codec;
 import 'package:substrate_metadata/chain_description/chain_description.model.dart';
 import 'package:substrate_metadata/event_registry.dart';
 import 'package:substrate_metadata/exceptions/exceptions.dart';
 import 'package:substrate_metadata/extrinsic.dart';
 import 'package:substrate_metadata/metadata_decoder.dart';
 import 'package:substrate_metadata/models/models.dart';
-import 'package:substrate_metadata/old/types_bundle.dart';
 import 'package:substrate_metadata/old/legacy_types_model.dart';
+import 'package:substrate_metadata/old/types_bundle.dart';
 import 'package:substrate_metadata/spec_version/spec_version.model.dart';
 import 'package:substrate_metadata/utils/spec_version_maker.dart';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
-    as scale_codec;
 
 class Chain {
   ///
@@ -196,7 +196,7 @@ class Chain {
   ///
   /// final decoded = chain.decodeConstant(constant, chainDescription);
   ///
-  /// final encodedUint8List = chain.encodeConstantsValue(chain.type, decoded, chainDescription);
+  /// final encodedUint8List = chain.encodeConstantsValue(chainDescription.type, decoded, chainDescription);
   /// ```
   Uint8List encodeConstantsValue(
       int type, dynamic value, ChainDescription chainDescription) {
@@ -376,7 +376,7 @@ class Chain {
     }
 
     final ChainDescription description =
-        ChainDescription.getFromMetadata(metadata, types);
+        ChainDescription.fromMetadata(metadata, types);
 
     return description;
   }

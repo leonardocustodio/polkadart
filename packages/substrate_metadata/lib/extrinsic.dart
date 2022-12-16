@@ -37,8 +37,9 @@ class Extrinsic {
     }
   }
 
-  static List<int> encodeExtrinsic(Map<String, dynamic> extrinsic,
-      ChainDescription chainDescription, scale_codec.Codec? codec) {
+  static List<int> encodeExtrinsic(
+      Map<String, dynamic> extrinsic, ChainDescription chainDescription,
+      [scale_codec.Codec? codec]) {
     assertionCheck(extrinsic['version'] == 4, 'unsupported extrinsic version');
     codec = codec ?? scale_codec.Codec(chainDescription.types);
     var encoder = scale_codec.ByteEncoder();
