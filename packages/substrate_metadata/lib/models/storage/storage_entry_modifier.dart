@@ -53,20 +53,16 @@ class StorageEntryTypeV14 {
 }
 
 class StorageEntryTypeV14_Plain extends StorageEntryTypeV14 {
-  @override
-  final int value;
-  const StorageEntryTypeV14_Plain({required this.value})
-      : super(kind: 'Plain', value: value);
+  const StorageEntryTypeV14_Plain({required super.value})
+      : super(kind: 'Plain');
 }
 
 class StorageEntryTypeV14_Map extends StorageEntryTypeV14 {
   final List<StorageHasherV11> hashers;
   final int key;
-  @override
-  final int value;
   const StorageEntryTypeV14_Map(
-      {required this.hashers, required this.key, required this.value})
-      : super(kind: 'Map', value: value);
+      {required this.hashers, required this.key, required super.value})
+      : super(kind: 'Map');
 
   /// Creates Class Object from `Json`
   static StorageEntryTypeV14_Map fromJson(Map<String, dynamic> map) =>

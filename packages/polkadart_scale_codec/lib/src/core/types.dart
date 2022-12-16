@@ -53,12 +53,6 @@ enum Primitive {
 ///
 /// PrimitiveType
 class PrimitiveType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
-
   /// Value from [Primitive] enum which denotes the type of value from Primitives enums
   final Primitive primitive;
   PrimitiveType({required this.primitive, super.path, super.docs})
@@ -68,12 +62,6 @@ class PrimitiveType extends Type with CodecType {
 ///
 /// CompactType
 class CompactType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
-
   /// type which this Type denotes
   final int type;
   CompactType({required this.type, super.path, super.docs})
@@ -83,12 +71,6 @@ class CompactType extends Type with CodecType {
 ///
 /// SequenceType
 class SequenceType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
-
   /// type which this sequence denotes
   final int type;
   SequenceType({required this.type, super.path, super.docs})
@@ -98,11 +80,6 @@ class SequenceType extends Type with CodecType {
 ///
 /// BitSequenceType
 class BitSequenceType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
   final int bitStoreType;
   final int bitOrderType;
   BitSequenceType(
@@ -116,12 +93,6 @@ class BitSequenceType extends Type with CodecType {
 ///
 /// ArrayType
 class ArrayType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
-
   /// length of this array
   final int length;
 
@@ -134,12 +105,6 @@ class ArrayType extends Type with CodecType {
 ///
 /// TupleType
 class TupleType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
-
   /// [Optional] tuple
   final List<int> tuple;
   TupleType({this.tuple = const <int>[], super.path, super.docs})
@@ -149,12 +114,6 @@ class TupleType extends Type with CodecType {
 ///
 /// CompositeType
 class CompositeType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
-
   /// [Optional] fields
   final List<Field> fields;
   CompositeType({this.fields = const <Field>[], super.path, super.docs})
@@ -176,12 +135,6 @@ class Field {
 ///
 /// VariantType
 class VariantType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
-
   /// Variants it can hold
   final List<Variant> variants;
   VariantType({this.variants = const <Variant>[], super.path, super.docs})
@@ -210,12 +163,6 @@ class Variant {
 ///
 /// OptionType
 class OptionType extends Type with CodecType {
-  @override
-  List<String>? docs;
-
-  @override
-  List<String>? path;
-
   /// type which this Optional Value denotes
   final int type;
   OptionType({required this.type, super.path, super.docs})

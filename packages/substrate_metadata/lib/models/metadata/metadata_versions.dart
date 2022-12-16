@@ -3,9 +3,7 @@
 part of models;
 
 class Metadata_V9 extends Metadata {
-  @override
-  final MetadataV9 value;
-  const Metadata_V9({required this.value}) : super(kind: 'V9', value: value);
+  const Metadata_V9({super.value}) : super(kind: 'V9');
 
   /// Creates Class Object from `Json`
   static Metadata_V9 fromJson(Map<String, dynamic> map) =>
@@ -13,9 +11,7 @@ class Metadata_V9 extends Metadata {
 }
 
 class Metadata_V10 extends Metadata {
-  @override
-  final MetadataV10 value;
-  const Metadata_V10({required this.value}) : super(kind: 'V10', value: value);
+  const Metadata_V10({super.value}) : super(kind: 'V10');
 
   /// Creates Class Object from `Json`
   static Metadata_V10 fromJson(Map<String, dynamic> map) =>
@@ -23,9 +19,7 @@ class Metadata_V10 extends Metadata {
 }
 
 class Metadata_V11 extends Metadata {
-  @override
-  final MetadataV11 value;
-  const Metadata_V11({required this.value}) : super(kind: 'V11', value: value);
+  const Metadata_V11({super.value}) : super(kind: 'V11');
 
   /// Creates Class Object from `Json`
   static Metadata_V11 fromJson(Map<String, dynamic> map) =>
@@ -33,9 +27,7 @@ class Metadata_V11 extends Metadata {
 }
 
 class Metadata_V12 extends Metadata {
-  @override
-  final MetadataV12 value;
-  const Metadata_V12({required this.value}) : super(kind: 'V12', value: value);
+  const Metadata_V12({super.value}) : super(kind: 'V12');
 
   /// Creates Class Object from `Json`
   static Metadata_V12 fromJson(Map<String, dynamic> map) =>
@@ -43,9 +35,7 @@ class Metadata_V12 extends Metadata {
 }
 
 class Metadata_V13 extends Metadata {
-  @override
-  final MetadataV13 value;
-  const Metadata_V13({required this.value}) : super(kind: 'V13', value: value);
+  const Metadata_V13({super.value}) : super(kind: 'V13');
 
   /// Creates Class Object from `Json`
   static Metadata_V13 fromJson(Map<String, dynamic> map) =>
@@ -53,9 +43,7 @@ class Metadata_V13 extends Metadata {
 }
 
 class Metadata_V14 extends Metadata {
-  @override
-  final MetadataV14 value;
-  const Metadata_V14({required this.value}) : super(kind: 'V14', value: value);
+  const Metadata_V14({super.value}) : super(kind: 'V14');
 
   /// Creates Class Object from `Json`
   static Metadata_V14 fromJson(Map<String, dynamic> map) =>
