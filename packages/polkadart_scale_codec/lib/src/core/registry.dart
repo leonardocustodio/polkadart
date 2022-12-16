@@ -82,6 +82,8 @@ class TypeRegistry {
     return types;
   }
 
+  //
+  // Reference: https://github.com/subsquid/squid-sdk/blob/5ece47edd3bd8da88643cc6a735b13eea2a5eeb6/substrate/substrate-metadata/src/util.ts#L46
   List<Type> _fixU256Structs(List<Type> types) {
     return types.map((type) {
       bool isU256 = false;
