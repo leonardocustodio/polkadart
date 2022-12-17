@@ -8,7 +8,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final MetadataDecoder decoderInstance = MetadataDecoder();
+  final decoderInstance = MetadataDecoder();
 
   // decode metadata
   final Metadata decodedMetadata = decoderInstance.decodeAsMetadata('0x6d657.....790b807d0b');
