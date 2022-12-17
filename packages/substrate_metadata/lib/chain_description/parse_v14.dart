@@ -153,15 +153,26 @@ abstract class ParseV14 implements _$ParseV14 {
 
   @Cached()
   int _uncheckedExtrinsic() {
+    final List<int> candidates = <int>[];
     for (var i = 0; i < (metadata.lookup?.types.length ?? 0); i++) {
       var def = metadata.lookup!.types[i].type;
       if (def.path.isNotEmpty &&
           def.path[0] == 'sp_runtime' &&
           def.path.last == 'UncheckedExtrinsic') {
-        return i;
+        candidates.add(i);
       }
     }
-    throw Exception('Failed to find UncheckedExtrinsic type in metadata');
+    switch (candidates.length) {
+      case 0:
+        throw Exception('Failed to find UncheckedExtrinsic type in metadata');
+      case 1:
+        return candidates[0];
+      default:
+        return metadata.extrinsic?.type != null &&
+                candidates.contains(metadata.extrinsic!.type!)
+            ? metadata.extrinsic!.type!
+            : candidates[0];
+    }
   }
 
   int _getTypeParameter(int ti, int idx) {

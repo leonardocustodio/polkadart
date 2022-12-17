@@ -62,7 +62,7 @@ extension TypeConverter on List<Type> {
           return def;
         }
       case TypeKind.Compact:
-        var type = getUnwrappedType((def as CompactType).type);
+        final Type type = getUnwrappedType((def as CompactType).type);
         switch (type.kind) {
           case TypeKind.Tuple:
             assertionCheck((type as TupleType).tuple.isEmpty);
@@ -70,6 +70,13 @@ extension TypeConverter on List<Type> {
           case TypeKind.Primitive:
             assertionCheck((type as PrimitiveType).primitive.name[0] == 'U');
             return CodecCompactType(integer: type.primitive);
+          case TypeKind.Composite:
+            assertionCheck((type as CompositeType).fields.length == 1);
+            final num = getUnwrappedType(type.fields[0].type);
+            assertionCheck(num.kind == TypeKind.Primitive);
+            assertionCheck(
+                (num as PrimitiveType).primitive.name.startsWith('U'));
+            return CodecCompactType(integer: num.primitive);
           default:
             throw UnexpectedCaseException('Unexpected TypeKind: ${type.kind}.');
         }

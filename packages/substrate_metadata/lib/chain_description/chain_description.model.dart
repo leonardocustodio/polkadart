@@ -34,23 +34,36 @@ class ChainDescription {
     required this.constants,
   });
 
-  static ChainDescription getFromMetadata(
-      Metadata metadata, LegacyTypes? legacyTypes) {
-    switch (metadata.kind) {
-      case 'V9':
-      case 'V10':
-      case 'V11':
-      case 'V12':
-      case 'V13':
+  static ChainDescription fromMetadata(Metadata metadata,
+      [LegacyTypes? legacyTypes]) {
+    switch (isPreV14(metadata)) {
+      case true:
         assertionCheck(legacyTypes != null,
             'Type definitions are required for metadata ${metadata.kind}');
         return ParseLegacy(metadata, legacyTypes!).getChainDescription();
-      case 'V14':
+      case false:
         return ParseV14((metadata as Metadata_V14).value).getChainDescription();
       default:
         throw UnsupportedMetadataException(
             'Unsupported metadata version: ${metadata.kind}');
     }
+  }
+
+  static int _versionConverter(String version) {
+    return int.parse(version.substring(1));
+  }
+
+  static bool isPreV14(Metadata metadata) {
+    final String version = metadata.kind;
+    final int versionNumber = _versionConverter(version);
+    if (versionNumber < 14) {
+      return true;
+    }
+    if (versionNumber == 14) {
+      return false;
+    }
+    throw UnsupportedMetadataException(
+        'Unsupported metadata version: ${metadata.kind}');
   }
 }
 
