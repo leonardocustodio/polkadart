@@ -53,10 +53,10 @@ dynamic _decodedEvents() {
       'event': {
         'System': {
           'ExtrinsicSuccess': {
-            'dispatchinfo': {
-              'weight': {'reftime': BigInt.from(159790000)},
+            'dispatch_info': {
+              'weight': {'ref_time': BigInt.from(159790000)},
               'class': 'Mandatory',
-              'paysfee': 'Yes'
+              'pays_fee': 'Yes'
             }
           }
         }
@@ -68,10 +68,10 @@ dynamic _decodedEvents() {
       'event': {
         'System': {
           'ExtrinsicSuccess': {
-            'dispatchinfo': {
-              'weight': {'reftime': BigInt.from(250000000)},
+            'dispatch_info': {
+              'weight': {'ref_time': BigInt.from(250000000)},
               'class': 'Mandatory',
-              'paysfee': 'Yes'
+              'pays_fee': 'Yes'
             }
           }
         }
@@ -305,10 +305,10 @@ dynamic _decodedEvents() {
       'event': {
         'System': {
           'ExtrinsicSuccess': {
-            'dispatchinfo': {
-              'weight': {'reftime': BigInt.from(191562000)},
+            'dispatch_info': {
+              'weight': {'ref_time': BigInt.from(191562000)},
               'class': 'Normal',
-              'paysfee': 'Yes'
+              'pays_fee': 'Yes'
             }
           }
         }
@@ -542,10 +542,10 @@ dynamic _decodedEvents() {
       'event': {
         'System': {
           'ExtrinsicSuccess': {
-            'dispatchinfo': {
-              'weight': {'reftime': BigInt.from(191562000)},
+            'dispatch_info': {
+              'weight': {'ref_time': BigInt.from(191562000)},
               'class': 'Normal',
-              'paysfee': 'Yes'
+              'pays_fee': 'Yes'
             }
           }
         }

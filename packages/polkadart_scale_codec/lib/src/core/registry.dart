@@ -282,7 +282,7 @@ class TypeRegistry {
               return CompositeType(
                   path: type.path,
                   docs: type.docs,
-                  fields: convertToCamelCase((type as CompositeType).fields));
+                  fields: (type as CompositeType).fields);
             case TypeKind.Variant:
               return VariantType(
                 path: type.path,
@@ -293,7 +293,7 @@ class TypeRegistry {
                           index: v.index,
                           name: v.name,
                           docs: v.docs,
-                          fields: convertToCamelCase(v.fields),
+                          fields: v.fields,
                         ))
                     .toList(),
               );
@@ -303,23 +303,6 @@ class TypeRegistry {
         })
         .toList()
         .cast();
-  }
-
-  List<Field> convertToCamelCase(List<Field> fields) {
-    return fields.map((f) {
-      if (isNotEmpty(f.name)) {
-        var name = f.name;
-        if (name!.startsWith(RegExp(r'r#'))) {
-          name = name.slice(2);
-        }
-        if (name.words().length > 1) {
-          name = name.camelCase;
-        }
-        return Field(docs: f.docs, type: f.type, name: name);
-      } else {
-        return f;
-      }
-    }).toList();
   }
 
   void define(String typeName, TypeCallback fn) {
