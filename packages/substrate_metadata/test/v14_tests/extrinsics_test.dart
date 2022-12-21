@@ -51,10 +51,10 @@ Map<String, dynamic> _decodedExtrinsicMap() {
         'enter': {
           'data': {
             'bitfields': [],
-            'backedcandidates': [],
+            'backed_candidates': [],
             'disputes': [],
-            'parentheader': {
-              'parenthash': [
+            'parent_header': {
+              'parent_hash': [
                 79,
                 15,
                 211,
@@ -89,7 +89,7 @@ Map<String, dynamic> _decodedExtrinsicMap() {
                 237
               ],
               'number': 7229126,
-              'stateroot': [
+              'state_root': [
                 183,
                 185,
                 34,
@@ -123,7 +123,7 @@ Map<String, dynamic> _decodedExtrinsicMap() {
                 90,
                 6
               ],
-              'extrinsicsroot': [
+              'extrinsics_root': [
                 135,
                 255,
                 17,
