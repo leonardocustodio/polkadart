@@ -1,13 +1,16 @@
+# **PolkaDart**
+
 [![Star on Github](https://img.shields.io/github/stars/rankanizer/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/rankanizer/polkadart)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/156365ed1c65ff0d7b8c/test_coverage)](https://codeclimate.com/github/rankanizer/polkadart/test_coverage)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-purple.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frankanizer%2Fpolkadart.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frankanizer%2Fpolkadart?ref=badge_shield) <!-- markdown-link-check-disable-line -->
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/rankanizer/polkadart)
 
-## PolkaDart
+<img align="right" width="400" src="https://raw.githubusercontent.com/w3f/Grants-Program/00855ef70bc503433dc9fccc057c2f66a426a82b/static/img/badge_black.svg" />
 
 This library provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node, this API provides developers the ability to query a node and interact with the Polkadot or Substrate chains using Dart.
 
-All code is made available with a [permissive Apache-2.0 license](./LICENSE).
+This library is funded by [Web3 Foundation](https://web3.foundation/) via their [Open Grants Program](https://github.com/w3f/Open-Grants-Program)
 
 ## [polkadart-scale-codec](./packages/polkadart_scale_codec/)
 
@@ -93,3 +96,6 @@ You can run all tests from the library by running `docker compose up`.
 | Events                 |   🔴    |
 | Errors                 |   🔴    |
 | SmartContracts         |   🔴    |
+
+## **License**
+This repository is licensed under [Apache 2.0 license](https://github.com/rankanizer/polkadart/blob/main/LICENSE)
