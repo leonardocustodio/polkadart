@@ -515,38 +515,83 @@ class Codec {
   /// Encodes [source] object to `encoder` when [Primitive] is know
   void _encodePrimitive(
       Primitive type, dynamic value, ScaleCodecEncoder encoder) {
-    switch (type) {
-      case Primitive.I8:
-      case Primitive.U8:
-      case Primitive.I16:
-      case Primitive.U16:
-      case Primitive.I32:
-      case Primitive.U32:
+    // name = 'I8' | 'U8' ......;
+    final String name = type.name;
+
+    // Integer and BigInt
+    if (name.startsWith('I') || name.startsWith('U')) {
+      // check for int matching
+      if (name.endsWith('I8') ||
+          name.endsWith('U8') ||
+          name.endsWith('16') ||
+          name.endsWith('32')) {
         assertionCheck(value is int,
             'Needed value of type \'int\' but found ${value.runtimeType}.');
-        break;
-      case Primitive.I64:
-      case Primitive.U64:
-      case Primitive.I128:
-      case Primitive.U128:
-      case Primitive.I256:
-      case Primitive.U256:
+      } else if (name.endsWith('64') ||
+          name.endsWith('128') ||
+          name.endsWith('256')) {
+        // check for BigInt matching
         assertionCheck(value is BigInt,
             'Needed value of type \'BigInt\' but found ${value.runtimeType}.');
-        break;
+      } else {
+        throw UnexpectedCaseException('Unexpected PrimitiveType: $type.');
+      }
+    }
+
+    switch (type) {
+      // signed integers
+      case Primitive.I8:
+        encoder.i8(value);
+        return;
+      case Primitive.I16:
+        encoder.i16(value);
+        return;
+      case Primitive.I32:
+        encoder.i32(value);
+        return;
+      case Primitive.I64:
+        encoder.i64(value);
+        return;
+      case Primitive.I128:
+        encoder.i128(value);
+        return;
+      case Primitive.I256:
+        encoder.i256(value);
+        return;
+      // unsigned integers
+      case Primitive.U8:
+        encoder.u8(value);
+        return;
+      case Primitive.U16:
+        encoder.u16(value);
+        return;
+      case Primitive.U32:
+        encoder.u32(value);
+        return;
+      case Primitive.U64:
+        encoder.u64(value);
+        return;
+      case Primitive.U128:
+        encoder.u128(value);
+        return;
+      case Primitive.U256:
+        encoder.u256(value);
+        return;
+      // boolean
       case Primitive.Boolean:
         assertionCheck(value is bool,
             'Needed value of type \'bool\' but found ${value.runtimeType}.');
-        break;
+        encoder.boolean(value);
+        return;
+      // string
       case Primitive.Str:
         assertionCheck(value is String,
             'Needed value of type \'String\' but found ${value.runtimeType}.');
-        break;
+        encoder.str(value);
+        return;
+      // unknown case
       default:
         throw UnexpectedCaseException('Unexpected PrimitiveType: $type.');
     }
-
-    var mirrorEncoder = reflect(encoder);
-    mirrorEncoder.invoke(Symbol(type.name.toLowerCase()), [value]);
   }
 }
