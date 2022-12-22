@@ -1,6 +1,6 @@
 import 'dart:convert';
-
-import 'package:cryptography/dart.dart';
+import 'dart:typed_data';
+import 'package:pointycastle/digests/blake2b.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
 import 'package:substrate_metadata/exceptions/exceptions.dart';
 
@@ -61,16 +61,9 @@ String sha256(dynamic data) {
     content = jsonEncode(data);
   }
 
-  final algorithm = const DartSha256();
+  final algorithm = Blake2bDigest();
 
-  // sinker to which all the hashes will be appended and then (hashed or digested) at last step;
-  final sink = algorithm.newHashSink();
+  final bytes = algorithm.process(Uint8List.fromList(utf8.encode(content)));
 
-  // add content to sinker to be hashed
-  sink.add(utf8.encode(content));
-
-  // close the sink to be able to hash/digest
-  sink.close();
-
-  return scale.encodeHex(sink.hashSync().bytes);
+  return scale.encodeHex(bytes);
 }

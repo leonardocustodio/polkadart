@@ -1,4 +1,3 @@
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/chain_description/chain_description.model.dart';
 import 'package:substrate_metadata/extrinsic.dart';
 import 'package:substrate_metadata/metadata_decoder.dart';
@@ -18,10 +17,10 @@ void main() {
       final ChainDescription chainDescription =
           ChainDescription.fromMetadata(metadata);
 
-      final List<int> encoded =
+      final String encodedHex =
           Extrinsic.encodeExtrinsic(_decodedExtrinsicMap(), chainDescription);
 
-      expect(encodeHex(encoded), _encodedExtrinsicHex);
+      expect(encodedHex, _encodedExtrinsicHex);
     });
 
     test('Decode Test', () {
@@ -46,6 +45,7 @@ const _encodedExtrinsicHex =
 Map<String, dynamic> _decodedExtrinsicMap() {
   return {
     'version': 4,
+    'extrinsic_length': 294,
     'call': {
       'ParaInherent': {
         'enter': {

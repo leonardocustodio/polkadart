@@ -111,7 +111,8 @@ class Chain {
       throw BlockNotFoundException(blockNumber);
     }
 
-    final List<dynamic> extrinsics = rawBlock.extrinsics.map((hex) {
+    final List<Map<String, dynamic>> extrinsics =
+        rawBlock.extrinsics.map((hex) {
       return Extrinsic.decodeExtrinsic(
           hex, versionDescription.description, versionDescription.codec);
     }).toList();
@@ -236,8 +237,8 @@ class Chain {
 
     final List<String> extrinsics =
         decodedBlockExtrinsics.extrinsics.map((extrinsic) {
-      return scale_codec.encodeHex(Extrinsic.encodeExtrinsic(
-          extrinsic, versionDescription.description, versionDescription.codec));
+      return Extrinsic.encodeExtrinsic(
+          extrinsic, versionDescription.description, versionDescription.codec);
     }).toList();
 
     return RawBlock(blockNumber: blockNumber, extrinsics: extrinsics);
