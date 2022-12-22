@@ -2,7 +2,6 @@ library polkadart_scale_codec_core;
 
 /// imports
 import 'dart:math';
-import 'dart:mirrors';
 import 'dart:core' as core;
 import 'dart:core';
 import 'dart:typed_data';
