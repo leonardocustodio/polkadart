@@ -86,7 +86,10 @@ extension ToJson<T> on T {
         this,
         // handle BigInt and Some
         toEncodable: (value) {
-          return (value is BigInt || value is scale.Some) ? value.toString() : value;
+          if (value is BigInt || value is scale.Some) {
+            return value.toString();
+          }
+          return value;
         },
       );
     }
