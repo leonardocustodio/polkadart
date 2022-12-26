@@ -83,7 +83,8 @@ dynamic _decodedEvents() {
       'event': {
         'System': {
           'KilledAccount': {
-            'account': '270179b49161217dd14c4572b0fbbed18f1974af52f87c5ec6e6fcd6184d952d'
+            'account':
+                '270179b49161217dd14c4572b0fbbed18f1974af52f87c5ec6e6fcd6184d952d'
           }
         }
       },
@@ -94,7 +95,8 @@ dynamic _decodedEvents() {
       'event': {
         'Balances': {
           'DustLost': {
-            'account': '270179b49161217dd14c4572b0fbbed18f1974af52f87c5ec6e6fcd6184d952d',
+            'account':
+                '270179b49161217dd14c4572b0fbbed18f1974af52f87c5ec6e6fcd6184d952d',
             'amount': BigInt.from(2999985)
           }
         }
@@ -106,8 +108,10 @@ dynamic _decodedEvents() {
       'event': {
         'Balances': {
           'Transfer': {
-            'from': '270179b49161217dd14c4572b0fbbed18f1974af52f87c5ec6e6fcd6184d952d',
-            'to': '57680e93f9d60b9be427bd9f7c5b6afe6d3ad3d09372bde3103a6c2595a0685c',
+            'from':
+                '270179b49161217dd14c4572b0fbbed18f1974af52f87c5ec6e6fcd6184d952d',
+            'to':
+                '57680e93f9d60b9be427bd9f7c5b6afe6d3ad3d09372bde3103a6c2595a0685c',
             'amount': BigInt.from(216244053000)
           }
         }
@@ -128,7 +132,8 @@ dynamic _decodedEvents() {
       'event': {
         'Balances': {
           'Reserved': {
-            'who': '14dd41222459d521e9d9cf15c7346abcb2b2137db1926773ed23034c0809e93d',
+            'who':
+                '14dd41222459d521e9d9cf15c7346abcb2b2137db1926773ed23034c0809e93d',
             'amount': BigInt.from(31200003)
           }
         }
@@ -155,7 +160,8 @@ dynamic _decodedEvents() {
       'event': {
         'System': {
           'KilledAccount': {
-            'account': 'ba27afce119b843500f1be93da74c15f40983361f045ee58357b6e167da9e53c'
+            'account':
+                'ba27afce119b843500f1be93da74c15f40983361f045ee58357b6e167da9e53c'
           }
         }
       },
@@ -166,7 +172,8 @@ dynamic _decodedEvents() {
       'event': {
         'Balances': {
           'DustLost': {
-            'account': 'ba27afce119b843500f1be93da74c15f40983361f045ee58357b6e167da9e53c',
+            'account':
+                'ba27afce119b843500f1be93da74c15f40983361f045ee58357b6e167da9e53c',
             'amount': BigInt.from(2999985)
           }
         }
@@ -178,8 +185,10 @@ dynamic _decodedEvents() {
       'event': {
         'Balances': {
           'Transfer': {
-            'from': 'ba27afce119b843500f1be93da74c15f40983361f045ee58357b6e167da9e53c',
-            'to': '57680e93f9d60b9be427bd9f7c5b6afe6d3ad3d09372bde3103a6c2595a0685c',
+            'from':
+                'ba27afce119b843500f1be93da74c15f40983361f045ee58357b6e167da9e53c',
+            'to':
+                '57680e93f9d60b9be427bd9f7c5b6afe6d3ad3d09372bde3103a6c2595a0685c',
             'amount': BigInt.from(59841000000)
           }
         }
@@ -200,7 +209,8 @@ dynamic _decodedEvents() {
       'event': {
         'Balances': {
           'Reserved': {
-            'who': '14dd41222459d521e9d9cf15c7346abcb2b2137db1926773ed23034c0809e93d',
+            'who':
+                '14dd41222459d521e9d9cf15c7346abcb2b2137db1926773ed23034c0809e93d',
             'amount': BigInt.from(31200003)
           }
         }

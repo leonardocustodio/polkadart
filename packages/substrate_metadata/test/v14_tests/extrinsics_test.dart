@@ -54,10 +54,13 @@ Map<String, dynamic> _decodedExtrinsicMap() {
             'backed_candidates': [],
             'disputes': [],
             'parent_header': {
-              'parent_hash': '4f0fd348d45083cfc987db027a6c093b7f2b5d04eea4a9f0c752922cd90ea5ed',
+              'parent_hash':
+                  '4f0fd348d45083cfc987db027a6c093b7f2b5d04eea4a9f0c752922cd90ea5ed',
               'number': 7229126,
-              'state_root': 'b7b922bf8f589915c3042968995ec5f4845a0e47d92d3017df4520a90be65a06',
-              'extrinsics_root': '87ff11c060f52d2b0e15e7c01c86a5c004e89a239426cd50ac5fc6dd9822e470',
+              'state_root':
+                  'b7b922bf8f589915c3042968995ec5f4845a0e47d92d3017df4520a90be65a06',
+              'extrinsics_root':
+                  '87ff11c060f52d2b0e15e7c01c86a5c004e89a239426cd50ac5fc6dd9822e470',
               'digest': {
                 'logs': [
                   {
