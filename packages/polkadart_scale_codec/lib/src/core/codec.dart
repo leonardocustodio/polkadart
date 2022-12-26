@@ -174,11 +174,15 @@ class Codec {
       case TypeKind.Bytes:
         return _decodeBytes(source);
       case TypeKind.BytesArray:
-        return source.bytes((def as CodecBytesArrayType).length);
+        return _decodeBytesArray((def as CodecBytesArrayType).length, source);
       default:
         throw UnexpectedCaseException(
             'Unexpected TypeKind: ${(def as Type).kind}.');
     }
+  }
+
+  String _decodeBytesArray(int length, Source source) {
+    return encodeHex(source.bytes(length)).substring(2);
   }
 
   /// Decodes Array
@@ -440,6 +444,9 @@ class Codec {
   /// Encodes Bytes Array
   void _encodeBytesArray(
       CodecBytesArrayType def, dynamic value, ScaleCodecEncoder encoder) {
+    if (value is String) {
+      value = decodeHex(value).toList();
+    }
     assertionCheck(value is List && value.length == def.length);
     encoder.bytes(value);
   }
