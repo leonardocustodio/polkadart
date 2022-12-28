@@ -84,10 +84,12 @@ extension ToJson<T> on T {
     if (this is List<Map<String, dynamic>> || this is Map<String, dynamic>) {
       return jsonEncode(
         this,
-        // handle BigInt and Some
+        // handle BigInt and Some / None
         toEncodable: (value) {
-          if (value is BigInt || value is scale.Some) {
+          if (value is BigInt) {
             return value.toString();
+          } else if (value is scale.Some || value is scale.NoneOption) {
+            return value.toJson();
           }
           return value;
         },

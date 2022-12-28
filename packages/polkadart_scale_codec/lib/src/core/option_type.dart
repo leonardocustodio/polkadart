@@ -32,6 +32,20 @@ class NoneOption extends _Option implements EquatableMixin {
   String toString() {
     return 'None';
   }
+
+  ///
+  /// Convert to json
+  ///
+  /// Example:
+  ///
+  /// ```
+  /// None.toJson() => {'kind': 'None'}
+  /// ```
+  Map<String, dynamic> toJson() {
+    return {
+      'kind': kind,
+    };
+  }
 }
 
 ///
@@ -49,5 +63,45 @@ class Some<T> extends _Option implements EquatableMixin {
   @override
   String toString() {
     return 'Some(${value.toString()})';
+  }
+
+  ///
+  /// Convert to json
+  ///
+  /// If the value is Some, then convert the value to json
+  ///
+  /// Example:
+  ///
+  /// ```
+  /// Some(Some(1)).toJson() => {'kind': 'Some', 'value': {'kind': 'Some', 'value': 1}}
+  ///
+  /// Some(None).toJson() => {'kind': 'Some', 'value': {'kind': 'None'}}
+  /// ```
+  Map<String, dynamic> toJson() {
+    return {
+      'kind': kind,
+      'value': value is Some
+          ? (value as Some).toJson()
+          : (value == None ? None.toJson() : value),
+    };
+  }
+
+  ///
+  /// Create Some Object from the json
+  ///
+  /// Example:
+  ///
+  /// ```
+  /// Some.fromJson({'kind': 'Some', 'value': {'kind': 'Some', 'value': 1}}) => Some(Some(1))
+  ///
+  /// Some.fromJson({'kind': 'Some', 'value': {'kind': 'None'}}) => Some(None)
+  /// ```
+  static Some fromJson(Map<String, dynamic> json) {
+    if (json['kind'] == 'Some' && json['value'] is Map<String, dynamic>) {
+      return Some.fromJson(json['value']);
+    } else if (json['kind'] == 'None') {
+      return Some(NoneOption());
+    }
+    return Some(json['value']);
   }
 }
