@@ -61,34 +61,15 @@ void main() {
         // Encoding the DecodedBlockExtrinsics
         final RawBlock encodedRawBlock =
             chain.encodeExtrinsics(decodedExtrinsic);
-        try {
-          //
-          // match the extrinsics of `encodedRawBlock` and the original `rawBlock`
-          expect(
-            // encoded
-            encodedRawBlock.extrinsics,
+        //
+        // match the extrinsics of `encodedRawBlock` and the original `rawBlock`
+        expect(
+          // original
+          originalRawBlock.extrinsics,
 
-            // original
-            originalRawBlock.extrinsics,
-          );
-        } catch (e) {
-          //
-          // Decoding the Raw Block
-          final DecodedBlockExtrinsics decodedExtrinsicFromEncoded =
-              chain.decodeExtrinsics(encodedRawBlock);
-          //
-          // Decoding the Raw Block
-          final DecodedBlockExtrinsics decodedExtrinsicFromOriginal =
-              chain.decodeExtrinsics(originalRawBlock);
-
-          expect(
-            // decoded extrinsic from encoded
-            decodedExtrinsicFromEncoded.extrinsics,
-
-            // decoded extrinsic from original
-            decodedExtrinsicFromOriginal.extrinsics,
-          );
-        }
+          // encoded
+          equals(encodedRawBlock.extrinsics),
+        );
       });
     }
   });

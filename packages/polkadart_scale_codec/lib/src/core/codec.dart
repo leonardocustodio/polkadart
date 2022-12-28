@@ -454,17 +454,35 @@ class Codec {
   ///
   /// Decodes Bit Sequence
   List<int> _decodeBitSequence(Source source) {
-    var length = (source.compactLength() / 8).ceil();
-    return source.bytes(length).toList();
+    final int length = source.compactLength();
+    final List<int> bits = source.bytes((length / 8).ceil()).toList();
+
+    final List<int> result = List<int>.filled(length, 0);
+
+    for (var i = 0; i < length; i++) {
+      final index = (i / 8).floor();
+      result[i] = (bits[index] >> i) & 1;
+    }
+
+    return result;
   }
 
   ///
   /// Encodes Bit Sequence
   void _encodeBitSequence(dynamic bits, ScaleCodecEncoder encoder) {
-    assertionCheck(
-        bits is List<int>, 'BitSequence can have bits of type List<int> only.');
-    encoder.compact(bits.length * 8);
-    encoder.bytes(bits);
+    assertionCheck(bits is List<int>,
+        'BitSequence can have bits of type `List<int>` only.');
+
+    encoder.compact(bits.length);
+
+    final List<int> bytes = List<int>.filled((bits.length / 8).ceil(), 0);
+
+    for (var i = 0; i < bits.length; i++) {
+      final index = (i / 8).floor();
+      bytes[index] |= (bits[i] << i);
+    }
+
+    encoder.bytes(bytes);
   }
 
   ///

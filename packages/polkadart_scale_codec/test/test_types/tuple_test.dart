@@ -55,7 +55,7 @@ void main() {
         [255, 255],
         Some(true)
       ];
-      const expectedResult = '0x200008ffff0101';
+      const expectedResult = '0x040008ffff0101';
 
       final registryIndex = registry.getIndex('(BitVec, Bytes, Option<bool>)');
 
@@ -167,7 +167,7 @@ void main() {
         'Given an encoded string when it represents a list of [BitVec, Bytes, Option<bool>] it should decoded',
         () {
       const expectedResult = [
-        [0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
         [255, 255],
         Some(true)
       ];

@@ -69,7 +69,7 @@ void main() {
           encodedEvents.events,
 
           // original block events
-          originalEvent.events,
+          equals(originalEvent.events),
         );
       });
     }
