@@ -104,8 +104,7 @@ void main() {
     test(
         'When \'0x4000000000\' is decoded then result \'[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\' is produced',
         () {
-      final decoded = Codec(types)
-          .decode(usageIndex, '0x4000000000');
+      final decoded = Codec(types).decode(usageIndex, '0x4000000000');
       expect([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], equals(decoded));
     });
   });
