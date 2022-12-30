@@ -39,11 +39,11 @@ class NoneOption extends _Option implements EquatableMixin {
   /// Example:
   ///
   /// ```
-  /// None.toJson() => {'kind': 'None'}
+  /// None.toJson() => {'_kind': 'None'}
   /// ```
   Map<String, dynamic> toJson() {
     return {
-      'kind': kind,
+      '_kind': kind,
     };
   }
 }
@@ -73,13 +73,13 @@ class Some<T> extends _Option implements EquatableMixin {
   /// Example:
   ///
   /// ```
-  /// Some(Some(1)).toJson() => {'kind': 'Some', 'value': {'kind': 'Some', 'value': 1}}
+  /// Some(Some(1)).toJson() => {'_kind': 'Some', 'value': {'_kind': 'Some', 'value': 1}}
   ///
-  /// Some(None).toJson() => {'kind': 'Some', 'value': {'kind': 'None'}}
+  /// Some(None).toJson() => {'_kind': 'Some', 'value': {'_kind': 'None'}}
   /// ```
   Map<String, dynamic> toJson() {
     return {
-      'kind': kind,
+      '_kind': kind,
       'value': value is Some
           ? (value as Some).toJson()
           : (value == None ? None.toJson() : value),
@@ -92,14 +92,14 @@ class Some<T> extends _Option implements EquatableMixin {
   /// Example:
   ///
   /// ```
-  /// Some.fromJson({'kind': 'Some', 'value': {'kind': 'Some', 'value': 1}}) => Some(Some(1))
+  /// Some.fromJson({'_kind': 'Some', 'value': {'_kind': 'Some', 'value': 1}}) => Some(Some(1))
   ///
-  /// Some.fromJson({'kind': 'Some', 'value': {'kind': 'None'}}) => Some(None)
+  /// Some.fromJson({'_kind': 'Some', 'value': {'_kind': 'None'}}) => Some(None)
   /// ```
   static Some fromJson(Map<String, dynamic> json) {
-    if (json['kind'] == 'Some' && json['value'] is Map<String, dynamic>) {
+    if (json['_kind'] == 'Some' && json['value'] is Map<String, dynamic>) {
       return Some.fromJson(json['value']);
-    } else if (json['kind'] == 'None') {
+    } else if (json['_kind'] == 'None') {
       return Some(NoneOption());
     }
     return Some(json['value']);
