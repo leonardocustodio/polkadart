@@ -5,6 +5,7 @@ import 'dart:math';
 import 'dart:core' as core;
 import 'dart:core';
 import 'dart:typed_data';
+import 'package:bit_array/bit_array.dart';
 import 'package:utility/utility.dart';
 import 'package:equatable/equatable.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';

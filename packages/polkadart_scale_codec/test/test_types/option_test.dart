@@ -11,7 +11,7 @@ void main() {
         'c': 'Option<u128>',
         'd': 'Option<i8>',
         'e': 'Option<Compact<u8>>',
-        'f': 'Option<BitVec<u8>>',
+        'f': 'Option<BitVec<u8, bitvec::order::Lsb0>>',
       },
     },
   );
@@ -131,39 +131,39 @@ void main() {
   }
 
   //
-  // Encodes type: `Option<BitVec<u8>>`
-  group('Encode Option<BitVec<u8>>:', () {
+  // Encodes type: `Option<BitVec<u8, bitvec::order::Lsb0>>`
+  group('Encode Option<BitVec<u8, bitvec::order::Lsb0>>:', () {
     test(
         'Lowest acceptable value is Some([0]) and the output should be \'0x010400\'',
         () {
       final encoded =
-          codec.encode(registry.getIndex('Option<BitVec<u8>>'), Some([0]));
+          codec.encode(registry.getIndex('Option<BitVec<u8, bitvec::order::Lsb0>>'), Some([0]));
       expect('0x010400', equals(encoded));
     });
 
     test(
         'Highest acceptable value is Some([1, 1, 1, 1, 1, 1, 1, 1]) and the output should be \'0x0120ff\'',
         () {
-      final encoded = codec.encode(registry.getIndex('Option<BitVec<u8>>'),
+      final encoded = codec.encode(registry.getIndex('Option<BitVec<u8, bitvec::order::Lsb0>>'),
           Some([1, 1, 1, 1, 1, 1, 1, 1]));
       expect('0x0120ff', equals(encoded));
     });
 
     test('None should encode to \'0x00\'', () {
       final encoded =
-          codec.encode(registry.getIndex('Option<BitVec<u8>>'), None);
+          codec.encode(registry.getIndex('Option<BitVec<u8, bitvec::order::Lsb0>>'), None);
       expect('0x00', equals(encoded));
     });
   });
 
   //
-  // Decodes type: `Option<BitVec<u8>>`
-  group('Decode Option<BitVec<u8>>:', () {
+  // Decodes type: `Option<BitVec<u8, bitvec::order::Lsb0>>`
+  group('Decode Option<BitVec<u8, bitvec::order::Lsb0>>:', () {
     test(
         'On decoding \'0x012000\' we must get lowest acceptable value: Some([0, 0, 0, 0, 0, 0, 0, 0])',
         () {
       final decoded =
-          codec.decode(registry.getIndex('Option<BitVec<u8>>'), '0x012000');
+          codec.decode(registry.getIndex('Option<BitVec<u8, bitvec::order::Lsb0>>'), '0x012000');
       expect(Some([0, 0, 0, 0, 0, 0, 0, 0]), equals(decoded));
     });
 
@@ -171,13 +171,13 @@ void main() {
         'On decoding \'0x0120ff\' we must get lowest acceptable value: Some([1, 1, 1, 1, 1, 1, 1, 1])',
         () {
       final decoded =
-          codec.decode(registry.getIndex('Option<BitVec<u8>>'), '0x0120ff');
+          codec.decode(registry.getIndex('Option<BitVec<u8, bitvec::order::Lsb0>>'), '0x0120ff');
       expect(Some([1, 1, 1, 1, 1, 1, 1, 1]), equals(decoded));
     });
 
     test('\'0x00\' should decode to None', () {
       final decoded =
-          codec.decode(registry.getIndex('Option<BitVec<u8>>'), '0x00');
+          codec.decode(registry.getIndex('Option<BitVec<u8, bitvec::order::Lsb0>>'), '0x00');
       expect(None, equals(decoded));
     });
   });

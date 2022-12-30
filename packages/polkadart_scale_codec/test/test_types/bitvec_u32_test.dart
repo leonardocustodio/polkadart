@@ -3,123 +3,124 @@ import 'package:test/test.dart';
 
 void main() {
   //
-  // Encodes type: `BitVec<u8, bitvec::order::Lsb0>`
-  group('Encode BitVec<u8, bitvec::order::Lsb0>:', () {
+  // Encodes type: `BitVec<u32, bitvec::order::Lsb0>`
+  group('Encode BitVec<u32, bitvec::order::Lsb0>:', () {
     // Creates the registry for parsing the types
     final registry = TypeRegistry();
 
     // specifying which type to use.
-    final usageIndex = registry.getIndex('BitVec<u8, bitvec::order::Lsb0>');
+    final usageIndex = registry.getIndex('BitVec<u32, bitvec::order::Lsb0>');
 
     // fetching the parsed types from `Json` to `Type`
     final types = registry.getTypes();
     test(
-        'When \'[1, 1, 0, 1, 1]\' is encoded then result \'0x141b\' is produced',
+        'When \'[1, 1, 0, 1, 1]\' is encoded then result \'0x141b000000\' is produced',
         () {
       final encoded = Codec(types).encode(usageIndex, [1, 1, 0, 1, 1]);
-      expect('0x141b', equals(encoded));
+      expect('0x141b000000', equals(encoded));
     });
 
     test(
-        'When \'[1, 1, 0, 1, 1, 0]\' is encoded then result \'0x181b\' is produced',
+        'When \'[1, 1, 0, 1, 1, 0]\' is encoded then result \'0x181b000000\' is produced',
         () {
       final encoded = Codec(types).encode(usageIndex, [1, 1, 0, 1, 1, 0]);
-      expect('0x181b', equals(encoded));
+      expect('0x181b000000', equals(encoded));
     });
 
     test(
-        'When \'[1, 1, 0, 1, 1, 0, 0]\' is encoded then result \'0x1c1b\' is produced',
+        'When \'[1, 1, 0, 1, 1, 0, 0]\' is encoded then result \'0x1c1b000000\' is produced',
         () {
       final encoded = Codec(types).encode(usageIndex, [1, 1, 0, 1, 1, 0, 0]);
-      expect('0x1c1b', equals(encoded));
+      expect('0x1c1b000000', equals(encoded));
     });
 
     test(
-        'When \'[1, 1, 1, 1, 1, 0, 1]\' is encoded then result \'0x1c5f\' is produced',
+        'When \'[1, 1, 1, 1, 1, 0, 1]\' is encoded then result \'0x1c5f000000\' is produced',
         () {
       final encoded = Codec(types).encode(usageIndex, [1, 1, 1, 1, 1, 0, 1]);
-      expect('0x1c5f', equals(encoded));
+      expect('0x1c5f000000', equals(encoded));
     });
 
     test(
-        'When \'[1, 1, 0, 1, 1, 0, 0, 0]\' is encoded then result \'0x201b\' is produced',
+        'When \'[1, 1, 0, 1, 1, 0, 0, 0]\' is encoded then result \'0x201b000000\' is produced',
         () {
       final encoded = Codec(types).encode(usageIndex, [1, 1, 0, 1, 1, 0, 0, 0]);
-      expect('0x201b', equals(encoded));
+      expect('0x201b000000', equals(encoded));
     });
 
     test(
-        'When \'[1, 1, 1, 1, 1, 1, 1, 1]\' is encoded then result \'0x20ff\' is produced',
+        'When \'[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\' is encoded then result \'0x4000000000\' is produced',
         () {
-      final encoded = Codec(types).encode(usageIndex, [1, 1, 1, 1, 1, 1, 1, 1]);
-      expect('0x20ff', equals(encoded));
+      final encoded = Codec(types)
+          .encode(usageIndex, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      expect('0x4000000000', equals(encoded));
     });
   });
 
-  group('Decode BitVec<u8, bitvec::order::Lsb0>: ', () {
+  group('Decode BitVec<u32, bitvec::order::Lsb0>:', () {
     // Creates the registry for parsing the types
     final registry = TypeRegistry();
 
     // specifying which type to use.
-    final usageIndex = registry.getIndex('BitVec<u8, bitvec::order::Lsb0>');
+    final usageIndex = registry.getIndex('BitVec<u32, bitvec::order::Lsb0>');
 
     // fetching the parsed types from `Json` to `Type`
     final types = registry.getTypes();
     test(
-        'When \'0x141b\' is decoded then result \'[1, 1, 0, 1, 1]\' is produced',
+        'When \'0x141b000000\' is decoded then result \'[1, 1, 0, 1, 1]\' is produced',
         () {
-      final decoded = Codec(types).decode(usageIndex, '0x141b');
+      final decoded = Codec(types).decode(usageIndex, '0x141b000000');
       expect([1, 1, 0, 1, 1], equals(decoded));
     });
 
     test(
-        'When \'0x181b\' is decoded then result \'[1, 1, 0, 1, 1, 0]\' is produced',
+        'When \'0x181b000000\' is decoded then result \'[1, 1, 0, 1, 1, 0]\' is produced',
         () {
-      final decoded = Codec(types).decode(usageIndex, '0x181b');
+      final decoded = Codec(types).decode(usageIndex, '0x181b000000');
       expect([1, 1, 0, 1, 1, 0], equals(decoded));
     });
 
     test(
-        'When \'0x1c1b\' is decoded then result \'[1, 1, 0, 1, 1, 0, 0]\' is produced',
+        'When \'0x1c1b000000\' is decoded then result \'[1, 1, 0, 1, 1, 0, 0]\' is produced',
         () {
-      final decoded = Codec(types).decode(usageIndex, '0x1c1b');
+      final decoded = Codec(types).decode(usageIndex, '0x1c1b000000');
       expect([1, 1, 0, 1, 1, 0, 0], equals(decoded));
     });
 
     test(
-        'When \'0x1c5f\' is decoded then result \'[1, 1, 1, 1, 1, 0, 1]\' is produced',
+        'When \'0x1c5f000000\' is decoded then result \'[1, 1, 1, 1, 1, 0, 1]\' is produced',
         () {
-      final decoded = Codec(types).decode(usageIndex, '0x1c5f');
+      final decoded = Codec(types).decode(usageIndex, '0x1c5f000000');
       expect([1, 1, 1, 1, 1, 0, 1], equals(decoded));
     });
 
     test(
-        'When \'0x201b\' is decoded then result \'[1, 1, 0, 1, 1, 0, 0, 0]\' is produced',
+        'When \'0x201b000000\' is decoded then result \'[1, 1, 0, 1, 1, 0, 0, 0]\' is produced',
         () {
-      final decoded = Codec(types).decode(usageIndex, '0x201b');
+      final decoded = Codec(types).decode(usageIndex, '0x201b000000');
       expect([1, 1, 0, 1, 1, 0, 0, 0], equals(decoded));
     });
 
     test(
-        'When \'0x20ff\' is decoded then result \'[1, 1, 1, 1, 1, 1, 1, 1]\' is produced',
+        'When \'0x4000000000\' is decoded then result \'[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\' is produced',
         () {
-      final decoded = Codec(types).decode(usageIndex, '0x20ff');
-      expect([1, 1, 1, 1, 1, 1, 1, 1], equals(decoded));
+      final decoded = Codec(types)
+          .decode(usageIndex, '0x4000000000');
+      expect([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], equals(decoded));
     });
   });
-
   {
     // Creates the registry for parsing the types
     final registry = TypeRegistry();
 
     // specifying which type to use.
-    final usageIndex = registry.getIndex('BitVec<u8, bitvec::order::Lsb0>');
+    final usageIndex = registry.getIndex('BitVec<u32, bitvec::order::Lsb0>');
 
     // fetching the parsed types from `Json` to `Type`
     final types = registry.getTypes();
     //
-    // Exception on Encode at (lowest - 1) and (highest + 1): `BitVec<u8, bitvec::order::Lsb0>`
-    group('Exception on Encode BitVec<u8, bitvec::order::Lsb0>:', () {
+    // Exception on Encode at (lowest - 1) and (highest + 1): `BitVec<u32, bitvec::order::Lsb0>`
+    group('Exception on Encode BitVec<u32, bitvec::order::Lsb0>:', () {
       test(
           'should throw exception \'UnexpectedCaseException\' when encoding [-1] which is 1 lesser than lowest acceptable.',
           () {
@@ -142,10 +143,10 @@ void main() {
     });
 
     //
-    // Exception on Decode at wrong value type: `BitVec<u8, bitvec::order::Lsb0>`
-    group('Exception on Decode BitVec<u8, bitvec::order::Lsb0>:', () {
+    // Exception on Decode at wrong value type: `BitVec<u32, bitvec::order::Lsb0>`
+    group('Exception on Decode BitVec<u32, bitvec::order::Lsb0>:', () {
       test(
-          'On decoding \'integer\' value should throw exception \'AssertionException\' for BitVec<u8, bitvec::order::Lsb0>',
+          'On decoding \'integer\' value should throw exception \'AssertionException\' for BitVec<u32, bitvec::order::Lsb0>',
           () {
         final exceptionMessage =
             'Source(data) -> `data` should be either String, List<int> or Uint8List.';
@@ -156,7 +157,7 @@ void main() {
       });
 
       test(
-          'On decoding \'double\' should throw exception \'AssertionException\' for BitVec<u8, bitvec::order::Lsb0>',
+          'On decoding \'double\' should throw exception \'AssertionException\' for BitVec<u32, bitvec::order::Lsb0>',
           () {
         final exceptionMessage =
             'Source(data) -> `data` should be either String, List<int> or Uint8List.';
@@ -168,10 +169,10 @@ void main() {
     });
 
     //
-    // Exception on Encode at wrong value type: `BitVec<u8, bitvec::order::Lsb0>`
-    group('Exception on Encode BitVec<u8, bitvec::order::Lsb0>:', () {
+    // Exception on Encode at wrong value type: `BitVec<u32, bitvec::order::Lsb0>`
+    group('Exception on Encode BitVec<u32, bitvec::order::Lsb0>:', () {
       test(
-          'On encoding \'integer\' value should throw exception \'AssertionException\' for BitVec<u8, bitvec::order::Lsb0>',
+          'On encoding \'integer\' value should throw exception \'AssertionException\' for BitVec<u32, bitvec::order::Lsb0>',
           () {
         final exceptionMessage =
             'BitSequence can have bits of type `List<int>` only.';
@@ -182,7 +183,7 @@ void main() {
       });
 
       test(
-          'On encoding \'float\' value should throw exception \'AssertionException\' for BitVec<u8, bitvec::order::Lsb0>',
+          'On encoding \'float\' value should throw exception \'AssertionException\' for BitVec<u32, bitvec::order::Lsb0>',
           () {
         final exceptionMessage =
             'BitSequence can have bits of type `List<int>` only.';

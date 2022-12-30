@@ -15,12 +15,6 @@ class TypeRegistry {
 
   /// [Private]
   ///
-  /// HashMap to store index of already looked ([typeExp] as String).
-  /// So as to look back and quickly pin-point the index of the desired types to be used.
-  final Map<String, int> _fastLookup = <String, int>{};
-
-  /// [Private]
-  ///
   /// Allows to add custom Definitions by
   final Map<String, TypeCallback> _definitions = <String, TypeCallback>{};
 
@@ -338,8 +332,8 @@ class TypeRegistry {
   int _use(dynamic typeExp, {String? pallet}) {
     RegistryType type;
     if (typeExp is String) {
-      if (_fastLookup[typeExp] != null) {
-        return _fastLookup[typeExp]!;
+      if (_lookup[typeExp] != null) {
+        return _lookup[typeExp]!;
       }
       type = TypeExpParser(typeExp).parse();
       type = _normalizeType(type, pallet);
@@ -355,7 +349,6 @@ class TypeRegistry {
       _types.add(DoNotConstructType());
       index = _types.length - 1;
       _lookup[key] = index;
-      _fastLookup[typeExp is String ? typeExp : key] = index;
       _types[index] = _buildScaleType(type);
     }
     return index;
@@ -526,12 +519,36 @@ class TypeRegistry {
       case 'Vec':
         var param = _use(assertOneParam(type));
         return SequenceType(type: param);
-
+      case 'Lsb0':
+        return TupleType(path: ['bitvec', 'order', 'Lsb0']);
+      case 'Msb0':
+        return TupleType(path: ['bitvec', 'order', 'Msb0']);
       case 'BitVec':
-        return BitSequenceType(
-          bitStoreType: _use('U8'),
-          bitOrderType: -1,
-        );
+        {
+          switch (type.params.length) {
+            case 0:
+              return BitSequenceType(
+                bitStoreType: _use('U8'),
+                bitOrderType: _use('bitvec::order::Lsb0'),
+              );
+            case 2:
+              final resgitryList = assertTwoParams(type);
+              final bit = resgitryList[0];
+              assertionCheck(
+                  bit is RegistryNamedType &&
+                      bit.name.toLowerCase().startsWith('u'),
+                  'BitVec first param must be u8, u16, u32, u64, u128 or u256');
+              final int storeTypeIndex = _use(resgitryList[0]);
+              final int orderTypeIndex = _use(resgitryList[1]);
+              return BitSequenceType(
+                bitStoreType: storeTypeIndex,
+                bitOrderType: orderTypeIndex,
+              );
+            default:
+              throw UnexpectedCaseException(
+                  'Unexpected BitVec initialization. Accepted: BitVec, BitVec<u8, bitvec::order::Lsb0>, BitVec<u32, bitvec::order::Lsb0>');
+          }
+        }
       case 'Option':
         {
           var param = _use(assertOneParam(type));
@@ -678,7 +695,7 @@ RegistryType assertOneParam(RegistryNamedType type) {
         'Invalid type ${type.toString()}: one type parameter expected');
   }
   var param = type.params[0];
-  if (param is int) {
+  if (param is! RegistryType) {
     throw Exception(
         'Invalid type ${type.toString()}: type parameter should refer to a type, not to bit size');
   }
@@ -691,12 +708,12 @@ List<RegistryType> assertTwoParams(RegistryNamedType type) {
         'Invalid type ${type.toString()}: two type parameters expected');
   }
   var param1 = type.params[0];
-  if (param1 is int) {
+  if (param1 is! RegistryType) {
     throw Exception(
         'Invalid type ${type.toString()}: first type parameter should refer to a type, not to bit size');
   }
   var param2 = type.params[1];
-  if (param2 is int) {
+  if (param2 is! RegistryType) {
     throw Exception(
         'Invalid type ${type.toString()}: second type parameter should refer to a type, not to bit size');
   }

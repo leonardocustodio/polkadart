@@ -30,7 +30,7 @@ extension TypeConverter on List<Type> {
             next = tuple[0];
             break;
           } else {
-            return TupleType(tuple: tuple);
+            return TupleType(tuple: tuple, path: def.path, docs: def.docs);
           }
         } else {
           return def;

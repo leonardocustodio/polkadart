@@ -158,7 +158,7 @@ class Codec {
       case TypeKind.Compact:
         return _decodeCompact((def as CodecCompactType), source);
       case TypeKind.BitSequence:
-        return _decodeBitSequence(source);
+        return _decodeBitSequence((def as BitSequenceType), source);
       case TypeKind.Array:
         return _decodeArray((def as ArrayType), source);
       case TypeKind.Sequence:
@@ -289,7 +289,7 @@ class Codec {
         encoder.compact(value);
         break;
       case TypeKind.BitSequence:
-        _encodeBitSequence(value, encoder);
+        _encodeBitSequence((def as BitSequenceType), value, encoder);
         break;
       case TypeKind.Array:
         _encodeArray((def as ArrayType), value, encoder);
@@ -453,36 +453,80 @@ class Codec {
 
   ///
   /// Decodes Bit Sequence
-  List<int> _decodeBitSequence(Source source) {
+  List<int> _decodeBitSequence(BitSequenceType def, Source source) {
+    // get compacted length for filling result
     final int length = source.compactLength();
-    final List<int> bits = source.bytes((length / 8).ceil()).toList();
 
-    final List<int> result = List<int>.filled(length, 0);
+    // get the capacity of the bit sequence
+    final int capacity = max(length, _getBitSequenceCapacity(def.bitStoreType));
 
-    for (var i = 0; i < length; i++) {
-      final index = (i / 8).floor();
-      result[i] = (bits[index] >> i) & 1;
+    // get the encoded bytes from the source
+    final List<int> bytes = source.bytes((capacity / 8).ceil()).toList();
+
+    // get the extra bit length so to form a 4 * Uint8List
+    final int extraBitLength = capacity - bytes.length;
+
+    // add the 0 to the bits
+    for (var i = 0; i < extraBitLength; i++) {
+      bytes.add(0);
     }
 
-    return result;
+    final BitArray bitArray = BitArray.fromUint8List(Uint8List.fromList(bytes));
+
+    final List<int> bits = List.filled(length, 0);
+
+    for (var i = 0; i < length; i++) {
+      bits[i] = bitArray[i] ? 1 : 0;
+    }
+
+    return bits;
   }
 
   ///
   /// Encodes Bit Sequence
-  void _encodeBitSequence(dynamic bits, ScaleCodecEncoder encoder) {
+  void _encodeBitSequence(
+      BitSequenceType def, dynamic bits, ScaleCodecEncoder encoder) {
     assertionCheck(bits is List<int>,
         'BitSequence can have bits of type `List<int>` only.');
 
+    int capacity = max(bits.length, _getBitSequenceCapacity(def.bitStoreType));
+
+    capacity = (capacity / 8).ceil() * 8;
+
     encoder.compact(bits.length);
 
-    final List<int> bytes = List<int>.filled((bits.length / 8).ceil(), 0);
-
+    final bitArray = BitArray(capacity);
     for (var i = 0; i < bits.length; i++) {
-      final index = (i / 8).floor();
-      bytes[index] |= (bits[i] << i);
+      switch (bits[i]) {
+        case 0:
+          bitArray[i] = false;
+          break;
+        case 1:
+          bitArray[i] = true;
+          break;
+        default:
+          throw UnexpectedCaseException(
+              'Invalid byte, unable to encode $bits.');
+      }
     }
 
-    encoder.bytes(bytes);
+    encoder.bytes(
+        bitArray.byteBuffer.asUint8List(0, (capacity / 8).ceil()).toList());
+  }
+
+  int _getBitSequenceCapacity(int bitStoreTypeIndex) {
+    // setting default capacity to 8
+    if (_types[bitStoreTypeIndex].kind != TypeKind.Primitive) {
+      return 8;
+    }
+    final type = _types[bitStoreTypeIndex] as PrimitiveType;
+    final name = type.primitive.name.toLowerCase();
+    if (name.startsWith('u') == false) {
+      throw UnexpectedCaseException(
+          'BitVec can have Primitives types of unsigned bit only.');
+    }
+
+    return int.parse(name.substring(1));
   }
 
   ///
