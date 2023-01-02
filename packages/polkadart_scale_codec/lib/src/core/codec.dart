@@ -523,7 +523,7 @@ class Codec {
     final name = type.primitive.name.toLowerCase();
     if (name.startsWith('u') == false) {
       throw UnexpectedCaseException(
-          'BitVec can have Primitives types of unsigned bit only.');
+          'Expected unsigned bit with `u` prefix, but got $name which can't be decoded');
     }
 
     return int.parse(name.substring(1));
