@@ -524,31 +524,7 @@ class TypeRegistry {
       case 'Msb0':
         return TupleType(path: ['bitvec', 'order', 'Msb0']);
       case 'BitVec':
-        {
-          switch (type.params.length) {
-            case 0:
-              return BitSequenceType(
-                bitStoreType: _use('U8'),
-                bitOrderType: _use('bitvec::order::Lsb0'),
-              );
-            case 2:
-              final resgitryList = assertTwoParams(type);
-              final bit = resgitryList[0];
-              assertionCheck(
-                  bit is RegistryNamedType &&
-                      bit.name.toLowerCase().startsWith('u'),
-                  'BitVec first param must be u8, u16, u32, u64, u128 or u256');
-              final int storeTypeIndex = _use(resgitryList[0]);
-              final int orderTypeIndex = _use(resgitryList[1]);
-              return BitSequenceType(
-                bitStoreType: storeTypeIndex,
-                bitOrderType: orderTypeIndex,
-              );
-            default:
-              throw UnexpectedCaseException(
-                  'Unexpected BitVec initialization. Accepted: BitVec, BitVec<u8, bitvec::order::Lsb0>, BitVec<u32, bitvec::order::Lsb0>');
-          }
-        }
+        return _getBitSequenceType(type);
       case 'Option':
         {
           var param = _use(assertOneParam(type));
@@ -570,6 +546,36 @@ class TypeRegistry {
     }
 
     throw Exception('Type ${type.name} is not defined');
+  }
+
+  ///
+  ///
+  ///
+  BitSequenceType _getBitSequenceType(RegistryNamedType type) {
+    switch (type.params.length) {
+      case 0:
+        return BitSequenceType(
+          bitStoreType: _use('U8'),
+          bitOrderType: _use('bitvec::order::Lsb0'),
+        );
+      case 2:
+        final resgitryList = assertTwoParams(type);
+        final bit = resgitryList[0];
+        assertionCheck(
+            bit is RegistryNamedType, 'Expected bit to be RegistryNamedType.');
+        assertionCheck(
+            (bit as RegistryNamedType).name.toLowerCase().startsWith('u'),
+            'BitVec first param must be u8, u16, u32, u64, u128 or u256');
+        final int storeTypeIndex = _use(resgitryList[0]);
+        final int orderTypeIndex = _use(resgitryList[1]);
+        return BitSequenceType(
+          bitStoreType: storeTypeIndex,
+          bitOrderType: orderTypeIndex,
+        );
+      default:
+        throw UnexpectedCaseException(
+            'Unexpected BitVec initialization. Accepted: BitVec, BitVec<u8, bitvec::order::Lsb0>, BitVec<u32, bitvec::order::Lsb0>');
+    }
   }
 
   ///
