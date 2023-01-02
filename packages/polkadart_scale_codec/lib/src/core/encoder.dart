@@ -110,7 +110,7 @@ abstract class ScaleCodecEncoder {
   void str(String value) {
     List<int> encodedBytes = utf8Encoder(value);
     compact(encodedBytes.length);
-    bytes(Uint8List.fromList(encodedBytes).toList());
+    bytes(encodedBytes);
   }
 
   /// write boolean value to data as `int`.

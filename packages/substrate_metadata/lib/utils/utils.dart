@@ -67,3 +67,34 @@ String sha256(dynamic data) {
 
   return scale.encodeHex(bytes);
 }
+
+/// Returns normalized Json to Human readable format
+extension ToJson<T> on T {
+  T toJson() {
+    if (this is List<T>) {
+      return (this as List<T>).map((T e) => e.toJson()).toList() as T;
+    }
+    if (this is List<Map<String, dynamic>> || this is Map<String, dynamic>) {
+      return jsonDecode(toHuman());
+    }
+    return this;
+  }
+
+  String toHuman() {
+    if (this is List<Map<String, dynamic>> || this is Map<String, dynamic>) {
+      return jsonEncode(
+        this,
+        // handle BigInt and Some / None
+        toEncodable: (value) {
+          if (value is BigInt) {
+            return value.toString();
+          } else if (value is scale.Some || value is scale.NoneOption) {
+            return value.toJson();
+          }
+          return value;
+        },
+      );
+    }
+    return toString();
+  }
+}
