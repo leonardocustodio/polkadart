@@ -786,6 +786,8 @@ Primitive? asPrimitive(String name) {
       return Primitive.Str;
     case 'char':
       return Primitive.Char;
+    case 'extrinsicera':
+      return Primitive.ExtrinsicEra;
     default:
       return null;
   }

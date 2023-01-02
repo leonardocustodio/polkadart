@@ -48,6 +48,10 @@ enum Primitive {
 
   /// Single Character
   Char,
+
+  /// Mocking Extrinsic Era as primitive for quick fix.
+  /// TODO: Issue: #183 : Remove this quick-fix once Extrinsic Era is implemented in Generic Way
+  ExtrinsicEra,
 }
 
 ///

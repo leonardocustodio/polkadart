@@ -276,3 +276,70 @@ int unsignedIntByteLength(BigInt value) {
   }
   return length;
 }
+
+///
+/// Converts little endian integer to hex
+/// [value] - little endian integer
+/// [length] - length of the integer
+/// Returns: `Uint8List`
+///
+/// Example:
+/// ```dart
+/// int value = 51;
+/// int length = 2;
+/// Uint8List hex = littleIntToHex(value, length);
+/// // hex = [51, 0]
+/// ```
+Uint8List littleIntToUint8List(int value, int length) {
+  final String val = value.toRadixString(2).padLeft(length * 8, '0');
+  final String flippedBits = flipBits(val);
+  final gmp = BigInt.parse(flippedBits, radix: 2)
+      .toRadixString(16)
+      .padLeft(length * 2, '0');
+  final buffer = Uint8List.fromList(decodeHex(gmp));
+  return buffer;
+}
+
+///
+/// Flips bits
+/// [bitString] - bit string
+/// Returns: `String`
+///
+/// Example:
+/// ```dart
+/// String bitString = '000000000000000000001010';
+/// String flippedBits = flipBits(bitString);
+/// // flippedBits = '101010000000000000000000'
+/// ```
+String flipBits(String bitString) {
+  final length = bitString.length;
+
+  if (length % 8 != 0) {
+    throw UnexpectedCaseException('Bit string length must be a multiple of 8');
+  }
+
+  var newString = '';
+  for (var i = length; i >= 0; i -= 8) {
+    newString += bitString.substring(i, (i + 8).clamp(0, length));
+  }
+
+  return newString;
+}
+
+///
+/// Counts the number of leading zeros in the binary representation of [value].
+///
+/// Example:
+/// ```dart
+/// int value = 1048576;
+/// int zero = countZeros(value);
+/// // zero = 20
+/// ```
+int countZeros(int value) {
+  var zero = 0;
+  while ((value & 1) == 0) {
+    zero += 1;
+    value = value >> 1;
+  }
+  return zero;
+}

@@ -545,6 +545,62 @@ class Codec {
     }
   }
 
+  ///
+  /// Decodes EraExtrinsic
+  Map<String, dynamic> _decodeExtrinsicEra(Source source) {
+    final optionData = source.bytes(1).toList();
+
+    if (optionData[0] == 0) {
+      return {'period': 0, 'phase': 0};
+    }
+
+    final bytes = decodeHex(
+      encodeHex(optionData).replaceAll(RegExp(r'0x'), '') +
+          encodeHex(source.bytes(1).toList()).replaceAll(RegExp(r'0x'), ''),
+    ).toList();
+
+    final encoded = bytes[0] + (bytes[1] << 8);
+
+    final period = 2 << (encoded % (1 << 4));
+
+    final phase = (encoded >> 4) * max(period >> 12, 1);
+
+    return {'period': period, 'phase': phase};
+  }
+
+  ///
+  /// Encodes Extrinsic Era
+  void _encodeExtrinsicEra(dynamic value, ScaleCodecEncoder encoder) {
+    if (value is String) {
+      if (value == '00') {
+        encoder.bytes(decodeHex(value).toList());
+        return;
+      }
+      throw UnexpectedCaseException('Invalid era value');
+    }
+
+    if (value is Map &&
+        value.containsKey('period') &&
+        value.containsKey('phase')) {
+      final int period = value['period'];
+      final int phase = value['phase'];
+      //
+      // It's condition of immortal
+      if (period == 0 && phase == 0) {
+        encoder.bytes(decodeHex("00").toList());
+        return;
+      }
+
+      final encoded = min(15, max(1, countZeros(period) - 1)) |
+          ((phase / max(period >> 12, 1)).round() << 4);
+
+      encoder.bytes(littleIntToUint8List(encoded, 2));
+      return;
+    }
+
+    throw UnexpectedCaseException('Invalid era value');
+  }
+
   /// Decodes [source] object when Primitive is known.
   dynamic _decodePrimitiveFromSource(Primitive type, Source source) {
     switch (type) {
@@ -576,6 +632,9 @@ class Codec {
         return source.boolean();
       case Primitive.Str:
         return source.str();
+      // TODO: Resolve issue: #183 - Extrinsic Era
+      case Primitive.ExtrinsicEra:
+        return _decodeExtrinsicEra(source);
       default:
         throw UnexpectedCaseException('Unexpected PrimitiveType: $type.');
     }
@@ -645,6 +704,10 @@ class Codec {
         return;
       case Primitive.U256:
         encoder.u256(value);
+        return;
+      // TODO: Resolve issue: #183 - Extrinsic Era
+      case Primitive.ExtrinsicEra:
+        _encodeExtrinsicEra(value, encoder);
         return;
       // boolean
       case Primitive.Boolean:

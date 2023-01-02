@@ -255,6 +255,24 @@ abstract class ParseV14 implements _$ParseV14 {
     List<Type> typesValue = metadata.lookup?.types.map((PortableTypeV14 t) {
           var info = {'path': t.type.path, 'docs': t.type.docs};
           var def = t.type.def;
+
+          /// TODO: Issue: #183 Replace this approach with a more generic one
+          ///
+          /// Why used? : (to get {"period": val, "phase": val})
+          if (t.type.def is Si1TypeDef_Composite &&
+              (t.type.def as Si1TypeDef_Composite).value.fields.isNotEmpty &&
+              (t.type.def as Si1TypeDef_Composite)
+                      .value
+                      .fields[0]
+                      .typeName
+                      ?.toLowerCase() ==
+                  'era') {
+            return PrimitiveType(
+              primitive: scale_codec.Primitive.ExtrinsicEra,
+              path: info['path'],
+              docs: info['docs'],
+            );
+          }
           switch (def.kind) {
             case 'Primitive':
               return PrimitiveType(
