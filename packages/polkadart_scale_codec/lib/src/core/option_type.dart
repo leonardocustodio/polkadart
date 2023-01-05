@@ -39,12 +39,10 @@ class NoneOption extends _Option implements EquatableMixin {
   /// Example:
   ///
   /// ```
-  /// None.toJson() => {'_kind': 'None'}
+  /// None.toJson() => {'None': null}
   /// ```
   Map<String, dynamic> toJson() {
-    return {
-      '_kind': kind,
-    };
+    return {'None': null};
   }
 }
 
@@ -73,14 +71,13 @@ class Some<T> extends _Option implements EquatableMixin {
   /// Example:
   ///
   /// ```
-  /// Some(Some(1)).toJson() => {'_kind': 'Some', 'value': {'_kind': 'Some', 'value': 1}}
+  /// Some(Some(1)).toJson() => {'Some': {'Some': 1}}
   ///
-  /// Some(None).toJson() => {'_kind': 'Some', 'value': {'_kind': 'None'}}
+  /// Some(None).toJson() => {'Some': {'None': null}}
   /// ```
   Map<String, dynamic> toJson() {
     return {
-      '_kind': kind,
-      'value': value is Some
+      'Some': value is Some
           ? (value as Some).toJson()
           : (value == None ? None.toJson() : value),
     };
@@ -92,16 +89,20 @@ class Some<T> extends _Option implements EquatableMixin {
   /// Example:
   ///
   /// ```
-  /// Some.fromJson({'_kind': 'Some', 'value': {'_kind': 'Some', 'value': 1}}) => Some(Some(1))
+  /// Some.fromJson({'Some': {'Some': 1}}) => Some(Some(1))
   ///
-  /// Some.fromJson({'_kind': 'Some', 'value': {'_kind': 'None'}}) => Some(None)
+  /// Some.fromJson({'Some': {'None': null}}) => Some(None)
   /// ```
-  static Some fromJson(Map<String, dynamic> json) {
-    if (json['_kind'] == 'Some' && json['value'] is Map<String, dynamic>) {
-      return Some.fromJson(json['value']);
-    } else if (json['_kind'] == 'None') {
-      return Some(NoneOption());
+  static dynamic fromJson(Map<String, dynamic> json) {
+    assertionCheck((json as Map<String, dynamic>).length == 1, 'Invalid json.');
+    if (json.keys.first == 'Some') {
+      if (json['Some'] is Map<String, dynamic>) {
+        return Some(Some.fromJson(json['Some']));
+      }
+      return Some(json['Some']);
+    } else if (json.keys.first == 'None') {
+      return NoneOption();
     }
-    return Some(json['value']);
+    throw UnexpectedCaseException('Expected to find Some or None key in json.');
   }
 }
