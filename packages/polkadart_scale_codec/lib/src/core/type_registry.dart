@@ -58,11 +58,11 @@ class TypeRegistry {
   ///
   /// Convert codec name for basic types
   static String _convertCodecName(String codecName) {
-    switch (codecName.toLowerCase()) {
-      case 'bool':
-      case 'string':
-      case 'int':
-      case 'null':
+    switch (codecName) {
+      case 'Bool':
+      case 'String':
+      case 'Int':
+      case 'Null':
         return '${codecName}Codec';
       default:
         return codecName;
@@ -115,17 +115,16 @@ class TypeRegistry {
               RegExp(r'^([^<]*)<(.+)>$').allMatches(value as String).toList();
 
           if (match.length > 2) {
-            switch (match[1].toString().toLowerCase()) {
+            switch (match[1].toString()) {
               // vec array
-              case 'vec':
+              case 'Vec':
               // option
-              case 'option':
+              case 'Option':
               // compact
-              case 'compact':
+              case 'Compact':
               // BTreeMap
               case 'BTreeMap':
-                final codec =
-                    registry.getCodec(match[1].toString().toLowerCase())!;
+                final codec = registry.getCodec(match[1].toString())!;
                 codec.subType = match[2].toString();
                 registry.addCodec(key, codec);
                 break;
@@ -135,7 +134,7 @@ class TypeRegistry {
         }
 
         // Tuple
-        if ((value as String).first == '(' && value.last == ')') {
+        if ((value as String).startsWith('(') && value.endsWith(')')) {
           final Codec codec = registry.getCodec('tuples')!;
           codec.typeString = value;
           codec.buildMapping();
@@ -143,7 +142,7 @@ class TypeRegistry {
           continue;
         }
         // Fixed array
-        if (value.first == '[' && value.last == ']') {
+        if (value.startsWith('[') && value.endsWith(']')) {
           final slicedList = value.substring(1, value.length - 2).split(';');
           if (slicedList.length == 2) {
             final String subType = slicedList[0].trim();
@@ -159,7 +158,7 @@ class TypeRegistry {
         // enum
         if (value['_enum'] != null) {
           final Codec codec = registry.getCodec('enum')!;
-          if (isAssoc(value['_enum'])) {
+          if (value['_enum'] is Map<String, dynamic>) {
             codec.typeStruct = value['_enum'];
           } else {
             codec.valueList = value['_enum'];
@@ -187,9 +186,4 @@ class TypeRegistry {
       }
     }
   }
-}
-
-bool isAssoc(List list) {
-  return list.asMap().keys.toList() !=
-      List.generate(list.length, (index) => index);
 }

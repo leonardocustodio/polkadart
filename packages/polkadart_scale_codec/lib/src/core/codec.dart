@@ -96,16 +96,27 @@ class Codec<T> implements CodecInterface<T> {
 
   Codec fetchCodecType(String typeString) {
     typeString = _convertType(typeString);
-    List match = <String>[];
+    RegExpMatch? match;
 
     if (typeString.endsWith('>')) {
       final Codec? codec = registry.getCodec(typeString);
       if (codec != null) {
         return codec;
       }
-      match = RegExp(r'^([^<]*)<(.+)>$').allMatches(typeString).toList();
+
+      ///
+      /// Match the typeString with the regex
+      /// Example: 'Vec<u8>' -> ['Vec<u8>', 'Vec', 'u8']
+      /// Example: 'Vec<(u8, u8)>' -> ['Vec<(u8, u8)>', 'Vec', '(u8, u8)']
+      match = RegExp(r'^([^<]*)<(.+)>$').firstMatch(typeString);
     }
-    if (match.isNotEmpty) {
+
+    ///
+    /// Here it seems tricky that we are checking for the match.groupCount == 2
+    /// but we're accessing the match[1] and match[2] which is not possible
+    ///
+    /// but seems match.groupCount returns 2 when there are 3 values in the match
+    if (match != null && match.groupCount == 2) {
       final Codec? codec = registry.getCodec(match[1].toString());
       if (codec != null) {
         codec.subType = match[2].toString();
