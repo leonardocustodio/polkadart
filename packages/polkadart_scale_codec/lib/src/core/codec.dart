@@ -57,6 +57,7 @@ class Codec<T> implements CodecInterface<T> {
     this.metadata = metadata;
   }
 
+
   void buildMapping() {
     typeStruct = <String>[];
 
