@@ -51,13 +51,6 @@ class U8 extends Codec<int> {
   /// final value = codec.encode(255);
   /// print(value); // ff
   /// ```
-  ///
-  /// Example:
-  /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8');
-  /// final value = codec.encode(256);
-  /// print(value); // 00
-  /// ```
   @override
   String encode(int value) {
     if (value >= 0 && value <= 255) {
