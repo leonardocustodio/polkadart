@@ -5,16 +5,23 @@ part of codec_types;
 class BoolCodec extends Codec<bool> {
   ///
   /// constructor
-  BoolCodec(super.registry);
+  BoolCodec({Registry? registry}) : super(registry: registry ?? Registry());
 
   ///
   /// Decode a bool from the source
   ///
   /// Example:
   /// ```dart
-  /// final boolCodec = BoolCodec(data: Source('0x01'));
-  /// final boolValue = boolCodec.decode();
+  /// final codec = Codec<bool>().createTypeCodec('Bool', data: Source('0x01'));
+  /// final boolValue = codec.decode();
   /// print(boolValue); // true
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<bool>().createTypeCodec('Bool', data: Source('0x00'));
+  /// final boolValue = codec.decode();
+  /// print(boolValue); // false
   /// ```
   @override
   bool decode() {
@@ -35,9 +42,16 @@ class BoolCodec extends Codec<bool> {
   ///
   /// Example:
   /// ```dart
-  /// final boolCodec = BoolCodec(data: Source('0x00'));
-  /// final boolValue = boolCodec.encode(true);
+  /// final codec = Codec<bool>().createTypeCodec('Bool');
+  /// final boolValue = codec.encode(true);
   /// print(boolValue); // 01
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<bool>().createTypeCodec('Bool');
+  /// final boolValue = codec.encode(false);
+  /// print(boolValue); // 00
   /// ```
   @override
   String encode(bool value) {

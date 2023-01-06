@@ -22,8 +22,6 @@ class TypeRegistry {
       final Codec codec = getCodecFromCodecName(codecType, registry);
       registry.addCodec(codecType, codec);
     }
-    // interfaces runtime module types
-    // _findInterfaces(registry);
     return registry;
   }
 
@@ -68,7 +66,6 @@ class TypeRegistry {
           continue;
         }
         bool iterationSolve = false;
-        // iteration
         while (true) {
           if (customJson[value] != null) {
             value = customJson[value];
