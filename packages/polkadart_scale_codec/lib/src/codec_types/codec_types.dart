@@ -8,3 +8,4 @@ part 'bool_codec.dart';
 part 'u8.dart';
 part 'u16.dart';
 part 'u32.dart';
+part 'u64.dart';
