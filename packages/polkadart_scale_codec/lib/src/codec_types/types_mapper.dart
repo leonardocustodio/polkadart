@@ -7,6 +7,8 @@ class CodecMapper {
         return BoolCodec(registry: registry);
       case 'u8':
         return U8(registry: registry);
+      case 'u16':
+        return U16(registry: registry);
     }
     return null;
   }

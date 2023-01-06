@@ -45,7 +45,9 @@ void main() {
       expect(bytes, equals([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]));
     });
 
-    test('When value 9223372036854775807 is encoded then it returns 0xffffffffffffff7f', () {
+    test(
+        'When value 9223372036854775807 is encoded then it returns 0xffffffffffffff7f',
+        () {
       final bytes = littleEndianIntToBytes(9223372036854775807, 8);
       expect(bytes, equals([0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f]));
     });
