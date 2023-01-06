@@ -54,7 +54,12 @@ class U32 extends Codec<int> {
   @override
   String encode(int value) {
     if (value >= 0 && value <= 4294967295) {
-      return encodeHex(littleEndianIntToBytes(value, 4));
+      return encodeHex(<int>[
+        value & 0xff,
+        (value >>> 8) & 0xff,
+        (value >>> 16) & 0xff,
+        value >>> 24
+      ]);
     }
     throw UnexpectedCaseException(
         'Expected value between 0 and 4294967295, but found: $value');
