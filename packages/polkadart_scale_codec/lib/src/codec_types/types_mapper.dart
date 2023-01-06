@@ -3,7 +3,7 @@ part of codec_types;
 class CodecMapper {
   static Codec? getCodec(String codecTypeName, Registry registry) {
     switch (codecTypeName) {
-      case 'BoolCodec':
+      case 'Bool':
         return BoolCodec(registry);
     }
     return null;
