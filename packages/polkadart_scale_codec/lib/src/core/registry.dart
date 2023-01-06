@@ -14,18 +14,18 @@ class Registry {
   ///
   /// Add a codec to the registry
   void addCodec(String codecName, Codec codec) {
-    _codecs[codecName] = codec;
+    _codecs[codecName.toLowerCase()] = codec;
   }
 
   ///
   /// Get a codec from the registry
   Codec? getCodec(String codecName) {
-    return _codecs[codecName];
+    return _codecs[codecName.toLowerCase()];
   }
 
   ///
   /// Adds map of codecs to the registry
   void addCodecs(Map<String, Codec> codecs) {
-    _codecs.addAll(codecs);
+    codecs.forEach(addCodec);
   }
 }

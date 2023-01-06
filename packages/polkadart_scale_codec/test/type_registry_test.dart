@@ -9,7 +9,7 @@ void main() {
     });
 
     test('When registry is created then it should have the defined keys.', () {
-      final keys = ['Bool'];
+      final keys = ['bool'];
 
       final Registry registry = TypeRegistry.createRegistry();
 
@@ -21,7 +21,7 @@ void main() {
         () {
       final Registry registry = Registry();
 
-      registry.addCodecs({'test': BoolCodec(registry)});
+      registry.addCodecs({'test': BoolCodec()});
 
       expect(registry.length, equals(1));
 

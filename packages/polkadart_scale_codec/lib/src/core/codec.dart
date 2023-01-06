@@ -27,7 +27,7 @@ class Codec<T> implements CodecInterface<T> {
 
   ///
   /// Registry to hold the mapped keys and Codec
-  final Registry registry;
+  late Registry registry;
 
   ///
   /// Data to be decoded
@@ -37,7 +37,9 @@ class Codec<T> implements CodecInterface<T> {
 
   ///
   /// Constructor to initialize the registry and create Codec instance
-  Codec(this.registry);
+  Codec({Registry? registry}) {
+    this.registry = registry ?? TypeRegistry.createRegistry();
+  }
 
   /// [Private]
   ///
