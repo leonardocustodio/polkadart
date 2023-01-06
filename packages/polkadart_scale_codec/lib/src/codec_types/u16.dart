@@ -54,7 +54,7 @@ class U16 extends Codec<int> {
   @override
   String encode(int value) {
     if (value >= 0 && value <= 65535) {
-      return encodeHex(littleEndianIntToBytes(value, 2));
+      return encodeHex(<int>[value & 0xff, value >>> 8]);
     }
     throw UnexpectedCaseException(
         'Expected value between 0 and 65535, but found: $value');
