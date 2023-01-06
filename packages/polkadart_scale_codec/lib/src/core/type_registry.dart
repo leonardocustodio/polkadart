@@ -94,7 +94,7 @@ class TypeRegistry {
         }
 
         // Complex type
-        if (value[-1] == '>') {
+        if ((value as String).endsWith('>')) {
           final RegExpMatch? match = getVecMatch(value);
 
           /// For knowing why we're checking for groupCount == 2 and accessing [1] and [2] index
@@ -120,7 +120,7 @@ class TypeRegistry {
         }
 
         // Tuple
-        if ((value as String).startsWith('(') && value.endsWith(')')) {
+        if (value.startsWith('(') && value.endsWith(')')) {
           final Codec codec = registry.getCodec('Tuples')!;
           codec.typeString = value;
           codec.buildMapping();
