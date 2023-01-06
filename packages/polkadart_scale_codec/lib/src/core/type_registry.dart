@@ -45,28 +45,12 @@ class TypeRegistry {
       return codec;
     }
 
-    codecName = _convertCodecName(codecName);
-
     codec = CodecMapper.getCodec(codecName, registry);
     if (codec != null) {
       return codec;
     }
 
     throw UnexpectedCodecException('Unable to find codec for $codecName');
-  }
-
-  ///
-  /// Convert codec name for basic types
-  static String _convertCodecName(String codecName) {
-    switch (codecName) {
-      case 'Bool':
-      case 'String':
-      case 'Int':
-      case 'Null':
-        return '${codecName}Codec';
-      default:
-        return codecName;
-    }
   }
 
   ///
@@ -159,7 +143,7 @@ class TypeRegistry {
       } else if (value is Map) {
         // enum
         if (value['_enum'] != null) {
-          final Codec codec = registry.getCodec('enum')!;
+          final Codec codec = registry.getCodec('Enum')!;
           if (value['_enum'] is Map<String, dynamic>) {
             codec.typeStruct = value['_enum'];
           } else {
@@ -170,7 +154,7 @@ class TypeRegistry {
         }
         // set
         if (value['_set'] != null) {
-          final Codec codec = registry.getCodec('set')!;
+          final Codec codec = registry.getCodec('Set')!;
           if (value['_bitLength'] != null) {
             codec.bitLength = int.parse(value['_bitLength']);
           } else {

@@ -9,7 +9,7 @@ void main() {
     });
 
     test('When registry is created then it should have the defined keys.', () {
-      final keys = ['bool'];
+      final keys = ['Bool'];
 
       final Registry registry = TypeRegistry.createRegistry();
 
@@ -27,7 +27,7 @@ void main() {
 
       final evaluatedKeys = registry.keys.toList();
 
-      expect(evaluatedKeys, equals(['bool']));
+      expect(evaluatedKeys, equals(['test']));
     });
   });
 }
