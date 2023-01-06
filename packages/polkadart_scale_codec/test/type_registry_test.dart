@@ -3,13 +3,13 @@ import 'package:test/test.dart';
 
 void main() {
   group('Test TypeRegistry', () {
-    test('When registry is created then it should have length 3', () {
+    test('When registry is created then it should have length 4', () {
       final Registry registry = TypeRegistry.createRegistry();
-      expect(registry.length, equals(3));
+      expect(registry.length, equals(4));
     });
 
     test('When registry is created then it should have the defined keys.', () {
-      final keys = ['bool', 'u8', 'u16'];
+      final keys = ['bool', 'u8', 'u16', 'u32'];
 
       final Registry registry = TypeRegistry.createRegistry();
 

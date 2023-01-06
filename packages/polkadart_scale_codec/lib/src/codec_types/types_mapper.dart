@@ -9,6 +9,8 @@ class CodecMapper {
         return U8(registry: registry);
       case 'u16':
         return U16(registry: registry);
+      case 'u32':
+        return U32(registry: registry);
     }
     return null;
   }
