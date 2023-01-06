@@ -2,6 +2,9 @@ part of core;
 
 class Codec<T> implements CodecInterface<T> {
   /// TypeName for the subType
+  ///
+  /// It is used to precess the subType of the followed types in metadata and
+  /// helps as a guided route in decoding and encoding the types following the type index from the metadata registry.
   late String subType;
 
   ///
@@ -103,12 +106,7 @@ class Codec<T> implements CodecInterface<T> {
       if (codec != null) {
         return codec;
       }
-
-      ///
-      /// Match the typeString with the regex
-      /// Example: 'Vec<u8>' -> ['Vec<u8>', 'Vec', 'u8']
-      /// Example: 'Vec<(u8, u8)>' -> ['Vec<(u8, u8)>', 'Vec', '(u8, u8)']
-      match = RegExp(r'^([^<]*)<(.+)>$').firstMatch(typeString);
+      match = getVecMatch(typeString);
     }
 
     ///
@@ -130,7 +128,7 @@ class Codec<T> implements CodecInterface<T> {
     }
 
     if (typeString.startsWith('(') && typeString.endsWith(')')) {
-      final Codec codec = registry.getCodec('tuples')!;
+      final Codec codec = registry.getCodec('Tuples')!;
       codec.typeString = typeString;
       codec.buildMapping();
       return codec;
@@ -170,12 +168,12 @@ class Codec<T> implements CodecInterface<T> {
   }
 
   @override
-  dynamic decode() {
+  T decode() {
     throw UnimplementedError();
   }
 
   @override
-  dynamic encode(T value) {
+  String encode(T value) {
     throw UnimplementedError();
   }
 }

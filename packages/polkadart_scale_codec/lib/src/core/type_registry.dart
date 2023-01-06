@@ -111,10 +111,12 @@ class TypeRegistry {
 
         // Complex type
         if (value[-1] == '>') {
-          final match =
-              RegExp(r'^([^<]*)<(.+)>$').allMatches(value as String).toList();
+          final RegExpMatch? match = getVecMatch(value);
 
-          if (match.length > 2) {
+          /// For knowing why we're checking for groupCount == 2 and accessing [1] and [2] index
+          ///
+          /// Check documentation on utils/regexp.dart -> getVecMatch(value);
+          if (match != null && match.groupCount == 2) {
             switch (match[1].toString()) {
               // vec array
               case 'Vec':
@@ -135,7 +137,7 @@ class TypeRegistry {
 
         // Tuple
         if ((value as String).startsWith('(') && value.endsWith(')')) {
-          final Codec codec = registry.getCodec('tuples')!;
+          final Codec codec = registry.getCodec('Tuples')!;
           codec.typeString = value;
           codec.buildMapping();
           registry.addCodec(key, codec);
@@ -180,7 +182,7 @@ class TypeRegistry {
           continue;
         }
         // struct
-        final Codec codec = registry.getCodec('struct')!;
+        final Codec codec = registry.getCodec('Struct')!;
         codec.typeStruct = value as List;
         registry.addCodec(key, codec);
       }

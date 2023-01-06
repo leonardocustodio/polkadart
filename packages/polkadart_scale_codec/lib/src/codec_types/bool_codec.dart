@@ -40,7 +40,7 @@ class BoolCodec extends Codec<bool> {
   /// print(boolValue); // 01
   /// ```
   @override
-  dynamic encode(bool value) {
+  String encode(bool value) {
     return value ? '01' : '00';
   }
 }
