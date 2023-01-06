@@ -34,20 +34,65 @@ void assertionCheck(bool value, [String? msg]) {
 int bytesToLittleEndianInt(List<int> bytes) {
   switch (bytes.length) {
     case 1:
-      return bytes[0];
     case 2:
-      return bytes[0] | bytes[1] << 8;
     case 4:
-      return bytes[0] | bytes[1] << 8 | bytes[2] << 16 | bytes[3] << 24;
     case 8:
-      return bytes[0] |
-          bytes[1] << 8 |
-          bytes[2] << 16 |
-          bytes[3] << 24 |
-          bytes[4] << 32 |
-          bytes[5] << 40 |
-          bytes[6] << 48 |
-          bytes[7] << 56;
+      {
+        var byte = bytes[0];
+        for (var index = 1; index < bytes.length; index++) {
+          byte |= bytes[index] << (8 * index);
+        }
+        return byte;
+      }
   }
   return 0;
+}
+
+///
+/// Converts a [int] to [List<int>]
+///
+/// Example:
+/// ```dart
+/// final val = 1;
+/// final bytes = littleEndianIntToBytes(val, 1);
+/// print(bytes); // [1]
+/// ```
+///
+/// Example:
+/// ```dart
+/// final val = 258;
+/// final bytes = littleEndianIntToBytes(val, 2);
+/// print(bytes); // [2, 1]
+/// ```
+///
+/// Example:
+/// ```dart
+/// final val = 16909060;
+/// final bytes = littleEndianIntToBytes(val, 4);
+/// print(bytes); // [4, 3, 2, 1]
+/// ```
+///
+/// Example:
+/// ```dart
+/// final val = 72340172838076673;
+/// final bytes = littleEndianIntToBytes(val, 8);
+/// print(bytes); // [1, 2, 3, 4, 5, 6, 7, 8]
+/// ```
+List<int> littleEndianIntToBytes(int value, int length) {
+  switch (length) {
+    case 1:
+    case 2:
+    case 4:
+    case 8:
+      {
+        final bytes = <int>[value];
+        for (var index = 1; index < length; index++) {
+          bytes.add(value >> (8 * index));
+        }
+        return bytes;
+      }
+    default:
+      throw UnexpectedCaseException(
+          'Expected length to be 1, 2, 4 or 8, but found $length');
+  }
 }

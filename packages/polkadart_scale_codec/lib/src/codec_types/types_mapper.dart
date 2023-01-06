@@ -5,6 +5,8 @@ class CodecMapper {
     switch (codecTypeName.toLowerCase()) {
       case 'bool':
         return BoolCodec(registry: registry);
+      case 'u8':
+        return U8(registry: registry);
     }
     return null;
   }
