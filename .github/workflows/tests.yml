@@ -5,6 +5,7 @@ on:
       - master
       - main
       - develop
+      - re-design
       - release-v*
     types:
       - opened
@@ -17,6 +18,7 @@ on:
     branches:
       - master
       - main
+      - re-design
     paths-ignore:
       - "**.md"
 
