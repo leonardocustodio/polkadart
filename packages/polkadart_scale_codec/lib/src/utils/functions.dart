@@ -74,9 +74,9 @@ int bytesToLittleEndianInt(List<int> bytes) {
 ///
 /// Example:
 /// ```dart
-/// final val = 72340172838076673;
-/// final bytes = littleEndianIntToBytes(val, 8);
-/// print(bytes); // [1, 2, 3, 4, 5, 6, 7, 8]
+/// final val = 65535;
+/// final bytes = littleEndianIntToBytes(val, 2);
+/// print(bytes); // [255, 255]
 /// ```
 List<int> littleEndianIntToBytes(int value, int length) {
   switch (length) {
@@ -85,9 +85,10 @@ List<int> littleEndianIntToBytes(int value, int length) {
     case 4:
     case 8:
       {
-        final bytes = <int>[value];
-        for (var index = 1; index < length; index++) {
-          bytes.add(value >> (8 * index));
+        final bytes = <int>[];
+        for (var index = 0; index < length; index++) {
+          bytes.add(value & 0xff);
+          value >>= 8;
         }
         return bytes;
       }
