@@ -13,6 +13,8 @@ class CodecMapper {
         return U32(registry: registry);
       case 'u64':
         return U64(registry: registry);
+      case 'u128':
+        return U128(registry: registry);
     }
     return null;
   }
