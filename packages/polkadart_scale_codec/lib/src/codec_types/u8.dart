@@ -46,10 +46,10 @@ class U8 extends Codec<int> {
   /// ```
   @override
   String encode(int value) {
-    if (value >= 0 && value <= 255) {
-      return encodeHex(<int>[value]);
+    if (value < 0 || value > 255) {
+      throw UnexpectedCaseException(
+          'Expected value between 0 and 255, but found: $value');
     }
-    throw UnexpectedCaseException(
-        'Expected value between 0 and 255, but found: $value');
+    return encodeHex(<int>[value]);
   }
 }
