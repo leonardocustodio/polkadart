@@ -6,9 +6,9 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00 is decoded then it returns 0', () {
       final codec =
-          Codec(registry: registry).createTypeCodec('u8', data: Source('0x01'));
+          Codec(registry: registry).createTypeCodec('u8', data: Source('0x00'));
       final u8Value = codec.decode();
-      expect(u8Value, equals(1));
+      expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
@@ -59,9 +59,9 @@ void main() {
 
     test('When lowest value 0x00 is decoded then it returns 0', () {
       final codec = Codec<int>(registry: registry)
-          .createTypeCodec('u8_key', data: Source('0x01'));
+          .createTypeCodec('u8_key', data: Source('0x00'));
       final u8Value = codec.decode();
-      expect(u8Value, equals(1));
+      expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
