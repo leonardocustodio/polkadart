@@ -10,3 +10,4 @@ part 'u16.dart';
 part 'u32.dart';
 part 'u64.dart';
 part 'u128.dart';
+part 'u256.dart';
