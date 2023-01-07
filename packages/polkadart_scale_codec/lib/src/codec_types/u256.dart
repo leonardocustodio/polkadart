@@ -9,13 +9,13 @@ class U256 extends Codec<BigInt> {
 
   ///
   /// Decode a unsigned 256 bit integer from the source
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U256', data: Source('0x0000000000000000000000000000000000000000000000000000000000000000'));
   /// final value = codec.decode();
   /// print(value); // 0
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U256', data: Source('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
@@ -31,14 +31,14 @@ class U256 extends Codec<BigInt> {
 
   ///
   /// Encodes a unsigned 256 bit integer
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U256');
   /// final value = codec.encode(BigInt.from(0));
   /// print(value); // 0000000000000000000000000000000000000000000000000000000000000000
   /// ```
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U256');
