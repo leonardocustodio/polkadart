@@ -25,9 +25,8 @@ class U128 extends Codec<BigInt> {
   /// ```
   @override
   BigInt decode() {
-    final BigInt low = super.createTypeCodec('U64', data: data).decode();
-    final BigInt high = super.createTypeCodec('U64', data: data).decode();
-    return low + (high << 64);
+    final u64Codec = super.createTypeCodec('U64', data: data);
+    return u64Codec.decode() + (u64Codec.decode() << 64);
   }
 
   ///
@@ -48,14 +47,15 @@ class U128 extends Codec<BigInt> {
   /// ```
   @override
   String encode(BigInt value) {
-    if (value.toInt() >= 0 &&
-        value <= BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16)) {
-      final low = super.createTypeCodec('U64');
-      final high = super.createTypeCodec('U64');
-      return low.encode(value & BigInt.parse('ffffffffffffffff', radix: 16)) +
-          high.encode(value >> 64);
+    if (value < BigInt.zero ||
+        value > BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16)) {
+      throw UnexpectedCaseException(
+          'Expected value between 0 and BigInt.parse("ffffffffffffffffffffffffffffffff"), but found: $value');
     }
-    throw UnexpectedCaseException(
-        'Expected value between 0 and BigInt.parse("ffffffffffffffffffffffffffffffff"), but found: $value');
+
+    final u64Codec = super.createTypeCodec('U64');
+    return u64Codec
+            .encode(value & BigInt.parse('ffffffffffffffff', radix: 16)) +
+        u64Codec.encode(value >> 64);
   }
 }
