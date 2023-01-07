@@ -13,6 +13,7 @@ void main() {
         'u128',
         'u256',
         'i8',
+        'i16',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();
