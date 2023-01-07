@@ -21,6 +21,8 @@ class CodecMapper {
         return I8(registry: registry);
       case 'i16':
         return I16(registry: registry);
+      case 'i32':
+        return I32(registry: registry);
     }
     return null;
   }
