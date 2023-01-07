@@ -1,5 +1,7 @@
 library codec_types;
 
+import 'dart:math';
+
 import 'package:polkadart_scale_codec/src/core/core.dart';
 import 'package:polkadart_scale_codec/src/utils/utils.dart';
 
@@ -11,3 +13,4 @@ part 'u32.dart';
 part 'u64.dart';
 part 'u128.dart';
 part 'u256.dart';
+part 'i8.dart';

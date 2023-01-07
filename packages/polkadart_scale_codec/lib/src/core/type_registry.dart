@@ -13,6 +13,7 @@ class TypeRegistry {
     'U64',
     'U128',
     'U256',
+    'I8',
   ];
 
   ///

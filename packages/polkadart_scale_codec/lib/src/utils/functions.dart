@@ -20,7 +20,7 @@ void assertionCheck(bool value, [String? msg]) {
 ///
 /// Example:
 /// ```dart
-/// final bytes = [1, 2];
+/// final bytes = [2, 1];
 /// final val = bytesToLittleEndianInt(bytes);
 /// print(val); // 258
 /// ```
@@ -29,7 +29,7 @@ void assertionCheck(bool value, [String? msg]) {
 /// ```dart
 /// final bytes = [1, 2, 3, 4];
 /// final val = bytesToLittleEndianInt(bytes);
-/// print(val); // 16909060
+/// print(val); // 67305985
 /// ```
 int bytesToLittleEndianInt(List<int> bytes) {
   switch (bytes.length) {
