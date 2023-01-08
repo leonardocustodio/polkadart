@@ -83,4 +83,38 @@ void main() {
       expect(() => codec.encode(null), throwsA(isA<Error>()));
     });
   });
+
+  /// BoolCodec direct test cases
+  group('Test BoolCodec Decode', () {
+    test('When 0x01 is decoded then it returns true', () {
+      final codec = BoolCodec(source: Source('0x01'));
+      final boolValue = codec.decode();
+      expect(boolValue, equals(true));
+    });
+
+    test('When 0x00 is decoded then it returns false', () {
+      final codec = BoolCodec(source: Source('0x00'));
+      final boolValue = codec.decode();
+      expect(boolValue, equals(false));
+    });
+
+    test('When 0x02 is decoded then it throws CodecException.', () {
+      final codec = BoolCodec(source: Source('0x02'));
+      expect(() => codec.decode(), throwsA(isA<UnexpectedCaseException>()));
+    });
+  });
+
+  group('Test BoolCodec Encode', () {
+    test('When true is encoded then it returns 0x01', () {
+      final codec = BoolCodec();
+      final boolValue = codec.encode(true);
+      expect(boolValue, equals('01'));
+    });
+
+    test('When false is encoded then it returns 0x00', () {
+      final codec = BoolCodec();
+      final boolValue = codec.encode(false);
+      expect(boolValue, equals('00'));
+    });
+  });
 }
