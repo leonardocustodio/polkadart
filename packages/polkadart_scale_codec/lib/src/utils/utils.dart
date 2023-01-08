@@ -2,7 +2,6 @@ library utils;
 
 /// imports
 import 'package:convert/convert.dart';
-import 'package:utility/utility.dart';
 import 'dart:typed_data';
 
 /// part files

@@ -4,12 +4,12 @@ import 'package:test/test.dart';
 void main() {
   /// extensions test cases
   group('Test String extension', () {
-    test('When getter first is called on \'Hello\' then \'H\' is returned', () {
+    test('first should return first character', () {
       final firstChar = 'Hello'.first;
       expect(firstChar, equals('H'));
     });
 
-    test('When getter last is called on \'Hello\' then \'o\' is returned', () {
+    test('last should return last character', () {
       final lastChar = 'Hello'.last;
       expect(lastChar, equals('o'));
     });
