@@ -97,4 +97,38 @@ void main() {
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
+
+  // Direct Test cases for U32()
+  group('U32 Direct Test', () {
+    test('When lowest value 0x00000000 is decoded then it returns 0', () {
+      final u32Value = U32(source: Source('0x00000000')).decode();
+      expect(u32Value, equals(0));
+    });
+
+    test('When highest value 0xffffffff is decoded then it returns 4294967295',
+        () {
+      final u32Value = U32(source: Source('0xffffffff')).decode();
+      expect(u32Value, equals(4294967295));
+    });
+
+    test('When lowest value 0 is encoded then it returns 0x00000000', () {
+      final u32Value = U32().encode(0);
+      expect(u32Value, equals('00000000'));
+    });
+
+    test('When highest value 4294967295 is encoded then it returns 0xffffffff',
+        () {
+      final u32Value = U32().encode(4294967295);
+      expect(u32Value, equals('ffffffff'));
+    });
+
+    test('When value -1 is encoded then it throws an exception', () {
+      expect(() => U32().encode(-1), throwsA(isA<UnexpectedCaseException>()));
+    });
+
+    test('When value 4294967296 is encoded then it throws an exception', () {
+      expect(() => U32().encode(4294967296),
+          throwsA(isA<UnexpectedCaseException>()));
+    });
+  });
 }
