@@ -27,7 +27,7 @@ class I8 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    final byte = data.byte();
+    final byte = (source ?? data).byte();
     return (byte | (byte & 0x80) * 0x1fffffe).toSigned(16);
   }
 

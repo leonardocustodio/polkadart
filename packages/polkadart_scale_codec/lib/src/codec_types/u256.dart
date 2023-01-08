@@ -7,8 +7,7 @@ class U256 extends Codec<BigInt> {
 
   ///
   /// constructor
-  U256({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  U256({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a unsigned 256 bit integer from the source

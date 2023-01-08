@@ -7,8 +7,7 @@ class U64 extends Codec<BigInt> {
 
   ///
   /// constructor
-  U64({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  U64({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a unsigned 64 bit integer from the source

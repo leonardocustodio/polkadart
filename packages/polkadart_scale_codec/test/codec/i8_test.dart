@@ -93,4 +93,41 @@ void main() {
       expect(() => codec.encode(128), throwsA(isA<UnexpectedCaseException>()));
     });
   });
+
+  // I8() Direct Test Cases without type registry
+  group('I8 Direct Test', () {
+    test('When lowest value 0x80 is decoded then it returns -128', () {
+      final codec = I8(source: Source('0x80'));
+      final i8Value = codec.decode();
+      expect(i8Value, equals(-128));
+    });
+
+    test('When highest value 0x7f is decoded then it returns 127', () {
+      final codec = I8(source: Source('0x7f'));
+      final i8Value = codec.decode();
+      expect(i8Value, equals(127));
+    });
+
+    test('When lowest value -128 is encoded then it returns 0x80', () {
+      final codec = I8();
+      final i8Value = codec.encode(-128);
+      expect(i8Value, equals('80'));
+    });
+
+    test('When highest value 127 is encoded then it returns 0x7f', () {
+      final codec = I8();
+      final i8Value = codec.encode(127);
+      expect(i8Value, equals('7f'));
+    });
+
+    test('When value -129 is encoded then it throws an exception', () {
+      final codec = I8();
+      expect(() => codec.encode(-129), throwsA(isA<UnexpectedCaseException>()));
+    });
+
+    test('When value 128 is encoded then it throws an exception', () {
+      final codec = I8();
+      expect(() => codec.encode(128), throwsA(isA<UnexpectedCaseException>()));
+    });
+  });
 }

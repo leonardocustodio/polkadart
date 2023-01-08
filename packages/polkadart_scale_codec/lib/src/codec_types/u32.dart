@@ -7,8 +7,7 @@ class U32 extends Codec<int> {
 
   ///
   /// constructor
-  U32({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  U32({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a unsigned 32 bit integer from the source
