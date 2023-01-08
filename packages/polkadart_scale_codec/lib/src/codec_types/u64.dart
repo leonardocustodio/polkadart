@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// encode/decode unsigned 64 bit integer
 class U64 extends Codec<BigInt> {
+  final Source? source;
+
   ///
   /// constructor
-  U64({Registry? registry}) : super(registry: registry ?? Registry());
+  U64({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a unsigned 64 bit integer from the source
@@ -19,15 +22,15 @@ class U64 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64', data: Source('0x0000000000000001'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U64', data: Source('0xffffffffffffffff'));
   /// final value = codec.decode();
-  /// print(value); // 1
+  /// print(value); // 18446744073709551615
   /// ```
   @override
   BigInt decode() {
-    final low = super.createTypeCodec('U32', data: data).decode();
-    final high = super.createTypeCodec('U32', data: data).decode();
-    return BigInt.from(low) + (BigInt.from(high) << 32);
+    final u32Codec = U32(source: source ?? data);
+    return BigInt.from(u32Codec.decode()) +
+        (BigInt.from(u32Codec.decode()) << 32);
   }
 
   ///
@@ -43,25 +46,18 @@ class U64 extends Codec<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U64');
-  /// final value = codec.encode(BigInt.from(1));
-  /// print(value); // 0000000000000001
-  /// ```
-  ///
-  /// Example:
-  /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64');
   /// final value = codec.encode(BigInt.parse('18446744073709551615'));
   /// print(value); // ffffffffffffffff
   /// ```
   @override
   String encode(BigInt value) {
-    if (value.toInt() >= 0 && value <= BigInt.parse('18446744073709551615')) {
-      final low = super.createTypeCodec('U32');
-      final high = super.createTypeCodec('U32');
-      return low.encode((value & BigInt.from(0xffffffff)).toInt()) +
-          high.encode((value >> 32).toInt());
+    if (value < BigInt.zero || value > BigInt.parse('18446744073709551615')) {
+      throw UnexpectedCaseException(
+          'Expected value between 0 and BigInt.parse("18446744073709551615"), but found: $value');
     }
-    throw UnexpectedCaseException(
-        'Expected value between 0 and BigInt.parse("18446744073709551615"), but found: $value');
+
+    final u32Codec = U32();
+    return u32Codec.encode((value & BigInt.from(0xffffffff)).toInt()) +
+        u32Codec.encode((value >> 32).toInt());
   }
 }

@@ -12,6 +12,15 @@ class UnexpectedCaseException implements Exception {
 }
 
 ///
+/// EOSException
+class EOSException implements Exception {
+  const EOSException();
+
+  @override
+  String toString() => 'Data left for processing.';
+}
+
+///
 /// EmptyStringException
 class EmptyStringException implements Exception {
   const EmptyStringException();
