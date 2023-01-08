@@ -3,11 +3,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('Test TypeRegistry', () {
-    test('When registry is created then it should have length 1', () {
-      final Registry registry = TypeRegistry.createRegistry();
-      expect(registry.length, equals(1));
-    });
-
     test('When registry is created then it should have the defined keys.', () {
       final keys = ['bool'];
 
@@ -15,6 +10,7 @@ void main() {
 
       final evaluatedKeys = registry.keys.toList();
       expect(evaluatedKeys, equals(keys));
+      expect(registry.length, equals(keys.length));
     });
 
     test('When map of codecs is added to registry then it should have length 2',
