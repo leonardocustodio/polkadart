@@ -25,7 +25,13 @@ class U8 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    return bytesToLittleEndianInt(data.bytes(1).toList());
+    return decodeFromSource(data);
+  }
+
+  ///
+  /// Decode a unsigned 8 bit integer from the source
+  static int decodeFromSource(Source source) {
+    return bytesToLittleEndianInt(source.bytes(1).toList());
   }
 
   ///

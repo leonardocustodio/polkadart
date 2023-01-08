@@ -103,4 +103,17 @@ void main() {
       expect(() => codec.encode(256), throwsA(isA<UnexpectedCaseException>()));
     });
   });
+
+  /// u8 decodeFromSource test-cases
+  group('Decode From Source Test', () {
+    test('When lowest value 0x00 is decoded then it returns 0', () {
+      final u8Value = U8.decodeFromSource(Source('0x00'));
+      expect(u8Value, equals(0));
+    });
+
+    test('When highest value 0xff is decoded then it returns 255', () {
+      final u8Value = U8.decodeFromSource(Source('0xff'));
+      expect(u8Value, equals(255));
+    });
+  });
 }
