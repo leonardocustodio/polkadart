@@ -4,24 +4,22 @@ import 'package:test/test.dart';
 void main() {
   /// extensions test cases
   group('Test String extension', () {
-    test('When getter first is called on \'Hello\' then \'H\' is returned', () {
+    test('first should return first character', () {
       final firstChar = 'Hello'.first;
       expect(firstChar, equals('H'));
     });
 
-    test('When getter last is called on \'Hello\' then \'o\' is returned', () {
+    test('last should return last character', () {
       final lastChar = 'Hello'.last;
       expect(lastChar, equals('o'));
     });
 
-    test(
-        'When getter first is called on \'\' then UnexpectedCaseException is thrown',
+    test('given an empty string when getting first character it should throw',
         () {
       expect(() => ''.first, throwsA(isA<EmptyStringException>()));
     });
 
-    test(
-        'When getter last is called on \'\' then UnexpectedCaseException is thrown',
+    test('given an empty string when getting last character it should throw',
         () {
       expect(() => ''.last, throwsA(isA<EmptyStringException>()));
     });

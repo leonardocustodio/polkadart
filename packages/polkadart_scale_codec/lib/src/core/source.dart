@@ -17,13 +17,18 @@ class Source {
   /// final source = Source('0x010203');
   /// print(source.data); // [1, 2, 3]
   /// ```
-  Source(dynamic data) {
-    assertionCheck(data is String || data is List<int>,
-        'Expected data to be of type `String`, `List<int>`, but found ${data.runtimeType}');
-    if (data is String) {
-      this.data = decodeHex(data);
-      return;
-    }
+  Source(String data) {
+    this.data = decodeHex(data);
+  }
+
+  ///
+  /// SourcefromBytes(data_to_decode)
+  ///
+  /// Example:
+  /// ```dart
+  /// final source = SourcefromBytes([1, 2, 3]);
+  /// ```
+  Source.fromBytes(List<int> data) {
     this.data = Uint8List.fromList(data);
   }
 
