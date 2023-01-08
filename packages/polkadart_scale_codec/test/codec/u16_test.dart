@@ -11,7 +11,7 @@ void main() {
       expect(u16Value, equals(0));
     });
 
-    test('When highest value 0xff00 is decoded then it returns 65535', () {
+    test('When highest value 0xffff is decoded then it returns 65535', () {
       final codec = Codec(registry: registry)
           .createTypeCodec('u16', data: Source('0xffff'));
       final u16Value = codec.decode();
@@ -65,7 +65,7 @@ void main() {
       expect(u16Value, equals(0));
     });
 
-    test('When highest value 0xff00 is decoded then it returns 65535', () {
+    test('When highest value 0xffff is decoded then it returns 65535', () {
       final codec = Codec(registry: registry)
           .createTypeCodec('u16_key', data: Source('0xffff'));
       final u16Value = codec.decode();

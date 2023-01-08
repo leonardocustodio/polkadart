@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// I16 to encode/decode signed 16 bit integer
 class I16 extends Codec<int> {
+  final Source? source;
+
   ///
   /// constructor
-  I16({Registry? registry}) : super(registry: registry ?? Registry());
+  I16({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a signed 16 bit integer from the source
@@ -25,10 +28,8 @@ class I16 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    final value = bytesToLittleEndianInt(data.bytes(2).toList());
-    final result = (value | (value & (1 << 15)) * 0x1fffe).toSigned(16);
-
-    return result;
+    final value = bytesToLittleEndianInt((source ?? data).bytes(2).toList());
+    return (value | (value & (1 << 15)) * 0x1fffe).toSigned(16);
   }
 
   ///
@@ -51,7 +52,7 @@ class I16 extends Codec<int> {
   String encode(int value) {
     if (value < -32768 || value > 32767) {
       throw UnexpectedCaseException(
-          'I8: value $value is not in range of -32768 to 32767');
+          'Expected value between -32768 and 32767, but found: $value');
     }
 
     final base = (value + 65536) % 65536;
