@@ -178,4 +178,18 @@ class Codec<T> implements CodecInterface<T> {
   String encode(T value) {
     throw UnimplementedError();
   }
+
+  ///
+  /// Asserts if the End of Source is reached.
+  ///
+  /// `throws [EOSException] if the data.remainingLength > 0`
+  ///
+  /// Please note that this method is useful only when the data is decoded from a Source.
+  ///
+  /// If the data is being encoded, then this method is not useful.
+  void assertEOS() {
+    if (data.remainingLength > 0) {
+      throw EOSException();
+    }
+  }
 }
