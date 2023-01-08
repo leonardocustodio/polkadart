@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// U16 to encode/decode unsigned 16 bit integer
 class U16 extends Codec<int> {
+  final Source? source;
+
   ///
   /// constructor
-  U16({Registry? registry}) : super(registry: registry ?? Registry());
+  U16({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a unsigned 16 bit integer from the source
@@ -25,7 +28,7 @@ class U16 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    return bytesToLittleEndianInt(data.bytes(2).toList());
+    return bytesToLittleEndianInt((source ?? data).bytes(2).toList());
   }
 
   ///
