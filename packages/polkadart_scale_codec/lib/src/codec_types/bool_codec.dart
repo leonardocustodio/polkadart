@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// BoolCodec to encode/decode bool
 class BoolCodec extends Codec<bool> {
+  final Source? source;
+
   ///
   /// constructor
-  BoolCodec({Registry? registry}) : super(registry: registry ?? Registry());
+  BoolCodec({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a bool from the source
@@ -25,13 +28,7 @@ class BoolCodec extends Codec<bool> {
   /// ```
   @override
   bool decode() {
-    return decodeFromSource(data);
-  }
-
-  ///
-  /// Decode a bool from the source
-  static bool decodeFromSource(Source data) {
-    final bytes = data.bytes(1).toList();
+    final bytes = (source ?? data).bytes(1).toList();
 
     if (bytes[0] == 1) {
       return true;
