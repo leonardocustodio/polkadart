@@ -7,8 +7,7 @@ class U128 extends Codec<BigInt> {
 
   ///
   /// constructor
-  U128({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  U128({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a unsigned 128 bit integer from the source
