@@ -2,13 +2,12 @@ part of codec_types;
 
 ///
 /// U16 to encode/decode unsigned 16 bit integer
-class U16 extends Codec<int> {
+class U16 extends Codec<int> implements CodecInterface<int> {
   final Source? source;
 
   ///
   /// constructor
-  U16({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  U16({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a unsigned 16 bit integer from the source

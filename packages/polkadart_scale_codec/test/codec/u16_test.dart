@@ -105,4 +105,32 @@ void main() {
           () => codec.encode(65536), throwsA(isA<UnexpectedCaseException>()));
     });
   });
+
+  /// Test cases using U16() class
+  group('U16 Class Test', () {
+    final registry = TypeRegistry.createRegistry();
+    test('When lowest value 0x0000 is decoded then it returns 0', () {
+      final u16 = U16(source: Source('0x0000'));
+      final u16Value = u16.decode();
+      expect(u16Value, equals(0));
+    });
+
+    test('When highest value 0xffff is decoded then it returns 65535', () {
+      final u16 = U16(source: Source('0xffff'));
+      final u16Value = u16.decode();
+      expect(u16Value, equals(65535));
+    });
+
+    test('When lowest value 0 is encoded then it returns 0x0000', () {
+      final u16 = U16();
+      final u16Value = u16.encode(0);
+      expect(u16Value, equals('0000'));
+    });
+
+    test('When highest value 65535 is encoded then it returns 0xffff', () {
+      final u16 = U16();
+      final u16Value = u16.encode(65535);
+      expect(u16Value, equals('ffff'));
+    });
+  });
 }
