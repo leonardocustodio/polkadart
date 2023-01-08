@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// encode/decode unsigned 32 bit integer
 class U32 extends Codec<int> {
+  final Source? source;
+
   ///
   /// constructor
-  U32({Registry? registry}) : super(registry: registry ?? Registry());
+  U32({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a unsigned 32 bit integer from the source
@@ -25,7 +28,7 @@ class U32 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    return bytesToLittleEndianInt(data.bytes(4).toList());
+    return bytesToLittleEndianInt((source ?? data).bytes(4).toList());
   }
 
   ///
