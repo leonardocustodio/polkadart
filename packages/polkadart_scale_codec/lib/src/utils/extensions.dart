@@ -1,6 +1,6 @@
 part of utils;
 
-extension StringConverter on String {
+extension StringExtension on String {
   ///
   /// returns first character of string
   String get first {
