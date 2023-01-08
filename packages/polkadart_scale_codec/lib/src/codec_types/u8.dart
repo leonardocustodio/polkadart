@@ -7,8 +7,7 @@ class U8 extends Codec<int> {
 
   ///
   /// constructor
-  U8({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  U8({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a unsigned 8 bit integer from the source
