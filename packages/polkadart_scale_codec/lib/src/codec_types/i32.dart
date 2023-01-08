@@ -7,8 +7,7 @@ class I32 extends Codec<int> {
 
   ///
   /// constructor
-  I32({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  I32({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a signed 32 bit integer from the source
@@ -28,10 +27,12 @@ class I32 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    return data.byte() +
-        data.byte() * (pow(2, 8) as int) +
-        data.byte() * (pow(2, 16) as int) +
-        (data.byte() << 24).toSigned(32);
+    final tempData = source ?? data;
+
+    return tempData.byte() +
+        tempData.byte() * (pow(2, 8) as int) +
+        tempData.byte() * (pow(2, 16) as int) +
+        (tempData.byte() << 24).toSigned(32);
   }
 
   ///

@@ -105,4 +105,35 @@ void main() {
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
+
+  // I32() Direct Test Cases without type registry
+  group('I32 Direct Test', () {
+    test('When lowest value 0x80000000 is decoded then it returns -2147483648',
+        () {
+      final codec = I32(source: Source('0x00000080'));
+      final i32Value = codec.decode();
+      expect(i32Value, equals(-2147483648));
+    });
+
+    test('When highest value 0xffffff7f is decoded then it returns 2147483647',
+        () {
+      final codec = I32(source: Source('0xffffff7f'));
+      final i32Value = codec.decode();
+      expect(i32Value, equals(2147483647));
+    });
+
+    test('When lowest value -2147483648 is encoded then it returns 0x80000000',
+        () {
+      final codec = I32();
+      final i32Value = codec.encode(-2147483648);
+      expect(i32Value, equals('00000080'));
+    });
+
+    test('When highest value 2147483647 is encoded then it returns 0xffffff7f',
+        () {
+      final codec = I32();
+      final i32Value = codec.encode(2147483647);
+      expect(i32Value, equals('ffffff7f'));
+    });
+  });
 }
