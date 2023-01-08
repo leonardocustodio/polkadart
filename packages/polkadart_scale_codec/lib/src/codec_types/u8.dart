@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// U8 to encode/decode unsigned 8 bit integer
 class U8 extends Codec<int> {
+  final Source? source;
+
   ///
   /// constructor
-  U8({Registry? registry}) : super(registry: registry ?? Registry());
+  U8({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a unsigned 8 bit integer from the source
@@ -25,7 +28,7 @@ class U8 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    return bytesToLittleEndianInt(data.bytes(1).toList());
+    return bytesToLittleEndianInt((source ?? data).bytes(1).toList());
   }
 
   ///
