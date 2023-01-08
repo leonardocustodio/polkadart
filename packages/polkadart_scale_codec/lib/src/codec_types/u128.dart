@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// encode/decode unsigned 128 bit integer
 class U128 extends Codec<BigInt> {
+  final Source? source;
+
   ///
   /// constructor
-  U128({Registry? registry}) : super(registry: registry ?? Registry());
+  U128({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a unsigned 128 bit integer from the source
@@ -25,7 +28,7 @@ class U128 extends Codec<BigInt> {
   /// ```
   @override
   BigInt decode() {
-    final u64Codec = super.createTypeCodec('U64', data: data);
+    final u64Codec = U64(source: source ?? data);
     return u64Codec.decode() + (u64Codec.decode() << 64);
   }
 
@@ -53,7 +56,7 @@ class U128 extends Codec<BigInt> {
           'Expected value between 0 and BigInt.parse("ffffffffffffffffffffffffffffffff"), but found: $value');
     }
 
-    final u64Codec = super.createTypeCodec('U64');
+    final u64Codec = U64();
     return u64Codec
             .encode(value & BigInt.parse('ffffffffffffffff', radix: 16)) +
         u64Codec.encode(value >> 64);
