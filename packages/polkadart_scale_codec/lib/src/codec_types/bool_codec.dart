@@ -25,6 +25,12 @@ class BoolCodec extends Codec<bool> {
   /// ```
   @override
   bool decode() {
+    return decodeFromSource(data);
+  }
+
+  ///
+  /// Decode a bool from the source
+  static bool decodeFromSource(Source data) {
     final bytes = data.bytes(1).toList();
 
     if (bytes[0] == 1) {

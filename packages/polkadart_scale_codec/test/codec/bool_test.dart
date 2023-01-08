@@ -83,4 +83,17 @@ void main() {
       expect(() => codec.encode(null), throwsA(isA<Error>()));
     });
   });
+
+  /// Decode from source bool test-cases
+  group('Test bool DecodeFromSource', () {
+    test('When 0x01 is decoded then it returns true', () {
+      final boolValue = BoolCodec.decodeFromSource(Source('0x01'));
+      expect(boolValue, equals(true));
+    });
+
+    test('When 0x00 is decoded then it returns false', () {
+      final boolValue = BoolCodec.decodeFromSource(Source('0x00'));
+      expect(boolValue, equals(false));
+    });
+  });
 }
