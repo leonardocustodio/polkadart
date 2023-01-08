@@ -1,15 +1,16 @@
 part of codec_types;
 
 class CodecMapper {
-  static Codec? getCodec(String codecTypeName, Registry registry) {
+  static Codec getCodec(String codecTypeName) {
     switch (codecTypeName.toLowerCase()) {
       case 'bool':
-        return BoolCodec(registry: registry);
+        return BoolCodec();
       case 'u8':
-        return U8(registry: registry);
+        return U8();
       case 'u16':
-        return U16(registry: registry);
+        return U16();
     }
-    return null;
+    throw UnexpectedCodecException(
+        'Expected a supported codec, but got $codecTypeName');
   }
 }

@@ -7,8 +7,7 @@ class BoolCodec extends Codec<bool> {
 
   ///
   /// constructor
-  BoolCodec({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  BoolCodec({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a bool from the source
