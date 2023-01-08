@@ -2,7 +2,6 @@ part of utils;
 
 /// Decodes hex [value] and converts to Buffer of Uint8List
 Uint8List decodeHex(String value) {
-  assertionCheck(value.isHex);
   if (value.contains('0x')) {
     value = value.replaceFirst(RegExp(r'0x'), '');
   }
