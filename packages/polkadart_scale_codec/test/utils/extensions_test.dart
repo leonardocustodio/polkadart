@@ -14,14 +14,12 @@ void main() {
       expect(lastChar, equals('o'));
     });
 
-    test(
-        'given an empty string when getting first character it should throw',
+    test('given an empty string when getting first character it should throw',
         () {
       expect(() => ''.first, throwsA(isA<EmptyStringException>()));
     });
 
-    test(
-        'given an empty string when getting last character it should throw',
+    test('given an empty string when getting last character it should throw',
         () {
       expect(() => ''.last, throwsA(isA<EmptyStringException>()));
     });
