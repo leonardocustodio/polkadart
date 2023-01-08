@@ -7,8 +7,7 @@ class I8 extends Codec<int> {
 
   ///
   /// constructor
-  I8({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  I8({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a signed 8 bit integer from the source
