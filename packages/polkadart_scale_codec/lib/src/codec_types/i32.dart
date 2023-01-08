@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// I32 to encode/decode signed 32 bit integer
 class I32 extends Codec<int> {
+  final Source? source;
+
   ///
   /// constructor
-  I32({Registry? registry}) : super(registry: registry ?? Registry());
+  I32({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a signed 32 bit integer from the source
@@ -55,6 +58,6 @@ class I32 extends Codec<int> {
     }
 
     final newValue = (value + 4294967296) % 4294967296;
-    return createTypeCodec('U32').encode(newValue);
+    return U32().encode(newValue);
   }
 }
