@@ -3,14 +3,29 @@ part of codec_types;
 ///
 /// I8 to encode/decode signed 8 bit integer
 class I8 extends Codec<int> {
+  final Source? source;
+
   ///
   /// constructor
-  I8({Registry? registry}) : super(registry: registry ?? Registry());
+  I8({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a signed 8 bit integer from the source
   ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<int>().createTypeCodec('I8', data: Source('0x80'));
+  /// final value = codec.decode();
+  /// print(value); // -128
+  /// ```
   ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<int>().createTypeCodec('I8', data: Source('0x7f'));
+  /// final value = codec.decode();
+  /// print(value); // 127
+  /// ```
   @override
   int decode() {
     final byte = data.byte();
@@ -19,13 +34,27 @@ class I8 extends Codec<int> {
 
   ///
   /// Encodes a signed 8 bit integer
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<int>().createTypeCodec('I8');
+  /// final value = codec.encode(-128);
+  /// print(value); // 80
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<int>().createTypeCodec('I8');
+  /// final value = codec.encode(127);
+  /// print(value); // 7f
+  /// ```
   @override
   String encode(int value) {
     if (value < -128 || value > 127) {
       throw UnexpectedCaseException(
-          'I8: value $value is not in range of -128 to 127');
+          'Expected value between -128 and 127, but found: $value');
     }
 
-    return encodeHex(<int>[(value + 256) % 256]);
+    return encodeHex([(value + 256) % 256]);
   }
 }
