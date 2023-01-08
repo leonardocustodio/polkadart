@@ -103,4 +103,31 @@ void main() {
       expect(() => codec.encode(256), throwsA(isA<UnexpectedCaseException>()));
     });
   });
+
+  /// Direct test for U8
+  group('U8 Direct Test', () {
+    test('When lowest value 0x00 is decoded then it returns 0', () {
+      final u8 = U8(source: Source('0x00'));
+      final u8Value = u8.decode();
+      expect(u8Value, equals(0));
+    });
+
+    test('When highest value 0xff is decoded then it returns 255', () {
+      final u8 = U8(source: Source('0xff'));
+      final u8Value = u8.decode();
+      expect(u8Value, equals(255));
+    });
+
+    test('When lowest value 0 is encoded then it returns 0x00', () {
+      final u8 = U8();
+      final u8Value = u8.encode(0);
+      expect(u8Value, equals('00'));
+    });
+
+    test('When highest value 255 is encoded then it returns 0xff', () {
+      final u8 = U8();
+      final u8Value = u8.encode(255);
+      expect(u8Value, equals('ff'));
+    });
+  });
 }
