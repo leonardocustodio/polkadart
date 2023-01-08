@@ -84,7 +84,7 @@ void main() {
     });
   });
 
-  // BoolCodec direct test cases
+  /// BoolCodec direct test cases
   group('Test BoolCodec Decode', () {
     test('When 0x01 is decoded then it returns true', () {
       final codec = BoolCodec(source: Source('0x01'));
