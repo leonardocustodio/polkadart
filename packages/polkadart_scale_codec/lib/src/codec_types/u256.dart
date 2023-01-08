@@ -3,9 +3,12 @@ part of codec_types;
 ///
 /// encode/decode unsigned 256 bit integer
 class U256 extends Codec<BigInt> {
+  final Source? source;
+
   ///
   /// constructor
-  U256({Registry? registry}) : super(registry: registry ?? Registry());
+  U256({Registry? registry, this.source})
+      : super(registry: registry ?? Registry());
 
   ///
   /// Decode a unsigned 256 bit integer from the source
@@ -24,9 +27,8 @@ class U256 extends Codec<BigInt> {
   /// ```
   @override
   BigInt decode() {
-    final BigInt low = super.createTypeCodec('U128', data: data).decode();
-    final BigInt high = super.createTypeCodec('U128', data: data).decode();
-    return low + (high << 128);
+    final u128Codec = U128(source: source ?? data);
+    return u128Codec.decode() + (u128Codec.decode() << 128);
   }
 
   ///
@@ -47,18 +49,18 @@ class U256 extends Codec<BigInt> {
   /// ```
   @override
   String encode(BigInt value) {
-    if (value.toInt() >= 0 &&
-        value <=
+    if (value < BigInt.zero ||
+        value >
             BigInt.parse(
                 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
                 radix: 16)) {
-      final low = super.createTypeCodec('U128');
-      final high = super.createTypeCodec('U128');
-      return low.encode(value &
-              BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16)) +
-          high.encode(value >> 128);
+      throw UnexpectedCaseException(
+          'Expected value between 0 and BigInt.parse("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"), but found: $value');
     }
-    throw UnexpectedCaseException(
-        'Expected value between 0 and BigInt.parse("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"), but found: $value');
+
+    final u128Codec = U128();
+    return u128Codec.encode(value &
+            BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16)) +
+        u128Codec.encode(value >> 128);
   }
 }
