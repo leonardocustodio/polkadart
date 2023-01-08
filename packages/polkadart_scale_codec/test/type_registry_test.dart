@@ -13,17 +13,15 @@ void main() {
       expect(registry.length, equals(keys.length));
     });
 
-    test('When map of codecs is added to registry then it should have length 2',
-        () {
+    test('When map of codecs is added to registry then its keys matched', () {
       final Registry registry = Registry();
 
-      registry.addCodecs({'test': BoolCodec()});
-
-      expect(registry.length, equals(1));
+      registry.addCodecs({'test': BoolCodec(), 'test2': BoolCodec()});
 
       final evaluatedKeys = registry.keys.toList();
 
-      expect(evaluatedKeys, equals(['test']));
+      expect(registry.length, equals(evaluatedKeys.length));
+      expect(evaluatedKeys, equals(['test', 'test2']));
     });
   });
 }
