@@ -15,13 +15,13 @@ void main() {
     });
 
     test(
-        'When getter first is called on \'\' then UnexpectedCaseException is thrown',
+        'given an empty string when getting first character it should throw',
         () {
       expect(() => ''.first, throwsA(isA<EmptyStringException>()));
     });
 
     test(
-        'When getter last is called on \'\' then UnexpectedCaseException is thrown',
+        'given an empty string when getting last character it should throw',
         () {
       expect(() => ''.last, throwsA(isA<EmptyStringException>()));
     });
