@@ -28,7 +28,7 @@ class TypeRegistry {
 
     // register default codec
     for (final String codecType in _defaultCodecTypes) {
-      final Codec codec = getCodecFromCodecName(codecType, registry);
+      final Codec codec = getCodecFromCodecName(codecType);
       registry.addCodec(codecType, codec);
     }
     return registry;
@@ -45,19 +45,8 @@ class TypeRegistry {
   /// final registry = TypeRegistry.createRegistry();
   /// final codec = TypeRegistry.getCodecFromCodecName('Compact', registry);
   /// ```
-  static Codec getCodecFromCodecName(String codecName, Registry registry) {
-    Codec? codec = CodecMapper.getCodec(codecName, registry);
-
-    if (codec != null) {
-      return codec;
-    }
-
-    codec = CodecMapper.getCodec(codecName, registry);
-    if (codec != null) {
-      return codec;
-    }
-
-    throw UnexpectedCodecException('Unable to find codec for $codecName');
+  static Codec getCodecFromCodecName(String codecName) {
+    return CodecMapper.getCodec(codecName);
   }
 
   ///
@@ -125,6 +114,7 @@ class TypeRegistry {
           }
         }
 
+        //
         // Tuple
         if (value.startsWith('(') && value.endsWith(')')) {
           final Codec codec = registry.getCodec('Tuples')!;
@@ -133,49 +123,67 @@ class TypeRegistry {
           registry.addCodec(key, codec);
           continue;
         }
+        //
         // Fixed array
         if (value.startsWith('[') && value.endsWith(']')) {
-          final slicedList = value.substring(1, value.length - 2).split(';');
-          if (slicedList.length == 2) {
-            final String subType = slicedList[0].trim();
-            final codec = subType.toLowerCase() == 'u8'
-                ? registry.getCodec('VecU8Fixed')!
-                : registry.getCodec('FixedArray')!;
-            codec.subType = subType;
-            codec.fixedLength = int.parse(slicedList[1]);
-            registry.addCodec(key, codec);
-          }
+          _initFixedArray(registry, key, value);
         }
       } else if (value is Map) {
+        //
         // enum
         if (value['_enum'] != null) {
-          final Codec codec = registry.getCodec('Enum')!;
-          if (value['_enum'] is Map<String, dynamic>) {
-            codec.typeStruct = value['_enum'];
-          } else {
-            codec.valueList = value['_enum'];
-          }
-          registry.addCodec(key, codec);
+          _initEnum(registry, key, value as Map<String, dynamic>);
           continue;
         }
+        //
         // set
         if (value['_set'] != null) {
-          final Codec codec = registry.getCodec('Set')!;
-          if (value['_bitLength'] != null) {
-            codec.bitLength = int.parse(value['_bitLength']);
-          } else {
-            codec.bitLength = 16;
-          }
-          (value['_set'] as Map).remove('_bitLength');
-          codec.valueList = (value['_set'] as Map).keys.toList();
-          registry.addCodec(key, codec);
+          _initSet(registry, key, value as Map<String, dynamic>);
           continue;
         }
+        //
         // struct
         final Codec codec = registry.getCodec('Struct')!;
         codec.typeStruct = value as List;
         registry.addCodec(key, codec);
       }
     }
+  }
+
+  static void _initFixedArray(Registry registry, String key, String value) {
+    final slicedList = value.substring(1, value.length - 2).split(';');
+    if (slicedList.length == 2) {
+      final String subType = slicedList[0].trim();
+      final Codec codec = subType.toLowerCase() == 'u8'
+          ? registry.getCodec('VecU8Fixed')!
+          : registry.getCodec('FixedArray')!;
+      codec.subType = subType;
+      codec.fixedLength = int.parse(slicedList[1]);
+      registry.addCodec(key, codec);
+    }
+  }
+
+  static void _initEnum(
+      Registry registry, String key, Map<String, dynamic> value) {
+    final Codec codec = registry.getCodec('Enum')!;
+    if (value['_enum'] is Map<String, dynamic>) {
+      codec.typeStruct = value['_enum'];
+    } else {
+      codec.valueList = value['_enum'];
+    }
+    registry.addCodec(key, codec);
+  }
+
+  static void _initSet(
+      Registry registry, String key, Map<String, dynamic> value) {
+    final Codec codec = registry.getCodec('Set')!;
+    if (value['_bitLength'] != null) {
+      codec.bitLength = int.parse(value['_bitLength']);
+    } else {
+      codec.bitLength = 16;
+    }
+    (value['_set'] as Map).remove('_bitLength');
+    codec.valueList = (value['_set'] as Map).keys.toList();
+    registry.addCodec(key, codec);
   }
 }
