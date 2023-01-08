@@ -7,8 +7,7 @@ class I8 extends Codec<int> {
 
   ///
   /// constructor
-  I8({Registry? registry, this.source})
-      : super(registry: registry ?? Registry());
+  I8({this.source}) : super(registry: Registry());
 
   ///
   /// Decode a signed 8 bit integer from the source
@@ -28,7 +27,7 @@ class I8 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    final byte = data.byte();
+    final byte = (source ?? data).byte();
     return (byte | (byte & 0x80) * 0x1fffffe).toSigned(16);
   }
 
