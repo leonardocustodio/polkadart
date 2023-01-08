@@ -97,4 +97,43 @@ void main() {
           () => codec.encode(32768), throwsA(isA<UnexpectedCaseException>()));
     });
   });
+
+  // I16() direct test cases without type registry
+  group('I16 Direct Test', () {
+    test('When lowest value 0x8000 is decoded then it returns -32768', () {
+      final codec = I16(source: Source('0x0080'));
+      final i16Value = codec.decode();
+      expect(i16Value, equals(-32768));
+    });
+
+    test('When highest value 0xff7f is decoded then it returns 32767', () {
+      final codec = I16(source: Source('0xff7f'));
+      final i16Value = codec.decode();
+      expect(i16Value, equals(32767));
+    });
+
+    test('When lowest value -32768 is encoded then it returns 0x8000', () {
+      final codec = I16();
+      final i16Value = codec.encode(-32768);
+      expect(i16Value, equals('0080'));
+    });
+
+    test('When highest value 32767 is encoded then it returns 0xff7f', () {
+      final codec = I16();
+      final i16Value = codec.encode(32767);
+      expect(i16Value, equals('ff7f'));
+    });
+
+    test('When value -32769 is encoded then it throws an exception', () {
+      final codec = I16();
+      expect(
+          () => codec.encode(-32769), throwsA(isA<UnexpectedCaseException>()));
+    });
+
+    test('When value 32768 is encoded then it throws an exception', () {
+      final codec = I16();
+      expect(
+          () => codec.encode(32768), throwsA(isA<UnexpectedCaseException>()));
+    });
+  });
 }

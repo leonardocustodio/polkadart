@@ -175,4 +175,70 @@ void main() {
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
+
+  // U256() Direct Test Cases without type registry
+  group('Direct Test', () {
+    test(
+        'When 0x0000000000000000000000000000000000000000000000000000000000000000 is decoded then it returns 0',
+        () {
+      final codec = U256(
+          source: Source(
+              '0x0000000000000000000000000000000000000000000000000000000000000000'));
+      final BigInt u256Value = codec.decode();
+      expect(u256Value.toString(), equals('0'));
+    });
+
+    test(
+        'When BigInt 0 is encoded then it returns 0x0000000000000000000000000000000000000000000000000000000000000000',
+        () {
+      final codec = U256();
+      final String u256Value = codec.encode(BigInt.from(0));
+      expect(
+          u256Value,
+          equals(
+              '0000000000000000000000000000000000000000000000000000000000000000'));
+    });
+
+    test(
+        'When 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns 115792089237316195423570985008687907853269984665640564039457584007913129639935',
+        () {
+      final codec = U256(
+          source: Source(
+              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+      final BigInt u256Value = codec.decode();
+      expect(
+          u256Value.toString(),
+          equals(
+              '115792089237316195423570985008687907853269984665640564039457584007913129639935'));
+    });
+
+    test(
+        'When BigInt 115792089237316195423570985008687907853269984665640564039457584007913129639935 is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+        () {
+      final codec = U256();
+      final String u256Value = codec.encode(BigInt.parse(
+          '115792089237316195423570985008687907853269984665640564039457584007913129639935'));
+
+      expect(
+          u256Value,
+          equals(
+              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+    });
+
+    test(
+        'When BigInt 115792089237316195423570985008687907853269984665640564039457584007913129639936 is encoded then it throws an exception',
+        () {
+      final codec = U256();
+      expect(
+          () => codec.encode(BigInt.parse(
+              '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
+          throwsA(isA<UnexpectedCaseException>()));
+    });
+
+    test('When BigInt -1 is encoded then it throws an exception', () {
+      final codec = U256();
+      expect(() => codec.encode(BigInt.from(-1)),
+          throwsA(isA<UnexpectedCaseException>()));
+    });
+  });
 }
