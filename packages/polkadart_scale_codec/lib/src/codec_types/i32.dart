@@ -27,12 +27,9 @@ class I32 extends Codec<int> {
   /// ```
   @override
   int decode() {
-    final tempData = source ?? data;
-
-    return tempData.byte() +
-        tempData.byte() * (pow(2, 8) as int) +
-        tempData.byte() * (pow(2, 16) as int) +
-        (tempData.byte() << 24).toSigned(32);
+    return U16(source: source ?? data).decode() +
+        (source ?? data).byte() * (pow(2, 16) as int) +
+        ((source ?? data).byte() << 24).toSigned(32);
   }
 
   ///
