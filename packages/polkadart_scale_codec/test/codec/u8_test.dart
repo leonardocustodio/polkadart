@@ -23,14 +23,18 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0 is encoded then it returns 0x00', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u8');
-      final u8Value = codec.encode(0);
-      expect(u8Value, equals('00'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, 0);
+      final u8Value = encoder.toHex();
+      expect(u8Value, equals('0x00'));
     });
 
     test('When highest value 255 is encoded then it returns 0xff', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u8');
-      final u8Value = codec.encode(255);
-      expect(u8Value, equals('ff'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, 255);
+      final u8Value = encoder.toHex();
+      expect(u8Value, equals('0xff'));
     });
   });
 
@@ -39,12 +43,17 @@ void main() {
 
     test('When value -1 is encoded then it throws an exception', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u8');
-      expect(() => codec.encode(-1), throwsA(isA<UnexpectedCaseException>()));
+
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, -1),
+          throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 256 is encoded then it throws an exception', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u8');
-      expect(() => codec.encode(256), throwsA(isA<UnexpectedCaseException>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, 256),
+          throwsA(isA<UnexpectedCaseException>()));
     });
   });
 
@@ -73,14 +82,18 @@ void main() {
 
     test('When lowest value 0 is encoded then it returns 0x00', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u8_key');
-      final u8Value = codec.encode(0);
-      expect(u8Value, equals('00'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, 0);
+      final u8Value = encoder.toHex();
+      expect(u8Value, equals('0x00'));
     });
 
     test('When highest value 255 is encoded then it returns 0xff', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u8_key');
-      final u8Value = codec.encode(255);
-      expect(u8Value, equals('ff'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, 255);
+      final u8Value = encoder.toHex();
+      expect(u8Value, equals('0xff'));
     });
   });
 
@@ -95,12 +108,16 @@ void main() {
 
     test('When value -1 is encoded then it throws an exception', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u8_key');
-      expect(() => codec.encode(-1), throwsA(isA<UnexpectedCaseException>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, -1),
+          throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 256 is encoded then it throws an exception', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u8_key');
-      expect(() => codec.encode(256), throwsA(isA<UnexpectedCaseException>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, 256),
+          throwsA(isA<UnexpectedCaseException>()));
     });
   });
 
@@ -120,14 +137,18 @@ void main() {
 
     test('When lowest value 0 is encoded then it returns 0x00', () {
       final u8 = U8();
-      final u8Value = u8.encode(0);
-      expect(u8Value, equals('00'));
+      final encoder = HexEncoder();
+      u8.encode(encoder, 0);
+      final u8Value = encoder.toHex();
+      expect(u8Value, equals('0x00'));
     });
 
     test('When highest value 255 is encoded then it returns 0xff', () {
       final u8 = U8();
-      final u8Value = u8.encode(255);
-      expect(u8Value, equals('ff'));
+      final encoder = HexEncoder();
+      u8.encode(encoder, 255);
+      final u8Value = encoder.toHex();
+      expect(u8Value, equals('0xff'));
     });
   });
 }

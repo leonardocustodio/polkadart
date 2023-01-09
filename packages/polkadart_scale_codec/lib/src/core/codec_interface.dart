@@ -9,5 +9,5 @@ mixin CodecInterface<T> {
 
   ///
   /// encodes the passed parameter and returns the encoded value
-  String encode(T value);
+  void encode(Encoder encoder, T value);
 }

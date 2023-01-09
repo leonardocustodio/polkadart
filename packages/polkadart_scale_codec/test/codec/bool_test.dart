@@ -24,14 +24,18 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When true is encoded then it returns 0x01', () {
       final codec = Codec(registry: registry).createTypeCodec('bool');
-      final boolValue = codec.encode(true);
-      expect(boolValue, equals('01'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, true);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x01'));
     });
 
     test('When false is encoded then it returns 0x00', () {
       final codec = Codec(registry: registry).createTypeCodec('bool');
-      final boolValue = codec.encode(false);
-      expect(boolValue, equals('00'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, false);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x00'));
     });
   });
 
@@ -59,14 +63,18 @@ void main() {
 
     test('When true is encoded then it returns 0x01', () {
       final codec = Codec(registry: registry).createTypeCodec('bool_key');
-      final boolValue = codec.encode(true);
-      expect(boolValue, equals('01'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, true);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x01'));
     });
 
     test('When false is encoded then it returns 0x00', () {
       final codec = Codec(registry: registry).createTypeCodec('bool_key');
-      final boolValue = codec.encode(false);
-      expect(boolValue, equals('00'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, false);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x00'));
     });
   });
 
@@ -80,7 +88,8 @@ void main() {
 
     test('When null is encoded then it throws CodecException.', () {
       final codec = Codec(registry: registry).createTypeCodec('bool');
-      expect(() => codec.encode(null), throwsA(isA<Error>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, null), throwsA(isA<Error>()));
     });
   });
 
@@ -107,14 +116,18 @@ void main() {
   group('Test BoolCodec Encode', () {
     test('When true is encoded then it returns 0x01', () {
       final codec = BoolCodec();
-      final boolValue = codec.encode(true);
-      expect(boolValue, equals('01'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, true);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x01'));
     });
 
     test('When false is encoded then it returns 0x00', () {
       final codec = BoolCodec();
-      final boolValue = codec.encode(false);
-      expect(boolValue, equals('00'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, false);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x00'));
     });
   });
 }

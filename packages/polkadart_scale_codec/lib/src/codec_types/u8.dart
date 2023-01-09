@@ -36,22 +36,24 @@ class U8 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('U8');
-  /// final value = codec.encode(0);
-  /// print(value); // 00
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 0);
+  /// print(encoder.toHex()); // 0x00
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('U8');
-  /// final value = codec.encode(255);
-  /// print(value); // ff
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 255);
+  /// print(encoder.toHex()); // 0xff
   /// ```
   @override
-  String encode(int value) {
+  void encode(Encoder encoder, int value) {
     if (value < 0 || value > 255) {
       throw UnexpectedCaseException(
           'Expected value between 0 and 255, but found: $value');
     }
-    return encodeHex(<int>[value]);
+    encoder.write(value);
   }
 }

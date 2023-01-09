@@ -10,3 +10,4 @@ part 'registry.dart';
 part 'source.dart';
 part 'type_registry.dart';
 part 'codec_interface.dart';
+part 'encoder.dart';

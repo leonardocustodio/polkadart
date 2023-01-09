@@ -45,18 +45,20 @@ class BoolCodec extends Codec<bool> {
   /// Example:
   /// ```dart
   /// final codec = Codec<bool>().createTypeCodec('Bool');
-  /// final boolValue = codec.encode(true);
-  /// print(boolValue); // 01
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, true);
+  /// print(encoder.toHex()); // 0x01
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<bool>().createTypeCodec('Bool');
-  /// final boolValue = codec.encode(false);
-  /// print(boolValue); // 00
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, false);
+  /// print(encoder.toHex()); // 0x00
   /// ```
   @override
-  String encode(bool value) {
-    return value ? '01' : '00';
+  void encode(Encoder encoder, bool value) {
+    encoder.write(value ? 1 : 0);
   }
 }

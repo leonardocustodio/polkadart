@@ -19,12 +19,16 @@ void main() {
   /// encode
   {
     final codec = Codec(registry: registry).createTypeCodec('bool');
-    final boolValue = codec.encode(true);
+    final encoder = HexEncoder();
+    codec.encode(encoder, true);
+    final boolValue = encoder.toHex();
     print('true: encoded -> $boolValue');
   }
   {
     final Codec codec4 = Codec(registry: registry).createTypeCodec('bool');
-    final boolValue = codec4.encode(false);
+    final encoder = HexEncoder();
+    codec4.encode(encoder, false);
+    final boolValue = encoder.toHex();
     print('false: encoded -> $boolValue');
   }
 
@@ -52,12 +56,16 @@ void main() {
   /// encode
   {
     final codec = Codec(registry: registry).createTypeCodec('bool_key');
-    final boolValue = codec.encode(true);
+    final encoder = HexEncoder();
+    codec.encode(encoder, true);
+    final boolValue = encoder.toHex();
     print('true: encoded -> $boolValue');
   }
   {
     final codec = Codec(registry: registry).createTypeCodec('bool_key');
-    final boolValue = codec.encode(false);
+    final encoder = HexEncoder();
+    codec.encode(encoder, false);
+    final boolValue = encoder.toHex();
     print('false: encoded -> $boolValue');
   }
 
@@ -76,13 +84,17 @@ void main() {
 
   {
     final codec = Codec<bool>().createTypeCodec('bool');
-    final boolValue = codec.encode(true);
+    final encoder = HexEncoder();
+    codec.encode(encoder, true);
+    final boolValue = encoder.toHex();
     print('true: encoded -> $boolValue');
   }
 
   {
     final codec = Codec<bool>().createTypeCodec('bool');
-    final boolValue = codec.encode(false);
+    final encoder = HexEncoder();
+    codec.encode(encoder, false);
+    final boolValue = encoder.toHex();
     print('false: encoded -> $boolValue');
   }
 }
