@@ -25,6 +25,8 @@ class CodecMapper {
         return I32();
       case 'i64':
         return I64();
+      case 'i128':
+        return I128();
     }
     throw UnexpectedCodecException(
         'Expected a supported codec, but got $codecTypeName');
