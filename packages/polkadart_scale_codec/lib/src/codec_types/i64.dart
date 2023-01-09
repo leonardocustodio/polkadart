@@ -12,7 +12,19 @@ class I64 extends Codec<BigInt> {
   ///
   /// Decode a signed 64 bit integer from the source
   ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<BigInt>().createTypeCodec('I64', data: Source('0x0000000000000080'));
+  /// final value = codec.decode();
+  /// print(value); // -9223372036854775808
+  /// ```
   ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<BigInt>().createTypeCodec('I64', data: Source('0xffffffffffffff7f'));
+  /// final value = codec.decode();
+  /// print(value); // 9223372036854775807
+  /// ```
   @override
   BigInt decode() {
     final low = U32(source: source ?? data).decode();
@@ -22,6 +34,20 @@ class I64 extends Codec<BigInt> {
 
   ///
   /// Encodes a signed 64 bit integer
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<BigInt>().createTypeCodec('I64');
+  /// final value = codec.encode(BigInt.from(-9223372036854775808));
+  /// print(value); // 0000000000000080
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec<BigInt>().createTypeCodec('I64');
+  /// final value = codec.encode(BigInt.from(9223372036854775807));
+  /// print(value); // ffffffffffffff7f
+  /// ```
   @override
   String encode(BigInt value) {
     if (value < BigInt.from(-9223372036854775808) ||

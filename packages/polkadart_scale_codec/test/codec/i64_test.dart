@@ -5,7 +5,7 @@ void main() {
   group('I64 Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test(
-        'When lowest value 0x8000000000000000 is decoded then it returns -9223372036854775808',
+        'When lowest value 0x0000000000000080 is decoded then it returns -9223372036854775808',
         () {
       final codec = Codec(registry: registry)
           .createTypeCodec('i64', data: Source('0x0000000000000080'));
@@ -26,7 +26,7 @@ void main() {
   group('I64 Encode Test', () {
     final registry = TypeRegistry.createRegistry();
     test(
-        'When lowest value -9223372036854775808 is encoded then it returns 0x8000000000000000',
+        'When lowest value -9223372036854775808 is encoded then it returns 0x0000000000000080',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
       final i64Value = codec.encode(BigInt.from(-9223372036854775808));
@@ -69,7 +69,7 @@ void main() {
       {'i64_key': 'i64'},
     );
     test(
-        'When lowest value -9223372036854775808 is encoded then it returns 0x8000000000000000',
+        'When lowest value -9223372036854775808 is encoded then it returns 0x0000000000000080',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
       final i64Value = codec.encode(BigInt.from(-9223372036854775808));
@@ -85,7 +85,7 @@ void main() {
     });
 
     test(
-        'When lowest value 0x8000000000000000 is decoded then it returns -9223372036854775808',
+        'When lowest value 0x0000000000000080 is decoded then it returns -9223372036854775808',
         () {
       final codec = Codec(registry: registry)
           .createTypeCodec('i64', data: Source('0x0000000000000080'));
@@ -131,7 +131,7 @@ void main() {
 
   group('I64 Direct Decode Test', () {
     test(
-        'When lowest value 0x8000000000000000 is decoded then it returns -9223372036854775808',
+        'When lowest value 0x0000000000000080 is decoded then it returns -9223372036854775808',
         () {
       final codec = I64(source: Source('0x0000000000000080'));
       final i64Value = codec.decode();
@@ -149,7 +149,7 @@ void main() {
 
   group('I64 Direct Encode Test', () {
     test(
-        'When lowest value -9223372036854775808 is encoded then it returns 0x8000000000000000',
+        'When lowest value -9223372036854775808 is encoded then it returns 0x0000000000000080',
         () {
       final codec = I64();
       final i64Value = codec.encode(BigInt.from(-9223372036854775808));
