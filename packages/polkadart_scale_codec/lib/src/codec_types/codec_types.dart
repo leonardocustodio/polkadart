@@ -18,3 +18,4 @@ part 'i16.dart';
 part 'i32.dart';
 part 'i64.dart';
 part 'i128.dart';
+part 'i256.dart';
