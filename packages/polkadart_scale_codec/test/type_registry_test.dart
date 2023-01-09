@@ -15,6 +15,7 @@ void main() {
         'i8',
         'i16',
         'i32',
+        'i64',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();
