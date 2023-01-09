@@ -14,14 +14,14 @@ class I128 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I32', data: Source('0x00000000000000000000000000000080'));
+  /// final codec = Codec<BigInt>().createTypeCodec('I128', data: Source('0x00000000000000000000000000000080'));
   /// final value = codec.decode();
   /// print(value); // -170141183460469231731687303715884105728
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I32', data: Source('0xffffffffffffffffffffffffffffff7f'));
+  /// final codec = Codec<BigInt>().createTypeCodec('I128', data: Source('0xffffffffffffffffffffffffffffff7f'));
   /// final value = codec.decode();
   /// print(value); // 170141183460469231731687303715884105727
   /// ```
@@ -37,14 +37,14 @@ class I128 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I32');
+  /// final codec = Codec<BigInt>().createTypeCodec('I128');
   /// final value = codec.encode(BigInt.parse('-170141183460469231731687303715884105728'));
   /// print(value); // 00000000000000000000000000000080
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I32');
+  /// final codec = Codec<BigInt>().createTypeCodec('I128');
   /// final value = codec.encode(BigInt.parse('170141183460469231731687303715884105727'));
   /// print(value); // ffffffffffffffffffffffffffffff7f
   /// ```
