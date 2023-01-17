@@ -6,14 +6,14 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00 is decoded then it returns 0', () {
       final codec =
-          Codec(registry: registry).createTypeCodec('u8', data: Source('0x00'));
+          Codec(registry: registry).createTypeCodec('u8', input: Input('0x00'));
       final u8Value = codec.decode();
       expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
       final codec =
-          Codec(registry: registry).createTypeCodec('u8', data: Source('0xff'));
+          Codec(registry: registry).createTypeCodec('u8', input: Input('0xff'));
       final u8Value = codec.decode();
       expect(u8Value, equals(255));
     });
@@ -68,14 +68,14 @@ void main() {
 
     test('When lowest value 0x00 is decoded then it returns 0', () {
       final codec = Codec<int>(registry: registry)
-          .createTypeCodec('u8_key', data: Source('0x00'));
+          .createTypeCodec('u8_key', input: Input('0x00'));
       final u8Value = codec.decode();
       expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
       final codec = Codec<int>(registry: registry)
-          .createTypeCodec('u8_key', data: Source('0xff'));
+          .createTypeCodec('u8_key', input: Input('0xff'));
       final u8Value = codec.decode();
       expect(u8Value, equals(255));
     });
@@ -124,14 +124,12 @@ void main() {
   /// Direct test for U8
   group('U8 Direct Test', () {
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final u8 = U8(source: Source('0x00'));
-      final u8Value = u8.decode();
+      final u8Value = U8.decodeFromInput(Input('0x00'));
       expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
-      final u8 = U8(source: Source('0xff'));
-      final u8Value = u8.decode();
+      final u8Value = U8.decodeFromInput(Input('0xff'));
       expect(u8Value, equals(255));
     });
 

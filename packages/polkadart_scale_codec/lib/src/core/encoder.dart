@@ -4,11 +4,11 @@ part of core;
 /// mixin to laydown the foundation defined set of instructions when making a [HexEncoder] or [ByteEncoder]
 mixin Encoder {
   ///
-  /// append single byte to the data
+  /// append single byte to the input
   void write(int byte);
 
   ///
-  /// append the list of bytes to the data.
+  /// append the list of bytes to the input.
   void bytes(List<int> bytes);
 }
 
@@ -31,7 +31,7 @@ class HexEncoder with Encoder {
   }
 
   ///
-  /// Return current hex data
+  /// Return current hex buffer
   String toHex() {
     return _buffer.toString();
   }

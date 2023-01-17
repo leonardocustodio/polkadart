@@ -4,7 +4,7 @@ part of core;
 /// An interface for the codec
 mixin CodecInterface<T> {
   ///
-  /// decodes the value form the source
+  /// decodes the value
   T decode();
 
   ///

@@ -3,31 +3,47 @@ part of codec_types;
 ///
 /// U8 to encode/decode unsigned 8 bit integer
 class U8 extends Codec<int> {
-  final Source? source;
-
   ///
   /// constructor
-  U8({this.source}) : super(registry: Registry());
+  U8() : super(registry: Registry());
 
   ///
-  /// Decode a unsigned 8 bit integer from the source
+  /// Decode a unsigned 8 bit integer from the Codec's input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8', data: Source('0x00'));
+  /// final codec = Codec<int>().createTypeCodec('U8', input: Input('0x00'));
   /// final value = codec.decode();
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8', data: Source('0xff'));
+  /// final codec = Codec<int>().createTypeCodec('U8', input: Input('0xff'));
   /// final value = codec.decode();
   /// print(value); // 255
   /// ```
   @override
   int decode() {
-    return bytesToLittleEndianInt((source ?? data).bytes(1).toList());
+    return decodeFromInput(input);
+  }
+
+  ///
+  /// Decode a unsigned 8 bit integer from the input
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U8.decodeFromInput(Input('0x00'));
+  /// print(value); // 0
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U8.decodeFromInput(Input('0xff'));
+  /// print(value); // 255
+  /// ```
+  static int decodeFromInput(Input input) {
+    return bytesToLittleEndianInt(input.bytes(1).toList());
   }
 
   ///
