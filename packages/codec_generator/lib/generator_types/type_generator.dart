@@ -21,6 +21,31 @@ abstract class TypeGenerator {
     this.docs = const <String>[],
   });
 
+  ///
+  /// Generate class code
+  ///
+  /// ```dart
+  /// import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'; as scale_codec
+  /// // other imports
+  ///
+  /// // class declaration
+  /// class ClassName<T, P, Q...... Generics> extends scale_codec.Encoder {
+  ///
+  ///  // Fields
+  /// final TypeName variableName;
+  ///
+  /// // Constructor
+  /// ClassName({
+  ///   required this.variableName, // if not nullable
+  ///   this.variableName, // if nullable
+  /// });
+  ///
+  /// // Encode method
+  /// @override
+  /// void encode(scale_codec.Encoder encoder) {
+  ///   variableName.encode(encoder);
+  /// }
+  /// ```
   String toClass() {
     final buffer = StringBuffer();
 
