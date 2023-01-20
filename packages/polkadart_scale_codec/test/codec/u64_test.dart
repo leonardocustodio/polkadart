@@ -7,7 +7,7 @@ void main() {
     test('When lowest value 0x0000000000000000 is decoded then it returns 0',
         () {
       final codec = Codec<BigInt>(registry: registry)
-          .createTypeCodec('u64', data: Source('0x0000000000000000'));
+          .createTypeCodec('u64', input: Input('0x0000000000000000'));
       final BigInt u64Value = codec.decode();
       expect(u64Value.toString(), equals('0'));
     });
@@ -16,7 +16,7 @@ void main() {
         'When highest value 0xffffffffffffffff is decoded then it returns 18446744073709551615',
         () {
       final codec = Codec<BigInt>(registry: registry)
-          .createTypeCodec('u64', data: Source('0xffffffffffffffff'));
+          .createTypeCodec('u64', input: Input('0xffffffffffffffff'));
       final BigInt u64Value = codec.decode();
       expect(u64Value.toString(), equals('18446744073709551615'));
     });
@@ -27,17 +27,18 @@ void main() {
     test('When lowest value 0 is encoded then it returns 0x0000000000000000',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u64');
-      final String u64Value = codec.encode(BigInt.from(0));
-      expect(u64Value, equals('0000000000000000'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.from(0));
+      expect(encoder.toHex(), equals('0x0000000000000000'));
     });
 
     test(
         'When highest value 18446744073709551615 is encoded then it returns 0xffffffffffffffff',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u64');
-      final String u64Value =
-          codec.encode(BigInt.parse('18446744073709551615'));
-      expect(u64Value, equals('ffffffffffffffff'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.parse('18446744073709551615'));
+      expect(encoder.toHex(), equals('0xffffffffffffffff'));
     });
   });
 
@@ -46,7 +47,8 @@ void main() {
 
     test('When value -1 is encoded then it throws an exception', () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u64');
-      expect(() => codec.encode(BigInt.from(-1)),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
@@ -54,7 +56,8 @@ void main() {
         'When value 18446744073709551616 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u64');
-      expect(() => codec.encode(BigInt.parse('18446744073709551616')),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.parse('18446744073709551616')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
@@ -70,7 +73,7 @@ void main() {
 
     test('When 0x0000000000000000 is decoded then it returns 0', () {
       final codec = Codec<BigInt>(registry: registry)
-          .createTypeCodec('u64_key', data: Source('0x0000000000000000'));
+          .createTypeCodec('u64_key', input: Input('0x0000000000000000'));
       final BigInt u64Value = codec.decode();
       expect(u64Value.toString(), equals('0'));
     });
@@ -78,15 +81,16 @@ void main() {
     test('When BigInt 0 is encoded then it returns 0x0000000000000000', () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('u64_key');
-      final String u64Value = codec.encode(BigInt.from(0));
-      expect(u64Value, equals('0000000000000000'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.from(0));
+      expect(encoder.toHex(), equals('0x0000000000000000'));
     });
 
     test(
         'When 0xffffffffffffffff is decoded then it returns 18446744073709551615',
         () {
       final codec = Codec<BigInt>(registry: registry)
-          .createTypeCodec('u64_key', data: Source('0xffffffffffffffff'));
+          .createTypeCodec('u64_key', input: Input('0xffffffffffffffff'));
       final BigInt u64Value = codec.decode();
       expect(u64Value.toString(), equals('18446744073709551615'));
     });
@@ -96,9 +100,9 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('u64_key');
-      final String u64Value =
-          codec.encode(BigInt.parse('18446744073709551615'));
-      expect(u64Value, equals('ffffffffffffffff'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.parse('18446744073709551615'));
+      expect(encoder.toHex(), equals('0xffffffffffffffff'));
     });
   });
 
@@ -114,7 +118,8 @@ void main() {
     test('When value -1 is encoded then it throws an exception', () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('u64_key');
-      expect(() => codec.encode(BigInt.from(-1)),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
@@ -123,51 +128,51 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('u64_key');
-      expect(() => codec.encode(BigInt.parse('18446744073709551616')),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.parse('18446744073709551616')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
 
-  // Direct test-cases for U64(source: Source())
+  // Direct test-cases for U64.decodeFromInput(Input())
   group('U64 Direct Test', () {
     test('When lowest value 0x0000000000000000 is decoded then it returns 0',
         () {
-      final u64Codec = U64(source: Source('0x0000000000000000'));
-      final BigInt u64Value = u64Codec.decode();
+      final u64Value = U64.decodeFromInput(Input('0x0000000000000000'));
       expect(u64Value.toString(), equals('0'));
     });
 
     test(
         'When highest value 0xffffffffffffffff is decoded then it returns 18446744073709551615',
         () {
-      final u64Codec = U64(source: Source('0xffffffffffffffff'));
-      final BigInt u64Value = u64Codec.decode();
+      final u64Value = U64.decodeFromInput(Input('0xffffffffffffffff'));
       expect(u64Value.toString(), equals('18446744073709551615'));
     });
     test('When lowest value 0 is encoded then it returns 0x0000000000000000',
         () {
-      final u64Codec = U64();
-      final String u64Value = u64Codec.encode(BigInt.from(0));
-      expect(u64Value, equals('0000000000000000'));
+      final encoder = HexEncoder();
+      U64.encodeToEncoder(encoder, BigInt.from(0));
+      expect(encoder.toHex(), equals('0x0000000000000000'));
     });
     test(
         'When highest value 18446744073709551615 is encoded then it returns 0xffffffffffffffff',
         () {
-      final u64Codec = U64();
-      final String u64Value =
-          u64Codec.encode(BigInt.parse('18446744073709551615'));
-      expect(u64Value, equals('ffffffffffffffff'));
+      final encoder = HexEncoder();
+      U64.encodeToEncoder(encoder, BigInt.parse('18446744073709551615'));
+      expect(encoder.toHex(), equals('0xffffffffffffffff'));
     });
     test('When value -1 is encoded then it throws an exception', () {
-      final u64Codec = U64();
-      expect(() => u64Codec.encode(BigInt.from(-1)),
+      final encoder = HexEncoder();
+      expect(() => U64.encodeToEncoder(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
     });
     test(
         'When value 18446744073709551616 is encoded then it throws an exception',
         () {
-      final u64Codec = U64();
-      expect(() => u64Codec.encode(BigInt.parse('18446744073709551616')),
+      final encoder = HexEncoder();
+      expect(
+          () => U64.encodeToEncoder(
+              encoder, BigInt.parse('18446744073709551616')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
