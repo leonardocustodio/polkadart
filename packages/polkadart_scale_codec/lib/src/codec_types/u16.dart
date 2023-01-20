@@ -8,7 +8,7 @@ class U16 extends Codec<int> {
   U16._() : super(registry: Registry());
 
   ///
-  /// Decode a unsigned 16 bit integer from the source
+  /// Decode a unsigned 16 bit integer from the input
   ///
   /// Example:
   /// ```dart
