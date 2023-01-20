@@ -26,7 +26,7 @@ void main() {
       final codec = Codec<int>(registry: registry).createTypeCodec('u32');
       final encoder = HexEncoder();
       codec.encode(encoder, 0);
-      expect(encoder.toHex(), equals('00000000'));
+      expect(encoder.toHex(), equals('0x00000000'));
     });
 
     test('When highest value 4294967295 is encoded then it returns 0xffffffff',
@@ -34,7 +34,7 @@ void main() {
       final codec = Codec<int>(registry: registry).createTypeCodec('u32');
       final encoder = HexEncoder();
       codec.encode(encoder, 4294967295);
-      expect(encoder.toHex(), equals('ffffffff'));
+      expect(encoder.toHex(), equals('0xffffffff'));
     });
   });
 
@@ -83,14 +83,14 @@ void main() {
       final codec = Codec<int>(registry: registry).createTypeCodec('u32_key');
       final encoder = HexEncoder();
       codec.encode(encoder, 0);
-      expect(encoder.toHex(), equals('00000000'));
+      expect(encoder.toHex(), equals('0x00000000'));
     });
 
     test('When u32_key is encoded then it returns 0xffffffff', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u32_key');
       final encoder = HexEncoder();
       codec.encode(encoder, 4294967295);
-      expect(encoder.toHex(), equals('ffffffff'));
+      expect(encoder.toHex(), equals('0xffffffff'));
     });
 
     test('When u32_key is encoded then it throws an exception', () {
@@ -124,14 +124,14 @@ void main() {
     test('When lowest value 0 is encoded then it returns 0x00000000', () {
       final encoder = HexEncoder();
       U32.encodeToEncoder(encoder, 0);
-      expect(encoder.toHex(), equals('00000000'));
+      expect(encoder.toHex(), equals('0x00000000'));
     });
 
     test('When highest value 4294967295 is encoded then it returns 0xffffffff',
         () {
       final encoder = HexEncoder();
       U32.encodeToEncoder(encoder, 4294967295);
-      expect(encoder.toHex(), equals('ffffffff'));
+      expect(encoder.toHex(), equals('0xffffffff'));
     });
 
     test('When value -1 is encoded then it throws an exception', () {
