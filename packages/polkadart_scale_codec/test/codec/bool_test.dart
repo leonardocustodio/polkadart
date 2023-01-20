@@ -113,17 +113,15 @@ void main() {
 
   group('Test BoolCodec Encode', () {
     test('When true is encoded then it returns 0x01', () {
-      final codec = BoolCodec();
       final encoder = HexEncoder();
-      codec.encode(encoder, true);
+      BoolCodec.encodeToEncoder(encoder, true);
       final boolValue = encoder.toHex();
       expect(boolValue, equals('0x01'));
     });
 
     test('When false is encoded then it returns 0x00', () {
-      final codec = BoolCodec();
       final encoder = HexEncoder();
-      codec.encode(encoder, false);
+      BoolCodec.encodeToEncoder(encoder, false);
       final boolValue = encoder.toHex();
       expect(boolValue, equals('0x00'));
     });

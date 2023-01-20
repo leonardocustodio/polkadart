@@ -134,17 +134,15 @@ void main() {
     });
 
     test('When lowest value 0 is encoded then it returns 0x00', () {
-      final u8 = U8();
       final encoder = HexEncoder();
-      u8.encode(encoder, 0);
+      U8.encodeToEncoder(encoder, 0);
       final u8Value = encoder.toHex();
       expect(u8Value, equals('0x00'));
     });
 
     test('When highest value 255 is encoded then it returns 0xff', () {
-      final u8 = U8();
       final encoder = HexEncoder();
-      u8.encode(encoder, 255);
+      U8.encodeToEncoder(encoder, 255);
       final u8Value = encoder.toHex();
       expect(u8Value, equals('0xff'));
     });

@@ -175,7 +175,7 @@ class Codec<T> implements CodecInterface<T> {
   }
 
   @override
-  void encode(Encoder _, T __) {
+  void encode(Encoder encoder, T value) {
     throw UnimplementedError();
   }
 

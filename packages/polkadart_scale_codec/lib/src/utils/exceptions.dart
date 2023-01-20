@@ -1,6 +1,17 @@
 part of utils;
 
 ///
+/// UnknownEncodeException
+class InvalidIntEncodeException implements Exception {
+  const InvalidIntEncodeException(this.value);
+
+  final int value;
+
+  @override
+  String toString() => 'Invalid UnSigned int to encode: $value';
+}
+
+///
 /// UnexpectedCaseException
 class UnexpectedCaseException implements Exception {
   const UnexpectedCaseException([this.message]);

@@ -2,32 +2,48 @@ part of codec_types;
 
 ///
 /// U16 to encode/decode unsigned 16 bit integer
-class U16 extends Codec<int> implements CodecInterface<int> {
-  final Source? source;
-
+class U16 extends Codec<int> {
   ///
   /// constructor
-  U16({this.source}) : super(registry: Registry());
+  U16._() : super(registry: Registry());
 
   ///
   /// Decode a unsigned 16 bit integer from the source
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U16', data: Source('0x0000'));
+  /// final codec = Codec<int>().createTypeCodec('U16', input: Input('0x0000'));
   /// final value = codec.decode();
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U16', data: Source('0xffff'));
+  /// final codec = Codec<int>().createTypeCodec('U16', input: Input('0xffff'));
   /// final value = codec.decode();
   /// print(value); // 65535
   /// ```
   @override
   int decode() {
-    return bytesToLittleEndianInt((source ?? data).bytes(2).toList());
+    return decodeFromInput(input);
+  }
+
+  ///
+  /// Decode a unsigned 16 bit integer from the input
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U16.decodeFromInput(Input('0x0000'));
+  /// print(value); // 0
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U16.decodeFromInput(Input('0xffff'));
+  /// print(value); // 65535
+  /// ```
+  static int decodeFromInput(Input input) {
+    return bytesToLittleEndianInt(input.bytes(2).toList());
   }
 
   ///
@@ -47,12 +63,32 @@ class U16 extends Codec<int> implements CodecInterface<int> {
   /// print(value); // ffff
   /// ```
   @override
-  String encode(int value) {
+  void encode(Encoder encoder, int value) {
+    encodeToEncoder(encoder, value);
+  }
+
+  ///
+  /// [static] Encodes a unsigned 16 bit integer
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// U16.encodeToEncoder(encoder, 0);
+  /// print(encoder.toHex()); // 0x0000
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// U16.encodeToEncoder(encoder, 65535);
+  /// print(encoder.toHex()); // 0xffff
+  /// ```
+  static void encodeToEncoder(Encoder encoder, int value) {
     if (value < 0 || value > 65535) {
       throw UnexpectedCaseException(
           'Expected value between 0 and 65535, but found: $value');
     }
 
-    return encodeHex(<int>[value & 0xff, value >>> 8]);
+    encoder.writeBytes(<int>[value & 0xff, value >>> 8]);
   }
 }

@@ -5,7 +5,7 @@ part of codec_types;
 class U8 extends Codec<int> {
   ///
   /// constructor
-  U8() : super(registry: Registry());
+  U8._() : super(registry: Registry());
 
   ///
   /// Decode a unsigned 8 bit integer from the Codec's input
@@ -66,6 +66,26 @@ class U8 extends Codec<int> {
   /// ```
   @override
   void encode(Encoder encoder, int value) {
+    encodeToEncoder(encoder, value);
+  }
+
+  ///
+  /// [static] Encodes a unsigned 8 bit integer
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// U8.encodeToEncoder(encoder, 0);
+  /// print(encoder.toHex()); // 0x00
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// U8.encodeToEncoder(encoder, 255);
+  /// print(encoder.toHex()); // 0xff
+  /// ```
+  static void encodeToEncoder(Encoder encoder, int value) {
     if (value < 0 || value > 255) {
       throw UnexpectedCaseException(
           'Expected value between 0 and 255, but found: $value');

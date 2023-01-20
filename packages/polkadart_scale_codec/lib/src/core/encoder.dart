@@ -9,7 +9,7 @@ mixin Encoder {
 
   ///
   /// append the list of bytes to the input.
-  void bytes(List<int> bytes);
+  void writeBytes(List<int> bytes);
 }
 
 ///
@@ -25,7 +25,7 @@ class HexEncoder with Encoder {
   }
 
   @override
-  void bytes(List<int> bytes) {
+  void writeBytes(List<int> bytes) {
     _buffer
         .writeAll(bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')));
   }
@@ -50,7 +50,7 @@ class ByteEncoder with Encoder {
   }
 
   @override
-  void bytes(List<int> bytes) {
+  void writeBytes(List<int> bytes) {
     _buffer.add(bytes);
   }
 
