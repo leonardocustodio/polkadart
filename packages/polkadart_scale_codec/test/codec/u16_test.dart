@@ -6,14 +6,14 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x0000 is decoded then it returns 0', () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('u16', data: Source('0x0000'));
+          .createTypeCodec('u16', input: Input('0x0000'));
       final u16Value = codec.decode();
       expect(u16Value, equals(0));
     });
 
     test('When highest value 0xffff is decoded then it returns 65535', () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('u16', data: Source('0xffff'));
+          .createTypeCodec('u16', input: Input('0xffff'));
       final u16Value = codec.decode();
       expect(u16Value, equals(65535));
     });
@@ -23,14 +23,16 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0 is encoded then it returns 0x0000', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16');
-      final u16Value = codec.encode(0);
-      expect(u16Value, equals('0000'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, 0);
+      expect(encoder.toHex(), equals('0000'));
     });
 
     test('When highest value 65535 is encoded then it returns 0xffff', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16');
-      final u16Value = codec.encode(65535);
-      expect(u16Value, equals('ffff'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, 65535);
+      expect(encoder.toHex(), equals('ffff'));
     });
   });
 
@@ -39,13 +41,16 @@ void main() {
 
     test('When value -1 is encoded then it throws an exception', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16');
-      expect(() => codec.encode(-1), throwsA(isA<UnexpectedCaseException>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, -1),
+          throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 65536 is encoded then it throws an exception', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16');
-      expect(
-          () => codec.encode(65536), throwsA(isA<UnexpectedCaseException>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, 65536),
+          throwsA(isA<UnexpectedCaseException>()));
     });
   });
 
@@ -59,29 +64,31 @@ void main() {
     );
 
     test('When lowest value 0x0000 is decoded then it returns 0', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('u16_key', data: Source('0x0000'));
+      final Codec codec = Codec(registry: registry)
+          .createTypeCodec('u16_key', input: Input('0x0000'));
       final u16Value = codec.decode();
       expect(u16Value, equals(0));
     });
 
     test('When highest value 0xffff is decoded then it returns 65535', () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('u16_key', data: Source('0xffff'));
+          .createTypeCodec('u16_key', input: Input('0xffff'));
       final u16Value = codec.decode();
       expect(u16Value, equals(65535));
     });
 
     test('When lowest value 0 is encoded then it returns 0x0000', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16_key');
-      final u16Value = codec.encode(0);
-      expect(u16Value, equals('0000'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, 0);
+      expect(encoder.toHex(), equals('0000'));
     });
 
     test('When highest value 65535 is encoded then it returns 0xffff', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16_key');
-      final u16Value = codec.encode(65535);
-      expect(u16Value, equals('ffff'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, 65535);
+      expect(encoder.toHex(), equals('ffff'));
     });
   });
 
@@ -96,13 +103,41 @@ void main() {
 
     test('When value -1 is encoded then it throws an exception', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16_key');
-      expect(() => codec.encode(-1), throwsA(isA<UnexpectedCaseException>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, -1),
+          throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 65536 is encoded then it throws an exception', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16_key');
-      expect(
-          () => codec.encode(65536), throwsA(isA<UnexpectedCaseException>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, 65536),
+          throwsA(isA<UnexpectedCaseException>()));
+    });
+  });
+
+  /// Test cases using U16() class
+  group('U16 Class Test', () {
+    test('When lowest value 0x0000 is decoded then it returns 0', () {
+      final u16Value = U16.decodeFromInput(Input('0x0000'));
+      expect(u16Value, equals(0));
+    });
+
+    test('When highest value 0xffff is decoded then it returns 65535', () {
+      final u16Value = U16.decodeFromInput(Input('0xffff'));
+      expect(u16Value, equals(65535));
+    });
+
+    test('When lowest value 0 is encoded then it returns 0x0000', () {
+      final encoder = HexEncoder();
+      U16.encodeToEncoder(encoder, 0);
+      expect(encoder.toHex(), equals('0000'));
+    });
+
+    test('When highest value 65535 is encoded then it returns 0xffff', () {
+      final encoder = HexEncoder();
+      U16.encodeToEncoder(encoder, 65535);
+      expect(encoder.toHex(), equals('ffff'));
     });
   });
 }
