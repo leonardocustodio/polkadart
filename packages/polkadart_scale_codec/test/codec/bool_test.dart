@@ -7,14 +7,14 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When 0x01 is decoded then it returns true', () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('bool', data: Source('0x01'));
+          .createTypeCodec('bool', input: Input('0x01'));
       final boolValue = codec.decode();
       expect(boolValue, equals(true));
     });
 
     test('When 0x00 is decoded then it returns false', () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('bool', data: Source('0x00'));
+          .createTypeCodec('bool', input: Input('0x00'));
       final boolValue = codec.decode();
       expect(boolValue, equals(false));
     });
@@ -24,14 +24,18 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When true is encoded then it returns 0x01', () {
       final codec = Codec(registry: registry).createTypeCodec('bool');
-      final boolValue = codec.encode(true);
-      expect(boolValue, equals('01'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, true);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x01'));
     });
 
     test('When false is encoded then it returns 0x00', () {
       final codec = Codec(registry: registry).createTypeCodec('bool');
-      final boolValue = codec.encode(false);
-      expect(boolValue, equals('00'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, false);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x00'));
     });
   });
 
@@ -45,28 +49,32 @@ void main() {
     );
     test('When 0x01 is decoded then it returns true', () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('bool_key', data: Source('0x01'));
+          .createTypeCodec('bool_key', input: Input('0x01'));
       final boolValue = codec.decode();
       expect(boolValue, equals(true));
     });
 
     test('When 0x00 is decoded then it returns false', () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('bool_key', data: Source('0x00'));
+          .createTypeCodec('bool_key', input: Input('0x00'));
       final boolValue = codec.decode();
       expect(boolValue, equals(false));
     });
 
     test('When true is encoded then it returns 0x01', () {
       final codec = Codec(registry: registry).createTypeCodec('bool_key');
-      final boolValue = codec.encode(true);
-      expect(boolValue, equals('01'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, true);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x01'));
     });
 
     test('When false is encoded then it returns 0x00', () {
       final codec = Codec(registry: registry).createTypeCodec('bool_key');
-      final boolValue = codec.encode(false);
-      expect(boolValue, equals('00'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, false);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x00'));
     });
   });
 
@@ -74,47 +82,50 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When 0x02 is decoded then it throws CodecException.', () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('bool', data: Source('0x02'));
+          .createTypeCodec('bool', input: Input('0x02'));
       expect(() => codec.decode(), throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When null is encoded then it throws CodecException.', () {
       final codec = Codec(registry: registry).createTypeCodec('bool');
-      expect(() => codec.encode(null), throwsA(isA<Error>()));
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, null), throwsA(isA<Error>()));
     });
   });
 
   /// BoolCodec direct test cases
   group('Test BoolCodec Decode', () {
     test('When 0x01 is decoded then it returns true', () {
-      final codec = BoolCodec(source: Source('0x01'));
-      final boolValue = codec.decode();
+      final boolValue = BoolCodec.decodeFromInput(Input('0x01'));
       expect(boolValue, equals(true));
     });
 
     test('When 0x00 is decoded then it returns false', () {
-      final codec = BoolCodec(source: Source('0x00'));
-      final boolValue = codec.decode();
+      final boolValue = BoolCodec.decodeFromInput(Input('0x00'));
       expect(boolValue, equals(false));
     });
 
     test('When 0x02 is decoded then it throws CodecException.', () {
-      final codec = BoolCodec(source: Source('0x02'));
-      expect(() => codec.decode(), throwsA(isA<UnexpectedCaseException>()));
+      expect(() => BoolCodec.decodeFromInput(Input('0x02')),
+          throwsA(isA<UnexpectedCaseException>()));
     });
   });
 
   group('Test BoolCodec Encode', () {
     test('When true is encoded then it returns 0x01', () {
       final codec = BoolCodec();
-      final boolValue = codec.encode(true);
-      expect(boolValue, equals('01'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, true);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x01'));
     });
 
     test('When false is encoded then it returns 0x00', () {
       final codec = BoolCodec();
-      final boolValue = codec.encode(false);
-      expect(boolValue, equals('00'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, false);
+      final boolValue = encoder.toHex();
+      expect(boolValue, equals('0x00'));
     });
   });
 }

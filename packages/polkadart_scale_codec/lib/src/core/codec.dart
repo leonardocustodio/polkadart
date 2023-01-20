@@ -30,8 +30,8 @@ class Codec<T> implements CodecInterface<T> {
   late Registry registry;
 
   ///
-  /// Data to be decoded
-  late Source data;
+  /// Input to be decoded
+  late Input input;
 
   List? metadata;
 
@@ -43,14 +43,14 @@ class Codec<T> implements CodecInterface<T> {
 
   /// [Private]
   ///
-  /// Initialize data, subType and metadata
+  /// Initialize input, subType and metadata
   void _init(
-    Source? data, {
+    Input? input, {
     String subType = '',
     List? metadata,
   }) {
-    if (data != null) {
-      this.data = data;
+    if (input != null) {
+      this.input = input;
     }
     this.subType = subType;
     this.metadata = metadata;
@@ -76,7 +76,7 @@ class Codec<T> implements CodecInterface<T> {
   ///
   /// Create a codec instance
   /// [typeString] is the type of the codec
-  /// [data] is the data to be decoded/encoded
+  /// [input] is the data to be decoded/encoded
   ///
   /// Example:
   /// ```dart
@@ -85,7 +85,7 @@ class Codec<T> implements CodecInterface<T> {
   /// ```
   Codec createTypeCodec(
     String typeString, {
-    Source? data,
+    Input? input,
     List? metadata,
   }) {
     final Codec codec = fetchCodecType(typeString);
@@ -94,7 +94,7 @@ class Codec<T> implements CodecInterface<T> {
 
     metadata ??= this.metadata;
 
-    codec._init(data, metadata: metadata);
+    codec._init(input, metadata: metadata);
 
     return codec;
   }
@@ -163,7 +163,7 @@ class Codec<T> implements CodecInterface<T> {
     codecTypeName = codecTypeName.replaceAll(RegExp(r'<T>'), '');
     codecTypeName = codecTypeName.replaceAll(RegExp(r'<T, I>'), '');
     codecTypeName = codecTypeName.replaceAll(RegExp(r"&'static[u8]"), 'Bytes');
-    if (codecTypeName == '<Lookup as StaticLookup>::Source') {
+    if (codecTypeName == '<Lookup as StaticLookup>::Input') {
       return 'Address';
     }
     return codecTypeName;
@@ -175,20 +175,20 @@ class Codec<T> implements CodecInterface<T> {
   }
 
   @override
-  String encode(T value) {
+  void encode(Encoder _, T __) {
     throw UnimplementedError();
   }
 
   ///
-  /// Asserts if the End of Source is reached.
+  /// Asserts if the End of Input is reached.
   ///
-  /// `throws [EOSException] if the data.remainingLength > 0`
+  /// `throws [EOSException] if the input.remainingLength > 0`
   ///
-  /// Please note that this method is useful only when the data is decoded from a Source.
+  /// Please note that this method is useful only when the input is decoded from a Input.
   ///
-  /// If the data is being encoded, then this method is not useful.
+  /// If the input is being encoded, then this method is not useful.
   void assertEOS() {
-    if (data.remainingLength > 0) {
+    if (input.remainingLength > 0) {
       throw EOSException();
     }
   }

@@ -17,7 +17,7 @@ class EOSException implements Exception {
   const EOSException();
 
   @override
-  String toString() => 'Data left for processing.';
+  String toString() => 'Input left for processing.';
 }
 
 ///
@@ -46,7 +46,7 @@ class EOFException implements Exception {
   const EOFException();
 
   @override
-  String toString() => 'Unexpected end of file/source exception.';
+  String toString() => 'Unexpected end of file/input exception.';
 }
 
 ///
