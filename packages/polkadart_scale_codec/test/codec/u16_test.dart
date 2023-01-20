@@ -25,14 +25,14 @@ void main() {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16');
       final encoder = HexEncoder();
       codec.encode(encoder, 0);
-      expect(encoder.toHex(), equals('0000'));
+      expect(encoder.toHex(), equals('0x0000'));
     });
 
     test('When highest value 65535 is encoded then it returns 0xffff', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16');
       final encoder = HexEncoder();
       codec.encode(encoder, 65535);
-      expect(encoder.toHex(), equals('ffff'));
+      expect(encoder.toHex(), equals('0xffff'));
     });
   });
 
@@ -81,14 +81,14 @@ void main() {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16_key');
       final encoder = HexEncoder();
       codec.encode(encoder, 0);
-      expect(encoder.toHex(), equals('0000'));
+      expect(encoder.toHex(), equals('0x0000'));
     });
 
     test('When highest value 65535 is encoded then it returns 0xffff', () {
       final codec = Codec<int>(registry: registry).createTypeCodec('u16_key');
       final encoder = HexEncoder();
       codec.encode(encoder, 65535);
-      expect(encoder.toHex(), equals('ffff'));
+      expect(encoder.toHex(), equals('0xffff'));
     });
   });
 
@@ -131,13 +131,13 @@ void main() {
     test('When lowest value 0 is encoded then it returns 0x0000', () {
       final encoder = HexEncoder();
       U16.encodeToEncoder(encoder, 0);
-      expect(encoder.toHex(), equals('0000'));
+      expect(encoder.toHex(), equals('0x0000'));
     });
 
     test('When highest value 65535 is encoded then it returns 0xffff', () {
       final encoder = HexEncoder();
       U16.encodeToEncoder(encoder, 65535);
-      expect(encoder.toHex(), equals('ffff'));
+      expect(encoder.toHex(), equals('0xffff'));
     });
   });
 }
