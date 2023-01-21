@@ -1,6 +1,17 @@
 part of utils;
 
 ///
+/// UnknownEncodeException
+class InvalidIntEncodeException implements Exception {
+  const InvalidIntEncodeException(this.value);
+
+  final int value;
+
+  @override
+  String toString() => 'Invalid UnSigned int to encode: $value';
+}
+
+///
 /// UnexpectedCaseException
 class UnexpectedCaseException implements Exception {
   const UnexpectedCaseException([this.message]);
@@ -17,7 +28,7 @@ class EOSException implements Exception {
   const EOSException();
 
   @override
-  String toString() => 'Data left for processing.';
+  String toString() => 'Input left for processing.';
 }
 
 ///
@@ -46,7 +57,7 @@ class EOFException implements Exception {
   const EOFException();
 
   @override
-  String toString() => 'Unexpected end of file/source exception.';
+  String toString() => 'Unexpected end of file/input exception.';
 }
 
 ///
