@@ -9,7 +9,7 @@ void main() {
         'When lowest value 0x0000000000000000000000000000000000000000000000000000000000000000 is decoded then it returns 0',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256',
-          data: Source(
+          input: Input(
               '0x0000000000000000000000000000000000000000000000000000000000000000'));
       final BigInt u256Value = codec.decode();
       expect(u256Value.toString(), equals('0'));
@@ -19,7 +19,7 @@ void main() {
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns 115792089237316195423570985008687907853269984665640564039457584007913129639935',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256',
-          data: Source(
+          input: Input(
               '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       final BigInt u256Value = codec.decode();
       expect(
@@ -35,23 +35,27 @@ void main() {
         'When lowest value 0 is encoded then it returns 0x0000000000000000000000000000000000000000000000000000000000000000',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
-      final String u256Value = codec.encode(BigInt.from(0));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.from(0));
       expect(
-          u256Value,
+          encoder.toHex(),
           equals(
-              '0000000000000000000000000000000000000000000000000000000000000000'));
+              '0x0000000000000000000000000000000000000000000000000000000000000000'));
     });
 
     test(
         'When highest value 115792089237316195423570985008687907853269984665640564039457584007913129639935 is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
-      final String u256Value = codec.encode(BigInt.parse(
-          '115792089237316195423570985008687907853269984665640564039457584007913129639935'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder,
+          BigInt.parse(
+              '115792089237316195423570985008687907853269984665640564039457584007913129639935'));
       expect(
-          u256Value,
+          encoder.toHex(),
           equals(
-              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
     });
   });
 
@@ -60,7 +64,8 @@ void main() {
 
     test('When value -1 is encoded then it throws an exception', () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
-      expect(() => codec.encode(BigInt.from(-1)),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
@@ -68,9 +73,12 @@ void main() {
         'When value 115792089237316195423570985008687907853269984665640564039457584007913129639936 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
+          () => codec.encode(
+              encoder,
+              BigInt.parse(
+                  '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
@@ -80,7 +88,8 @@ void main() {
 
     test('When value -1 is encoded then it throws an exception', () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
-      expect(() => codec.encode(BigInt.from(-1)),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
@@ -88,9 +97,12 @@ void main() {
         'When value 115792089237316195423570985008687907853269984665640564039457584007913129639936 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
+          () => codec.encode(
+              encoder,
+              BigInt.parse(
+                  '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
@@ -108,7 +120,7 @@ void main() {
         'When 0x0000000000000000000000000000000000000000000000000000000000000000 is decoded then it returns 0',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256',
-          data: Source(
+          input: Input(
               '0x0000000000000000000000000000000000000000000000000000000000000000'));
       final BigInt u256Value = codec.decode();
       expect(u256Value.toString(), equals('0'));
@@ -118,18 +130,19 @@ void main() {
         'When BigInt 0 is encoded then it returns 0x0000000000000000000000000000000000000000000000000000000000000000',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
-      final String u256Value = codec.encode(BigInt.from(0));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.from(0));
       expect(
-          u256Value,
+          encoder.toHex(),
           equals(
-              '0000000000000000000000000000000000000000000000000000000000000000'));
+              '0x0000000000000000000000000000000000000000000000000000000000000000'));
     });
 
     test(
         'When 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns 115792089237316195423570985008687907853269984665640564039457584007913129639935',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256',
-          data: Source(
+          input: Input(
               '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       final BigInt u256Value = codec.decode();
       expect(
@@ -142,12 +155,15 @@ void main() {
         'When BigInt 115792089237316195423570985008687907853269984665640564039457584007913129639935 is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
-      final String u256Value = codec.encode(BigInt.parse(
-          '115792089237316195423570985008687907853269984665640564039457584007913129639935'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder,
+          BigInt.parse(
+              '115792089237316195423570985008687907853269984665640564039457584007913129639935'));
       expect(
-          u256Value,
+          encoder.toHex(),
           equals(
-              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
     });
   });
   group('Custom Type Exception Test', () {
@@ -163,15 +179,19 @@ void main() {
         'When BigInt 115792089237316195423570985008687907853269984665640564039457584007913129639936 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
+          () => codec.encode(
+              encoder,
+              BigInt.parse(
+                  '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When BigInt -1 is encoded then it throws an exception', () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
-      expect(() => codec.encode(BigInt.from(-1)),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
@@ -181,31 +201,27 @@ void main() {
     test(
         'When 0x0000000000000000000000000000000000000000000000000000000000000000 is decoded then it returns 0',
         () {
-      final codec = U256(
-          source: Source(
-              '0x0000000000000000000000000000000000000000000000000000000000000000'));
-      final BigInt u256Value = codec.decode();
+      final u256Value = U256.decodeFromInput(Input(
+          '0x0000000000000000000000000000000000000000000000000000000000000000'));
       expect(u256Value.toString(), equals('0'));
     });
 
     test(
         'When BigInt 0 is encoded then it returns 0x0000000000000000000000000000000000000000000000000000000000000000',
         () {
-      final codec = U256();
-      final String u256Value = codec.encode(BigInt.from(0));
+      final encoder = HexEncoder();
+      U256.encodeToEncoder(encoder, BigInt.from(0));
       expect(
-          u256Value,
+          encoder.toHex(),
           equals(
-              '0000000000000000000000000000000000000000000000000000000000000000'));
+              '0x0000000000000000000000000000000000000000000000000000000000000000'));
     });
 
     test(
         'When 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns 115792089237316195423570985008687907853269984665640564039457584007913129639935',
         () {
-      final codec = U256(
-          source: Source(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-      final BigInt u256Value = codec.decode();
+      final u256Value = U256.decodeFromInput(Input(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       expect(
           u256Value.toString(),
           equals(
@@ -215,29 +231,33 @@ void main() {
     test(
         'When BigInt 115792089237316195423570985008687907853269984665640564039457584007913129639935 is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         () {
-      final codec = U256();
-      final String u256Value = codec.encode(BigInt.parse(
-          '115792089237316195423570985008687907853269984665640564039457584007913129639935'));
+      final encoder = HexEncoder();
+      U256.encodeToEncoder(
+          encoder,
+          BigInt.parse(
+              '115792089237316195423570985008687907853269984665640564039457584007913129639935'));
 
       expect(
-          u256Value,
+          encoder.toHex(),
           equals(
-              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
     });
 
     test(
         'When BigInt 115792089237316195423570985008687907853269984665640564039457584007913129639936 is encoded then it throws an exception',
         () {
-      final codec = U256();
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
+          () => U256.encodeToEncoder(
+              encoder,
+              BigInt.parse(
+                  '115792089237316195423570985008687907853269984665640564039457584007913129639936')),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When BigInt -1 is encoded then it throws an exception', () {
-      final codec = U256();
-      expect(() => codec.encode(BigInt.from(-1)),
+      final encoder = HexEncoder();
+      expect(() => U256.encodeToEncoder(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
