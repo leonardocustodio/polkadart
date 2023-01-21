@@ -12,14 +12,14 @@ class U64 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64', data: Source('0x0000000000000000'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U64', input: Input('0x0000000000000000'));
   /// final value = codec.decode();
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64', data: Source('0xffffffffffffffff'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U64', input: Input('0xffffffffffffffff'));
   /// final value = codec.decode();
   /// print(value); // 18446744073709551615
   /// ```

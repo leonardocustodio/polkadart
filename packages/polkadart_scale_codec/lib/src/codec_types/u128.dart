@@ -12,14 +12,14 @@ class U128 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U128', data: Source('0x00000000000000000000000000000000'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U128', input: Input('0x00000000000000000000000000000000'));
   /// final value = codec.decode();
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U128', data: Source('0xffffffffffffffffffffffffffffffff'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U128', input: Input('0xffffffffffffffffffffffffffffffff'));
   /// final value = codec.decode();
   /// print(value); // 340282366920938463463374607431768211455
   /// ```

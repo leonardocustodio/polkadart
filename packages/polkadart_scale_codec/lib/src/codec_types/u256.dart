@@ -3,31 +3,48 @@ part of codec_types;
 ///
 /// encode/decode unsigned 256 bit integer
 class U256 extends Codec<BigInt> {
-  final Source? source;
-
   ///
   /// constructor
-  U256({this.source}) : super(registry: Registry());
+  U256._() : super(registry: Registry());
 
   ///
-  /// Decode a unsigned 256 bit integer from the source
+  /// Decode a unsigned 256 bit integer from the input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U256', data: Source('0x0000000000000000000000000000000000000000000000000000000000000000'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U256', input: Input('0x0000000000000000000000000000000000000000000000000000000000000000'));
   /// final value = codec.decode();
   /// print(value); // 0
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U256', data: Source('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U256', input: Input('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
   /// final value = codec.decode();
   /// print(value); // 115792089237316195423570985008687907853269984665640564039457584007913129639935
   /// ```
   @override
   BigInt decode() {
-    final u128Codec = U128(source: source ?? data);
-    return u128Codec.decode() + (u128Codec.decode() << 128);
+    return decodeFromInput(input);
+  }
+
+  ///
+  /// [static] Decode a unsigned 256 bit integer from the input
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U256.decodeFromInput(Input('0x0000000000000000000000000000000000000000000000000000000000000000'));
+  /// print(value); // 0
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U256.decodeFromInput(Input('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+  /// print(value); // 115792089237316195423570985008687907853269984665640564039457584007913129639935
+  /// ```
+  static BigInt decodeFromInput(Input input) {
+    final low = U128.decodeFromInput(input);
+    final high = U128.decodeFromInput(input);
+    return low + (high << 128);
   }
 
   ///
@@ -47,7 +64,27 @@ class U256 extends Codec<BigInt> {
   /// print(value); // ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   /// ```
   @override
-  String encode(BigInt value) {
+  void encode(Encoder encoder, BigInt value) {
+    encodeToEncoder(encoder, value);
+  }
+
+  ///
+  /// [static] Encodes a unsigned 256 bit integer
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// final value = U256.encodeToEncoder(encoder, BigInt.from(0));
+  /// print(value); // 0000000000000000000000000000000000000000000000000000000000000000
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// final value = U256.encodeToEncoder(encoder, BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935'));
+  /// print(value); // ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  /// ```
+  static void encodeToEncoder(Encoder encoder, BigInt value) {
     if (value < BigInt.zero ||
         value >
             BigInt.parse(
@@ -57,9 +94,8 @@ class U256 extends Codec<BigInt> {
           'Expected value between 0 and BigInt.parse("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"), but found: $value');
     }
 
-    final u128Codec = U128();
-    return u128Codec.encode(value &
-            BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16)) +
-        u128Codec.encode(value >> 128);
+    U128.encodeToEncoder(encoder,
+        value & BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16));
+    U128.encodeToEncoder(encoder, value >> 128);
   }
 }
