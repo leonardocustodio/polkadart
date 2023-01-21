@@ -13,11 +13,11 @@ Uint8List decodeHex(String value) {
   }
 }
 
-/// Encodes buffer of list of integers [data] to hexa-decimal.
-String encodeHex(List<int> data) {
+/// Encodes buffer of list of integers [bytes] to hexa-decimal.
+String encodeHex(List<int> bytes) {
   try {
-    return hex.encode(data);
+    return hex.encode(bytes);
   } catch (_) {
-    throw HexEncodeException('$data');
+    throw HexEncodeException('$bytes');
   }
 }
