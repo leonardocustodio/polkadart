@@ -8,7 +8,7 @@ class U64 extends Codec<BigInt> {
   U64._() : super(registry: Registry());
 
   ///
-  /// Decode a unsigned 64 bit integer from the source
+  /// Decode a unsigned 64 bit integer from the input
   ///
   /// Example:
   /// ```dart

@@ -8,7 +8,7 @@ class U128 extends Codec<BigInt> {
   U128._() : super(registry: Registry());
 
   ///
-  /// Decode a unsigned 128 bit integer from the source
+  /// Decode a unsigned 128 bit integer from the input
   ///
   /// Example:
   /// ```dart
