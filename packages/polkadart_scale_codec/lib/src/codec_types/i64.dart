@@ -3,32 +3,48 @@ part of codec_types;
 ///
 /// encode/decode signed 64 bit integer
 class I64 extends Codec<BigInt> {
-  final Source? source;
-
   ///
   /// constructor
-  I64({this.source}) : super(registry: Registry());
+  I64._() : super(registry: Registry());
 
   ///
-  /// Decode a signed 64 bit integer from the source
+  /// Decode a signed 64 bit integer from the input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I64', data: Source('0x0000000000000080'));
+  /// final codec = Codec<BigInt>().createTypeCodec('I64', input: Input('0x0000000000000080'));
   /// final value = codec.decode();
   /// print(value); // -9223372036854775808
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I64', data: Source('0xffffffffffffff7f'));
+  /// final codec = Codec<BigInt>().createTypeCodec('I64', input: Input('0xffffffffffffff7f'));
   /// final value = codec.decode();
   /// print(value); // 9223372036854775807
   /// ```
   @override
   BigInt decode() {
-    final low = U32(source: source ?? data).decode();
-    final high = I32(source: source ?? data).decode();
+    return decodeFromInput(input);
+  }
+
+  ///
+  /// [static] Decode a signed 64 bit integer from the input
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = I64.decodeFromInput(Input('0x0000000000000080'));
+  /// print(value); // -9223372036854775808
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = I64.decodeFromInput(Input('0xffffffffffffff7f'));
+  /// print(value); // 9223372036854775807
+  /// ```
+  static BigInt decodeFromInput(Input input) {
+    final low = U32.decodeFromInput(input);
+    final high = I32.decodeFromInput(input);
     return BigInt.from(low) + (BigInt.from(high) << 32);
   }
 
@@ -49,7 +65,27 @@ class I64 extends Codec<BigInt> {
   /// print(value); // ffffffffffffff7f
   /// ```
   @override
-  String encode(BigInt value) {
+  void encode(Encoder encoder, BigInt value) {
+    encodeToEncoder(encoder, value);
+  }
+
+  ///
+  /// [static] Encodes a signed 64 bit integer
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// I64.encodeToEncoder(encoder, BigInt.from(-9223372036854775808));
+  /// print(encoder.toHex()); // 0000000000000080
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// I64.encodeToEncoder(encoder, BigInt.from(9223372036854775807));
+  /// print(encoder.toHex()); // ffffffffffffff7f
+  /// ```
+  static void encodeToEncoder(Encoder encoder, BigInt value) {
     if (value < BigInt.from(-9223372036854775808) ||
         value > BigInt.from(9223372036854775807)) {
       throw UnexpectedCaseException(
@@ -57,6 +93,7 @@ class I64 extends Codec<BigInt> {
     }
 
     final base = BigInt.parse('18446744073709551616');
-    return U64().encode((value + base) % base);
+    final val = (value + base) % base;
+    U64.encodeToEncoder(encoder, val);
   }
 }
