@@ -3,33 +3,49 @@ part of codec_types;
 ///
 /// encode/decode unsigned 64 bit integer
 class U64 extends Codec<BigInt> {
-  final Source? source;
-
   ///
   /// constructor
-  U64({this.source}) : super(registry: Registry());
+  U64._() : super(registry: Registry());
 
   ///
-  /// Decode a unsigned 64 bit integer from the source
+  /// Decode a unsigned 64 bit integer from the input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64', data: Source('0x0000000000000000'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U64', input: Input('0x0000000000000000'));
   /// final value = codec.decode();
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64', data: Source('0xffffffffffffffff'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U64', input: Input('0xffffffffffffffff'));
   /// final value = codec.decode();
   /// print(value); // 18446744073709551615
   /// ```
   @override
   BigInt decode() {
-    final u32Codec = U32(source: source ?? data);
-    return BigInt.from(u32Codec.decode()) +
-        (BigInt.from(u32Codec.decode()) << 32);
+    return decodeFromInput(input);
+  }
+
+  ///
+  /// [static] Decode a unsigned 64 bit integer from the input
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U64.decodeFromInput(Input('0x0000000000000000'));
+  /// print(value); // 0
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U64.decodeFromInput(Input('0xffffffffffffffff'));
+  /// print(value); // 18446744073709551615
+  /// ```
+  static BigInt decodeFromInput(Input input) {
+    final low = U32.decodeFromInput(input);
+    final high = U32.decodeFromInput(input);
+    return BigInt.from(low) + (BigInt.from(high) << 32);
   }
 
   ///
@@ -49,14 +65,31 @@ class U64 extends Codec<BigInt> {
   /// print(value); // ffffffffffffffff
   /// ```
   @override
-  String encode(BigInt value) {
+  void encode(Encoder encoder, BigInt value) {
+    encodeToEncoder(encoder, value);
+  }
+
+  ///
+  /// [static] Encodes a unsigned 64 bit integer
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U64.encodeToEncoder(BigInt.from(0));
+  /// print(value); // 0000000000000000
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = U64.encodeToEncoder(BigInt.parse('18446744073709551615'));
+  /// print(value); // ffffffffffffffff
+  /// ```
+  static void encodeToEncoder(Encoder encoder, BigInt value) {
     if (value < BigInt.zero || value > BigInt.parse('18446744073709551615')) {
       throw UnexpectedCaseException(
           'Expected value between 0 and BigInt.parse("18446744073709551615"), but found: $value');
     }
 
-    final u32Codec = U32();
-    return u32Codec.encode((value & BigInt.from(0xffffffff)).toInt()) +
-        u32Codec.encode((value >> 32).toInt());
+    U32.encodeToEncoder(encoder, (value & BigInt.from(0xffffffff)).toInt());
+    U32.encodeToEncoder(encoder, (value >> 32).toInt());
   }
 }
