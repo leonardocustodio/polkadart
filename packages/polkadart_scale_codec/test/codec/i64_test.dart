@@ -8,7 +8,7 @@ void main() {
         'When lowest value 0x0000000000000080 is decoded then it returns -9223372036854775808',
         () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('i64', data: Source('0x0000000000000080'));
+          .createTypeCodec('i64', input: Input('0x0000000000000080'));
       final i64Value = codec.decode();
       expect(i64Value, equals(BigInt.from(-9223372036854775808)));
     });
@@ -17,7 +17,7 @@ void main() {
         'When highest value 0xffffffffffffff7f is decoded then it returns 9223372036854775807',
         () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('i64', data: Source('0xffffffffffffff7f'));
+          .createTypeCodec('i64', input: Input('0xffffffffffffff7f'));
       final i64Value = codec.decode();
       expect(i64Value, equals(BigInt.from(9223372036854775807)));
     });
@@ -29,16 +29,18 @@ void main() {
         'When lowest value -9223372036854775808 is encoded then it returns 0x0000000000000080',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
-      final i64Value = codec.encode(BigInt.from(-9223372036854775808));
-      expect(i64Value, equals('0000000000000080'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.from(-9223372036854775808));
+      expect(encoder.toHex(), equals('0x0000000000000080'));
     });
 
     test(
         'When highest value 9223372036854775807 is encoded then it returns 0xffffffffffffff7f',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
-      final i64Value = codec.encode(BigInt.from(9223372036854775807));
-      expect(i64Value, equals('ffffffffffffff7f'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.from(9223372036854775807));
+      expect(encoder.toHex(), equals('0xffffffffffffff7f'));
     });
   });
 
@@ -49,7 +51,8 @@ void main() {
         'When value -9223372036854775809 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
-      expect(() => codec.encode(BigInt.parse('-9223372036854775809')),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.parse('-9223372036854775809')),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
@@ -57,7 +60,8 @@ void main() {
         'When value 9223372036854775808 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
-      expect(() => codec.encode(BigInt.parse('9223372036854775808')),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.parse('9223372036854775808')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
@@ -72,23 +76,25 @@ void main() {
         'When lowest value -9223372036854775808 is encoded then it returns 0x0000000000000080',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
-      final i64Value = codec.encode(BigInt.from(-9223372036854775808));
-      expect(i64Value, equals('0000000000000080'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.from(-9223372036854775808));
+      expect(encoder.toHex(), equals('0x0000000000000080'));
     });
 
     test(
         'When highest value 9223372036854775807 is encoded then it returns 0xffffffffffffff7f',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
-      final i64Value = codec.encode(BigInt.from(9223372036854775807));
-      expect(i64Value, equals('ffffffffffffff7f'));
+      final encoder = HexEncoder();
+      codec.encode(encoder, BigInt.from(9223372036854775807));
+      expect(encoder.toHex(), equals('0xffffffffffffff7f'));
     });
 
     test(
         'When lowest value 0x0000000000000080 is decoded then it returns -9223372036854775808',
         () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('i64', data: Source('0x0000000000000080'));
+          .createTypeCodec('i64', input: Input('0x0000000000000080'));
       final i64Value = codec.decode();
       expect(i64Value, equals(BigInt.from(-9223372036854775808)));
     });
@@ -97,7 +103,7 @@ void main() {
         'When highest value 0xffffffffffffff7f is decoded then it returns 9223372036854775807',
         () {
       final codec = Codec(registry: registry)
-          .createTypeCodec('i64', data: Source('0xffffffffffffff7f'));
+          .createTypeCodec('i64', input: Input('0xffffffffffffff7f'));
       final i64Value = codec.decode();
       expect(i64Value, equals(BigInt.from(9223372036854775807)));
     });
@@ -114,7 +120,8 @@ void main() {
         'When value -9223372036854775809 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
-      expect(() => codec.encode(BigInt.parse('-9223372036854775809')),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.parse('-9223372036854775809')),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
@@ -122,7 +129,8 @@ void main() {
         'When value 9223372036854775808 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i64');
-      expect(() => codec.encode(BigInt.parse('9223372036854775808')),
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, BigInt.parse('9223372036854775808')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
@@ -133,16 +141,14 @@ void main() {
     test(
         'When lowest value 0x0000000000000080 is decoded then it returns -9223372036854775808',
         () {
-      final codec = I64(source: Source('0x0000000000000080'));
-      final i64Value = codec.decode();
+      final i64Value = I64.decodeFromInput(Input('0x0000000000000080'));
       expect(i64Value, equals(BigInt.from(-9223372036854775808)));
     });
 
     test(
         'When highest value 0xffffffffffffff7f is decoded then it returns 9223372036854775807',
         () {
-      final codec = I64(source: Source('0xffffffffffffff7f'));
-      final i64Value = codec.decode();
+      final i64Value = I64.decodeFromInput(Input('0xffffffffffffff7f'));
       expect(i64Value, equals(BigInt.from(9223372036854775807)));
     });
   });
@@ -151,17 +157,19 @@ void main() {
     test(
         'When lowest value -9223372036854775808 is encoded then it returns 0x0000000000000080',
         () {
-      final codec = I64();
-      final i64Value = codec.encode(BigInt.from(-9223372036854775808));
-      expect(i64Value, equals('0000000000000080'));
+      final encoder = HexEncoder();
+
+      I64.encodeToEncoder(encoder, BigInt.from(-9223372036854775808));
+      expect(encoder.toHex(), equals('0x0000000000000080'));
     });
 
     test(
         'When highest value 9223372036854775807 is encoded then it returns 0xffffffffffffff7f',
         () {
-      final codec = I64();
-      final i64Value = codec.encode(BigInt.from(9223372036854775807));
-      expect(i64Value, equals('ffffffffffffff7f'));
+      final encoder = HexEncoder();
+
+      I64.encodeToEncoder(encoder, BigInt.from(9223372036854775807));
+      expect(encoder.toHex(), equals('0xffffffffffffff7f'));
     });
   });
 
@@ -169,16 +177,20 @@ void main() {
     test(
         'When value -9223372036854775809 is encoded then it throws an exception',
         () {
-      final codec = I64();
-      expect(() => codec.encode(BigInt.parse('-9223372036854775809')),
+      final encoder = HexEncoder();
+      expect(
+          () => I64.encodeToEncoder(
+              encoder, BigInt.parse('-9223372036854775809')),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test(
         'When value 9223372036854775808 is encoded then it throws an exception',
         () {
-      final codec = I64();
-      expect(() => codec.encode(BigInt.parse('9223372036854775808')),
+      final encoder = HexEncoder();
+      expect(
+          () =>
+              I64.encodeToEncoder(encoder, BigInt.parse('9223372036854775808')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });

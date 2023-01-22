@@ -8,7 +8,7 @@ void main() {
         'When lowest value 0x00000000000000000000000000000080 is decoded then it returns -170141183460469231731687303715884105728',
         () {
       final codec = Codec(registry: registry).createTypeCodec('i128',
-          data: Source('0x00000000000000000000000000000080'));
+          input: Input('0x00000000000000000000000000000080'));
       final i128Value = codec.decode();
       expect(i128Value,
           equals(BigInt.parse('-170141183460469231731687303715884105728')));
@@ -18,7 +18,7 @@ void main() {
         'When highest value 0xffffffffffffffffffffffffffffff7f is decoded then it returns 170141183460469231731687303715884105727',
         () {
       final codec = Codec(registry: registry).createTypeCodec('i128',
-          data: Source('0xffffffffffffffffffffffffffffff7f'));
+          input: Input('0xffffffffffffffffffffffffffffff7f'));
       final i128Value = codec.decode();
       expect(i128Value,
           equals(BigInt.parse('170141183460469231731687303715884105727')));
@@ -31,18 +31,20 @@ void main() {
         'When lowest value -170141183460469231731687303715884105728 is encoded then it returns 0x00000000000000000000000000000080',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i128');
-      final i128Value = codec
-          .encode(BigInt.parse('-170141183460469231731687303715884105728'));
-      expect(i128Value, equals('00000000000000000000000000000080'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder, BigInt.parse('-170141183460469231731687303715884105728'));
+      expect(encoder.toHex(), equals('0x00000000000000000000000000000080'));
     });
 
     test(
         'When highest value 170141183460469231731687303715884105727 is encoded then it returns 0xffffffffffffffffffffffffffffff7f',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i128');
-      final i128Value =
-          codec.encode(BigInt.parse('170141183460469231731687303715884105727'));
-      expect(i128Value, equals('ffffffffffffffffffffffffffffff7f'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder, BigInt.parse('170141183460469231731687303715884105727'));
+      expect(encoder.toHex(), equals('0xffffffffffffffffffffffffffffff7f'));
     });
   });
 
@@ -53,9 +55,10 @@ void main() {
         'When value -170141183460469231731687303715884105729 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i128');
+      final encoder = HexEncoder();
       expect(
-          () => codec
-              .encode(BigInt.parse('-170141183460469231731687303715884105729')),
+          () => codec.encode(encoder,
+              BigInt.parse('-170141183460469231731687303715884105729')),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
@@ -63,9 +66,10 @@ void main() {
         'When value 170141183460469231731687303715884105728 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i128');
+      final encoder = HexEncoder();
       expect(
-          () => codec
-              .encode(BigInt.parse('170141183460469231731687303715884105728')),
+          () => codec.encode(
+              encoder, BigInt.parse('170141183460469231731687303715884105728')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
@@ -82,9 +86,10 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('i128_key');
-      final i128Value = codec
-          .encode(BigInt.parse('-170141183460469231731687303715884105728'));
-      expect(i128Value, equals('00000000000000000000000000000080'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder, BigInt.parse('-170141183460469231731687303715884105728'));
+      expect(encoder.toHex(), equals('0x00000000000000000000000000000080'));
     });
 
     test(
@@ -92,16 +97,18 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('i128_key');
-      final i128Value =
-          codec.encode(BigInt.parse('170141183460469231731687303715884105727'));
-      expect(i128Value, equals('ffffffffffffffffffffffffffffff7f'));
+
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder, BigInt.parse('170141183460469231731687303715884105727'));
+      expect(encoder.toHex(), equals('0xffffffffffffffffffffffffffffff7f'));
     });
 
     test(
         'When lowest value 0x00000000000000000000000000000080 is decoded then it returns -170141183460469231731687303715884105728',
         () {
       final codec = Codec(registry: registry).createTypeCodec('i128_key',
-          data: Source('0x00000000000000000000000000000080'));
+          input: Input('0x00000000000000000000000000000080'));
       final i128Value = codec.decode();
       expect(i128Value,
           equals(BigInt.parse('-170141183460469231731687303715884105728')));
@@ -111,7 +118,7 @@ void main() {
         'When highest value 0xffffffffffffffffffffffffffffff7f is decoded then it returns 170141183460469231731687303715884105727',
         () {
       final codec = Codec(registry: registry).createTypeCodec('i128_key',
-          data: Source('0xffffffffffffffffffffffffffffff7f'));
+          input: Input('0xffffffffffffffffffffffffffffff7f'));
       final i128Value = codec.decode();
       expect(i128Value,
           equals(BigInt.parse('170141183460469231731687303715884105727')));
@@ -130,9 +137,10 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('i128_key');
+      final encoder = HexEncoder();
       expect(
-          () => codec
-              .encode(BigInt.parse('-170141183460469231731687303715884105729')),
+          () => codec.encode(encoder,
+              BigInt.parse('-170141183460469231731687303715884105729')),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
@@ -141,9 +149,10 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('i128_key');
+      final encoder = HexEncoder();
       expect(
-          () => codec
-              .encode(BigInt.parse('170141183460469231731687303715884105728')),
+          () => codec.encode(
+              encoder, BigInt.parse('170141183460469231731687303715884105728')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
@@ -154,8 +163,9 @@ void main() {
     test(
         'When lowest value 0x00000000000000000000000000000080 is decoded then it returns -170141183460469231731687303715884105728',
         () {
-      final codec = I128(source: Source('0x00000000000000000000000000000080'));
-      final i128Value = codec.decode();
+      final i128Value =
+          I128.decodeFromInput(Input('0x00000000000000000000000000000080'));
+
       expect(i128Value,
           equals(BigInt.parse('-170141183460469231731687303715884105728')));
     });
@@ -163,8 +173,9 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffff7f is decoded then it returns 170141183460469231731687303715884105727',
         () {
-      final codec = I128(source: Source('0xffffffffffffffffffffffffffffff7f'));
-      final i128Value = codec.decode();
+      final i128Value =
+          I128.decodeFromInput(Input('0xffffffffffffffffffffffffffffff7f'));
+
       expect(i128Value,
           equals(BigInt.parse('170141183460469231731687303715884105727')));
     });
@@ -174,19 +185,20 @@ void main() {
     test(
         'When lowest value -170141183460469231731687303715884105728 is encoded then it returns 0x00000000000000000000000000000080',
         () {
-      final codec = I128();
-      final i128Value = codec
-          .encode(BigInt.parse('-170141183460469231731687303715884105728'));
-      expect(i128Value, equals('00000000000000000000000000000080'));
+      final encoder = HexEncoder();
+      I128.encodeToEncoder(
+          encoder, BigInt.parse('-170141183460469231731687303715884105728'));
+      expect(encoder.toHex(), equals('0x00000000000000000000000000000080'));
     });
 
     test(
         'When highest value 170141183460469231731687303715884105727 is encoded then it returns 0xffffffffffffffffffffffffffffff7f',
         () {
-      final codec = I128();
-      final i128Value =
-          codec.encode(BigInt.parse('170141183460469231731687303715884105727'));
-      expect(i128Value, equals('ffffffffffffffffffffffffffffff7f'));
+      final encoder = HexEncoder();
+
+      I128.encodeToEncoder(
+          encoder, BigInt.parse('170141183460469231731687303715884105727'));
+      expect(encoder.toHex(), equals('0xffffffffffffffffffffffffffffff7f'));
     });
   });
 
@@ -194,20 +206,20 @@ void main() {
     test(
         'When value -170141183460469231731687303715884105729 is encoded then it throws an exception',
         () {
-      final codec = I128();
+      final encoder = HexEncoder();
       expect(
-          () => codec
-              .encode(BigInt.parse('-170141183460469231731687303715884105729')),
+          () => I128.encodeToEncoder(encoder,
+              BigInt.parse('-170141183460469231731687303715884105729')),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test(
         'When value 170141183460469231731687303715884105728 is encoded then it throws an exception',
         () {
-      final codec = I128();
+      final encoder = HexEncoder();
       expect(
-          () => codec
-              .encode(BigInt.parse('170141183460469231731687303715884105728')),
+          () => I128.encodeToEncoder(
+              encoder, BigInt.parse('170141183460469231731687303715884105728')),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });
