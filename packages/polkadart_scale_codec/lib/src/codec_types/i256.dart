@@ -3,11 +3,9 @@ part of codec_types;
 ///
 /// encode/decode signed 256 bit integer
 class I256 extends Codec<BigInt> {
-  final Source? source;
-
   ///
   /// constructor
-  I256({this.source}) : super(registry: Registry());
+  I256._() : super(registry: Registry());
 
   ///
   /// Decode a signed 256 bit integer from the source
@@ -27,8 +25,26 @@ class I256 extends Codec<BigInt> {
   /// ```
   @override
   BigInt decode() {
-    final low = U128(source: source ?? data).decode();
-    final high = I128(source: source ?? data).decode();
+    return decodeFromInput(input);
+  }
+
+  ///
+  /// [static] Decode a signed 256 bit integer from the input
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = I256.decodeFromInput(Input('0x0000000000000000000000000000008000000000000000000000000000000000'));
+  /// print(value); // -57896044618658097711785492504343953926634992332820282019728792003956564819968
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final value = I256.decodeFromInput(Input('0xffffffffffffffffffffffffffffffff7fffffffffffffffffffffffffffffff'));
+  /// print(value); // 57896044618658097711785492504343953926634992332820282019728792003956564819967
+  /// ```
+  static BigInt decodeFromInput(Input input) {
+    final low = U128.decodeFromInput(input);
+    final high = I128.decodeFromInput(input);
     return low + (high << 128);
   }
 
@@ -49,7 +65,27 @@ class I256 extends Codec<BigInt> {
   /// print(value); // ffffffffffffffffffffffffffffff7f
   /// ```
   @override
-  String encode(BigInt value) {
+  void encode(Encoder encoder, BigInt value) {
+    encodeToEncoder(encoder, value);
+  }
+
+  ///
+  /// [static] Encodes a signed 256 bit integer
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// I256.encodeToEncoder(encoder, BigInt.parse('-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
+  /// print(encoder.toHex()); // 0000000000000000000000000000000000000000000000000000000000000080
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// I256.encodeToEncoder(encoder, BigInt.parse('57896044618658097711785492504343953926634992332820282019728792003956564819967'));
+  /// print(encoder.toHex()); // 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f
+  /// ```
+  static void encodeToEncoder(Encoder encoder, BigInt value) {
     if (value <
             BigInt.parse(
                 '-57896044618658097711785492504343953926634992332820282019728792003956564819968') ||
@@ -62,6 +98,7 @@ class I256 extends Codec<BigInt> {
 
     final base = BigInt.parse(
         '115792089237316195423570985008687907853269984665640564039457584007913129639936');
-    return U256().encode((value + base) % base);
+    final val = (value + base) % base;
+    U256.encodeToEncoder(encoder, val);
   }
 }

@@ -8,7 +8,7 @@ void main() {
         'When lowest value 0x0000000000000000000000000000000000000000000000000000000000000080 is decoded then it returns -57896044618658097711785492504343953926634992332820282019728792003956564819968',
         () {
       final codec = Codec(registry: registry).createTypeCodec('i256',
-          data: Source(
+          input: Input(
               '0x0000000000000000000000000000000000000000000000000000000000000080'));
       final i256Value = codec.decode();
       expect(
@@ -21,7 +21,7 @@ void main() {
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f is decoded then it returns 57896044618658097711785492504343953926634992332820282019728792003956564819967',
         () {
       final codec = Codec(registry: registry).createTypeCodec('i256',
-          data: Source(
+          input: Input(
               '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
       final i256Value = codec.decode();
       expect(
@@ -37,24 +37,30 @@ void main() {
         'When lowest value -57896044618658097711785492504343953926634992332820282019728792003956564819968 is encoded then it returns 0x0000000000000000000000000000000000000000000000000000000000000080',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i256');
-      final i256Value = codec.encode(BigInt.parse(
-          '-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder,
+          BigInt.parse(
+              '-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
       expect(
-          i256Value,
+          encoder.toHex(),
           equals(
-              '0000000000000000000000000000000000000000000000000000000000000080'));
+              '0x0000000000000000000000000000000000000000000000000000000000000080'));
     });
 
     test(
         'When highest value 57896044618658097711785492504343953926634992332820282019728792003956564819967 is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i256');
-      final i256Value = codec.encode(BigInt.parse(
-          '57896044618658097711785492504343953926634992332820282019728792003956564819967'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder,
+          BigInt.parse(
+              '57896044618658097711785492504343953926634992332820282019728792003956564819967'));
       expect(
-          i256Value,
+          encoder.toHex(),
           equals(
-              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
+              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
     });
   });
 
@@ -64,9 +70,12 @@ void main() {
         'When value 57896044618658097711785492504343953926634992332820282019728792003956564819968 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i256');
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '57896044618658097711785492504343953926634992332820282019728792003956564819968')),
+          () => codec.encode(
+              encoder,
+              BigInt.parse(
+                  '57896044618658097711785492504343953926634992332820282019728792003956564819968')),
           throwsA(isA<Exception>()));
     });
 
@@ -74,9 +83,12 @@ void main() {
         'When value -57896044618658097711785492504343953926634992332820282019728792003956564819969 is encoded then it throws an exception',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec('i256');
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '-57896044618658097711785492504343953926634992332820282019728792003956564819969')),
+          () => codec.encode(
+              encoder,
+              BigInt.parse(
+                  '-57896044618658097711785492504343953926634992332820282019728792003956564819969')),
           throwsA(isA<Exception>()));
     });
   });
@@ -93,12 +105,15 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('i256_key');
-      final i256Value = codec.encode(BigInt.parse(
-          '-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder,
+          BigInt.parse(
+              '-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
       expect(
-          i256Value,
+          encoder.toHex(),
           equals(
-              '0000000000000000000000000000000000000000000000000000000000000080'));
+              '0x0000000000000000000000000000000000000000000000000000000000000080'));
     });
 
     test(
@@ -106,19 +121,22 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('i256_key');
-      final i256Value = codec.encode(BigInt.parse(
-          '57896044618658097711785492504343953926634992332820282019728792003956564819967'));
+      final encoder = HexEncoder();
+      codec.encode(
+          encoder,
+          BigInt.parse(
+              '57896044618658097711785492504343953926634992332820282019728792003956564819967'));
       expect(
-          i256Value,
+          encoder.toHex(),
           equals(
-              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
+              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
     });
 
     test(
         'When lowest value 0x0000000000000000000000000000000000000000000000000000000000000080 is decoded then it returns -57896044618658097711785492504343953926634992332820282019728792003956564819968',
         () {
       final codec = Codec(registry: registry).createTypeCodec('i256_key',
-          data: Source(
+          input: Input(
               '0x0000000000000000000000000000000000000000000000000000000000000080'));
       final i256Value = codec.decode();
       expect(
@@ -131,7 +149,7 @@ void main() {
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f is decoded then it returns 57896044618658097711785492504343953926634992332820282019728792003956564819967',
         () {
       final codec = Codec(registry: registry).createTypeCodec('i256_key',
-          data: Source(
+          input: Input(
               '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
       final i256Value = codec.decode();
       expect(
@@ -153,9 +171,12 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('i256_key');
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '57896044618658097711785492504343953926634992332820282019728792003956564819968')),
+          () => codec.encode(
+              encoder,
+              BigInt.parse(
+                  '57896044618658097711785492504343953926634992332820282019728792003956564819968')),
           throwsA(isA<Exception>()));
     });
 
@@ -164,9 +185,12 @@ void main() {
         () {
       final codec =
           Codec<BigInt>(registry: registry).createTypeCodec('i256_key');
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '-57896044618658097711785492504343953926634992332820282019728792003956564819969')),
+          () => codec.encode(
+              encoder,
+              BigInt.parse(
+                  '-57896044618658097711785492504343953926634992332820282019728792003956564819969')),
           throwsA(isA<Exception>()));
     });
   });
@@ -177,34 +201,37 @@ void main() {
     test(
         'When lowest value -57896044618658097711785492504343953926634992332820282019728792003956564819968 is encoded then it returns 0x0000000000000000000000000000000000000000000000000000000000000080',
         () {
-      final codec = I256();
-      final i256Value = codec.encode(BigInt.parse(
-          '-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
+      final encoder = HexEncoder();
+      I256.encodeToEncoder(
+          encoder,
+          BigInt.parse(
+              '-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
       expect(
-          i256Value,
+          encoder.toHex(),
           equals(
-              '0000000000000000000000000000000000000000000000000000000000000080'));
+              '0x0000000000000000000000000000000000000000000000000000000000000080'));
     });
 
     test(
         'When highest value 57896044618658097711785492504343953926634992332820282019728792003956564819967 is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f',
         () {
-      final codec = I256();
-      final i256Value = codec.encode(BigInt.parse(
-          '57896044618658097711785492504343953926634992332820282019728792003956564819967'));
+      final encoder = HexEncoder();
+      I256.encodeToEncoder(
+          encoder,
+          BigInt.parse(
+              '57896044618658097711785492504343953926634992332820282019728792003956564819967'));
       expect(
-          i256Value,
+          encoder.toHex(),
           equals(
-              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
+              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
     });
 
     test(
         'When lowest value 0x0000000000000000000000000000000000000000000000000000000000000080 is decoded then it returns -57896044618658097711785492504343953926634992332820282019728792003956564819968',
         () {
-      final codec = I256(
-          source: Source(
-              '0x0000000000000000000000000000000000000000000000000000000000000080'));
-      final i256Value = codec.decode();
+      final i256Value = I256.decodeFromInput(Input(
+          '0x0000000000000000000000000000000000000000000000000000000000000080'));
+
       expect(
           i256Value,
           equals(BigInt.parse(
@@ -214,10 +241,9 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f is decoded then it returns 57896044618658097711785492504343953926634992332820282019728792003956564819967',
         () {
-      final codec = I256(
-          source: Source(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
-      final i256Value = codec.decode();
+      final i256Value = I256.decodeFromInput(Input(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
+
       expect(
           i256Value,
           equals(BigInt.parse(
@@ -229,20 +255,24 @@ void main() {
     test(
         'When value 57896044618658097711785492504343953926634992332820282019728792003956564819968 is encoded then it throws an exception',
         () {
-      final codec = I256();
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '57896044618658097711785492504343953926634992332820282019728792003956564819968')),
+          () => I256.encodeToEncoder(
+              encoder,
+              BigInt.parse(
+                  '57896044618658097711785492504343953926634992332820282019728792003956564819968')),
           throwsA(isA<Exception>()));
     });
 
     test(
         'When value -57896044618658097711785492504343953926634992332820282019728792003956564819969 is encoded then it throws an exception',
         () {
-      final codec = I256();
+      final encoder = HexEncoder();
       expect(
-          () => codec.encode(BigInt.parse(
-              '-57896044618658097711785492504343953926634992332820282019728792003956564819969')),
+          () => I256.encodeToEncoder(
+              encoder,
+              BigInt.parse(
+                  '-57896044618658097711785492504343953926634992332820282019728792003956564819969')),
           throwsA(isA<Exception>()));
     });
   });
