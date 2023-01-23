@@ -20,6 +20,7 @@ class TypeRegistry {
     'I128',
     'I256',
     'Compact',
+    'Vec',
   ];
 
   ///

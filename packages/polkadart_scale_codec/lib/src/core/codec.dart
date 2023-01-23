@@ -5,25 +5,25 @@ class Codec<T> implements CodecInterface<T> {
   ///
   /// It is used to precess the subType of the followed types in metadata and
   /// helps as a guided route in decoding and encoding the types following the type index from the metadata registry.
-  late String subType;
+  String subType = '';
 
   ///
   /// Current TypeName
-  late String typeString;
+  String typeString = '';
 
-  late int fixedLength;
+  int fixedLength = 0;
 
   ///
   /// Set Struct BitLength
-  late int bitLength;
+  int bitLength = 0;
 
   ///
   /// Set the typeStruct
-  late List typeStruct;
+  List typeStruct = [];
 
   ///
   /// Set the valueList for vec
-  late List valueList;
+  List valueList = [];
 
   ///
   /// Registry to hold the mapped keys and Codec
@@ -52,7 +52,9 @@ class Codec<T> implements CodecInterface<T> {
     if (input != null) {
       this.input = input;
     }
-    this.subType = subType;
+    if (subType.trim().isNotEmpty) {
+      this.subType = subType.trim();
+    }
     this.metadata = metadata;
   }
 
@@ -93,6 +95,8 @@ class Codec<T> implements CodecInterface<T> {
     codec.typeString = typeString;
 
     metadata ??= this.metadata;
+
+    codec.registry = registry;
 
     codec._init(input, metadata: metadata);
 
@@ -163,7 +167,7 @@ class Codec<T> implements CodecInterface<T> {
     codecTypeName = codecTypeName.replaceAll(RegExp(r'<T>'), '');
     codecTypeName = codecTypeName.replaceAll(RegExp(r'<T, I>'), '');
     codecTypeName = codecTypeName.replaceAll(RegExp(r"&'static[u8]"), 'Bytes');
-    if (codecTypeName == '<Lookup as StaticLookup>::Input') {
+    if (codecTypeName == '<Lookup as StaticLookup>::Source') {
       return 'Address';
     }
     return codecTypeName;
