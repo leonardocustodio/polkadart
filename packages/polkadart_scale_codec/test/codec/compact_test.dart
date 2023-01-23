@@ -51,7 +51,7 @@ void main() {
       final codec = Codec(registry: registry).createTypeCodec('Compact');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -1),
-          throwsA(isA<IncompatibleCompactException>()));
+          throwsA(isA<IncompatibleCompactValueException>()));
     });
 
     test(
@@ -60,7 +60,7 @@ void main() {
       final codec = Codec(registry: registry).createTypeCodec('Compact');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, (BigInt.from(64) << 530)),
-          throwsA(isA<IncompatibleCompactException>()));
+          throwsA(isA<IncompatibleCompactValueException>()));
     });
   });
 
@@ -113,7 +113,7 @@ void main() {
       final codec = Codec(registry: registry).createTypeCodec('Compact_key');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -1),
-          throwsA(isA<IncompatibleCompactException>()));
+          throwsA(isA<IncompatibleCompactValueException>()));
     });
 
     test(
@@ -122,7 +122,7 @@ void main() {
       final codec = Codec(registry: registry).createTypeCodec('Compact_key');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, (BigInt.from(64) << 530)),
-          throwsA(isA<IncompatibleCompactException>()));
+          throwsA(isA<IncompatibleCompactValueException>()));
     });
   });
 
@@ -161,7 +161,7 @@ void main() {
 
     test('When value -1 is encoded then it throws an exception', () {
       expect(() => Compact.encodeToEncoder(HexEncoder(), -1),
-          throwsA(isA<IncompatibleCompactException>()));
+          throwsA(isA<IncompatibleCompactValueException>()));
     });
 
     test(
@@ -169,7 +169,7 @@ void main() {
         () {
       expect(
           () => Compact.encodeToEncoder(HexEncoder(), (BigInt.from(64) << 530)),
-          throwsA(isA<IncompatibleCompactException>()));
+          throwsA(isA<IncompatibleCompactValueException>()));
     });
   });
 }

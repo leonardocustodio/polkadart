@@ -1,9 +1,20 @@
 part of utils;
 
 ///
-/// IncompatibleCompactException
-class IncompatibleCompactException implements Exception {
-  const IncompatibleCompactException(this.value);
+/// IncompatibleCompactTypeException
+class IncompatibleCompactTypeException implements Exception {
+  const IncompatibleCompactTypeException(this.type);
+
+  final dynamic type;
+
+  @override
+  String toString() => 'Expected Compact type `BigInt or int` but found: $type';
+}
+
+///
+/// IncompatibleCompactValueException
+class IncompatibleCompactValueException implements Exception {
+  const IncompatibleCompactValueException(this.value);
 
   final dynamic value;
 

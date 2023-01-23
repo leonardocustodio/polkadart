@@ -136,10 +136,14 @@ class Compact<T extends Uint> extends Codec<dynamic> {
   /// print(encoder.toHex()); // 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   /// ```
   static void encodeToEncoder(Encoder encoder, dynamic val) {
+    if (!(val is BigInt || val is int)) {
+      throw IncompatibleCompactTypeException(val.runtimeType);
+    }
+
     final BigInt bigIntValue = val is BigInt ? val : BigInt.from(val);
     final int value = bigIntValue.toInt();
     if (value < 0) {
-      throw IncompatibleCompactException(bigIntValue);
+      throw IncompatibleCompactValueException(value);
     }
 
     if (value < 64) {
@@ -163,7 +167,7 @@ class Compact<T extends Uint> extends Codec<dynamic> {
         copiedValue >>= 8;
       }
     } else {
-      throw IncompatibleCompactException(bigIntValue);
+      throw IncompatibleCompactValueException(bigIntValue);
     }
   }
 
