@@ -18,6 +18,7 @@ void main() {
         'i64',
         'i128',
         'i256',
+        'compact',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();

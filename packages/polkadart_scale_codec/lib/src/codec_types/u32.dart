@@ -2,10 +2,10 @@ part of codec_types;
 
 ///
 /// encode/decode unsigned 32 bit integer
-class U32 extends Codec<int> {
+class U32 extends Uint<int> {
   ///
   /// constructor
-  U32._() : super(registry: Registry());
+  U32._() : super._();
 
   ///
   /// Decode a unsigned 32 bit integer from the input

@@ -2,10 +2,10 @@ part of codec_types;
 
 ///
 /// U8 to encode/decode unsigned 8 bit integer
-class U8 extends Codec<int> {
+class U8 extends Uint<int> {
   ///
   /// constructor
-  U8._() : super(registry: Registry());
+  U8._() : super._();
 
   ///
   /// Decode a unsigned 8 bit integer from the Codec's input

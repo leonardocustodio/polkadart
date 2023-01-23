@@ -2,10 +2,10 @@ part of codec_types;
 
 ///
 /// encode/decode unsigned 256 bit integer
-class U256 extends Codec<BigInt> {
+class U256 extends Uint<BigInt> {
   ///
   /// constructor
-  U256._() : super(registry: Registry());
+  U256._() : super._();
 
   ///
   /// Decode a unsigned 256 bit integer from the input

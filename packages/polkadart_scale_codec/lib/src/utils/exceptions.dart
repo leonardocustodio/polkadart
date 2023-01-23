@@ -1,6 +1,17 @@
 part of utils;
 
 ///
+/// IncompatibleCompactException
+class IncompatibleCompactException implements Exception {
+  const IncompatibleCompactException(this.value);
+
+  final dynamic value;
+
+  @override
+  String toString() => 'Incompatible Compact value: $value';
+}
+
+///
 /// UnknownEncodeException
 class InvalidIntEncodeException implements Exception {
   const InvalidIntEncodeException(this.value);

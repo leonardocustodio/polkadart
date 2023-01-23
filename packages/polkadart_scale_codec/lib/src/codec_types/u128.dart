@@ -2,10 +2,10 @@ part of codec_types;
 
 ///
 /// encode/decode unsigned 128 bit integer
-class U128 extends Codec<BigInt> {
+class U128 extends Uint<BigInt> {
   ///
   /// constructor
-  U128._() : super(registry: Registry());
+  U128._() : super._();
 
   ///
   /// Decode a unsigned 128 bit integer from the input

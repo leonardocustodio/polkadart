@@ -44,7 +44,7 @@ class I32 extends Codec<int> {
   /// ```
   static int decodeFromInput(Input input) {
     return U16.decodeFromInput(input) +
-        input.byte() * (pow(2, 16) as int) +
+        input.byte() * (2 << 15) +
         (input.byte() << 24).toSigned(32);
   }
 

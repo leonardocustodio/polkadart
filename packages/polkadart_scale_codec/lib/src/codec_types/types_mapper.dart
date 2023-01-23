@@ -29,6 +29,8 @@ class CodecMapper {
         return I128._();
       case 'i256':
         return I256._();
+      case 'compact':
+        return Compact._();
     }
     throw UnexpectedCodecException(
         'Expected a supported codec, but got $codecTypeName');

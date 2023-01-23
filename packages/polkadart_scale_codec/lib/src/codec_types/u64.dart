@@ -2,10 +2,10 @@ part of codec_types;
 
 ///
 /// encode/decode unsigned 64 bit integer
-class U64 extends Codec<BigInt> {
+class U64 extends Uint<BigInt> {
   ///
   /// constructor
-  U64._() : super(registry: Registry());
+  U64._() : super._();
 
   ///
   /// Decode a unsigned 64 bit integer from the input
