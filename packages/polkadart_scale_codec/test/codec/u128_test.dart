@@ -7,18 +7,18 @@ void main() {
     test(
         'When lowest value 0x00000000000000000000000000000000 is decoded then it returns 0',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u128',
-          input: Input('0x00000000000000000000000000000000'));
-      final BigInt u128Value = codec.decode();
+      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u128');
+      final BigInt u128Value =
+          codec.decode(Input('0x00000000000000000000000000000000'));
       expect(u128Value.toString(), equals('0'));
     });
 
     test(
         'When highest value 0xffffffffffffffffffffffffffffffff is decoded then it returns 340282366920938463463374607431768211455',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u128',
-          input: Input('0xffffffffffffffffffffffffffffffff'));
-      final BigInt u128Value = codec.decode();
+      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u128');
+      final BigInt u128Value =
+          codec.decode(Input('0xffffffffffffffffffffffffffffffff'));
       expect(u128Value.toString(),
           equals('340282366920938463463374607431768211455'));
     });
@@ -73,17 +73,16 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     TypeRegistry.addCustomCodec(
       registry,
-      <String, dynamic>{
-        'u128_key': 'u128',
-      },
+      <String, dynamic>{'u128_key': 'u128'},
     );
 
     test('When 0x00000000000000000000000000000000 is decoded then it returns 0',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec(
-          'u128_key',
-          input: Input('0x00000000000000000000000000000000'));
-      final BigInt u128Value = codec.decode();
+        'u128_key',
+      );
+      final BigInt u128Value =
+          codec.decode(Input('0x00000000000000000000000000000000'));
       expect(u128Value.toString(), equals('0'));
     });
 
@@ -101,9 +100,10 @@ void main() {
         'When 0xffffffffffffffffffffffffffffffff is decoded then it returns 340282366920938463463374607431768211455',
         () {
       final codec = Codec<BigInt>(registry: registry).createTypeCodec(
-          'u128_key',
-          input: Input('0xffffffffffffffffffffffffffffffff'));
-      final BigInt u128Value = codec.decode();
+        'u128_key',
+      );
+      final BigInt u128Value =
+          codec.decode(Input('0xffffffffffffffffffffffffffffffff'));
       expect(u128Value.toString(),
           equals('340282366920938463463374607431768211455'));
     });
@@ -124,9 +124,7 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     TypeRegistry.addCustomCodec(
       registry,
-      <String, dynamic>{
-        'u128_key': 'u128',
-      },
+      <String, dynamic>{'u128_key': 'u128'},
     );
 
     test('When value -1 is encoded then it throws an exception', () {

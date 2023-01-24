@@ -2,29 +2,36 @@ part of codec_types;
 
 ///
 /// encode/decode unsigned 128 bit integer
-class U128 extends Codec<BigInt> {
+class U128 extends Uint<BigInt> {
   ///
   /// constructor
-  U128._() : super(registry: Registry());
+  U128._() : super._();
 
   ///
-  /// Decode a unsigned 128 bit integer from the source
+  /// [static] Create a new instance of U128
+  @override
+  U128 copyWith(Codec codec) {
+    return copyProperties(codec, U128._()) as U128;
+  }
+
+  ///
+  /// Decode a unsigned 128 bit integer from the input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U128', data: Source('0x00000000000000000000000000000000'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U128', input: Input('0x00000000000000000000000000000000'));
   /// final value = codec.decode();
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U128', data: Source('0xffffffffffffffffffffffffffffffff'));
+  /// final codec = Codec<BigInt>().createTypeCodec('U128', input: Input('0xffffffffffffffffffffffffffffffff'));
   /// final value = codec.decode();
   /// print(value); // 340282366920938463463374607431768211455
   /// ```
   @override
-  BigInt decode() {
+  BigInt decode(Input input) {
     return decodeFromInput(input);
   }
 

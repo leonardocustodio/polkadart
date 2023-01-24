@@ -2,10 +2,17 @@ part of codec_types;
 
 ///
 /// U16 to encode/decode unsigned 16 bit integer
-class U16 extends Codec<int> {
+class U16 extends Uint<int> {
   ///
   /// constructor
-  U16._() : super(registry: Registry());
+  U16._() : super._();
+
+  ///
+  /// [static] Create a new instance of U16
+  @override
+  U16 copyWith(Codec codec) {
+    return copyProperties(codec, U16._()) as U16;
+  }
 
   ///
   /// Decode a unsigned 16 bit integer from the input
@@ -24,7 +31,7 @@ class U16 extends Codec<int> {
   /// print(value); // 65535
   /// ```
   @override
-  int decode() {
+  int decode(Input input) {
     return decodeFromInput(input);
   }
 

@@ -5,16 +5,14 @@ void main() {
   group('U16 Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x0000 is decoded then it returns 0', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('u16', input: Input('0x0000'));
-      final u16Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('u16');
+      final u16Value = codec.decode(Input('0x0000'));
       expect(u16Value, equals(0));
     });
 
     test('When highest value 0xffff is decoded then it returns 65535', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('u16', input: Input('0xffff'));
-      final u16Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('u16');
+      final u16Value = codec.decode(Input('0xffff'));
       expect(u16Value, equals(65535));
     });
   });
@@ -64,16 +62,14 @@ void main() {
     );
 
     test('When lowest value 0x0000 is decoded then it returns 0', () {
-      final Codec codec = Codec(registry: registry)
-          .createTypeCodec('u16_key', input: Input('0x0000'));
-      final u16Value = codec.decode();
+      final Codec codec = Codec(registry: registry).createTypeCodec('u16_key');
+      final u16Value = codec.decode(Input('0x0000'));
       expect(u16Value, equals(0));
     });
 
     test('When highest value 0xffff is decoded then it returns 65535', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('u16_key', input: Input('0xffff'));
-      final u16Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('u16_key');
+      final u16Value = codec.decode(Input('0xffff'));
       expect(u16Value, equals(65535));
     });
 
