@@ -15,6 +15,12 @@ class TypeRegistry {
     'U256',
     'I8',
     'I16',
+    'I32',
+    'I64',
+    'I128',
+    'I256',
+    'Compact',
+    'Vec',
   ];
 
   ///
@@ -106,8 +112,9 @@ class TypeRegistry {
               case 'Compact':
               // BTreeMap
               case 'BTreeMap':
-                final codec = registry.getCodec(match[1].toString())!;
+                final Codec codec = registry.getCodec(match[1].toString())!;
                 codec.subType = match[2].toString();
+                codec.typeString = value;
                 registry.addCodec(key, codec);
                 break;
             }
