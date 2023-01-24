@@ -6,18 +6,16 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x0000000000000000 is decoded then it returns 0',
         () {
-      final codec = Codec<BigInt>(registry: registry)
-          .createTypeCodec('u64', input: Input('0x0000000000000000'));
-      final BigInt u64Value = codec.decode();
+      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u64');
+      final BigInt u64Value = codec.decode(Input('0x0000000000000000'));
       expect(u64Value.toString(), equals('0'));
     });
 
     test(
         'When highest value 0xffffffffffffffff is decoded then it returns 18446744073709551615',
         () {
-      final codec = Codec<BigInt>(registry: registry)
-          .createTypeCodec('u64', input: Input('0xffffffffffffffff'));
-      final BigInt u64Value = codec.decode();
+      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u64');
+      final BigInt u64Value = codec.decode(Input('0xffffffffffffffff'));
       expect(u64Value.toString(), equals('18446744073709551615'));
     });
   });
@@ -72,9 +70,9 @@ void main() {
     );
 
     test('When 0x0000000000000000 is decoded then it returns 0', () {
-      final codec = Codec<BigInt>(registry: registry)
-          .createTypeCodec('u64_key', input: Input('0x0000000000000000'));
-      final BigInt u64Value = codec.decode();
+      final codec =
+          Codec<BigInt>(registry: registry).createTypeCodec('u64_key');
+      final BigInt u64Value = codec.decode(Input('0x0000000000000000'));
       expect(u64Value.toString(), equals('0'));
     });
 
@@ -89,9 +87,9 @@ void main() {
     test(
         'When 0xffffffffffffffff is decoded then it returns 18446744073709551615',
         () {
-      final codec = Codec<BigInt>(registry: registry)
-          .createTypeCodec('u64_key', input: Input('0xffffffffffffffff'));
-      final BigInt u64Value = codec.decode();
+      final codec =
+          Codec<BigInt>(registry: registry).createTypeCodec('u64_key');
+      final BigInt u64Value = codec.decode(Input('0xffffffffffffffff'));
       expect(u64Value.toString(), equals('18446744073709551615'));
     });
 

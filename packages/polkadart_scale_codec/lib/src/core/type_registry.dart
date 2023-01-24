@@ -5,7 +5,23 @@ part of core;
 class TypeRegistry {
   ///
   /// Basic Codec names
-  static const _defaultCodecTypes = <String>['Bool', 'U8', 'U16', 'U32', 'U64'];
+  static const _defaultCodecTypes = <String>[
+    'Bool',
+    'U8',
+    'U16',
+    'U32',
+    'U64',
+    'U128',
+    'U256',
+    'I8',
+    'I16',
+    'I32',
+    'I64',
+    'I128',
+    'I256',
+    'Compact',
+    'Vec',
+  ];
 
   ///
   /// Create a registry
@@ -96,8 +112,9 @@ class TypeRegistry {
               case 'Compact':
               // BTreeMap
               case 'BTreeMap':
-                final codec = registry.getCodec(match[1].toString())!;
+                final Codec codec = registry.getCodec(match[1].toString())!;
                 codec.subType = match[2].toString();
+                codec.typeString = value;
                 registry.addCodec(key, codec);
                 break;
             }
