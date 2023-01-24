@@ -8,6 +8,13 @@ class U8 extends Uint<int> {
   U8._() : super._();
 
   ///
+  /// [static] Create a new instance of U8
+  @override
+  U8 copyWith(Codec codec) {
+    return copyProperties(codec, U8._()) as U8;
+  }
+
+  ///
   /// Decode a unsigned 8 bit integer from the Codec's input
   ///
   /// Example:
@@ -24,7 +31,7 @@ class U8 extends Uint<int> {
   /// print(value); // 255
   /// ```
   @override
-  int decode() {
+  int decode(Input input) {
     return decodeFromInput(input);
   }
 

@@ -8,6 +8,13 @@ class U16 extends Uint<int> {
   U16._() : super._();
 
   ///
+  /// [static] Create a new instance of U16
+  @override
+  U16 copyWith(Codec codec) {
+    return copyProperties(codec, U16._()) as U16;
+  }
+
+  ///
   /// Decode a unsigned 16 bit integer from the input
   ///
   /// Example:
@@ -24,7 +31,7 @@ class U16 extends Uint<int> {
   /// print(value); // 65535
   /// ```
   @override
-  int decode() {
+  int decode(Input input) {
     return decodeFromInput(input);
   }
 

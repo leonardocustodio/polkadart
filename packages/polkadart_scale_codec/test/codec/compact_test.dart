@@ -5,19 +5,17 @@ void main() {
   group('Compact Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('Compact', input: Input('0x00'));
-      final compactValue = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('Compact');
+      final compactValue = codec.decode(Input('0x00'));
       expect(compactValue, equals(0));
     });
 
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns ((BigInt.from(64) << 530) - BigInt.from(1))',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact',
-          input: Input(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-      final compactValue = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('Compact');
+      final compactValue = codec.decode(Input(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       expect(compactValue, equals(((BigInt.from(64) << 530) - BigInt.from(1))));
     });
   });
@@ -74,19 +72,19 @@ void main() {
     );
 
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('Compact_key', input: Input('0x00'));
-      final compactValue = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
+      final compactValue = codec.decode(Input('0x00'));
       expect(compactValue, equals(0));
     });
 
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns ((BigInt.from(64) << 530) - BigInt.from(1))',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key',
-          input: Input(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-      final compactValue = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec(
+        'Compact_key',
+      );
+      final compactValue = codec.decode(Input(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       expect(compactValue, equals(((BigInt.from(64) << 530) - BigInt.from(1))));
     });
 

@@ -8,6 +8,13 @@ class BoolCodec extends Codec<bool> {
   BoolCodec._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of BoolCodec
+  @override
+  BoolCodec copyWith(Codec codec) {
+    return copyProperties(codec, BoolCodec._()) as BoolCodec;
+  }
+
+  ///
   /// Decodes the value from the Codec's input
   ///
   /// Example:
@@ -24,7 +31,7 @@ class BoolCodec extends Codec<bool> {
   /// print(boolValue); // false
   /// ```
   @override
-  bool decode() {
+  bool decode(Input input) {
     return decodeFromInput(input);
   }
 

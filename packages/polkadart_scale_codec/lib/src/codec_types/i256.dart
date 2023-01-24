@@ -8,6 +8,13 @@ class I256 extends Codec<BigInt> {
   I256._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of I256
+  @override
+  I256 copyWith(Codec codec) {
+    return copyProperties(codec, I256._()) as I256;
+  }
+
+  ///
   /// Decode a signed 256 bit integer from the source
   ///
   /// Example:
@@ -24,7 +31,7 @@ class I256 extends Codec<BigInt> {
   /// print(value); // 57896044618658097711785492504343953926634992332820282019728792003956564819967
   /// ```
   @override
-  BigInt decode() {
+  BigInt decode(Input input) {
     return decodeFromInput(input);
   }
 

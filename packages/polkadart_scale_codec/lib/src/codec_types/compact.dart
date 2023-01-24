@@ -8,6 +8,13 @@ class Compact<T extends Uint> extends Codec<dynamic> {
   Compact._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of Compact
+  @override
+  Compact copyWith(Codec codec) {
+    return copyProperties(codec, Compact._()) as Compact;
+  }
+
+  ///
   /// Decodes the value from the Codec's input
   ///
   /// Supported Compact values can range from  0 - ((2 ^ 536) - 1)
@@ -26,7 +33,7 @@ class Compact<T extends Uint> extends Codec<dynamic> {
   /// print(value); // 115792089237316195423570985008687907853269984665640564039457584007913129639935
   /// ```
   @override
-  dynamic decode() {
+  dynamic decode(Input input) {
     return decodeFromInput(input);
   }
 

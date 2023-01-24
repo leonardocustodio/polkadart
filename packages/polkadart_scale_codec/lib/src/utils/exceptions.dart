@@ -1,6 +1,15 @@
 part of utils;
 
 ///
+/// SubtypeNotFoundException
+class SubtypeNotFoundException implements Exception {
+  const SubtypeNotFoundException();
+
+  @override
+  String toString() => 'Vector must have a sub type';
+}
+
+///
 /// IncompatibleCompactTypeException
 class IncompatibleCompactTypeException implements Exception {
   const IncompatibleCompactTypeException(this.type);
