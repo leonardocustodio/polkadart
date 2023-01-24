@@ -2,10 +2,17 @@ part of codec_types;
 
 ///
 /// encode/decode unsigned 32 bit integer
-class U32 extends Codec<int> {
+class U32 extends Uint<int> {
   ///
   /// constructor
-  U32._() : super(registry: Registry());
+  U32._() : super._();
+
+  ///
+  /// [static] Create a new instance of U32
+  @override
+  U32 copyWith(Codec codec) {
+    return copyProperties(codec, U32._()) as U32;
+  }
 
   ///
   /// Decode a unsigned 32 bit integer from the input
@@ -24,7 +31,7 @@ class U32 extends Codec<int> {
   /// print(value); // 4294967295
   /// ```
   @override
-  int decode() {
+  int decode(Input input) {
     return decodeFromInput(input);
   }
 

@@ -4,7 +4,23 @@ import 'package:test/test.dart';
 void main() {
   group('Test TypeRegistry', () {
     test('When registry is created then it should have the defined keys.', () {
-      final keys = ['bool', 'u8', 'u16', 'u32'];
+      final keys = [
+        'bool',
+        'u8',
+        'u16',
+        'u32',
+        'u64',
+        'u128',
+        'u256',
+        'i8',
+        'i16',
+        'i32',
+        'i64',
+        'i128',
+        'i256',
+        'compact',
+        'vec',
+      ];
 
       final Registry registry = TypeRegistry.createRegistry();
 
