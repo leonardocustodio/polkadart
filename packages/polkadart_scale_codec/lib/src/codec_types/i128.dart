@@ -8,6 +8,13 @@ class I128 extends Codec<BigInt> {
   I128._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of I128
+  @override
+  I128 copyWith(Codec codec) {
+    return copyProperties(codec, I128._()) as I128;
+  }
+
+  ///
   /// Decode a signed 128 bit integer from the source
   ///
   /// Example:
@@ -24,7 +31,7 @@ class I128 extends Codec<BigInt> {
   /// print(value); // 170141183460469231731687303715884105727
   /// ```
   @override
-  BigInt decode() {
+  BigInt decode(Input input) {
     return decodeFromInput(input);
   }
 

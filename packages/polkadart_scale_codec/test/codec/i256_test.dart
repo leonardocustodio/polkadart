@@ -7,10 +7,9 @@ void main() {
     test(
         'When lowest value 0x0000000000000000000000000000000000000000000000000000000000000080 is decoded then it returns -57896044618658097711785492504343953926634992332820282019728792003956564819968',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i256',
-          input: Input(
-              '0x0000000000000000000000000000000000000000000000000000000000000080'));
-      final i256Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i256');
+      final i256Value = codec.decode(Input(
+          '0x0000000000000000000000000000000000000000000000000000000000000080'));
       expect(
           i256Value,
           equals(BigInt.parse(
@@ -20,10 +19,9 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f is decoded then it returns 57896044618658097711785492504343953926634992332820282019728792003956564819967',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i256',
-          input: Input(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
-      final i256Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i256');
+      final i256Value = codec.decode(Input(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
       expect(
           i256Value,
           equals(BigInt.parse(
@@ -135,10 +133,11 @@ void main() {
     test(
         'When lowest value 0x0000000000000000000000000000000000000000000000000000000000000080 is decoded then it returns -57896044618658097711785492504343953926634992332820282019728792003956564819968',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i256_key',
-          input: Input(
-              '0x0000000000000000000000000000000000000000000000000000000000000080'));
-      final i256Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec(
+        'i256_key',
+      );
+      final i256Value = codec.decode(Input(
+          '0x0000000000000000000000000000000000000000000000000000000000000080'));
       expect(
           i256Value,
           equals(BigInt.parse(
@@ -148,10 +147,11 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f is decoded then it returns 57896044618658097711785492504343953926634992332820282019728792003956564819967',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i256_key',
-          input: Input(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
-      final i256Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec(
+        'i256_key',
+      );
+      final i256Value = codec.decode(Input(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f'));
       expect(
           i256Value,
           equals(BigInt.parse(

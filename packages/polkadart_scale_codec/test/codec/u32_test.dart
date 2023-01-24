@@ -5,17 +5,15 @@ void main() {
   group('U32 Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00000000 is decoded then it returns 0', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('u32', input: Input('0x00000000'));
-      final u32Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('u32');
+      final u32Value = codec.decode(Input('0x00000000'));
       expect(u32Value, equals(0));
     });
 
     test('When highest value 0xffffffff is decoded then it returns 4294967295',
         () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('u32', input: Input('0xffffffff'));
-      final u32Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('u32');
+      final u32Value = codec.decode(Input('0xffffffff'));
       expect(u32Value, equals(4294967295));
     });
   });
@@ -66,16 +64,14 @@ void main() {
     );
 
     test('When u32_key is decoded then it returns 0', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('u32_key', input: Input('0x00000000'));
-      final u32Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('u32_key');
+      final u32Value = codec.decode(Input('0x00000000'));
       expect(u32Value, equals(0));
     });
 
     test('When u32_key is encoded then it returns 0xffffffff', () {
-      final codec = Codec<int>(registry: registry)
-          .createTypeCodec('u32_key', input: Input('0xffffffff'));
-      final u32Value = codec.decode();
+      final codec = Codec<int>(registry: registry).createTypeCodec('u32_key');
+      final u32Value = codec.decode(Input('0xffffffff'));
       expect(u32Value, equals(4294967295));
     });
 
