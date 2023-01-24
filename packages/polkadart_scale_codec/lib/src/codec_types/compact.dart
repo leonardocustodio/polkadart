@@ -21,14 +21,14 @@ class Compact<T extends Uint> extends Codec<dynamic> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec().createTypeCodec('Compact', input: );
+  /// final codec = Codec().createTypeCodec('Compact');
   /// final value = codec.decode(Input('0x00'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec().createTypeCodec('Compact', input: );
+  /// final codec = Codec().createTypeCodec('Compact');
   /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
   /// print(value); // 115792089237316195423570985008687907853269984665640564039457584007913129639935
   /// ```

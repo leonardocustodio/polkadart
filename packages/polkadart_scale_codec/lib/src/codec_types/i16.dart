@@ -15,19 +15,19 @@ class I16 extends Codec<int> {
   }
 
   ///
-  /// Decode a signed 16 bit integer from the source
+  /// Decode a signed 16 bit integer from the input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I16', input: Input('0x0080'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('I16');
+  /// final value = codec.decode(Input('0x0080'));
   /// print(value); // -32768
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I16', input: Input('0xff7f'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('I16');
+  /// final value = codec.decode(Input('0xff7f'));
   /// print(value); // 32767
   /// ```
   @override
@@ -60,19 +60,21 @@ class I16 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('I16');
-  /// final value = codec.encode(-32768);
-  /// print(value); // 0080
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, -32768);
+  /// print(encoder.toHex()); // 0080
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('I16');
-  /// final value = codec.encode(32767);
-  /// print(value); // ff7f
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 32767);
+  /// print(encoder.toHex()); // ff7f
   /// ```
   @override
   void encode(Encoder encoder, int value) {
-    encodeTo(encoder, value);
+    encodeToEncoder(encoder, value);
   }
 
   ///
@@ -81,17 +83,17 @@ class I16 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final encoder = HexEncoder();
-  /// final value = I16.encodeToBytes(encoder, -32768);
+  /// I16.encodeToEncoder(encoder, -32768);
   /// print(encoder.toHex()); // 0080
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final encoder = HexEncoder();
-  /// final value = I16.encodeToBytes(encoder, 32767);
+  /// I16.encodeToEncoder(encoder, 32767);
   /// print(encoder.toHex()); // ff7f
   /// ```
-  static void encodeTo(Encoder encoder, int value) {
+  static void encodeToEncoder(Encoder encoder, int value) {
     if (value < -32768 || value > 32767) {
       throw UnexpectedCaseException(
           'Expected value between -32768 and 32767, but found: $value');

@@ -21,7 +21,8 @@ class Vec<T extends Codec> extends Codec<List> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec().createTypeCodec('Vec<u8>', input: Input('0x0401020304'));
+  /// final codec = Codec().createTypeCodec('Vec<u8>');
+  /// final value = codec.decode(Input('0x0401020304'));
   /// final vecValue = codec.decode();
   /// print(vecValue); // [1, 2, 3, 4]
   /// ```
@@ -48,7 +49,7 @@ class Vec<T extends Codec> extends Codec<List> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec().createTypeCodec('Vec<u8>');
+  /// final codec = Codec().createTypeCodec('Vec<u8>');');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, [1, 2, 3, 4]);
   /// print(encoder.toHex()); // 0x0401020304

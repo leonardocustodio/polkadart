@@ -19,14 +19,14 @@ class U256 extends Uint<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U256', input: Input('0x0000000000000000000000000000000000000000000000000000000000000000'));
-  /// final value = codec.decode();
+  /// final codec = Codec<BigInt>().createTypeCodec('U256');
+  /// final value = codec.decode(Input('0x0000000000000000000000000000000000000000000000000000000000000000'));
   /// print(value); // 0
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U256', input: Input('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-  /// final value = codec.decode();
+  /// final codec = Codec<BigInt>().createTypeCodec('U256');
+  /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
   /// print(value); // 115792089237316195423570985008687907853269984665640564039457584007913129639935
   /// ```
   @override
@@ -60,15 +60,17 @@ class U256 extends Uint<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U256');
-  /// final value = codec.encode(BigInt.from(0));
-  /// print(value); // 0000000000000000000000000000000000000000000000000000000000000000
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, BigInt.from(0));
+  /// print(encoder.toHex()); // 0000000000000000000000000000000000000000000000000000000000000000
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U256');
-  /// final value = codec.encode(BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935'));
-  /// print(value); // ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935'));
+  /// print(encoder.toHex()); // ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   /// ```
   @override
   void encode(Encoder encoder, BigInt value) {
@@ -81,15 +83,15 @@ class U256 extends Uint<BigInt> {
   /// Example:
   /// ```dart
   /// final encoder = HexEncoder();
-  /// final value = U256.encodeToEncoder(encoder, BigInt.from(0));
-  /// print(value); // 0000000000000000000000000000000000000000000000000000000000000000
+  /// U256.encodeToEncoder(encoder, BigInt.from(0));
+  /// print(encoder.toHex()); // 0000000000000000000000000000000000000000000000000000000000000000
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final encoder = HexEncoder();
-  /// final value = U256.encodeToEncoder(encoder, BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935'));
-  /// print(value); // ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  /// U256.encodeToEncoder(encoder, BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935'));
+  /// print(encoder.toHex()); // ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   /// ```
   static void encodeToEncoder(Encoder encoder, BigInt value) {
     if (value < BigInt.zero ||

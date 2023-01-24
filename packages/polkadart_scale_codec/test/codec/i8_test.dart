@@ -116,23 +116,23 @@ void main() {
 
     test('When lowest value -128 is encoded then it returns 0x80', () {
       final encoder = HexEncoder();
-      I8.encodeTo(encoder, -128);
+      I8.encodeToEncoder(encoder, -128);
       expect(encoder.toHex(), equals('0x80'));
     });
 
     test('When highest value 127 is encoded then it returns 0x7f', () {
       final encoder = HexEncoder();
-      I8.encodeTo(encoder, 127);
+      I8.encodeToEncoder(encoder, 127);
       expect(encoder.toHex(), equals('0x7f'));
     });
 
     test('When value -129 is encoded then it throws an exception', () {
-      expect(() => I8.encodeTo(HexEncoder(), -129),
+      expect(() => I8.encodeToEncoder(HexEncoder(), -129),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 128 is encoded then it throws an exception', () {
-      expect(() => I8.encodeTo(HexEncoder(), 128),
+      expect(() => I8.encodeToEncoder(HexEncoder(), 128),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });

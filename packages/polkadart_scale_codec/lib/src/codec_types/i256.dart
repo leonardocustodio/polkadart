@@ -15,19 +15,19 @@ class I256 extends Codec<BigInt> {
   }
 
   ///
-  /// Decode a signed 256 bit integer from the source
+  /// Decode a signed 256 bit integer from the input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I256', data: Source('0x0000000000000000000000000000008000000000000000000000000000000000'));
-  /// final value = codec.decode();
+  /// final codec = Codec<BigInt>().createTypeCodec('I256');
+  /// final value = codec.decode(Input('0x0000000000000000000000000000008000000000000000000000000000000000'));
   /// print(value); // -57896044618658097711785492504343953926634992332820282019728792003956564819968
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I256', data: Source('0xffffffffffffffffffffffffffffffff7fffffffffffffffffffffffffffffff'));
-  /// final value = codec.decode();
+  /// final codec = Codec<BigInt>().createTypeCodec('I256');
+  /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffffff7fffffffffffffffffffffffffffffff'));
   /// print(value); // 57896044618658097711785492504343953926634992332820282019728792003956564819967
   /// ```
   @override
@@ -61,15 +61,17 @@ class I256 extends Codec<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('I256');
-  /// final value = codec.encode(BigInt.parse('-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
-  /// print(value); // 00000000000000000000000000000080
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, BigInt.parse('-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
+  /// print(encoder.toHex()); // 00000000000000000000000000000080
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('I256');
-  /// final value = codec.encode(BigInt.parse('57896044618658097711785492504343953926634992332820282019728792003956564819967'));
-  /// print(value); // ffffffffffffffffffffffffffffff7f
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, BigInt.parse('57896044618658097711785492504343953926634992332820282019728792003956564819967'));
+  /// print(encoder.toHex()); // ffffffffffffffffffffffffffffff7f
   /// ```
   @override
   void encode(Encoder encoder, BigInt value) {

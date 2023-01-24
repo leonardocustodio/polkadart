@@ -19,15 +19,15 @@ class U32 extends Uint<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U32', input: Input('0x00000000'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('U32');
+  /// final value = codec.decode(Input('0x00000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U32', input: Input('0xffffffff'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('U32');
+  /// final value = codec.decode(Input('0xffffffff'));
   /// print(value); // 4294967295
   /// ```
   @override
@@ -62,15 +62,17 @@ class U32 extends Uint<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('U32');
-  /// final value = codec.encode(0);
-  /// print(value); // 00000000
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 0);
+  /// print(encoder.toHex()); // 00000000
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('U32');
-  /// final value = codec.encode(4294967295);
-  /// print(value); // ffffffff
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 4294967295);
+  /// print(encoder.toHex()); // ffffffff
   /// ```
   @override
   void encode(Encoder encoder, int value) {

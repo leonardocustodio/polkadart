@@ -19,15 +19,15 @@ class I8 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I8', input: Input('0x80'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('I8');
+  /// final value = codec.decode(Input('0x80'));
   /// print(value); // -128
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I8', input: Input('0x7f'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('I8');
+  /// final value = codec.decode(Input('0x7f'));
   /// print(value); // 127
   /// ```
   @override
@@ -60,19 +60,21 @@ class I8 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('I8');
-  /// final value = codec.encode(-128);
-  /// print(value); // 80
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, -128);
+  /// print(encoder.toHex()); // 80
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('I8');
-  /// final value = codec.encode(127);
-  /// print(value); // 7f
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 127);
+  /// print(encoder.toHex()); // 7f
   /// ```
   @override
   void encode(Encoder encoder, int value) {
-    encodeTo(encoder, value);
+    encodeToEncoder(encoder, value);
   }
 
   ///
@@ -81,17 +83,17 @@ class I8 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final encoder = HexEncoder();
-  /// final value = I8.encodeTo(encoder, -128);
+  /// I8.encodeToEncoder(encoder, -128);
   /// print(encoder.toHex()); // 80
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final encoder = HexEncoder();
-  /// final value = I8.encodeTo(encoder, 127);
+  /// I8.encodeToEncoder(encoder, 127);
   /// print(encoder.toHex()); // 7f
   /// ```
-  static void encodeTo(Encoder encoder, int value) {
+  static void encodeToEncoder(Encoder encoder, int value) {
     if (value < -128 || value > 127) {
       throw UnexpectedCaseException(
           'Expected value between -128 and 127, but found: $value');

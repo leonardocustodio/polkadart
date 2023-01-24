@@ -19,15 +19,15 @@ class U8 extends Uint<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8', input: Input('0x00'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('U8');
+  /// final value = codec.decode(Input('0x00'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8', input: Input('0xff'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('U8');
+  /// final value = codec.decode(Input('0xff'));
   /// print(value); // 255
   /// ```
   @override

@@ -15,19 +15,19 @@ class I32 extends Codec<int> {
   }
 
   ///
-  /// Decode a signed 32 bit integer from the source
+  /// Decode a signed 32 bit integer from the input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I32', input: Input('0x00000080'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('I32');
+  /// final value = codec.decode(Input('0x00000080'));
   /// print(value); // -2147483648
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I32', input: Input('0xffffff7f'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('I32');
+  /// final value = codec.decode(Input('0xffffff7f'));
   /// print(value); // 2147483647
   /// ```
   @override
@@ -36,7 +36,7 @@ class I32 extends Codec<int> {
   }
 
   ///
-  /// [static] Decode a signed 32 bit integer directly from the source
+  /// [static] Decode a signed 32 bit integer directly from the input
   ///
   /// Example:
   /// ```dart
@@ -61,15 +61,17 @@ class I32 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('I32');
-  /// final value = codec.encode(-2147483648);
-  /// print(value); // 00000080
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, -2147483648);
+  /// print(encoder.toHex()); // 00000080
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('I32');
-  /// final value = codec.encode(2147483647);
-  /// print(value); // ffffff7f
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 2147483647);
+  /// print(encoder.toHex()); // ffffff7f
   /// ```
   @override
   void encode(Encoder encoder, int value) {

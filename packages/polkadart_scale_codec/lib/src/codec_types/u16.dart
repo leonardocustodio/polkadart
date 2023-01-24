@@ -19,15 +19,15 @@ class U16 extends Uint<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U16', input: Input('0x0000'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('U16');
+  /// final value = codec.decode(Input('0x0000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U16', input: Input('0xffff'));
-  /// final value = codec.decode();
+  /// final codec = Codec<int>().createTypeCodec('U16');
+  /// final value = codec.decode(Input('0xffff'));
   /// print(value); // 65535
   /// ```
   @override
@@ -59,15 +59,17 @@ class U16 extends Uint<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('U16');
-  /// final value = codec.encode(0);
-  /// print(value); // 0000
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 0);
+  /// print(encoder.toHex()); // 0000
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().createTypeCodec('U16');
-  /// final value = codec.encode(65535);
-  /// print(value); // ffff
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, 65535);
+  /// print(encoder.toHex()); // ffff
   /// ```
   @override
   void encode(Encoder encoder, int value) {

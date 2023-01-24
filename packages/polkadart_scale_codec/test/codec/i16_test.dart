@@ -116,25 +116,25 @@ void main() {
 
     test('When lowest value -32768 is encoded then it returns 0x8000', () {
       final encoder = HexEncoder();
-      I16.encodeTo(encoder, -32768);
+      I16.encodeToEncoder(encoder, -32768);
       expect(encoder.toHex(), equals('0x0080'));
     });
 
     test('When highest value 32767 is encoded then it returns 0xff7f', () {
       final encoder = HexEncoder();
-      I16.encodeTo(encoder, 32767);
+      I16.encodeToEncoder(encoder, 32767);
       expect(encoder.toHex(), equals('0xff7f'));
     });
 
     test('When value -32769 is encoded then it throws an exception', () {
       final encoder = HexEncoder();
-      expect(() => I16.encodeTo(encoder, -32769),
+      expect(() => I16.encodeToEncoder(encoder, -32769),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 32768 is encoded then it throws an exception', () {
       final encoder = HexEncoder();
-      expect(() => I16.encodeTo(encoder, 32768),
+      expect(() => I16.encodeToEncoder(encoder, 32768),
           throwsA(isA<UnexpectedCaseException>()));
     });
   });

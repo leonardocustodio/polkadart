@@ -19,15 +19,15 @@ class U128 extends Uint<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U128', input: Input('0x00000000000000000000000000000000'));
-  /// final value = codec.decode();
+  /// final codec = Codec<BigInt>().createTypeCodec('U128');
+  /// final value = codec.decode(Input('0x00000000000000000000000000000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U128', input: Input('0xffffffffffffffffffffffffffffffff'));
-  /// final value = codec.decode();
+  /// final codec = Codec<BigInt>().createTypeCodec('U128');
+  /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffffff'));
   /// print(value); // 340282366920938463463374607431768211455
   /// ```
   @override
@@ -61,15 +61,17 @@ class U128 extends Uint<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U128');
-  /// final value = codec.encode(BigInt.from(0));
-  /// print(value); // 00000000000000000000000000000000
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, BigInt.from(0));
+  /// print(encoder.toHex()); // 00000000000000000000000000000000
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('U128');
-  /// final value = codec.encode(BigInt.parse('340282366920938463463374607431768211455'));
-  /// print(value); // ffffffffffffffffffffffffffffffff
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, BigInt.parse('340282366920938463463374607431768211455'));
+  /// print(encoder.toHex()); // ffffffffffffffffffffffffffffffff
   /// ```
   @override
   void encode(Encoder encoder, BigInt value) {
@@ -82,15 +84,15 @@ class U128 extends Uint<BigInt> {
   /// Example:
   /// ```dart
   /// final encoder = HexEncoder();
-  /// final value = U128.encodeToEncoder(encoder, BigInt.from(0));
-  /// print(value); // 00000000000000000000000000000000
+  /// U128.encodeToEncoder(encoder, BigInt.from(0));
+  /// print(encoder.toHex()); // 00000000000000000000000000000000
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final encoder = HexEncoder();
-  /// final value = U128.encodeToEncoder(encoder, BigInt.parse('340282366920938463463374607431768211455'));
-  /// print(value); // ffffffffffffffffffffffffffffffff
+  /// U128.encodeToEncoder(encoder, BigInt.parse('340282366920938463463374607431768211455'));
+  /// print(encoder.toHex()); // ffffffffffffffffffffffffffffffff
   /// ```
   static void encodeToEncoder(Encoder encoder, BigInt value) {
     if (value < BigInt.zero ||

@@ -19,15 +19,15 @@ class I64 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I64', input: Input('0x0000000000000080'));
-  /// final value = codec.decode();
+  /// final codec = Codec<BigInt>().createTypeCodec('I64');
+  /// final value = codec.decode(Input('0x0000000000000080'));
   /// print(value); // -9223372036854775808
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I64', input: Input('0xffffffffffffff7f'));
-  /// final value = codec.decode();
+  /// final codec = Codec<BigInt>().createTypeCodec('I64');
+  /// final value = codec.decode(Input('0xffffffffffffff7f'));
   /// print(value); // 9223372036854775807
   /// ```
   @override
@@ -61,15 +61,17 @@ class I64 extends Codec<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('I64');
-  /// final value = codec.encode(BigInt.from(-9223372036854775808));
-  /// print(value); // 0000000000000080
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, BigInt.from(-9223372036854775808));
+  /// print(encoder.toHex()); // 0000000000000080
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().createTypeCodec('I64');
-  /// final value = codec.encode(BigInt.from(9223372036854775807));
-  /// print(value); // ffffffffffffff7f
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, BigInt.from(9223372036854775807));
+  /// print(encoder.toHex()); // ffffffffffffff7f
   /// ```
   @override
   void encode(Encoder encoder, BigInt value) {
