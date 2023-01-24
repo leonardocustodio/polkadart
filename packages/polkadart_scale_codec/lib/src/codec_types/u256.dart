@@ -2,10 +2,17 @@ part of codec_types;
 
 ///
 /// encode/decode unsigned 256 bit integer
-class U256 extends Codec<BigInt> {
+class U256 extends Uint<BigInt> {
   ///
   /// constructor
-  U256._() : super(registry: Registry());
+  U256._() : super._();
+
+  ///
+  /// [static] Create a new instance of U256
+  @override
+  U256 copyWith(Codec codec) {
+    return copyProperties(codec, U256._()) as U256;
+  }
 
   ///
   /// Decode a unsigned 256 bit integer from the input
@@ -23,7 +30,7 @@ class U256 extends Codec<BigInt> {
   /// print(value); // 115792089237316195423570985008687907853269984665640564039457584007913129639935
   /// ```
   @override
-  BigInt decode() {
+  BigInt decode(Input input) {
     return decodeFromInput(input);
   }
 

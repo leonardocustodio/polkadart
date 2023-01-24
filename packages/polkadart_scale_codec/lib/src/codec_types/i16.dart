@@ -8,6 +8,13 @@ class I16 extends Codec<int> {
   I16._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of I16
+  @override
+  I16 copyWith(Codec codec) {
+    return copyProperties(codec, I16._()) as I16;
+  }
+
+  ///
   /// Decode a signed 16 bit integer from the source
   ///
   /// Example:
@@ -24,7 +31,7 @@ class I16 extends Codec<int> {
   /// print(value); // 32767
   /// ```
   @override
-  int decode() {
+  int decode(Input input) {
     return decodeFromInput(input);
   }
 
