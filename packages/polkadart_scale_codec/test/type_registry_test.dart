@@ -20,6 +20,7 @@ void main() {
         'i256',
         'compact',
         'vec',
+        'str',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();

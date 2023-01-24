@@ -21,6 +21,7 @@ class TypeRegistry {
     'I256',
     'Compact',
     'Vec',
+    'Str',
   ];
 
   ///
