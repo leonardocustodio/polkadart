@@ -94,7 +94,7 @@ void main() {
     });
 
     test(
-        'When bytes of length 0 is evaluated irrespective of bytes then it throws AssertionException',
+        'When bytes of length 0 is evaluated then it throws AssertionException',
         () {
       expect(
           () => bytesToLittleEndianInt([]), throwsA(isA<AssertionException>()));
