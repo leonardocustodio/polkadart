@@ -54,12 +54,12 @@ class UnexpectedCaseException implements Exception {
 }
 
 ///
-/// EOSException
-class EOSException implements Exception {
-  const EOSException();
+/// EndOfInputException
+class EndOfInputException implements Exception {
+  const EndOfInputException();
 
   @override
-  String toString() => 'Input left for processing.';
+  String toString() => 'End of Input not reached, Data left for processing.';
 }
 
 ///

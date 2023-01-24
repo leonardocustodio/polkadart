@@ -180,14 +180,14 @@ class Codec<T> implements CodecInterface<T> {
   ///
   /// Asserts if the End of Input is reached.
   ///
-  /// `throws [EOSException] if the input.remainingLength > 0`
+  /// `throws [EndOfInputException] if the input.remainingLength > 0`
   ///
   /// Please note that this method is useful only when the input is decoded from a Input.
   ///
   /// If the input is being encoded, then this method is not useful.
-  void assertEOS() {
+  void assertEndOfInput() {
     if (input.remainingLength > 0) {
-      throw EOSException();
+      throw EndOfInputException();
     }
   }
 }

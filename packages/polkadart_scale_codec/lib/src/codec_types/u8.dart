@@ -50,7 +50,7 @@ class U8 extends Uint<int> {
   /// print(value); // 255
   /// ```
   static int decodeFromInput(Input input) {
-    return bytesToLittleEndianInt(input.bytes(1).toList());
+    return input.byte();
   }
 
   ///
