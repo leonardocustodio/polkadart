@@ -123,6 +123,7 @@ void main() {
       <String, dynamic>{
         'A': 'Vec<u8>',
         'Vec_key': 'Vec<A>',
+        'Vec_Without_Subtype': 'Vec',
       },
     );
 
@@ -155,99 +156,37 @@ void main() {
       final compactValue = codec.decode(Input('0x1001020304'));
       expect(compactValue, equals([1, 2, 3, 4]));
     });
-    return;
 
     test(
-        'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns ((BigInt.from(64) << 530) - BigInt.from(1))',
+        'When Vector with empty subtype is encoded then it throws an SubtypeNotFoundException',
         () {
-      final codec = Codec(registry: registry).createTypeCodec(
-        'Compact_key',
-      );
-      final compactValue = codec.decode(Input(
-          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-      expect(compactValue, equals(((BigInt.from(64) << 530) - BigInt.from(1))));
+      final codec =
+          Codec(registry: registry).createTypeCodec('Vec_Without_Subtype');
+      final encoder = HexEncoder();
+      expect(() => codec.encode(encoder, []),
+          throwsA(isA<SubtypeNotFoundException>()));
     });
 
-    test('When lowest value 0 is encoded then it returns 0x00', () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
-      final encoder = HexEncoder();
-      codec.encode(encoder, 0);
-      expect(encoder.toHex(), equals('0x00'));
-    });
-
-    test(
-        'When highest value ((BigInt.from(64) << 530) - BigInt.from(1)) is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+    test('When type other than list is encoded then it throws an exception',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
+      final codec = Codec(registry: registry).createTypeCodec('A');
       final encoder = HexEncoder();
-      codec.encode(encoder, ((BigInt.from(64) << 530) - BigInt.from(1)));
+
+      /// match exception string
       expect(
-          encoder.toHex(),
-          equals(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-    });
-
-    test('When value -1 is encoded then it throws an exception', () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
-      final encoder = HexEncoder();
-      expect(() => codec.encode(encoder, -1),
-          throwsA(isA<IncompatibleCompactValueException>()));
+          () => codec.encode(encoder, 1),
+          throwsA(predicate((e) =>
+              e.toString() ==
+              'type \'int\' is not a subtype of type \'List<dynamic>\' of \'values\'')));
     });
 
     test(
-        'When value (BigInt.from(64) << 530) is encoded then it throws an exception',
+        'When Vector with empty subtype is decoded then it throws an SubtypeNotFoundException',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
-      final encoder = HexEncoder();
-      expect(() => codec.encode(encoder, (BigInt.from(64) << 530)),
-          throwsA(isA<IncompatibleCompactValueException>()));
-    });
-  });
-
-  // Compact() Direct Test Cases without type registry
-  group('Vec Direct Test', () {
-    test('When lowest value 0x00 is decoded then it returns 0', () {
-      final compactValue = Compact.decodeFromInput(Input('0x00'));
-      expect(compactValue, equals(0));
-    });
-
-    test(
-        'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns ((BigInt.from(64) << 530) - BigInt.from(1))',
-        () {
-      final compactValue = Compact.decodeFromInput(Input(
-          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-      expect(compactValue, equals(((BigInt.from(64) << 530) - BigInt.from(1))));
-    });
-
-    test('When lowest value 0 is encoded then it returns 0x00', () {
-      final encoder = HexEncoder();
-      Compact.encodeToEncoder(encoder, 0);
-      expect(encoder.toHex(), equals('0x00'));
-    });
-
-    test(
-        'When highest value ((BigInt.from(64) << 530) - BigInt.from(1)) is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-        () {
-      final encoder = HexEncoder();
-      Compact.encodeToEncoder(
-          encoder, ((BigInt.from(64) << 530) - BigInt.from(1)));
-      expect(
-          encoder.toHex(),
-          equals(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-    });
-
-    test('When value -1 is encoded then it throws an exception', () {
-      expect(() => Compact.encodeToEncoder(HexEncoder(), -1),
-          throwsA(isA<IncompatibleCompactValueException>()));
-    });
-
-    test(
-        'When value (BigInt.from(64) << 530) is encoded then it throws an exception',
-        () {
-      expect(
-          () => Compact.encodeToEncoder(HexEncoder(), (BigInt.from(64) << 530)),
-          throwsA(isA<IncompatibleCompactValueException>()));
+      final codec =
+          Codec(registry: registry).createTypeCodec('Vec_Without_Subtype');
+      expect(() => codec.decode(Input('0x041001020304')),
+          throwsA(isA<SubtypeNotFoundException>()));
     });
   });
 }
