@@ -19,15 +19,15 @@ class BoolCodec extends Codec<bool> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<bool>().createTypeCodec('Bool', input: Input('0x01'));
-  /// final boolValue = codec.decode();
+  /// final codec = Codec<bool>().createTypeCodec('Bool');
+  /// final boolValue = codec.decode(Input('0x01'));
   /// print(boolValue); // true
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<bool>().createTypeCodec('Bool', input: Input('0x00'));
-  /// final boolValue = codec.decode();
+  /// final codec = Codec<bool>().createTypeCodec('Bool');
+  /// final boolValue = codec.decode(Input('0x00'));
   /// print(boolValue); // false
   /// ```
   @override
