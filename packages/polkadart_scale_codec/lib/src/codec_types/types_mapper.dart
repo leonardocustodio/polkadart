@@ -9,6 +9,30 @@ class CodecMapper {
         return U8._();
       case 'u16':
         return U16._();
+      case 'u32':
+        return U32._();
+      case 'u64':
+        return U64._();
+      case 'u128':
+        return U128._();
+      case 'u256':
+        return U256._();
+      case 'i8':
+        return I8._();
+      case 'i16':
+        return I16._();
+      case 'i32':
+        return I32._();
+      case 'i64':
+        return I64._();
+      case 'i128':
+        return I128._();
+      case 'i256':
+        return I256._();
+      case 'compact':
+        return Compact._();
+      case 'vec':
+        return Vec._();
     }
     throw UnexpectedCodecException(
         'Expected a supported codec, but got $codecTypeName');
