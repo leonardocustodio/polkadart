@@ -1,6 +1,48 @@
 part of utils;
 
 ///
+/// SubtypeNotFoundException
+class SubtypeNotFoundException implements Exception {
+  const SubtypeNotFoundException();
+
+  @override
+  String toString() => 'Vector must have a sub type';
+}
+
+///
+/// IncompatibleCompactTypeException
+class IncompatibleCompactTypeException implements Exception {
+  const IncompatibleCompactTypeException(this.type);
+
+  final dynamic type;
+
+  @override
+  String toString() => 'Expected Compact type `BigInt or int` but found: $type';
+}
+
+///
+/// IncompatibleCompactValueException
+class IncompatibleCompactValueException implements Exception {
+  const IncompatibleCompactValueException(this.value);
+
+  final dynamic value;
+
+  @override
+  String toString() => 'Incompatible Compact value: $value';
+}
+
+///
+/// UnknownEncodeException
+class InvalidIntEncodeException implements Exception {
+  const InvalidIntEncodeException(this.value);
+
+  final int value;
+
+  @override
+  String toString() => 'Invalid UnSigned int to encode: $value';
+}
+
+///
 /// UnexpectedCaseException
 class UnexpectedCaseException implements Exception {
   const UnexpectedCaseException([this.message]);

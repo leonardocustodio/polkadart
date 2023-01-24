@@ -5,16 +5,14 @@ void main() {
   group('U8 Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final codec =
-          Codec(registry: registry).createTypeCodec('u8', input: Input('0x00'));
-      final u8Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('u8');
+      final u8Value = codec.decode(Input('0x00'));
       expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
-      final codec =
-          Codec(registry: registry).createTypeCodec('u8', input: Input('0xff'));
-      final u8Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('u8');
+      final u8Value = codec.decode(Input('0xff'));
       expect(u8Value, equals(255));
     });
   });
@@ -67,16 +65,14 @@ void main() {
     );
 
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final codec = Codec<int>(registry: registry)
-          .createTypeCodec('u8_key', input: Input('0x00'));
-      final u8Value = codec.decode();
+      final codec = Codec<int>(registry: registry).createTypeCodec('u8_key');
+      final u8Value = codec.decode(Input('0x00'));
       expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
-      final codec = Codec<int>(registry: registry)
-          .createTypeCodec('u8_key', input: Input('0xff'));
-      final u8Value = codec.decode();
+      final codec = Codec<int>(registry: registry).createTypeCodec('u8_key');
+      final u8Value = codec.decode(Input('0xff'));
       expect(u8Value, equals(255));
     });
 
@@ -134,17 +130,15 @@ void main() {
     });
 
     test('When lowest value 0 is encoded then it returns 0x00', () {
-      final u8 = U8();
       final encoder = HexEncoder();
-      u8.encode(encoder, 0);
+      U8.encodeToEncoder(encoder, 0);
       final u8Value = encoder.toHex();
       expect(u8Value, equals('0x00'));
     });
 
     test('When highest value 255 is encoded then it returns 0xff', () {
-      final u8 = U8();
       final encoder = HexEncoder();
-      u8.encode(encoder, 255);
+      U8.encodeToEncoder(encoder, 255);
       final u8Value = encoder.toHex();
       expect(u8Value, equals('0xff'));
     });

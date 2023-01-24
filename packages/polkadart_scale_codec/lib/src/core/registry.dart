@@ -20,12 +20,7 @@ class Registry {
   ///
   /// Get a codec from the registry
   Codec? getCodec(String codecName) {
-    return _codecs[codecName.toLowerCase()];
-  }
-
-  ///
-  /// Adds map of codecs to the registry
-  void addCodecs(Map<String, Codec> codecs) {
-    codecs.forEach(addCodec);
+    final codec = _codecs[codecName.toLowerCase()];
+    return codec?.copyWith(codec);
   }
 }

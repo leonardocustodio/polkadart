@@ -5,7 +5,14 @@ part of codec_types;
 class BoolCodec extends Codec<bool> {
   ///
   /// constructor
-  BoolCodec() : super(registry: Registry());
+  BoolCodec._() : super(registry: Registry());
+
+  ///
+  /// [static] Create a new instance of BoolCodec
+  @override
+  BoolCodec copyWith(Codec codec) {
+    return copyProperties(codec, BoolCodec._()) as BoolCodec;
+  }
 
   ///
   /// Decodes the value from the Codec's input
@@ -24,7 +31,7 @@ class BoolCodec extends Codec<bool> {
   /// print(boolValue); // false
   /// ```
   @override
-  bool decode() {
+  bool decode(Input input) {
     return decodeFromInput(input);
   }
 
@@ -74,6 +81,26 @@ class BoolCodec extends Codec<bool> {
   /// ```
   @override
   void encode(Encoder encoder, bool value) {
+    encodeToEncoder(encoder, value);
+  }
+
+  ///
+  /// [static] Encodes a bool
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// BoolCodec.encodeToEncoder(encoder, true);
+  /// print(encoder.toHex()); // 0x01
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final encoder = HexEncoder();
+  /// BoolCodec.encodeToEncoder(encoder, false);
+  /// print(encoder.toHex()); // 0x00
+  /// ```
+  static void encodeToEncoder(Encoder encoder, bool value) {
     encoder.write(value ? 1 : 0);
   }
 }
