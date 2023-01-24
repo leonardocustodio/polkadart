@@ -12,6 +12,15 @@ class UnexpectedCaseException implements Exception {
 }
 
 ///
+/// EndOfInputException
+class EndOfInputException implements Exception {
+  const EndOfInputException();
+
+  @override
+  String toString() => 'End of Input not reached, Data left for processing.';
+}
+
+///
 /// EmptyStringException
 class EmptyStringException implements Exception {
   const EmptyStringException();
@@ -37,7 +46,7 @@ class EOFException implements Exception {
   const EOFException();
 
   @override
-  String toString() => 'Unexpected end of file/source exception.';
+  String toString() => 'Unexpected end of file/input exception.';
 }
 
 ///

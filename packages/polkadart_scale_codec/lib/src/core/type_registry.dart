@@ -5,7 +5,7 @@ part of core;
 class TypeRegistry {
   ///
   /// Basic Codec names
-  static const _defaultCodecTypes = <String>['Bool'];
+  static const _defaultCodecTypes = <String>['Bool', 'U8'];
 
   ///
   /// Create a registry

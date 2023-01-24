@@ -3,31 +3,46 @@ part of codec_types;
 ///
 /// BoolCodec to encode/decode bool
 class BoolCodec extends Codec<bool> {
-  final Source? source;
-
   ///
   /// constructor
-  BoolCodec({this.source}) : super(registry: Registry());
+  BoolCodec() : super(registry: Registry());
 
   ///
-  /// Decode a bool from the source
+  /// Decodes the value from the Codec's input
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<bool>().createTypeCodec('Bool', data: Source('0x01'));
+  /// final codec = Codec<bool>().createTypeCodec('Bool', input: Input('0x01'));
   /// final boolValue = codec.decode();
   /// print(boolValue); // true
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<bool>().createTypeCodec('Bool', data: Source('0x00'));
+  /// final codec = Codec<bool>().createTypeCodec('Bool', input: Input('0x00'));
   /// final boolValue = codec.decode();
   /// print(boolValue); // false
   /// ```
   @override
   bool decode() {
-    final bytes = (source ?? data).bytes(1).toList();
+    return decodeFromInput(input);
+  }
+
+  ///
+  /// Decode a bool from the input
+  /// Example:
+  /// ```dart
+  /// final boolValue = BoolCodec.decodeFromInput(Input('0x01'));
+  /// print(boolValue); // true
+  /// ```
+  ///
+  /// Example:
+  /// ```dart
+  /// final boolValue = BoolCodec.decodeFromInput(Input('0x00'));
+  /// print(boolValue); // false
+  /// ```
+  static bool decodeFromInput(Input input) {
+    final bytes = input.bytes(1).toList();
 
     if (bytes[0] == 1) {
       return true;
@@ -45,18 +60,20 @@ class BoolCodec extends Codec<bool> {
   /// Example:
   /// ```dart
   /// final codec = Codec<bool>().createTypeCodec('Bool');
-  /// final boolValue = codec.encode(true);
-  /// print(boolValue); // 01
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, true);
+  /// print(encoder.toHex()); // 0x01
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<bool>().createTypeCodec('Bool');
-  /// final boolValue = codec.encode(false);
-  /// print(boolValue); // 00
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, false);
+  /// print(encoder.toHex()); // 0x00
   /// ```
   @override
-  String encode(bool value) {
-    return value ? '01' : '00';
+  void encode(Encoder encoder, bool value) {
+    encoder.write(value ? 1 : 0);
   }
 }
