@@ -8,7 +8,7 @@ class U16 extends Uint<int> {
   U16._() : super._();
 
   ///
-  /// [static] Create a new instance of U16
+  /// [static] Create a properties-copied instance of U16
   @override
   U16 copyWith(Codec codec) {
     return copyProperties(codec, U16._()) as U16;

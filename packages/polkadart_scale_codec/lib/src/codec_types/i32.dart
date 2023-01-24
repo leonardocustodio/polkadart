@@ -8,7 +8,7 @@ class I32 extends Codec<int> {
   I32._() : super(registry: Registry());
 
   ///
-  /// [static] Create a new instance of I32
+  /// [static] Create a properties-copied instance of I32
   @override
   I32 copyWith(Codec codec) {
     return copyProperties(codec, I32._()) as I32;

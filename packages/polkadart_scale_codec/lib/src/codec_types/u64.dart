@@ -8,7 +8,7 @@ class U64 extends Uint<BigInt> {
   U64._() : super._();
 
   ///
-  /// [static] Create a new instance of U64
+  /// [static] Create a properties-copied instance of U64
   @override
   U64 copyWith(Codec codec) {
     return copyProperties(codec, U64._()) as U64;

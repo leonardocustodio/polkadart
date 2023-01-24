@@ -8,7 +8,7 @@ class I64 extends Codec<BigInt> {
   I64._() : super(registry: Registry());
 
   ///
-  /// [static] Create a new instance of I64
+  /// [static] Create a properties-copied instance of I64
   @override
   I64 copyWith(Codec codec) {
     return copyProperties(codec, I64._()) as I64;

@@ -8,7 +8,7 @@ class I8 extends Codec<int> {
   I8._() : super(registry: Registry());
 
   ///
-  /// [static] Create a new instance of I8
+  /// [static] Create a properties-copied instance of I8
   @override
   I8 copyWith(Codec codec) {
     return copyProperties(codec, I8._()) as I8;

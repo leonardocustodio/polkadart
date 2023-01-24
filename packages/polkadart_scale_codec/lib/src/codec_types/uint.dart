@@ -6,7 +6,7 @@ class Uint<T> extends Codec<T> {
   Uint._() : super(registry: Registry());
 
   ///
-  /// [static] Create a new instance of Uint
+  /// [static] Create a properties-copied instance of Uint
   @override
   Uint copyWith(Codec codec) {
     return copyProperties(codec, Uint._()) as Uint;

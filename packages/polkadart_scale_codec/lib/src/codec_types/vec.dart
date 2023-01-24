@@ -8,7 +8,7 @@ class Vec<T extends Codec> extends Codec<List> {
   Vec._() : super(registry: Registry());
 
   ///
-  /// [static] Create a new instance of Vec
+  /// [static] Create a properties-copied instance of Vec
   @override
   Vec copyWith(Codec codec) {
     return copyProperties(codec, Vec._()) as Vec;

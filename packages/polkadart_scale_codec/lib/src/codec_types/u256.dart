@@ -8,7 +8,7 @@ class U256 extends Uint<BigInt> {
   U256._() : super._();
 
   ///
-  /// [static] Create a new instance of U256
+  /// [static] Create a properties-copied instance of U256
   @override
   U256 copyWith(Codec codec) {
     return copyProperties(codec, U256._()) as U256;

@@ -8,7 +8,7 @@ class I16 extends Codec<int> {
   I16._() : super(registry: Registry());
 
   ///
-  /// [static] Create a new instance of I16
+  /// [static] Create a properties-copied instance of I16
   @override
   I16 copyWith(Codec codec) {
     return copyProperties(codec, I16._()) as I16;
@@ -50,7 +50,7 @@ class I16 extends Codec<int> {
   /// print(value); // 32767
   /// ```
   static int decodeFromInput(Input input) {
-    final value = bytesToLittleEndianInt(input.bytes(2).toList());
+    final value = U16.decodeFromInput(input);
     return (value | (value & (1 << 15)) * 0x1fffe).toSigned(16);
   }
 

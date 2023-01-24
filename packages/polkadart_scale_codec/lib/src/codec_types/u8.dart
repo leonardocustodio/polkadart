@@ -8,7 +8,7 @@ class U8 extends Uint<int> {
   U8._() : super._();
 
   ///
-  /// [static] Create a new instance of U8
+  /// [static] Create a properties-copied instance of U8
   @override
   U8 copyWith(Codec codec) {
     return copyProperties(codec, U8._()) as U8;

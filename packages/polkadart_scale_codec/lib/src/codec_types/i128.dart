@@ -8,7 +8,7 @@ class I128 extends Codec<BigInt> {
   I128._() : super(registry: Registry());
 
   ///
-  /// [static] Create a new instance of I128
+  /// [static] Create a properties-copied instance of I128
   @override
   I128 copyWith(Codec codec) {
     return copyProperties(codec, I128._()) as I128;
