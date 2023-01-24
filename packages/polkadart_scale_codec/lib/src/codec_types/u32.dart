@@ -43,7 +43,10 @@ class U32 extends Codec<int> {
   /// print(value); // 4294967295
   /// ```
   static int decodeFromInput(Input input) {
-    return bytesToLittleEndianInt(input.bytes(4).toList());
+    return input.byte() +
+        (input.byte() << 8) +
+        (input.byte() << 16) +
+        (input.byte() << 24);
   }
 
   ///

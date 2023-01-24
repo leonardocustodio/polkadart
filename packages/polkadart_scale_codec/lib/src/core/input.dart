@@ -71,7 +71,8 @@ class Input {
   /// ```
   Uint8List bytes(int length) {
     final beg = currentIndex;
-    final end = currentIndex += length;
+    currentIndex += length;
+    final end = currentIndex;
     if (buffer.length < end) {
       throw EOFException();
     }
