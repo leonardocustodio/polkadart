@@ -2,10 +2,17 @@ part of codec_types;
 
 ///
 /// encode/decode unsigned 64 bit integer
-class U64 extends Codec<BigInt> {
+class U64 extends Uint<BigInt> {
   ///
   /// constructor
-  U64._() : super(registry: Registry());
+  U64._() : super._();
+
+  ///
+  /// [static] Create a new instance of U64
+  @override
+  U64 copyWith(Codec codec) {
+    return copyProperties(codec, U64._()) as U64;
+  }
 
   ///
   /// Decode a unsigned 64 bit integer from the input
@@ -24,7 +31,7 @@ class U64 extends Codec<BigInt> {
   /// print(value); // 18446744073709551615
   /// ```
   @override
-  BigInt decode() {
+  BigInt decode(Input input) {
     return decodeFromInput(input);
   }
 

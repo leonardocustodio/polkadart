@@ -7,18 +7,16 @@ void main() {
     test(
         'When lowest value 0x0000000000000080 is decoded then it returns -9223372036854775808',
         () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('i64', input: Input('0x0000000000000080'));
-      final i64Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i64');
+      final i64Value = codec.decode(Input('0x0000000000000080'));
       expect(i64Value, equals(BigInt.from(-9223372036854775808)));
     });
 
     test(
         'When highest value 0xffffffffffffff7f is decoded then it returns 9223372036854775807',
         () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('i64', input: Input('0xffffffffffffff7f'));
-      final i64Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i64');
+      final i64Value = codec.decode(Input('0xffffffffffffff7f'));
       expect(i64Value, equals(BigInt.from(9223372036854775807)));
     });
   });
@@ -93,18 +91,16 @@ void main() {
     test(
         'When lowest value 0x0000000000000080 is decoded then it returns -9223372036854775808',
         () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('i64', input: Input('0x0000000000000080'));
-      final i64Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i64');
+      final i64Value = codec.decode(Input('0x0000000000000080'));
       expect(i64Value, equals(BigInt.from(-9223372036854775808)));
     });
 
     test(
         'When highest value 0xffffffffffffff7f is decoded then it returns 9223372036854775807',
         () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('i64', input: Input('0xffffffffffffff7f'));
-      final i64Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i64');
+      final i64Value = codec.decode(Input('0xffffffffffffff7f'));
       expect(i64Value, equals(BigInt.from(9223372036854775807)));
     });
   });

@@ -8,6 +8,13 @@ class I8 extends Codec<int> {
   I8._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of I8
+  @override
+  I8 copyWith(Codec codec) {
+    return copyProperties(codec, I8._()) as I8;
+  }
+
+  ///
   /// Decode a signed 8 bit integer from the input
   ///
   /// Example:
@@ -24,7 +31,7 @@ class I8 extends Codec<int> {
   /// print(value); // 127
   /// ```
   @override
-  int decode() {
+  int decode(Input input) {
     return decodeFromInput(input);
   }
 
