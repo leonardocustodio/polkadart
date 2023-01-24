@@ -20,6 +20,7 @@ class Registry {
   ///
   /// Get a codec from the registry
   Codec? getCodec(String codecName) {
-    return _codecs[codecName.toLowerCase()];
+    final codec = _codecs[codecName.toLowerCase()];
+    return codec?.copyWith(codec);
   }
 }
