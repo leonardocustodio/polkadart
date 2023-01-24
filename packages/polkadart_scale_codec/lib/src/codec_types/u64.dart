@@ -19,14 +19,14 @@ class U64 extends Uint<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('U64');
   /// final value = codec.decode(Input('0x0000000000000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('U64');
   /// final value = codec.decode(Input('0xffffffffffffffff'));
   /// print(value); // 18446744073709551615
   /// ```
@@ -60,7 +60,7 @@ class U64 extends Uint<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('U64');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, BigInt.from(0));
   /// print(encoder.toHex()); // 0000000000000000
@@ -68,7 +68,7 @@ class U64 extends Uint<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('U64');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('U64');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, BigInt.parse('18446744073709551615'));
   /// print(encoder.toHex()); // ffffffffffffffff

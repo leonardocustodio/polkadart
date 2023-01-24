@@ -19,14 +19,14 @@ class I32 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I32');
+  /// final codec = Codec<int>().fetchTypeCodec('I32');
   /// final value = codec.decode(Input('0x00000080'));
   /// print(value); // -2147483648
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I32');
+  /// final codec = Codec<int>().fetchTypeCodec('I32');
   /// final value = codec.decode(Input('0xffffff7f'));
   /// print(value); // 2147483647
   /// ```
@@ -60,7 +60,7 @@ class I32 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I32');
+  /// final codec = Codec<int>().fetchTypeCodec('I32');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, -2147483648);
   /// print(encoder.toHex()); // 00000080
@@ -68,7 +68,7 @@ class I32 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I32');
+  /// final codec = Codec<int>().fetchTypeCodec('I32');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, 2147483647);
   /// print(encoder.toHex()); // ffffff7f

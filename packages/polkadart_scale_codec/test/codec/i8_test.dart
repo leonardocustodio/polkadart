@@ -5,13 +5,13 @@ void main() {
   group('I8 Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x80 is decoded then it returns -128', () {
-      final codec = Codec(registry: registry).createTypeCodec('i8');
+      final codec = Codec(registry: registry).fetchTypeCodec('i8');
       final i8Value = codec.decode(Input('0x80'));
       expect(i8Value, equals(-128));
     });
 
     test('When highest value 0x7f is decoded then it returns 127', () {
-      final codec = Codec(registry: registry).createTypeCodec('i8');
+      final codec = Codec(registry: registry).fetchTypeCodec('i8');
       final i8Value = codec.decode(Input('0x7f'));
       expect(i8Value, equals(127));
     });
@@ -20,14 +20,14 @@ void main() {
   group('I8 Encode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value -128 is encoded then it returns 0x80', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i8');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i8');
       final encoder = HexEncoder();
       codec.encode(encoder, -128);
       expect(encoder.toHex(), equals('0x80'));
     });
 
     test('When highest value 127 is encoded then it returns 0x7f', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i8');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i8');
       final encoder = HexEncoder();
       codec.encode(encoder, 127);
       expect(encoder.toHex(), equals('0x7f'));
@@ -38,14 +38,14 @@ void main() {
     final registry = TypeRegistry.createRegistry();
 
     test('When value -129 is encoded then it throws an exception', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i8');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i8');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -129),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 128 is encoded then it throws an exception', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i8');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i8');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, 128),
           throwsA(isA<UnexpectedCaseException>()));
@@ -62,40 +62,40 @@ void main() {
     );
 
     test('When lowest value 0x80 is decoded then it returns -128', () {
-      final codec = Codec(registry: registry).createTypeCodec('i8_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('i8_key');
       final i8Value = codec.decode(Input('0x80'));
       expect(i8Value, equals(-128));
     });
 
     test('When highest value 0x7f is decoded then it returns 127', () {
-      final codec = Codec(registry: registry).createTypeCodec('i8_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('i8_key');
       final i8Value = codec.decode(Input('0x7f'));
       expect(i8Value, equals(127));
     });
 
     test('When lowest value -128 is encoded then it returns 0x80', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i8_key');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i8_key');
       final encoder = HexEncoder();
       codec.encode(encoder, -128);
       expect(encoder.toHex(), equals('0x80'));
     });
 
     test('When highest value 127 is encoded then it returns 0x7f', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i8_key');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i8_key');
       final encoder = HexEncoder();
       codec.encode(encoder, 127);
       expect(encoder.toHex(), equals('0x7f'));
     });
 
     test('When value -129 is encoded then it throws an exception', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i8_key');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i8_key');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -129),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 128 is encoded then it throws an exception', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i8_key');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i8_key');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, 128),
           throwsA(isA<UnexpectedCaseException>()));

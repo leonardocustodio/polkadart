@@ -21,7 +21,7 @@ class Vec<T extends Codec> extends Codec<List> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec().createTypeCodec('Vec<u8>');
+  /// final codec = Codec().fetchTypeCodec('Vec<u8>');
   /// final value = codec.decode(Input('0x0401020304'));
   /// final vecValue = codec.decode();
   /// print(vecValue); // [1, 2, 3, 4]
@@ -35,7 +35,7 @@ class Vec<T extends Codec> extends Codec<List> {
     final vecLength = Compact.decodeFromInput(input);
 
     final result = [];
-    final codec = createTypeCodec(subType);
+    final codec = fetchTypeCodec(subType);
     for (var i = 0; i < vecLength; i++) {
       final value = codec.decode(input);
       result.add(value);
@@ -49,7 +49,7 @@ class Vec<T extends Codec> extends Codec<List> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec().createTypeCodec('Vec<u8>');');
+  /// final codec = Codec().fetchTypeCodec('Vec<u8>');');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, [1, 2, 3, 4]);
   /// print(encoder.toHex()); // 0x0401020304
@@ -62,7 +62,7 @@ class Vec<T extends Codec> extends Codec<List> {
 
     Compact.encodeToEncoder(encoder, values.length);
 
-    final codec = createTypeCodec(subType);
+    final codec = fetchTypeCodec(subType);
     for (var value in values) {
       codec.encode(encoder, value);
     }

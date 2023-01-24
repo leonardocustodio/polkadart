@@ -87,16 +87,16 @@ class Codec<T> implements CodecInterface<T> {
   /// Example:
   /// ```dart
   /// final registry = TypeRegistry.createRegistry();
-  /// final codec = Codec<bool>(registry).createTypeCodec('bool');
+  /// final codec = Codec<bool>(registry).fetchTypeCodec('bool');
   /// ```
-  Codec createTypeCodec(String typeString) {
-    final codec = fetchCodecType(typeString);
+  Codec fetchTypeCodec(String typeString) {
+    final codec = _fetchCodec(typeString);
     codec.registry = registry;
     codec.typeString = typeString;
     return codec;
   }
 
-  Codec fetchCodecType(String typeString) {
+  Codec _fetchCodec(String typeString) {
     typeString = _convertType(typeString);
     RegExpMatch? match;
 

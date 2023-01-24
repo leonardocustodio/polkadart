@@ -8,7 +8,7 @@ void main() {
     test(
         'When lowest value 0x0000000000000000000000000000000000000000000000000000000000000000 is decoded then it returns 0',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final BigInt u256Value = codec.decode(Input(
           '0x0000000000000000000000000000000000000000000000000000000000000000'));
       expect(u256Value.toString(), equals('0'));
@@ -17,7 +17,7 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns 115792089237316195423570985008687907853269984665640564039457584007913129639935',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final BigInt u256Value = codec.decode(Input(
           '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       expect(
@@ -32,7 +32,7 @@ void main() {
     test(
         'When lowest value 0 is encoded then it returns 0x0000000000000000000000000000000000000000000000000000000000000000',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       codec.encode(encoder, BigInt.from(0));
       expect(
@@ -44,7 +44,7 @@ void main() {
     test(
         'When highest value 115792089237316195423570985008687907853269984665640564039457584007913129639935 is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       codec.encode(
           encoder,
@@ -61,7 +61,7 @@ void main() {
     final registry = TypeRegistry.createRegistry();
 
     test('When value -1 is encoded then it throws an exception', () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
@@ -70,7 +70,7 @@ void main() {
     test(
         'When value 115792089237316195423570985008687907853269984665640564039457584007913129639936 is encoded then it throws an exception',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       expect(
           () => codec.encode(
@@ -85,7 +85,7 @@ void main() {
     final registry = TypeRegistry.createRegistry();
 
     test('When value -1 is encoded then it throws an exception', () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));
@@ -94,7 +94,7 @@ void main() {
     test(
         'When value 115792089237316195423570985008687907853269984665640564039457584007913129639936 is encoded then it throws an exception',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       expect(
           () => codec.encode(
@@ -115,7 +115,7 @@ void main() {
     test(
         'When 0x0000000000000000000000000000000000000000000000000000000000000000 is decoded then it returns 0',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final BigInt u256Value = codec.decode(Input(
           '0x0000000000000000000000000000000000000000000000000000000000000000'));
       expect(u256Value.toString(), equals('0'));
@@ -124,7 +124,7 @@ void main() {
     test(
         'When BigInt 0 is encoded then it returns 0x0000000000000000000000000000000000000000000000000000000000000000',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       codec.encode(encoder, BigInt.from(0));
       expect(
@@ -136,7 +136,7 @@ void main() {
     test(
         'When 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns 115792089237316195423570985008687907853269984665640564039457584007913129639935',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final BigInt u256Value = codec.decode(Input(
           '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       expect(
@@ -148,7 +148,7 @@ void main() {
     test(
         'When BigInt 115792089237316195423570985008687907853269984665640564039457584007913129639935 is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       codec.encode(
           encoder,
@@ -170,7 +170,7 @@ void main() {
     test(
         'When BigInt 115792089237316195423570985008687907853269984665640564039457584007913129639936 is encoded then it throws an exception',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       expect(
           () => codec.encode(
@@ -181,7 +181,7 @@ void main() {
     });
 
     test('When BigInt -1 is encoded then it throws an exception', () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u256');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, BigInt.from(-1)),
           throwsA(isA<UnexpectedCaseException>()));

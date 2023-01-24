@@ -5,7 +5,7 @@ void main() {
   group('Compact Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact');
       final compactValue = codec.decode(Input('0x00'));
       expect(compactValue, equals(0));
     });
@@ -13,7 +13,7 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns ((BigInt.from(64) << 530) - BigInt.from(1))',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact');
       final compactValue = codec.decode(Input(
           '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       expect(compactValue, equals(((BigInt.from(64) << 530) - BigInt.from(1))));
@@ -23,7 +23,7 @@ void main() {
   group('Compact Encode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0 is encoded then it returns 0x00', () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact');
       final encoder = HexEncoder();
       codec.encode(encoder, 0);
       expect(encoder.toHex(), equals('0x00'));
@@ -32,7 +32,7 @@ void main() {
     test(
         'When highest value ((BigInt.from(64) << 530) - BigInt.from(1)) is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact');
       final encoder = HexEncoder();
       codec.encode(encoder, (BigInt.from(64) << 530) - BigInt.from(1));
       expect(
@@ -46,7 +46,7 @@ void main() {
     final registry = TypeRegistry.createRegistry();
 
     test('When value -1 is encoded then it throws an exception', () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -1),
           throwsA(isA<IncompatibleCompactValueException>()));
@@ -55,7 +55,7 @@ void main() {
     test(
         'When value (BigInt.from(64) << 530) is encoded then it throws an exception',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, (BigInt.from(64) << 530)),
           throwsA(isA<IncompatibleCompactValueException>()));
@@ -72,7 +72,7 @@ void main() {
     );
 
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact_key');
       final compactValue = codec.decode(Input('0x00'));
       expect(compactValue, equals(0));
     });
@@ -80,7 +80,7 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns ((BigInt.from(64) << 530) - BigInt.from(1))',
         () {
-      final codec = Codec(registry: registry).createTypeCodec(
+      final codec = Codec(registry: registry).fetchTypeCodec(
         'Compact_key',
       );
       final compactValue = codec.decode(Input(
@@ -89,7 +89,7 @@ void main() {
     });
 
     test('When lowest value 0 is encoded then it returns 0x00', () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact_key');
       final encoder = HexEncoder();
       codec.encode(encoder, 0);
       expect(encoder.toHex(), equals('0x00'));
@@ -98,7 +98,7 @@ void main() {
     test(
         'When highest value ((BigInt.from(64) << 530) - BigInt.from(1)) is encoded then it returns 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact_key');
       final encoder = HexEncoder();
       codec.encode(encoder, ((BigInt.from(64) << 530) - BigInt.from(1)));
       expect(
@@ -108,7 +108,7 @@ void main() {
     });
 
     test('When value -1 is encoded then it throws an exception', () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact_key');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -1),
           throwsA(isA<IncompatibleCompactValueException>()));
@@ -117,7 +117,7 @@ void main() {
     test(
         'When value (BigInt.from(64) << 530) is encoded then it throws an exception',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Compact_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact_key');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, (BigInt.from(64) << 530)),
           throwsA(isA<IncompatibleCompactValueException>()));

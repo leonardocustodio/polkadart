@@ -19,14 +19,14 @@ class BoolCodec extends Codec<bool> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<bool>().createTypeCodec('Bool');
+  /// final codec = Codec<bool>().fetchTypeCodec('Bool');
   /// final boolValue = codec.decode(Input('0x01'));
   /// print(boolValue); // true
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<bool>().createTypeCodec('Bool');
+  /// final codec = Codec<bool>().fetchTypeCodec('Bool');
   /// final boolValue = codec.decode(Input('0x00'));
   /// print(boolValue); // false
   /// ```
@@ -66,7 +66,7 @@ class BoolCodec extends Codec<bool> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<bool>().createTypeCodec('Bool');
+  /// final codec = Codec<bool>().fetchTypeCodec('Bool');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, true);
   /// print(encoder.toHex()); // 0x01
@@ -74,7 +74,7 @@ class BoolCodec extends Codec<bool> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<bool>().createTypeCodec('Bool');
+  /// final codec = Codec<bool>().fetchTypeCodec('Bool');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, false);
   /// print(encoder.toHex()); // 0x00

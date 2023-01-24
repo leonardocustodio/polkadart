@@ -6,7 +6,7 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When value 0x041001020304 is decoded then it returns [[1, 2, 3, 4]]',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec<Vec<u8>>');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<u8>>');
       final compactValue = codec.decode(Input('0x041001020304'));
       expect(
           compactValue,
@@ -18,7 +18,7 @@ void main() {
     test(
         'When value 0x0810010203041005060708 is decoded then it returns [[1, 2, 3, 4], [5, 6, 7, 8]]',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec<Vec<u8>>');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<u8>>');
       final compactValue = codec.decode(Input('0x0810010203041005060708'));
       expect(
           compactValue,
@@ -32,7 +32,7 @@ void main() {
     test(
         'When value 0x0810010001000c010000 is decoded then it returns [[true, false, true, false], [true, false, false]]',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec<Vec<bool>>');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<bool>>');
       final compactValue = codec.decode(Input('0x0810010001000c010000'));
       expect(
           compactValue,
@@ -48,7 +48,7 @@ void main() {
 
     test('When value [[1, 2, 3, 4]] is encoded then it returns 0x041001020304',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec<Vec<u8>>');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<u8>>');
       final encoder = HexEncoder();
       codec.encode(encoder, [
         [1, 2, 3, 4]
@@ -59,7 +59,7 @@ void main() {
     test(
         'When value [[1, 2, 3, 4], [5, 6, 7, 8]] is encoded then it returns 0x0810010203041005060708',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec<Vec<u8>>');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<u8>>');
       final encoder = HexEncoder();
       codec.encode(encoder, [
         [1, 2, 3, 4],
@@ -72,7 +72,7 @@ void main() {
     test(
         'When value [[true, false, true, false], [true, false, false]] is encoded then it returns 0x0810010001000c010000',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec<Vec<bool>>');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<bool>>');
       final encoder = HexEncoder();
       codec.encode(encoder, [
         [true, false, true, false],
@@ -88,7 +88,7 @@ void main() {
     test(
         'When Vector with empty subtype is encoded then it throws an SubtypeNotFoundException',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, []),
           throwsA(isA<SubtypeNotFoundException>()));
@@ -96,7 +96,7 @@ void main() {
 
     test('When type other than list is encoded then it throws an exception',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec<u8>');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec<u8>');
       final encoder = HexEncoder();
 
       /// match exception string
@@ -110,7 +110,7 @@ void main() {
     test(
         'When Vector with empty subtype is decoded then it throws an SubtypeNotFoundException',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec');
       expect(() => codec.decode(Input('0x041001020304')),
           throwsA(isA<SubtypeNotFoundException>()));
     });
@@ -129,7 +129,7 @@ void main() {
 
     test('When value 0x041001020304 is decoded then it returns [[1, 2, 3, 4]]',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec_key');
       final compactValue = codec.decode(Input('0x041001020304'));
       expect(
           compactValue,
@@ -141,7 +141,7 @@ void main() {
     test(
         'When value 0x0810010203041005060708 is decoded then it returns [[1, 2, 3, 4], [5, 6, 7, 8]]',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('Vec_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('Vec_key');
       final compactValue = codec.decode(Input('0x0810010203041005060708'));
       expect(
           compactValue,
@@ -152,7 +152,7 @@ void main() {
     });
 
     test('When value 0x1001020304 is decoded then it returns [1, 2, 3, 4]', () {
-      final codec = Codec(registry: registry).createTypeCodec('A');
+      final codec = Codec(registry: registry).fetchTypeCodec('A');
       final compactValue = codec.decode(Input('0x1001020304'));
       expect(compactValue, equals([1, 2, 3, 4]));
     });
@@ -161,7 +161,7 @@ void main() {
         'When Vector with empty subtype is encoded then it throws an SubtypeNotFoundException',
         () {
       final codec =
-          Codec(registry: registry).createTypeCodec('Vec_Without_Subtype');
+          Codec(registry: registry).fetchTypeCodec('Vec_Without_Subtype');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, []),
           throwsA(isA<SubtypeNotFoundException>()));
@@ -169,7 +169,7 @@ void main() {
 
     test('When type other than list is encoded then it throws an exception',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('A');
+      final codec = Codec(registry: registry).fetchTypeCodec('A');
       final encoder = HexEncoder();
 
       /// match exception string
@@ -184,7 +184,7 @@ void main() {
         'When Vector with empty subtype is decoded then it throws an SubtypeNotFoundException',
         () {
       final codec =
-          Codec(registry: registry).createTypeCodec('Vec_Without_Subtype');
+          Codec(registry: registry).fetchTypeCodec('Vec_Without_Subtype');
       expect(() => codec.decode(Input('0x041001020304')),
           throwsA(isA<SubtypeNotFoundException>()));
     });

@@ -7,7 +7,7 @@ void main() {
     test(
         'When lowest value 0x00000000000000000000000000000080 is decoded then it returns -170141183460469231731687303715884105728',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i128');
+      final codec = Codec(registry: registry).fetchTypeCodec('i128');
       final i128Value =
           codec.decode(Input('0x00000000000000000000000000000080'));
       expect(i128Value,
@@ -17,7 +17,7 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffff7f is decoded then it returns 170141183460469231731687303715884105727',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i128');
+      final codec = Codec(registry: registry).fetchTypeCodec('i128');
       final i128Value =
           codec.decode(Input('0xffffffffffffffffffffffffffffff7f'));
       expect(i128Value,
@@ -30,7 +30,7 @@ void main() {
     test(
         'When lowest value -170141183460469231731687303715884105728 is encoded then it returns 0x00000000000000000000000000000080',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('i128');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('i128');
       final encoder = HexEncoder();
       codec.encode(
           encoder, BigInt.parse('-170141183460469231731687303715884105728'));
@@ -40,7 +40,7 @@ void main() {
     test(
         'When highest value 170141183460469231731687303715884105727 is encoded then it returns 0xffffffffffffffffffffffffffffff7f',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('i128');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('i128');
       final encoder = HexEncoder();
       codec.encode(
           encoder, BigInt.parse('170141183460469231731687303715884105727'));
@@ -54,7 +54,7 @@ void main() {
     test(
         'When value -170141183460469231731687303715884105729 is encoded then it throws an exception',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('i128');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('i128');
       final encoder = HexEncoder();
       expect(
           () => codec.encode(encoder,
@@ -65,7 +65,7 @@ void main() {
     test(
         'When value 170141183460469231731687303715884105728 is encoded then it throws an exception',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('i128');
+      final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('i128');
       final encoder = HexEncoder();
       expect(
           () => codec.encode(
@@ -85,7 +85,7 @@ void main() {
         'When lowest value -170141183460469231731687303715884105728 is encoded then it returns 0x00000000000000000000000000000080',
         () {
       final codec =
-          Codec<BigInt>(registry: registry).createTypeCodec('i128_key');
+          Codec<BigInt>(registry: registry).fetchTypeCodec('i128_key');
       final encoder = HexEncoder();
       codec.encode(
           encoder, BigInt.parse('-170141183460469231731687303715884105728'));
@@ -96,7 +96,7 @@ void main() {
         'When highest value 170141183460469231731687303715884105727 is encoded then it returns 0xffffffffffffffffffffffffffffff7f',
         () {
       final codec =
-          Codec<BigInt>(registry: registry).createTypeCodec('i128_key');
+          Codec<BigInt>(registry: registry).fetchTypeCodec('i128_key');
 
       final encoder = HexEncoder();
       codec.encode(
@@ -107,7 +107,7 @@ void main() {
     test(
         'When lowest value 0x00000000000000000000000000000080 is decoded then it returns -170141183460469231731687303715884105728',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i128_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('i128_key');
       final i128Value =
           codec.decode(Input('0x00000000000000000000000000000080'));
       expect(i128Value,
@@ -117,7 +117,7 @@ void main() {
     test(
         'When highest value 0xffffffffffffffffffffffffffffff7f is decoded then it returns 170141183460469231731687303715884105727',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i128_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('i128_key');
       final i128Value =
           codec.decode(Input('0xffffffffffffffffffffffffffffff7f'));
       expect(i128Value,
@@ -136,7 +136,7 @@ void main() {
         'When value -170141183460469231731687303715884105729 is encoded then it throws an exception',
         () {
       final codec =
-          Codec<BigInt>(registry: registry).createTypeCodec('i128_key');
+          Codec<BigInt>(registry: registry).fetchTypeCodec('i128_key');
       final encoder = HexEncoder();
       expect(
           () => codec.encode(encoder,
@@ -148,7 +148,7 @@ void main() {
         'When value 170141183460469231731687303715884105728 is encoded then it throws an exception',
         () {
       final codec =
-          Codec<BigInt>(registry: registry).createTypeCodec('i128_key');
+          Codec<BigInt>(registry: registry).fetchTypeCodec('i128_key');
       final encoder = HexEncoder();
       expect(
           () => codec.encode(

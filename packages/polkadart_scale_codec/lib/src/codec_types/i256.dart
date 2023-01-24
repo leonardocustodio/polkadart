@@ -19,14 +19,14 @@ class I256 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I256');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('I256');
   /// final value = codec.decode(Input('0x0000000000000000000000000000008000000000000000000000000000000000'));
   /// print(value); // -57896044618658097711785492504343953926634992332820282019728792003956564819968
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I256');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('I256');
   /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffffff7fffffffffffffffffffffffffffffff'));
   /// print(value); // 57896044618658097711785492504343953926634992332820282019728792003956564819967
   /// ```
@@ -60,7 +60,7 @@ class I256 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I256');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('I256');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, BigInt.parse('-57896044618658097711785492504343953926634992332820282019728792003956564819968'));
   /// print(encoder.toHex()); // 00000000000000000000000000000080
@@ -68,7 +68,7 @@ class I256 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I256');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('I256');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, BigInt.parse('57896044618658097711785492504343953926634992332820282019728792003956564819967'));
   /// print(encoder.toHex()); // ffffffffffffffffffffffffffffff7f

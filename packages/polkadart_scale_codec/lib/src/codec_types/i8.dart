@@ -19,14 +19,14 @@ class I8 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I8');
+  /// final codec = Codec<int>().fetchTypeCodec('I8');
   /// final value = codec.decode(Input('0x80'));
   /// print(value); // -128
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I8');
+  /// final codec = Codec<int>().fetchTypeCodec('I8');
   /// final value = codec.decode(Input('0x7f'));
   /// print(value); // 127
   /// ```
@@ -59,7 +59,7 @@ class I8 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I8');
+  /// final codec = Codec<int>().fetchTypeCodec('I8');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, -128);
   /// print(encoder.toHex()); // 80
@@ -67,7 +67,7 @@ class I8 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('I8');
+  /// final codec = Codec<int>().fetchTypeCodec('I8');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, 127);
   /// print(encoder.toHex()); // 7f

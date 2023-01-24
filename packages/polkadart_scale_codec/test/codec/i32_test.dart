@@ -6,14 +6,14 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x80000000 is decoded then it returns -2147483648',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i32');
+      final codec = Codec(registry: registry).fetchTypeCodec('i32');
       final i32Value = codec.decode(Input('0x00000080'));
       expect(i32Value, equals(-2147483648));
     });
 
     test('When highest value 0xffffff7f is decoded then it returns 2147483647',
         () {
-      final codec = Codec(registry: registry).createTypeCodec('i32');
+      final codec = Codec(registry: registry).fetchTypeCodec('i32');
       final i32Value = codec.decode(Input('0xffffff7f'));
       expect(i32Value, equals(2147483647));
     });
@@ -23,7 +23,7 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value -2147483648 is encoded then it returns 0x80000000',
         () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i32');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i32');
       final encoder = HexEncoder();
       codec.encode(encoder, -2147483648);
       expect(encoder.toHex(), equals('0x00000080'));
@@ -31,7 +31,7 @@ void main() {
 
     test('When highest value 2147483647 is encoded then it returns 0xffffff7f',
         () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i32');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i32');
       final encoder = HexEncoder();
       codec.encode(encoder, 2147483647);
       expect(encoder.toHex(), equals('0xffffff7f'));
@@ -42,14 +42,14 @@ void main() {
     final registry = TypeRegistry.createRegistry();
 
     test('When value -2147483649 is encoded then it throws an exception', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i32');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i32');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -2147483649),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 2147483648 is encoded then it throws an exception', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i32');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i32');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, 2147483648),
           throwsA(isA<UnexpectedCaseException>()));
@@ -66,27 +66,27 @@ void main() {
     );
 
     test('When i32 is encoded then it returns the correct json', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i32_key');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i32_key');
       final encoder = HexEncoder();
       codec.encode(encoder, 2147483647);
       expect(encoder.toHex(), equals('0xffffff7f'));
     });
 
     test('When i32 is decoded then it returns the correct json', () {
-      final codec = Codec(registry: registry).createTypeCodec('i32_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('i32_key');
       final i32Value = codec.decode(Input('0xffffff7f'));
       expect(i32Value, equals(2147483647));
     });
 
     test('When i32 is encoded then it returns the correct json', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i32_key');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i32_key');
       final encoder = HexEncoder();
       codec.encode(encoder, -2147483648);
       expect(encoder.toHex(), equals('0x00000080'));
     });
 
     test('When i32 is decoded then it returns the correct json', () {
-      final codec = Codec(registry: registry).createTypeCodec('i32_key');
+      final codec = Codec(registry: registry).fetchTypeCodec('i32_key');
       final i32Value = codec.decode(Input('0x00000080'));
       expect(i32Value, equals(-2147483648));
     });
@@ -96,14 +96,14 @@ void main() {
     final registry = TypeRegistry.createRegistry();
 
     test('When value -2147483649 is encoded then it throws an exception', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i32');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i32');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -2147483649),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
     test('When value 2147483648 is encoded then it throws an exception', () {
-      final codec = Codec<int>(registry: registry).createTypeCodec('i32');
+      final codec = Codec<int>(registry: registry).fetchTypeCodec('i32');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, 2147483648),
           throwsA(isA<UnexpectedCaseException>()));

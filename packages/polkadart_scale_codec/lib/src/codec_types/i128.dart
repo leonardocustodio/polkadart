@@ -19,14 +19,14 @@ class I128 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I128');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('I128');
   /// final value = codec.decode(Input('0x00000000000000000000000000000080'));
   /// print(value); // -170141183460469231731687303715884105728
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I128');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('I128');
   /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffff7f'));
   /// print(value); // 170141183460469231731687303715884105727
   /// ```
@@ -60,7 +60,7 @@ class I128 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I128');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('I128');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, BigInt.parse('-170141183460469231731687303715884105728'));
   /// print(encoder.toHex()); // 00000000000000000000000000000080
@@ -68,7 +68,7 @@ class I128 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<BigInt>().createTypeCodec('I128');
+  /// final codec = Codec<BigInt>().fetchTypeCodec('I128');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, BigInt.parse('170141183460469231731687303715884105727'));
   /// print(encoder.toHex()); // ffffffffffffffffffffffffffffff7f

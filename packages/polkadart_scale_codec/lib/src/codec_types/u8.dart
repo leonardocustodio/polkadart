@@ -19,14 +19,14 @@ class U8 extends Uint<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8');
+  /// final codec = Codec<int>().fetchTypeCodec('U8');
   /// final value = codec.decode(Input('0x00'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8');
+  /// final codec = Codec<int>().fetchTypeCodec('U8');
   /// final value = codec.decode(Input('0xff'));
   /// print(value); // 255
   /// ```
@@ -58,7 +58,7 @@ class U8 extends Uint<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8');
+  /// final codec = Codec<int>().fetchTypeCodec('U8');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, 0);
   /// print(encoder.toHex()); // 0x00
@@ -66,7 +66,7 @@ class U8 extends Uint<int> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec<int>().createTypeCodec('U8');
+  /// final codec = Codec<int>().fetchTypeCodec('U8');
   /// final encoder = HexEncoder();
   /// codec.encode(encoder, 255);
   /// print(encoder.toHex()); // 0xff
