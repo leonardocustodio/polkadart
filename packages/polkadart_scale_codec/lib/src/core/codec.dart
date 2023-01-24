@@ -44,8 +44,8 @@ class Codec<T> implements CodecInterface<T> {
   /// [Private]
   ///
   /// Initialize input, subType and metadata
-  void _init(
-    Input? input, {
+  void init({
+    required Input? input,
     String subType = '',
     List? metadata,
   }) {
@@ -75,6 +75,10 @@ class Codec<T> implements CodecInterface<T> {
     typeStruct.addAll(typeStringList);
   }
 
+  Codec copyWith(Codec anotherCodec) {
+    throw Exception('CopyWith should be implemented in the derived class.');
+  }
+
   ///
   /// Create a codec instance
   /// [typeString] is the type of the codec
@@ -85,21 +89,10 @@ class Codec<T> implements CodecInterface<T> {
   /// final registry = TypeRegistry.createRegistry();
   /// final codec = Codec<bool>(registry).createTypeCodec('bool');
   /// ```
-  Codec createTypeCodec(
-    String typeString, {
-    Input? input,
-    List? metadata,
-  }) {
-    final Codec codec = fetchCodecType(typeString);
-
-    codec.typeString = typeString;
-
-    metadata ??= this.metadata;
-
+  Codec createTypeCodec(String typeString) {
+    final codec = fetchCodecType(typeString);
     codec.registry = registry;
-
-    codec._init(input, metadata: metadata);
-
+    codec.typeString = typeString;
     return codec;
   }
 
@@ -108,7 +101,7 @@ class Codec<T> implements CodecInterface<T> {
     RegExpMatch? match;
 
     if (typeString.endsWith('>')) {
-      final Codec? codec = registry.getCodec(typeString);
+      final Codec? codec = registry.getCodec(typeString)?.copyWith(this);
       if (codec != null) {
         return codec;
       }
@@ -121,7 +114,8 @@ class Codec<T> implements CodecInterface<T> {
     ///
     /// but seems match.groupCount returns 2 when there are 3 values in the match
     if (match != null && match.groupCount == 2) {
-      final Codec? codec = registry.getCodec(match[1].toString());
+      final Codec? codec =
+          registry.getCodec(match[1].toString())?.copyWith(this);
       if (codec != null) {
         codec.subType = match[2].toString();
         return codec;
@@ -174,7 +168,7 @@ class Codec<T> implements CodecInterface<T> {
   }
 
   @override
-  T decode() {
+  T decode(Input input) {
     throw UnimplementedError();
   }
 

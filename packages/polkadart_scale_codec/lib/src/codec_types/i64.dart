@@ -8,6 +8,13 @@ class I64 extends Codec<BigInt> {
   I64._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of I64
+  @override
+  I64 copyWith(Codec codec) {
+    return copyProperties(codec, I64._()) as I64;
+  }
+
+  ///
   /// Decode a signed 64 bit integer from the input
   ///
   /// Example:
@@ -24,7 +31,7 @@ class I64 extends Codec<BigInt> {
   /// print(value); // 9223372036854775807
   /// ```
   @override
-  BigInt decode() {
+  BigInt decode(Input input) {
     return decodeFromInput(input);
   }
 

@@ -8,6 +8,13 @@ class I32 extends Codec<int> {
   I32._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of I32
+  @override
+  I32 copyWith(Codec codec) {
+    return copyProperties(codec, I32._()) as I32;
+  }
+
+  ///
   /// Decode a signed 32 bit integer from the source
   ///
   /// Example:
@@ -24,7 +31,7 @@ class I32 extends Codec<int> {
   /// print(value); // 2147483647
   /// ```
   @override
-  int decode() {
+  int decode(Input input) {
     return decodeFromInput(input);
   }
 

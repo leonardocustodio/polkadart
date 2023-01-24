@@ -8,6 +8,13 @@ class U128 extends Uint<BigInt> {
   U128._() : super._();
 
   ///
+  /// [static] Create a new instance of U128
+  @override
+  U128 copyWith(Codec codec) {
+    return copyProperties(codec, U128._()) as U128;
+  }
+
+  ///
   /// Decode a unsigned 128 bit integer from the input
   ///
   /// Example:
@@ -24,7 +31,7 @@ class U128 extends Uint<BigInt> {
   /// print(value); // 340282366920938463463374607431768211455
   /// ```
   @override
-  BigInt decode() {
+  BigInt decode(Input input) {
     return decodeFromInput(input);
   }
 

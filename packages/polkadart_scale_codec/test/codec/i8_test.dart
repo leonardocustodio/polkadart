@@ -5,16 +5,14 @@ void main() {
   group('I8 Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x80 is decoded then it returns -128', () {
-      final codec =
-          Codec(registry: registry).createTypeCodec('i8', input: Input('0x80'));
-      final i8Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i8');
+      final i8Value = codec.decode(Input('0x80'));
       expect(i8Value, equals(-128));
     });
 
     test('When highest value 0x7f is decoded then it returns 127', () {
-      final codec =
-          Codec(registry: registry).createTypeCodec('i8', input: Input('0x7f'));
-      final i8Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i8');
+      final i8Value = codec.decode(Input('0x7f'));
       expect(i8Value, equals(127));
     });
   });
@@ -64,16 +62,14 @@ void main() {
     );
 
     test('When lowest value 0x80 is decoded then it returns -128', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('i8_key', input: Input('0x80'));
-      final i8Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i8_key');
+      final i8Value = codec.decode(Input('0x80'));
       expect(i8Value, equals(-128));
     });
 
     test('When highest value 0x7f is decoded then it returns 127', () {
-      final codec = Codec(registry: registry)
-          .createTypeCodec('i8_key', input: Input('0x7f'));
-      final i8Value = codec.decode();
+      final codec = Codec(registry: registry).createTypeCodec('i8_key');
+      final i8Value = codec.decode(Input('0x7f'));
       expect(i8Value, equals(127));
     });
 

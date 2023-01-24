@@ -8,15 +8,36 @@ class Vec<T extends Codec> extends Codec<List> {
   Vec._() : super(registry: Registry());
 
   ///
+  /// [static] Create a new instance of Vec
+  @override
+  Vec copyWith(Codec codec) {
+    return copyProperties(codec, Vec._()) as Vec;
+  }
+
+  ///
   /// Decodes the value from the Codec's input
   ///
+  /// The input is expected to be a Compact<u32> followed by that many instances of the type T.
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = Codec().createTypeCodec('Vec<u8>', input: Input('0x0401020304'));
+  /// final vecValue = codec.decode();
+  /// print(vecValue); // [1, 2, 3, 4]
+  /// ```
   @override
-  List decode() {
-    final vecLength = super.createTypeCodec('Compact<u32>').decode();
+  List decode(Input input) {
+    if (subType.trim().isEmpty) {
+      throw SubtypeNotFoundException();
+    }
+
+    final vecLength = Compact.decodeFromInput(input);
 
     final result = [];
+    final codec = createTypeCodec(subType);
     for (var i = 0; i < vecLength; i++) {
-      result.add(createTypeCodec(subType).decode());
+      final value = codec.decode(input);
+      result.add(value);
     }
 
     return result;
@@ -24,10 +45,25 @@ class Vec<T extends Codec> extends Codec<List> {
 
   ///
   /// Encodes a Vector of values.
-  @override
-  void encode(Encoder encoder, List value) {}
-
   ///
-  /// [static] Encodes a Vector of lists to the encoder.
-  static void encodeToEncoder(Encoder encoder, List value) {}
+  /// Example:
+  /// ```dart
+  /// final codec = Codec().createTypeCodec('Vec<u8>');
+  /// final encoder = HexEncoder();
+  /// codec.encode(encoder, [1, 2, 3, 4]);
+  /// print(encoder.toHex()); // 0x0401020304
+  /// ```
+  @override
+  void encode(Encoder encoder, List values) {
+    if (subType.trim().isEmpty) {
+      throw SubtypeNotFoundException();
+    }
+
+    Compact.encodeToEncoder(encoder, values.length);
+
+    final codec = createTypeCodec(subType);
+    for (var value in values) {
+      codec.encode(encoder, value);
+    }
+  }
 }

@@ -5,7 +5,7 @@ part of core;
 mixin CodecInterface<T> {
   ///
   /// decodes the value
-  T decode();
+  T decode(Input input);
 
   ///
   /// encodes the passed parameter and returns the encoded value

@@ -8,6 +8,13 @@ class U32 extends Uint<int> {
   U32._() : super._();
 
   ///
+  /// [static] Create a new instance of U32
+  @override
+  U32 copyWith(Codec codec) {
+    return copyProperties(codec, U32._()) as U32;
+  }
+
+  ///
   /// Decode a unsigned 32 bit integer from the input
   ///
   /// Example:
@@ -24,7 +31,7 @@ class U32 extends Uint<int> {
   /// print(value); // 4294967295
   /// ```
   @override
-  int decode() {
+  int decode(Input input) {
     return decodeFromInput(input);
   }
 

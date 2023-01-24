@@ -8,20 +8,18 @@ void main() {
     test(
         'When lowest value 0x0000000000000000000000000000000000000000000000000000000000000000 is decoded then it returns 0',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256',
-          input: Input(
-              '0x0000000000000000000000000000000000000000000000000000000000000000'));
-      final BigInt u256Value = codec.decode();
+      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final BigInt u256Value = codec.decode(Input(
+          '0x0000000000000000000000000000000000000000000000000000000000000000'));
       expect(u256Value.toString(), equals('0'));
     });
 
     test(
         'When highest value 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns 115792089237316195423570985008687907853269984665640564039457584007913129639935',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256',
-          input: Input(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-      final BigInt u256Value = codec.decode();
+      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final BigInt u256Value = codec.decode(Input(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       expect(
           u256Value.toString(),
           equals(
@@ -111,18 +109,15 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     TypeRegistry.addCustomCodec(
       registry,
-      <String, dynamic>{
-        'u256_key': 'u256',
-      },
+      <String, dynamic>{'u256_key': 'u256'},
     );
 
     test(
         'When 0x0000000000000000000000000000000000000000000000000000000000000000 is decoded then it returns 0',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256',
-          input: Input(
-              '0x0000000000000000000000000000000000000000000000000000000000000000'));
-      final BigInt u256Value = codec.decode();
+      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final BigInt u256Value = codec.decode(Input(
+          '0x0000000000000000000000000000000000000000000000000000000000000000'));
       expect(u256Value.toString(), equals('0'));
     });
 
@@ -141,10 +136,9 @@ void main() {
     test(
         'When 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff is decoded then it returns 115792089237316195423570985008687907853269984665640564039457584007913129639935',
         () {
-      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256',
-          input: Input(
-              '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
-      final BigInt u256Value = codec.decode();
+      final codec = Codec<BigInt>(registry: registry).createTypeCodec('u256');
+      final BigInt u256Value = codec.decode(Input(
+          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
       expect(
           u256Value.toString(),
           equals(
@@ -170,9 +164,7 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     TypeRegistry.addCustomCodec(
       registry,
-      <String, dynamic>{
-        'u256_key': 'u256',
-      },
+      <String, dynamic>{'u256_key': 'u256'},
     );
 
     test(
