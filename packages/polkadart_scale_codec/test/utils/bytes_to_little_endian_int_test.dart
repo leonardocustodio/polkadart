@@ -100,30 +100,22 @@ void main() {
           () => bytesToLittleEndianInt([]), throwsA(isA<AssertionException>()));
     });
 
-    test(
-        'When bytes of length 3 is evaluated irrespective of bytes then it returns 0',
-        () {
+    test('When [0, 0, 1] is evaluated then it returns 65536', () {
       final intValue = bytesToLittleEndianInt([0, 0, 1]);
       expect(intValue, equals(65536));
     });
 
-    test(
-        'When bytes of length 5 is evaluated irrespective of bytes then it returns 0',
-        () {
+    test('When [0, 0, 1, 0] is evaluated then it returns 16777216', () {
       final intValue = bytesToLittleEndianInt([0, 0, 0, 1, 0]);
       expect(intValue, equals(16777216));
     });
 
-    test(
-        'When bytes of length 6 is evaluated irrespective of bytes then it returns 0',
-        () {
+    test('When [0, 0, 0, 0, 0, 0] is evaluated then it returns 0', () {
       final intValue = bytesToLittleEndianInt([0, 0, 0, 0, 0, 0]);
       expect(intValue, equals(0));
     });
 
-    test(
-        'When bytes of length 7 is evaluated irrespective of bytes then it returns 0',
-        () {
+    test('When [0, 0, 1, 0, 0, 0, 0] is evaluated then it returns 65536', () {
       final intValue = bytesToLittleEndianInt([0, 0, 1, 0, 0, 0, 0]);
       expect(intValue, equals(65536));
     });
