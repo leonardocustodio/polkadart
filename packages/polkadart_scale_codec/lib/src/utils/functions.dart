@@ -32,18 +32,16 @@ void assertionCheck(bool value, [String? msg]) {
 /// print(val); // 16909060
 /// ```
 int bytesToLittleEndianInt(List<int> bytes) {
-  switch (bytes.length) {
-    case 1:
-    case 2:
-    case 4:
-    case 8:
-      {
-        var byte = bytes[0];
-        for (var index = 1; index < bytes.length; index++) {
-          byte |= bytes[index] << (8 * index);
-        }
-        return byte;
-      }
+  if (bytes.isEmpty) {
+    throw AssertionException('Bytes cannot be empty');
   }
-  return 0;
+  if (bytes.length < 9) {
+    var byte = bytes[0];
+    for (var index = 1; index < bytes.length; index++) {
+      byte |= bytes[index] << (8 * index);
+    }
+    return byte;
+  }
+
+  throw AssertionException('Bytes cannot be greater than 8');
 }
