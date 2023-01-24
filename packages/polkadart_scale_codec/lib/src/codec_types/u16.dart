@@ -43,7 +43,7 @@ class U16 extends Uint<int> {
   /// print(value); // 65535
   /// ```
   static int decodeFromInput(Input input) {
-    return bytesToLittleEndianInt(input.bytes(2).toList());
+    return input.byte() + (input.byte() << 8);
   }
 
   ///
