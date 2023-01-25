@@ -33,8 +33,11 @@ class CodecMapper {
         return Compact._();
       case 'vec':
         return Vec._();
+      case 'string':
       case 'str':
         return Str._();
+      case 'tuples':
+        return Tuples._();
     }
     throw UnexpectedCodecException(
         'Expected a supported codec, but got $codecTypeName');

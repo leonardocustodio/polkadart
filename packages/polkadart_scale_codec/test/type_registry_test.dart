@@ -20,7 +20,9 @@ void main() {
         'i256',
         'compact',
         'vec',
+        'string',
         'str',
+        'tuples'
       ];
 
       final Registry registry = TypeRegistry.createRegistry();

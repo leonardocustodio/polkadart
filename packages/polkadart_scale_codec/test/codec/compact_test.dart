@@ -64,8 +64,7 @@ void main() {
 
   group('Custom Json Test', () {
     final registry = TypeRegistry.createRegistry();
-    TypeRegistry.addCustomCodec(
-      registry,
+    registry.addCustomCodec(
       <String, dynamic>{
         'Compact_key': 'Compact',
       },

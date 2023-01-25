@@ -23,3 +23,4 @@ part 'compact.dart';
 part 'uint.dart';
 part 'vec.dart';
 part 'str.dart';
+part 'tuples.dart';

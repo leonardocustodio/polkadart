@@ -118,8 +118,7 @@ void main() {
 
   group('Custom Json Test', () {
     final registry = TypeRegistry.createRegistry();
-    TypeRegistry.addCustomCodec(
-      registry,
+    registry.addCustomCodec(
       <String, dynamic>{
         'A': 'Vec<u8>',
         'Vec_key': 'Vec<A>',

@@ -12,12 +12,13 @@ void assertionCheck(bool value, [String? msg]) {
 ///
 /// Copies the properties of [from] to [to]
 Codec copyProperties(Codec from, Codec to) {
-  to.registry = from.registry;
-  to.subType = from.subType;
-  to.metadata = from.metadata;
   to.bitLength = from.bitLength;
   to.fixedLength = from.fixedLength;
+  to.metadata = from.metadata;
+  to.registry = from.registry;
+  to.subType = from.subType;
   to.typeString = from.typeString;
+  to.typeStruct = from.typeStruct;
   to.valueList = from.valueList;
   return to;
 }

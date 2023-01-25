@@ -1,6 +1,17 @@
 part of utils;
 
 ///
+/// InvalidTupleException
+class InvalidTupleException implements Exception {
+  const InvalidTupleException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+///
 /// SubtypeNotFoundException
 class SubtypeNotFoundException implements Exception {
   const SubtypeNotFoundException();

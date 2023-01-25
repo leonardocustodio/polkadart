@@ -128,7 +128,7 @@ class Codec<T> implements CodecInterface<T> {
     }
 
     if (typeString.startsWith('(') && typeString.endsWith(')')) {
-      final Codec codec = registry.getCodec('Tuples')!;
+      final Codec codec = registry.getCodec('Tuples')!.copyWith(this);
       codec.typeString = typeString;
       codec.buildMapping();
       return codec;

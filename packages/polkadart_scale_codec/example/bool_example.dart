@@ -31,8 +31,7 @@ void main() {
   }
 
   /// with custom json
-  TypeRegistry.addCustomCodec(
-    registry,
+  registry.addCustomCodec(
     <String, dynamic>{
       'bool_key': 'bool',
     },
