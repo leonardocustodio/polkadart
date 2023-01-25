@@ -2,7 +2,7 @@ part of codec_types;
 
 ///
 /// Vec to encode/decode vector of values
-class Vec<T extends Codec> extends Codec<List> {
+class Vec extends Codec<List> {
   ///
   /// constructor
   Vec._() : super(registry: Registry());
