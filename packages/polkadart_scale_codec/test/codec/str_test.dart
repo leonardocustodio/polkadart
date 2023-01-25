@@ -1,3 +1,4 @@
+import 'package:polkadart_scale_codec/src/codec_types/codec_types.dart';
 import 'package:polkadart_scale_codec/src/core/core.dart';
 import 'package:test/test.dart';
 
@@ -62,6 +63,30 @@ void main() {
       final codec = Codec(registry: registry).fetchTypeCodec('str');
       final strValue = codec.decode(Input('0x00'));
       expect(strValue, equals(''));
+    });
+  });
+
+  /// Str static tests
+  group('Str Static Decode Test', () {
+    test('When value "0x1054657374" is decoded then it returns "Test"', () {
+      final strValue = Str.decodeFromInput(Input('0x1054657374'));
+      expect(strValue, equals('Test'));
+    });
+    test('When value "0x00" is decoded then it returns empty string', () {
+      final strValue = Str.decodeFromInput(Input('0x00'));
+      expect(strValue, equals(''));
+    });
+
+    test('When value "Test" is encoded then it returns 0x1054657374', () {
+      final encoder = HexEncoder();
+      Str.encodeToEncoder(encoder, 'Test');
+      expect(encoder.toHex(), equals('0x1054657374'));
+    });
+
+    test('When empty string is encoded then it returns 0x', () {
+      final encoder = HexEncoder();
+      Str.encodeToEncoder(encoder, '');
+      expect(encoder.toHex(), equals('0x00'));
     });
   });
 }
