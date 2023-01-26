@@ -86,7 +86,8 @@ class Registry {
                 break;
               // compact
               case 'Compact':
-                final Codec codec = getCodec(match[1].toString())!.freshInstance();
+                final Codec codec =
+                    getCodec(match[1].toString())!.freshInstance();
                 codec.subType = getCodec(match[2].toString());
                 codec.typeString = value;
                 addCodec(key, codec as Compact);
