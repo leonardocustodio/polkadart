@@ -4,13 +4,13 @@ void main() {
   final registry = TypeRegistry.createRegistry();
   {
     final codec = Codec(registry: registry).fetchTypeCodec('bool');
-    final boolValue = codec.decode(Input('0x01'));
+    final boolValue = codec.decode(DefaultInput.fromHex('0x01'));
     print('01: decoded -> $boolValue');
   }
 
   {
     final codec = Codec(registry: registry).fetchTypeCodec('bool');
-    final boolValue = codec.decode(Input('0x00'));
+    final boolValue = codec.decode(DefaultInput.fromHex('0x00'));
     print('00: decoded -> $boolValue');
   }
 
@@ -38,13 +38,13 @@ void main() {
   );
   {
     final codec = Codec(registry: registry).fetchTypeCodec('bool_key');
-    final boolValue = codec.decode(Input('0x01'));
+    final boolValue = codec.decode(DefaultInput.fromHex('0x01'));
     print('01: decoded -> $boolValue');
   }
 
   {
     final codec = Codec(registry: registry).fetchTypeCodec('bool_key');
-    final boolValue = codec.decode(Input('0x00'));
+    final boolValue = codec.decode(DefaultInput.fromHex('0x00'));
     print('00: decoded -> $boolValue');
   }
 
@@ -67,13 +67,13 @@ void main() {
   /// without Registry
   {
     final codec = Codec<bool>().fetchTypeCodec('bool');
-    final boolValue = codec.decode(Input('0x01'));
+    final boolValue = codec.decode(DefaultInput.fromHex('0x01'));
     print('01: decoded -> $boolValue');
   }
 
   {
     final codec = Codec<bool>().fetchTypeCodec('bool');
-    final boolValue = codec.decode(Input('0x00'));
+    final boolValue = codec.decode(DefaultInput.fromHex('0x00'));
     print('00: decoded -> $boolValue');
   }
 

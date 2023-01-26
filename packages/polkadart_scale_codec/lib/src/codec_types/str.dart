@@ -17,7 +17,7 @@ class Str extends Codec<String> {
   ///
   /// Example:
   /// ```dart
-  /// final stringValue = Str.decodeFromInput(Input('0x1054657374'));
+  /// final stringValue = Str.decodeFromInput(DefaultInput.fromHex('0x1054657374'));
   /// print(stringValue); // Test
   /// ```
   @override
@@ -30,7 +30,7 @@ class Str extends Codec<String> {
   ///
   /// Example:
   /// ```dart
-  /// final stringValue = Str.decodeFromInput(Input('0x1054657374'));
+  /// final stringValue = Str.decodeFromInput(DefaultInput.fromHex('0x1054657374'));
   /// print(stringValue); // Test
   /// ```
   static String decodeFromInput(Input input) {

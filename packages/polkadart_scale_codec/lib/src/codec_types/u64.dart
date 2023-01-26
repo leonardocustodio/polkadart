@@ -18,14 +18,14 @@ class U64 extends Uint<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().fetchTypeCodec('U64');
-  /// final value = codec.decode(Input('0x0000000000000000'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x0000000000000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().fetchTypeCodec('U64');
-  /// final value = codec.decode(Input('0xffffffffffffffff'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xffffffffffffffff'));
   /// print(value); // 18446744073709551615
   /// ```
   @override
@@ -38,13 +38,13 @@ class U64 extends Uint<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final value = U64.decodeFromInput(Input('0x0000000000000000'));
+  /// final value = U64.decodeFromInput(DefaultInput.fromHex('0x0000000000000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = U64.decodeFromInput(Input('0xffffffffffffffff'));
+  /// final value = U64.decodeFromInput(DefaultInput.fromHex('0xffffffffffffffff'));
   /// print(value); // 18446744073709551615
   /// ```
   static BigInt decodeFromInput(Input input) {

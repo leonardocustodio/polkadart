@@ -7,14 +7,14 @@ void main() {
     test('When lowest value 0x80000000 is decoded then it returns -2147483648',
         () {
       final codec = Codec(registry: registry).fetchTypeCodec('i32');
-      final i32Value = codec.decode(Input('0x00000080'));
+      final i32Value = codec.decode(DefaultInput.fromHex('0x00000080'));
       expect(i32Value, equals(-2147483648));
     });
 
     test('When highest value 0xffffff7f is decoded then it returns 2147483647',
         () {
       final codec = Codec(registry: registry).fetchTypeCodec('i32');
-      final i32Value = codec.decode(Input('0xffffff7f'));
+      final i32Value = codec.decode(DefaultInput.fromHex('0xffffff7f'));
       expect(i32Value, equals(2147483647));
     });
   });
@@ -73,7 +73,7 @@ void main() {
 
     test('When i32 is decoded then it returns the correct json', () {
       final codec = Codec(registry: registry).fetchTypeCodec('i32_key');
-      final i32Value = codec.decode(Input('0xffffff7f'));
+      final i32Value = codec.decode(DefaultInput.fromHex('0xffffff7f'));
       expect(i32Value, equals(2147483647));
     });
 
@@ -86,7 +86,7 @@ void main() {
 
     test('When i32 is decoded then it returns the correct json', () {
       final codec = Codec(registry: registry).fetchTypeCodec('i32_key');
-      final i32Value = codec.decode(Input('0x00000080'));
+      final i32Value = codec.decode(DefaultInput.fromHex('0x00000080'));
       expect(i32Value, equals(-2147483648));
     });
   });
@@ -113,13 +113,13 @@ void main() {
   group('I32 Direct Test', () {
     test('When lowest value 0x80000000 is decoded then it returns -2147483648',
         () {
-      final i32Value = I32.decodeFromInput(Input('0x00000080'));
+      final i32Value = I32.decodeFromInput(DefaultInput.fromHex('0x00000080'));
       expect(i32Value, equals(-2147483648));
     });
 
     test('When highest value 0xffffff7f is decoded then it returns 2147483647',
         () {
-      final i32Value = I32.decodeFromInput(Input('0xffffff7f'));
+      final i32Value = I32.decodeFromInput(DefaultInput.fromHex('0xffffff7f'));
       expect(i32Value, equals(2147483647));
     });
 

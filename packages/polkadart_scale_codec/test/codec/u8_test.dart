@@ -6,13 +6,13 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00 is decoded then it returns 0', () {
       final codec = Codec(registry: registry).fetchTypeCodec('u8');
-      final u8Value = codec.decode(Input('0x00'));
+      final u8Value = codec.decode(DefaultInput.fromHex('0x00'));
       expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
       final codec = Codec(registry: registry).fetchTypeCodec('u8');
-      final u8Value = codec.decode(Input('0xff'));
+      final u8Value = codec.decode(DefaultInput.fromHex('0xff'));
       expect(u8Value, equals(255));
     });
   });
@@ -65,13 +65,13 @@ void main() {
 
     test('When lowest value 0x00 is decoded then it returns 0', () {
       final codec = Codec<int>(registry: registry).fetchTypeCodec('u8_key');
-      final u8Value = codec.decode(Input('0x00'));
+      final u8Value = codec.decode(DefaultInput.fromHex('0x00'));
       expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
       final codec = Codec<int>(registry: registry).fetchTypeCodec('u8_key');
-      final u8Value = codec.decode(Input('0xff'));
+      final u8Value = codec.decode(DefaultInput.fromHex('0xff'));
       expect(u8Value, equals(255));
     });
 
@@ -118,12 +118,12 @@ void main() {
   /// Direct test for U8
   group('U8 Direct Test', () {
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final u8Value = U8.decodeFromInput(Input('0x00'));
+      final u8Value = U8.decodeFromInput(DefaultInput.fromHex('0x00'));
       expect(u8Value, equals(0));
     });
 
     test('When highest value 0xff is decoded then it returns 255', () {
-      final u8Value = U8.decodeFromInput(Input('0xff'));
+      final u8Value = U8.decodeFromInput(DefaultInput.fromHex('0xff'));
       expect(u8Value, equals(255));
     });
 

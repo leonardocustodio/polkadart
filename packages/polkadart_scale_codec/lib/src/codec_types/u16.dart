@@ -18,14 +18,14 @@ class U16 extends Uint<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('U16');
-  /// final value = codec.decode(Input('0x0000'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x0000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('U16');
-  /// final value = codec.decode(Input('0xffff'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xffff'));
   /// print(value); // 65535
   /// ```
   @override
@@ -38,13 +38,13 @@ class U16 extends Uint<int> {
   ///
   /// Example:
   /// ```dart
-  /// final value = U16.decodeFromInput(Input('0x0000'));
+  /// final value = U16.decodeFromInput(DefaultInput.fromHex('0x0000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = U16.decodeFromInput(Input('0xffff'));
+  /// final value = U16.decodeFromInput(DefaultInput.fromHex('0xffff'));
   /// print(value); // 65535
   /// ```
   static int decodeFromInput(Input input) {

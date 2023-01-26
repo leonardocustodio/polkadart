@@ -8,8 +8,8 @@ void main() {
         'When lowest value 0x00000000000000000000000000000000 is decoded then it returns 0',
         () {
       final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u128');
-      final BigInt u128Value =
-          codec.decode(Input('0x00000000000000000000000000000000'));
+      final BigInt u128Value = codec
+          .decode(DefaultInput.fromHex('0x00000000000000000000000000000000'));
       expect(u128Value.toString(), equals('0'));
     });
 
@@ -17,8 +17,8 @@ void main() {
         'When highest value 0xffffffffffffffffffffffffffffffff is decoded then it returns 340282366920938463463374607431768211455',
         () {
       final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u128');
-      final BigInt u128Value =
-          codec.decode(Input('0xffffffffffffffffffffffffffffffff'));
+      final BigInt u128Value = codec
+          .decode(DefaultInput.fromHex('0xffffffffffffffffffffffffffffffff'));
       expect(u128Value.toString(),
           equals('340282366920938463463374607431768211455'));
     });
@@ -80,8 +80,8 @@ void main() {
       final codec = Codec<BigInt>(registry: registry).fetchTypeCodec(
         'u128_key',
       );
-      final BigInt u128Value =
-          codec.decode(Input('0x00000000000000000000000000000000'));
+      final BigInt u128Value = codec
+          .decode(DefaultInput.fromHex('0x00000000000000000000000000000000'));
       expect(u128Value.toString(), equals('0'));
     });
 
@@ -101,8 +101,8 @@ void main() {
       final codec = Codec<BigInt>(registry: registry).fetchTypeCodec(
         'u128_key',
       );
-      final BigInt u128Value =
-          codec.decode(Input('0xffffffffffffffffffffffffffffffff'));
+      final BigInt u128Value = codec
+          .decode(DefaultInput.fromHex('0xffffffffffffffffffffffffffffffff'));
       expect(u128Value.toString(),
           equals('340282366920938463463374607431768211455'));
     });
@@ -151,16 +151,16 @@ void main() {
     test(
         'When lowest value 0x00000000000000000000000000000000 is decoded then it returns 0',
         () {
-      final u128Value =
-          U128.decodeFromInput(Input('0x00000000000000000000000000000000'));
+      final u128Value = U128.decodeFromInput(
+          DefaultInput.fromHex('0x00000000000000000000000000000000'));
       expect(u128Value.toString(), equals('0'));
     });
 
     test(
         'When highest value 0xffffffffffffffffffffffffffffffff is decoded then it returns 340282366920938463463374607431768211455',
         () {
-      final u128Value =
-          U128.decodeFromInput(Input('0xffffffffffffffffffffffffffffffff'));
+      final u128Value = U128.decodeFromInput(
+          DefaultInput.fromHex('0xffffffffffffffffffffffffffffffff'));
       expect(u128Value.toString(),
           equals('340282366920938463463374607431768211455'));
     });

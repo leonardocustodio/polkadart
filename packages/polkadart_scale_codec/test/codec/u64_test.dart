@@ -7,7 +7,8 @@ void main() {
     test('When lowest value 0x0000000000000000 is decoded then it returns 0',
         () {
       final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u64');
-      final BigInt u64Value = codec.decode(Input('0x0000000000000000'));
+      final BigInt u64Value =
+          codec.decode(DefaultInput.fromHex('0x0000000000000000'));
       expect(u64Value.toString(), equals('0'));
     });
 
@@ -15,7 +16,8 @@ void main() {
         'When highest value 0xffffffffffffffff is decoded then it returns 18446744073709551615',
         () {
       final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u64');
-      final BigInt u64Value = codec.decode(Input('0xffffffffffffffff'));
+      final BigInt u64Value =
+          codec.decode(DefaultInput.fromHex('0xffffffffffffffff'));
       expect(u64Value.toString(), equals('18446744073709551615'));
     });
   });
@@ -70,7 +72,8 @@ void main() {
 
     test('When 0x0000000000000000 is decoded then it returns 0', () {
       final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u64_key');
-      final BigInt u64Value = codec.decode(Input('0x0000000000000000'));
+      final BigInt u64Value =
+          codec.decode(DefaultInput.fromHex('0x0000000000000000'));
       expect(u64Value.toString(), equals('0'));
     });
 
@@ -85,7 +88,8 @@ void main() {
         'When 0xffffffffffffffff is decoded then it returns 18446744073709551615',
         () {
       final codec = Codec<BigInt>(registry: registry).fetchTypeCodec('u64_key');
-      final BigInt u64Value = codec.decode(Input('0xffffffffffffffff'));
+      final BigInt u64Value =
+          codec.decode(DefaultInput.fromHex('0xffffffffffffffff'));
       expect(u64Value.toString(), equals('18446744073709551615'));
     });
 
@@ -128,14 +132,16 @@ void main() {
   group('U64 Direct Test', () {
     test('When lowest value 0x0000000000000000 is decoded then it returns 0',
         () {
-      final u64Value = U64.decodeFromInput(Input('0x0000000000000000'));
+      final u64Value =
+          U64.decodeFromInput(DefaultInput.fromHex('0x0000000000000000'));
       expect(u64Value.toString(), equals('0'));
     });
 
     test(
         'When highest value 0xffffffffffffffff is decoded then it returns 18446744073709551615',
         () {
-      final u64Value = U64.decodeFromInput(Input('0xffffffffffffffff'));
+      final u64Value =
+          U64.decodeFromInput(DefaultInput.fromHex('0xffffffffffffffff'));
       expect(u64Value.toString(), equals('18446744073709551615'));
     });
     test('When lowest value 0 is encoded then it returns 0x0000000000000000',

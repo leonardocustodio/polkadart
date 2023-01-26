@@ -20,7 +20,7 @@ class Vec extends Codec<List> {
   /// Example:
   /// ```dart
   /// final codec = Codec().fetchTypeCodec('Vec<u8>');
-  /// final value = codec.decode(Input('0x0401020304'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x0401020304'));
   /// final vecValue = codec.decode();
   /// print(vecValue); // [1, 2, 3, 4]
   /// ```

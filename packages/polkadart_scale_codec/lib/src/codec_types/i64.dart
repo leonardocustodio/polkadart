@@ -18,14 +18,14 @@ class I64 extends Codec<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().fetchTypeCodec('I64');
-  /// final value = codec.decode(Input('0x0000000000000080'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x0000000000000080'));
   /// print(value); // -9223372036854775808
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().fetchTypeCodec('I64');
-  /// final value = codec.decode(Input('0xffffffffffffff7f'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xffffffffffffff7f'));
   /// print(value); // 9223372036854775807
   /// ```
   @override
@@ -38,13 +38,13 @@ class I64 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final value = I64.decodeFromInput(Input('0x0000000000000080'));
+  /// final value = I64.decodeFromInput(DefaultInput.fromHex('0x0000000000000080'));
   /// print(value); // -9223372036854775808
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = I64.decodeFromInput(Input('0xffffffffffffff7f'));
+  /// final value = I64.decodeFromInput(DefaultInput.fromHex('0xffffffffffffff7f'));
   /// print(value); // 9223372036854775807
   /// ```
   static BigInt decodeFromInput(Input input) {

@@ -6,14 +6,14 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00000000 is decoded then it returns 0', () {
       final codec = Codec(registry: registry).fetchTypeCodec('u32');
-      final u32Value = codec.decode(Input('0x00000000'));
+      final u32Value = codec.decode(DefaultInput.fromHex('0x00000000'));
       expect(u32Value, equals(0));
     });
 
     test('When highest value 0xffffffff is decoded then it returns 4294967295',
         () {
       final codec = Codec(registry: registry).fetchTypeCodec('u32');
-      final u32Value = codec.decode(Input('0xffffffff'));
+      final u32Value = codec.decode(DefaultInput.fromHex('0xffffffff'));
       expect(u32Value, equals(4294967295));
     });
   });
@@ -64,13 +64,13 @@ void main() {
 
     test('When u32_key is decoded then it returns 0', () {
       final codec = Codec(registry: registry).fetchTypeCodec('u32_key');
-      final u32Value = codec.decode(Input('0x00000000'));
+      final u32Value = codec.decode(DefaultInput.fromHex('0x00000000'));
       expect(u32Value, equals(0));
     });
 
     test('When u32_key is encoded then it returns 0xffffffff', () {
       final codec = Codec<int>(registry: registry).fetchTypeCodec('u32_key');
-      final u32Value = codec.decode(Input('0xffffffff'));
+      final u32Value = codec.decode(DefaultInput.fromHex('0xffffffff'));
       expect(u32Value, equals(4294967295));
     });
 
@@ -106,13 +106,13 @@ void main() {
   // Direct Test cases for U32()
   group('U32 Direct Test', () {
     test('When lowest value 0x00000000 is decoded then it returns 0', () {
-      final u32Value = U32.decodeFromInput(Input('0x00000000'));
+      final u32Value = U32.decodeFromInput(DefaultInput.fromHex('0x00000000'));
       expect(u32Value, equals(0));
     });
 
     test('When highest value 0xffffffff is decoded then it returns 4294967295',
         () {
-      final u32Value = U32.decodeFromInput(Input('0xffffffff'));
+      final u32Value = U32.decodeFromInput(DefaultInput.fromHex('0xffffffff'));
       expect(u32Value, equals(4294967295));
     });
 

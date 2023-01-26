@@ -7,12 +7,12 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When value "0x1054657374" is decoded then it returns "Test"', () {
       final codec = Codec(registry: registry).fetchTypeCodec('str');
-      final strValue = codec.decode(Input('0x1054657374'));
+      final strValue = codec.decode(DefaultInput.fromHex('0x1054657374'));
       expect(strValue, equals('Test'));
     });
     test('When value "0x00" is decoded then it returns empty string', () {
       final codec = Codec(registry: registry).fetchTypeCodec('str');
-      final strValue = codec.decode(Input('0x00'));
+      final strValue = codec.decode(DefaultInput.fromHex('0x00'));
       expect(strValue, equals(''));
     });
   });
@@ -55,12 +55,12 @@ void main() {
 
     test('When value "0x1054657374" is decoded then it returns "Test"', () {
       final codec = Codec(registry: registry).fetchTypeCodec('str_key');
-      final strValue = codec.decode(Input('0x1054657374'));
+      final strValue = codec.decode(DefaultInput.fromHex('0x1054657374'));
       expect(strValue, equals('Test'));
     });
     test('When value "0x00" is decoded then it returns empty string', () {
       final codec = Codec(registry: registry).fetchTypeCodec('str');
-      final strValue = codec.decode(Input('0x00'));
+      final strValue = codec.decode(DefaultInput.fromHex('0x00'));
       expect(strValue, equals(''));
     });
   });
@@ -68,11 +68,12 @@ void main() {
   /// Str static tests
   group('Str Static Decode Test', () {
     test('When value "0x1054657374" is decoded then it returns "Test"', () {
-      final strValue = Str.decodeFromInput(Input('0x1054657374'));
+      final strValue =
+          Str.decodeFromInput(DefaultInput.fromHex('0x1054657374'));
       expect(strValue, equals('Test'));
     });
     test('When value "0x00" is decoded then it returns empty string', () {
-      final strValue = Str.decodeFromInput(Input('0x00'));
+      final strValue = Str.decodeFromInput(DefaultInput.fromHex('0x00'));
       expect(strValue, equals(''));
     });
 

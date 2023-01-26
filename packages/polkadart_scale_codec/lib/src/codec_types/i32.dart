@@ -18,14 +18,14 @@ class I32 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('I32');
-  /// final value = codec.decode(Input('0x00000080'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x00000080'));
   /// print(value); // -2147483648
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('I32');
-  /// final value = codec.decode(Input('0xffffff7f'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xffffff7f'));
   /// print(value); // 2147483647
   /// ```
   @override
@@ -38,13 +38,13 @@ class I32 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final value = I32.decodeFromInput(Input('0x00000080'));
+  /// final value = I32.decodeFromInput(DefaultInput.fromHex('0x00000080'));
   /// print(value); // -2147483648
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = I32.decodeFromInput(Input('0xffffff7f'));
+  /// final value = I32.decodeFromInput(DefaultInput.fromHex('0xffffff7f'));
   /// print(value); // 2147483647
   /// ```
   static int decodeFromInput(Input input) {

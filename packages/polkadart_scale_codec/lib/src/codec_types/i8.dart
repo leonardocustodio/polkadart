@@ -18,14 +18,14 @@ class I8 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('I8');
-  /// final value = codec.decode(Input('0x80'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x80'));
   /// print(value); // -128
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('I8');
-  /// final value = codec.decode(Input('0x7f'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x7f'));
   /// print(value); // 127
   /// ```
   @override
@@ -38,13 +38,13 @@ class I8 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final value = I8.decode(input: Input('0x80'));
+  /// final value = I8.decode(input: DefaultInput.fromHex('0x80'));
   /// print(value); // -128
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = I8.decode(input: Input('0x7f'));
+  /// final value = I8.decode(input: DefaultInput.fromHex('0x7f'));
   /// print(value); // 127
   /// ```
   static int decodeFromInput(Input input) {

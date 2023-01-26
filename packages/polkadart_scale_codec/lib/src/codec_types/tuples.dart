@@ -18,7 +18,7 @@ class Tuples extends Codec<List> {
   /// Example:
   /// ```dart
   /// final codec = Codec().fetchTypeCodec('(Compact<u8>, bool)');
-  /// final value = codec.decode(Input('0x0c01'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x0c01'));
   /// print(value); // [3, true]
   /// ```
   @override

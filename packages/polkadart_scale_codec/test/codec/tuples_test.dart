@@ -97,7 +97,7 @@ void main() {
 
       final codec = Codec().fetchTypeCodec('(Compact<u8>, bool)');
 
-      expect(codec.decode(Input(value)), expectedResult);
+      expect(codec.decode(DefaultInput.fromHex(value)), expectedResult);
     });
 
     test(
@@ -108,7 +108,7 @@ void main() {
 
       final codec = Codec().fetchTypeCodec('(String, u8)');
 
-      expect(codec.decode(Input(value)), expectedResult);
+      expect(codec.decode(DefaultInput.fromHex(value)), expectedResult);
     });
 
     test(
@@ -123,7 +123,7 @@ void main() {
 
       final codec = Codec().fetchTypeCodec('(Vec<String>, Vec<u8>)');
 
-      expect(codec.decode(Input(value)), expectedResult);
+      expect(codec.decode(DefaultInput.fromHex(value)), expectedResult);
     });
 
     test('Given an empty encoded string it should throw AssertionException',
@@ -133,7 +133,7 @@ void main() {
       final codec = Codec().fetchTypeCodec('(Compact<u8>, bool)');
 
       expect(
-        () => codec.decode(Input(value)),
+        () => codec.decode(DefaultInput.fromHex(value)),
         throwsA(isA<EOFException>()),
       );
     });
@@ -244,7 +244,7 @@ void main() {
 
         final codec = Codec(registry: registry).fetchTypeCodec('a');
 
-        expect(codec.decode(Input(value)), expectedResult);
+        expect(codec.decode(DefaultInput.fromHex(value)), expectedResult);
       });
 
       test(
@@ -255,7 +255,7 @@ void main() {
 
         final codec = Codec(registry: registry).fetchTypeCodec('b');
 
-        expect(codec.decode(Input(value)), expectedResult);
+        expect(codec.decode(DefaultInput.fromHex(value)), expectedResult);
       });
 
       test(
@@ -270,7 +270,7 @@ void main() {
 
         final codec = Codec(registry: registry).fetchTypeCodec('c');
 
-        expect(codec.decode(Input(value)), expectedResult);
+        expect(codec.decode(DefaultInput.fromHex(value)), expectedResult);
       });
 
       test('Given an empty encoded string it should throw AssertionException',
@@ -280,7 +280,7 @@ void main() {
         final codec = Codec(registry: registry).fetchTypeCodec('a');
 
         expect(
-          () => codec.decode(Input(value)),
+          () => codec.decode(DefaultInput.fromHex(value)),
           throwsA(isA<EOFException>()),
         );
       });

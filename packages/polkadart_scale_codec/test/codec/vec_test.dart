@@ -6,7 +6,7 @@ void main() {
     test('When value 0x041001020304 is decoded then it returns [[1, 2, 3, 4]]',
         () {
       final codec = Codec().fetchTypeCodec('Vec<Vec<u8>>');
-      final compactValue = codec.decode(Input('0x041001020304'));
+      final compactValue = codec.decode(DefaultInput.fromHex('0x041001020304'));
       expect(
           compactValue,
           equals([
@@ -18,7 +18,8 @@ void main() {
         'When value 0x0810010203041005060708 is decoded then it returns [[1, 2, 3, 4], [5, 6, 7, 8]]',
         () {
       final codec = Codec().fetchTypeCodec('Vec<Vec<u8>>');
-      final compactValue = codec.decode(Input('0x0810010203041005060708'));
+      final compactValue =
+          codec.decode(DefaultInput.fromHex('0x0810010203041005060708'));
       expect(
           compactValue,
           equals([
@@ -32,7 +33,8 @@ void main() {
         'When value 0x0810010001000c010000 is decoded then it returns [[true, false, true, false], [true, false, false]]',
         () {
       final codec = Codec().fetchTypeCodec('Vec<Vec<bool>>');
-      final compactValue = codec.decode(Input('0x0810010001000c010000'));
+      final compactValue =
+          codec.decode(DefaultInput.fromHex('0x0810010001000c010000'));
       expect(
           compactValue,
           equals([
@@ -106,7 +108,7 @@ void main() {
         'When Vector with empty subtype is decoded then it throws an SubtypeNotFoundException',
         () {
       final codec = Codec().fetchTypeCodec('Vec');
-      expect(() => codec.decode(Input('0x041001020304')),
+      expect(() => codec.decode(DefaultInput.fromHex('0x041001020304')),
           throwsA(isA<SubtypeNotFoundException>()));
     });
   });
@@ -124,7 +126,7 @@ void main() {
     test('When value 0x041001020304 is decoded then it returns [[1, 2, 3, 4]]',
         () {
       final codec = Codec(registry: registry).fetchTypeCodec('Vec_key');
-      final compactValue = codec.decode(Input('0x041001020304'));
+      final compactValue = codec.decode(DefaultInput.fromHex('0x041001020304'));
       expect(
           compactValue,
           equals([
@@ -136,7 +138,8 @@ void main() {
         'When value 0x0810010203041005060708 is decoded then it returns [[1, 2, 3, 4], [5, 6, 7, 8]]',
         () {
       final codec = Codec(registry: registry).fetchTypeCodec('Vec_key');
-      final compactValue = codec.decode(Input('0x0810010203041005060708'));
+      final compactValue =
+          codec.decode(DefaultInput.fromHex('0x0810010203041005060708'));
       expect(
           compactValue,
           equals([
@@ -147,7 +150,7 @@ void main() {
 
     test('When value 0x1001020304 is decoded then it returns [1, 2, 3, 4]', () {
       final codec = Codec(registry: registry).fetchTypeCodec('A');
-      final compactValue = codec.decode(Input('0x1001020304'));
+      final compactValue = codec.decode(DefaultInput.fromHex('0x1001020304'));
       expect(compactValue, equals([1, 2, 3, 4]));
     });
 
@@ -179,7 +182,7 @@ void main() {
         () {
       final codec =
           Codec(registry: registry).fetchTypeCodec('Vec_Without_Subtype');
-      expect(() => codec.decode(Input('0x041001020304')),
+      expect(() => codec.decode(DefaultInput.fromHex('0x041001020304')),
           throwsA(isA<SubtypeNotFoundException>()));
     });
   });

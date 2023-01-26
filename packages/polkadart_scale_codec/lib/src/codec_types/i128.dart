@@ -18,14 +18,14 @@ class I128 extends Codec<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().fetchTypeCodec('I128');
-  /// final value = codec.decode(Input('0x00000000000000000000000000000080'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x00000000000000000000000000000080'));
   /// print(value); // -170141183460469231731687303715884105728
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().fetchTypeCodec('I128');
-  /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffff7f'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xffffffffffffffffffffffffffffff7f'));
   /// print(value); // 170141183460469231731687303715884105727
   /// ```
   @override
@@ -38,13 +38,13 @@ class I128 extends Codec<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final value = I128.decodeFromInput(Input('0x00000000000000000000000000000080'));
+  /// final value = I128.decodeFromInput(DefaultInput.fromHex('0x00000000000000000000000000000080'));
   /// print(value); // -170141183460469231731687303715884105728
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = I128.decodeFromInput(Input('0xffffffffffffffffffffffffffffff7f'));
+  /// final value = I128.decodeFromInput(DefaultInput.fromHex('0xffffffffffffffffffffffffffffff7f'));
   /// print(value); // 170141183460469231731687303715884105727
   /// ```
   static BigInt decodeFromInput(Input input) {

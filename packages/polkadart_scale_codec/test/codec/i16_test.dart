@@ -6,13 +6,13 @@ void main() {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x8000 is decoded then it returns -32768', () {
       final codec = Codec(registry: registry).fetchTypeCodec('i16');
-      final i16Value = codec.decode(Input('0x0080'));
+      final i16Value = codec.decode(DefaultInput.fromHex('0x0080'));
       expect(i16Value, equals(-32768));
     });
 
     test('When highest value 0xff7f is decoded then it returns 32767', () {
       final codec = Codec(registry: registry).fetchTypeCodec('i16');
-      final i16Value = codec.decode(Input('0xff7f'));
+      final i16Value = codec.decode(DefaultInput.fromHex('0xff7f'));
       expect(i16Value, equals(32767));
     });
   });
@@ -62,13 +62,13 @@ void main() {
 
     test('When lowest value 0x8000 is decoded then it returns -32768', () {
       final codec = Codec(registry: registry).fetchTypeCodec('i16');
-      final i16Value = codec.decode(Input('0x0080'));
+      final i16Value = codec.decode(DefaultInput.fromHex('0x0080'));
       expect(i16Value, equals(-32768));
     });
 
     test('When highest value 0xff7f is decoded then it returns 32767', () {
       final codec = Codec(registry: registry).fetchTypeCodec('i16');
-      final i16Value = codec.decode(Input('0xff7f'));
+      final i16Value = codec.decode(DefaultInput.fromHex('0xff7f'));
       expect(i16Value, equals(32767));
     });
 
@@ -104,12 +104,12 @@ void main() {
   // I16() direct test cases without type registry
   group('I16 Direct Test', () {
     test('When lowest value 0x8000 is decoded then it returns -32768', () {
-      final i16Value = I16.decodeFromInput(Input('0x0080'));
+      final i16Value = I16.decodeFromInput(DefaultInput.fromHex('0x0080'));
       expect(i16Value, equals(-32768));
     });
 
     test('When highest value 0xff7f is decoded then it returns 32767', () {
-      final i16Value = I16.decodeFromInput(Input('0xff7f'));
+      final i16Value = I16.decodeFromInput(DefaultInput.fromHex('0xff7f'));
       expect(i16Value, equals(32767));
     });
 

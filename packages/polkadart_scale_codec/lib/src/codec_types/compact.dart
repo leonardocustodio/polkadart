@@ -20,14 +20,14 @@ class Compact<T extends Uint> extends Codec<dynamic> {
   /// Example:
   /// ```dart
   /// final codec = Codec().fetchTypeCodec('Compact');
-  /// final value = codec.decode(Input('0x00'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x00'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec().fetchTypeCodec('Compact');
-  /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
   /// print(value); // 115792089237316195423570985008687907853269984665640564039457584007913129639935
   /// ```
   @override
@@ -42,13 +42,13 @@ class Compact<T extends Uint> extends Codec<dynamic> {
   ///
   /// Example:
   /// ```dart
-  /// final value = Compact.decodeFromInput(Input('0x00'));
+  /// final value = Compact.decodeFromInput(DefaultInput.fromHex('0x00'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = Compact.decodeFromInput(Input('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
+  /// final value = Compact.decodeFromInput(DefaultInput.fromHex('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'));
   /// print(value); // 115792089237316195423570985008687907853269984665640564039457584007913129639935
   /// ```
   static dynamic decodeFromInput(Input input) {

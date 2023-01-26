@@ -18,14 +18,14 @@ class U128 extends Uint<BigInt> {
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().fetchTypeCodec('U128');
-  /// final value = codec.decode(Input('0x00000000000000000000000000000000'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x00000000000000000000000000000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<BigInt>().fetchTypeCodec('U128');
-  /// final value = codec.decode(Input('0xffffffffffffffffffffffffffffffff'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xffffffffffffffffffffffffffffffff'));
   /// print(value); // 340282366920938463463374607431768211455
   /// ```
   @override
@@ -38,13 +38,13 @@ class U128 extends Uint<BigInt> {
   ///
   /// Example:
   /// ```dart
-  /// final value = U128.decodeFromInput(Input('0x00000000000000000000000000000000'));
+  /// final value = U128.decodeFromInput(DefaultInput.fromHex('0x00000000000000000000000000000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = U128.decodeFromInput(Input('0xffffffffffffffffffffffffffffffff'));
+  /// final value = U128.decodeFromInput(DefaultInput.fromHex('0xffffffffffffffffffffffffffffffff'));
   /// print(value); // 340282366920938463463374607431768211455
   /// ```
   static BigInt decodeFromInput(Input input) {

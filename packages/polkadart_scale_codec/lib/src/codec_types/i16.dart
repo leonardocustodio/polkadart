@@ -18,14 +18,14 @@ class I16 extends Codec<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('I16');
-  /// final value = codec.decode(Input('0x0080'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x0080'));
   /// print(value); // -32768
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('I16');
-  /// final value = codec.decode(Input('0xff7f'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xff7f'));
   /// print(value); // 32767
   /// ```
   @override
@@ -38,13 +38,13 @@ class I16 extends Codec<int> {
   ///
   /// Example:
   /// ```dart
-  /// final value = I16.decodeFromInput(input: Input('0x0080'));
+  /// final value = I16.decodeFromInput(input: DefaultInput.fromHex('0x0080'));
   /// print(value); // -32768
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = I16.decodeFromInput(input: Input('0xff7f'));
+  /// final value = I16.decodeFromInput(input: DefaultInput.fromHex('0xff7f'));
   /// print(value); // 32767
   /// ```
   static int decodeFromInput(Input input) {

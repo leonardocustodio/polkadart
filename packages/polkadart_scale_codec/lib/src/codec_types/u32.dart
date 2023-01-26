@@ -18,14 +18,14 @@ class U32 extends Uint<int> {
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('U32');
-  /// final value = codec.decode(Input('0x00000000'));
+  /// final value = codec.decode(DefaultInput.fromHex('0x00000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
   /// final codec = Codec<int>().fetchTypeCodec('U32');
-  /// final value = codec.decode(Input('0xffffffff'));
+  /// final value = codec.decode(DefaultInput.fromHex('0xffffffff'));
   /// print(value); // 4294967295
   /// ```
   @override
@@ -38,13 +38,13 @@ class U32 extends Uint<int> {
   ///
   /// Example:
   /// ```dart
-  /// final value = U32.decodeFromInput(Input('0x00000000'));
+  /// final value = U32.decodeFromInput(DefaultInput.fromHex('0x00000000'));
   /// print(value); // 0
   /// ```
   ///
   /// Example:
   /// ```dart
-  /// final value = U32.decodeFromInput(Input('0xffffffff'));
+  /// final value = U32.decodeFromInput(DefaultInput.fromHex('0xffffffff'));
   /// print(value); // 4294967295
   /// ```
   static int decodeFromInput(Input input) {
