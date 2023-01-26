@@ -8,11 +8,9 @@ class BoolCodec extends Codec<bool> {
   BoolCodec._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of BoolCodec
+  /// [static] returns a new instance of BoolCodec
   @override
-  BoolCodec copyWith(Codec codec) {
-    return copyProperties(codec, BoolCodec._()) as BoolCodec;
-  }
+  BoolCodec freshInstance() => BoolCodec._();
 
   ///
   /// Decodes the value from the Codec's input

@@ -1,6 +1,8 @@
 library codec_types;
 
 import 'dart:convert';
+import 'dart:core' as core;
+import 'dart:core';
 
 import 'package:polkadart_scale_codec/src/core/core.dart';
 import 'package:polkadart_scale_codec/src/utils/utils.dart';
@@ -24,3 +26,4 @@ part 'uint.dart';
 part 'vec.dart';
 part 'str.dart';
 part 'tuples.dart';
+part 'option.dart';

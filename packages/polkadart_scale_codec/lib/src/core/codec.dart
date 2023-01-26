@@ -1,11 +1,11 @@
 part of core;
 
-class Codec<T> implements CodecInterface<T> {
+class Codec<T> extends CodecInterface<T> {
   /// TypeName for the subType
   ///
   /// It is used to precess the subType of the followed types in metadata and
   /// helps as a guided route in decoding and encoding the types following the type index from the metadata registry.
-  String subType = '';
+  Codec? subType;
 
   ///
   /// Current TypeName
@@ -37,8 +37,47 @@ class Codec<T> implements CodecInterface<T> {
 
   ///
   /// Constructor to initialize the registry and create Codec instance
-  Codec({Registry? registry}) {
-    this.registry = registry ?? TypeRegistry.createRegistry();
+  Codec({Registry? registry})
+      : registry = registry ?? TypeRegistry.createRegistry();
+
+  @override
+  Codec<T> freshInstance() {
+    throw UnimplementedError();
+  }
+
+  ///
+  /// Cloned the current codec instance
+  dynamic copyWith(
+      {required Codec codec,
+      String? typeString,
+      Codec? subType,
+      int? fixedLength,
+      int? bitLength,
+      List? typeStruct,
+      List? valueList,
+      List? metadata}) {
+    if (typeString != null) {
+      codec.typeString = typeString;
+    }
+    if (subType != null) {
+      codec.subType = subType;
+    }
+    if (fixedLength != null) {
+      codec.fixedLength = fixedLength;
+    }
+    if (bitLength != null) {
+      codec.bitLength = bitLength;
+    }
+    if (typeStruct != null) {
+      codec.typeStruct = typeStruct;
+    }
+    if (valueList != null) {
+      codec.valueList = valueList;
+    }
+    if (metadata != null) {
+      codec.metadata = metadata;
+    }
+    return codec;
   }
 
   /// [Private]
@@ -46,14 +85,14 @@ class Codec<T> implements CodecInterface<T> {
   /// Initialize input, subType and metadata
   void init({
     required Input? input,
-    String subType = '',
+    Codec? subType,
     List? metadata,
   }) {
     if (input != null) {
       this.input = input;
     }
-    if (subType.trim().isNotEmpty) {
-      this.subType = subType.trim();
+    if (subType != null) {
+      this.subType = subType;
     }
     this.metadata = metadata;
   }
@@ -73,10 +112,6 @@ class Codec<T> implements CodecInterface<T> {
         .map((element) => element.trim());
 
     typeStruct.addAll(typeStringList);
-  }
-
-  Codec copyWith(Codec anotherCodec) {
-    throw Exception('CopyWith should be implemented in the derived class.');
   }
 
   ///
@@ -101,9 +136,9 @@ class Codec<T> implements CodecInterface<T> {
     RegExpMatch? match;
 
     if (typeString.endsWith('>')) {
-      final Codec? codec = registry.getCodec(typeString)?.copyWith(this);
+      final Codec? codec = registry.getCodec(typeString)?.freshInstance();
       if (codec != null) {
-        return codec;
+        return codec as Vec;
       }
       match = getVecMatch(typeString);
     }
@@ -114,11 +149,10 @@ class Codec<T> implements CodecInterface<T> {
     ///
     /// but seems match.groupCount returns 2 when there are 3 values in the match
     if (match != null && match.groupCount == 2) {
-      final Codec? codec =
-          registry.getCodec(match[1].toString())?.copyWith(this);
+      final codec = registry.getCodec(match[1].toString())?.freshInstance();
       if (codec != null) {
-        codec.subType = match[2].toString();
-        return codec;
+        return copyWith(
+            codec: codec, subType: _fetchCodec(match[2].toString()));
       }
     } else {
       final Codec? codec = registry.getCodec(typeString);
@@ -128,19 +162,17 @@ class Codec<T> implements CodecInterface<T> {
     }
 
     if (typeString.startsWith('(') && typeString.endsWith(')')) {
-      final Codec codec = registry.getCodec('Tuples')!.copyWith(this);
-      codec.typeString = typeString;
-      codec.buildMapping();
-      return codec;
+      return _processTuple(typeString);
     }
 
     if (typeString.startsWith('[') && typeString.endsWith(']')) {
       final slice = typeString.substring(1, typeString.length - 1).split(';');
       if (slice.length == 2) {
-        final subType = slice[0].trim();
-        final Codec codec = (subType.toLowerCase() == 'u8'
-            ? registry.getCodec('VecU8Fixed')
-            : registry.getCodec('FixedArray'))!;
+        final subType = _fetchCodec(slice[0].trim());
+        final Codec codec = (subType is U8
+                ? registry.getCodec('VecU8Fixed')
+                : registry.getCodec('FixedArray'))!
+            .freshInstance();
         codec.subType = subType;
         codec.fixedLength = int.parse(slice[1]);
         return codec;
@@ -148,6 +180,13 @@ class Codec<T> implements CodecInterface<T> {
     }
 
     throw UnexpectedCaseException('Unknown codec type "$typeString"');
+  }
+
+  Tuples _processTuple(String typeString) {
+    final codec = registry.getCodec('Tuples')!.freshInstance();
+    codec.typeString = typeString;
+    codec.buildMapping();
+    return codec as Tuples;
   }
 
   String _convertType(String codecTypeName) {

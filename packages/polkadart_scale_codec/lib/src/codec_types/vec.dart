@@ -8,11 +8,9 @@ class Vec extends Codec<List> {
   Vec._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of Vec
+  /// [static] returns a new instance of Vec
   @override
-  Vec copyWith(Codec codec) {
-    return copyProperties(codec, Vec._()) as Vec;
-  }
+  Vec freshInstance() => Vec._();
 
   ///
   /// Decodes the value from the Codec's input
@@ -28,16 +26,15 @@ class Vec extends Codec<List> {
   /// ```
   @override
   List decode(Input input) {
-    if (subType.trim().isEmpty) {
+    if (subType == null) {
       throw SubtypeNotFoundException();
     }
 
     final vecLength = Compact.decodeFromInput(input);
 
     final result = [];
-    final codec = fetchTypeCodec(subType);
     for (var i = 0; i < vecLength; i++) {
-      final value = codec.decode(input);
+      final value = subType!.decode(input);
       result.add(value);
     }
 
@@ -56,15 +53,14 @@ class Vec extends Codec<List> {
   /// ```
   @override
   void encode(Encoder encoder, List values) {
-    if (subType.trim().isEmpty) {
+    if (subType == null) {
       throw SubtypeNotFoundException();
     }
 
     Compact.encodeToEncoder(encoder, values.length);
 
-    final codec = fetchTypeCodec(subType);
     for (var value in values) {
-      codec.encode(encoder, value);
+      subType!.encode(encoder, value);
     }
   }
 }

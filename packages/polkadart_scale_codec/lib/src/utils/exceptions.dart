@@ -1,6 +1,28 @@
 part of utils;
 
 ///
+/// InvalidOptionException
+class InvalidOptionException implements Exception {
+  const InvalidOptionException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+///
+/// InvalidOptionByteException
+class InvalidOptionByteException implements Exception {
+  const InvalidOptionByteException(this.byte);
+
+  final int byte;
+
+  @override
+  String toString() => 'Invalid Option byte: $byte';
+}
+
+///
 /// InvalidTupleException
 class InvalidTupleException implements Exception {
   const InvalidTupleException(this.message);

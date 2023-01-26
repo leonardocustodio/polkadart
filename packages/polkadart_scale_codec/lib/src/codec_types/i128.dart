@@ -8,11 +8,9 @@ class I128 extends Codec<BigInt> {
   I128._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of I128
+  /// [static] returns a new instance of I128
   @override
-  I128 copyWith(Codec codec) {
-    return copyProperties(codec, I128._()) as I128;
-  }
+  I128 freshInstance() => I128._();
 
   ///
   /// Decode a signed 128 bit integer from the input

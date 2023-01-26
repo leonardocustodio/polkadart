@@ -8,11 +8,9 @@ class Compact<T extends Uint> extends Codec<dynamic> {
   Compact._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of Compact
+  /// [static] returns a new instance of Compact
   @override
-  Compact copyWith(Codec codec) {
-    return copyProperties(codec, Compact._()) as Compact;
-  }
+  Compact freshInstance() => Compact._();
 
   ///
   /// Decodes the value from the Codec's input

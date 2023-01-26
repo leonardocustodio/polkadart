@@ -8,11 +8,9 @@ class Str extends Codec<String> {
   Str._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of Str
+  /// [static] returns a new instance of Str
   @override
-  Str copyWith(Codec codec) {
-    return copyProperties(codec, Str._()) as Str;
-  }
+  Str freshInstance() => Str._();
 
   ///
   /// Decodes the value from the Codec's input

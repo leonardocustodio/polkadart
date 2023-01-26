@@ -8,11 +8,9 @@ class U128 extends Uint<BigInt> {
   U128._() : super._();
 
   ///
-  /// [static] Create a properties-copied instance of U128
+  /// [static] returns a new instance of U128
   @override
-  U128 copyWith(Codec codec) {
-    return copyProperties(codec, U128._()) as U128;
-  }
+  U128 freshInstance() => U128._();
 
   ///
   /// Decode a unsigned 128 bit integer from the input

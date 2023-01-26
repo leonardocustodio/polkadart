@@ -8,11 +8,9 @@ class I8 extends Codec<int> {
   I8._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of I8
+  /// [static] returns a new instance of I8
   @override
-  I8 copyWith(Codec codec) {
-    return copyProperties(codec, I8._()) as I8;
-  }
+  I8 freshInstance() => I8._();
 
   ///
   /// Decode a signed 8 bit integer from the input

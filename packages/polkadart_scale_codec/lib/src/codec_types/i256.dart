@@ -8,11 +8,9 @@ class I256 extends Codec<BigInt> {
   I256._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of I256
+  /// [static] returns a new instance of I256
   @override
-  I256 copyWith(Codec codec) {
-    return copyProperties(codec, I256._()) as I256;
-  }
+  I256 freshInstance() => I256._();
 
   ///
   /// Decode a signed 256 bit integer from the input

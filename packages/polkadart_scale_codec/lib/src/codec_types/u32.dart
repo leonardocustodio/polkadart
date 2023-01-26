@@ -8,11 +8,9 @@ class U32 extends Uint<int> {
   U32._() : super._();
 
   ///
-  /// [static] Create a properties-copied instance of U32
+  /// [static] returns a new instance of U32
   @override
-  U32 copyWith(Codec codec) {
-    return copyProperties(codec, U32._()) as U32;
-  }
+  U32 freshInstance() => U32._();
 
   ///
   /// Decode a unsigned 32 bit integer from the input

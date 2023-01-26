@@ -11,7 +11,7 @@ void assertionCheck(bool value, [String? msg]) {
 
 ///
 /// Copies the properties of [from] to [to]
-Codec copyProperties(Codec from, Codec to) {
+/* Codec copyProperties(Codec from, Codec to) {
   to.bitLength = from.bitLength;
   to.fixedLength = from.fixedLength;
   to.metadata = from.metadata;
@@ -22,3 +22,4 @@ Codec copyProperties(Codec from, Codec to) {
   to.valueList = from.valueList;
   return to;
 }
+ */

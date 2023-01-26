@@ -8,11 +8,9 @@ class I16 extends Codec<int> {
   I16._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of I16
+  /// [static] returns a new instance of I16
   @override
-  I16 copyWith(Codec codec) {
-    return copyProperties(codec, I16._()) as I16;
-  }
+  I16 freshInstance() => I16._();
 
   ///
   /// Decode a signed 16 bit integer from the input

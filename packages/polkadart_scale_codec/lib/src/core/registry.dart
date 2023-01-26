@@ -20,8 +20,7 @@ class Registry {
   ///
   /// Get a codec from the registry
   Codec? getCodec(String codecName) {
-    final codec = _codecs[codecName.toLowerCase()];
-    return codec?.copyWith(codec);
+    return _codecs[codecName.toLowerCase()];
   }
 
   ///
@@ -73,17 +72,32 @@ class Registry {
             switch (match[1].toString()) {
               // vec array
               case 'Vec':
+                final codec = getCodec(match[1].toString())!.freshInstance();
+                codec.subType = getCodec(match[2].toString());
+                codec.typeString = value;
+                addCodec(key, codec as Vec);
+                break;
               // option
               case 'Option':
+                final codec = getCodec(match[1].toString())!.freshInstance();
+                codec.subType = getCodec(match[2].toString());
+                codec.typeString = value;
+                addCodec(key, codec as Option);
+                break;
               // compact
               case 'Compact':
+                final Codec codec = getCodec(match[1].toString())!.freshInstance();
+                codec.subType = getCodec(match[2].toString());
+                codec.typeString = value;
+                addCodec(key, codec as Compact);
+                break;
               // BTreeMap
-              case 'BTreeMap':
+              /*  case 'BTreeMap':
                 final Codec codec = getCodec(match[1].toString())!;
-                codec.subType = match[2].toString();
+                codec.subType = getCodec(match[2].toString());
                 codec.typeString = value;
                 addCodec(key, codec);
-                break;
+                break; */
             }
             continue;
           }
@@ -92,7 +106,7 @@ class Registry {
         //
         // Tuple
         if (value.startsWith('(') && value.endsWith(')')) {
-          final Codec codec = getCodec('Tuples')!;
+          final Codec codec = getCodec('Tuples')!.freshInstance() as Tuples;
           codec.typeString = value;
           codec.buildMapping();
           addCodec(key, codec);
@@ -128,10 +142,9 @@ class Registry {
   void _initFixedArray(String key, String value) {
     final slicedList = value.substring(1, value.length - 2).split(';');
     if (slicedList.length == 2) {
-      final String subType = slicedList[0].trim();
-      final Codec codec = subType.toLowerCase() == 'u8'
-          ? getCodec('VecU8Fixed')!
-          : getCodec('FixedArray')!;
+      final subType = getCodec(slicedList[0].trim());
+      final codec =
+          subType is U8 ? getCodec('VecU8Fixed')! : getCodec('FixedArray')!;
       codec.subType = subType;
       codec.fixedLength = int.parse(slicedList[1]);
       addCodec(key, codec);

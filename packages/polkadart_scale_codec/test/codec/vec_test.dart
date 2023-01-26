@@ -3,10 +3,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('Vec Decode Test', () {
-    final registry = TypeRegistry.createRegistry();
     test('When value 0x041001020304 is decoded then it returns [[1, 2, 3, 4]]',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<u8>>');
+      final codec = Codec().fetchTypeCodec('Vec<Vec<u8>>');
       final compactValue = codec.decode(Input('0x041001020304'));
       expect(
           compactValue,
@@ -18,7 +17,7 @@ void main() {
     test(
         'When value 0x0810010203041005060708 is decoded then it returns [[1, 2, 3, 4], [5, 6, 7, 8]]',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<u8>>');
+      final codec = Codec().fetchTypeCodec('Vec<Vec<u8>>');
       final compactValue = codec.decode(Input('0x0810010203041005060708'));
       expect(
           compactValue,
@@ -32,7 +31,7 @@ void main() {
     test(
         'When value 0x0810010001000c010000 is decoded then it returns [[true, false, true, false], [true, false, false]]',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<bool>>');
+      final codec = Codec().fetchTypeCodec('Vec<Vec<bool>>');
       final compactValue = codec.decode(Input('0x0810010001000c010000'));
       expect(
           compactValue,
@@ -44,11 +43,9 @@ void main() {
   });
 
   group('Vec Encode Test', () {
-    final registry = TypeRegistry.createRegistry();
-
     test('When value [[1, 2, 3, 4]] is encoded then it returns 0x041001020304',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<u8>>');
+      final codec = Codec().fetchTypeCodec('Vec<Vec<u8>>');
       final encoder = HexEncoder();
       codec.encode(encoder, [
         [1, 2, 3, 4]
@@ -59,7 +56,7 @@ void main() {
     test(
         'When value [[1, 2, 3, 4], [5, 6, 7, 8]] is encoded then it returns 0x0810010203041005060708',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<u8>>');
+      final codec = Codec().fetchTypeCodec('Vec<Vec<u8>>');
       final encoder = HexEncoder();
       codec.encode(encoder, [
         [1, 2, 3, 4],
@@ -72,7 +69,7 @@ void main() {
     test(
         'When value [[true, false, true, false], [true, false, false]] is encoded then it returns 0x0810010001000c010000',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec<Vec<bool>>');
+      final codec = Codec().fetchTypeCodec('Vec<Vec<bool>>');
       final encoder = HexEncoder();
       codec.encode(encoder, [
         [true, false, true, false],
@@ -83,12 +80,10 @@ void main() {
   });
 
   group('Exception Test', () {
-    final registry = TypeRegistry.createRegistry();
-
     test(
         'When Vector with empty subtype is encoded then it throws an SubtypeNotFoundException',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec');
+      final codec = Codec().fetchTypeCodec('Vec');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, []),
           throwsA(isA<SubtypeNotFoundException>()));
@@ -96,7 +91,7 @@ void main() {
 
     test('When type other than list is encoded then it throws an exception',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec<u8>');
+      final codec = Codec().fetchTypeCodec('Vec<u8>');
       final encoder = HexEncoder();
 
       /// match exception string
@@ -110,21 +105,21 @@ void main() {
     test(
         'When Vector with empty subtype is decoded then it throws an SubtypeNotFoundException',
         () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Vec');
+      final codec = Codec().fetchTypeCodec('Vec');
       expect(() => codec.decode(Input('0x041001020304')),
           throwsA(isA<SubtypeNotFoundException>()));
     });
   });
 
   group('Custom Json Test', () {
-    final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
-      <String, dynamic>{
-        'A': 'Vec<u8>',
-        'Vec_key': 'Vec<A>',
-        'Vec_Without_Subtype': 'Vec',
-      },
-    );
+    final registry = TypeRegistry.createRegistry()
+      ..addCustomCodec(
+        <String, dynamic>{
+          'A': 'Vec<u8>',
+          'Vec_key': 'Vec<A>',
+          'Vec_Without_Subtype': 'Vec',
+        },
+      );
 
     test('When value 0x041001020304 is decoded then it returns [[1, 2, 3, 4]]',
         () {

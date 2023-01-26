@@ -8,11 +8,9 @@ class Tuples extends Codec<List> {
   Tuples._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of Tuples
+  /// [static] returns a new instance of Tuples
   @override
-  Tuples copyWith(Codec codec) {
-    return copyProperties(codec, Tuples._()) as Tuples;
-  }
+  Tuples freshInstance() => Tuples._();
 
   ///
   /// Decodes the value from the Codec's input

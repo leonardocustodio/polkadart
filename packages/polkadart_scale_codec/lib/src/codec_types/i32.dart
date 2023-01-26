@@ -8,11 +8,9 @@ class I32 extends Codec<int> {
   I32._() : super(registry: Registry());
 
   ///
-  /// [static] Create a properties-copied instance of I32
+  /// [static] returns a new instance of I32
   @override
-  I32 copyWith(Codec codec) {
-    return copyProperties(codec, I32._()) as I32;
-  }
+  I32 freshInstance() => I32._();
 
   ///
   /// Decode a signed 32 bit integer from the input
