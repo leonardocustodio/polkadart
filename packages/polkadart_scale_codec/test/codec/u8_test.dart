@@ -57,7 +57,7 @@ void main() {
 
   group('Custom Json Test', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       <String, dynamic>{
         'u8_key': 'u8',
       },
@@ -94,7 +94,7 @@ void main() {
 
   group('Exception Test for custom json', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       <String, dynamic>{
         'u8_key': 'u8',
       },

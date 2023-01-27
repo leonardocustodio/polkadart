@@ -31,6 +31,27 @@ mixin Input {
   int byte();
 
   ///
+  /// Gives a peek of the byte of current index and does not increments the current index
+  int peekByte() {
+    late int b;
+    if (currentIndex >= buffer.length) {
+      throw EOFException();
+    }
+    b = buffer[currentIndex];
+    return b;
+  }
+
+  /// Gives a peek of the bytes[currentIndex, currentIndex + length]
+  /// Does not increments the current index
+  Uint8List peekBytes(int length) {
+    final end = currentIndex + length;
+    if (buffer.length < end) {
+      throw EOFException();
+    }
+    return buffer.sublist(currentIndex, end);
+  }
+
+  ///
   /// Get the bytes from the current index to the length
   ///
   /// Example:

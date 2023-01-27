@@ -18,12 +18,16 @@ class Codec<T> extends CodecInterface<T> {
   int bitLength = 0;
 
   ///
-  /// Set the typeStruct
-  List typeStruct = [];
+  /// Set the struct keys and codec types
+  Map<String, Codec> typeStruct = {};
+
+  ///
+  /// Set the tuple types
+  List<String> tupleTypes = [];
 
   ///
   /// Set the valueList for vec
-  List valueList = [];
+  List<String> valueList = [];
 
   ///
   /// Registry to hold the mapped keys and Codec
@@ -53,8 +57,9 @@ class Codec<T> extends CodecInterface<T> {
       Codec? subType,
       int? fixedLength,
       int? bitLength,
-      List? typeStruct,
-      List? valueList,
+      Map<String, Codec>? typeStruct,
+      List<String>? tupleTypes,
+      List<String>? valueList,
       List? metadata}) {
     if (typeString != null) {
       codec.typeString = typeString;
@@ -70,6 +75,9 @@ class Codec<T> extends CodecInterface<T> {
     }
     if (typeStruct != null) {
       codec.typeStruct = typeStruct;
+    }
+    if (tupleTypes != null) {
+      codec.tupleTypes = tupleTypes;
     }
     if (valueList != null) {
       codec.valueList = valueList;
@@ -104,14 +112,12 @@ class Codec<T> extends CodecInterface<T> {
   }
 
   void buildMapping() {
-    typeStruct = <String>[];
-
     final typeStringList = typeString
         .substring(1, typeString.length - 1)
         .split(',')
         .map((element) => element.trim());
 
-    typeStruct.addAll(typeStringList);
+    tupleTypes = typeStringList.toList();
   }
 
   ///
@@ -135,10 +141,15 @@ class Codec<T> extends CodecInterface<T> {
     typeString = _convertType(typeString);
     RegExpMatch? match;
 
+    final registryCodec = registry.getCodec(typeString);
+    if (registryCodec != null) {
+      return registryCodec;
+    }
+
     if (typeString.endsWith('>')) {
       final Codec? codec = registry.getCodec(typeString)?.freshInstance();
       if (codec != null) {
-        return codec as Vec;
+        return codec;
       }
       match = getVecMatch(typeString);
     }
@@ -152,7 +163,7 @@ class Codec<T> extends CodecInterface<T> {
       final codec = registry.getCodec(match[1].toString())?.freshInstance();
       if (codec != null) {
         return copyWith(
-            codec: codec, subType: _fetchCodec(match[2].toString()));
+            codec: codec, subType: fetchTypeCodec(match[2].toString()));
       }
     } else {
       final Codec? codec = registry.getCodec(typeString);
@@ -168,7 +179,7 @@ class Codec<T> extends CodecInterface<T> {
     if (typeString.startsWith('[') && typeString.endsWith(']')) {
       final slice = typeString.substring(1, typeString.length - 1).split(';');
       if (slice.length == 2) {
-        final subType = _fetchCodec(slice[0].trim());
+        final subType = fetchTypeCodec(slice[0].trim());
         final Codec codec = (subType is U8
                 ? registry.getCodec('VecU8Fixed')
                 : registry.getCodec('FixedArray'))!
@@ -186,6 +197,9 @@ class Codec<T> extends CodecInterface<T> {
     final codec = registry.getCodec('Tuples')!.freshInstance();
     codec.typeString = typeString;
     codec.buildMapping();
+    for (final type in codec.tupleTypes) {
+      codec.registry.addCodec(type, fetchTypeCodec(type));
+    }
     return codec as Tuples;
   }
 

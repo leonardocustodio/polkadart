@@ -40,6 +40,8 @@ class CodecMapper {
         return Tuples._();
       case 'option':
         return Option._();
+      case 'struct':
+        return Struct._();
     }
     throw UnexpectedCodecException(
         'Expected a supported codec, but got $codecTypeName');

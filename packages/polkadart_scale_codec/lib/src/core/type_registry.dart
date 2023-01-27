@@ -24,6 +24,8 @@ class TypeRegistry {
     'String',
     'Str',
     'Tuples',
+    'Option',
+    'Struct',
   ];
 
   ///

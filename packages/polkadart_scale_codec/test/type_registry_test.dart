@@ -22,7 +22,9 @@ void main() {
         'vec',
         'string',
         'str',
-        'tuples'
+        'tuples',
+        'option',
+        'struct',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();

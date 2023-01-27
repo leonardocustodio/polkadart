@@ -25,7 +25,7 @@ class Tuples extends Codec<List> {
   List decode(Input input) {
     final result = [];
 
-    for (final indexedKey in typeStruct) {
+    for (final indexedKey in tupleTypes) {
       result.add(fetchTypeCodec(indexedKey).decode(input));
     }
     return result;
@@ -43,18 +43,18 @@ class Tuples extends Codec<List> {
   /// ```
   @override
   void encode(Encoder encoder, List values) {
-    if (typeStruct.isEmpty) {
+    if (tupleTypes.isEmpty) {
       throw InvalidTupleException(
           'InvalidTupleException: Atleast 1 subtype is expected for Tuple.');
     }
 
-    if (typeStruct.length != values.length) {
+    if (tupleTypes.length != values.length) {
       throw InvalidTupleException(
           'InvalidTupleException: The number of values does not match the number of types.');
     }
 
     for (var i = 0; i < values.length; i++) {
-      final codec = fetchTypeCodec(typeStruct[i]);
+      final codec = fetchTypeCodec(tupleTypes[i]);
       codec.encode(encoder, values[i]);
     }
   }

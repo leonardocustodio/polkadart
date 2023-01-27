@@ -142,7 +142,7 @@ void main() {
   {
     // Creates the registry for parsing the types
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(<String, dynamic>{
+    registry.registerCustomCodec(<String, dynamic>{
       'a': '(Compact<u8>, bool)',
       'b': '(String, u8)',
       'c': '(Vec<String>, Vec<u8>)',

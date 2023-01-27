@@ -56,7 +56,7 @@ void main() {
 
   group('Custom Json Test', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       <String, dynamic>{
         'u32_key': 'u32',
       },
@@ -88,14 +88,16 @@ void main() {
       expect(encoder.toHex(), equals('0xffffffff'));
     });
 
-    test('When u32_key is encoded then it throws an exception', () {
+    test('When u32_key is encoded with lowest - 1 then it throws an exception',
+        () {
       final codec = Codec<int>(registry: registry).fetchTypeCodec('u32_key');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, -1),
           throwsA(isA<UnexpectedCaseException>()));
     });
 
-    test('When u32_key is encoded then it throws an exception', () {
+    test('When u32_key is encoded with maximum + 1 then it throws an exception',
+        () {
       final codec = Codec<int>(registry: registry).fetchTypeCodec('u32_key');
       final encoder = HexEncoder();
       expect(() => codec.encode(encoder, 4294967296),

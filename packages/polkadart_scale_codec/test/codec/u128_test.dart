@@ -71,7 +71,7 @@ void main() {
 
   group('Custom Type Test', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       <String, dynamic>{'u128_key': 'u128'},
     );
 
@@ -121,7 +121,7 @@ void main() {
 
   group('Custom Type Exception Test', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       <String, dynamic>{'u128_key': 'u128'},
     );
 

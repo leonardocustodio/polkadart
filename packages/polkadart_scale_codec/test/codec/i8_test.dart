@@ -54,7 +54,7 @@ void main() {
 
   group('Custom Json Test', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       <String, dynamic>{
         'i8_key': 'i8',
       },

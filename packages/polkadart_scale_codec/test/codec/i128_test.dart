@@ -76,7 +76,7 @@ void main() {
 
   group('Custom Json Test', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       {'i128_key': 'i128'},
     );
 
@@ -126,7 +126,7 @@ void main() {
 
   group('Custom Json Exception Test', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       {'i128_key': 'i128'},
     );
 

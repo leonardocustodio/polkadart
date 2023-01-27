@@ -1,6 +1,18 @@
 part of utils;
 
 ///
+/// InvalidStructException
+class InvalidStructException implements Exception {
+  const InvalidStructException(this.key);
+
+  final String key;
+
+  @override
+  String toString() =>
+      'InvalidStructException: The key $key is not present in the map.';
+}
+
+///
 /// InvalidOptionException
 class InvalidOptionException implements Exception {
   const InvalidOptionException(this.message);

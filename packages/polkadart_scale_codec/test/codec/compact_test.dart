@@ -5,7 +5,7 @@ void main() {
   group('Compact Decode Test', () {
     final registry = TypeRegistry.createRegistry();
     test('When lowest value 0x00 is decoded then it returns 0', () {
-      final codec = Codec(registry: registry).fetchTypeCodec('Compact');
+      final codec = Codec(registry: registry).fetchTypeCodec('Compact<u8>');
       final compactValue = codec.decode(DefaultInput.fromHex('0x00'));
       expect(compactValue, equals(0));
     });
@@ -64,7 +64,7 @@ void main() {
 
   group('Custom Json Test', () {
     final registry = TypeRegistry.createRegistry();
-    registry.addCustomCodec(
+    registry.registerCustomCodec(
       <String, dynamic>{
         'Compact_key': 'Compact',
       },

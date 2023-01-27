@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:core' as core;
 import 'dart:core';
 
+import 'package:equatable/equatable.dart';
 import 'package:polkadart_scale_codec/src/core/core.dart';
 import 'package:polkadart_scale_codec/src/utils/utils.dart';
 
@@ -27,3 +28,4 @@ part 'vec.dart';
 part 'str.dart';
 part 'tuples.dart';
 part 'option.dart';
+part 'struct.dart';

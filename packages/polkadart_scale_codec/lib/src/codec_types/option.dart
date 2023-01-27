@@ -17,9 +17,10 @@ class Option<T> extends Codec<OptionType> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec().fetchTypeCodec('Option<Option<(Compact<u8>, bool)>>');
-  /// final value = codec.decode(DefaultInput.fromHex('0x0c01'));
-  /// print(value); // [3, true]
+  /// final codec = Codec().fetchTypeCodec('Option<(Compact<u8>, bool)>');
+  /// final value = codec.decode(DefaultInput.fromHex('0x010c01'));
+  /// print(value); // Some([3, true])
+  /// print(value.value); // [3, true]
   /// ```
   @override
   OptionType decode(Input input) {
@@ -29,6 +30,17 @@ class Option<T> extends Codec<OptionType> {
         return None;
       case 1:
         assertionCheck(subType != null, 'SubType is not defined');
+
+        //
+        // A smart way to handle 2 case scenarios:
+        //
+        // Option<Option<bool>> : Some(Some(false)) : '0x010100'
+        // Option<Option<bool>> : Some(None)        : '0x010100'
+        //
+        // See, It simplifies the things....
+        if (subType is Option && input.peekByte() == 0) {
+          return Some(None);
+        }
         return Some(subType!.decode(input));
       default:
         throw InvalidOptionByteException(b);
@@ -40,10 +52,10 @@ class Option<T> extends Codec<OptionType> {
   ///
   /// Example:
   /// ```dart
-  /// final codec = Codec().fetchTypeCodec('(Compact<u8>, bool)');
+  /// final codec = Codec().fetchTypeCodec('Option<(Compact<u8>, bool)>');
   /// final encoder = HexEncoder();
-  /// final value = codec.encode(encoder, [3, true]);
-  /// print(encoder.toHex()); // 0x0c01
+  /// final value = codec.encode(encoder, Some([3, true]));
+  /// print(encoder.toHex()); // 0x010c01
   /// ```
   @override
   void encode(Encoder encoder, OptionType value) {
@@ -64,11 +76,14 @@ class Option<T> extends Codec<OptionType> {
 /// OptionType
 
 ///
-/// Making Option private and hence only `Some()` and `None` will be exposed for usage
-class OptionType<T> {
+/// OptionType is a generic type that can be either Some(T) or None.
+class OptionType<T> extends Equatable {
   final String kind;
   final T? value;
   const OptionType(this.kind, [this.value]);
+
+  @override
+  List<Object?> get props => [kind, value];
 
   @override
   String toString() {
@@ -80,8 +95,11 @@ class OptionType<T> {
 /// Mocking as a None value similar to `rust type`.
 const None = NoneOption();
 
-class NoneOption extends OptionType {
+class NoneOption extends OptionType implements EquatableMixin {
   const NoneOption() : super('None');
+
+  @override
+  List<Object?> get props => ['None'];
 
   @override
   String toString() {
@@ -105,10 +123,13 @@ class NoneOption extends OptionType {
 
 ///
 /// Mocking to get Some wrapped value inside Some(value);
-class Some<T> extends OptionType {
+class Some<T> extends OptionType implements EquatableMixin {
   @override
   final T value;
   const Some(this.value) : super('Some');
+
+  @override
+  List<Object?> get props => ['Some', value];
 
   @override
   core.Type get runtimeType => value.runtimeType;
