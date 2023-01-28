@@ -1,6 +1,17 @@
 part of utils;
 
 ///
+/// InvalidEnumException
+class InvalidEnumException implements Exception {
+  const InvalidEnumException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+///
 /// InvalidResultException
 class InvalidResultException implements Exception {
   const InvalidResultException(this.message);

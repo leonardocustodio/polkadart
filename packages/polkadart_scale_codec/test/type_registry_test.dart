@@ -26,6 +26,7 @@ void main() {
         'option',
         'struct',
         'result',
+        'enum',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();

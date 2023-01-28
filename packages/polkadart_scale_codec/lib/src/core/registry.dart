@@ -170,7 +170,7 @@ class Registry {
 
   Codec _processEnum(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
-    final Codec codec = getCodec('Enum')!;
+    final Enum codec = getCodec('Enum')!.freshInstance() as Enum;
     if (value['_enum'] is Map<String, dynamic>) {
       codec.typeStruct =
           _processStruct(customJson, key, value['_enum']).typeStruct;

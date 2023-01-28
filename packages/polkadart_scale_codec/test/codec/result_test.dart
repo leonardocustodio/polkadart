@@ -2,7 +2,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Vec Encode Test', () {
+  group('Result Encode Test', () {
     test('When value {"Ok": 42} is encoded then it returns 0x002a', () {
       final codec = Codec().fetchTypeCodec('Result<u8, bool>');
       final encoder = HexEncoder();
@@ -49,7 +49,7 @@ void main() {
   });
 
   // Decode Test
-  group('Vec Decode Test', () {
+  group('Result Decode Test', () {
     test('When value 0x002a is decoded then it returns {"Ok": 42}', () {
       final codec = Codec().fetchTypeCodec('Result<u8, bool>');
       final input = DefaultInput.fromHex('0x002a');
@@ -95,7 +95,7 @@ void main() {
           }));
     });
   });
-  group('Vec Registry Encode Test', () {
+  group('Result Registry Encode Test', () {
     final registry = TypeRegistry.createRegistry()
       ..registerCustomCodec({
         'Res': 'Result<A, bool>',
@@ -148,7 +148,7 @@ void main() {
     });
   });
 
-  group('Vec Registry Decode Test', () {
+  group('Result Registry Decode Test', () {
     final registry = TypeRegistry.createRegistry()
       ..registerCustomCodec({
         'Res': 'Result<A, bool>',

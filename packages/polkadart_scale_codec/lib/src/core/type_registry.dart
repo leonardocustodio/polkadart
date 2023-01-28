@@ -27,6 +27,7 @@ class TypeRegistry {
     'Option',
     'Struct',
     'Result',
+    'Enum',
   ];
 
   ///
