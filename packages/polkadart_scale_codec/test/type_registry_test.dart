@@ -25,6 +25,7 @@ void main() {
         'tuples',
         'option',
         'struct',
+        'result',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();

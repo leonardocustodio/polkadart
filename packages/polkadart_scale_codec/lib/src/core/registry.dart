@@ -69,7 +69,8 @@ class Registry {
           final match1 = match[1].toString();
           final match2 = match[2].toString();
           switch (match1) {
-            // vec array
+            case 'Result':
+              return _processResult(customJson, key, value);
             case 'Vec':
             case 'Option':
             case 'Compact':
@@ -176,6 +177,29 @@ class Registry {
     } else {
       codec.valueList = value['_enum'];
     }
+    addCodec(key, codec);
+    return codec;
+  }
+
+  Codec _processResult(
+      Map<String, dynamic> customJson, String key, String value) {
+    final Result codec = getCodec('Result')!.freshInstance() as Result;
+    final match = getResultMatch(value);
+
+    assertionCheck(match != null && match.groupCount >= 3,
+        'Result type should have two types, Result<Ok, Error>. Like: Result<u8, bool>');
+
+    codec.typeString = key;
+
+    final match2 = match![2]!.trim();
+    final match3 = match[3]!.trim();
+
+    codec.typeStruct = {
+      'Ok': getCodec(match2) ??
+          processCodec(customJson, match2, customJson[match2] ?? match2),
+      'Err': getCodec(match3) ??
+          processCodec(customJson, match3, customJson[match3] ?? match3),
+    };
     addCodec(key, codec);
     return codec;
   }

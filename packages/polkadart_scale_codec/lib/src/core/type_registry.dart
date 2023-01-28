@@ -26,6 +26,7 @@ class TypeRegistry {
     'Tuples',
     'Option',
     'Struct',
+    'Result',
   ];
 
   ///

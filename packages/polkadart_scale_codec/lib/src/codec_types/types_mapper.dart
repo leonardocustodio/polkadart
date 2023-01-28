@@ -42,6 +42,10 @@ class CodecMapper {
         return Option._();
       case 'struct':
         return Struct._();
+      case 'result':
+        return Result._();
+      case 'enum':
+        return Enum._();
     }
     throw UnexpectedCodecException(
         'Expected a supported codec, but got $codecTypeName');

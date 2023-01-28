@@ -160,10 +160,17 @@ class Codec<T> extends CodecInterface<T> {
     ///
     /// but seems match.groupCount returns 2 when there are 3 values in the match
     if (match != null && match.groupCount == 2) {
-      final codec = registry.getCodec(match[1].toString())?.freshInstance();
+      // Check if match[1] is 'Result'
+      final match1 = match[1].toString();
+
+      if (match1 == 'Result') {
+        return _processResult(typeString);
+      }
+      final match2 = match[2].toString();
+
+      final codec = registry.getCodec(match1)?.freshInstance();
       if (codec != null) {
-        return copyWith(
-            codec: codec, subType: fetchTypeCodec(match[2].toString()));
+        return copyWith(codec: codec, subType: fetchTypeCodec(match2));
       }
     } else {
       final Codec? codec = registry.getCodec(typeString);
@@ -191,6 +198,27 @@ class Codec<T> extends CodecInterface<T> {
     }
 
     throw UnexpectedCaseException('Unknown codec type "$typeString"');
+  }
+
+  Result _processResult(String key) {
+    final match = getResultMatch(key);
+
+    assertionCheck(match != null,
+        'Result type should be like: Result<u8, bool> or Result<Result<u8, bool>, bool>');
+
+    final Result codec = registry.getCodec('Result')!.freshInstance() as Result;
+
+    assertionCheck(match!.groupCount >= 3,
+        'Result type should have two types, Result<Ok, Error>. Like: Result<u8, bool>');
+
+    codec.typeString = key;
+
+    codec.typeStruct = {
+      'Ok': fetchTypeCodec(match[2]!.trim()),
+      'Err': fetchTypeCodec(match[3]!.trim()),
+    };
+    registry.addCodec(key, codec);
+    return codec;
   }
 
   Tuples _processTuple(String typeString) {

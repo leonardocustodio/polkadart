@@ -29,3 +29,5 @@ part 'str.dart';
 part 'tuples.dart';
 part 'option.dart';
 part 'struct.dart';
+part 'result.dart';
+part 'enum.dart';

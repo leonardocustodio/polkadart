@@ -1,6 +1,17 @@
 part of utils;
 
 ///
+/// InvalidResultException
+class InvalidResultException implements Exception {
+  const InvalidResultException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+///
 /// InvalidStructException
 class InvalidStructException implements Exception {
   const InvalidStructException(this.key);

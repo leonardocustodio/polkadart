@@ -25,3 +25,11 @@ part of utils;
 RegExpMatch? getVecMatch(String typeString) {
   return RegExp(r'^([^<]*)<(.+)>$').firstMatch(typeString);
 }
+
+///
+/// Match the typeString with the regex
+/// Example: 'Result<u8, bool>' -> ['Result<u8, bool>', 'Result', 'u8', 'bool']
+/// Example: 'Result<Result<u8, bool>, bool>' -> ['Result<Result<u8, bool>, bool>', 'Result', 'Result<u8, bool>', 'bool']
+RegExpMatch? getResultMatch(String typeString) {
+  return RegExp(r'^([^<]*)<(.+),(.+)>$').firstMatch(typeString);
+}
