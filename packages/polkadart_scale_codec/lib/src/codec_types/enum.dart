@@ -1,7 +1,7 @@
 part of codec_types;
 
 ///
-/// Enum to encode/decode map/list of values
+/// Enum to encode/decode Enum
 class Enum extends Codec<dynamic> {
   ///
   /// conEnumor
@@ -16,7 +16,43 @@ class Enum extends Codec<dynamic> {
   /// Decodes the value from the Codec's input
   @override
   dynamic decode(Input input) {
-    return '';
+    //
+    // Read the index of the key from the input
+    final int keyIndex = input.byte();
+
+    //
+    // Check if typeStruct is not empty indicating that it is an enum of Complex type
+    if (typeStruct.isNotEmpty) {
+      //
+      // Check if the keyIndex is within the range of the typeStruct
+      assertionCheck(keyIndex < typeStruct.length,
+          'InvalidEnumException: Expected keyIndex to be less than ${typeStruct.length}, but found $keyIndex');
+
+      //
+      // Get the key from the typeStruct
+      final String key = typeStruct.keys.toList()[keyIndex];
+
+      //
+      // Get the codec from the typeStruct
+      final Codec codec = typeStruct[key]!;
+
+      //
+      // Decode the value of the key with the corresponding codec from the typeStruct
+      final dynamic value = codec.decode(input);
+
+      return <String, dynamic>{key: value};
+    } else {
+      //
+      // Check if the keyIndex is within the range of the valueList
+      assertionCheck(keyIndex < valueList.length,
+          'InvalidEnumException: Expected keyIndex to be less than ${valueList.length}, but found $keyIndex');
+
+      //
+      // Get the key from the valueList
+      final String key = valueList[keyIndex];
+
+      return key;
+    }
   }
 
   ///
