@@ -27,6 +27,7 @@ void main() {
         'struct',
         'result',
         'enum',
+        'h256',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();

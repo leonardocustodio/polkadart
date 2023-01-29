@@ -3,6 +3,7 @@ library codec_types;
 import 'dart:convert';
 import 'dart:core' as core;
 import 'dart:core';
+import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:polkadart_scale_codec/src/core/core.dart';
@@ -31,3 +32,4 @@ part 'option.dart';
 part 'struct.dart';
 part 'result.dart';
 part 'enum.dart';
+part 'h256.dart';

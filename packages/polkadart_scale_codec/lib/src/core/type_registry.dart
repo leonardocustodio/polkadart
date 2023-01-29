@@ -28,6 +28,7 @@ class TypeRegistry {
     'Struct',
     'Result',
     'Enum',
+    'H256',
   ];
 
   ///
