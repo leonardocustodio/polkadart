@@ -48,6 +48,8 @@ class CodecMapper {
         return Enum._();
       case 'h256':
         return H256._();
+      case 'btreemap':
+        return BTreeMap._();
     }
     throw UnexpectedCodecException(
         'Expected a supported codec, but got $codecTypeName');

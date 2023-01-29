@@ -29,6 +29,7 @@ class TypeRegistry {
     'Result',
     'Enum',
     'H256',
+    'BTreeMap',
   ];
 
   ///

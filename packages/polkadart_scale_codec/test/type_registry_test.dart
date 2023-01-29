@@ -28,6 +28,7 @@ void main() {
         'result',
         'enum',
         'h256',
+        'btreemap',
       ];
 
       final Registry registry = TypeRegistry.createRegistry();

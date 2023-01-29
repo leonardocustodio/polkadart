@@ -163,8 +163,11 @@ class Codec<T> extends CodecInterface<T> {
       // Check if match[1] is 'Result'
       final match1 = match[1].toString();
 
-      if (match1 == 'Result') {
-        return _processResult(typeString);
+      switch (match1) {
+        case 'Result':
+          return _processResult(typeString);
+        case 'BTreeMap':
+          return _processBTreeMap(typeString);
       }
       final match2 = match[2].toString();
 
@@ -208,7 +211,7 @@ class Codec<T> extends CodecInterface<T> {
 
     final Result codec = registry.getCodec('Result')!.freshInstance() as Result;
 
-    assertionCheck(match!.groupCount >= 3,
+    assertionCheck(match!.groupCount == 3,
         'Result type should have two types, Result<Ok, Error>. Like: Result<u8, bool>');
 
     codec.typeString = key;
@@ -216,6 +219,28 @@ class Codec<T> extends CodecInterface<T> {
     codec.typeStruct = {
       'Ok': fetchTypeCodec(match[2]!.trim()),
       'Err': fetchTypeCodec(match[3]!.trim()),
+    };
+    registry.addCodec(key, codec);
+    return codec;
+  }
+
+  BTreeMap _processBTreeMap(String key) {
+    final match = getResultMatch(key);
+
+    assertionCheck(match != null,
+        'BTreeMap type should be like: BTreeMap<u8, bool> or BTreeMap<BTreeMap<u8, bool>, bool>');
+
+    final BTreeMap codec =
+        registry.getCodec('BTreeMap')!.freshInstance() as BTreeMap;
+
+    assertionCheck(match!.groupCount == 3,
+        'BTreeMap type should have two types, Like: BTreeMap<u8, bool>');
+
+    codec.typeString = key;
+
+    codec.typeStruct = {
+      'key': fetchTypeCodec(match[2]!.trim()),
+      'value': fetchTypeCodec(match[3]!.trim()),
     };
     registry.addCodec(key, codec);
     return codec;

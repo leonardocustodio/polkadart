@@ -1,6 +1,17 @@
 part of utils;
 
 ///
+/// InvalidBTreeMapException
+class InvalidBTreeMapException implements Exception {
+  const InvalidBTreeMapException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+///
 /// InvalidEnumException
 class InvalidEnumException implements Exception {
   const InvalidEnumException(this.message);

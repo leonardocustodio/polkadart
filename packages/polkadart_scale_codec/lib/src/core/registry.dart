@@ -71,6 +71,8 @@ class Registry {
           switch (match1) {
             case 'Result':
               return _processResult(customJson, key, value);
+            case 'BTreeMap':
+              return _processBTreeMap(customJson, key, value);
             case 'Vec':
             case 'Option':
             case 'Compact':
@@ -118,7 +120,7 @@ class Registry {
       if (value.startsWith('[') && value.endsWith(']')) {
         _processFixedArray(key, value);
       }
-      throw Exception('Type not found for $value');
+      throw UnexpectedCaseException('Type not found for $value');
     } else if (value is Map) {
       //
       // enum
@@ -198,6 +200,29 @@ class Registry {
       'Ok': getCodec(match2) ??
           processCodec(customJson, match2, customJson[match2] ?? match2),
       'Err': getCodec(match3) ??
+          processCodec(customJson, match3, customJson[match3] ?? match3),
+    };
+    addCodec(key, codec);
+    return codec;
+  }
+
+  Codec _processBTreeMap(
+      Map<String, dynamic> customJson, String key, String value) {
+    final BTreeMap codec = getCodec('BTreeMap')!.freshInstance() as BTreeMap;
+    final match = getResultMatch(value);
+
+    assertionCheck(match != null && match.groupCount >= 3,
+        'BTreeMap type should have two types, Like: BTreeMap<u8, bool>');
+
+    codec.typeString = key;
+
+    final match2 = match![2]!.trim();
+    final match3 = match[3]!.trim();
+
+    codec.typeStruct = {
+      'key': getCodec(match2) ??
+          processCodec(customJson, match2, customJson[match2] ?? match2),
+      'value': getCodec(match3) ??
           processCodec(customJson, match3, customJson[match3] ?? match3),
     };
     addCodec(key, codec);
