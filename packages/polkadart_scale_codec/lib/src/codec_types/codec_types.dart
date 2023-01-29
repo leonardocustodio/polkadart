@@ -33,3 +33,4 @@ part 'struct.dart';
 part 'result.dart';
 part 'enum.dart';
 part 'h256.dart';
+part 'enum_extensions.dart';
