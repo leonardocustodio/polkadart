@@ -30,6 +30,7 @@ class TypeRegistry {
     'Enum',
     'H256',
     'BTreeMap',
+    'FixedVec',
   ];
 
   ///

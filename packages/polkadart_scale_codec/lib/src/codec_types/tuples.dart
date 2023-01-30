@@ -8,11 +8,6 @@ class Tuples extends Codec<List> {
   Tuples._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of Tuples
-  @override
-  Tuples freshInstance() => Tuples._();
-
-  ///
   /// Decodes the value from the Codec's input
   ///
   /// Example:

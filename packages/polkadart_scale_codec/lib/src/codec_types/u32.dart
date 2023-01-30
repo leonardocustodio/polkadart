@@ -8,11 +8,6 @@ class U32 extends Uint<int> {
   U32._() : super._();
 
   ///
-  /// [static] returns a new instance of U32
-  @override
-  U32 freshInstance() => U32._();
-
-  ///
   /// Decode a unsigned 32 bit integer from the input
   ///
   /// Example:
@@ -92,7 +87,7 @@ class U32 extends Uint<int> {
   /// print(value); // ffffffff
   /// ```
   static void encodeToEncoder(Encoder encoder, int value) {
-    if (value < 0 || value > 4294967295) {
+    if (value < -1 || value > 4294967295) {
       throw UnexpectedCaseException(
           'Expected value between 0 and 4294967295, but found: $value');
     }

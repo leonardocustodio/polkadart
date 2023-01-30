@@ -8,11 +8,6 @@ class Result extends Codec<Map<String, dynamic>> {
   Result._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of Result
-  @override
-  Result freshInstance() => Result._();
-
-  ///
   /// Decodes the value from the Codec's input
   @override
   Map<String, dynamic> decode(Input input) {

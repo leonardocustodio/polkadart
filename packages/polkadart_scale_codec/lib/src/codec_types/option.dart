@@ -8,11 +8,6 @@ class Option<T> extends Codec<OptionType> {
   Option._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of Option
-  @override
-  Option freshInstance() => Option._();
-
-  ///
   /// Decodes the value from the Codec's input
   ///
   /// Example:

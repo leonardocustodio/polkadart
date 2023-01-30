@@ -8,11 +8,6 @@ class Enum extends Codec<dynamic> {
   Enum._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of Enum
-  @override
-  Enum freshInstance() => Enum._();
-
-  ///
   /// Decodes the value from the Codec's input
   @override
   dynamic decode(Input input) {

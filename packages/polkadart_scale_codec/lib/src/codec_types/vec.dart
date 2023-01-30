@@ -8,11 +8,6 @@ class Vec extends Codec<List> {
   Vec._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of Vec
-  @override
-  Vec freshInstance() => Vec._();
-
-  ///
   /// Decodes the value from the Codec's input
   ///
   /// The input is expected to be a Compact<u32> followed by that many instances of the type T.

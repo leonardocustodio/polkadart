@@ -35,3 +35,4 @@ part 'enum.dart';
 part 'h256.dart';
 part 'enum_extensions.dart';
 part 'b_tree_map.dart';
+part 'fixed_vec.dart';

@@ -1,6 +1,17 @@
 part of utils;
 
 ///
+/// FixedVecException
+class FixedVecException implements Exception {
+  const FixedVecException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+///
 /// InvalidBTreeMapException
 class InvalidBTreeMapException implements Exception {
   const InvalidBTreeMapException(this.message);

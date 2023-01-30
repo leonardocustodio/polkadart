@@ -34,14 +34,14 @@ class Registry {
         continue;
       }
 
-      final codec = processCodec(customJson, key, value);
+      final codec = _processCodec(customJson, key, value);
       if (getCodec(key) == null) {
         addCodec(key, codec);
       }
     }
   }
 
-  Codec processCodec(
+  Codec _processCodec(
       Map<String, dynamic> customJson, String key, dynamic value) {
     /// Check if the codec is already in the registry
     final Codec? codec = getCodec(key);
@@ -76,20 +76,20 @@ class Registry {
             case 'Vec':
             case 'Option':
             case 'Compact':
-              final codec = getCodec(match1)!.freshInstance();
+              final codec = getCodec(match1)!;//.freshInstance();
               codec.registry = this;
 
               codec.subType = getCodec(match2);
 
               // If the subType is null, then it is a custom type or a complex type
-              codec.subType ??= processCodec(
+              codec.subType ??= _processCodec(
                   customJson, match2, customJson[match2] ?? match2);
 
               codec.typeString = value;
               addCodec(key, codec);
               return codec;
           }
-          return processCodec(customJson, value, customJson[value]);
+          return _processCodec(customJson, value, customJson[value]);
         }
       }
 
@@ -101,8 +101,8 @@ class Registry {
         codec.buildMapping();
         for (var element in codec.tupleTypes) {
           var subCodecs = getCodec(element);
-          subCodecs ??=
-              processCodec(customJson, element, customJson[element] ?? element);
+          subCodecs ??= _processCodec(
+              customJson, element, customJson[element] ?? element);
           codec.registry.addCodec(element, subCodecs);
         }
         addCodec(key, codec);
@@ -111,7 +111,7 @@ class Registry {
       //
       // Fixed array
       if (value.startsWith('[') && value.endsWith(']')) {
-        _processFixedArray(key, value);
+        _processFixedVec(customJson, key, value);
       }
       throw UnexpectedCaseException('Type not found for $value');
     } else if (value is Map) {
@@ -132,51 +132,86 @@ class Registry {
             customJson, key, value['_struct'] as Map<String, String>);
       }
     }
-    return processCodec(customJson, value, customJson[value]);
+    return _processCodec(customJson, value, customJson[value]);
   }
 
-  Codec _processStruct(
+  Struct _processStruct(
       Map<String, dynamic> customJson, String key, Map<String, String> value) {
     final Struct codec = getCodec('Struct')!.freshInstance() as Struct;
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
       final value = mapEntry.value;
       var subCodec = getCodec(value);
-      subCodec ??= processCodec(customJson, value, customJson[value] ?? value);
+      subCodec ??= _processCodec(customJson, value, customJson[value] ?? value);
       codec.typeStruct[key] = subCodec;
     }
     addCodec(key, codec);
     return codec;
   }
 
-  Codec? _processFixedArray(String key, String value) {
-    final slicedList = value.substring(1, value.length - 2).split(';');
-    if (slicedList.length == 2) {
-      final subType = getCodec(slicedList[0].trim());
-      final codec =
-          (subType is U8 ? getCodec('VecU8Fixed') : getCodec('FixedArray'))!;
-      codec.subType = subType;
-      codec.fixedLength = int.parse(slicedList[1]);
-      addCodec(key, codec);
-      return codec;
-    }
-    return null;
+  FixedVec _processFixedVec(
+      Map<String, dynamic> cusomJson, String key, String value) {
+    final match = getFixedVecMatch(value);
+
+    assertionCheck(
+        match != null, 'Expected fixed array: [Type; length] but got $value');
+
+    assertionCheck(match!.groupCount == 2,
+        'Expected fixed array: [Type; length] but got $value');
+
+    // For knowing why we're checking for groupCount == 2 and accessing [1] and [2] index
+    // Check documentation on utils/regexp.dart -> getFixedArrayMatch(value);
+    final match1 = match[1].toString();
+
+    // Get the subType
+    late Codec? subType;
+
+    subType = getCodec(match1);
+
+    subType ??= _processCodec(cusomJson, match1, cusomJson[match1] ?? match1);
+
+    //
+    // Get the Codec based on the subType
+    final FixedVec codec = getCodec('FixedVec')! as FixedVec;
+
+    //
+    // Get the subType
+    codec.subType = subType;
+
+    //
+    // Get the length of the fixed array
+    final int? length = int.tryParse(match[2].toString());
+
+    assertionCheck(length != null, 'Expected length to be an integer');
+
+    assertionCheck(
+        length! >= 0, 'Expected length to be greater than or equal to 0');
+
+    assertionCheck(
+        length <= 255, 'Expected length to be less than or equal to 256');
+
+    codec.fixedLength = length;
+    addCodec(key, codec);
+    return codec;
   }
 
-  Codec _processEnum(
+  Enum _processEnum(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     final Enum codec = getCodec('Enum')!.freshInstance() as Enum;
     if (value['_enum'] is Map<String, dynamic>) {
       codec.typeStruct =
           _processStruct(customJson, key, value['_enum']).typeStruct;
-    } else {
+    } else if (value['_enum'] is List<String>) {
       codec.valueList = value['_enum'];
+    } else {
+      throw UnexpectedCaseException(
+          'Expected enum to be a map or a list, but found ${value['_enum'].runtimeType}');
     }
     addCodec(key, codec);
     return codec;
   }
 
-  Codec _processResult(
+  Result _processResult(
       Map<String, dynamic> customJson, String key, String value) {
     final Result codec = getCodec('Result')!.freshInstance() as Result;
     final match = getResultMatch(value);
@@ -191,15 +226,15 @@ class Registry {
 
     codec.typeStruct = {
       'Ok': getCodec(match2) ??
-          processCodec(customJson, match2, customJson[match2] ?? match2),
+          _processCodec(customJson, match2, customJson[match2] ?? match2),
       'Err': getCodec(match3) ??
-          processCodec(customJson, match3, customJson[match3] ?? match3),
+          _processCodec(customJson, match3, customJson[match3] ?? match3),
     };
     addCodec(key, codec);
     return codec;
   }
 
-  Codec _processBTreeMap(
+  BTreeMap _processBTreeMap(
       Map<String, dynamic> customJson, String key, String value) {
     final BTreeMap codec = getCodec('BTreeMap')!.freshInstance() as BTreeMap;
     final match = getResultMatch(value);
@@ -214,9 +249,9 @@ class Registry {
 
     codec.typeStruct = {
       'key': getCodec(match2) ??
-          processCodec(customJson, match2, customJson[match2] ?? match2),
+          _processCodec(customJson, match2, customJson[match2] ?? match2),
       'value': getCodec(match3) ??
-          processCodec(customJson, match3, customJson[match3] ?? match3),
+          _processCodec(customJson, match3, customJson[match3] ?? match3),
     };
     addCodec(key, codec);
     return codec;

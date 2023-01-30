@@ -8,11 +8,6 @@ class H256 extends Codec<Uint8List> {
   H256._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of H256
-  @override
-  H256 freshInstance() => H256._();
-
-  ///
   /// Decodes the value from the Codec's input
   @override
   Uint8List decode(Input input) {

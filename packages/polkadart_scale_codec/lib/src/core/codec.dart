@@ -171,7 +171,7 @@ class Codec<T> extends CodecInterface<T> {
       }
       final match2 = match[2].toString();
 
-      final codec = registry.getCodec(match1)?.freshInstance();
+      final codec = registry.getCodec(match1);//?.freshInstance();
       if (codec != null) {
         return copyWith(codec: codec, subType: fetchTypeCodec(match2));
       }
@@ -187,20 +187,52 @@ class Codec<T> extends CodecInterface<T> {
     }
 
     if (typeString.startsWith('[') && typeString.endsWith(']')) {
-      final slice = typeString.substring(1, typeString.length - 1).split(';');
-      if (slice.length == 2) {
-        final subType = fetchTypeCodec(slice[0].trim());
-        final Codec codec = (subType is U8
-                ? registry.getCodec('VecU8Fixed')
-                : registry.getCodec('FixedArray'))!
-            .freshInstance();
-        codec.subType = subType;
-        codec.fixedLength = int.parse(slice[1]);
-        return codec;
-      }
+      return _processFixedVec(typeString);
     }
 
     throw UnexpectedCaseException('Unknown codec type "$typeString"');
+  }
+
+  FixedVec _processFixedVec(String typeString) {
+    final match = getFixedVecMatch(typeString);
+
+    assertionCheck(match != null,
+        'Expected fixed array: [Type; length] but got $typeString');
+
+    assertionCheck(match!.groupCount == 2,
+        'Expected fixed array: [Type; length] but got $typeString');
+
+    // For knowing why we're checking for groupCount == 2 and accessing [1] and [2] index
+    // Check documentation on utils/regexp.dart -> getFixedVecMatch(value);
+    final match1 = match[1].toString();
+
+    // Get the subType
+    late Codec? subType;
+
+    subType = registry.getCodec(match1);
+
+    subType ??= fetchTypeCodec(match1);
+
+    //
+    // Get the Codec based on the subType
+    final FixedVec codec = registry.getCodec('FixedVec')! as FixedVec;
+
+    //
+    // Get the subType
+    codec.subType = subType;
+
+    //
+    // Get the length of the fixed array
+    final int? length = int.tryParse(match[2].toString());
+
+    assertionCheck(length != null, 'Expected length to be an integer');
+
+    assertionCheck(
+        length! >= 0, 'Expected length to be greater than or equal to 0');
+
+    codec.fixedLength = length;
+    registry.addCodec(typeString, codec);
+    return codec;
   }
 
   Result _processResult(String key) {

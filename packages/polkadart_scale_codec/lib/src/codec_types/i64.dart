@@ -8,11 +8,6 @@ class I64 extends Codec<BigInt> {
   I64._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of I64
-  @override
-  I64 freshInstance() => I64._();
-
-  ///
   /// Decode a signed 64 bit integer from the input
   ///
   /// Example:

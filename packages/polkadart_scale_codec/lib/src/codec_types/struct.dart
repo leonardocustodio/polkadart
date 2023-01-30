@@ -8,11 +8,6 @@ class Struct extends Codec<Map<String, dynamic>> {
   Struct._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of Struct
-  @override
-  Struct freshInstance() => Struct._();
-
-  ///
   /// Decodes the value from the Codec's input
   @override
   Map<String, dynamic> decode(Input input) {

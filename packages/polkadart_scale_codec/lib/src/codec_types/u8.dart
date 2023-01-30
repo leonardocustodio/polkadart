@@ -8,11 +8,6 @@ class U8 extends Uint<int> {
   U8._() : super._();
 
   ///
-  /// [static] returns a new instance of U8
-  @override
-  U8 freshInstance() => U8._();
-
-  ///
   /// Decode a unsigned 8 bit integer from the Codec's input
   ///
   /// Example:
@@ -91,7 +86,7 @@ class U8 extends Uint<int> {
   /// print(encoder.toHex()); // 0xff
   /// ```
   static void encodeToEncoder(Encoder encoder, int value) {
-    if (value < 0 || value > 255) {
+    if (value < -1 || value > 255) {
       throw UnexpectedCaseException(
           'Expected value between 0 and 255, but found: $value');
     }

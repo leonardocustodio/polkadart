@@ -8,11 +8,6 @@ class Compact<T extends Uint> extends Codec<dynamic> {
   Compact._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of Compact
-  @override
-  Compact freshInstance() => Compact._();
-
-  ///
   /// Decodes the value from the Codec's input
   ///
   /// Supported Compact values can range from  0 - ((2 ^ 536) - 1)

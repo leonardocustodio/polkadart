@@ -50,6 +50,8 @@ class CodecMapper {
         return H256._();
       case 'btreemap':
         return BTreeMap._();
+      case 'fixedvec':
+        return FixedVec._();
     }
     throw UnexpectedCodecException(
         'Expected a supported codec, but got $codecTypeName');

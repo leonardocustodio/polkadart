@@ -8,11 +8,6 @@ class U128 extends Uint<BigInt> {
   U128._() : super._();
 
   ///
-  /// [static] returns a new instance of U128
-  @override
-  U128 freshInstance() => U128._();
-
-  ///
   /// Decode a unsigned 128 bit integer from the input
   ///
   /// Example:

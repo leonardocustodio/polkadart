@@ -8,11 +8,6 @@ class I8 extends Codec<int> {
   I8._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of I8
-  @override
-  I8 freshInstance() => I8._();
-
-  ///
   /// Decode a signed 8 bit integer from the input
   ///
   /// Example:

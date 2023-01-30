@@ -33,3 +33,11 @@ RegExpMatch? getVecMatch(String typeString) {
 RegExpMatch? getResultMatch(String typeString) {
   return RegExp(r'^([^<]*)<(.+),(.+)>$').firstMatch(typeString);
 }
+
+///
+/// Match the typeString with the regex
+/// Example: '[u8; 10]' -> ['[u8; 10]', 'u8', '10']
+/// Example: '[u8; 100]' -> ['[u8; 100]', 'u8', '100']
+RegExpMatch? getFixedVecMatch(String typeString) {
+  return RegExp(r'\[(.+); ([0-9]+)\]$').firstMatch(typeString);
+}

@@ -8,11 +8,6 @@ class U64 extends Uint<BigInt> {
   U64._() : super._();
 
   ///
-  /// [static] returns a new instance of U64
-  @override
-  U64 freshInstance() => U64._();
-
-  ///
   /// Decode a unsigned 64 bit integer from the input
   ///
   /// Example:

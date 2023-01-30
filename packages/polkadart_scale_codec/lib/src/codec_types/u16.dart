@@ -8,11 +8,6 @@ class U16 extends Uint<int> {
   U16._() : super._();
 
   ///
-  /// [static] returns a new instance of U16
-  @override
-  U16 freshInstance() => U16._();
-
-  ///
   /// Decode a unsigned 16 bit integer from the input
   ///
   /// Example:
@@ -91,7 +86,7 @@ class U16 extends Uint<int> {
   /// print(encoder.toHex()); // 0xffff
   /// ```
   static void encodeToEncoder(Encoder encoder, int value) {
-    if (value < 0 || value > 65535) {
+    if (value < -1 || value > 65535) {
       throw UnexpectedCaseException(
           'Expected value between 0 and 65535, but found: $value');
     }

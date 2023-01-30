@@ -8,11 +8,6 @@ class Str extends Codec<String> {
   Str._() : super(registry: Registry());
 
   ///
-  /// [static] returns a new instance of Str
-  @override
-  Str freshInstance() => Str._();
-
-  ///
   /// Decodes the value from the Codec's input
   ///
   /// Example:

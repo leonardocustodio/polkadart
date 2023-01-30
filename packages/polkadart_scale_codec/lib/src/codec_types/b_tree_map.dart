@@ -6,12 +6,7 @@ class BTreeMap extends Codec<Map<dynamic, dynamic>> {
   ///
   /// constructor
   BTreeMap._() : super(registry: Registry());
-
-  ///
-  /// [static] returns a new instance of BTreeMap
-  @override
-  BTreeMap freshInstance() => BTreeMap._();
-
+  
   ///
   /// Decodes the value from the Codec's input
   @override

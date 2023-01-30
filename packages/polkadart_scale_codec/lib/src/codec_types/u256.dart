@@ -8,11 +8,6 @@ class U256 extends Uint<BigInt> {
   U256._() : super._();
 
   ///
-  /// [static] returns a new instance of U256
-  @override
-  U256 freshInstance() => U256._();
-
-  ///
   /// Decode a unsigned 256 bit integer from the input
   ///
   /// Example:
