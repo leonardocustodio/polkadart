@@ -88,13 +88,6 @@ class Registry {
               codec.typeString = value;
               addCodec(key, codec);
               return codec;
-            // BTreeMap
-            /*  case 'BTreeMap':
-                final Codec codec = getCodec(match[1].toString())!;
-                codec.subType = getCodec(match[2].toString());
-                codec.typeString = value;
-                addCodec(key, codec);
-                break; */
           }
           return processCodec(customJson, value, customJson[value]);
         }
