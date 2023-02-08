@@ -1,7 +1,6 @@
 library polkadart_scale_codec;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'core/core.dart';
+export 'io/io.dart';
+export 'primitives/primitives.dart';
+export 'utils/utils.dart';
