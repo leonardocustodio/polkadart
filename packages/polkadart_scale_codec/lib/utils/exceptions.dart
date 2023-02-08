@@ -37,3 +37,13 @@ class OutOfBoundsException implements Exception {
   @override
   String toString() => 'Out of Bounds Exception';
 }
+
+///
+/// OptionException
+class OptionException implements Exception {
+  const OptionException(this.message);
+
+  final String message;
+  @override
+  String toString() => message;
+}
