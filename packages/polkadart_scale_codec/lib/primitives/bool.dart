@@ -6,8 +6,8 @@ class BoolCodec with Codec<bool> {
   static final BoolCodec instance = BoolCodec._();
 
   @override
-  void encodeTo(bool element, Output output) {
-    return output.pushByte(element ? 1 : 0);
+  void encodeTo(bool value, Output output) {
+    return output.pushByte(value ? 1 : 0);
   }
 
   @override
@@ -16,7 +16,7 @@ class BoolCodec with Codec<bool> {
   }
 
   @override
-  int sizeHint(bool element) {
+  int sizeHint(bool value) {
     return 1;
   }
 }

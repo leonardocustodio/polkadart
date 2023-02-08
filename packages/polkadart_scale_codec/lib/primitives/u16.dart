@@ -6,10 +6,10 @@ class U16Codec with Codec<int> {
   static final U16Codec instance = U16Codec._();
 
   @override
-  void encodeTo(int element, Output output) {
+  void encodeTo(int value, Output output) {
     output
-      ..pushByte(element.toUnsigned(8))
-      ..pushByte((element >> 8).toUnsigned(8));
+      ..pushByte(value.toUnsigned(8))
+      ..pushByte((value >> 8).toUnsigned(8));
   }
 
   @override
@@ -18,7 +18,7 @@ class U16Codec with Codec<int> {
   }
 
   @override
-  int sizeHint(int element) {
+  int sizeHint(int value) {
     return 2;
   }
 }

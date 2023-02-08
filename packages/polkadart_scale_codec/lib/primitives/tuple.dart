@@ -6,10 +6,10 @@ class TupleCodec with Codec<List<dynamic>> {
   const TupleCodec(this.codecs);
 
   @override
-  void encodeTo(List<dynamic> element, Output output) {
-    assert(element.length == codecs.length, 'Invalid list length');
+  void encodeTo(List<dynamic> value, Output output) {
+    assertion(value.length == codecs.length, 'Invalid list length');
     for (var i = 0; i < codecs.length; i++) {
-      codecs[i].encodeTo(element[i], output);
+      codecs[i].encodeTo(value[i], output);
     }
   }
 
@@ -23,11 +23,11 @@ class TupleCodec with Codec<List<dynamic>> {
   }
 
   @override
-  int sizeHint(List<dynamic> element) {
-    assert(element.length == codecs.length, 'Invalid list length');
+  int sizeHint(List<dynamic> value) {
+    assertion(value.length == codecs.length, 'Invalid list length');
     var size = 0;
     for (var i = 0; i < codecs.length; i++) {
-      size += codecs[i].sizeHint(element[i]);
+      size += codecs[i].sizeHint(value[i]);
     }
     return size;
   }

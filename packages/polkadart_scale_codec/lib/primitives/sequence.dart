@@ -6,9 +6,9 @@ class SequenceCodec<A> with Codec<List<A>> {
   const SequenceCodec(this.codec);
 
   @override
-  void encodeTo(List<A> element, Output output) {
-    CompactCodec.instance.encodeTo(element.length, output);
-    for (final element in element) {
+  void encodeTo(List<A> value, Output output) {
+    CompactCodec.instance.encodeTo(value.length, output);
+    for (final element in value) {
       codec.encodeTo(element, output);
     }
   }
@@ -24,9 +24,9 @@ class SequenceCodec<A> with Codec<List<A>> {
   }
 
   @override
-  int sizeHint(List<A> element) {
-    var size = CompactCodec.instance.sizeHint(element.length);
-    for (A element in element) {
+  int sizeHint(List<A> value) {
+    var size = CompactCodec.instance.sizeHint(value.length);
+    for (A element in value) {
       size += codec.sizeHint(element);
     }
     return size;

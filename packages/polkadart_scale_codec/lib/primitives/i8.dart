@@ -6,9 +6,11 @@ class I8Codec with Codec<int> {
   static final I8Codec instance = I8Codec._();
 
   @override
-  void encodeTo(int element, Output output) {
-    assert(element >= -128 && element <= 0x7F);
-    output.pushByte(element.toUnsigned(8));
+  void encodeTo(int value, Output output) {
+    if (value < -128 || value > 0x7F) {
+      throw OutOfBoundsException();
+    }
+    output.pushByte(value.toUnsigned(8));
   }
 
   @override
@@ -17,7 +19,7 @@ class I8Codec with Codec<int> {
   }
 
   @override
-  int sizeHint(int element) {
+  int sizeHint(int value) {
     return 1;
   }
 }

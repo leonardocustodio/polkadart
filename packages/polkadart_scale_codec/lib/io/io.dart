@@ -1,10 +1,12 @@
 library io;
 
 import 'dart:typed_data';
+import 'package:polkadart_scale_codec/utils/utils.dart';
 
 part 'byte_output.dart';
+part 'hex_input.dart';
 part 'hex_output.dart';
 part 'input.dart';
 part 'output.dart';
 part 'size_tracker.dart';
-part 'uint8list_input.dart';
+part 'byte_input.dart';

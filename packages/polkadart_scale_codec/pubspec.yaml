@@ -6,7 +6,8 @@ homepage: https://github.com/rankanizer/polkadart
 environment:
   sdk: ">=2.17.6 <3.0.0"
 
-dependencies:
+dependencies: 
+  convert: ^3.0.2
 
 dev_dependencies:
   lints: ^2.0.0 # BSD-3-Clause

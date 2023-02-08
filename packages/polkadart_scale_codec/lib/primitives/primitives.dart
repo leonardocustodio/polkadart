@@ -2,6 +2,7 @@ library primitives;
 
 import 'package:polkadart_scale_codec/core/core.dart';
 import 'package:polkadart_scale_codec/io/io.dart';
+import 'package:polkadart_scale_codec/utils/utils.dart';
 
 part 'bool.dart';
 part 'array.dart';

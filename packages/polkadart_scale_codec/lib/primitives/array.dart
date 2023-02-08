@@ -7,9 +7,9 @@ class ArrayCodec<A> with Codec<List<A>> {
   const ArrayCodec(this.codec, this.size);
 
   @override
-  void encodeTo(List<A> element, Output output) {
-    assert(element.length == size, 'Invalid list length');
-    for (final element in element) {
+  void encodeTo(List<A> value, Output output) {
+    assertion(value.length == size, 'Invalid list length');
+    for (final element in value) {
       codec.encodeTo(element, output);
     }
   }
@@ -24,10 +24,10 @@ class ArrayCodec<A> with Codec<List<A>> {
   }
 
   @override
-  int sizeHint(List<A> element) {
-    assert(element.length == size, 'Invalid list length');
+  int sizeHint(List<A> value) {
+    assertion(value.length == size, 'Invalid list length');
     var byteSize = 0;
-    for (A element in element) {
+    for (A element in value) {
       byteSize += codec.sizeHint(element);
     }
     return byteSize;

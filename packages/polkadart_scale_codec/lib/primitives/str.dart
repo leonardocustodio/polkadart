@@ -7,8 +7,8 @@ class StrCodec<A> with Codec<String> {
   static final StrCodec instance = StrCodec._();
 
   @override
-  void encodeTo(String element, Output output) {
-    final list = element.codeUnits;
+  void encodeTo(String value, Output output) {
+    final list = value.codeUnits;
     CompactCodec.instance.encodeTo(list.length, output);
     for (final charCode in list) {
       U8Codec.instance.encodeTo(charCode, output);
@@ -23,9 +23,9 @@ class StrCodec<A> with Codec<String> {
   }
 
   @override
-  int sizeHint(String element) {
-    var size = CompactCodec.instance.sizeHint(element.length);
-    size += element.codeUnits.length;
+  int sizeHint(String value) {
+    var size = CompactCodec.instance.sizeHint(value.length);
+    size += value.codeUnits.length;
     return size;
   }
 }

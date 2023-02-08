@@ -6,13 +6,13 @@ class U32Codec with Codec<int> {
   static final U32Codec instance = U32Codec._();
 
   @override
-  void encodeTo(int element, Output output) {
-    assert(element >= 0 && element <= 0xFFFFFFFF);
+  void encodeTo(int value, Output output) {
+    assertion(value >= 0 && value <= 0xFFFFFFFF);
     output
-      ..pushByte(element.toUnsigned(8))
-      ..pushByte((element >> 8).toUnsigned(8))
-      ..pushByte((element >> 16).toUnsigned(8))
-      ..pushByte((element >> 24).toUnsigned(8));
+      ..pushByte(value.toUnsigned(8))
+      ..pushByte((value >> 8).toUnsigned(8))
+      ..pushByte((value >> 16).toUnsigned(8))
+      ..pushByte((value >> 24).toUnsigned(8));
   }
 
   @override
@@ -24,7 +24,7 @@ class U32Codec with Codec<int> {
   }
 
   @override
-  int sizeHint(int element) {
+  int sizeHint(int value) {
     return 4;
   }
 }

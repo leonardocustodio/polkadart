@@ -6,9 +6,11 @@ class I32Codec with Codec<int> {
   static final I32Codec instance = I32Codec._();
 
   @override
-  void encodeTo(int element, Output output) {
-    assert(element >= -0x80000000 && element <= 0x7FFFFFFF, 'Out of bounds');
-    U32Codec.instance.encodeTo(element.toUnsigned(32), output);
+  void encodeTo(int value, Output output) {
+    if (value < -2147483648 || value > 2147483647) {
+      throw OutOfBoundsException();
+    }
+    U32Codec.instance.encodeTo(value.toUnsigned(32), output);
   }
 
   @override
@@ -17,7 +19,7 @@ class I32Codec with Codec<int> {
   }
 
   @override
-  int sizeHint(int element) {
+  int sizeHint(int value) {
     return 4;
   }
 }

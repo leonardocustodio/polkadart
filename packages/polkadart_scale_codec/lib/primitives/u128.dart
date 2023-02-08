@@ -6,10 +6,10 @@ class U128Codec with Codec<BigInt> {
   static final U128Codec instance = U128Codec._();
 
   @override
-  void encodeTo(BigInt element, Output output) {
+  void encodeTo(BigInt value, Output output) {
     U64Codec.instance
-      ..encodeTo(element.toUnsigned(64), output)
-      ..encodeTo((element >> 64).toUnsigned(64), output);
+      ..encodeTo(value.toUnsigned(64), output)
+      ..encodeTo((value >> 64).toUnsigned(64), output);
   }
 
   @override
@@ -20,7 +20,7 @@ class U128Codec with Codec<BigInt> {
   }
 
   @override
-  int sizeHint(BigInt element) {
+  int sizeHint(BigInt value) {
     return 16;
   }
 }

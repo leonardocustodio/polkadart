@@ -6,9 +6,9 @@ class U8Codec with Codec<int> {
   static final U8Codec instance = U8Codec._();
 
   @override
-  void encodeTo(int element, Output output) {
-    assert(element >= 0 && element <= 0xFF);
-    return output.pushByte(element.toUnsigned(8));
+  void encodeTo(int value, Output output) {
+    assertion(value >= 0 && value <= 0xFF);
+    return output.pushByte(value.toUnsigned(8));
   }
 
   @override
@@ -17,7 +17,7 @@ class U8Codec with Codec<int> {
   }
 
   @override
-  int sizeHint(int element) {
+  int sizeHint(int value) {
     return 1;
   }
 }

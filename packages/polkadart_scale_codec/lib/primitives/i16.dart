@@ -6,9 +6,11 @@ class I16Codec with Codec<int> {
   static final I16Codec instance = I16Codec._();
 
   @override
-  void encodeTo(int element, Output output) {
-    assert(element >= -0x8000 && element <= 0x7FFF);
-    U16Codec.instance.encodeTo(element.toUnsigned(16), output);
+  void encodeTo(int value, Output output) {
+    if (value < -0x8000 || value > 0x7FFF) {
+      throw OutOfBoundsException();
+    }
+    U16Codec.instance.encodeTo(value.toUnsigned(16), output);
   }
 
   @override
@@ -17,7 +19,7 @@ class I16Codec with Codec<int> {
   }
 
   @override
-  int sizeHint(int element) {
+  int sizeHint(int value) {
     return 2;
   }
 }
