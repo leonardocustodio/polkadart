@@ -1,5 +1,7 @@
 library polkadart_scale_codec;
 
-export '/src/core/core.dart';
-export '/src/utils/utils.dart';
-export '/src/codec_types/codec_types.dart' hide CodecMapper;
+/// A Calculator.
+class Calculator {
+  /// Returns [value] plus 1.
+  int addOne(int value) => value + 1;
+}
