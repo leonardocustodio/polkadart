@@ -30,3 +30,4 @@ part 'option.dart';
 part 'b_tree_map.dart';
 part 'result.dart';
 part 'struct.dart';
+part 'enum.dart';

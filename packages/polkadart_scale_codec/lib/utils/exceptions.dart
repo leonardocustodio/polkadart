@@ -67,3 +67,14 @@ class StructException implements Exception {
   @override
   String toString() => message;
 }
+
+
+///
+/// EnumException
+class EnumException implements Exception {
+  const EnumException(this.message);
+
+  final String message;
+  @override
+  String toString() => message;
+}
