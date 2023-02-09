@@ -57,3 +57,13 @@ class ResultException implements Exception {
   @override
   String toString() => message;
 }
+
+///
+/// FixedVecException
+class FixedVecException implements Exception {
+  const FixedVecException(this.message);
+
+  final String message;
+  @override
+  String toString() => message;
+}
