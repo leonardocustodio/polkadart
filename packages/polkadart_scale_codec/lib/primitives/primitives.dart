@@ -1,5 +1,7 @@
 library primitives;
 
+import 'dart:typed_data';
+
 import 'package:polkadart_scale_codec/core/core.dart';
 import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';
@@ -31,3 +33,4 @@ part 'b_tree_map.dart';
 part 'result.dart';
 part 'struct.dart';
 part 'enum.dart';
+part 'h256.dart';
