@@ -68,7 +68,6 @@ class StructException implements Exception {
   String toString() => message;
 }
 
-
 ///
 /// EnumException
 class EnumException implements Exception {
