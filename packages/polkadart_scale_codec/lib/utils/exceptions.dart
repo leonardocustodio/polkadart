@@ -59,9 +59,9 @@ class ResultException implements Exception {
 }
 
 ///
-/// FixedVecException
-class FixedVecException implements Exception {
-  const FixedVecException(this.message);
+/// StructException
+class StructException implements Exception {
+  const StructException(this.message);
 
   final String message;
   @override

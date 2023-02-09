@@ -29,4 +29,4 @@ part 'u256.dart';
 part 'option.dart';
 part 'b_tree_map.dart';
 part 'result.dart';
-part 'fixed_vec.dart';
+part 'struct.dart';

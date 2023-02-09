@@ -2,15 +2,15 @@ part of primitives;
 
 ///
 /// BTreeMap to encode/decode map of values
-class BTreeMap with Codec<Map<dynamic, dynamic>> {
-  final Codec keyCodec;
-  final Codec valueCodec;
+class BTreeMap<K, V> with Codec<Map<K, V>> {
+  final Codec<K> keyCodec;
+  final Codec<V> valueCodec;
 
   const BTreeMap({required this.keyCodec, required this.valueCodec});
 
   @override
-  Map<dynamic, dynamic> decode(Input input) {
-    final result = <dynamic, dynamic>{};
+  Map<K, V> decode(Input input) {
+    final result = <K, V>{};
 
     final length = CompactCodec.instance.decode(input);
 
@@ -23,7 +23,7 @@ class BTreeMap with Codec<Map<dynamic, dynamic>> {
   }
 
   @override
-  void encodeTo(Map<dynamic, dynamic> value, Output output) {
+  void encodeTo(Map<K, V> value, Output output) {
     CompactCodec.instance.encodeTo(value.length, output);
 
     value.forEach((key, value) {
