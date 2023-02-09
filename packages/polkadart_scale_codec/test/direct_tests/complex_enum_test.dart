@@ -1,0 +1,50 @@
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
+import 'package:test/test.dart';
+
+void main() {
+  group('Complex Enum Codec Encode Test', () {
+    test('should encode and decode', () {
+      final output = HexOutput();
+      final codec = ComplexEnumCodec({
+        'a': SimpleEnumCodec(['a', 'b', 'c']),
+        'b': SimpleEnumCodec(['d', 'e', 'f']),
+        'c': SimpleEnumCodec(['g', 'h', 'i']),
+      });
+      codec.encodeTo({'b': 'f'}, output);
+      expect(output.toString(), '0x0102');
+    });
+
+    test('should throw error when invalid value', () {
+      final output = HexOutput();
+      final codec = ComplexEnumCodec({
+        'a': SimpleEnumCodec(['a', 'b', 'c']),
+        'b': SimpleEnumCodec(['d', 'e', 'f']),
+        'c': SimpleEnumCodec(['g', 'h', 'i']),
+      });
+      expect(() => codec.encodeTo({'d': 'unknown'}, output),
+          throwsA(isA<EnumException>()));
+    });
+  });
+
+  group('Complex Enum Codec Decode Test', () {
+    test('should decode and encode', () {
+      final input = HexInput('0x0102');
+      final codec = ComplexEnumCodec({
+        'a': SimpleEnumCodec(['a', 'b', 'c']),
+        'b': SimpleEnumCodec(['d', 'e', 'f']),
+        'c': SimpleEnumCodec(['g', 'h', 'i']),
+      });
+      expect(codec.decode(input), {'b': 'f'});
+    });
+
+    test('should throw error when invalid index', () {
+      final input = HexInput('0x0302');
+      final codec = ComplexEnumCodec({
+        'a': SimpleEnumCodec(['a', 'b', 'c']),
+        'b': SimpleEnumCodec(['d', 'e', 'f']),
+        'c': SimpleEnumCodec(['g', 'h', 'i']),
+      });
+      expect(() => codec.decode(input), throwsA(isA<EnumException>()));
+    });
+  });
+}

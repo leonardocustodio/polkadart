@@ -23,26 +23,41 @@ class SimpleEnumCodec<A> with Codec<A> {
   }
 }
 
-class ComplexEnumCodec<A> with Codec<A> {
-  final Map<A, Codec> map;
+class ComplexEnumCodec<V> with Codec<Map<String, V>> {
+  final Map<String, Codec<V>> map;
   const ComplexEnumCodec(this.map);
 
   @override
-  void encodeTo(A value, Output output) {
-    final codec = map[value];
-    if (codec == null) {
-      throw EnumException('Invalid enum value: $value.');
+  void encodeTo(Map<String, V> value, Output output) {
+    if (value.length != 1) {
+      throw EnumException(
+          'Expected exactly one key/value pair, but got multiple: $value.');
     }
-    return codec.encodeTo(value, output);
+
+    final index = map.keys.toList().indexOf(value.keys.first);
+
+    if (index == -1) {
+      throw EnumException(
+          'Invalid enum value: $value. Can only accept: ${map.keys.toList()}');
+    }
+
+    output.pushByte(index);
+
+    final codec = map[value.keys.first]!;
+
+    return codec.encodeTo(value[value.keys.first] as V, output);
   }
 
   @override
-  A decode(Input input) {
+  Map<String, V> decode(Input input) {
     final index = input.read();
     if (index >= map.length) {
       throw EnumException('Invalid enum index: $index.');
     }
-    final codec = map.values.elementAt(index);
-    return codec.decode(input);
+    final key = map.keys.elementAt(index);
+
+    final codec = map[key]!;
+
+    return <String, V>{key: codec.decode(input)};
   }
 }
