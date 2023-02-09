@@ -34,3 +34,4 @@ part 'result.dart';
 part 'struct.dart';
 part 'enum.dart';
 part 'h256.dart';
+part 'bytes.dart';
