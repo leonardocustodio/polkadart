@@ -3,7 +3,7 @@
 part of primitives;
 
 class OptionCodec with Codec<_OptionType> {
-  final Codec? subType;
+  final Codec subType;
   const OptionCodec(this.subType);
 
   @override
@@ -12,10 +12,7 @@ class OptionCodec with Codec<_OptionType> {
       output.pushByte(0);
     } else if (value is Some) {
       output.pushByte(1);
-      if (subType == null) {
-        throw OptionException('Need to specify a subType for Some to encode.');
-      }
-      subType!.encodeTo(value.value, output);
+      subType.encodeTo(value.value, output);
     } else {
       throw OptionException(
           'Unable to encode due to invalid value type. Needed value either Some() or None, but found of type: \'${value.runtimeType}\'.');
@@ -40,11 +37,7 @@ class OptionCodec with Codec<_OptionType> {
           if (subType is OptionCodec && input.peekByte() == 0) {
             return Some(None);
           }
-          if (subType == null) {
-            throw OptionException(
-                'Need to specify a subType for Some to encode.');
-          }
-          return Some(subType!.decode(input));
+          return Some(subType.decode(input));
         }
       default:
         throw OptionException('Invalid Option Byte: $b');

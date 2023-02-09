@@ -77,6 +77,8 @@ class Registry {
         if (match != null && match.groupCount == 2) {
           final typeName = match[1].toString();
           switch (typeName) {
+            case 'Option':
+              return _parseOption(customJson, key, match);
             case 'Vec':
               return _parseSequence(customJson, key, match);
           }
@@ -104,6 +106,9 @@ class Registry {
       /*  if (value.startsWith('[') && value.endsWith(']')) {
         _parseFixedVec(customJson, key, value);
       } */
+      if (customJson[value] != null) {
+        return _parseCodec(customJson, value, customJson[value]);
+      }
       throw Exception('Type not found for $value');
     } else if (value is Map) {
       //
@@ -124,6 +129,20 @@ class Registry {
       } */
     }
     return _parseCodec(customJson, value, customJson[value]);
+  }
+
+  OptionCodec _parseOption(
+      Map<String, dynamic> customJson, String key, RegExpMatch match) {
+    final match2 = match[2].toString();
+
+    final Codec subType =
+        _parseCodec(customJson, match2, customJson[match2] ?? match2);
+
+    final OptionCodec codec = OptionCodec(subType);
+
+    addCodec(key, codec);
+
+    return codec;
   }
 
   SequenceCodec _parseSequence(
