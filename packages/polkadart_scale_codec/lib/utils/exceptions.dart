@@ -47,3 +47,13 @@ class OptionException implements Exception {
   @override
   String toString() => message;
 }
+
+///
+/// ResultException
+class ResultException implements Exception {
+  const ResultException(this.message);
+
+  final String message;
+  @override
+  String toString() => message;
+}
