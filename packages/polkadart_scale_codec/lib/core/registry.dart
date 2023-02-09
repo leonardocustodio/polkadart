@@ -43,6 +43,7 @@ class Registry {
 
   Codec _parseCodec(
       Map<String, dynamic> customJson, String key, dynamic value) {
+    key = key.trim();
     //
     // Check if the codec is already in the registry
     final Codec? codec = getCodec(key);
@@ -53,6 +54,7 @@ class Registry {
     //
     //Check if the value is a string
     if (value is String) {
+      value = value.trim();
       //
       // Check if the value is present in the registry
       Codec? codec = getCodec(value);
@@ -77,6 +79,8 @@ class Registry {
         if (match != null && match.groupCount == 2) {
           final typeName = match[1].toString();
           switch (typeName) {
+            case 'Compact':
+              return _parseCompact(customJson, key, match);
             case 'Option':
               return _parseOption(customJson, key, match);
             case 'Vec':
@@ -88,27 +92,20 @@ class Registry {
 
       //
       // Tuple
-      /*  if (value.startsWith('(') && value.endsWith(')')) {
-        final Tuples codec = getCodec('Tuples')!.newInstance() as Tuples;
-        codec.typeString = value;
-        codec.buildMapping();
-        for (var element in codec.tupleTypes) {
-          var subCodecs = getCodec(element);
-          subCodecs ??=
-              _parseCodec(customJson, element, customJson[element] ?? element);
-          codec.registry.addCodec(element, subCodecs);
-        }
-        addCodec(key, codec);
-        return codec;
-      } */
+      if (value.startsWith('(') && value.endsWith(')')) {
+        return _parseTuple(customJson, key, value);
+      }
+
       //
       // Fixed array
       /*  if (value.startsWith('[') && value.endsWith(']')) {
         _parseFixedVec(customJson, key, value);
       } */
+
       if (customJson[value] != null) {
         return _parseCodec(customJson, value, customJson[value]);
       }
+
       throw Exception('Type not found for $value');
     } else if (value is Map) {
       //
@@ -129,6 +126,47 @@ class Registry {
       } */
     }
     return _parseCodec(customJson, value, customJson[value]);
+  }
+
+  TupleCodec _parseTuple(
+      Map<String, dynamic> customJson, String key, String value) {
+    final List<String> types = value.substring(1, value.length - 1).split(',');
+
+    final codecs = <Codec>[];
+
+    for (var type in types) {
+      final Codec subType =
+          _parseCodec(customJson, type, customJson[type] ?? type);
+      codecs.add(subType);
+    }
+
+    final TupleCodec codec = TupleCodec(codecs);
+    addCodec(key, codec);
+
+    return codec;
+  }
+
+  Codec _parseCompact(
+      Map<String, dynamic> customJson, String key, RegExpMatch match) {
+    final match2 = match[2].toString();
+
+    final Codec subType =
+        _parseCodec(customJson, match2, customJson[match2] ?? match2);
+    late Codec codec;
+
+    if (subType is U8Codec || subType is U16Codec || subType is U32Codec) {
+      codec = CompactCodec.instance;
+    } else if (subType is U64Codec ||
+        subType is U128Codec ||
+        subType is U256Codec) {
+      codec = CompactBigIntCodec.instance;
+    } else {
+      throw Exception('Compact type not supported for $subType');
+    }
+
+    addCodec(key, codec);
+
+    return codec;
   }
 
   OptionCodec _parseOption(

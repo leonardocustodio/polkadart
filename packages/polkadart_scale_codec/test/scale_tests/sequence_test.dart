@@ -2,15 +2,17 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/test.dart';
 
 void main() {
-  /// Tests using Registry
+  // Tests using Registry
   group('Sequence Codec Encode Tests', () {
     final registry = Registry()
-      ..registerCustomCodec(<String, dynamic>{
-        '2DVector': 'Vec<1DVector>',
-        '1DVector': 'Vec<B>',
-        'B': 'C',
-        'C': 'u8',
-      });
+      ..registerCustomCodec(
+        <String, dynamic>{
+          '2DVector': 'Vec<1DVector>',
+          '1DVector': 'Vec<B>',
+          'B': 'C',
+          'C': 'u8',
+        },
+      );
 
     test('Encode 2DVector', () {
       final output = HexOutput();
