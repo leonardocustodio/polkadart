@@ -2,13 +2,13 @@ part of primitives;
 
 ///
 /// Result to encode/decode map of values
-class Result<T> with Codec<Map<String, T>> {
+class ResultCodec<T> with Codec<Map<String, T>> {
   final Codec<T> okCodec;
   final Codec<T> errCodec;
 
   ///
   /// Constructor
-  const Result({required this.okCodec, required this.errCodec});
+  const ResultCodec({required this.okCodec, required this.errCodec});
 
   ///
   /// Decodes the value from the Codec's input

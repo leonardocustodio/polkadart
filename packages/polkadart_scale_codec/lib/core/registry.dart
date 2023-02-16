@@ -85,6 +85,8 @@ class Registry {
               return _parseOption(customJson, key, match);
             case 'Vec':
               return _parseSequence(customJson, key, match);
+            case 'Result':
+              return _parseResult(customJson, key, value);
           }
           return _parseCodec(customJson, value, customJson[value]);
         }
@@ -197,6 +199,30 @@ class Registry {
     return codec;
   }
 
+  ResultCodec _parseResult(
+      Map<String, dynamic> customJson, String key, String value) {
+    final match = getResultMatch(value);
+
+    assertion(match != null && match.groupCount >= 3,
+        'Result type should have two types, Result<Ok, Error>. Like: Result<u8, bool>');
+
+    final match2 = match![2]!.trim();
+    final match3 = match[3]!.trim();
+
+    final okCodec = getCodec(match2) ??
+        _parseCodec(customJson, match2, customJson[match2] ?? match2);
+
+    final errCodec = getCodec(match3) ??
+        _parseCodec(customJson, match3, customJson[match3] ?? match3);
+
+    final ResultCodec codec = ResultCodec(
+      okCodec: okCodec,
+      errCodec: errCodec,
+    );
+    addCodec(key, codec);
+    return codec;
+  }
+
   /* Struct _parseStruct(
       Map<String, dynamic> customJson, String key, Map<String, String> value) {
     final Struct codec = getCodec('Struct')!.newInstance() as Struct;
@@ -264,28 +290,7 @@ class Registry {
     return codec;
   }
 
-  Result _parseResult(
-      Map<String, dynamic> customJson, String key, String value) {
-    final Result codec = getCodec('Result')!.newInstance() as Result;
-    final match = getResultMatch(value);
-
-    assertion(match != null && match.groupCount >= 3,
-        'Result type should have two types, Result<Ok, Error>. Like: Result<u8, bool>');
-
-    codec.typeString = key;
-
-    final match2 = match![2]!.trim();
-    final match3 = match[3]!.trim();
-
-    codec.typeStruct = {
-      'Ok': getCodec(match2) ??
-          _parseCodec(customJson, match2, customJson[match2] ?? match2),
-      'Err': getCodec(match3) ??
-          _parseCodec(customJson, match3, customJson[match3] ?? match3),
-    };
-    addCodec(key, codec);
-    return codec;
-  }
+  
 
   BTreeMap _parseBTreeMap(
       Map<String, dynamic> customJson, String key, String value) {
