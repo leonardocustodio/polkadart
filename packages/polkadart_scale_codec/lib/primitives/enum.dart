@@ -23,18 +23,13 @@ class SimpleEnumCodec<A> with Codec<A> {
   }
 }
 
-class ComplexEnumCodec<V> with Codec<Map<String, V>> {
+class ComplexEnumCodec<V> with Codec<MapEntry<String, V>> {
   final Map<String, Codec<V>> map;
   const ComplexEnumCodec(this.map);
 
   @override
-  void encodeTo(Map<String, V> value, Output output) {
-    if (value.length != 1) {
-      throw EnumException(
-          'Expected exactly one key/value pair, but got multiple: $value.');
-    }
-
-    final index = map.keys.toList().indexOf(value.keys.first);
+  void encodeTo(MapEntry<String, V> value, Output output) {
+    final index = map.keys.toList().indexOf(value.key);
 
     if (index == -1) {
       throw EnumException(
@@ -43,13 +38,13 @@ class ComplexEnumCodec<V> with Codec<Map<String, V>> {
 
     output.pushByte(index);
 
-    final codec = map[value.keys.first]!;
+    final codec = map[value.key]!;
 
-    return codec.encodeTo(value[value.keys.first] as V, output);
+    return codec.encodeTo(value as V, output);
   }
 
   @override
-  Map<String, V> decode(Input input) {
+  MapEntry<String, V> decode(Input input) {
     final index = input.read();
     if (index >= map.length) {
       throw EnumException('Invalid enum index: $index.');
@@ -58,6 +53,6 @@ class ComplexEnumCodec<V> with Codec<Map<String, V>> {
 
     final codec = map[key]!;
 
-    return <String, V>{key: codec.decode(input)};
+    return MapEntry(key, codec.decode(input));
   }
 }

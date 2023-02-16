@@ -10,7 +10,7 @@ void main() {
         'b': SimpleEnumCodec(['d', 'e', 'f']),
         'c': SimpleEnumCodec(['g', 'h', 'i']),
       });
-      codec.encodeTo({'b': 'f'}, output);
+      codec.encodeTo(MapEntry('b', 'f'), output);
       expect(output.toString(), '0x0102');
     });
 
@@ -21,7 +21,7 @@ void main() {
         'b': SimpleEnumCodec(['d', 'e', 'f']),
         'c': SimpleEnumCodec(['g', 'h', 'i']),
       });
-      expect(() => codec.encodeTo({'d': 'unknown'}, output),
+      expect(() => codec.encodeTo(MapEntry('d', 'unknown'), output),
           throwsA(isA<EnumException>()));
     });
   });

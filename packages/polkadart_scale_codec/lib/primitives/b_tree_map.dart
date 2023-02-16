@@ -2,11 +2,11 @@ part of primitives;
 
 ///
 /// BTreeMap to encode/decode map of values
-class BTreeMap<K, V> with Codec<Map<K, V>> {
+class BTreeMapCodec<K, V> with Codec<Map<K, V>> {
   final Codec<K> keyCodec;
   final Codec<V> valueCodec;
 
-  const BTreeMap({required this.keyCodec, required this.valueCodec});
+  const BTreeMapCodec({required this.keyCodec, required this.valueCodec});
 
   @override
   Map<K, V> decode(Input input) {

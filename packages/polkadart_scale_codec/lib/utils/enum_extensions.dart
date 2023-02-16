@@ -20,3 +20,9 @@ extension EnumExtensions<T extends core.Enum> on T {
     output.pushByte(index);
   }
 }
+
+extension ListExtension<T extends GeneratorOutput> on List<T> {
+  void encodeTo(Output output) {
+    forEach((element) => element.encodeTo(output));
+  }
+}

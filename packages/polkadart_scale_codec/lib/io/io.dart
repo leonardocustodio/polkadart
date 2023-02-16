@@ -10,3 +10,4 @@ part 'input.dart';
 part 'output.dart';
 part 'size_tracker.dart';
 part 'byte_input.dart';
+part 'generator_output.dart';

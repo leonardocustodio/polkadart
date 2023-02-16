@@ -2,12 +2,12 @@
 
 part of primitives;
 
-class OptionCodec with Codec<_OptionType> {
+class OptionCodec with Codec<OptionType> {
   final Codec subType;
   const OptionCodec(this.subType);
 
   @override
-  void encodeTo(_OptionType value, Output output) {
+  void encodeTo(OptionType value, Output output) {
     if (value is NoneOption) {
       output.pushByte(0);
     } else if (value is Some) {
@@ -20,7 +20,7 @@ class OptionCodec with Codec<_OptionType> {
   }
 
   @override
-  _OptionType decode(Input input) {
+  OptionType decode(Input input) {
     final int b = input.read();
     switch (b) {
       case 0:
@@ -45,7 +45,7 @@ class OptionCodec with Codec<_OptionType> {
   }
 
   @override
-  int sizeHint(_OptionType value) {
+  int sizeHint(OptionType value) {
     return 32;
   }
 }
@@ -54,10 +54,10 @@ class OptionCodec with Codec<_OptionType> {
 /// OptionType
 ///
 /// OptionType is a generic type that can be either Some(T) or None.
-class _OptionType<T> extends Equatable {
+class OptionType<T> extends Equatable {
   final String kind;
   final T? value;
-  const _OptionType(this.kind, [this.value]);
+  const OptionType(this.kind, [this.value]);
 
   @override
   List<Object?> get props => [kind, value];
@@ -72,7 +72,7 @@ class _OptionType<T> extends Equatable {
 /// Mocking as a None value similar to `rust type`.
 const None = NoneOption();
 
-class NoneOption extends _OptionType implements EquatableMixin {
+class NoneOption extends OptionType implements EquatableMixin {
   const NoneOption() : super('None');
 
   @override
@@ -100,7 +100,7 @@ class NoneOption extends _OptionType implements EquatableMixin {
 
 ///
 /// Mocking to get Some wrapped value inside Some(value);
-class Some<T> extends _OptionType implements EquatableMixin {
+class Some<T> extends OptionType<T> implements EquatableMixin {
   @override
   final T value;
   const Some(this.value) : super('Some');

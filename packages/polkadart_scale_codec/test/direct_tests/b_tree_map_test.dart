@@ -5,7 +5,7 @@ void main() {
   group('BTreeMap Encode Test:', () {
     test('Given a {42: true} it should be encoded to 0x042a01', () {
       final output = HexOutput();
-      BTreeMap(keyCodec: U8Codec.instance, valueCodec: BoolCodec.instance)
+      BTreeMapCodec(keyCodec: U8Codec.instance, valueCodec: BoolCodec.instance)
           .encodeTo({42: true}, output);
       expect(output.toString(), '0x042a01');
     });
@@ -14,8 +14,8 @@ void main() {
         'When value {{632: false}: true} is encoded then it returns 0x0404780200000001',
         () {
       final output = HexOutput();
-      BTreeMap(
-              keyCodec: BTreeMap(
+      BTreeMapCodec(
+              keyCodec: BTreeMapCodec(
                   keyCodec: U32Codec.instance, valueCodec: BoolCodec.instance),
               valueCodec: BoolCodec.instance)
           .encodeTo({
@@ -27,8 +27,8 @@ void main() {
         'When value {{"1291": true}: false} is encoded then it returns 0x040410313239310100',
         () {
       final output = HexOutput();
-      BTreeMap(
-        keyCodec: BTreeMap(
+      BTreeMapCodec(
+        keyCodec: BTreeMapCodec(
           keyCodec: StrCodec.instance,
           valueCodec: BoolCodec.instance,
         ),
@@ -45,7 +45,7 @@ void main() {
     test('When value {[42, true]: false} is encoded then it returns 0x042a0100',
         () {
       final output = HexOutput();
-      BTreeMap(
+      BTreeMapCodec(
         keyCodec: TupleCodec([U8Codec.instance, BoolCodec.instance]),
         valueCodec: BoolCodec.instance,
       ).encodeTo(
@@ -61,7 +61,7 @@ void main() {
   group('BTreeMap Decode Test:', () {
     test('Given a 0x042a01 it should be decoded to {42: true}', () {
       final input = HexInput('0x042a01');
-      final result = BTreeMap(
+      final result = BTreeMapCodec(
         keyCodec: U8Codec.instance,
         valueCodec: BoolCodec.instance,
       ).decode(input);
@@ -72,8 +72,8 @@ void main() {
         'When value 0x0404780200000001 is decoded then it returns {{632: false}: true}',
         () {
       final input = HexInput('0x0404780200000001');
-      final result = BTreeMap(
-        keyCodec: BTreeMap(
+      final result = BTreeMapCodec(
+        keyCodec: BTreeMapCodec(
           keyCodec: U32Codec.instance,
           valueCodec: BoolCodec.instance,
         ),
@@ -90,8 +90,8 @@ void main() {
         'When value 0x040410313239310100 is decoded then it returns {{"1291": true}: false}',
         () {
       final input = HexInput('0x040410313239310100');
-      final result = BTreeMap(
-        keyCodec: BTreeMap(
+      final result = BTreeMapCodec(
+        keyCodec: BTreeMapCodec(
           keyCodec: StrCodec.instance,
           valueCodec: BoolCodec.instance,
         ),
@@ -107,7 +107,7 @@ void main() {
     test('When value 0x042a0100 is decoded then it returns {[42, true]: false}',
         () {
       final input = HexInput('0x042a0100');
-      final result = BTreeMap(
+      final result = BTreeMapCodec(
         keyCodec: TupleCodec([U8Codec.instance, BoolCodec.instance]),
         valueCodec: BoolCodec.instance,
       ).decode(input);

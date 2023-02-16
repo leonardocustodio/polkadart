@@ -2,8 +2,8 @@ part of primitives;
 
 ///
 /// Struct to encode/decode map of values
-class Struct with Codec<Map<String, dynamic>> {
-  final Map<String, Codec<dynamic>> mappedCodec;
+class Struct with Codec<LinkedHashMap<String, dynamic>> {
+  final LinkedHashMap<String, Codec<dynamic>> mappedCodec;
 
   ///
   /// constructor
@@ -12,19 +12,19 @@ class Struct with Codec<Map<String, dynamic>> {
   ///
   /// Decodes the value from the Codec's input
   @override
-  Map<String, dynamic> decode(Input input) {
-    final result = <String, dynamic>{};
+  LinkedHashMap<String, dynamic> decode(Input input) {
+    final LinkedHashMap result = LinkedHashMap<String, dynamic>();
 
     for (final entry in mappedCodec.entries) {
       result[entry.key] = entry.value.decode(input);
     }
-    return result;
+    return result as LinkedHashMap<String, dynamic>;
   }
 
   ///
   /// Encodes Struct of values.
   @override
-  void encodeTo(Map<String, dynamic> value, Output output) {
+  void encodeTo(LinkedHashMap<String, dynamic> value, Output output) {
     if (mappedCodec.isEmpty) {
       return;
     }
