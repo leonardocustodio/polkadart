@@ -38,6 +38,6 @@ RegExpMatch? getResultMatch(String typeString) {
 /// Match the typeString with the regex
 /// Example: '[u8; 10]' -> ['[u8; 10]', 'u8', '10']
 /// Example: '[[u8; 2]; 100]' -> ['[u8; 100]', '[u8; 2]', '100']
-RegExpMatch? getFixedVecMatch(String typeString) {
+RegExpMatch? getArrayMatch(String typeString) {
   return RegExp(r'\[(.+); ([0-9]+)\]$').firstMatch(typeString);
 }

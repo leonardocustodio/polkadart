@@ -98,9 +98,9 @@ class Registry {
 
       //
       // Fixed array
-      /*  if (value.startsWith('[') && value.endsWith(']')) {
-        _parseFixedVec(customJson, key, value);
-      } */
+      if (value.startsWith('[') && value.endsWith(']')) {
+        return _parseArray(customJson, key, value);
+      }
 
       if (customJson[value] != null) {
         return _parseCodec(customJson, value, customJson[value]);
@@ -211,18 +211,16 @@ class Registry {
     return codec;
   } */
 
-  /* FixedVec _parseFixedVec(
+  ArrayCodec _parseArray(
       Map<String, dynamic> cusomJson, String key, String value) {
-    final match = getFixedVecMatch(value);
+    final match = getArrayMatch(value);
 
-    assertionCheck(
+    assertion(
         match != null, 'Expected fixed array: [Type; length] but got $value');
 
-    assertionCheck(match!.groupCount == 2,
+    assertion(match!.groupCount == 2,
         'Expected fixed array: [Type; length] but got $value');
 
-    // For knowing why we're checking for groupCount == 2 and accessing [1] and [2] index
-    // Check documentation on utils/regexp.dart -> getFixedArrayMatch(value);
     final match1 = match[1].toString();
 
     // Get the subType
@@ -233,30 +231,23 @@ class Registry {
     subType ??= _parseCodec(cusomJson, match1, cusomJson[match1] ?? match1);
 
     //
-    // Get the Codec based on the subType
-    final FixedVec codec = getCodec('FixedVec')! as FixedVec;
-
-    //
-    // Get the subType
-    codec.subType = subType;
-
-    //
     // Get the length of the fixed array
     final int? length = int.tryParse(match[2].toString());
 
-    assertionCheck(length != null, 'Expected length to be an integer');
+    assertion(length != null, 'Expected length to be an integer');
 
-    assertionCheck(
-        length! >= 0, 'Expected length to be greater than or equal to 0');
+    assertion(length! >= 0, 'Expected length to be greater than or equal to 0');
 
-    assertionCheck(
-        length <= 255, 'Expected length to be less than or equal to 256');
+    assertion(length <= 255, 'Expected length to be less than or equal to 256');
 
-    codec.fixedLength = length;
+    //
+    // Get the Codec based on the subType
+    final ArrayCodec codec = ArrayCodec(subType, length);
+
     addCodec(key, codec);
     return codec;
   }
-
+/*
   Enum _parseEnum(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     final Enum codec = getCodec('Enum')!.newInstance() as Enum;
@@ -278,7 +269,7 @@ class Registry {
     final Result codec = getCodec('Result')!.newInstance() as Result;
     final match = getResultMatch(value);
 
-    assertionCheck(match != null && match.groupCount >= 3,
+    assertion(match != null && match.groupCount >= 3,
         'Result type should have two types, Result<Ok, Error>. Like: Result<u8, bool>');
 
     codec.typeString = key;
@@ -301,7 +292,7 @@ class Registry {
     final BTreeMap codec = getCodec('BTreeMap')!.newInstance() as BTreeMap;
     final match = getResultMatch(value);
 
-    assertionCheck(match != null && match.groupCount >= 3,
+    assertion(match != null && match.groupCount >= 3,
         'BTreeMap type should have two types, Like: BTreeMap<u8, bool>');
 
     codec.typeString = key;
