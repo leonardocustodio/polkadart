@@ -8,7 +8,7 @@ void main() {
     test('When value {"a": 42, "b": true} is encoded then it returns 0x2a01',
         () {
       final output = HexOutput();
-      Struct(
+      StructCodec(
         LinkedHashMap.from({
           'a': U8Codec.instance,
           'b': BoolCodec.instance,
@@ -29,11 +29,11 @@ void main() {
         'When struct is encoded then it returns correct hex 0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64',
         () {
       final output = HexOutput();
-      Struct(
+      StructCodec(
         LinkedHashMap.from({
           'index': U8Codec.instance,
           'note': StrCodec.instance,
-          'Juice': Struct(
+          'Juice': StructCodec(
             LinkedHashMap.from({
               'name': StrCodec.instance,
               'ounces': U8Codec.instance,
@@ -62,7 +62,7 @@ void main() {
     test('When value 0x2a01 is decoded then it returns {"a": 42, "b": true}',
         () {
       final input = HexInput('0x2a01');
-      final decoded = Struct(
+      final decoded = StructCodec(
         LinkedHashMap.from({
           'a': U8Codec.instance,
           'b': BoolCodec.instance,
@@ -79,11 +79,11 @@ void main() {
         () {
       final input = HexInput(
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
-      final decoded = Struct(
+      final decoded = StructCodec(
         LinkedHashMap.from({
           'index': U8Codec.instance,
           'note': StrCodec.instance,
-          'Juice': Struct(
+          'Juice': StructCodec(
             LinkedHashMap.from({
               'name': StrCodec.instance,
               'ounces': U8Codec.instance,

@@ -2,12 +2,12 @@ part of primitives;
 
 ///
 /// Struct to encode/decode map of values
-class Struct with Codec<LinkedHashMap<String, dynamic>> {
+class StructCodec with Codec<LinkedHashMap<String, dynamic>> {
   final LinkedHashMap<String, Codec<dynamic>> mappedCodec;
 
   ///
   /// constructor
-  const Struct(this.mappedCodec);
+  const StructCodec(this.mappedCodec);
 
   ///
   /// Decodes the value from the Codec's input

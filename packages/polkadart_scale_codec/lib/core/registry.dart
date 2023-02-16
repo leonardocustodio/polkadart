@@ -85,6 +85,8 @@ class Registry {
               return _parseOption(customJson, key, match);
             case 'Vec':
               return _parseSequence(customJson, key, match);
+            case 'BTreeMap':
+              return _parseBTreeMap(customJson, key, value);
             case 'Result':
               return _parseResult(customJson, key, value);
           }
@@ -112,20 +114,15 @@ class Registry {
     } else if (value is Map) {
       //
       // enum
-      /*  if (value['_enum'] != null) {
+      if (value['_enum'] != null) {
         return _parseEnum(customJson, key, value as Map<String, dynamic>);
-      } */
-      //
-      // set
-      /*  if (value['_set'] != null) {
-        return _parseSet(key, value as Map<String, dynamic>);
-      } */
+      }
       //
       // struct
-      /* if (value['_struct'] != null) {
+      if (value['_struct'] != null) {
         return _parseStruct(
             customJson, key, value['_struct'] as Map<String, String>);
-      } */
+      }
     }
     return _parseCodec(customJson, value, customJson[value]);
   }
@@ -223,19 +220,44 @@ class Registry {
     return codec;
   }
 
-  /* Struct _parseStruct(
+  BTreeMapCodec _parseBTreeMap(
+      Map<String, dynamic> customJson, String key, String value) {
+    final match = getResultMatch(value);
+
+    assertion(match != null && match.groupCount >= 3,
+        'BTreeMap type should have two types, BTreeMap<KeyCodec, ValueCodec>. Like: BTreeMap<KeyCodec, ValueCodec>');
+
+    final match2 = match![2]!.trim();
+    final match3 = match[3]!.trim();
+
+    final keyCodec = getCodec(match2) ??
+        _parseCodec(customJson, match2, customJson[match2] ?? match2);
+
+    final valueCodec = getCodec(match3) ??
+        _parseCodec(customJson, match3, customJson[match3] ?? match3);
+
+    final BTreeMapCodec codec = BTreeMapCodec(
+      keyCodec: keyCodec,
+      valueCodec: valueCodec,
+    );
+    addCodec(key, codec);
+    return codec;
+  }
+
+  StructCodec _parseStruct(
       Map<String, dynamic> customJson, String key, Map<String, String> value) {
-    final Struct codec = getCodec('Struct')!.newInstance() as Struct;
+    final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
       final value = mapEntry.value;
-      var subCodec = getCodec(value);
-      subCodec ??= _parseCodec(customJson, value, customJson[value] ?? value);
-      codec.typeStruct[key] = subCodec;
+      final Codec subCodec = getCodec(value) ??
+          _parseCodec(customJson, value, customJson[value] ?? value);
+      codecMap[key] = subCodec;
     }
+    final codec = StructCodec(LinkedHashMap.from(codecMap));
     addCodec(key, codec);
     return codec;
-  } */
+  }
 
   ArrayCodec _parseArray(
       Map<String, dynamic> cusomJson, String key, String value) {
@@ -273,67 +295,33 @@ class Registry {
     addCodec(key, codec);
     return codec;
   }
-/*
-  Enum _parseEnum(
+
+  Codec _parseEnum(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
-    final Enum codec = getCodec('Enum')!.newInstance() as Enum;
+    late Codec codec;
     if (value['_enum'] is Map<String, dynamic>) {
-      codec.typeStruct =
-          _parseStruct(customJson, key, value['_enum']).typeStruct;
+      codec = ComplexEnumCodec(
+          _parseStruct(customJson, key, value['_enum']).mappedCodec);
     } else if (value['_enum'] is List<String>) {
-      codec.valueList = value['_enum'];
+      codec = SimpleEnumCodec(value['_enum']);
     } else {
-      throw UnexpectedCaseException(
-          'Expected enum to be a map or a list, but found ${value['_enum'].runtimeType}');
+      throw EnumException(
+          'EnumException: Expected enum to be a map or a list, but found ${value['_enum'].runtimeType}');
     }
     addCodec(key, codec);
     return codec;
   }
-
-  
-
-  BTreeMap _parseBTreeMap(
-      Map<String, dynamic> customJson, String key, String value) {
-    final BTreeMap codec = getCodec('BTreeMap')!.newInstance() as BTreeMap;
-    final match = getResultMatch(value);
-
-    assertion(match != null && match.groupCount >= 3,
-        'BTreeMap type should have two types, Like: BTreeMap<u8, bool>');
-
-    codec.typeString = key;
-
-    final match2 = match![2]!.trim();
-    final match3 = match[3]!.trim();
-
-    codec.typeStruct = {
-      'key': getCodec(match2) ??
-          _parseCodec(customJson, match2, customJson[match2] ?? match2),
-      'value': getCodec(match3) ??
-          _parseCodec(customJson, match3, customJson[match3] ?? match3),
-    };
-    addCodec(key, codec);
-    return codec;
-  }
-
-  Codec _parseSet(String key, Map<String, dynamic> value) {
-    final Codec codec = getCodec('Set')!;
-    if (value['_bitLength'] != null) {
-      codec.bitLength = int.parse(value['_bitLength']);
-    } else {
-      codec.bitLength = 16;
-    }
-    (value['_set'] as Map).remove('_bitLength');
-    codec.valueList = (value['_set'] as Map).keys.cast<String>().toList();
-    addCodec(key, codec);
-    return codec;
-  } */
 
   ///
   /// match and return the types which are simple and not parametrized
-  Codec? getSimpleCodecs(String primitiveName) {
-    switch (primitiveName.toString()) {
+  Codec? getSimpleCodecs(String simpleCodecs) {
+    switch (simpleCodecs.toLowerCase()) {
       case 'bool':
         return BoolCodec.instance;
+      case 'h256':
+        return H256Codec.instance;
+      case 'bytes':
+        return BytesCodec.instance;
       case 'u8':
         return U8Codec.instance;
       case 'u16':
