@@ -111,19 +111,17 @@ class Registry {
       }
 
       throw Exception('Type not found for $value');
-    } else if (value is Map) {
+    } else if (value is Map<String, dynamic>) {
       //
       // enum
       if (value['_enum'] != null) {
-        return _parseEnum(customJson, key, value as Map<String, dynamic>);
+        return _parseEnum(customJson, key, value);
       }
       //
       // struct
-      if (value['_struct'] != null) {
-        return _parseStruct(
-            customJson, key, value['_struct'] as Map<String, String>);
-      }
+      return _parseStruct(customJson, key, value as Map<String, dynamic>);
     }
+
     return _parseCodec(customJson, value, customJson[value]);
   }
 
@@ -245,7 +243,7 @@ class Registry {
   }
 
   StructCodec _parseStruct(
-      Map<String, dynamic> customJson, String key, Map<String, String> value) {
+      Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;

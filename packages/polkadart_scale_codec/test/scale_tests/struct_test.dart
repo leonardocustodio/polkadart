@@ -8,18 +8,14 @@ void main() {
       ..registerCustomCodec(<String, dynamic>{
         'OrderStructList': 'Vec<OrderStruct>',
         'OrderStruct': {
-          '_struct': {
-            'index': 'UnsignedInt8',
-            'note': 'Str',
-            'Juice': 'JuiceName',
-            'Remarks': 'Option<Str>',
-          }
+          'index': 'UnsignedInt8',
+          'note': 'Str',
+          'Juice': 'JuiceName',
+          'Remarks': 'Option<Str>',
         },
         'JuiceName': {
-          '_struct': {
-            'name': 'Str',
-            'ounces': 'UnsignedInt8',
-          }
+          'name': 'Str',
+          'ounces': 'UnsignedInt8',
         },
         'UnsignedInt8': 'u8',
       });
@@ -102,18 +98,14 @@ void main() {
       ..registerCustomCodec(<String, dynamic>{
         'OrderStructList': 'Vec<OrderStruct>',
         'OrderStruct': {
-          '_struct': {
-            'index': 'UnsignedInt8',
-            'note': 'Str',
-            'Juice': 'JuiceName',
-            'Remarks': 'Option<Str>',
-          }
+          'index': 'UnsignedInt8',
+          'note': 'Str',
+          'Juice': 'JuiceName',
+          'Remarks': 'Option<Str>',
         },
         'JuiceName': {
-          '_struct': {
-            'name': 'Str',
-            'ounces': 'UnsignedInt8',
-          }
+          'name': 'Str',
+          'ounces': 'UnsignedInt8',
         },
         'UnsignedInt8': 'u8',
       });

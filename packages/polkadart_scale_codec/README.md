@@ -16,7 +16,7 @@
 | Bytes        | `Bytes`                         |
 | Compact      | `Compact<T>`                    |
 | Enum         | `_enum`                         |
-| Struct       | `_struct`                       |
+| Struct       | `{}`                       |
 | FixedVec     | `[u8, length]`                  |
 | BitVec       | `BitVec`                        |
 | Option       | `Option<T>`                     |
@@ -322,15 +322,15 @@
         '_enum': ['Orange', 'Apple', 'Kiwi']
       },
       'OuncesEnum': {
-        '_struct': {'ounces': 'u8', 'Remarks': 'Option<Text>'}
+        'ounces': 'u8', 
+        'Remarks': 'Option<Text>',
       },
       'OrderStruct': {
-        '_struct': {
           'index': 'u8',
           'note': 'Text',
           'Juice': 'OrderJuiceEnum',
           'Ounces': 'OuncesEnum'
-        }
+        
       },
     },
   );
