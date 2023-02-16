@@ -40,7 +40,7 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V>> {
 
     final codec = map[value.key]!;
 
-    return codec.encodeTo(value as V, output);
+    return codec.encodeTo(value.value, output);
   }
 
   @override

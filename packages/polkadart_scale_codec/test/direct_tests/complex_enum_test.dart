@@ -34,7 +34,7 @@ void main() {
         'b': SimpleEnumCodec(['d', 'e', 'f']),
         'c': SimpleEnumCodec(['g', 'h', 'i']),
       });
-      expect(codec.decode(input), {'b': 'f'});
+      expect(codec.decode(input).toString(), MapEntry('b', 'f').toString());
     });
 
     test('should throw error when invalid index', () {
