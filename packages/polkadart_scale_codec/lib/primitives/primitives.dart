@@ -31,7 +31,7 @@ part 'u128.dart';
 part 'u256.dart';
 part 'option.dart';
 part 'b_tree_map.dart';
-part 'struct.dart';
+part 'composite.dart';
 part 'enum.dart';
 part 'bit_sequence.dart';
 part 'null_codec.dart';

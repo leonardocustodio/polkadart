@@ -125,8 +125,8 @@ class Registry {
         return _parseEnum(customJson, key, value);
       }
       //
-      // struct
-      return _parseStruct(customJson, key, value);
+      // composite
+      return _parseComposite(customJson, key, value);
     }
 
     return _parseCodec(customJson, value, customJson[value]);
@@ -249,7 +249,7 @@ class Registry {
     return codec;
   }
 
-  StructCodec _parseStruct(
+  CompositeCodec _parseComposite(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
@@ -265,7 +265,7 @@ class Registry {
       }
       codecMap[key] = subCodec;
     }
-    final codec = StructCodec(LinkedHashMap.from(codecMap));
+    final codec = CompositeCodec(LinkedHashMap.from(codecMap));
     addCodec(key, codec);
     return codec;
   }
@@ -317,7 +317,7 @@ class Registry {
           codecMap[entry.key] =
               _parseCodec(customJson, entry.value, entry.value);
         } else {
-          codecMap[entry.key] = _parseStruct(customJson, key, entry.value);
+          codecMap[entry.key] = _parseComposite(customJson, key, entry.value);
         }
       }
       codec = ComplexEnumCodec(codecMap);

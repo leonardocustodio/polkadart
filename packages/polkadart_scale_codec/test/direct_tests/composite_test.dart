@@ -4,11 +4,11 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Struct Encode Test', () {
+  group('Composite Encode Test', () {
     test('When value {"a": 42, "b": true} is encoded then it returns 0x2a01',
         () {
       final output = HexOutput();
-      StructCodec(
+      CompositeCodec(
         LinkedHashMap.from({
           'a': U8Codec.instance,
           'b': BoolCodec.instance,
@@ -26,14 +26,14 @@ void main() {
     });
 
     test(
-        'When struct is encoded then it returns correct hex 0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64',
+        'When Composite is encoded then it returns correct hex 0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64',
         () {
       final output = HexOutput();
-      StructCodec(
+      CompositeCodec(
         LinkedHashMap.from({
           'index': U8Codec.instance,
           'note': StrCodec.instance,
-          'Juice': StructCodec(
+          'Juice': CompositeCodec(
             LinkedHashMap.from({
               'name': StrCodec.instance,
               'ounces': U8Codec.instance,
@@ -58,11 +58,11 @@ void main() {
     });
   });
 
-  group('Struct Decode Test', () {
+  group('Composite Decode Test', () {
     test('When value 0x2a01 is decoded then it returns {"a": 42, "b": true}',
         () {
       final input = HexInput('0x2a01');
-      final decoded = StructCodec(
+      final decoded = CompositeCodec(
         LinkedHashMap.from({
           'a': U8Codec.instance,
           'b': BoolCodec.instance,
@@ -75,15 +75,15 @@ void main() {
     });
 
     test(
-        'When struct is decoded then it returns correct value {"index": 8, "note": "This is a note", "Juice": {"name": "Kiwi", "ounces": 1}, "Remarks": "Hey Food was good"}',
+        'When Composite is decoded then it returns correct value {"index": 8, "note": "This is a note", "Juice": {"name": "Kiwi", "ounces": 1}, "Remarks": "Hey Food was good"}',
         () {
       final input = HexInput(
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
-      final decoded = StructCodec(
+      final decoded = CompositeCodec(
         LinkedHashMap.from({
           'index': U8Codec.instance,
           'note': StrCodec.instance,
-          'Juice': StructCodec(
+          'Juice': CompositeCodec(
             LinkedHashMap.from({
               'name': StrCodec.instance,
               'ounces': U8Codec.instance,

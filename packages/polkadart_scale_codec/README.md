@@ -16,7 +16,7 @@
 | Bytes        | `Bytes`                         |
 | Compact      | `Compact<T>`                    |
 | Enum         | `_enum`                         |
-| Struct       | `{}`                       |
+| Composite       | `{}`                       |
 | FixedVec     | `[u8, length]`                  |
 | BitVec       | `BitVec`                        |
 | Option       | `Option<T>`                     |
@@ -312,7 +312,7 @@
   var decoded = codec.decode(typeIndex, encoded);
 ```
 
-### Struct
+### Composite
 
 ```dart
   // Creates the registry for parsing the types
@@ -325,7 +325,7 @@
         'ounces': 'u8', 
         'Remarks': 'Option<Text>',
       },
-      'OrderStruct': {
+      'OrderComposite': {
           'index': 'u8',
           'note': 'Text',
           'Juice': 'OrderJuiceEnum',
@@ -335,7 +335,7 @@
     },
   );
 
-  final typeIndex = registry.getIndex('OrderStruct');
+  final typeIndex = registry.getIndex('OrderComposite');
 
   // fetching the parsed types from `Json` to `Type`
   final types = registry.getTypes();

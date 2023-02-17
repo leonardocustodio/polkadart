@@ -1,13 +1,13 @@
 part of primitives;
 
 ///
-/// Struct to encode/decode map of values
-class StructCodec with Codec<LinkedHashMap<String, dynamic>> {
+/// Composite to encode/decode map of values
+class CompositeCodec with Codec<LinkedHashMap<String, dynamic>> {
   final LinkedHashMap<String, Codec<dynamic>> mappedCodec;
 
   ///
   /// constructor
-  const StructCodec(this.mappedCodec);
+  const CompositeCodec(this.mappedCodec);
 
   ///
   /// Decodes the value from the Codec's input
@@ -25,7 +25,7 @@ class StructCodec with Codec<LinkedHashMap<String, dynamic>> {
   }
 
   ///
-  /// Encodes Struct of values.
+  /// Encodes Composite of values.
   @override
   void encodeTo(LinkedHashMap<String, dynamic> value, Output output) {
     if (mappedCodec.isEmpty) {
@@ -34,7 +34,7 @@ class StructCodec with Codec<LinkedHashMap<String, dynamic>> {
 
     for (final entry in mappedCodec.entries) {
       if (mappedCodec.containsKey(entry.key) == false) {
-        throw StructException(
+        throw CompositeException(
             'Codec not found for key: ${entry.key}, in mappedCodec: $mappedCodec');
       }
 
