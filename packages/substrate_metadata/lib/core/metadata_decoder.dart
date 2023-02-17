@@ -1,15 +1,13 @@
-import 'dart:typed_data';
-
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:polkadart_scale_codec/metadata_types/metadata/metadata.dart'
+import 'package:substrate_metadata/metadata_definitions/metadata_definitions.dart'
     as metadata_definitions;
 
 class MetadataDecoder {
   late final Registry typeRegistry;
 
   MetadataDecoder._() {
-    print('MetadataDecoder._() called');
-    typeRegistry = Registry()..registerCustomCodec(metadata_definitions.types);
+    typeRegistry = Registry()
+      ..registerCustomCodec(metadata_definitions.METADATA_DEFINITIONS);
   }
 
   static final MetadataDecoder _instance = MetadataDecoder._();
@@ -17,23 +15,25 @@ class MetadataDecoder {
   static MetadataDecoder get instance => _instance;
 
   ///
-  /// Decode metadata from hex string
-  Map<String, dynamic> decode(String data) {
-    return _decodePrivate(data);
+  /// Decode metadata from Input
+  Map<String, dynamic> decode(Input input) {
+    return _decodePrivate(input);
+  }
+
+  void encode(Map<String, dynamic> metadata, Output output) {
+    final magic = 0x6174656d;
+    U32Codec.instance.encodeTo(magic, output);
+
+    final version = metadata['version'];
+    U8Codec.instance.encodeTo(version, output);
+
+    ScaleCodec(typeRegistry)
+        .encodeTo('MetadataV$version', metadata['metadata'], output);
   }
 
   ///
   /// Private method to decode metadata
-  Map<String, dynamic> _decodePrivate(dynamic data) {
-    assertion(data is String || data is Uint8List);
-    late Uint8List content;
-    if (data is String) {
-      content = decodeHex(data);
-    } else {
-      content = data;
-    }
-    var source = ByteInput(content);
-
+  Map<String, dynamic> _decodePrivate(Input source) {
     final magic = U32Codec.instance.decode(source);
     assertion(magic == 0x6174656d,
         'Expected magic number 0x6174656d, but got $magic');

@@ -93,7 +93,7 @@ class NoneOption extends OptionType implements EquatableMixin {
   /// ```
   Map<String, dynamic> toJson() {
     return {
-      '_kind': kind,
+      'None': 'None',
     };
   }
 }
@@ -130,10 +130,9 @@ class Some<T> extends OptionType<T> implements EquatableMixin {
   /// ```
   Map<String, dynamic> toJson() {
     return {
-      '_kind': kind,
-      'value': value is Some
+      'Some': value is Some
           ? (value as Some).toJson()
-          : (value == None ? None.toJson() : value),
+          : (value == None ? 'None' : value),
     };
   }
 

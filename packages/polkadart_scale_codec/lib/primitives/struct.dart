@@ -16,9 +16,6 @@ class StructCodec with Codec<LinkedHashMap<String, dynamic>> {
     final LinkedHashMap result = LinkedHashMap<String, dynamic>();
 
     for (final entry in mappedCodec.entries) {
-      if (entry.key.toLowerCase() == 'hasher') {
-        print('here');
-      }
       result[entry.key] = entry.value.decode(input);
     }
     return result as LinkedHashMap<String, dynamic>;

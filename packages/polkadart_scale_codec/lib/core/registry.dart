@@ -46,9 +46,6 @@ class Registry {
     if (value == null) {
       return NullCodec.instance;
     }
-    if (key == 'StorageEntryTypeV14' || value == 'StorageEntryTypeV14') {
-      print('here');
-    }
 
     key = key.trim();
     //
