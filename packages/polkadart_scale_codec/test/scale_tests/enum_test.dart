@@ -11,8 +11,8 @@ void main() {
         },
         'JuiceEnumComplex': {
           '_enum': {
-            'Apple': 'u8',
-            'Orange': 'bool',
+            'Apple': 'U8',
+            'Orange': 'Bool',
           },
         }
       });
@@ -53,8 +53,8 @@ void main() {
         },
         'JuiceEnumComplex': {
           '_enum': {
-            'Apple': 'u8',
-            'Orange': 'bool',
+            'Apple': 'U8',
+            'Orange': 'Bool',
           },
         }
       });

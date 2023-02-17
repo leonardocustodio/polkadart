@@ -6,8 +6,8 @@ void main() {
   group('Option Encode Test:', () {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
-        'A': 'Option<(Compact<u8>, bool)>',
-        'B': 'Option<bool>',
+        'A': 'Option<(Compact<U8>, Bool)>',
+        'B': 'Option<Bool>',
         'C': 'Option<B>',
       });
 
@@ -64,8 +64,8 @@ void main() {
   group('Option Decode Test:', () {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
-        'A': 'Option<(Compact<u8>, bool)>',
-        'B': 'Option<bool>',
+        'A': 'Option<(Compact<U8>, Bool)>',
+        'B': 'Option<Bool>',
         'C': 'Option<B>',
       });
 

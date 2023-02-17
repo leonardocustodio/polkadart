@@ -6,9 +6,9 @@ void main() {
   group('ArrayCodec Encode Test:', () {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
-        'A': '[(u8, bool); 4]',
-        'C': '[u8; 2]',
-        'B': '[u8; 4]',
+        'A': '[(U8, Bool); 4]',
+        'C': '[U8; 2]',
+        'B': '[U8; 4]',
         'D': '[C; 2]'
       });
 
@@ -58,9 +58,9 @@ void main() {
   group('ArrayCodec Decode Test:', () {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
-        'A': '[(u8, bool); 4]',
-        'B': '[u8; 4]',
-        'C': '[u8; 2]',
+        'A': '[(U8, Bool); 4]',
+        'B': '[U8; 4]',
+        'C': '[U8; 2]',
         'D': '[C; 2]'
       });
 

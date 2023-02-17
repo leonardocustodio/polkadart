@@ -201,7 +201,7 @@ class Registry {
     return codec;
   }
 
-  ResultCodec _parseResult(
+  ComplexEnumCodec _parseResult(
       Map<String, dynamic> customJson, String key, String value) {
     final match = getResultMatch(value);
 
@@ -217,10 +217,10 @@ class Registry {
     final errCodec = getCodec(match3) ??
         _parseCodec(customJson, match3, customJson[match3] ?? match3);
 
-    final ResultCodec codec = ResultCodec(
-      okCodec: okCodec,
-      errCodec: errCodec,
-    );
+    final ComplexEnumCodec codec = ComplexEnumCodec({
+      'Ok': okCodec,
+      'Err': errCodec,
+    });
     addCodec(key, codec);
     return codec;
   }
@@ -334,38 +334,34 @@ class Registry {
   ///
   /// match and return the types which are simple and not parametrized
   Codec? getSimpleCodecs(String simpleCodecs) {
-    switch (simpleCodecs.toLowerCase()) {
-      case 'bool':
+    switch (simpleCodecs) {
+      case 'Bool':
         return BoolCodec.instance;
-      case 'h256':
-        return H256Codec.instance;
-      case 'bytes':
-        return BytesCodec.instance;
-      case 'u8':
+      case 'U8':
         return U8Codec.instance;
-      case 'u16':
+      case 'U16':
         return U16Codec.instance;
-      case 'u32':
+      case 'U32':
         return U32Codec.instance;
-      case 'u64':
+      case 'U64':
         return U64Codec.instance;
-      case 'u128':
+      case 'U128':
         return U128Codec.instance;
-      case 'string':
-      case 'text':
-      case 'str':
+      case 'String':
+      case 'Text':
+      case 'Str':
         return StrCodec.instance;
-      case 'i8':
+      case 'I8':
         return I8Codec.instance;
-      case 'i16':
+      case 'I16':
         return I16Codec.instance;
-      case 'i32':
+      case 'I32':
         return I32Codec.instance;
-      case 'i64':
+      case 'I64':
         return I64Codec.instance;
-      case 'i128':
+      case 'I128':
         return I128Codec.instance;
-      case 'null':
+      case 'Null':
         return NullCodec.instance;
       default:
         return null;

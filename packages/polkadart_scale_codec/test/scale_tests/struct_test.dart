@@ -17,7 +17,7 @@ void main() {
           'name': 'Str',
           'ounces': 'UnsignedInt8',
         },
-        'UnsignedInt8': 'u8',
+        'UnsignedInt8': 'U8',
       });
     test(
         'When struct "OrderStruct" is encoded then it returns correct hex 0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64',
@@ -107,7 +107,7 @@ void main() {
           'name': 'Str',
           'ounces': 'UnsignedInt8',
         },
-        'UnsignedInt8': 'u8',
+        'UnsignedInt8': 'U8',
       });
     test('When struct "OrderStruct" is decoded then it returns correct value',
         () {

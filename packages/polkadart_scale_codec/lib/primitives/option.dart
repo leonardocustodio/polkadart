@@ -26,19 +26,7 @@ class OptionCodec with Codec<OptionType> {
       case 0:
         return None;
       case 1:
-        {
-          //
-          // A smart way to handle 2 case scenarios:
-          //
-          // Option<Option<bool>> : Some(Some(false)) : '0x010100'
-          // Option<Option<bool>> : Some(None)        : '0x010100'
-          //
-          // See, It simplifies the things....
-          if (subType is OptionCodec && input.peekByte() == 0) {
-            return Some(None);
-          }
-          return Some(subType.decode(input));
-        }
+        return Some(subType.decode(input));
       default:
         throw OptionException('Invalid Option Byte: $b');
     }
