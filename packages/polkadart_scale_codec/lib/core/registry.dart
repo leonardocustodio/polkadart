@@ -313,9 +313,10 @@ class Registry {
     if (value['_enum'] is Map<String, dynamic>) {
       final codecMap = <String, Codec>{};
       for (var entry in (value['_enum'] as Map<String, dynamic>).entries) {
-        if (entry.value is String){
-          codecMap[entry.key] = _parseCodec(customJson, entry.value, entry.value);
-        }else{
+        if (entry.value is String) {
+          codecMap[entry.key] =
+              _parseCodec(customJson, entry.value, entry.value);
+        } else {
           codecMap[entry.key] = _parseStruct(customJson, key, entry.value);
         }
       }
