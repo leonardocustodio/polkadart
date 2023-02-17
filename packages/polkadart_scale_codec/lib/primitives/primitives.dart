@@ -37,3 +37,4 @@ part 'enum.dart';
 part 'h256.dart';
 part 'bytes.dart';
 part 'bit_sequence.dart';
+part 'null_codec.dart';

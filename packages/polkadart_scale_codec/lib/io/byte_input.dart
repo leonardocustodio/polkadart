@@ -17,6 +17,9 @@ class ByteInput with Input {
 
   @override
   UnmodifiableUint8ListView readBytes(int length) {
+    if (offset + length > _buffer.length) {
+      throw Exception('Not enough bytes to read');
+    }
     final bytes = _buffer.sublist(offset, offset + length);
     offset += length;
     return UnmodifiableUint8ListView(bytes);

@@ -43,6 +43,13 @@ class Registry {
 
   Codec _parseCodec(
       Map<String, dynamic> customJson, String key, dynamic value) {
+    if (value == null) {
+      return NullCodec.instance;
+    }
+    if (key == 'StorageEntryTypeV14' || value == 'StorageEntryTypeV14') {
+      print('here');
+    }
+
     key = key.trim();
     //
     // Check if the codec is already in the registry
@@ -119,7 +126,7 @@ class Registry {
       }
       //
       // struct
-      return _parseStruct(customJson, key, value as Map<String, dynamic>);
+      return _parseStruct(customJson, key, value);
     }
 
     return _parseCodec(customJson, value, customJson[value]);
@@ -248,8 +255,14 @@ class Registry {
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
       final value = mapEntry.value;
-      final Codec subCodec = getCodec(value) ??
-          _parseCodec(customJson, value, customJson[value] ?? value);
+
+      late Codec subCodec;
+      if (value is String) {
+        subCodec = getCodec(value) ??
+            _parseCodec(customJson, value, customJson[value] ?? value);
+      } else {
+        subCodec = _parseCodec(customJson, key, value);
+      }
       codecMap[key] = subCodec;
     }
     final codec = StructCodec(LinkedHashMap.from(codecMap));
@@ -298,8 +311,15 @@ class Registry {
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     late Codec codec;
     if (value['_enum'] is Map<String, dynamic>) {
-      codec = ComplexEnumCodec(
-          _parseStruct(customJson, key, value['_enum']).mappedCodec);
+      final codecMap = <String, Codec>{};
+      for (var entry in (value['_enum'] as Map<String, dynamic>).entries) {
+        if (entry.value is String){
+          codecMap[entry.key] = _parseCodec(customJson, entry.value, entry.value);
+        }else{
+          codecMap[entry.key] = _parseStruct(customJson, key, entry.value);
+        }
+      }
+      codec = ComplexEnumCodec(codecMap);
     } else if (value['_enum'] is List<String>) {
       codec = SimpleEnumCodec(value['_enum']);
     } else {
@@ -330,6 +350,8 @@ class Registry {
         return U64Codec.instance;
       case 'u128':
         return U128Codec.instance;
+      case 'string':
+      case 'text':
       case 'str':
         return StrCodec.instance;
       case 'i8':
@@ -342,6 +364,8 @@ class Registry {
         return I64Codec.instance;
       case 'i128':
         return I128Codec.instance;
+      case 'null':
+        return NullCodec.instance;
       default:
         return null;
     }
