@@ -334,6 +334,8 @@ class Registry {
     switch (simpleCodecs.toLowerCase()) {
       case 'bool':
         return BoolCodec.instance;
+      case 'h160':
+        return ArrayCodec(U8Codec.instance, 20);
       case 'h256':
         return H256Codec.instance;
       case 'bytes':

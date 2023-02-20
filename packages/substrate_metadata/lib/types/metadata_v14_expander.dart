@@ -33,7 +33,6 @@ class MetadataV14Expander {
 
   String _dealOnePortableType(
       int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
-    print(id);
     if (registeredSiType[id] != null) {
       return registeredSiType[id]!;
     }
@@ -110,6 +109,30 @@ class MetadataV14Expander {
       return 'Null';
     }
     if (one['def']['Composite']['fields'].length == 1) {
+
+      // Check if this is single path and is a BTreeMap or not
+      if (one['path'].length == 1) {
+        final String pathName = one['path'][0];
+        if (pathName == 'BTreeMap') {
+          // ids
+          final keyFieldId = one['params'][0]['type'];
+          final valueFieldId = one['params'][1]['type'];
+          
+          // types
+          final String keyType = registeredSiType[keyFieldId] ??
+              _dealOnePortableType(keyFieldId, id2Portable[keyFieldId], id2Portable);
+          final String valueType = registeredSiType[valueFieldId] ??
+              _dealOnePortableType(valueFieldId, id2Portable[valueFieldId], id2Portable);
+
+          final String typeString = 'BTreeMap<$keyType, $valueType>';
+          registeredTypeNames.add(typeString);
+          registeredSiType[id] = typeString;
+          return typeString;
+        }
+      }
+
+
+
       final int siType = one['def']['Composite']['fields'][0]['type'];
       final String subType = registeredSiType[siType] ??
           _dealOnePortableType(siType, id2Portable[siType], id2Portable);
@@ -166,7 +189,9 @@ class MetadataV14Expander {
     final String tuple2Type = registeredSiType[tuple2] ??
         _dealOnePortableType(tuple2, id2Portable[tuple2], id2Portable);
     // combine (a,b) Tuple
-    registeredSiType[id] = '($tuple1Type,$tuple2Type)';
+    print(id);
+    print('($tuple1Type, $tuple2Type)');
+    registeredSiType[id] = '($tuple1Type, $tuple2Type)';
     return registeredSiType[id]!;
   }
 
