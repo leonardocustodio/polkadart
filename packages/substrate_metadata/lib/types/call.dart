@@ -18,8 +18,16 @@ class Call with Codec<Map<String, dynamic>> {
     final result = <String, dynamic>{
       'module_id': call['module_id']['name'],
       'call_name': call['call']['name'],
-      'params': <String, dynamic>{},
+      'params': <Map<String, dynamic>>[],
     };
+
+    final args = call['call']['args'];
+    for (final arg in args) {
+      final type = arg['type'];
+      final name = arg['name'];
+      final value = ScaleCodec(registry).decode(type, input);
+      result['params'].add({'name': name, 'type': type, 'value': value});
+    }
 
     return result;
   }

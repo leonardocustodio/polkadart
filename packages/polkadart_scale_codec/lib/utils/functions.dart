@@ -30,3 +30,39 @@ String encodeHex(List<int> bytes) {
     throw HexException('$bytes');
   }
 }
+
+///
+/// returns a list of strings from a tuple string
+///
+/// '(a, b, c)'             =>   ['a','b','c']
+/// '((a, b), c)'           => ['(a, b)', 'c']
+/// '(a, (b, c))'         => ['a', '(b, c)']
+/// '(a, (b, c), d)'      => ['a', '(b, c)', 'd']
+/// '(a, (b, c), (d, e))' => ['a', '(b, c)', '(d, e)']
+/// '((a, b), (c, d))'    => ['(a, b)', '(c, d)']
+List<String> parseTupleRegExp(String text) {
+  text = text.substring(1, text.length - 1);
+
+  final List<String> result = <String>[];
+  String buffer = '';
+
+  int count = 0;
+
+  for (var index = 0; index < text.length; index++) {
+    String char = text[index];
+    if (char == '(') {
+      count++;
+    } else if (char == ')') {
+      count--;
+    }
+
+    if (count == 0 && char == ',') {
+      result.add(buffer);
+      buffer = '';
+    } else {
+      buffer += char;
+    }
+  }
+  result.add(buffer);
+  return result;
+}

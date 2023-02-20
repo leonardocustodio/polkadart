@@ -181,7 +181,7 @@ class MetadataV14 {
       'magic': magic,
       'version': version,
       'metadata': metadata,
-    }.toJson();
+    };
 
     return result;
   }

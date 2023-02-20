@@ -40,7 +40,7 @@ class Registry {
       }
     }
   }
-  
+
   Codec _parseCodec(
       Map<String, dynamic> customJson, String key, dynamic value) {
     if (value == null) {
@@ -131,7 +131,9 @@ class Registry {
 
   TupleCodec _parseTuple(
       Map<String, dynamic> customJson, String key, String value) {
-    final List<String> types = value.substring(1, value.length - 1).split(',');
+    // (U64, (U128, Str))
+    // U64,
+    final List<String> types = parseTupleRegExp(value);
 
     final codecs = <Codec>[];
 
