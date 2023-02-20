@@ -24,4 +24,10 @@ class ByteInput with Input {
     offset += length;
     return UnmodifiableUint8ListView(bytes);
   }
+
+  /// clone
+  @override
+  ByteInput clone() {
+    return ByteInput(_buffer);
+  }
 }

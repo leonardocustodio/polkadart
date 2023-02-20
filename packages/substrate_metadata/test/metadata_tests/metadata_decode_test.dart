@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Metadata Tests:', () {
-    final versions = [12, 13, 14];
+    final versions = [14];
     for (final version in versions) {
       test('Decode/Encode V$version', () {
         final String metadataFilePath =

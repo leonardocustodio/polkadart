@@ -80,4 +80,7 @@ mixin Input {
   bool hasBytes() {
     return _buffer.length > offset;
   }
+
+  /// Clone the input
+  Input clone();
 }

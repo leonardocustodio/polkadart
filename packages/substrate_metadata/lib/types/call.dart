@@ -1,0 +1,31 @@
+part of metadata_types;
+
+class Call with Codec<Map<String, dynamic>> {
+  final Registry registry;
+  final Map<String, dynamic> metadata;
+
+  const Call({required this.registry, required this.metadata});
+
+  @override
+  Map<String, dynamic> decode(Input input) {
+    final callIndex = U16Codec.instance.decode(input);
+
+    assertion(metadata.isNotEmpty, 'Empty metadata found.');
+    assertion(metadata['call_index'] != null, 'No call_index found.');
+
+    final call = metadata['call_index'][callIndex];
+
+    final result = <String, dynamic>{
+      'module_id': call['module_id']['name'],
+      'call_name': call['call']['name'],
+      'params': <String, dynamic>{},
+    };
+
+    return result;
+  }
+
+  @override
+  void encodeTo(Map<String, dynamic> value, Output output) {
+    // TODO: implement encodeTo
+  }
+}

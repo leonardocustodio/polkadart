@@ -35,7 +35,7 @@ Object? _encodeJson(Object? value) {
   } else if (value is scale.Some) {
     return _extractSomeValue(value);
   } else if (value is scale.NoneOption) {
-    return 'None';
+    return null;
   } else if (value is MapEntry) {
     final v = <String, dynamic>{
       value.key: _encodeJson(value.value),
@@ -50,7 +50,7 @@ dynamic _extractSomeValue(scale.Some value) {
     return _extractSomeValue(value.value as scale.Some);
   }
   if (value.value == scale.None) {
-    return 'None';
+    return null;
   }
   return value.value;
 }

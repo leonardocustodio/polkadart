@@ -16,4 +16,10 @@ class HexInput with Input {
     offset += length;
     return UnmodifiableUint8ListView(bytes);
   }
+
+  /// clone
+  @override
+  HexInput clone() {
+    return HexInput(encodeHex(_buffer));
+  }
 }
