@@ -86,18 +86,49 @@ class MetadataV14Expander {
     return 'Null';
   }
 
-  String _genPathName(List<dynamic> path, int siTypeId,
-      Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _genPathName(
+    List<dynamic> path,
+    int siTypeId,
+    Map<String, dynamic> one,
+    List<dynamic> id2Portable,
+  ) {
     path = path.cast<String>();
 
-    if (one.isNotEmpty &&
-        one['type']['def']?['Variant'] != null &&
-        one['type']['path'][0] == 'Option') {
-      return _expandOption(siTypeId, one['type'], id2Portable);
+    if (one.isNotEmpty && one['type']['def']?['Variant'] != null) {
+      switch (one['type']['path'][0]) {
+        case 'Option':
+          return _expandOption(siTypeId, one['type'], id2Portable);
+        case 'Result':
+          return _expandResult(siTypeId, one['type'], id2Portable);
+        default:
+      }
     }
+
     String genName = path.join(':');
     if (registeredTypeNames.contains(genName)) {
       genName = '$genName@$siTypeId';
+    }
+    if (genName == '' && one.isNotEmpty) {
+      // can't return empty path names
+      if (one['type']['def']?['Sequence'] != null) {
+        final sequenceSubTypeId = one['type']['def']?['Sequence']['type'];
+
+        String? subType = registeredSiType[sequenceSubTypeId] ??
+            _genPathName(id2Portable[sequenceSubTypeId]['type']['path'],
+                sequenceSubTypeId, id2Portable[sequenceSubTypeId], id2Portable);
+
+        if (subType == '') {
+          subType = registeredSiType[sequenceSubTypeId] ??
+              _dealOnePortableType(sequenceSubTypeId,
+                  id2Portable[sequenceSubTypeId], id2Portable);
+        }
+        registeredSiType[siTypeId] = 'Vec<$subType>';
+        return 'Vec<$subType>';
+      } else if (one['type']['def']?['Compact'] != null) {
+        return _expandCompact(siTypeId, one['type'], id2Portable);
+      } else if (one['type']['def']?['Array'] != null) {
+        return _expandArray(siTypeId, one['type'], id2Portable);
+      }
     }
     return genName;
   }
@@ -207,37 +238,38 @@ class MetadataV14Expander {
 
   String _expandEnum(
       int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
-    final List<String> enumValueList = [];
-
+    if (id == 58) {
+      print('here');
+    }
     final List<dynamic> variants = one['def']['Variant']['variants'];
     variants.sort((a, b) => a['index'] < b['index'] ? -1 : 1);
+
+    final variantNameMap = <String, dynamic>{};
 
     for (int index = 0; index < variants.length; index++) {
       final Map<String, dynamic> variant = variants[index];
       final String name = variant['name'];
-      final int enumIndex = variant['index'];
+      variantNameMap[name] = 'Null';
 
       // fill empty element
-      int interval = enumIndex;
+      /* int interval = enumIndex;
       if (index > 0) {
         interval = enumIndex - (variants[index - 1]['index'] as int) - 1;
       }
       while (interval > 0) {
         enumValueList.add('empty$interval');
         interval--;
-      }
+      } */
 
       switch (variant['fields'].length) {
         case 0:
-          enumValueList.add(name);
           break;
         case 1:
           final int siType = variant['fields'][0]['type'];
-          enumValueList.add(registeredSiType[siType] ??
-              _genPathName(
-                  id2Portable[siType]['type']['path'], siType, {}, []));
+          variantNameMap[name] = registeredSiType[siType] ??
+              _genPathName(id2Portable[siType]['type']['path'], siType,
+                  id2Portable[siType], id2Portable);
           break;
-
         default:
           // field count> 1, enum one element is struct
           // If there is no name the fields are a tuple
@@ -250,10 +282,10 @@ class MetadataV14Expander {
                 typeMapping += ', ';
               }
               typeMapping += registeredSiType[siType] ??
-                  _genPathName(
-                      id2Portable[siType]['type']['path'], siType, {}, []);
+                  _genPathName(id2Portable[siType]['type']['path'], siType,
+                      id2Portable[siType], id2Portable);
             }
-            enumValueList.add('($typeMapping)');
+            variantNameMap[name] = '($typeMapping)';
             break;
           }
 
@@ -265,17 +297,25 @@ class MetadataV14Expander {
                 _genPathName(id2Portable[siType]['type']['path'], siType,
                     id2Portable[siType], id2Portable);
           }
-          enumValueList.add(jsonEncode(typeMapping));
+          variantNameMap[name] = typeMapping;
           break;
       }
+    }
+
+    late dynamic result;
+
+    if (variantNameMap.values.any((e) => e.toString() != 'Null')) {
+      // enum one element is struct or parameterized
+      result = variantNameMap;
+    } else {
+      // enum all values are 'Null' and hence it is not a parameterized enum
+      result = variantNameMap.keys.toList().cast<String>();
     }
 
     final String typeString = _genPathName(one['path'], id, {}, []);
 
     registeredTypeNames.add(typeString);
-    customCodecRegister[typeString] = {'_enum': enumValueList};
-
-    /*  generator.registerCustomCodec(typeString, EnumType(enumValueList)); */
+    customCodecRegister[typeString] = {'_enum': result};
 
     registeredSiType[id] = typeString;
     return typeString;

@@ -171,11 +171,20 @@ class MetadataV14 {
       metadata['pallets'][palletIndex]['errors_value'] = errors;
     }
 
+    final List<String> sortedKeys = metadataExpander.customCodecRegister.keys
+        .toList()
+      ..sort((a, b) => a.compareTo(b));
+
+    final customCodecRegister = <String, dynamic>{};
+    for (final key in sortedKeys) {
+      customCodecRegister[key] = metadataExpander.customCodecRegister[key];
+    }
+
     //
     // Register the Call type
     registry
       ..addCodec('Call', Call(registry: registry, metadata: metadata))
-      ..registerCustomCodec(metadataExpander.customCodecRegister);
+      ..registerCustomCodec(customCodecRegister);
 
     final result = {
       'magic': magic,

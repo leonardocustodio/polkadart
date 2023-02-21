@@ -23,6 +23,8 @@ class Registry {
     return codecs[codecName];
   }
 
+  final Map<String, dynamic> _postVariantFieldsProcessor = <String, dynamic>{};
+
   ///
   /// Parses customJson and adds it to registry
   void registerCustomCodec(Map<String, dynamic> customJson) {
@@ -35,6 +37,19 @@ class Registry {
       }
 
       final codec = _parseCodec(customJson, key, value);
+      if (getCodec(key) == null) {
+        addCodec(key, codec);
+      }
+    }
+    for (final mapEntry in _postVariantFieldsProcessor.entries) {
+      final key = mapEntry.key;
+      final value = mapEntry.value;
+
+      if (getCodec(key) != null) {
+        continue;
+      }
+
+      final codec = _parseCodec(_postVariantFieldsProcessor, key, value);
       if (getCodec(key) == null) {
         addCodec(key, codec);
       }
@@ -250,6 +265,7 @@ class Registry {
 
   StructCodec _parseStruct(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
+    print('parse struct $key $value');
     final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
@@ -310,18 +326,18 @@ class Registry {
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     late Codec codec;
     if (value['_enum'] is Map<String, dynamic>) {
-      final codecMap = <String, Codec>{};
+      codec = DynamicEnumCodec.complex(
+        registry: this,
+        keys: (value['_enum'] as Map<String, dynamic>).keys.toList(),
+      );
       for (var entry in (value['_enum'] as Map<String, dynamic>).entries) {
-        if (entry.value is String) {
-          codecMap[entry.key] =
-              _parseCodec(customJson, entry.value, entry.value);
-        } else {
-          codecMap[entry.key] = _parseStruct(customJson, key, entry.value);
-        }
+        _postVariantFieldsProcessor[entry.key] = entry.value;
       }
-      codec = ComplexEnumCodec(codecMap);
     } else if (value['_enum'] is List<String>) {
-      codec = SimpleEnumCodec(value['_enum']);
+      codec = DynamicEnumCodec.simple(
+        registry: this,
+        keys: (value['_enum'] as List<String>).toList(),
+      );
     } else {
       throw EnumException(
           'EnumException: Expected enum to be a map or a list, but found ${value['_enum'].runtimeType}');

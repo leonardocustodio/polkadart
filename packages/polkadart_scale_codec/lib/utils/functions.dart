@@ -49,16 +49,20 @@ List<String> parseTupleRegExp(String text) {
   int count = 0;
 
   for (var index = 0; index < text.length; index++) {
-    String char = text[index];
+    final String char = text[index];
     if (char == '(') {
       count++;
     } else if (char == ')') {
       count--;
     }
 
-    if (count == 0 && char == ',') {
+    if (count == 0 &&
+        char == ',' &&
+        index != text.length - 1 &&
+        text[index + 1] == ' ') {
       result.add(buffer);
       buffer = '';
+      index++;
     } else {
       buffer += char;
     }
