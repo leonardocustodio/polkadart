@@ -34,6 +34,6 @@ class Call with Codec<Map<String, dynamic>> {
 
   @override
   void encodeTo(Map<String, dynamic> value, Output output) {
-    // TODO: implement encodeTo
+    throw UnimplementedError();
   }
 }

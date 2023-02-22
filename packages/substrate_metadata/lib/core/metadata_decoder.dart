@@ -1,19 +1,16 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/metadata_definitions/metadata_definitions.dart'
+import 'package:substrate_metadata/definitions/metadata/metadata.dart'
     as metadata_definitions;
 import 'package:substrate_metadata/types/metadata_types.dart';
 
 class MetadataDecoder {
-  late final Registry typeRegistry;
+  late Registry typeRegistry;
 
-  MetadataDecoder._() {
-    typeRegistry = Registry()
-      ..registerCustomCodec(metadata_definitions.METADATA_DEFINITIONS);
+  MetadataDecoder.fromTypes(Map<String, dynamic> types) {
+    typeRegistry = Registry()..registerCustomCodec(types);
   }
 
-  static final MetadataDecoder _instance = MetadataDecoder._();
-
-  static MetadataDecoder get instance => _instance;
+  MetadataDecoder();
 
   ///
   /// Decode metadata from Input
@@ -21,12 +18,15 @@ class MetadataDecoder {
     return _decodePrivate(input);
   }
 
-  void encode(Map<String, dynamic> metadata, Output output) {
+  void encode(Map<String, dynamic> metadata, int version, Output output) {
     final magic = 0x6174656d;
     U32Codec.instance.encodeTo(magic, output);
 
-    final version = metadata['version'];
     U8Codec.instance.encodeTo(version, output);
+
+    typeRegistry = Registry()
+      ..registerCustomCodec(
+          metadata_definitions.metadataTypes.types, 'MetadataV$version');
 
     ScaleCodec(typeRegistry)
         .encodeTo('MetadataV$version', metadata['metadata'], output);
@@ -45,11 +45,15 @@ class MetadataDecoder {
     assertion(15 > version,
         'Expected version less then 15, but got $version. Versions above 15 are not supported by this lib');
 
+    typeRegistry = Registry()
+      ..registerCustomCodec(
+          metadata_definitions.metadataTypes.types, 'MetadataV$version');
     //
     // This is important to separate the V14 decoding because
     // the types mapping is changed with optimisation in v14
     //
     // Hence V14 decoding is handled separately to simplify the decoding of events and extrinsics by pre-analysing the lookup types.
+
     if (version == 14) {
       return MetadataV14.fromRegistry(typeRegistry).decode(source);
     }
@@ -68,13 +72,10 @@ class MetadataDecoder {
         rethrow;
       }
       try {
-        final clonnedInput = source.clone();
-        U32Codec.instance.decode(clonnedInput);
-        U8Codec.instance.decode(clonnedInput);
         return {
           'version': 10,
-          'metadata': ScaleCodec(typeRegistry)
-              .decode('MetadataV$version', clonnedInput),
+          'metadata':
+              ScaleCodec(typeRegistry).decode('MetadataV$version', source),
         };
       } catch (unknownError) {
         rethrow;

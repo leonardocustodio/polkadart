@@ -23,13 +23,13 @@ void main() {
     test('When value "Apple" is encoded then it returns 0x00', () {
       final output = HexOutput();
       final codec = ScaleCodec(registry);
-      codec.encodeTo('JuiceEnum', MapEntry('Apple', null), output);
+      codec.encodeTo('JuiceEnum', 'Apple', output);
       expect(output.toString(), '0x00');
     });
     test('When value "Orange" is encoded then it returns 0x01', () {
       final output = HexOutput();
       final codec = ScaleCodec(registry);
-      codec.encodeTo('JuiceEnum', MapEntry('Orange', null), output);
+      codec.encodeTo('JuiceEnum', 'Orange', output);
       expect(output.toString(), '0x01');
     });
     test('When value MapEntry("Apple", 1) is encoded then it returns 0x00', () {
@@ -90,13 +90,13 @@ void main() {
       final input = HexInput('0x00');
       final codec = ScaleCodec(registry);
       final decoded = codec.decode('JuiceEnum', input);
-      expect(decoded.toString(), MapEntry('Apple', null).toString());
+      expect(decoded, 'Apple');
     });
     test('When value 0x01 is decoded then it returns "Orange"', () {
       final input = HexInput('0x01');
       final codec = ScaleCodec(registry);
       final decoded = codec.decode('JuiceEnum', input);
-      expect(decoded.toString(), MapEntry('Orange', null).toString());
+      expect(decoded, 'Orange');
     });
     test('When value 0x0001 is decoded then it returns MapEntry("Apple", 1)',
         () {

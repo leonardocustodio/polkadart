@@ -59,47 +59,27 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V>> {
 
 class DynamicEnumCodec<V> with Codec<MapEntry<String, V>> {
   final Registry registry;
-  final List<String> keys;
-  final bool _isSimple;
+  final Map<String, dynamic> map;
 
-  ///
-  /// In complex the keys are the names of the enum variants which have parameters
-  ///
-  /// {
-  ///   'Apple': 'u8',
-  ///   'Orange': 'bool',
-  /// }
-  ///
-  /// // keys = ['Apple', 'Orange']
-  ///
-  /// Here the 'Apple' is mapped to a u8 and 'Orange' is mapped to a bool and is used to decode/encode further.
-  const DynamicEnumCodec.complex({required this.registry, required this.keys})
-      : _isSimple = false;
-
-  ///
-  /// In simple the keys are the names of the enum variants which have no parameters
-  ///
-  /// // keys = ['Apple', 'Orange']
-  const DynamicEnumCodec.simple({required this.registry, required this.keys})
-      : _isSimple = true;
+  /// Complex Constructor
+  const DynamicEnumCodec({required this.registry, required this.map});
 
   @override
   void encodeTo(MapEntry<String, V> value, Output output) {
-    final index = keys.toList().indexOf(value.key);
+    final index = map.keys.toList().indexOf(value.key);
 
     if (index == -1) {
       throw EnumException(
-          'Invalid enum value: $value. Can only accept: ${keys.toList()}');
+          'Invalid enum value: $value. Can only accept: ${map.keys.toList()}');
     }
 
     output.pushByte(index);
 
-    if (_isSimple) {
-      return;
-    }
-    final codec = registry.getCodec(value.key);
+    final type = map[value.key];
 
-    assertion(codec != null, 'Codec for ${value.key} not found');
+    final codec = registry.getCodec(type);
+
+    assertion(codec != null, 'Codec for type:$type not found.');
 
     codec!.encodeTo(value.value, output);
   }
@@ -107,18 +87,16 @@ class DynamicEnumCodec<V> with Codec<MapEntry<String, V>> {
   @override
   MapEntry<String, V> decode(Input input) {
     final index = input.read();
-    if (index >= keys.length) {
+    if (index >= map.keys.length) {
       throw EnumException('Invalid enum index: $index.');
     }
-    final key = keys.elementAt(index);
+    final key = map.keys.elementAt(index);
 
-    if (_isSimple) {
-      return MapEntry(key, null as V);
-    }
+    final type = map[key];
 
-    final codec = registry.getCodec(key);
+    final codec = registry.getCodec(type);
 
-    assertion(codec != null, 'Codec for $key not found');
+    assertion(codec != null, 'Codec for type: $type not found.');
 
     return MapEntry(key, codec!.decode(input));
   }

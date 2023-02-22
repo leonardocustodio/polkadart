@@ -4,6 +4,9 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
 /// Returns normalized Json to Human readable format
 extension ToJson<T> on T {
   T toJson() {
+    if (this is MapEntry) {
+      return _encodeJson(this) as T;
+    }
     if (this is List<T>) {
       return (this as List<T>).map((T e) => e.toJson()).toList() as T;
     }

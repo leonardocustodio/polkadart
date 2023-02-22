@@ -7,7 +7,10 @@ class MetadataV14Expander {
 
   final customCodecRegister = <String, dynamic>{};
 
-  MetadataV14Expander(List<dynamic> id2Portable) {
+  MetadataV14Expander(List<dynamic> value) {
+    final id2Portable =
+        value.map((e) => (e as Map<String, dynamic>).toJson()).toList();
+
     for (var item in id2Portable) {
       if (item['type']['def']?['Primitive'] != null) {
         registeredSiType[item['id']] = item['type']['def']['Primitive'];
@@ -65,19 +68,18 @@ class MetadataV14Expander {
           return _expandResult(id, one, id2Portable);
       }
       if (one['path'].length >= 2) {
-        switch (one['path'][one['path'].length - 1]) {
-          case 'Instruction':
-            registeredSiType[id] = 'Call';
-            return 'Call';
-          case 'Call':
-            {
-              if (one['path'][one['path'].length - 1] == 'Event' ||
-                  one['path'][one['path'].length - 2] == 'pallet') {
-                registeredSiType[id] = 'Call';
-                return 'Call';
-              }
-            }
-            break;
+        if (['Call', 'Event'].contains(one['path'].last)) {
+          registeredSiType[id] = 'Call';
+          return registeredSiType[id]!;
+        }
+        if (one['path'].last == 'Call' &&
+            one['path'][one['path'].length - 2] == 'pallet') {
+          registeredSiType[id] = 'Call';
+          return registeredSiType[id]!;
+        }
+        if (one['path'].last == 'Instruction') {
+          registeredSiType[id] = 'Call';
+          return registeredSiType[id]!;
         }
       }
       return _expandEnum(id, one, id2Portable);

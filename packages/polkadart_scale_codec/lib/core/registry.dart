@@ -27,18 +27,25 @@ class Registry {
 
   ///
   /// Parses customJson and adds it to registry
-  void registerCustomCodec(Map<String, dynamic> customJson) {
-    for (final mapEntry in customJson.entries) {
-      final key = mapEntry.key;
-      final value = mapEntry.value;
+  void registerCustomCodec(Map<String, dynamic> customJson,
+      [String? selectedKey]) {
+    if (selectedKey != null) {
+      final codec =
+          _parseCodec(customJson, selectedKey, customJson[selectedKey]);
+      addCodec(selectedKey, codec);
+    } else {
+      for (final mapEntry in customJson.entries) {
+        final key = mapEntry.key;
+        final value = mapEntry.value;
 
-      if (getCodec(key) != null) {
-        continue;
-      }
+        if (getCodec(key) != null) {
+          continue;
+        }
 
-      final codec = _parseCodec(customJson, key, value);
-      if (getCodec(key) == null) {
-        addCodec(key, codec);
+        final codec = _parseCodec(customJson, key, value);
+        if (getCodec(key) == null) {
+          addCodec(key, codec);
+        }
       }
     }
     for (final mapEntry in _postVariantFieldsProcessor.entries) {
@@ -49,7 +56,7 @@ class Registry {
         continue;
       }
 
-      final codec = _parseCodec(_postVariantFieldsProcessor, key, value);
+      final codec = _parseCodec(customJson, key, value);
       if (getCodec(key) == null) {
         addCodec(key, codec);
       }
@@ -265,7 +272,6 @@ class Registry {
 
   StructCodec _parseStruct(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
-    print('parse struct $key $value');
     final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
@@ -326,18 +332,33 @@ class Registry {
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     late Codec codec;
     if (value['_enum'] is Map<String, dynamic>) {
-      codec = DynamicEnumCodec.complex(
-        registry: this,
-        keys: (value['_enum'] as Map<String, dynamic>).keys.toList(),
-      );
-      for (var entry in (value['_enum'] as Map<String, dynamic>).entries) {
-        _postVariantFieldsProcessor[entry.key] = entry.value;
+      try {
+        final codecMap = <String, Codec>{};
+        for (var entry in (value['_enum'] as Map<String, dynamic>).entries) {
+          if (entry.value is String) {
+            codecMap[entry.key] =
+                _parseCodec(customJson, entry.value, entry.value);
+          } else {
+            codecMap[entry.key] = _parseStruct(customJson, key, entry.value);
+          }
+        }
+        codec = ComplexEnumCodec(codecMap);
+      } catch (e) {
+        // If the enum is too complex and is calling itself back again and again then, we fallback to a dynamic enum
+        if (e is! StackOverflowError) {
+          rethrow;
+        }
+
+        codec = DynamicEnumCodec(
+          registry: this,
+          map: value['_enum'],
+        );
+        for (final entry in (value['_enum'] as Map<String, dynamic>).entries) {
+          _postVariantFieldsProcessor[entry.key] = entry.value;
+        }
       }
     } else if (value['_enum'] is List<String>) {
-      codec = DynamicEnumCodec.simple(
-        registry: this,
-        keys: (value['_enum'] as List<String>).toList(),
-      );
+      codec = SimpleEnumCodec(value['_enum']);
     } else {
       throw EnumException(
           'EnumException: Expected enum to be a map or a list, but found ${value['_enum'].runtimeType}');
