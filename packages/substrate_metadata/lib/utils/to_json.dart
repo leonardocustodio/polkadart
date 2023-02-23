@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale;
+part of utils;
 
 /// Returns normalized Json to Human readable format
 extension ToJson<T> on T {
@@ -17,7 +16,7 @@ extension ToJson<T> on T {
   }
 
   String toHuman() {
-    if (this is scale.Some<dynamic>) {
+    if (this is Some<dynamic>) {
       return toString();
     }
 
@@ -35,9 +34,9 @@ extension ToJson<T> on T {
 Object? _encodeJson(Object? value) {
   if (value is BigInt) {
     return value.toString();
-  } else if (value is scale.Some) {
+  } else if (value is Some) {
     return _extractSomeValue(value);
-  } else if (value is scale.NoneOption) {
+  } else if (value is NoneOption) {
     return null;
   } else if (value is MapEntry) {
     final v = <String, dynamic>{
@@ -48,11 +47,11 @@ Object? _encodeJson(Object? value) {
   return value;
 }
 
-dynamic _extractSomeValue(scale.Some value) {
-  if (value.value is scale.Some) {
-    return _extractSomeValue(value.value as scale.Some);
+dynamic _extractSomeValue(Some value) {
+  if (value.value is Some) {
+    return _extractSomeValue(value.value as Some);
   }
-  if (value.value == scale.None) {
+  if (value.value == None) {
     return null;
   }
   return value.value;

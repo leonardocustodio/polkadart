@@ -20,7 +20,7 @@ void main() {
         // decoding
         final input = HexInput(metadataHex);
 
-        final decodedMetadata = MetadataDecoder().decode(input);
+        final decodedMetadata = MetadataDecoder().decodeFromInput(input);
 
         final output = HexOutput();
         MetadataDecoder()

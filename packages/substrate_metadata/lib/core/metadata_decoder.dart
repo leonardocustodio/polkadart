@@ -6,30 +6,20 @@ import 'package:substrate_metadata/types/metadata_types.dart';
 class MetadataDecoder {
   late Registry typeRegistry;
 
-  MetadataDecoder.fromTypes(Map<String, dynamic> types) {
-    typeRegistry = Registry()..registerCustomCodec(types);
-  }
-
+  //
+  // Constructor
   MetadataDecoder();
 
   ///
   /// Decode metadata from Input
-  Map<String, dynamic> decode(Input input) {
+  Map<String, dynamic> decodeFromInput(Input input) {
     return _decodePrivate(input);
   }
 
-  void encode(Map<String, dynamic> metadata, int version, Output output) {
-    final magic = 0x6174656d;
-    U32Codec.instance.encodeTo(magic, output);
-
-    U8Codec.instance.encodeTo(version, output);
-
-    typeRegistry = Registry()
-      ..registerCustomCodec(
-          metadata_definitions.metadataTypes.types, 'MetadataV$version');
-
-    ScaleCodec(typeRegistry)
-        .encodeTo('MetadataV$version', metadata['metadata'], output);
+  ///
+  /// Decode metadata from Hexadecimal String
+  Map<String, dynamic> decodeFromHex(String metadataHex) {
+    return _decodePrivate(HexInput(metadataHex));
   }
 
   ///
@@ -45,9 +35,7 @@ class MetadataDecoder {
     assertion(15 > version,
         'Expected version less then 15, but got $version. Versions above 15 are not supported by this lib');
 
-    typeRegistry = Registry()
-      ..registerCustomCodec(
-          metadata_definitions.metadataTypes.types, 'MetadataV$version');
+    typeRegistry = RegistryCreator.instance[version];
     //
     // This is important to separate the V14 decoding because
     // the types mapping is changed with optimisation in v14
@@ -81,5 +69,57 @@ class MetadataDecoder {
         rethrow;
       }
     }
+  }
+
+  void encode(Map<String, dynamic> metadata, int version, Output output) {
+    final magic = 0x6174656d;
+    //
+    // encode magic number
+    U32Codec.instance.encodeTo(magic, output);
+
+    //
+    // encode version
+    U8Codec.instance.encodeTo(version, output);
+
+    typeRegistry = Registry()
+      ..registerCustomCodec(
+          metadata_definitions.metadataTypes.types, 'MetadataV$version');
+
+    ScaleCodec(typeRegistry)
+        .encodeTo('MetadataV$version', metadata['metadata'], output);
+  }
+}
+
+/// Singleton class to create and parse Registry for V9-V14 only once and use it again and again.
+class RegistryCreator {
+  static final RegistryCreator _singleton = RegistryCreator._internal();
+
+  factory RegistryCreator() {
+    return _singleton;
+  }
+
+  static RegistryCreator get instance => _singleton;
+
+  RegistryCreator._internal() {
+    for (var i = 9; i < 15; i++) {
+      _createRegistry(i);
+    }
+  }
+
+  final registry = <Registry>[];
+
+  // create [] operator
+  Registry operator [](int version) {
+    if (version < 9 || version > 14) {
+      throw Exception(
+          'Expected version between 9 and 14, but got $version, Only V9-V14 are supported');
+    }
+    return registry[version - 9];
+  }
+
+  void _createRegistry(int version) {
+    registry.add(Registry()
+      ..registerCustomCodec(
+          metadata_definitions.metadataTypes.types, 'MetadataV$version'));
   }
 }
