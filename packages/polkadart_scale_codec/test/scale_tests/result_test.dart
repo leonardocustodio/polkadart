@@ -7,9 +7,9 @@ void main() {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
         'A': 'Result<U8, U8>',
-        'C': 'Result<U8, Bool>',
-        'B': 'Result<C, Bool>',
-        'D': 'Result<(U8, Bool), Bool>'
+        'C': 'Result<U8, bool>',
+        'B': 'Result<C, bool>',
+        'D': 'Result<(U8, bool), bool>'
       });
 
     test('When value MapEntry("Ok", 42) is encoded then it returns 0x002a', () {
@@ -56,9 +56,9 @@ void main() {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
         'A': 'Result<U8, U8>',
-        'C': 'Result<U8, Bool>',
-        'B': 'Result<C, Bool>',
-        'D': 'Result<(U8, Bool), Bool>'
+        'C': 'Result<U8, bool>',
+        'B': 'Result<C, bool>',
+        'D': 'Result<(U8, bool), bool>'
       });
 
     test('When value 0x002a is decoded then it returns MapEntry("Ok", 42)', () {

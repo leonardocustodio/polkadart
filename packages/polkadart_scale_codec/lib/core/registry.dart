@@ -370,34 +370,34 @@ class Registry {
   ///
   /// match and return the types which are simple and not parametrized
   Codec? getSimpleCodecs(String simpleCodecs) {
-    switch (simpleCodecs) {
-      case 'Bool':
+    switch (simpleCodecs.toLowerCase()) {
+      case 'bool':
         return BoolCodec.instance;
-      case 'U8':
+      case 'u8':
         return U8Codec.instance;
-      case 'U16':
+      case 'u16':
         return U16Codec.instance;
-      case 'U32':
+      case 'u32':
         return U32Codec.instance;
-      case 'U64':
+      case 'u64':
         return U64Codec.instance;
-      case 'U128':
+      case 'u128':
         return U128Codec.instance;
-      case 'String':
-      case 'Text':
-      case 'Str':
+      case 'string':
+      case 'text':
+      case 'str':
         return StrCodec.instance;
-      case 'I8':
+      case 'i8':
         return I8Codec.instance;
-      case 'I16':
+      case 'i16':
         return I16Codec.instance;
-      case 'I32':
+      case 'i32':
         return I32Codec.instance;
-      case 'I64':
+      case 'i64':
         return I64Codec.instance;
-      case 'I128':
+      case 'i128':
         return I128Codec.instance;
-      case 'Null':
+      case 'null':
         return NullCodec.instance;
       default:
         return null;

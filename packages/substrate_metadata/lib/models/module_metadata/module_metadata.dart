@@ -388,7 +388,7 @@ class ModuleConstantMetadataV9 {
       ModuleConstantMetadataV9(
         name: map['name'],
         type: map['type'],
-        value: Uint8List.fromList(map['value'] as List<int>),
+        value: Uint8List.fromList((map['value'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
 

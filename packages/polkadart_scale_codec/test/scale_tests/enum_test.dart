@@ -7,7 +7,7 @@ void main() {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
         'OrangeStruct': {
-          'value1': 'Bool',
+          'value1': 'bool',
           'value2': 'JuiceEnumComplex',
         },
         'JuiceEnum': {
@@ -82,7 +82,7 @@ void main() {
         'JuiceEnumComplex': {
           '_enum': {
             'Apple': 'U8',
-            'Orange': 'Bool',
+            'Orange': 'bool',
           },
         }
       });

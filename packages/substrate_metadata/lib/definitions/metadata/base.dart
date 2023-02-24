@@ -9,7 +9,7 @@ part of metadata;
 const Si1Variant = <String, String>{
   'name': 'Text',
   'fields': 'Vec<Si1Field>',
-  'index': 'u8',
+  'index': 'U8',
   'docs': 'Vec<Text>'
 };
 
@@ -20,7 +20,7 @@ const ScaleInfoTypes = <String, dynamic>{
     'typeName': 'Option<Text>',
     'docs': 'Vec<Text>'
   },
-  'Si0LookupTypeId': 'u32',
+  'Si0LookupTypeId': 'U32',
   'Si0Path': 'Vec<Text>',
   'Si0Type': {
     'path': 'Si0Path',
@@ -41,7 +41,7 @@ const ScaleInfoTypes = <String, dynamic>{
     }
   },
   'Si0TypeDefArray': {
-    'len': 'u32',
+    'len': 'U32',
     'type': 'Si0LookupTypeId',
   },
   'Si0TypeDefBitSequence': {
@@ -88,7 +88,7 @@ const ScaleInfoTypes = <String, dynamic>{
   'Si0Variant': {
     'name': 'Text',
     'fields': 'Vec<Si0Field>',
-    'index': 'Option<u8>',
+    'index': 'Option<U8>',
     'discriminant': 'Option<u64>',
     'docs': 'Vec<Text>'
   },
@@ -119,7 +119,7 @@ const ScaleInfoTypes = <String, dynamic>{
     }
   },
   'Si1TypeDefArray': {
-    'len': 'u32',
+    'len': 'U32',
     'type': 'Si1LookupTypeId',
   },
   'Si1TypeDefBitSequence': {

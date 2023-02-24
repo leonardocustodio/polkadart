@@ -9,7 +9,7 @@ part of metadata;
 const V11 = <String, dynamic>{
   'ErrorMetadataV11': 'ErrorMetadataV10',
   'EventMetadataV11': 'EventMetadataV10',
-  'ExtrinsicMetadataV11': {'version': 'u8', 'signedExtensions': 'Vec<Text>'},
+  'ExtrinsicMetadataV11': {'version': 'U8', 'signedExtensions': 'Vec<Text>'},
   'FunctionArgumentMetadataV11': 'FunctionArgumentMetadataV10',
   'FunctionMetadataV11': 'FunctionMetadataV10',
   'MetadataV11': {

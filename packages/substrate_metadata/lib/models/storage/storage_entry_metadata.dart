@@ -21,7 +21,8 @@ class StorageEntryMetadataV9 {
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV9.fromJson(map['type']),
-        fallback: Uint8List.fromList(map['fallback'] as List<int>),
+        fallback:
+            Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
 
@@ -56,7 +57,8 @@ class StorageEntryMetadataV10 {
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV10.fromJson(map['type']),
-        fallback: Uint8List.fromList(map['fallback'] as List<int>),
+        fallback:
+            Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
 
