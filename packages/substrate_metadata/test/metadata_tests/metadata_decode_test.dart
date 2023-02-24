@@ -5,25 +5,21 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 import 'package:test/test.dart';
 
+const versions = [9, 10, 11, 12, 13, 14];
+
 void main() {
   group('Metadata Tests:', () {
-    // metadata file path for v9 - v14
-    final String metadataFilePath = '../../chain/metadata.json';
+    for (final version in versions) {
+      test('Decode/Encode version: $version', () {
+        // metadata file path for v9 - v14
+        final String metadataFilePath =
+            '../../chain/metadata/metadata_v$version.json';
 
-    // reading the file
-    final String fileContents = File(metadataFilePath).readAsStringSync();
+        // reading the file
+        final String fileContents = File(metadataFilePath).readAsStringSync();
 
-    final List<String> metadataVersions =
-        (jsonDecode(fileContents)['metadataVersions'] as List<dynamic>)
-            .cast<String>();
+        final String metadataHex = jsonDecode(fileContents)['v$version'];
 
-    // testing for v9 - v14
-    //
-    // looping throught all the metadata
-    for (var index = 0; index < metadataVersions.length; index++) {
-      final metadataHex = metadataVersions[index];
-
-      test('Decode/Encode at index: $index', () {
         //
         // Here we only have the metadata but not the versions
         // so we are directly testing the decode method and
