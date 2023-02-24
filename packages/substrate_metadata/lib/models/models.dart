@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/definitions/legacy_types_model.dart';
 import 'package:substrate_metadata/exceptions/exceptions.dart';
 
 part './decoded_block/decoded_block_events.model.dart';

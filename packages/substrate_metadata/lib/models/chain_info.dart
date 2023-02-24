@@ -20,8 +20,4 @@ class ChainInfo {
     throw UnsupportedMetadataException(
         'Unsupported metadata version: ${metadata.version}');
   }
-
-  /* static ChainInfo fromMetadata(Metadata metadata, LegacyTypes? types) {
-
-  } */
 }

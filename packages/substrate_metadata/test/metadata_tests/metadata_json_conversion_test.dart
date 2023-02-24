@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
+import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Metadata Tests:', () {
+  group('Metadata Json Conversion Test:', () {
     // metadata file path for v9 - v14
     final String metadataFilePath =
         '../substrate_metadata/test/metadata_tests/metadata.json';
@@ -32,16 +32,23 @@ void main() {
         //
 
         // decoding
-        final decodedMetadata = MetadataDecoder().decode(metadataHex);
+        final Map<String, dynamic> decodedMetadataJson =
+            MetadataDecoder().decode(metadataHex);
 
-        final output = HexOutput();
+        //
+        // Here we are creating Metadata Object from the decoded metadata
+        final Metadata metadataObject = Metadata.fromVersion(
+            decodedMetadataJson['metadata'], decodedMetadataJson['version']);
 
-        // encoding to output;
-        MetadataDecoder().encode(
-            decodedMetadata['metadata'], decodedMetadata['version'], output);
+        //
+        // Here we are creating the json from the metadata object
+        //
+        // Hence checking testing the toJson() method
+        final Map<String, dynamic> metadataJsonFromObject =
+            Metadata.toJson(metadataObject);
 
-        final encodedMetadataHex = output.toString();
-        expect(encodedMetadataHex, metadataHex);
+        expect(metadataJsonFromObject.toString(),
+            decodedMetadataJson['metadata'].toString());
       });
     }
   });

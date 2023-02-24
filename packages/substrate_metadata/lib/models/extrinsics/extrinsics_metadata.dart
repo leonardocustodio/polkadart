@@ -12,6 +12,12 @@ class ExtrinsicMetadataV11 {
         version: map['version'],
         signedExtensions: (map['signedExtensions'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'version': version,
+        'signedExtensions': signedExtensions,
+      };
 }
 
 class ExtrinsicMetadataV14 {
@@ -31,4 +37,13 @@ class ExtrinsicMetadataV14 {
           signedExtensions: (map['signedExtensions'] as List)
               .map((value) => SignedExtensionMetadataV14.fromJson(value))
               .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'type': type,
+        'version': version,
+        'signedExtensions': signedExtensions
+            .map((SignedExtensionMetadataV14 value) => value.toJson())
+            .toList(),
+      };
 }

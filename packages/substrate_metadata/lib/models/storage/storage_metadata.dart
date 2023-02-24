@@ -13,6 +13,12 @@ class StorageMetadataV9 {
           items: (map['items'] as List)
               .map((val) => StorageEntryMetadataV9.fromJson(val))
               .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'prefix': prefix,
+        'items': items.map((e) => e.toJson()).toList(),
+      };
 }
 
 class StorageMetadataV10 {
@@ -27,6 +33,12 @@ class StorageMetadataV10 {
           items: (map['items'] as List)
               .map((val) => StorageEntryMetadataV10.fromJson(val))
               .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'prefix': prefix,
+        'items': items.map((e) => e.toJson()).toList(),
+      };
 }
 
 class StorageMetadataV11 {
@@ -41,6 +53,12 @@ class StorageMetadataV11 {
           items: (map['items'] as List)
               .map((val) => StorageEntryMetadataV11.fromJson(val))
               .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'prefix': prefix,
+        'items': items.map((e) => e.toJson()).toList(),
+      };
 }
 
 class StorageMetadataV13 {
@@ -56,4 +74,10 @@ class StorageMetadataV13 {
           items: (map['items'] as List)
               .map((val) => StorageEntryMetadataV13.fromJson(val))
               .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'prefix': prefix,
+        'items': items.map((e) => e.toJson()).toList(),
+      };
 }

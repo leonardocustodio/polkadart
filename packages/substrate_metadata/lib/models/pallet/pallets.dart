@@ -53,6 +53,32 @@ class PalletMetadataV14 {
 
     return obj;
   }
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['name'] = name;
+
+    final localStorage = storage?.toJson();
+    data['storage'] = localStorage != null ? Some(localStorage) : None;
+
+    final localCalls = calls?.toJson();
+    data['calls'] = localCalls != null ? Some(localCalls) : None;
+
+    final localEvents = events?.toJson();
+    data['events'] = localEvents != null ? Some(localEvents) : None;
+
+    data['constants'] = constants
+        .map((PalletConstantMetadataV14 value) => value.toJson())
+        .toList();
+
+    final localErrors = errors?.toJson();
+    data['errors'] = localErrors != null ? Some(localErrors) : None;
+
+    data['index'] = index;
+
+    return data;
+  }
 }
 
 class PalletStorageMetadataV14 {
@@ -67,6 +93,14 @@ class PalletStorageMetadataV14 {
           items: (map['items'] as List)
               .map((value) => StorageEntryMetadataV14.fromJson(value))
               .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'prefix': prefix,
+        'items': items
+            .map((StorageEntryMetadataV14 value) => value.toJson())
+            .toList(),
+      };
 }
 
 class PalletCallMetadataV14 {
@@ -76,6 +110,11 @@ class PalletCallMetadataV14 {
   /// Creates Class Object from `Json`
   static PalletCallMetadataV14 fromJson(Map<String, dynamic> map) =>
       PalletCallMetadataV14(type: map['type']);
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'type': type,
+      };
 }
 
 class PalletEventMetadataV14 {
@@ -85,6 +124,11 @@ class PalletEventMetadataV14 {
   /// Creates Class Object from `Json`
   static PalletEventMetadataV14 fromJson(Map<String, dynamic> map) =>
       PalletEventMetadataV14(type: map['type']);
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'type': type,
+      };
 }
 
 class PalletConstantMetadataV14 {
@@ -106,6 +150,14 @@ class PalletConstantMetadataV14 {
           type: map['type'],
           value: Uint8List.fromList((map['value'] as List).cast<int>()),
           docs: (map['docs'] as List).cast<String>());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'type': type,
+        'value': value.toList(),
+        'docs': docs,
+      };
 }
 
 class PalletErrorMetadataV14 {
@@ -115,4 +167,9 @@ class PalletErrorMetadataV14 {
   /// Creates Class Object from `Json`
   static PalletErrorMetadataV14 fromJson(Map<String, dynamic> map) =>
       PalletErrorMetadataV14(type: map['type']);
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'type': type,
+      };
 }

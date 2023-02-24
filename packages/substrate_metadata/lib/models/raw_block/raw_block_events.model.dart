@@ -14,4 +14,10 @@ class RawBlockEvents extends Equatable {
 
   @override
   List<Object?> get props => [blockNumber, events];
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'blockNumber': blockNumber,
+        'events': events,
+      };
 }

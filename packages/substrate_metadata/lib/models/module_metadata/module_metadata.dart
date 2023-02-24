@@ -15,6 +15,9 @@ abstract class AnyLegacyModule {
       this.events,
       required this.constants,
       required this.errors});
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson();
 }
 
 class ModuleMetadataV9 extends AnyLegacyModule {
@@ -62,6 +65,26 @@ class ModuleMetadataV9 extends AnyLegacyModule {
           .toList();
     }
     return obj;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+    return map;
   }
 }
 
@@ -111,6 +134,26 @@ class ModuleMetadataV10 extends AnyLegacyModule {
     }
     return obj;
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+    return map;
+  }
 }
 
 class ModuleMetadataV11 extends AnyLegacyModule {
@@ -158,6 +201,26 @@ class ModuleMetadataV11 extends AnyLegacyModule {
           .toList();
     }
     return obj;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+    return map;
   }
 }
 
@@ -210,6 +273,28 @@ class ModuleMetadataV12 extends AnyLegacyModule {
     }
     return obj;
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+
+    map['index'] = index;
+    return map;
+  }
 }
 
 class ModuleMetadataV13 extends AnyLegacyModule {
@@ -261,6 +346,28 @@ class ModuleMetadataV13 extends AnyLegacyModule {
     }
     return obj;
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+
+    map['index'] = index;
+    return map;
+  }
 }
 
 class ModuleConstantMetadataV9 {
@@ -284,4 +391,12 @@ class ModuleConstantMetadataV9 {
         value: Uint8List.fromList(map['value'] as List<int>),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates Map Object from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'type': type,
+        'value': value,
+        'docs': docs,
+      };
 }

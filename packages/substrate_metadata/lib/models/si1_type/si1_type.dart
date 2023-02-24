@@ -23,6 +23,15 @@ class Si1Type {
         def: Si1TypeDef.fromJson(map['def']),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'path': path,
+        'params':
+            params.map((Si1TypeParameter value) => value.toJson()).toList(),
+        'def': Si1TypeDef.toJson(def),
+        'docs': docs,
+      };
 }
 
 class Si1TypeParameter {
@@ -34,6 +43,12 @@ class Si1TypeParameter {
   /// Creates Class Object from `Json`
   static Si1TypeParameter fromJson(Map<String, dynamic> map) =>
       Si1TypeParameter(name: map['name'], type: map['type'].value);
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'type': type == null ? None : Some(type),
+      };
 }
 
 class Si1TypeDef {
@@ -63,6 +78,35 @@ class Si1TypeDef {
         throw UnexpectedTypeException('Unexpected type: ${map.key}');
     }
   }
+
+  /// Creates `Map` from Class Object
+  static MapEntry<String, dynamic> toJson(Si1TypeDef value) {
+    switch (value.kind) {
+      case 'Composite':
+        return MapEntry(
+            value.kind, (value as Si1TypeDef_Composite).value.toJson());
+      case 'Variant':
+        return MapEntry(
+            value.kind, (value as Si1TypeDef_Variant).value.toJson());
+      case 'Sequence':
+        return MapEntry(
+            value.kind, (value as Si1TypeDef_Sequence).value.toJson());
+      case 'Array':
+        return MapEntry(value.kind, (value as Si1TypeDef_Array).value.toJson());
+      case 'Tuple':
+        return MapEntry(value.kind, (value as Si1TypeDef_Tuple).value);
+      case 'Primitive':
+        return MapEntry(value.kind, (value as Si1TypeDef_Primitive).value.kind);
+      case 'Compact':
+        return MapEntry(
+            value.kind, (value as Si1TypeDef_Compact).value.toJson());
+      case 'BitSequence':
+        return MapEntry(
+            value.kind, (value as Si1TypeDef_BitSequence).value.toJson());
+      default:
+        throw UnexpectedTypeException('Unexpected type: ${value.kind}');
+    }
+  }
 }
 
 class Si1TypeDef_Composite extends Si1TypeDef {
@@ -72,6 +116,11 @@ class Si1TypeDef_Composite extends Si1TypeDef {
   /// Creates Class Object from `Json`
   static Si1TypeDef_Composite fromJson(Map<String, dynamic> map) =>
       Si1TypeDef_Composite(value: Si1TypeDefComposite.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        kind: value.toJson(),
+      };
 }
 
 class Si1TypeDef_Variant extends Si1TypeDef {
@@ -81,6 +130,11 @@ class Si1TypeDef_Variant extends Si1TypeDef {
   /// Creates Class Object from `Json`
   static Si1TypeDef_Variant fromJson(Map<String, dynamic> map) =>
       Si1TypeDef_Variant(value: Si1TypeDefVariant.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        kind: value.toJson(),
+      };
 }
 
 class Si1TypeDef_Sequence extends Si1TypeDef {
@@ -90,6 +144,11 @@ class Si1TypeDef_Sequence extends Si1TypeDef {
   /// Creates Class Object from `Json`
   static Si1TypeDef_Sequence fromJson(Map<String, dynamic> map) =>
       Si1TypeDef_Sequence(value: Si1TypeDefSequence.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        kind: value.toJson(),
+      };
 }
 
 class Si1TypeDef_Array extends Si1TypeDef {
@@ -99,6 +158,11 @@ class Si1TypeDef_Array extends Si1TypeDef {
   /// Creates Class Object from `Json`
   static Si1TypeDef_Array fromJson(Map<String, dynamic> map) =>
       Si1TypeDef_Array(value: Si1TypeDefArray.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        kind: value.toJson(),
+      };
 }
 
 class Si1TypeDef_Tuple extends Si1TypeDef {
@@ -108,6 +172,11 @@ class Si1TypeDef_Tuple extends Si1TypeDef {
   /// Creates Class Object from `Json`
   static Si1TypeDef_Tuple fromJson(List list) =>
       Si1TypeDef_Tuple(value: list.cast<int>());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        kind: value,
+      };
 }
 
 class Si1TypeDef_Primitive extends Si1TypeDef {
@@ -126,6 +195,11 @@ class Si1TypeDef_Compact extends Si1TypeDef {
   /// Creates Class Object from `Json`
   static Si1TypeDef_Compact fromJson(Map<String, dynamic> map) =>
       Si1TypeDef_Compact(value: Si1TypeDefCompact.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        kind: value.toJson(),
+      };
 }
 
 class Si1TypeDef_BitSequence extends Si1TypeDef {
@@ -136,6 +210,11 @@ class Si1TypeDef_BitSequence extends Si1TypeDef {
   /// Creates Class Object from `Json`
   static Si1TypeDef_BitSequence fromJson(Map<String, dynamic> map) =>
       Si1TypeDef_BitSequence(value: Si1TypeDefBitSequence.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        kind: value.toJson(),
+      };
 }
 
 class Si1TypeDefComposite {
@@ -149,6 +228,11 @@ class Si1TypeDefComposite {
             .map((value) => Si1Field.fromJson(value))
             .toList(),
       );
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson() => {
+        'fields': fields.map((value) => value.toJson()).toList(),
+      };
 }
 
 class Si1TypeDefVariant {
@@ -162,6 +246,11 @@ class Si1TypeDefVariant {
             .map((value) => Si1Variant.fromJson(value))
             .toList(),
       );
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson() => {
+        'variants': variants.map((value) => value.toJson()).toList(),
+      };
 }
 
 class Si1TypeDefSequence {
@@ -171,6 +260,11 @@ class Si1TypeDefSequence {
   /// Creates Class Object from `Json`
   static Si1TypeDefSequence fromJson(Map<String, dynamic> map) =>
       Si1TypeDefSequence(type: map['type']);
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson() => {
+        'type': type,
+      };
 }
 
 class Si1TypeDefArray {
@@ -181,6 +275,12 @@ class Si1TypeDefArray {
   /// Creates Class Object from `Json`
   static Si1TypeDefArray fromJson(Map<String, dynamic> map) =>
       Si1TypeDefArray(len: map['len'], type: map['type']);
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson() => {
+        'len': len,
+        'type': type,
+      };
 }
 
 class Si1TypeDefCompact {
@@ -190,6 +290,11 @@ class Si1TypeDefCompact {
   /// Creates Class Object from `Json`
   static Si1TypeDefCompact fromJson(Map<String, dynamic> map) =>
       Si1TypeDefCompact(type: map['type']);
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson() => {
+        'type': type,
+      };
 }
 
 class Si1TypeDefBitSequence {
@@ -204,6 +309,12 @@ class Si1TypeDefBitSequence {
         bitStoreType: map['bitStoreType'],
         bitOrderType: map['bitOrderType'],
       );
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson() => {
+        'bitStoreType': bitStoreType,
+        'bitOrderType': bitOrderType,
+      };
 }
 
 class Si1Field {
@@ -224,6 +335,14 @@ class Si1Field {
         typeName: map['typeName'].value,
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name == null ? None : Some(name),
+        'type': type,
+        'typeName': typeName == null ? None : Some(typeName),
+        'docs': docs,
+      };
 }
 
 class Si1Variant {
@@ -245,4 +364,12 @@ class Si1Variant {
           .toList(),
       index: map['index'],
       docs: (map['docs'] as List).cast<String>());
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'fields': fields.map((e) => e.toJson()).toList(),
+        'index': index,
+        'docs': docs,
+      };
 }

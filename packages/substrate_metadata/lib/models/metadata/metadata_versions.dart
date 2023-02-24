@@ -8,6 +8,9 @@ class Metadata_V9 extends Metadata {
   /// Creates Class Object from `Json`
   static Metadata_V9 fromJson(Map<String, dynamic> map) =>
       Metadata_V9(value: MetadataV9.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V10 extends Metadata {
@@ -16,6 +19,9 @@ class Metadata_V10 extends Metadata {
   /// Creates Class Object from `Json`
   static Metadata_V10 fromJson(Map<String, dynamic> map) =>
       Metadata_V10(value: MetadataV10.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V11 extends Metadata {
@@ -24,6 +30,9 @@ class Metadata_V11 extends Metadata {
   /// Creates Class Object from `Json`
   static Metadata_V11 fromJson(Map<String, dynamic> map) =>
       Metadata_V11(value: MetadataV11.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V12 extends Metadata {
@@ -32,6 +41,9 @@ class Metadata_V12 extends Metadata {
   /// Creates Class Object from `Json`
   static Metadata_V12 fromJson(Map<String, dynamic> map) =>
       Metadata_V12(value: MetadataV12.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V13 extends Metadata {
@@ -40,6 +52,9 @@ class Metadata_V13 extends Metadata {
   /// Creates Class Object from `Json`
   static Metadata_V13 fromJson(Map<String, dynamic> map) =>
       Metadata_V13(value: MetadataV13.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V14 extends Metadata {
@@ -48,6 +63,9 @@ class Metadata_V14 extends Metadata {
   /// Creates Class Object from `Json`
   static Metadata_V14 fromJson(Map<String, dynamic> map) =>
       Metadata_V14(value: MetadataV14.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class MetadataV14 {
@@ -78,6 +96,27 @@ class MetadataV14 {
 
     return obj;
   }
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+
+    if (lookup != null) {
+      data['lookup'] = lookup!.toJson();
+    }
+
+    if (pallets != null) {
+      data['pallets'] = pallets!.map((value) => value.toJson()).toList();
+    }
+
+    if (extrinsic != null) {
+      data['extrinsic'] = extrinsic!.toJson();
+    }
+
+    data['type'] = type;
+
+    return data;
+  }
 }
 
 class MetadataV9 {
@@ -89,6 +128,11 @@ class MetadataV9 {
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV9.fromJson(value))
           .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+      };
 }
 
 class MetadataV10 {
@@ -100,6 +144,11 @@ class MetadataV10 {
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV10.fromJson(value))
           .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+      };
 }
 
 class MetadataV11 {
@@ -113,6 +162,12 @@ class MetadataV11 {
           .map((value) => ModuleMetadataV11.fromJson(value))
           .toList(),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+        'extrinsic': extrinsic.toJson(),
+      };
 }
 
 class MetadataV12 {
@@ -126,6 +181,12 @@ class MetadataV12 {
           .map((value) => ModuleMetadataV12.fromJson(value))
           .toList(),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+        'extrinsic': extrinsic.toJson(),
+      };
 }
 
 class MetadataV13 {
@@ -139,4 +200,10 @@ class MetadataV13 {
           .map((value) => ModuleMetadataV13.fromJson(value))
           .toList(),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+        'extrinsic': extrinsic.toJson(),
+      };
 }

@@ -65,7 +65,7 @@ class MetadataDecoder {
 
         U32Codec.instance.decode(clonnedSource);
         U8Codec.instance.decode(clonnedSource);
-        
+
         final metadata = ScaleCodec(RegistryCreator.instance[10])
             .decode('MetadataV10', clonnedSource);
         return {
@@ -86,12 +86,11 @@ class MetadataDecoder {
 
     //
     // encode version
-    U8Codec.instance.encodeTo(version == 10 ? 9: version, output);
+    U8Codec.instance.encodeTo(version == 10 ? 9 : version, output);
 
     final typeRegistry = RegistryCreator.instance[version];
 
-    ScaleCodec(typeRegistry)
-        .encodeTo('MetadataV$version', metadata['metadata'], output);
+    ScaleCodec(typeRegistry).encodeTo('MetadataV$version', metadata, output);
   }
 }
 

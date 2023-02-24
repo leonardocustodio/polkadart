@@ -49,6 +49,18 @@ class StorageEntryTypeV14 {
         throw UnexpectedTypeException('Unexpected type: ${map.key}');
     }
   }
+
+  /// Creates `Map` from Class Object
+  MapEntry<String, dynamic> toJson() {
+    switch (kind) {
+      case 'Plain':
+        return MapEntry(kind, value);
+      case 'Map':
+        return MapEntry(kind, (this as StorageEntryTypeV14_Map).toMap());
+      default:
+        throw UnexpectedTypeException('Unexpected type: $kind');
+    }
+  }
 }
 
 class StorageEntryTypeV14_Plain extends StorageEntryTypeV14 {
@@ -72,4 +84,11 @@ class StorageEntryTypeV14_Map extends StorageEntryTypeV14 {
             .toList(),
         value: map['value'],
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toMap() => {
+        'hashers': hashers.map((e) => e.toJson()).toList(),
+        'key': key,
+        'value': value,
+      };
 }
