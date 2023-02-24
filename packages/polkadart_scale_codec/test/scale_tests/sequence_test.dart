@@ -10,7 +10,7 @@ void main() {
           '2DVector': 'Vec<1DVector>',
           '1DVector': 'Vec<B>',
           'B': 'C',
-          'C': 'u8',
+          'C': 'U8',
         },
       );
 
@@ -60,7 +60,7 @@ void main() {
         '2DVector': 'Vec<1DVector>',
         '1DVector': 'Vec<B>',
         'B': 'C',
-        'C': 'u8',
+        'C': 'U8',
       });
 
     test('Decode 2DVector', () {

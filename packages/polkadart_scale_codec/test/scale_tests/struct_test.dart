@@ -3,11 +3,11 @@ import 'package:test/test.dart';
 
 void main() {
   // Test with Registry
-  group('StructCodec Encode Test:', () {
+  group('CompositeCodec Encode Test:', () {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
-        'OrderStructList': 'Vec<OrderStruct>',
-        'OrderStruct': {
+        'OrderCompositeList': 'Vec<OrderComposite>',
+        'OrderComposite': {
           'index': 'UnsignedInt8',
           'note': 'Str',
           'Juice': 'JuiceName',
@@ -17,15 +17,15 @@ void main() {
           'name': 'Str',
           'ounces': 'UnsignedInt8',
         },
-        'UnsignedInt8': 'u8',
+        'UnsignedInt8': 'U8',
       });
     test(
-        'When struct "OrderStruct" is encoded then it returns correct hex 0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64',
+        'When struct "OrderComposite" is encoded then it returns correct hex 0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64',
         () {
       final output = HexOutput();
       final codec = ScaleCodec(registry);
       codec.encodeTo(
-        'OrderStruct',
+        'OrderComposite',
         {
           'index': 8,
           'note': 'This is a note',
@@ -42,12 +42,13 @@ void main() {
         '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64',
       );
     });
-    test('When struct "OrderStructList" is encoded then it returns correct hex',
+    test(
+        'When struct "OrderCompositeList" is encoded then it returns correct hex',
         () {
       final output = HexOutput();
       final codec = ScaleCodec(registry);
       codec.encodeTo(
-        'OrderStructList',
+        'OrderCompositeList',
         [
           {
             'index': 0,
@@ -93,11 +94,11 @@ void main() {
   });
 
   // Decode Tests
-  group('StructCodec Decode Test:', () {
+  group('CompositeCodec Decode Test:', () {
     final registry = Registry()
       ..registerCustomCodec(<String, dynamic>{
-        'OrderStructList': 'Vec<OrderStruct>',
-        'OrderStruct': {
+        'OrderCompositeList': 'Vec<OrderComposite>',
+        'OrderComposite': {
           'index': 'UnsignedInt8',
           'note': 'Str',
           'Juice': 'JuiceName',
@@ -107,14 +108,15 @@ void main() {
           'name': 'Str',
           'ounces': 'UnsignedInt8',
         },
-        'UnsignedInt8': 'u8',
+        'UnsignedInt8': 'U8',
       });
-    test('When struct "OrderStruct" is decoded then it returns correct value',
+    test(
+        'When struct "OrderComposite" is decoded then it returns correct value',
         () {
       final input = HexInput(
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
       final codec = ScaleCodec(registry);
-      final result = codec.decode('OrderStruct', input);
+      final result = codec.decode('OrderComposite', input);
       expect(
         result,
         equals({
@@ -129,12 +131,12 @@ void main() {
       );
     });
     test(
-        'When struct "OrderStructList" is decoded then it returns correct value',
+        'When struct "OrderCompositeList" is decoded then it returns correct value',
         () {
       final input = HexInput(
           '0x080040546869732069732061206e6f74652030284b697769204a7569636501014448657920466f6f642077617320676f6f640840546869732069732061206e6f746520312042656574726f6f740200');
       final codec = ScaleCodec(registry);
-      final result = codec.decode('OrderStructList', input);
+      final result = codec.decode('OrderCompositeList', input);
       expect(
           result,
           equals([

@@ -144,8 +144,8 @@ class Registry {
         return _parseEnum(customJson, key, value);
       }
       //
-      // struct
-      return _parseStruct(customJson, key, value);
+      // composite
+      return _parseComposite(customJson, key, value);
     }
 
     return _parseCodec(customJson, value, customJson[value]);
@@ -222,7 +222,7 @@ class Registry {
     return codec;
   }
 
-  ResultCodec _parseResult(
+  ComplexEnumCodec _parseResult(
       Map<String, dynamic> customJson, String key, String value) {
     final match = getResultMatch(value);
 
@@ -238,10 +238,10 @@ class Registry {
     final errCodec = getCodec(match3) ??
         _parseCodec(customJson, match3, customJson[match3] ?? match3);
 
-    final ResultCodec codec = ResultCodec(
-      okCodec: okCodec,
-      errCodec: errCodec,
-    );
+    final ComplexEnumCodec codec = ComplexEnumCodec({
+      'Ok': okCodec,
+      'Err': errCodec,
+    });
     addCodec(key, codec);
     return codec;
   }
@@ -270,7 +270,7 @@ class Registry {
     return codec;
   }
 
-  StructCodec _parseStruct(
+  CompositeCodec _parseComposite(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
@@ -286,7 +286,7 @@ class Registry {
       }
       codecMap[key] = subCodec;
     }
-    final codec = StructCodec(LinkedHashMap.from(codecMap));
+    final codec = CompositeCodec(LinkedHashMap.from(codecMap));
     addCodec(key, codec);
     return codec;
   }
@@ -339,7 +339,7 @@ class Registry {
             codecMap[entry.key] =
                 _parseCodec(customJson, entry.value, entry.value);
           } else {
-            codecMap[entry.key] = _parseStruct(customJson, key, entry.value);
+            codecMap[entry.key] = _parseComposite(customJson, key, entry.value);
           }
         }
         codec = ComplexEnumCodec(codecMap);
@@ -370,40 +370,34 @@ class Registry {
   ///
   /// match and return the types which are simple and not parametrized
   Codec? getSimpleCodecs(String simpleCodecs) {
-    switch (simpleCodecs.toLowerCase()) {
-      case 'bool':
+    switch (simpleCodecs) {
+      case 'Bool':
         return BoolCodec.instance;
-      case 'h160':
-        return ArrayCodec(U8Codec.instance, 20);
-      case 'h256':
-        return H256Codec.instance;
-      case 'bytes':
-        return BytesCodec.instance;
-      case 'u8':
+      case 'U8':
         return U8Codec.instance;
-      case 'u16':
+      case 'U16':
         return U16Codec.instance;
-      case 'u32':
+      case 'U32':
         return U32Codec.instance;
-      case 'u64':
+      case 'U64':
         return U64Codec.instance;
-      case 'u128':
+      case 'U128':
         return U128Codec.instance;
-      case 'string':
-      case 'text':
-      case 'str':
+      case 'String':
+      case 'Text':
+      case 'Str':
         return StrCodec.instance;
-      case 'i8':
+      case 'I8':
         return I8Codec.instance;
-      case 'i16':
+      case 'I16':
         return I16Codec.instance;
-      case 'i32':
+      case 'I32':
         return I32Codec.instance;
-      case 'i64':
+      case 'I64':
         return I64Codec.instance;
-      case 'i128':
+      case 'I128':
         return I128Codec.instance;
-      case 'null':
+      case 'Null':
         return NullCodec.instance;
       default:
         return null;

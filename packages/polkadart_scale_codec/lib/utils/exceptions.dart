@@ -59,9 +59,9 @@ class ResultException implements Exception {
 }
 
 ///
-/// StructException
-class StructException implements Exception {
-  const StructException(this.message);
+/// CompositeException
+class CompositeException implements Exception {
+  const CompositeException(this.message);
 
   final String message;
   @override

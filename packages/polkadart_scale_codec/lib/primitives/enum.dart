@@ -23,12 +23,12 @@ class SimpleEnumCodec<A> with Codec<A> {
   }
 }
 
-class ComplexEnumCodec<V> with Codec<MapEntry<String, V>> {
-  final Map<String, Codec<V>> map;
+class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
+  final Map<String, Codec<V?>?> map;
   const ComplexEnumCodec(this.map);
 
   @override
-  void encodeTo(MapEntry<String, V> value, Output output) {
+  void encodeTo(MapEntry<String, V?> value, Output output) {
     final index = map.keys.toList().indexOf(value.key);
 
     if (index == -1) {
@@ -38,22 +38,22 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V>> {
 
     output.pushByte(index);
 
-    final codec = map[value.key]!;
+    final codec = map[value.key];
 
-    return codec.encodeTo(value.value, output);
+    codec?.encodeTo(value.value, output);
   }
 
   @override
-  MapEntry<String, V> decode(Input input) {
+  MapEntry<String, V?> decode(Input input) {
     final index = input.read();
     if (index >= map.length) {
       throw EnumException('Invalid enum index: $index.');
     }
     final key = map.keys.elementAt(index);
 
-    final codec = map[key]!;
+    final codec = map[key];
 
-    return MapEntry(key, codec.decode(input));
+    return MapEntry(key, codec?.decode(input));
   }
 }
 
