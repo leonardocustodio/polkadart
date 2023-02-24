@@ -9,13 +9,8 @@ class ChainInfo {
     required this.scaleCodec,
   });
 
-  static int _versionConverter(String version) {
-    return int.parse(version.substring(1));
-  }
-
   static bool isPreV14(Metadata metadata) {
-    final String version = metadata.kind;
-    final int versionNumber = _versionConverter(version);
+    final int versionNumber = metadata.version;
     if (versionNumber < 14) {
       return true;
     }
@@ -23,6 +18,10 @@ class ChainInfo {
       return false;
     }
     throw UnsupportedMetadataException(
-        'Unsupported metadata version: ${metadata.kind}');
+        'Unsupported metadata version: ${metadata.version}');
   }
+
+  /* static ChainInfo fromMetadata(Metadata metadata, LegacyTypes? types) {
+
+  } */
 }

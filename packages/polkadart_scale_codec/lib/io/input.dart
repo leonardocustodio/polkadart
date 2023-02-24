@@ -10,6 +10,8 @@ mixin Input {
   /// Buffer to be decoded
   late Uint8List _buffer;
 
+  Uint8List get buffer => Uint8List.fromList(_buffer.toList());
+
   ///
   /// Get the length of the buffer
   int get length => _buffer.length;

@@ -19,7 +19,7 @@ class HexInput with Input {
 
   /// clone
   @override
-  HexInput clone() {
-    return HexInput(encodeHex(_buffer));
+  ByteInput clone() {
+    return ByteInput(_buffer);
   }
 }

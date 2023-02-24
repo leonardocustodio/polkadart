@@ -1,69 +1,76 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
+import 'package:substrate_metadata/models/models.dart' as models;
 import 'package:substrate_metadata/definitions/metadata/metadata.dart'
     as metadata_definitions;
-import 'package:substrate_metadata/types/metadata_types.dart';
 
 class MetadataDecoder {
-  late Registry typeRegistry;
-
   //
   // Constructor
-  MetadataDecoder();
+  const MetadataDecoder();
 
   ///
   /// Decode metadata from Input
-  Map<String, dynamic> decodeFromInput(Input input) {
-    return _decodePrivate(input);
+  models.Metadata decodeAsMetadata(String metadataHex) {
+    final result = _decodePrivate(metadataHex);
+    final version = result['version'];
+    return models.Metadata.fromVersion(result['metadata'], version);
   }
 
   ///
   /// Decode metadata from Hexadecimal String
-  Map<String, dynamic> decodeFromHex(String metadataHex) {
-    return _decodePrivate(HexInput(metadataHex));
+  Map<String, dynamic> decode(String metadataHex) {
+    return _decodePrivate(metadataHex);
   }
 
   ///
   /// Private method to decode metadata
-  Map<String, dynamic> _decodePrivate(Input source) {
+  Map<String, dynamic> _decodePrivate(String hex) {
+    //
+    // Create input from Hexa-deciaml String
+    final source = HexInput(hex);
+
+    //
+    // Decode the magic number
     final magic = U32Codec.instance.decode(source);
+
+    //
+    // assert that the magic number is 0x6174656d
     assertion(magic == 0x6174656d,
         'Expected magic number 0x6174656d, but got $magic');
 
+    // decode the version information
     final version = U8Codec.instance.decode(source);
     assertion(9 <= version,
         'Expected version greater then 9, but got $version. Versions below 9 are not supported by this lib');
     assertion(15 > version,
         'Expected version less then 15, but got $version. Versions above 15 are not supported by this lib');
 
-    typeRegistry = RegistryCreator.instance[version];
-    //
-    // This is important to separate the V14 decoding because
-    // the types mapping is changed with optimisation in v14
-    //
-    // Hence V14 decoding is handled separately to simplify the decoding of events and extrinsics by pre-analysing the lookup types.
-
-    if (version == 14) {
-      return MetadataV14.fromRegistry(typeRegistry).decode(source);
-    }
-
     // Kusama Hack :o
     // See https://github.com/polkadot-js/api/commit/a9211690be6b68ad6c6dad7852f1665cadcfa5b2
     // for why try-catch and version decoding stuff is here
     try {
+      final metadata = ScaleCodec(RegistryCreator.instance[version])
+          .decode('MetadataV$version', source);
+
       return {
         'version': version,
-        'metadata':
-            ScaleCodec(typeRegistry).decode('MetadataV$version', source),
+        'metadata': metadata,
       };
     } catch (e) {
       if (version != 9) {
         rethrow;
       }
       try {
+        final clonnedSource = HexInput(hex);
+
+        U32Codec.instance.decode(clonnedSource);
+        U8Codec.instance.decode(clonnedSource);
+        
+        final metadata = ScaleCodec(RegistryCreator.instance[10])
+            .decode('MetadataV10', clonnedSource);
         return {
           'version': 10,
-          'metadata':
-              ScaleCodec(typeRegistry).decode('MetadataV$version', source),
+          'metadata': metadata,
         };
       } catch (unknownError) {
         rethrow;
@@ -79,11 +86,9 @@ class MetadataDecoder {
 
     //
     // encode version
-    U8Codec.instance.encodeTo(version, output);
+    U8Codec.instance.encodeTo(version == 10 ? 9: version, output);
 
-    typeRegistry = Registry()
-      ..registerCustomCodec(
-          metadata_definitions.metadataTypes.types, 'MetadataV$version');
+    final typeRegistry = RegistryCreator.instance[version];
 
     ScaleCodec(typeRegistry)
         .encodeTo('MetadataV$version', metadata['metadata'], output);
@@ -112,7 +117,7 @@ class RegistryCreator {
   Registry operator [](int version) {
     if (version < 9 || version > 14) {
       throw Exception(
-          'Expected version between 9 and 14, but got $version, Only V9-V14 are supported');
+          'Expected version between 9 and 14, but got $version, Only V9 - V14 are supported');
     }
     return registry[version - 9];
   }

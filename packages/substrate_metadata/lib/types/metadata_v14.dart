@@ -25,6 +25,7 @@ class MetadataV14 {
     // create the rawMetadata map
     final metadata = Map<String, dynamic>.from(
         ScaleCodec(registry).decode('MetadataV$version', input));
+    models.Metadata.fromVersion(metadata, version);
 
     final rawMetadata = metadata.toJson();
 

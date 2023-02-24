@@ -1,4 +1,4 @@
-import 'package:polkadart_scale_codec/io/io.dart';
+import 'package:substrate_metadata/definitions/types_bundle.dart';
 
 import '../definitions/legacy_types_model.dart';
 import '../models/models.dart';
@@ -121,18 +121,19 @@ class Chain {
   ///
   /// chainObject.addSpecVersion(specVersion);
   /// ```
-  VersionDescription addSpecVersion(SpecVersion specVersion) {
-    VersionDescription? versionDescription =
+  void addSpecVersion(SpecVersion specVersion) {
+    /*  VersionDescription? versionDescription =
         getVersionDescription(specVersion.blockNumber);
     if (versionDescription != null) {
       return versionDescription;
-    }
+    } */
 
-    final chainInfo = getChainInfoFromSpecVersion(specVersion);
+    /* final chainInfo = */
+    getChainInfoFromSpecVersion(specVersion);
 
-    versionDescription = VersionDescription(
+    /* versionDescription = VersionDescription(
       /// local to class params
-      chainInfo: chainInfo,
+      chainInfo: chainInfo!,
 
       /// passing params for super-class i.e. SpecVersion
       metadata: specVersion.metadata,
@@ -140,16 +141,16 @@ class Chain {
       specVersion: specVersion.specVersion,
       blockNumber: specVersion.blockNumber,
       blockHash: specVersion.blockHash,
-    );
+    ); */
 
     // insert the version description at proper index according to blockNumber
     //
     // while inserting the merge sort is used to cut the time out and insert with divide and conquer approach
     // Why?
     // because the stays sorted accoring to blockNumber and we can use the approach of merge sort to find the nearest index for the blockNumber.
-    insertVersionDescription(
+    /* insertVersionDescription(
         versionDescription.blockNumber, versionDescription);
-    return versionDescription;
+    return versionDescription; */
   }
 
   ///
@@ -164,14 +165,39 @@ class Chain {
   ///
   /// final chainInfo = chainObject.getChainInfoFromSpecVersion(specVersion);
   /// ```
-  ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
+  ChainInfo? getChainInfoFromSpecVersion(SpecVersion specVersion) {
     final MetadataDecoder metadataDecoder = MetadataDecoder();
 
-    final metadata = metadataDecoder.decodeFromHex(specVersion.metadata);
+    final metadata = metadataDecoder.decodeAsMetadata(specVersion.metadata);
+
+    switch (metadata.version) {
+      case 9:
+        print('Metadata version 9');
+        break;
+      case 10:
+        print('Metadata version 10');
+        break;
+      case 11:
+        print('Metadata version 11');
+        break;
+      case 12:
+        print('Metadata version 12');
+        break;
+      case 13:
+        print('Metadata version 13');
+        break;
+      case 14:
+        print('Metadata version 14');
+        break;
+      default:
+        throw Exception('whaaaat ??, ${metadata.version}');
+    }
 
     final bool isPreV14 = ChainInfo.isPreV14(metadata);
 
-    LegacyTypes? types;
+    print('isPreV14: $isPreV14');
+
+    /* LegacyTypes? types;
 
     // Pre checking helps to avoid extra computation for processing LegacyTypesBundle.
     if (isPreV14 && typesBundleDefinition != null) {
@@ -179,9 +205,8 @@ class Chain {
           typesBundleDefinition!, specVersion.specVersion);
     }
 
-    final ChainDescription description =
-        ChainDescription.fromMetadata(metadata, types);
-
-    return description;
+    final ChainInfo description =
+        ChainInfo.fromMetadata(metadata, types); */
+    return null;
   }
 }
