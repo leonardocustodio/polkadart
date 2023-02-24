@@ -8,8 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group('Metadata Json Conversion Test:', () {
     // metadata file path for v9 - v14
-    final String metadataFilePath =
-        '../substrate_metadata/test/metadata_tests/metadata.json';
+    final String metadataFilePath = '../../chain/metadata.json';
 
     // reading the file
     final String fileContents = File(metadataFilePath).readAsStringSync();
