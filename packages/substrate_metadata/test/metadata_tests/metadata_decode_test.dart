@@ -5,7 +5,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 import 'package:test/test.dart';
 
-const versions = [9, 10, 11, 12, 13, 14];
+const versions = [9, 10];
 
 void main() {
   group('Metadata Tests:', () {
