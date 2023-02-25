@@ -24,3 +24,4 @@ part 'extrinsics/extrinsics_metadata.dart';
 part 'extrinsics/signed_extrinsics_metadata.dart';
 part 'spec_version.dart';
 part 'version_description.dart';
+part 'chain_info.dart';

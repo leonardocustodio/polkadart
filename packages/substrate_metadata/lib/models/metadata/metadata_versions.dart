@@ -69,53 +69,37 @@ class Metadata_V14 extends Metadata {
 }
 
 class MetadataV14 {
-  PortableRegistryV14? lookup;
-  List<PalletMetadataV14>? pallets;
-  ExtrinsicMetadataV14? extrinsic;
-  int? type;
+  final PortableRegistryV14 lookup;
+  final List<PalletMetadataV14> pallets;
+  final ExtrinsicMetadataV14 extrinsic;
+  final int type;
 
-  MetadataV14({this.lookup, this.pallets, this.extrinsic, this.type});
+  const MetadataV14({
+    required this.lookup,
+    required this.pallets,
+    required this.extrinsic,
+    required this.type,
+  });
 
   /// Creates Class Object from `Json`
   static MetadataV14 fromJson(Map<String, dynamic> map) {
-    final obj = MetadataV14(type: map['type']);
-
-    if (map['lookup'] != null) {
-      obj.lookup = PortableRegistryV14.fromJson(map['lookup']);
-    }
-
-    if (map['extrinsic'] != null) {
-      obj.extrinsic = ExtrinsicMetadataV14.fromJson(map['extrinsic']);
-    }
-
-    if (map['pallets'] != null) {
-      obj.pallets = (map['pallets'] as List)
-          .map((value) => PalletMetadataV14.fromJson(value))
-          .toList();
-    }
-
-    return obj;
+    return MetadataV14(
+        type: map['type'],
+        lookup: PortableRegistryV14.fromJson(map['lookup']),
+        pallets: (map['pallets'] as List)
+            .map((value) => PalletMetadataV14.fromJson(value))
+            .toList(),
+        extrinsic: ExtrinsicMetadataV14.fromJson(map['extrinsic']));
   }
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-
-    if (lookup != null) {
-      data['lookup'] = lookup!.toJson();
-    }
-
-    if (pallets != null) {
-      data['pallets'] = pallets!.map((value) => value.toJson()).toList();
-    }
-
-    if (extrinsic != null) {
-      data['extrinsic'] = extrinsic!.toJson();
-    }
-
-    data['type'] = type;
-
-    return data;
+    return <String, dynamic>{
+      'lookup': lookup.toJson(),
+      'pallets': pallets.map((value) => value.toJson()).toList(),
+      'extrinsic': extrinsic.toJson(),
+      'type': type,
+    };
   }
 }
 
