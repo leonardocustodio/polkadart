@@ -1,6 +1,7 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/definitions/metadata/metadata.dart'
     as metadata_definitions;
+import 'package:substrate_metadata/models/models.dart' as models;
 
 class MetadataDecoder {
   //
@@ -11,6 +12,13 @@ class MetadataDecoder {
   /// Decode metadata from Hexadecimal String
   Map<String, dynamic> decode(String metadataHex) {
     return _decodePrivate(metadataHex);
+  }
+
+  ///
+  /// Decode metadata from Input
+  models.Metadata decodeAsMetadata(String metadataHex) {
+    final result = _decodePrivate(metadataHex);
+    return models.Metadata.fromVersion(result['metadata'], result['version']);
   }
 
   ///
