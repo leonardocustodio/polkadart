@@ -19,9 +19,9 @@ void main() {
       // check if the versionDescriptionList is sorted by blockNumber
       for (var i = 0; i < chain.versioDescriptionList.length - 1; i++) {
         expect(
+            true,
             chain.versioDescriptionList[i].blockNumber <=
-                chain.versioDescriptionList[i + 1].blockNumber,
-            true);
+                chain.versioDescriptionList[i + 1].blockNumber);
       }
     });
   });
