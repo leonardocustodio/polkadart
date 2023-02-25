@@ -7,5 +7,6 @@ final metadataTypes = LegacyTypes(
     ...ScaleInfoTypes,
     ...V9,
     ...V10,
+    ...V11,
   },
 );
