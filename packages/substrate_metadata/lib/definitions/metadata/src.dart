@@ -9,5 +9,6 @@ final metadataTypes = LegacyTypes(
     ...V10,
     ...V11,
     ...V12,
+    ...V13,
   },
 );
