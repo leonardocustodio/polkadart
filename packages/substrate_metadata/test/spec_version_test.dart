@@ -6,7 +6,7 @@ void main() {
   group('Spec Versions Test', () {
     test('init spec version file', () {
       //
-      // Initiate chain constructor with chain specific types-definition
+      // Initiate chain constructor
       final chain = Chain();
 
       //
