@@ -65,11 +65,14 @@ class Registry {
 
   Codec _parseCodec(
       Map<String, dynamic> customJson, String key, dynamic value) {
+    print(key);
     if (value == null) {
       return NullCodec.instance;
     }
 
     key = key.trim();
+
+    key = _renameType(key);
     //
     // Check if the codec is already in the registry
     final Codec? codec = getCodec(key);
@@ -81,6 +84,8 @@ class Registry {
     //Check if the value is a string
     if (value is String) {
       value = value.trim();
+
+      value = _renameType(value);
       //
       // Check if the value is present in the registry
       Codec? codec = getCodec(value);
@@ -115,6 +120,8 @@ class Registry {
               return _parseBTreeMap(customJson, key, value);
             case 'Result':
               return _parseResult(customJson, key, value);
+            case 'BitVec':
+              return _parseBitSequence(customJson, key, value);
           }
           return _parseCodec(customJson, value, customJson[value]);
         }
@@ -136,7 +143,7 @@ class Registry {
         return _parseCodec(customJson, value, customJson[value]);
       }
 
-      throw Exception('Type not found for $value');
+      throw Exception('Type not found for `$value`');
     } else if (value is Map<String, dynamic>) {
       //
       // enum
@@ -183,7 +190,8 @@ class Registry {
       codec = CompactCodec.instance;
     } else if (subType is U64Codec ||
         subType is U128Codec ||
-        subType is U256Codec) {
+        subType is U256Codec ||
+        subType is NullCodec) {
       codec = CompactBigIntCodec.instance;
     } else {
       throw Exception('Compact type not supported for $subType');
@@ -219,6 +227,49 @@ class Registry {
 
     addCodec(key, codec);
 
+    return codec;
+  }
+
+  BitSequenceCodec _parseBitSequence(
+      Map<String, dynamic> customJson, String key, String value) {
+    final match = getResultMatch(value);
+
+    assertion(match != null && match.groupCount >= 3,
+        'BitVec type should have two types, BitVec<U8, LSB>. Like: BitVec<U8, MSB>');
+
+    final storeType = match![2]!.trim();
+    final orderType = match[3]!.trim();
+
+    late BitStore store;
+    late BitOrder order;
+
+    switch (storeType) {
+      case 'U8':
+        store = BitStore.U8;
+        break;
+      case 'U16':
+        store = BitStore.U16;
+        break;
+      case 'U32':
+        store = BitStore.U32;
+        break;
+      case 'U64':
+        store = BitStore.U64;
+        break;
+      default:
+    }
+
+    if (orderType.startsWith('Lsb')) {
+      order = BitOrder.LSB;
+    } else if (orderType.startsWith('Msb')) {
+      order = BitOrder.MSB;
+    }
+
+    final BitSequenceCodec codec = BitSequenceCodec(
+      store,
+      order,
+    );
+    addCodec(key, codec);
     return codec;
   }
 
@@ -365,6 +416,26 @@ class Registry {
     }
     addCodec(key, codec);
     return codec;
+  }
+
+  String _renameType(String type) {
+    type = type.trim();
+    if (type == '()') {
+      return 'Null';
+    }
+    type = type.replaceAll('T::', '');
+    type = type.replaceAll('VecDeque<', 'Vec<');
+    type = type.replaceAll('<T>', '');
+    type = type.replaceAll('<T, I>', '');
+    type = type.replaceAll('&\'static[u8]', 'Bytes');
+    switch (type) {
+      case '<Lookup as StaticLookup>::Source':
+        return 'Address';
+    }
+    if (type == '') {
+      return 'Null';
+    }
+    return type;
   }
 
   ///

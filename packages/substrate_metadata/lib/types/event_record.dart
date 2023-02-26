@@ -1,14 +1,13 @@
 part of metadata_types;
 
 class EventRecord with Codec<Map<String, dynamic>> {
-  final Registry registry;
-  final Map<String, dynamic> metadata;
+  final ChainInfo chainInfo;
 
-  const EventRecord({required this.registry, required this.metadata});
+  const EventRecord({required this.chainInfo});
 
   @override
   Map<String, dynamic> decode(Input input) {
-    if (metadata.isEmpty) {
+    if (chainInfo.metadata.isEmpty) {
       throw Exception('Metadata is empty');
     }
 
@@ -20,21 +19,27 @@ class EventRecord with Codec<Map<String, dynamic>> {
       result['phase'] = {'ApplyExtrinsic': U32Codec.instance.decode(input)};
     }
 
-    result['lookup'] = encodeHex(input.readBytes(2));
+    final lookup = input.readBytes(2);
+    print(lookup);
 
-    if (metadata['event_index']?[result['lookup']] == null) {
+    result['lookup'] = encodeHex(lookup.toList());
+    print(result['lookup']);
+
+    if (chainInfo.metadata['event_index']?[result['lookup']] == null) {
       throw Exception('Metadata lookup is empty');
     }
 
-    final event = metadata['event_index']?[result['lookup']];
+    final event = chainInfo.metadata['event_index']?[result['lookup']];
     final moduleName = event['module']['name'];
     final eventName = event['call']['name'];
     final params = <String, dynamic>{};
 
     final args = event['call']['args'];
-    for (final type in args) {
-      final value = ScaleCodec(registry).decode(type, input);
-      params[type] = value;
+    for (final arg in args) {
+      final name = arg['name'];
+      final type = arg['type'];
+      final value = chainInfo.scaleCodec.decode(type, input);
+      params[name] = value;
     }
     result['event'] = {
       moduleName: {
@@ -57,14 +62,14 @@ class EventRecord with Codec<Map<String, dynamic>> {
 
     output.write(decodeHex(value['lookup']));
 
-    final event = metadata['event_index']?[value['lookup']];
+    final event = chainInfo.metadata['event_index']?[value['lookup']];
 
     final args = event['call']['args'];
 
     for (final type in args) {
       final val =
           value['event'][event['module']['name']][event['call']['name']][type];
-      ScaleCodec(registry).encodeTo(type, val, output);
+      chainInfo.scaleCodec.encodeTo(type, val, output);
     }
 
     SequenceCodec(StrCodec.instance).encodeTo(value['topic'], output);

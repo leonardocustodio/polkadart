@@ -6,10 +6,17 @@ class MetadataV14Expander {
   final registeredTypeNames = <String>[];
 
   final customCodecRegister = <String, dynamic>{};
+  final bool printIt;
 
-  MetadataV14Expander(List<dynamic> types) {
+  MetadataV14Expander(List<dynamic> types, this.printIt) {
     final id2Portable =
         types.map((e) => (e as Map<String, dynamic>).toJson()).toList();
+
+    if (printIt) {
+      final jsonFile = File('../substrate_metadata/check/metadata_v14.json');
+      jsonFile.createSync(recursive: true);
+      jsonFile.writeAsStringSync(jsonEncode(id2Portable));
+    }
 
     for (var item in id2Portable) {
       if (item['type']?['def']?['Primitive'] != null) {
@@ -17,10 +24,34 @@ class MetadataV14Expander {
       }
     }
     for (var item in id2Portable) {
+      final id = item['id'];
+      final one = item['type'];
+      if (item['type']?['def']?['Variant'] != null) {
+        if (printIt) {
+          print('Variant: id: $id');
+          print('here');
+        }
+        if (one['path'].length >= 2) {
+          if (['Call', 'Event', 'Instruction'].contains(one['path'].last)) {
+            registeredSiType[id] = 'Call';
+            continue;
+          }
+          /* if (one['path'].last == 'Call' &&
+              one['path'][one['path'].length - 2] == 'pallet') {
+            registeredSiType[id] = 'Call';
+            continue;
+          } */
+          /* if (one['path'].last == 'Instruction') {
+            registeredSiType[id] = 'Call';
+            continue;
+          } */
+        }
+      }
+    }
+    for (var item in id2Portable) {
       if (item['type']['path'].length > 1 &&
           item['type']['path'][0] == 'primitive_types') {
-        registeredSiType[item['id']] =
-            item['type']['path'][item['type']['path'].length - 1];
+        _fetchTypeName(item['id'], item, id2Portable);
       }
     }
     for (var item in id2Portable) {
@@ -56,10 +87,14 @@ class MetadataV14Expander {
       return _exploreCompact(id, one, id2Portable);
     }
     if (one['def']?['BitSequence'] != null) {
-      registeredSiType[id] = 'BitVec';
+      registeredSiType[id] = 'BitVec<U8, Lsb>';
       return registeredSiType[id]!;
     }
     if (one['def']?['Variant'] != null) {
+      if (printIt) {
+        print('Variant: id: $id');
+        print('here');
+      }
       final String variantType = one['path'][0];
       switch (variantType) {
         case 'Option':
@@ -94,6 +129,9 @@ class MetadataV14Expander {
     Map<String, dynamic> one,
     List<dynamic> id2Portable,
   ) {
+    if (registeredSiType[siTypeId] != null) {
+      return registeredSiType[siTypeId]!;
+    }
     path = path.cast<String>();
 
     if (one.isNotEmpty && one['type']['def']?['Variant'] != null) {
@@ -115,9 +153,11 @@ class MetadataV14Expander {
       if (one['type']['def']?['Sequence'] != null) {
         final sequenceSubTypeId = one['type']['def']?['Sequence']['type'];
 
-        String? subType = registeredSiType[sequenceSubTypeId] ??
-            _genPathName(id2Portable[sequenceSubTypeId]['type']['path'],
-                sequenceSubTypeId, id2Portable[sequenceSubTypeId], id2Portable);
+        String? subType = _genPathName(
+            id2Portable[sequenceSubTypeId]['type']['path'],
+            sequenceSubTypeId,
+            id2Portable[sequenceSubTypeId],
+            id2Portable);
 
         if (subType == '') {
           subType = registeredSiType[sequenceSubTypeId] ??
@@ -153,10 +193,13 @@ class MetadataV14Expander {
     }
     final Map<String, String> tempStruct = <String, String>{};
     for (var field in one['def']['Composite']['fields']) {
-      tempStruct[field['name'] ?? field['typeName'].toLowerCase()] =
-          registeredSiType[field['type']] ??
-              _fetchTypeName(
-                  field['type'], id2Portable[field['type']], id2Portable);
+      final subTypeName = registeredSiType[field['type']] ??
+          _fetchTypeName(
+              field['type'], id2Portable[field['type']], id2Portable);
+
+      tempStruct[field['name'] ??
+          field['typeName']?.toLowerCase() ??
+          subTypeName.toLowerCase()] = subTypeName;
     }
     final String typeString = _genPathName(one['path'], id, {}, []);
     registeredTypeNames.add(typeString);
@@ -240,10 +283,12 @@ class MetadataV14Expander {
 
   String _exploreEnum(
       int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
-    if (id == 58) {
-      print('here');
+    if (registeredSiType[id] != null) {
+      return registeredSiType[id]!;
     }
+
     final List<dynamic> variants = one['def']['Variant']['variants'];
+
     variants.sort((a, b) => a['index'] < b['index'] ? -1 : 1);
 
     final variantNameMap = <String, dynamic>{};
@@ -285,9 +330,13 @@ class MetadataV14Expander {
           for (Map<String, dynamic> field in variant['fields']) {
             final String valueName = field['name'];
             final int siType = field['type'];
-            typeMapping[valueName] = registeredSiType[siType] ??
+            final subType = registeredSiType[siType] ??
                 _genPathName(id2Portable[siType]['type']['path'], siType,
                     id2Portable[siType], id2Portable);
+            if ('polkadot_runtime:Call' == subType) {
+              print('subType: $subType');
+            }
+            typeMapping[valueName] = subType;
           }
           variantNameMap[name] = typeMapping;
           break;
@@ -308,6 +357,9 @@ class MetadataV14Expander {
 
     registeredTypeNames.add(typeString);
     customCodecRegister[typeString] = {'_enum': result};
+    if ('frame_support:traits:schedule:MaybeHashed' == typeString) {
+      print('typeString: $typeString');
+    }
 
     registeredSiType[id] = typeString;
     return typeString;

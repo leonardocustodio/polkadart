@@ -26,13 +26,12 @@ void main() {
         //
 
         // decoding
-        final Map<String, dynamic> decodedMetadataJson =
-            MetadataDecoder().decode(metadataHex);
+        final decodedMetadataJson =
+            MetadataDecoder.instance.decode(metadataHex);
 
         //
         // Here we are creating Metadata Object from the decoded metadata
-        final Metadata metadataObject = Metadata.fromVersion(
-            decodedMetadataJson['metadata'], decodedMetadataJson['version']);
+        final Metadata metadataObject = decodedMetadataJson.metadataObject;
 
         //
         // Here we are creating the json from the metadata object
@@ -42,7 +41,7 @@ void main() {
             Metadata.toJson(metadataObject);
 
         expect(metadataJsonFromObject.toString(),
-            decodedMetadataJson['metadata'].toString());
+            decodedMetadataJson.metadata.toString());
       });
     }
   });

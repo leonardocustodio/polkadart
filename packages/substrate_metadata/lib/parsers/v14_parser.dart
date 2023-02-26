@@ -1,17 +1,13 @@
 part of parsers;
 
 class V14Parser {
-  final Map<String, dynamic> metadata;
-
-  const V14Parser({required this.metadata});
-
-  ChainInfo getChainInfo() {
-    final rawMetadata = metadata.toJson()['metadata'];
+  static ChainInfo getChainInfo(DecodedMetadata metadata, bool printIt) {
+    final rawMetadata = metadata.metadata.toJson();
 
     //
     // Expand the V14 compressed types and then mapp the siTypes id to the type names.
     final metadataExpander =
-        MetadataV14Expander(rawMetadata['lookup']['types']);
+        MetadataV14Expander(rawMetadata['lookup']['types'], printIt);
 
     //
     // copy of the siTypes map
@@ -96,7 +92,7 @@ class V14Parser {
           // iterate over fields of each variant
           for (final v in variant['fields']) {
             args.add({
-              'name': v['name'],
+              'name': v['typeName'],
               'type': siTypes[v['type']],
             });
           }
@@ -111,12 +107,10 @@ class V14Parser {
 
       //
       // call lookup filling
-      rawMetadata['call_index'] = <String, dynamic>{};
+      rawMetadata['call_index'] ??= <String, dynamic>{};
       for (var callIndex = 0; callIndex < calls.length; callIndex++) {
         final call = calls[callIndex];
-        final lookup = ((pallet['index'] + callIndex) as int)
-            .toRadixString(16)
-            .padLeft(4, '0');
+        final lookup = encodeHex([pallet['index'], callIndex]);
         rawMetadata['call_index'][lookup] = {
           'module': {'name': pallet['name']},
           'call': call,
@@ -125,12 +119,10 @@ class V14Parser {
 
       //
       // event lookup filling
-      rawMetadata['event_index'] = <String, dynamic>{};
+      rawMetadata['event_index'] ??= <String, dynamic>{};
       for (var eventIndex = 0; eventIndex < events.length; eventIndex++) {
         final event = events[eventIndex];
-        final lookup = ((pallet['index'] + eventIndex) as int)
-            .toRadixString(16)
-            .padLeft(4, '0');
+        final lookup = encodeHex([pallet['index'], eventIndex]);
         rawMetadata['event_index'][lookup] = {
           'module': {'name': pallet['name']},
           'call': event,
@@ -168,6 +160,7 @@ class V14Parser {
     registry.addCodec('Call', Call(registry: registry, metadata: rawMetadata));
     registry.registerCustomCodec(metadataExpander.customCodecRegister);
 
-    return ChainInfo(scaleCodec: ScaleCodec(registry));
+    return ChainInfo(
+        registry: registry, metadata: rawMetadata, version: metadata.version);
   }
 }

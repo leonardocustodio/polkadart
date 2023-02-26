@@ -16,7 +16,7 @@ class Call with Codec<Map<String, dynamic>> {
     final call = metadata['call_index'][callIndex];
 
     final result = <String, dynamic>{
-      'module_id': call['module_id']['name'],
+      'module_id': call['module']['name'],
       'call_name': call['call']['name'],
       'params': <Map<String, dynamic>>[],
     };
@@ -26,7 +26,8 @@ class Call with Codec<Map<String, dynamic>> {
       final type = arg['type'];
       final name = arg['name'];
       final value = ScaleCodec(registry).decode(type, input);
-      result['params'].add({'name': name, 'type': type, 'value': value});
+      (result['params'] as List<Map<String, dynamic>>)
+          .add({'name': name, 'type': type, 'value': value});
     }
 
     return result;

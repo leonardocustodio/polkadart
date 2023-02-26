@@ -1,3 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:polkadart_scale_codec/io/io.dart';
+import 'package:substrate_metadata/core/metadata_decoder.dart';
+import 'package:substrate_metadata/types/metadata_types.dart';
+
 import '../definitions/legacy_types_model.dart';
 import '../models/models.dart';
 import '../utils/utils.dart';
@@ -91,6 +98,26 @@ class Chain {
     }
   }
 
+  DecodedBlockEvents? decodeEvents(RawBlockEvents rawBlockEvents) {
+    final blockNumber = rawBlockEvents.blockNumber;
+
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
+
+    // Check if this is not empty, throw Exception if it is.
+    if (versionDescription == null) {
+      return null;
+    }
+    if (versionDescription.chainInfo.version < 14) {
+      return null;
+    }
+    print('decoding....');
+
+    final events = EventCodec(chainInfo: versionDescription.chainInfo)
+        .decode(HexInput(rawBlockEvents.events));
+    return DecodedBlockEvents(blockNumber: blockNumber, events: events);
+  }
+
   ///
   /// [SpecVersion]
   ///
@@ -110,9 +137,13 @@ class Chain {
     if (versionDescription != null) {
       return;
     }
+    print(specVersion.specVersion);
+
+    final ChainInfo chainInfo = getChainInfoFromSpecVersion(specVersion);
 
     versionDescription = VersionDescription(
       /// local to class params
+      chainInfo: chainInfo,
 
       /// passing params for super-class i.e. SpecVersion
       metadata: specVersion.metadata,
@@ -130,5 +161,23 @@ class Chain {
     // because the list stays sorted accoring to blockNumber and we can use the approach of binary search to find the nearest index for the blockNumber.
     insertVersionDescription(
         versionDescription.blockNumber, versionDescription);
+  }
+
+  ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
+    final DecodedMetadata decodedMetadata =
+        MetadataDecoder.instance.decode(specVersion.metadata);
+
+    LegacyTypes? types;
+
+    // Pre checking helps to avoid extra computation for processing LegacyTypesBundle.
+    if (decodedMetadata.isPreV14 && typesBundleDefinition != null) {
+      /*  types = getLegacyTypesFromBundle(
+          typesBundleDefinition!, specVersion.specVersion); */
+    }
+
+    final ChainInfo description = ChainInfo.fromMetadata(
+        decodedMetadata, specVersion.specVersion == 9170);
+
+    return description;
   }
 }

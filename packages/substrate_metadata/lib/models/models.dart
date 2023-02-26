@@ -2,8 +2,13 @@ library models;
 
 import 'dart:typed_data';
 
+import 'package:equatable/equatable.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/exceptions/exceptions.dart';
+import 'package:substrate_metadata/parsers/parsers.dart';
+import 'package:substrate_metadata/utils/utils.dart';
+
+import '../definitions/legacy_types_model.dart';
 
 part './error_metadata/error_metadata.dart';
 part './events/events.dart';
@@ -25,3 +30,8 @@ part 'extrinsics/signed_extrinsics_metadata.dart';
 part 'spec_version.dart';
 part 'version_description.dart';
 part 'chain_info.dart';
+part 'decoded_metadata.dart';
+part 'decoded_block/decoded_block_events.model.dart';
+part 'decoded_block/decoded_block_extrinsics.model.dart';
+part 'raw_block/raw_block.model.dart';
+part 'raw_block/raw_block_events.model.dart';

@@ -1,32 +1,21 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/definitions/metadata/metadata.dart'
     as metadata_definitions;
-import 'package:substrate_metadata/models/models.dart' as models;
+import 'package:substrate_metadata/models/models.dart';
 
 class MetadataDecoder {
-  //
-  // Constructor
-  const MetadataDecoder();
-
   ///
-  /// Decode metadata from Hexadecimal String
-  Map<String, dynamic> decode(String metadataHex) {
-    return _decodePrivate(metadataHex);
-  }
+  /// Constructor
+  const MetadataDecoder._();
+
+  static const instance = MetadataDecoder._();
 
   ///
   /// Decode metadata from Input
-  models.Metadata decodeAsMetadata(String metadataHex) {
-    final result = _decodePrivate(metadataHex);
-    return models.Metadata.fromVersion(result['metadata'], result['version']);
-  }
-
-  ///
-  /// Private method to decode metadata
-  Map<String, dynamic> _decodePrivate(String hex) {
+  DecodedMetadata decode(String metadataHex) {
     //
     // Create input from Hexa-deciaml String
-    final source = HexInput(hex);
+    final source = HexInput(metadataHex);
 
     //
     // Decode the magic number
@@ -51,45 +40,40 @@ class MetadataDecoder {
       final metadata = ScaleCodec(RegistryCreator.instance[version])
           .decode('MetadataV$version', source);
 
-      return {
-        'version': version,
-        'metadata': metadata,
-      };
+      return DecodedMetadata(metadata: metadata, version: version);
     } catch (e) {
       if (version != 9) {
         rethrow;
       }
       try {
-        final clonnedSource = HexInput(hex);
+        final clonnedSource = HexInput(metadataHex);
 
         U32Codec.instance.decode(clonnedSource);
         U8Codec.instance.decode(clonnedSource);
 
         final metadata = ScaleCodec(RegistryCreator.instance[10])
             .decode('MetadataV10', clonnedSource);
-        return {
-          'version': 10,
-          'metadata': metadata,
-        };
+        return DecodedMetadata(metadata: metadata, version: 10);
       } catch (unknownError) {
         rethrow;
       }
     }
   }
 
-  void encode(Map<String, dynamic> metadata, int version, Output output) {
-    final magic = 0x6174656d;
+  void encode(DecodedMetadata metadata, Output output) {
     //
     // encode magic number
-    U32Codec.instance.encodeTo(magic, output);
+    U32Codec.instance.encodeTo(0x6174656d, output);
 
     //
     // encode version
-    U8Codec.instance.encodeTo(version == 10 ? 9 : version, output);
+    U8Codec.instance
+        .encodeTo(metadata.version == 10 ? 9 : metadata.version, output);
 
-    final typeRegistry = RegistryCreator.instance[version];
+    final typeRegistry = RegistryCreator.instance[metadata.version];
 
-    ScaleCodec(typeRegistry).encodeTo('MetadataV$version', metadata, output);
+    ScaleCodec(typeRegistry)
+        .encodeTo('MetadataV${metadata.version}', metadata.metadata, output);
   }
 }
 
@@ -103,13 +87,9 @@ class RegistryCreator {
 
   static RegistryCreator get instance => _singleton;
 
-  RegistryCreator._internal() {
-    for (var i = 9; i < 15; i++) {
-      _createRegistry(i);
-    }
-  }
+  RegistryCreator._internal();
 
-  final registry = <Registry>[];
+  final _registry = <Registry?>[]..length = 6;
 
   // create [] operator
   Registry operator [](int version) {
@@ -117,12 +97,14 @@ class RegistryCreator {
       throw Exception(
           'Expected version between 9 and 14, but got $version, Only V9 - V14 are supported');
     }
-    return registry[version - 9];
+    return _registry[version - 9] ?? _createRegistry(version);
   }
 
-  void _createRegistry(int version) {
-    registry.add(Registry()
+  Registry _createRegistry(int version) {
+    _registry[version - 9] ??= Registry()
       ..registerCustomCodec(
-          metadata_definitions.metadataTypes.types, 'MetadataV$version'));
+          metadata_definitions.metadataTypes.types, 'MetadataV$version');
+
+    return _registry[version - 9]!;
   }
 }

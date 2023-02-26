@@ -1,29 +1,23 @@
 part of models;
 
 class ChainInfo {
+  final int version;
+  final Registry registry;
+  final Map<String, dynamic> metadata;
   final ScaleCodec scaleCodec;
 
-  const ChainInfo({
-    required this.scaleCodec,
-  });
+  ChainInfo({
+    required this.version,
+    required this.registry,
+    required this.metadata,
+  }) : scaleCodec = ScaleCodec(registry);
 
-  static ChainInfo fromMetadata(Map<String, dynamic> metadata) {
-    final scaleCodec = ScaleCodec.fromMetadata(metadata);
-    return ChainInfo(scaleCodec: scaleCodec);
-  }
-
-  static ChainInfo fromMetadataJson(Map<String, dynamic> metadata) {
-    return ChainInfo(scaleCodec: scaleCodec);
-  }
-
-  static bool isPreV14(int versionNumber) {
-    if (versionNumber < 14) {
-      return true;
+  static ChainInfo fromMetadata(DecodedMetadata metadata, bool printIt,
+      [LegacyTypes? legacyTypes]) {
+    if (metadata.isPreV14) {
+      //assertion(legacyTypes != null, 'Legacy types are required for metadata versions below 14');
+      return LegacyParser.getChainInfo(metadata);
     }
-    if (versionNumber == 14) {
-      return false;
-    }
-    throw UnsupportedMetadataException(
-        'Unsupported metadata version: $versionNumber');
+    return V14Parser.getChainInfo(metadata, printIt);
   }
 }

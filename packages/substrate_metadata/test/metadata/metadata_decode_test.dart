@@ -27,13 +27,17 @@ void main() {
         //
 
         // decoding
-        final decodedMetadata = MetadataDecoder().decode(metadataHex);
+        final decodedMetadata = MetadataDecoder.instance.decode(metadataHex);
+
+        // create file for json
+        final jsonFile = File('../substrate_metadata/metadata_v$version.json');
+        jsonFile.createSync(recursive: true);
+        jsonFile.writeAsStringSync(jsonEncode(decodedMetadata.metadataJson));
 
         final output = HexOutput();
 
         // encoding to output;
-        MetadataDecoder().encode(
-            decodedMetadata['metadata'], decodedMetadata['version'], output);
+        MetadataDecoder.instance.encode(decodedMetadata, output);
 
         final encodedMetadataHex = output.toString();
         expect(encodedMetadataHex, metadataHex);
