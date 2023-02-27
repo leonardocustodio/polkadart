@@ -1,6 +1,6 @@
 library metadata;
 
-import '../legacy_types_model.dart';
+import '../../models/legacy_types.dart';
 
 part 'base.dart';
 part 'src.dart';

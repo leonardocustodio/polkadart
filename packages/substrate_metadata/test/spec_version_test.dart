@@ -13,7 +13,7 @@ void main() {
       // Populating with the metadata for block-numbers available for this chain....
       chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
 
-      expect(chain.versioDescriptionList.length, 34);
+      expect(chain.versioDescriptionList.length, 6);
 
       //
       // check if the versionDescriptionList is sorted by blockNumber

@@ -12,11 +12,12 @@ class ChainInfo {
     required this.metadata,
   }) : scaleCodec = ScaleCodec(registry);
 
-  static ChainInfo fromMetadata(DecodedMetadata metadata,
+  static ChainInfo? fromMetadata(DecodedMetadata metadata,
       [LegacyTypes? legacyTypes]) {
     if (metadata.isPreV14) {
       //assertion(legacyTypes != null, 'Legacy types are required for metadata versions below 14');
-      return LegacyParser.getChainInfo(metadata);
+      //return LegacyParser.getChainInfo(metadata);
+      return null;
     }
     return V14Parser.getChainInfo(metadata);
   }

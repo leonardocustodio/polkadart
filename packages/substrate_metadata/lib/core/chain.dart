@@ -1,21 +1,9 @@
-import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:substrate_metadata/core/metadata_decoder.dart';
-import 'package:substrate_metadata/types/metadata_types.dart';
-
-import '../definitions/legacy_types_model.dart';
 import '../models/models.dart';
 import '../utils/utils.dart';
 
 class Chain {
-  Chain([this.typesBundleDefinition]);
-
-  ///
-  /// Type Definition of the chain
-  ///
-  /// ```dart
-  /// final typeBundleDefinition = LegacyTypeDefinition.fromJson(chainDefinitionJson);
-  /// ```
-  final LegacyTypesBundle? typesBundleDefinition;
+  Chain();
 
   ///
   /// To hold the parsed spec versions and metadata related information
@@ -95,46 +83,6 @@ class Chain {
     }
   }
 
-  DecodedBlockEvents? decodeEvents(RawBlockEvents rawBlockEvents) {
-    final blockNumber = rawBlockEvents.blockNumber;
-
-    final VersionDescription? versionDescription =
-        getVersionDescription(blockNumber);
-
-    // Check if this is not empty, throw Exception if it is.
-    if (versionDescription == null) {
-      return null;
-    }
-    if (versionDescription.chainInfo.version < 14) {
-      return null;
-    }
-
-    final events = EventCodec(chainInfo: versionDescription.chainInfo)
-        .decode(HexInput(rawBlockEvents.events));
-    return DecodedBlockEvents(blockNumber: blockNumber, events: events);
-  }
-
-  RawBlockEvents? encodeEvents(DecodedBlockEvents decodedBlockEvents) {
-    final blockNumber = decodedBlockEvents.blockNumber;
-
-    final VersionDescription? versionDescription =
-        getVersionDescription(blockNumber);
-
-    // Check if this is not empty, throw Exception if it is.
-    if (versionDescription == null) {
-      return null;
-    }
-    if (versionDescription.chainInfo.version < 14) {
-      return null;
-    }
-
-    final output = HexOutput();
-
-    EventCodec(chainInfo: versionDescription.chainInfo)
-        .encodeTo(decodedBlockEvents.events, output);
-    return RawBlockEvents(blockNumber: blockNumber, events: output.toString());
-  }
-
   ///
   /// [SpecVersion]
   ///
@@ -155,8 +103,10 @@ class Chain {
       return;
     }
 
-    final ChainInfo chainInfo = getChainInfoFromSpecVersion(specVersion);
-    if (chainInfo.version < 14) {
+    final ChainInfo? chainInfo = getChainInfoFromSpecVersion(specVersion);
+
+    // Remove after implementing LegacyParser for preV14 versions of Chain Metadata.
+    if (chainInfo == null || chainInfo.version < 14) {
       return;
     }
 
@@ -182,19 +132,15 @@ class Chain {
         versionDescription.blockNumber, versionDescription);
   }
 
-  ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
+  ChainInfo? getChainInfoFromSpecVersion(SpecVersion specVersion) {
     final DecodedMetadata decodedMetadata =
         MetadataDecoder.instance.decode(specVersion.metadata);
 
-    LegacyTypes? types;
-
-    // Pre checking helps to avoid extra computation for processing LegacyTypesBundle.
-    if (decodedMetadata.isPreV14 && typesBundleDefinition != null) {
-      /*  types = getLegacyTypesFromBundle(
-          typesBundleDefinition!, specVersion.specVersion); */
+    if (decodedMetadata.isPreV14) {
+      return null;
     }
 
-    final ChainInfo description = ChainInfo.fromMetadata(decodedMetadata);
+    final ChainInfo description = ChainInfo.fromMetadata(decodedMetadata)!;
 
     return description;
   }
