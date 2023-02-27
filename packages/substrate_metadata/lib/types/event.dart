@@ -7,7 +7,9 @@ class EventCodec with Codec<List<Map<String, dynamic>>> {
 
   @override
   List<Map<String, dynamic>> decode(Input input) {
-    return SequenceCodec(EventRecord(chainInfo: chainInfo)).decode(input);
+    final result =
+        SequenceCodec(EventRecord(chainInfo: chainInfo)).decode(input);
+    return result;
   }
 
   @override

@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:substrate_metadata/core/metadata_decoder.dart';
 import 'package:substrate_metadata/types/metadata_types.dart';
@@ -111,11 +108,31 @@ class Chain {
     if (versionDescription.chainInfo.version < 14) {
       return null;
     }
-    print('decoding....');
 
     final events = EventCodec(chainInfo: versionDescription.chainInfo)
         .decode(HexInput(rawBlockEvents.events));
     return DecodedBlockEvents(blockNumber: blockNumber, events: events);
+  }
+
+  RawBlockEvents? encodeEvents(DecodedBlockEvents decodedBlockEvents) {
+    final blockNumber = decodedBlockEvents.blockNumber;
+
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
+
+    // Check if this is not empty, throw Exception if it is.
+    if (versionDescription == null) {
+      return null;
+    }
+    if (versionDescription.chainInfo.version < 14) {
+      return null;
+    }
+
+    final output = HexOutput();
+
+    EventCodec(chainInfo: versionDescription.chainInfo)
+        .encodeTo(decodedBlockEvents.events, output);
+    return RawBlockEvents(blockNumber: blockNumber, events: output.toString());
   }
 
   ///
@@ -137,9 +154,11 @@ class Chain {
     if (versionDescription != null) {
       return;
     }
-    print(specVersion.specVersion);
 
     final ChainInfo chainInfo = getChainInfoFromSpecVersion(specVersion);
+    if (chainInfo.version < 14) {
+      return;
+    }
 
     versionDescription = VersionDescription(
       /// local to class params
@@ -175,8 +194,7 @@ class Chain {
           typesBundleDefinition!, specVersion.specVersion); */
     }
 
-    final ChainInfo description = ChainInfo.fromMetadata(
-        decodedMetadata, specVersion.specVersion == 9170);
+    final ChainInfo description = ChainInfo.fromMetadata(decodedMetadata);
 
     return description;
   }

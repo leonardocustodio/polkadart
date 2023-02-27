@@ -1,17 +1,17 @@
 /// Legacy Types used to hold the types for metadata version older than v14.
 class LegacyTypes {
   final Map<String, dynamic> types;
-  final Map<String, Map<String, String>>? typesAlias;
-  final Map<String, String>? signedExtensions;
+  Map<String, Map<String, String>>? typesAlias;
+  Map<String, String>? signedExtensions;
 
-  const LegacyTypes(
-      {required this.types, this.typesAlias, this.signedExtensions});
+  LegacyTypes({required this.types, this.typesAlias, this.signedExtensions});
 
   static LegacyTypes fromJson(Map<String, dynamic> map) {
     return LegacyTypes(
-        types: map['types'] ?? <String, dynamic>{},
-        typesAlias: map['typesAlias'],
-        signedExtensions: map['signedExtensions']);
+      types: map['types'] ?? <String, dynamic>{},
+      typesAlias: map['typesAlias'] ?? <String, Map<String, String>>{},
+      signedExtensions: map['signedExtensions'] ?? <String, String>{},
+    );
   }
 }
 
@@ -20,7 +20,7 @@ class LegacyTypesWithSpecVersionRange extends LegacyTypes {
   /// minmax ~ ( min and max -> range of Spec-Version )
   final List<int?> minmax;
 
-  const LegacyTypesWithSpecVersionRange(
+  LegacyTypesWithSpecVersionRange(
       {required this.minmax,
       required super.types,
       super.typesAlias,
@@ -39,7 +39,7 @@ class LegacyTypesWithSpecVersionRange extends LegacyTypes {
 class LegacyTypesBundle extends LegacyTypes {
   final List<LegacyTypesWithSpecVersionRange>? versions;
 
-  const LegacyTypesBundle(
+  LegacyTypesBundle(
       {this.versions,
       required super.types,
       super.typesAlias,

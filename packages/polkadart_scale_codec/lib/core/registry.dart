@@ -34,7 +34,9 @@ class Registry {
           _parseCodec(customJson, selectedKey, customJson[selectedKey]);
       addCodec(selectedKey, codec);
     } else {
-      for (final mapEntry in customJson.entries) {
+      final entries = customJson.entries.toList();
+      for (var index = 0; index < entries.length; index++) {
+        final mapEntry = entries[index];
         final key = mapEntry.key;
         final value = mapEntry.value;
 
@@ -65,7 +67,6 @@ class Registry {
 
   Codec _parseCodec(
       Map<String, dynamic> customJson, String key, dynamic value) {
-    print(key);
     if (value == null) {
       return NullCodec.instance;
     }

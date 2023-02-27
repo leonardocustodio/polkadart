@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:substrate_metadata/core/chain.dart';
 import 'package:substrate_metadata/models/models.dart';
-import 'package:test/scaffolding.dart';
+import 'package:test/expect.dart';
+import 'package:test/test.dart';
 
 void main() {
   // read lines
@@ -48,7 +50,25 @@ void main() {
         // Decoding the `Raw Block Events`
         final decodedBlockEvents = chain.decodeEvents(originalEvent);
 
-        print(decodedBlockEvents?.events);
+        if (decodedBlockEvents?.events == null) {
+          expect(true, true);
+          return;
+        }
+
+        //
+        // Encoding the `Decoded Block Events`
+        final encodedBlockEvents = chain.encodeEvents(decodedBlockEvents!);
+
+        //
+        // Comparing the original event with the encoded event
+        expect(originalEvent.events, encodedBlockEvents!.events);
+
+        final againDecodedEvents = chain.decodeEvents(encodedBlockEvents);
+
+        //
+        // Comparing the decoded event with the decodedFromEncoded event
+        expect(decodedBlockEvents.events.toString(),
+            againDecodedEvents!.events.toString());
       });
     }
   });

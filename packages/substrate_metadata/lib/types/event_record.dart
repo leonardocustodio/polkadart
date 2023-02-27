@@ -20,10 +20,8 @@ class EventRecord with Codec<Map<String, dynamic>> {
     }
 
     final lookup = input.readBytes(2);
-    print(lookup);
 
     result['lookup'] = encodeHex(lookup.toList());
-    print(result['lookup']);
 
     if (chainInfo.metadata['event_index']?[result['lookup']] == null) {
       throw Exception('Metadata lookup is empty');
@@ -38,7 +36,11 @@ class EventRecord with Codec<Map<String, dynamic>> {
     for (final arg in args) {
       final name = arg['name'];
       final type = arg['type'];
-      final value = chainInfo.scaleCodec.decode(type, input);
+      final typeCodec = chainInfo.scaleCodec.registry.getCodec(type);
+      if (typeCodec == null) {
+        throw Exception('Codec not found for type: $type');
+      }
+      final value = typeCodec.decode(input);
       params[name] = value;
     }
     result['event'] = {
@@ -54,24 +56,31 @@ class EventRecord with Codec<Map<String, dynamic>> {
 
   @override
   void encodeTo(Map<String, dynamic> value, Output output) {
-    U8Codec.instance.encodeTo(value['phase'], output);
-
-    if (value['phase'] == 0) {
+    if (value['phase'] is int){
+      U8Codec.instance.encodeTo(value['phase'], output);
+    }else {
+      U8Codec.instance.encodeTo(0, output);
       U32Codec.instance.encodeTo(value['phase']['ApplyExtrinsic'], output);
     }
 
-    output.write(decodeHex(value['lookup']));
+    final lookup = (value['lookup'] as String).padLeft(4, '0');
 
-    final event = chainInfo.metadata['event_index']?[value['lookup']];
+    output.write(decodeHex(lookup));
+
+    final event = chainInfo.metadata['event_index']?[lookup];
+    final moduleName = event['module']['name'];
+    final eventName = event['call']['name'];
+    final params = value['event'][moduleName][eventName];
 
     final args = event['call']['args'];
 
-    for (final type in args) {
-      final val =
-          value['event'][event['module']['name']][event['call']['name']][type];
-      chainInfo.scaleCodec.encodeTo(type, val, output);
+    for (final arg in args) {
+      final name = arg['name'];
+      final type = arg['type'];
+      chainInfo.scaleCodec.encodeTo(type, params[name], output);
     }
 
-    SequenceCodec(StrCodec.instance).encodeTo(value['topic'], output);
+    SequenceCodec(StrCodec.instance)
+        .encodeTo(value['topic'] ?? <String>[], output);
   }
 }

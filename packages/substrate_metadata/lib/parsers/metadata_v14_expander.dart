@@ -6,17 +6,10 @@ class MetadataV14Expander {
   final registeredTypeNames = <String>[];
 
   final customCodecRegister = <String, dynamic>{};
-  final bool printIt;
 
-  MetadataV14Expander(List<dynamic> types, this.printIt) {
+  MetadataV14Expander(List<dynamic> types) {
     final id2Portable =
         types.map((e) => (e as Map<String, dynamic>).toJson()).toList();
-
-    if (printIt) {
-      final jsonFile = File('../substrate_metadata/check/metadata_v14.json');
-      jsonFile.createSync(recursive: true);
-      jsonFile.writeAsStringSync(jsonEncode(id2Portable));
-    }
 
     for (var item in id2Portable) {
       if (item['type']?['def']?['Primitive'] != null) {
@@ -27,10 +20,6 @@ class MetadataV14Expander {
       final id = item['id'];
       final one = item['type'];
       if (item['type']?['def']?['Variant'] != null) {
-        if (printIt) {
-          print('Variant: id: $id');
-          print('here');
-        }
         if (one['path'].length >= 2) {
           if (['Call', 'Event', 'Instruction'].contains(one['path'].last)) {
             registeredSiType[id] = 'Call';
@@ -91,10 +80,6 @@ class MetadataV14Expander {
       return registeredSiType[id]!;
     }
     if (one['def']?['Variant'] != null) {
-      if (printIt) {
-        print('Variant: id: $id');
-        print('here');
-      }
       final String variantType = one['path'][0];
       switch (variantType) {
         case 'Option':
@@ -102,7 +87,7 @@ class MetadataV14Expander {
         case 'Result':
           return _exploreResult(id, one, id2Portable);
       }
-      if (one['path'].length >= 2) {
+      /* if (one['path'].length >= 2) {
         if (['Call', 'Event'].contains(one['path'].last)) {
           registeredSiType[id] = 'Call';
           return registeredSiType[id]!;
@@ -116,7 +101,7 @@ class MetadataV14Expander {
           registeredSiType[id] = 'Call';
           return registeredSiType[id]!;
         }
-      }
+      } */
       return _exploreEnum(id, one, id2Portable);
     }
     registeredSiType[id] = 'Null';
@@ -215,6 +200,7 @@ class MetadataV14Expander {
     registeredSiType[id] =
         '[${registeredSiType[siType] ?? _fetchTypeName(siType, id2Portable[siType], id2Portable)}; ${one['def']['Array']['len']}]';
 
+    customCodecRegister[registeredSiType[id]!] = registeredSiType[id];
     return registeredSiType[id]!;
   }
 
@@ -224,7 +210,7 @@ class MetadataV14Expander {
 
     registeredSiType[id] =
         'Vec<${registeredSiType[siType] ?? _fetchTypeName(siType, id2Portable[siType], id2Portable)}>';
-
+    customCodecRegister[registeredSiType[id]!] = registeredSiType[id];
     return registeredSiType[id]!;
   }
 
@@ -252,6 +238,7 @@ class MetadataV14Expander {
     registeredSiType[id] =
         'Compact<${registeredSiType[siType] ?? _fetchTypeName(siType, id2Portable[siType], id2Portable)}>';
 
+    customCodecRegister[registeredSiType[id]!] = registeredSiType[id];
     return registeredSiType[id]!;
   }
 
@@ -262,6 +249,7 @@ class MetadataV14Expander {
     registeredSiType[id] =
         'Option<${registeredSiType[siType] ?? _fetchTypeName(siType, id2Portable[siType], id2Portable)}>';
 
+    customCodecRegister[registeredSiType[id]!] = registeredSiType[id];
     return registeredSiType[id]!;
   }
 
@@ -278,6 +266,7 @@ class MetadataV14Expander {
         _fetchTypeName(resultErr, id2Portable[resultErr], id2Portable);
 
     registeredSiType[id] = 'Result<$okType,$errType>';
+    customCodecRegister[registeredSiType[id]!] = registeredSiType[id];
     return registeredSiType[id]!;
   }
 
@@ -333,9 +322,6 @@ class MetadataV14Expander {
             final subType = registeredSiType[siType] ??
                 _genPathName(id2Portable[siType]['type']['path'], siType,
                     id2Portable[siType], id2Portable);
-            if ('polkadot_runtime:Call' == subType) {
-              print('subType: $subType');
-            }
             typeMapping[valueName] = subType;
           }
           variantNameMap[name] = typeMapping;
@@ -357,9 +343,6 @@ class MetadataV14Expander {
 
     registeredTypeNames.add(typeString);
     customCodecRegister[typeString] = {'_enum': result};
-    if ('frame_support:traits:schedule:MaybeHashed' == typeString) {
-      print('typeString: $typeString');
-    }
 
     registeredSiType[id] = typeString;
     return typeString;

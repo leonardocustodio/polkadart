@@ -1,13 +1,13 @@
 part of parsers;
 
 class V14Parser {
-  static ChainInfo getChainInfo(DecodedMetadata metadata, bool printIt) {
+  static ChainInfo getChainInfo(DecodedMetadata metadata) {
     final rawMetadata = metadata.metadata.toJson();
 
     //
     // Expand the V14 compressed types and then mapp the siTypes id to the type names.
     final metadataExpander =
-        MetadataV14Expander(rawMetadata['lookup']['types'], printIt);
+        MetadataV14Expander(rawMetadata['lookup']['types']);
 
     //
     // copy of the siTypes map

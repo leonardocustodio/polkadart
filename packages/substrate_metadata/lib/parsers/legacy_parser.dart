@@ -51,6 +51,9 @@ class LegacyParser {
     registry.addCodec('Call', Call(registry: registry, metadata: rawMetadata));
     //registry.registerCustomCodec(legacyTypes.types);
 
-    return ChainInfo(registry: registry, metadata: rawMetadata, version: decodedMetadata.version);
+    return ChainInfo(
+        registry: registry,
+        metadata: rawMetadata,
+        version: decodedMetadata.version);
   }
 }
