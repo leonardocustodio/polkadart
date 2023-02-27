@@ -69,8 +69,6 @@ class Registry {
       return NullCodec.instance;
     }
 
-    key = key.trim();
-
     key = _renameType(key);
     //
     // Check if the codec is already in the registry
@@ -82,9 +80,7 @@ class Registry {
     //
     //Check if the value is a string
     if (value is String) {
-      value = value.trim();
-
-      value = _renameType(value);
+      key = _renameType(key);
       //
       // Check if the value is present in the registry
       Codec? codec = getCodec(value);
@@ -431,6 +427,7 @@ class Registry {
       case '<Lookup as StaticLookup>::Source':
         return 'Address';
     }
+    type = type.trim();
     if (type == '') {
       return 'Null';
     }
