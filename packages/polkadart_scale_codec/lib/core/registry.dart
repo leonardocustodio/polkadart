@@ -327,36 +327,50 @@ class Registry {
     late int bitLength;
     if (value.containsKey('_bitLength')) {
       bitLength = value['_bitLength']!;
-      value.remove('_bitLength');
     } else {
       bitLength = 8;
     }
     assertion(bitLength % 8 == 0, 'Set bitLength should be multiple of 8.');
     assertion(bitLength > 0, 'Set bitLength should be greater than 0');
 
-    final codec = SetCodec(bitLength, value.keys.toList());
+    final values = value.entries
+        .where((element) => element.key != '_bitLength')
+        .map((e) => e.key)
+        .toList();
+
+    final codec = SetCodec(bitLength, values);
     addCodec(key, codec);
     return codec;
   }
 
-  CompositeCodec _parseComposite(
-      Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
+  CompositeCodec _parseComposite(Map<String, dynamic> customJson,
+      String mainKey, Map<String, dynamic> value) {
     final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
       final val = mapEntry.value;
-
       late Codec subCodec;
       if (val is String) {
-        subCodec = getCodec(val) ??
-            _parseCodec(customJson, val, customJson[val] ?? val);
+        try {
+          subCodec = getCodec(val) ??
+              _parseCodec(customJson, val, customJson[val] ?? val);
+        } catch (e) {
+          if (e is! StackOverflowError) {
+            rethrow;
+          }
+          subCodec = ReferencedCodec(
+            referencedType: val,
+            registry: this,
+          );
+        }
       } else {
         subCodec = _parseCodec(customJson, key, val);
       }
       codecMap[key] = subCodec;
     }
     final codec = CompositeCodec(LinkedHashMap.from(codecMap));
-    addCodec(key, codec);
+
+    addCodec(mainKey, codec);
     return codec;
   }
 
@@ -386,10 +400,6 @@ class Registry {
     assertion(length != null, 'Expected length to be an integer');
 
     assertion(length! >= 0, 'Expected length to be greater than or equal to 0');
-    if (length > 256) {
-      print(
-          'Warning: length of array $key is greater than 255, which is not supported by the substrate runtime');
-    }
 
     assertion(length <= 256, 'Expected length to be less than or equal to 256');
 
@@ -404,7 +414,22 @@ class Registry {
   Codec _parseEnum(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     late Codec codec;
-    if (value['_enum'] is Map<String, dynamic>) {
+    // Indexed Enum
+    if (value['_enum'] is Map<String, int>) {
+      final maxIndex = ((value['_enum'] as Map<String, int>).values)
+          .toList()
+          .reduce(
+              (int value, int element) => value > element ? value : element);
+      //
+      // make enum list of strings with null values
+      final List<String?> enumValues = List.filled(maxIndex + 1, null);
+
+      // filling at the available positions of the indexes
+      for (final MapEntry<String, int> entry in value['_enum'].entries) {
+        enumValues[entry.value] = entry.key;
+      }
+      codec = SimpleEnumCodec(enumValues);
+    } else if (value['_enum'] is Map<String, dynamic>) {
       try {
         final codecMap = <String, Codec>{};
         for (var entry in (value['_enum'] as Map<String, dynamic>).entries) {
@@ -412,7 +437,14 @@ class Registry {
             codecMap[entry.key] =
                 _parseCodec(customJson, entry.value, entry.value);
           } else {
-            codecMap[entry.key] = _parseComposite(customJson, key, entry.value);
+            try {
+              codecMap[entry.key] =
+                  _parseComposite(customJson, key, entry.value);
+            } catch (e) {
+              if (e is! StackOverflowError) {
+                rethrow;
+              }
+            }
           }
         }
         codec = ComplexEnumCodec(codecMap);

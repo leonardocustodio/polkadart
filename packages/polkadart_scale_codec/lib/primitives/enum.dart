@@ -1,11 +1,12 @@
 part of primitives;
 
 class SimpleEnumCodec<A> with Codec<A> {
-  final List<A> list;
+  final List<A?> list;
   const SimpleEnumCodec(this.list);
 
   @override
-  void encodeTo(A value, Output output) {
+  void encodeTo(A? value, Output output) {
+    assertion(value != null, 'value should not be null.');
     final index = list.indexOf(value);
     if (index == -1) {
       throw EnumException('Invalid enum index: $index.');
@@ -16,10 +17,11 @@ class SimpleEnumCodec<A> with Codec<A> {
   @override
   A decode(Input input) {
     final index = input.read();
-    if (index >= list.length) {
+    if (index >= list.length || list[index] == null) {
       throw EnumException('Invalid enum index: $index.');
     }
-    return list[index];
+    
+    return list[index]!;
   }
 }
 

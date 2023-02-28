@@ -106,12 +106,7 @@ class Chain {
       return;
     }
 
-    final ChainInfo? chainInfo = getChainInfoFromSpecVersion(specVersion);
-
-    // Remove after implementing LegacyParser for preV14 versions of Chain Metadata.
-    if (chainInfo == null || chainInfo.version < 14) {
-      return;
-    }
+    final ChainInfo chainInfo = getChainInfoFromSpecVersion(specVersion);
 
     versionDescription = VersionDescription(
       /// local to class params
@@ -135,7 +130,7 @@ class Chain {
         versionDescription.blockNumber, versionDescription);
   }
 
-  ChainInfo? getChainInfoFromSpecVersion(SpecVersion specVersion) {
+  ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
     final DecodedMetadata decodedMetadata =
         MetadataDecoder.instance.decode(specVersion.metadata);
 

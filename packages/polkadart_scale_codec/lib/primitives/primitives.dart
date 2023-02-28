@@ -1,14 +1,11 @@
 library primitives;
 
 import 'dart:collection';
-import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:polkadart_scale_codec/core/core.dart';
 import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';
 import 'package:equatable/equatable.dart';
-
 import 'dart:core' as core;
 import 'dart:core';
 
@@ -37,3 +34,4 @@ part 'enum.dart';
 part 'bit_sequence.dart';
 part 'null_codec.dart';
 part 'set.dart';
+part 'referenced_codec.dart';

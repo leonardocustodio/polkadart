@@ -1010,8 +1010,6 @@ const substrateTypes = {
       'EIP1559': 'EIP1559Transaction'
     }
   },
-  'EthereumAccountId': 'GenericEthereumAccountId',
-  'EthereumLookupSource': 'GenericEthereumLookupSource',
   'EthereumSignature': '[u8; 65]',
   'EthAccessListItem': {'address': 'EthAddress', 'slots': 'Vec<H256>'},
   'EthAccessList': 'Vec<EthAccessListItem>',
@@ -1257,18 +1255,7 @@ const substrateTypes = {
   'ExitSucceed': {
     '_enum': ['Stopped', 'Returned', 'Suicided']
   },
-  'Extrinsic': 'GenericExtrinsic',
-  'ExtrinsicEra': 'GenericExtrinsicEra',
-  'ExtrinsicPayload': 'GenericExtrinsicPayload',
   'ExtrinsicSignature': 'MultiSignature',
-  'ExtrinsicV4': 'GenericExtrinsicV4',
-  'ExtrinsicPayloadV4': 'GenericExtrinsicPayloadV4',
-  'ExtrinsicSignatureV4': 'GenericExtrinsicSignatureV4',
-  'ExtrinsicUnknown': 'GenericExtrinsicUnknown',
-  'ExtrinsicPayloadUnknown': 'GenericExtrinsicPayloadUnknown',
-  'Era': 'ExtrinsicEra',
-  'ImmortalEra': 'GenericImmortalEra',
-  'MortalEra': 'GenericMortalEra',
   'AnySignature': 'H512',
   'MultiSignature': {
     '_enum': {
@@ -1278,7 +1265,6 @@ const substrateTypes = {
     }
   },
   'Signature': 'H512',
-  'SignerPayload': 'GenericSignerPayload',
   'EcdsaSignature': '[u8; 65]',
   'Ed25519Signature': 'H512',
   'Sr25519Signature': 'H512',
@@ -2023,7 +2009,6 @@ const substrateTypes = {
   'Permill': 'UInt<32, Permill>',
   'Perquintill': 'UInt<64, Perquintill>',
   'AccountId': 'AccountId32',
-  'AccountId20': 'GenericEthereumAccountId',
   'AccountId32': 'GenericAccountId',
   'AccountIdOf': 'AccountId',
   'AccountIndex': 'GenericAccountIndex',
@@ -2031,7 +2016,7 @@ const substrateTypes = {
   'AssetId': 'u32',
   'Balance': 'UInt<128, Balance>',
   'BalanceOf': 'Balance',
-  'Block': 'GenericBlock',
+  'Block': 'Hash',
   'BlockNumber': 'u32',
   'BlockNumberFor': 'BlockNumber',
   'BlockNumberOf': 'BlockNumber',
@@ -2096,6 +2081,9 @@ const substrateTypes = {
   'OpaqueCall': 'Bytes',
   'Origin': 'DoNotConstruct<Origin>',
   'PalletId': 'LockIdentifier',
+  'OriginCaller': {
+    '_enum': {'System': 'SystemOrigin'}
+  },
   'PalletsOrigin': 'OriginCaller',
   'PalletVersion': {'major': 'u16', 'minor': 'u8', 'patch': 'u8'},
   'Pays': {
@@ -2438,10 +2426,10 @@ const substrateTypes = {
   },
   'ElectionPhase': {
     '_enum': {
-      'Off': null,
-      'Signed': null,
+      'Off': 'Null',
+      'Signed': 'Null',
       'Unsigned': '(bool, BlockNumber)',
-      'Emergency': null
+      'Emergency': 'Null'
     }
   },
   'ElectionResult': {
@@ -2690,7 +2678,6 @@ const substrateTypes = {
     'maxBlock': 'Weight',
     'perClass': 'PerDispatchClassWeightsPerClass'
   },
-  'ChainProperties': 'GenericChainProperties',
   'ChainType': {
     '_enum': {
       'Development': 'Null',
@@ -2733,10 +2720,8 @@ const substrateTypes = {
   'DispatchResult': 'Result<(), DispatchError>',
   'DispatchResultOf': 'DispatchResult',
   'DispatchResultTo198': 'Result<(), Text>',
-  'Event': 'GenericEvent',
   'EventId': '[u8; 2]',
   'EventIndex': 'u32',
-  'EventRecord': {'phase': 'Phase', 'event': 'Event', 'topics': 'Vec<Hash>'},
   'Health': {'peers': 'u64', 'isSyncing': 'bool', 'shouldHavePeers': 'bool'},
   'InvalidTransaction': {
     '_enum': {
