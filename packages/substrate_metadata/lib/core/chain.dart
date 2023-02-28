@@ -1,9 +1,12 @@
 import 'package:substrate_metadata/core/metadata_decoder.dart';
+import '../definitions/types_bundle.dart';
+import '../models/legacy_types.dart';
 import '../models/models.dart';
 import '../utils/utils.dart';
 
 class Chain {
-  Chain();
+  final LegacyTypesBundle? typesBundleDefinition;
+  Chain([this.typesBundleDefinition]);
 
   ///
   /// To hold the parsed spec versions and metadata related information
@@ -136,11 +139,16 @@ class Chain {
     final DecodedMetadata decodedMetadata =
         MetadataDecoder.instance.decode(specVersion.metadata);
 
-    if (decodedMetadata.isPreV14) {
-      return null;
+    LegacyTypes? types;
+
+    // Pre checking helps to avoid extra computation for processing LegacyTypesBundle.
+    if (decodedMetadata.isPreV14 && typesBundleDefinition != null) {
+      types = getLegacyTypesFromBundle(
+          typesBundleDefinition!, specVersion.specVersion);
     }
 
-    final ChainInfo description = ChainInfo.fromMetadata(decodedMetadata)!;
+    final ChainInfo description =
+        ChainInfo.fromMetadata(decodedMetadata, types)!;
 
     return description;
   }

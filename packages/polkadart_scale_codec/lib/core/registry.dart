@@ -117,6 +117,8 @@ class Registry {
               return _parseResult(customJson, key, value);
             case 'BitVec':
               return _parseBitSequence(customJson, key, value);
+            case 'DoNotConstruct':
+              return NullCodec.instance;
           }
           return _parseCodec(customJson, value, customJson[value]);
         }
@@ -146,11 +148,16 @@ class Registry {
         return _parseEnum(customJson, key, value);
       }
       //
+      // set
+      if (value['_set'] != null) {
+        return _parseSet(key, value['_set'] as Map<String, int>);
+      }
+      //
       // composite
       return _parseComposite(customJson, key, value);
     }
 
-    return _parseCodec(customJson, value, customJson[value]);
+    return _parseCodec(customJson, key, customJson[value]);
   }
 
   TupleCodec _parseTuple(
@@ -316,19 +323,35 @@ class Registry {
     return codec;
   }
 
+  SetCodec _parseSet(String key, Map<String, int> value) {
+    late int bitLength;
+    if (value.containsKey('_bitLength')) {
+      bitLength = value['_bitLength']!;
+      value.remove('_bitLength');
+    } else {
+      bitLength = 8;
+    }
+    assertion(bitLength % 8 == 0, 'Set bitLength should be multiple of 8.');
+    assertion(bitLength > 0, 'Set bitLength should be greater than 0');
+
+    final codec = SetCodec(bitLength, value.keys.toList());
+    addCodec(key, codec);
+    return codec;
+  }
+
   CompositeCodec _parseComposite(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
-      final value = mapEntry.value;
+      final val = mapEntry.value;
 
       late Codec subCodec;
-      if (value is String) {
-        subCodec = getCodec(value) ??
-            _parseCodec(customJson, value, customJson[value] ?? value);
+      if (val is String) {
+        subCodec = getCodec(val) ??
+            _parseCodec(customJson, val, customJson[val] ?? val);
       } else {
-        subCodec = _parseCodec(customJson, key, value);
+        subCodec = _parseCodec(customJson, key, val);
       }
       codecMap[key] = subCodec;
     }
@@ -363,8 +386,12 @@ class Registry {
     assertion(length != null, 'Expected length to be an integer');
 
     assertion(length! >= 0, 'Expected length to be greater than or equal to 0');
+    if (length > 256) {
+      print(
+          'Warning: length of array $key is greater than 255, which is not supported by the substrate runtime');
+    }
 
-    assertion(length <= 255, 'Expected length to be less than or equal to 256');
+    assertion(length <= 256, 'Expected length to be less than or equal to 256');
 
     //
     // Get the Codec based on the subType
@@ -438,6 +465,8 @@ class Registry {
   /// match and return the types which are simple and not parametrized
   Codec? getSimpleCodecs(String simpleCodecs) {
     switch (simpleCodecs.toLowerCase()) {
+      case 'bitvec':
+        return BitSequenceCodec(BitStore.U8, BitOrder.LSB);
       case 'bool':
         return BoolCodec.instance;
       case 'u8':
@@ -450,6 +479,8 @@ class Registry {
         return U64Codec.instance;
       case 'u128':
         return U128Codec.instance;
+      case 'u256':
+        return U256Codec.instance;
       case 'string':
       case 'text':
       case 'str':
@@ -464,6 +495,9 @@ class Registry {
         return I64Codec.instance;
       case 'i128':
         return I128Codec.instance;
+      case 'i256':
+        return I256Codec.instance;
+      case 'donotconstruct':
       case 'null':
         return NullCodec.instance;
       default:

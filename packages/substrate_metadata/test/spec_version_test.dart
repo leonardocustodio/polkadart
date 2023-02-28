@@ -1,13 +1,21 @@
 import 'package:substrate_metadata/core/chain.dart';
+import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
+
+import 'parachain_definitions/polkadot.dart';
 
 void main() {
   group('Spec Versions Test', () {
     test('init spec version file', () {
       //
-      // Initiate chain constructor
-      final chain = Chain();
+      // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
+      final LegacyTypesBundle typesDefinitions =
+          LegacyTypesBundle.fromJson(polkadotTypesBundle);
+
+      //
+      // Initiate chain constructor with chain specific types-definition
+      final chain = Chain(typesDefinitions);
 
       //
       // Populating with the metadata for block-numbers available for this chain....
