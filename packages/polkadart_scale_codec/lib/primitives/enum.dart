@@ -1,6 +1,6 @@
 part of primitives;
 
-class SimpleEnumCodec<A> with Codec<A> {
+class SimpleEnumCodec<A> with Codec<A?> {
   final List<A?> list;
   const SimpleEnumCodec(this.list);
 
@@ -11,6 +11,14 @@ class SimpleEnumCodec<A> with Codec<A> {
     if (index == -1) {
       throw EnumException('Invalid enum index: $index.');
     }
+    if (index >= list.length) {
+      throw EnumException(
+          '$index is out of range. Max index is ${list.length - 1}');
+    }
+
+    if (list[index] == null) {
+      throw EnumException('Value at index: $index is null, $index not usable.');
+    }
     return output.pushByte(index);
   }
 
@@ -20,7 +28,15 @@ class SimpleEnumCodec<A> with Codec<A> {
     if (index >= list.length || list[index] == null) {
       throw EnumException('Invalid enum index: $index.');
     }
-    
+    if (index >= list.length) {
+      throw EnumException(
+          '$index is out of range. Max index is ${list.length - 1}');
+    }
+
+    if (list[index] == null) {
+      throw EnumException('Value at index: $index is null, $index not usable.');
+    }
+
     return list[index]!;
   }
 }
