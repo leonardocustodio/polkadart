@@ -29,6 +29,13 @@ void main() {
         // decoding
         final decodedMetadata = MetadataDecoder.instance.decode(metadataHex);
 
+        // create File
+        final file =
+            File('../substrate_metadata/check/metadata_v$version.json');
+        file
+          ..createSync(recursive: true)
+          ..writeAsStringSync(jsonEncode(decodedMetadata.metadataJson));
+
         final output = HexOutput();
 
         // encoding to output;

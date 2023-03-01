@@ -280,21 +280,26 @@ class MetadataV14Expander {
 
     variants.sort((a, b) => a['index'] < b['index'] ? -1 : 1);
 
-    final variantNameMap = <String, dynamic>{};
+    final maxIndex = variants[variants.length - 1]['index'];
 
-    for (int index = 0; index < variants.length; index++) {
-      final Map<String, dynamic> variant = variants[index];
+    final List<MapEntry<String, dynamic>?> variantNameMap =
+        List<MapEntry<String, dynamic>?>.filled(maxIndex + 1, null);
+
+    for (final Map<String, dynamic> variant in variants) {
+      final int index = variant['index'];
       final String name = variant['name'];
-      variantNameMap[name] = 'Null';
+      variantNameMap[index] = MapEntry(name, 'Null');
 
       switch (variant['fields'].length) {
         case 0:
           break;
         case 1:
           final int siType = variant['fields'][0]['type'];
-          variantNameMap[name] = registeredSiType[siType] ??
-              _genPathName(id2Portable[siType]['type']['path'], siType,
-                  id2Portable[siType], id2Portable);
+          variantNameMap[index] = MapEntry(
+              name,
+              registeredSiType[siType] ??
+                  _genPathName(id2Portable[siType]['type']['path'], siType,
+                      id2Portable[siType], id2Portable));
           break;
         default:
           // field count> 1, enum one element is struct
@@ -311,7 +316,7 @@ class MetadataV14Expander {
                   _genPathName(id2Portable[siType]['type']['path'], siType,
                       id2Portable[siType], id2Portable);
             }
-            variantNameMap[name] = '($typeMapping)';
+            variantNameMap[index] = MapEntry(name, '($typeMapping)');
             break;
           }
 
@@ -324,19 +329,23 @@ class MetadataV14Expander {
                     id2Portable[siType], id2Portable);
             typeMapping[valueName] = subType;
           }
-          variantNameMap[name] = typeMapping;
+          variantNameMap[index] = MapEntry(name, typeMapping);
           break;
       }
     }
 
     late dynamic result;
 
-    if (variantNameMap.values.any((e) => e.toString() != 'Null')) {
-      // enum one element is struct or parameterized
+    if (variantNameMap.any(
+        (MapEntry<String, dynamic>? e) => e != null && e.value != 'Null')) {
+      // enum one element is composite or parameterized
+      // Here some of the indexs can be null which denotes that the index is not used and
+      // hence should throw error from the Enum Codec
       result = variantNameMap;
     } else {
       // enum all values are 'Null' and hence it is not a parameterized enum
-      result = variantNameMap.keys.toList().cast<String>();
+      result =
+          variantNameMap.map((MapEntry<String, dynamic>? e) => e?.key).toList();
     }
 
     final String typeString = _genPathName(one['path'], id, {}, []);

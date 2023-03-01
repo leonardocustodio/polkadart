@@ -291,10 +291,10 @@ class Registry {
     final errCodec = getCodec(match3) ??
         _parseCodec(customJson, match3, customJson[match3] ?? match3);
 
-    final ComplexEnumCodec codec = ComplexEnumCodec({
-      'Ok': okCodec,
-      'Err': errCodec,
-    });
+    final ComplexEnumCodec codec = ComplexEnumCodec([
+      MapEntry('Ok', okCodec),
+      MapEntry('Err', errCodec),
+    ]);
     addCodec(key, codec);
     return codec;
   }
@@ -336,7 +336,7 @@ class Registry {
     final values = value.entries
         .where((element) => element.key != '_bitLength')
         .map((e) => e.key)
-        .toList();
+        .toList(growable: false);
 
     final codec = SetCodec(bitLength, values);
     addCodec(key, codec);
@@ -413,63 +413,100 @@ class Registry {
 
   Codec _parseEnum(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
-    late Codec codec;
-    // Indexed Enum
     if (value['_enum'] is Map<String, int>) {
-      final maxIndex = ((value['_enum'] as Map<String, int>).values)
-          .toList()
-          .reduce(
-              (int value, int element) => value > element ? value : element);
       //
-      // make enum list of strings with null values
-      final List<String?> enumValues = List.filled(maxIndex + 1, null);
-
-      // filling at the available positions of the indexes
-      for (final MapEntry<String, int> entry in value['_enum'].entries) {
-        enumValues[entry.value] = entry.key;
-      }
-      codec = SimpleEnumCodec(enumValues);
+      // Indexed Enum
+      return _parseIndexedEnum(key, value['_enum'] as Map<String, int>);
     } else if (value['_enum'] is Map<String, dynamic>) {
-      try {
-        final codecMap = <String, Codec>{};
-        for (var entry in (value['_enum'] as Map<String, dynamic>).entries) {
-          if (entry.value is String) {
-            codecMap[entry.key] =
-                _parseCodec(customJson, entry.value, entry.value);
-          } else {
-            try {
-              codecMap[entry.key] =
-                  _parseComposite(customJson, key, entry.value);
-            } catch (e) {
-              if (e is! StackOverflowError) {
-                rethrow;
-              }
-            }
-          }
-        }
-        codec = ComplexEnumCodec(codecMap);
-      } catch (e) {
-        // If the enum is too complex and is calling itself back again and again then, we fallback to a dynamic enum
-        if (e is! StackOverflowError) {
-          rethrow;
-        }
-
-        codec = DynamicEnumCodec(
-          registry: this,
-          map: value['_enum'],
-        );
-        for (final entry in (value['_enum'] as Map<String, dynamic>).entries) {
-          _postVariantFieldsProcessor[entry.key] = entry.value;
-        }
-      }
-    } else if (value['_enum'] is List<String>) {
-      codec = SimpleEnumCodec(value['_enum']);
+      //
+      // Complex Enum
+      return _parseComplexEnum(customJson, key, value);
+    } else if (value['_enum'] is List<MapEntry<String, dynamic>?>) {
+      //
+      // Complex Enum
+      return _parseComplexEnum(customJson, key, value);
+    } else if (value['_enum'] is List<String?>) {
+      //
+      // Simplified Enum
+      return _parseSimplifiedEnum(key, value['_enum'] as List<String?>);
     } else {
       throw EnumException(
           'EnumException: Expected enum to be a map or a list, but found ${value['_enum'].runtimeType}');
     }
+  }
+
+  Codec _parseComplexEnum(
+      Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
+    late Codec codec;
+    try {
+      late List<MapEntry<String, Codec>?> codecMap;
+
+      late List<MapEntry<String, dynamic>> entries;
+
+      if (value['_enum'] is Map<String, dynamic>) {
+        codecMap = List<MapEntry<String, Codec>?>.filled(
+            (value['_enum'] as Map<String, dynamic>).length, null);
+        entries = (value['_enum'] as Map<String, dynamic>)
+            .entries
+            .toList(growable: false);
+      } else if (value['_enum'] is List<MapEntry<String, dynamic>>) {
+        codecMap = List<MapEntry<String, Codec>?>.filled(
+            (value['_enum'] as List<MapEntry<String, dynamic>>).length, null);
+        entries = (value['_enum'] as List<MapEntry<String, dynamic>>)
+            .toList(growable: false);
+      }
+
+      for (var index = 0; index < entries.length; index++) {
+        final entry = entries[index];
+        if (entry.value is String) {
+          codecMap[index] = MapEntry(
+              entry.key, _parseCodec(customJson, entry.value, entry.value));
+        } else {
+          codecMap[index] = MapEntry(
+              entry.key, _parseComposite(customJson, key, entry.value));
+        }
+      }
+      codec = ComplexEnumCodec(codecMap);
+    } catch (e) {
+      // If the enum is too complex and is calling itself back again and again then,
+      // we fallback to a dynamic enum
+      if (e is! StackOverflowError) {
+        rethrow;
+      }
+
+      codec = DynamicEnumCodec(
+        registry: this,
+        list: value['_enum'],
+      );
+      for (final entry in (value['_enum'] as Map<String, dynamic>).entries) {
+        _postVariantFieldsProcessor[entry.key] = entry.value;
+      }
+    }
     addCodec(key, codec);
     return codec;
+  }
+
+  SimpleEnumCodec _parseSimplifiedEnum(String key, List<String?> values) {
+    final codec = SimpleEnumCodec(values);
+    addCodec(key, codec);
+    return codec;
+  }
+
+  SimpleEnumCodec _parseIndexedEnum(
+      String key, Map<String, int> indexedEnumValues) {
+    final maxIndex = indexedEnumValues.values
+        .toList(growable: false)
+        .reduce((int value, int element) => value > element ? value : element);
+    //
+    // make enum list of strings with null values
+    final List<String?> enumValues = List.filled(maxIndex + 1, null);
+
+    // filling at the available positions of the indexes
+    for (final MapEntry<String, int> entry in indexedEnumValues.entries) {
+      enumValues[entry.value] = entry.key;
+    }
+
+    return _parseSimplifiedEnum(key, enumValues);
   }
 
   String _renameType(String type) {

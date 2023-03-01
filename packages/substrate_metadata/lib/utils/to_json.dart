@@ -9,6 +9,9 @@ extension ToJson<T> on T {
     if (this is List<T>) {
       return (this as List<T>).map((T e) => e.toJson()).toList() as T;
     }
+    if (this is List<dynamic>) {
+      return (this as List<dynamic>).cast<Map<String, dynamic>>().map((Map<String, dynamic> e) => e.toJson()).toList() as T;
+    }
     if (this is List<Map<String, dynamic>> || this is Map<String, dynamic>) {
       return jsonDecode(toHuman());
     }

@@ -231,6 +231,7 @@ const substrateTypes = {
     'amount': 'Balance',
     'reasons': 'Reasons'
   },
+  'Status': 'BalanceStatus',
   'BalanceStatus': {
     '_enum': ['Free', 'Reserved']
   },
@@ -1995,26 +1996,26 @@ const substrateTypes = {
     'threshold': 'u16'
   },
   'RpcMethods': {'version': 'u32', 'methods': 'Vec<Text>'},
-  'Fixed64': 'Int<64, Fixed64>',
-  'FixedI64': 'Int<64, FixedI64>',
-  'FixedU64': 'UInt<64, FixedU64>',
-  'Fixed128': 'Int<128, Fixed128>',
-  'FixedI128': 'Int<128, FixedI128>',
-  'FixedU128': 'UInt<128, FixedU128>',
-  'I32F32': 'Int<64, I32F32>',
-  'U32F32': 'UInt<64, U32F32>',
-  'PerU16': 'UInt<16, PerU16>',
-  'Perbill': 'UInt<32, Perbill>',
-  'Percent': 'UInt<8, Percent>',
-  'Permill': 'UInt<32, Permill>',
-  'Perquintill': 'UInt<64, Perquintill>',
+  'Fixed64': 'I64',
+  'FixedI64': 'I64',
+  'FixedU64': 'U64',
+  'Fixed128': 'I128',
+  'FixedI128': 'I128',
+  'FixedU128': 'U128',
+  'I32F32': 'I64',
+  'U32F32': 'U64',
+  'PerU16': 'U16',
+  'Perbill': 'U32',
+  'Percent': 'U8',
+  'Permill': 'U32',
+  'Perquintill': 'U64',
   'AccountId': 'AccountId32',
   'AccountId32': 'GenericAccountId',
   'AccountIdOf': 'AccountId',
   'AccountIndex': 'GenericAccountIndex',
   'Address': 'MultiAddress',
   'AssetId': 'u32',
-  'Balance': 'UInt<128, Balance>',
+  'Balance': 'U128',
   'BalanceOf': 'Balance',
   'Block': 'Hash',
   'BlockNumber': 'u32',
@@ -2077,7 +2078,7 @@ const substrateTypes = {
   'MultiSigner': {
     '_enum': {'Ed25519': '[u8; 32]', 'Sr25519': '[u8; 32]', 'Ecdsa': '[u8; 33]'}
   },
-  'Moment': 'UInt<64, Moment>',
+  'Moment': 'U64',
   'OpaqueCall': 'Bytes',
   'Origin': 'DoNotConstruct<Origin>',
   'PalletId': 'LockIdentifier',
@@ -3578,5 +3579,10 @@ const substrateTypes = {
   'VersionedXcm': {
     '_enum': {'V0': 'XcmV0', 'V1': 'XcmV1', 'V2': 'XcmV2'}
   },
-  'XcmVersion': 'u32'
+  'XcmVersion': 'u32',
+  'TaskAddress<BlockNumber>': 'TaskAddress',
+  'sp_std::marker::PhantomData<(AccountId, Event)>' : 'Null',
+  'Timepoint<BlockNumber>': 'Timepoint',
+  'NewBidder<AccountId>': 'NewBidder',
+  'Vec<IdentificationTuple>': 'Vec<IdentificationTuple>'
 };
