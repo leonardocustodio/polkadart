@@ -1,7 +1,7 @@
 part of primitives;
 
 /// Empty codec to encode/decode nothing
-class NullCodec with Codec {
+class NullCodec with Codec<void> {
   const NullCodec._();
 
   static const NullCodec instance = NullCodec._();
@@ -10,5 +10,8 @@ class NullCodec with Codec {
   void decode(Input input) {}
 
   @override
-  void encodeTo(dynamic value, Output output) {}
+  void encodeTo(void value, Output output) {}
+
+  @override
+  int sizeHint(void value) => 0;
 }
