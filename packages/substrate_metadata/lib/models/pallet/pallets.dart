@@ -28,26 +28,26 @@ class PalletMetadataV14 {
             .toList());
 
     if (map['storage'] != null &&
-        map['storage'] is Some &&
-        (map['storage'] as Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = PalletStorageMetadataV14.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is Some &&
-        (map['calls'] as Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = PalletCallMetadataV14.fromJson(map['calls'].value);
     }
 
     if (map['events'] != null &&
-        map['events'] is Some &&
-        (map['events'] as Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = PalletEventMetadataV14.fromJson(map['events'].value);
     }
 
     if (map['errors'] != null &&
-        map['errors'] is Some &&
-        (map['errors'] as Some).value != null) {
+        map['errors'] is Option &&
+        (map['errors'] as Option).value != null) {
       obj.errors = PalletErrorMetadataV14.fromJson(map['errors'].value);
     }
 
@@ -60,20 +60,20 @@ class PalletMetadataV14 {
     data['name'] = name;
 
     final localStorage = storage?.toJson();
-    data['storage'] = localStorage != null ? Some(localStorage) : None;
+    data['storage'] = localStorage != null ? Option.some(localStorage) : None;
 
     final localCalls = calls?.toJson();
-    data['calls'] = localCalls != null ? Some(localCalls) : None;
+    data['calls'] = localCalls != null ? Option.some(localCalls) : None;
 
     final localEvents = events?.toJson();
-    data['events'] = localEvents != null ? Some(localEvents) : None;
+    data['events'] = localEvents != null ? Option.some(localEvents) : None;
 
     data['constants'] = constants
         .map((PalletConstantMetadataV14 value) => value.toJson())
         .toList();
 
     final localErrors = errors?.toJson();
-    data['errors'] = localErrors != null ? Some(localErrors) : None;
+    data['errors'] = localErrors != null ? Option.some(localErrors) : None;
 
     data['index'] = index;
 
