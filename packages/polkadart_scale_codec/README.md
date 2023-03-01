@@ -16,7 +16,7 @@
 | Bytes        | `Bytes`                         |
 | Compact      | `Compact<T>`                    |
 | Enum         | `_enum`                         |
-| Composite       | `{}`                       |
+| Composite    | `{}`                            |
 | FixedVec     | `[u8, length]`                  |
 | BitVec       | `BitVec`                        |
 | Option       | `Option<T>`                     |
@@ -197,12 +197,12 @@
   // Initializing Scale-Codec object
   final codec = Codec(types);
 
-  final value = Some(true);
+  final value = Option.some(true);
 
   // 0x0101
   var encoded = codec.encode(registryIndex, value);
 
-  // Some(true)
+  // Option.some(true)
   var decoded = codec.decode(registryIndex, encoded);
 
   // or
@@ -322,7 +322,7 @@
         '_enum': ['Orange', 'Apple', 'Kiwi']
       },
       'OuncesEnum': {
-        'ounces': 'u8', 
+        'ounces': 'u8',
         'Remarks': 'Option<Text>',
       },
       'OrderComposite': {
@@ -330,7 +330,7 @@
           'note': 'Text',
           'Juice': 'OrderJuiceEnum',
           'Ounces': 'OuncesEnum'
-        
+
       },
     },
   );
@@ -349,23 +349,23 @@
     'Juice': 'Kiwi',
     'Ounces': {
       'ounces': 1,
-      'Remarks': Some('This is the first order.'),
+      'Remarks': Option.some('This is the first order.'),
     }
   };
-  
+
   final encoded = codec.encode(typeIndex, order);
-  
+
   // {
   //   'index': 8,
   //   'note': 'This is a note',
   //   'Juice': 'Kiwi',
   //   'Ounces': {
   //     'ounces': 1,
-  //     'Remarks': Some('This is the first order.'),
+  //     'Remarks': Option.some('This is the first order.'),
   //   }
   // }
   final decoded = codec.decode(typeIndex, encoded);
-  
+
   print(decoded);
 ```
 
