@@ -2,11 +2,11 @@ library primitives;
 
 import 'dart:collection';
 import 'dart:typed_data';
-
+import 'dart:convert' show utf8;
+import 'package:equatable/equatable.dart';
 import 'package:polkadart_scale_codec/core/core.dart';
 import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';
-import 'package:equatable/equatable.dart';
 
 import 'dart:core' as core;
 import 'dart:core';

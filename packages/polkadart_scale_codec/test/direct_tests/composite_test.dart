@@ -49,7 +49,7 @@ void main() {
             'name': 'Kiwi',
             'ounces': 1,
           },
-          'Remarks': Some('Hey Food was good'),
+          'Remarks': Option.some('Hey Food was good'),
         }),
         output,
       );
@@ -92,15 +92,17 @@ void main() {
           'Remarks': OptionCodec(StrCodec.instance),
         }),
       ).decode(input);
-      expect(decoded, {
-        'index': 8,
-        'note': 'This is a note',
-        'Juice': {
-          'name': 'Kiwi',
-          'ounces': 1,
-        },
-        'Remarks': Some('Hey Food was good'),
-      });
+      expect(
+          decoded.toString(),
+          {
+            'index': 8,
+            'note': 'This is a note',
+            'Juice': {
+              'name': 'Kiwi',
+              'ounces': 1,
+            },
+            'Remarks': Option.some('Hey Food was good'),
+          }.toString());
     });
   });
 }
