@@ -3581,7 +3581,7 @@ const substrateTypes = {
   },
   'XcmVersion': 'u32',
   'TaskAddress<BlockNumber>': 'TaskAddress',
-  'sp_std::marker::PhantomData<(AccountId, Event)>' : 'Null',
+  'sp_std::marker::PhantomData<(AccountId, Event)>': 'Null',
   'Timepoint<BlockNumber>': 'Timepoint',
   'NewBidder<AccountId>': 'NewBidder',
   'Vec<IdentificationTuple>': 'Vec<IdentificationTuple>'

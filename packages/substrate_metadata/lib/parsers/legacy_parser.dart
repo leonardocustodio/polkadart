@@ -19,7 +19,8 @@ class LegacyParser {
             callIndex++) {
           final call = module['calls'][callIndex];
 
-          final lookup = encodeHex([module['index'] ?? callModuleIndex, callIndex]);
+          final lookup =
+              encodeHex([module['index'] ?? callModuleIndex, callIndex]);
 
           rawMetadata['call_index'][lookup] = {
             'module': {'name': module['name']},

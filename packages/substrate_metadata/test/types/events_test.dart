@@ -55,7 +55,6 @@ void main() {
         test(
             'When original event is decoded and encoded back then it matches the provided event value. : ${originalEvent.blockNumber}',
             () {
-
           if (originalEvent.blockNumber == 7565089) {
             print('here');
           }
