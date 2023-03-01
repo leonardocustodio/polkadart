@@ -47,7 +47,7 @@ class Si1TypeParameter {
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'name': name,
-        'type': type == null ? None : Some(type),
+        'type': type == null ? None : Option.some(type),
       };
 }
 
@@ -338,9 +338,9 @@ class Si1Field {
 
   /// Creates Map from Class Object
   Map<String, dynamic> toJson() => {
-        'name': name == null ? None : Some(name),
+        'name': name == null ? None : Option.some(name),
         'type': type,
-        'typeName': typeName == null ? None : Some(typeName),
+        'typeName': typeName == null ? None : Option.some(typeName),
         'docs': docs,
       };
 }

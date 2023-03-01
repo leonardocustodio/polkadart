@@ -44,22 +44,22 @@ class ModuleMetadataV9 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is Some &&
-        (map['storage'] as Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV9.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is Some &&
-        (map['calls'] as Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is Some &&
-        (map['events'] as Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
@@ -73,13 +73,13 @@ class ModuleMetadataV9 extends AnyLegacyModule {
     map['name'] = name;
 
     final localStorage = storage?.toJson();
-    map['storage'] = localStorage == null ? None : Some(localStorage);
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
     final localCalls = calls?.map((e) => e.toJson()).toList();
-    map['calls'] = localCalls == null ? None : Some(localCalls);
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
     final localEvents = events?.map((e) => e.toJson()).toList();
-    map['events'] = localEvents == null ? None : Some(localEvents);
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
 
     map['constants'] = constants.map((e) => e.toJson()).toList();
 
@@ -112,22 +112,22 @@ class ModuleMetadataV10 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is Some &&
-        (map['storage'] as Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV10.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is Some &&
-        (map['calls'] as Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is Some &&
-        (map['events'] as Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
@@ -141,13 +141,13 @@ class ModuleMetadataV10 extends AnyLegacyModule {
     map['name'] = name;
 
     final localStorage = storage?.toJson();
-    map['storage'] = localStorage == null ? None : Some(localStorage);
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
     final localCalls = calls?.map((e) => e.toJson()).toList();
-    map['calls'] = localCalls == null ? None : Some(localCalls);
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
     final localEvents = events?.map((e) => e.toJson()).toList();
-    map['events'] = localEvents == null ? None : Some(localEvents);
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
 
     map['constants'] = constants.map((e) => e.toJson()).toList();
 
@@ -180,22 +180,22 @@ class ModuleMetadataV11 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is Some &&
-        (map['storage'] as Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV11.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is Some &&
-        (map['calls'] as Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is Some &&
-        (map['events'] as Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
@@ -209,13 +209,13 @@ class ModuleMetadataV11 extends AnyLegacyModule {
     map['name'] = name;
 
     final localStorage = storage?.toJson();
-    map['storage'] = localStorage == null ? None : Some(localStorage);
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
     final localCalls = calls?.map((e) => e.toJson()).toList();
-    map['calls'] = localCalls == null ? None : Some(localCalls);
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
     final localEvents = events?.map((e) => e.toJson()).toList();
-    map['events'] = localEvents == null ? None : Some(localEvents);
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
 
     map['constants'] = constants.map((e) => e.toJson()).toList();
 
@@ -251,22 +251,22 @@ class ModuleMetadataV12 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is Some &&
-        (map['storage'] as Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV11.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is Some &&
-        (map['calls'] as Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is Some &&
-        (map['events'] as Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
@@ -280,13 +280,13 @@ class ModuleMetadataV12 extends AnyLegacyModule {
     map['name'] = name;
 
     final localStorage = storage?.toJson();
-    map['storage'] = localStorage == null ? None : Some(localStorage);
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
     final localCalls = calls?.map((e) => e.toJson()).toList();
-    map['calls'] = localCalls == null ? None : Some(localCalls);
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
     final localEvents = events?.map((e) => e.toJson()).toList();
-    map['events'] = localEvents == null ? None : Some(localEvents);
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
 
     map['constants'] = constants.map((e) => e.toJson()).toList();
 
@@ -324,22 +324,22 @@ class ModuleMetadataV13 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is Some &&
-        (map['storage'] as Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV13.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is Some &&
-        (map['calls'] as Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is Some &&
-        (map['events'] as Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
@@ -353,13 +353,13 @@ class ModuleMetadataV13 extends AnyLegacyModule {
     map['name'] = name;
 
     final localStorage = storage?.toJson();
-    map['storage'] = localStorage == null ? None : Some(localStorage);
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
     final localCalls = calls?.map((e) => e.toJson()).toList();
-    map['calls'] = localCalls == null ? None : Some(localCalls);
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
     final localEvents = events?.map((e) => e.toJson()).toList();
-    map['events'] = localEvents == null ? None : Some(localEvents);
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
 
     map['constants'] = constants.map((e) => e.toJson()).toList();
 
