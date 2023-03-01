@@ -33,7 +33,7 @@ void main() {
             'name': 'Kiwi',
             'ounces': 1,
           },
-          'Remarks': Some('Hey Food was good'),
+          'Remarks': Option.some('Hey Food was good'),
         },
         output,
       );
@@ -57,7 +57,7 @@ void main() {
               'name': 'Kiwi Juice',
               'ounces': 1,
             },
-            'Remarks': Some('Hey Food was good'),
+            'Remarks': Option.some('Hey Food was good'),
           },
           {
             'index': 8,
@@ -126,7 +126,7 @@ void main() {
             'name': 'Kiwi',
             'ounces': 1,
           },
-          'Remarks': Some('Hey Food was good'),
+          'Remarks': Option.some('Hey Food was good'),
         }),
       );
     });
@@ -147,7 +147,7 @@ void main() {
                 'name': 'Kiwi Juice',
                 'ounces': 1,
               },
-              'Remarks': Some('Hey Food was good'),
+              'Remarks': Option.some('Hey Food was good'),
             },
             {
               'index': 8,
