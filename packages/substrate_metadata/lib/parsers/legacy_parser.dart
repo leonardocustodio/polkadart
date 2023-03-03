@@ -60,7 +60,7 @@ class LegacyParser {
         }
       }
     }
-    List<String> extraTypesKeys = extraTypes.keys.toList();
+    final List<String> extraTypesKeys = extraTypes.keys.toList();
 
     for (final type in extraTypesKeys) {
       if (legacyTypes.types[type] != null) {
@@ -75,12 +75,9 @@ class LegacyParser {
     //
     // Register the Call type
     registry.addCodec('Call', Call(registry: registry, metadata: rawMetadata));
-    // ignore: unnecessary_cast
-    registry.registerCustomCodec(legacyTypes.types as Map<String, dynamic>);
-
-    extraTypesKeys = extraTypes.keys.toList();
-
-    registry.registerCustomCodec(extraTypes);
+    registry.registerCustomCodec(
+        // ignore: unnecessary_cast
+        {...extraTypes, ...legacyTypes.types as Map<String, dynamic>});
 
     return ChainInfo(
         registry: registry,

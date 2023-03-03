@@ -72,9 +72,6 @@ class Chain {
     if (versionDescription == null) {
       throw BlockNotFoundException(blockNumber);
     }
-    if (blockNumber == 7565089) {
-      print('here');
-    }
     assertion(blockNumber >= versionDescription.blockNumber);
 
     final events = EventCodec(chainInfo: versionDescription.chainInfo)

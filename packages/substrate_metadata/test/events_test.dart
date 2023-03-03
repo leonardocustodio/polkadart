@@ -4,10 +4,9 @@ import 'dart:io';
 import 'package:substrate_metadata/core/chain.dart';
 import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:substrate_metadata/models/models.dart';
-import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/test.dart';
 
-import '../parachain_definitions/polkadot.dart';
+import 'parachain_definitions/polkadot.dart';
 
 void main() {
   // read lines
@@ -51,35 +50,28 @@ void main() {
     //
     // Looping through every block
     for (var originalEvent in rawBlocksList) {
-      try {
-        test(
-            'When original event is decoded and encoded back then it matches the provided event value. : ${originalEvent.blockNumber}',
-            () {
-          if (originalEvent.blockNumber == 7565089) {
-            print('here');
-          }
-          //
-          // Decoding the `Raw Block Events`
-          final decodedBlockEvents = chain.decodeEvents(originalEvent);
+      test(
+          'When original event is decoded and encoded back then it matches the provided event value.',
+          () {
+        //
+        // Decoding the `Raw Block Events`
+        final decodedBlockEvents = chain.decodeEvents(originalEvent);
 
-          //
-          // Encoding the `Decoded Block Events`
-          final encodedBlockEvents = chain.encodeEvents(decodedBlockEvents);
+        //
+        // Encoding the `Decoded Block Events`
+        final encodedBlockEvents = chain.encodeEvents(decodedBlockEvents);
 
-          //
-          // Comparing the original event with the encoded event
-          expect(originalEvent.events, encodedBlockEvents.events);
+        //
+        // Comparing the original event with the encoded event
+        expect(originalEvent.events, encodedBlockEvents.events);
 
-          final againDecodedEvents = chain.decodeEvents(encodedBlockEvents);
+        final againDecodedEvents = chain.decodeEvents(encodedBlockEvents);
 
-          //
-          // Comparing the decoded event with the decodedFromEncoded event
-          expect(decodedBlockEvents.events.toString(),
-              againDecodedEvents.events.toString());
-        });
-      } catch (_) {
-        break;
-      }
+        //
+        // Comparing the decoded event with the decodedFromEncoded event
+        expect(decodedBlockEvents.events.toString(),
+            againDecodedEvents.events.toString());
+      });
     }
   });
 }

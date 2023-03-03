@@ -21,7 +21,7 @@ class MetadataV14Expander {
       final one = item['type'];
       if (item['type']?['def']?['Variant'] != null) {
         if (one['path'].length >= 2) {
-          if (['Call', 'Event', 'Instruction'].contains(one['path'].last)) {
+          if (['Call', 'Event'].contains(one['path'].last)) {
             registeredSiType[id] = 'Call';
             continue;
           }
@@ -279,8 +279,11 @@ class MetadataV14Expander {
     final List<dynamic> variants = one['def']['Variant']['variants'];
 
     variants.sort((a, b) => a['index'] < b['index'] ? -1 : 1);
+    late int maxIndex = -1;
 
-    final maxIndex = variants[variants.length - 1]['index'];
+    if (variants.isNotEmpty) {
+      maxIndex = variants.last['index'];
+    }
 
     final List<MapEntry<String, dynamic>?> variantNameMap =
         List<MapEntry<String, dynamic>?>.filled(maxIndex + 1, null);
@@ -335,17 +338,19 @@ class MetadataV14Expander {
     }
 
     late dynamic result;
+    // Here some of the indexs can be null which denotes that some of the middle index is not usable and
+    // hence should throw error from the Enum Codec if the index is being tried to use.
+    // This is done to avoid the need of having a separate codec for each enum.
 
     if (variantNameMap.any(
         (MapEntry<String, dynamic>? e) => e != null && e.value != 'Null')) {
       // enum one element is composite or parameterized
-      // Here some of the indexs can be null which denotes that the index is not used and
-      // hence should throw error from the Enum Codec
       result = variantNameMap;
     } else {
-      // enum all values are 'Null' and hence it is not a parameterized enum
-      result =
-          variantNameMap.map((MapEntry<String, dynamic>? e) => e?.key).toList();
+      // enum all values are 'Null' Type or null and hence it is not a parameterized enum
+      result = variantNameMap
+          .map((MapEntry<String, dynamic>? e) => e?.key)
+          .toList(growable: false);
     }
 
     final String typeString = _genPathName(one['path'], id, {}, []);

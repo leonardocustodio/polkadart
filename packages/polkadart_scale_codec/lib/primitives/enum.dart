@@ -89,17 +89,16 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
   }
 }
 
-class DynamicEnumCodec<V> with Codec<MapEntry<String, String>> {
+class DynamicEnumCodec<V> with Codec<MapEntry<String, V>> {
   final Registry registry;
-  final List<MapEntry<String, dynamic>?> list;
+  final List<String?> list;
 
   /// Complex Constructor
   const DynamicEnumCodec({required this.registry, required this.list});
 
   @override
-  void encodeTo(MapEntry<String, String> value, Output output) {
-    final index = list.indexWhere((MapEntry<String, dynamic>? element) =>
-        element != null && element.key == value.key);
+  void encodeTo(MapEntry<String, V> value, Output output) {
+    final index = list.indexOf(value.key);
 
     if (index == -1) {
       throw EnumException(
@@ -116,9 +115,7 @@ class DynamicEnumCodec<V> with Codec<MapEntry<String, String>> {
 
     output.pushByte(index);
 
-    final mapEntry = list[index]!;
-
-    final type = mapEntry.key;
+    final type = list[index]!;
 
     final codec = registry.getCodec(type);
 
@@ -128,22 +125,24 @@ class DynamicEnumCodec<V> with Codec<MapEntry<String, String>> {
   }
 
   @override
-  MapEntry<String, String> decode(Input input) {
+  MapEntry<String, V> decode(Input input) {
     final index = input.read();
+
     if (index >= list.length) {
       throw EnumException('Invalid enum index: $index.');
     }
     if (list[index] == null) {
       throw EnumException('Invalid enum index: $index. $index not usable');
     }
-    final mapEntry = list[index]!;
-
-    final type = mapEntry.key;
+    final type = list[index]!;
 
     final codec = registry.getCodec(type);
+    if (codec == null) {
+      print('here');
+    }
 
     assertion(codec != null, 'Codec for type: $type not found.');
 
-    return MapEntry(mapEntry.key, codec!.decode(input));
+    return MapEntry(type, codec!.decode(input));
   }
 }

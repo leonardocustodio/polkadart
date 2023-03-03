@@ -18,7 +18,8 @@ class SequenceCodec<A> with Codec<List<A>> {
     final size = CompactCodec.instance.decode(input).toInt();
     final elements = <A>[];
     for (var i = 0; i < size; i++) {
-      elements.add(codec.decode(input));
+      final value = codec.decode(input);
+      elements.add(value);
     }
     return elements;
   }

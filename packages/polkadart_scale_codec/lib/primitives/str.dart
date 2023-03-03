@@ -18,7 +18,7 @@ class StrCodec<A> with Codec<String> {
   @override
   String decode(Input input) {
     final size = CompactCodec.instance.decode(input).toInt();
-    final elements = input.readBytes(size).toList();
+    final elements = input.readBytes(size).toList(growable: false);
     return String.fromCharCodes(elements);
   }
 

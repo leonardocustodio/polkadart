@@ -23,11 +23,6 @@ class EventRecord with Codec<Map<String, dynamic>> {
 
     result['lookup'] = encodeHex(lookup.toList());
 
-    if (chainInfo.version == 14) {
-      print(lookup);
-      print(result['lookup']);
-    }
-
     if (chainInfo.metadata['event_index']?[result['lookup']] == null) {
       throw Exception('Metadata lookup is empty');
     }
@@ -49,7 +44,8 @@ class EventRecord with Codec<Map<String, dynamic>> {
       } else {
         throw Exception('Unknown type of arg: $arg');
       }
-      final value = chainInfo.scaleCodec.decode(type, input);
+      final codec = chainInfo.registry.getCodec(type)!;
+      final value = codec.decode(input);
       params.add(value);
     }
     result['event'] = {

@@ -8,7 +8,8 @@ class Call with Codec<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> decode(Input input) {
-    final callIndex = U16Codec.instance.decode(input);
+    final lookup = input.readBytes(2).toList();
+    final String callIndex = encodeHex(lookup);
 
     assertion(metadata.isNotEmpty, 'Empty metadata found.');
     assertion(metadata['call_index'] != null, 'No call_index found.');

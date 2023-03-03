@@ -10,7 +10,7 @@ mixin Input {
   /// Buffer to be decoded
   late Uint8List _buffer;
 
-  Uint8List get buffer => Uint8List.fromList(_buffer.toList());
+  Uint8List get buffer => Uint8List.fromList(_buffer.toList(growable: false));
 
   ///
   /// Get the length of the buffer
@@ -35,23 +35,23 @@ mixin Input {
 
   ///
   /// Gives a peek of the byte of current index and does not increments the current index
-  int peekByte() {
+  int peekByte(int index) {
     late int b;
-    if (offset >= _buffer.length) {
+    if (index >= _buffer.length) {
       throw EOFException();
     }
-    b = _buffer[offset];
+    b = _buffer[index];
     return b;
   }
 
   /// Gives a peek of the bytes[currentIndex, currentIndex + length]
   /// Does not increments the current index
-  Uint8List peekBytes(int length) {
-    final end = offset + length;
+  Uint8List peekBytes(int start, int length) {
+    final end = start + length;
     if (_buffer.length < end) {
       throw EOFException();
     }
-    return _buffer.sublist(offset, end);
+    return _buffer.sublist(start, end);
   }
 
   ///

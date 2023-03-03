@@ -97,7 +97,8 @@ class RegistryCreator {
       throw Exception(
           'Expected version between 9 and 14, but got $version, Only V9 - V14 are supported');
     }
-    return _registry[version - 9] ?? _createRegistry(version);
+    return Registry.from(
+        (_registry[version - 9] ?? _createRegistry(version)).codecs);
   }
 
   Registry _createRegistry(int version) {
