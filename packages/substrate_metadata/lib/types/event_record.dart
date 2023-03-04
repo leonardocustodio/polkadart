@@ -21,7 +21,7 @@ class EventRecord with Codec<Map<String, dynamic>> {
 
     final lookup = input.readBytes(2);
 
-    result['lookup'] = encodeHex(lookup.toList());
+    result['lookup'] = encodeHex(lookup.toList(growable: false));
 
     if (chainInfo.metadata['event_index']?[result['lookup']] == null) {
       throw Exception('Metadata lookup is empty');

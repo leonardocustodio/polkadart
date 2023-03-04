@@ -61,7 +61,7 @@ List<SpecVersion> _readSpecVersionFromJson(String filePath) {
   if (validateSpecVersionArray(json)) {
     return (json['items'] as List<dynamic>)
         .map((spec) => SpecVersion.fromJson(spec))
-        .toList();
+        .toList(growable: false);
   } else {
     throw SpecFileException('Failed to extract chain versions from $filePath');
   }

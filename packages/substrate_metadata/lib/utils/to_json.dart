@@ -13,7 +13,7 @@ extension ToJson<T> on T {
       return (this as List<dynamic>)
           .cast<Map<String, dynamic>>()
           .map((Map<String, dynamic> e) => e.toJson())
-          .toList() as T;
+          .toList(growable: false) as T;
     }
     if (this is List<Map<String, dynamic>> || this is Map<String, dynamic>) {
       return jsonDecode(toHuman());

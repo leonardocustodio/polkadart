@@ -38,7 +38,7 @@ class Chain {
   /// If the `blockNumber` is not having any related `VersionDescription` then it returns `null`.
   VersionDescription? getVersionDescription(int blockNumber) {
     // List of block numbers
-    final blockNumberList = _versionDescriptionMap.keys.toList();
+    final blockNumberList = _versionDescriptionMap.keys.toList(growable: false);
 
     int next = -1;
     for (var index = 0; index < blockNumberList.length; index++) {

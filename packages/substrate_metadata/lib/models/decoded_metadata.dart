@@ -10,7 +10,7 @@ class DecodedMetadata {
   });
 
   ///
-  /// Simplified metadata in json format where Some() and MapEntry are resolved into simpler types.
+  /// Simplified metadata in json format where Option.some() and MapEntry are resolved into simpler types.
   ///
   /// Suitable to store in .json file.
   Map<String, dynamic> get json => <String, dynamic>{

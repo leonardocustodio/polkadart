@@ -8,8 +8,9 @@ class MetadataV14Expander {
   final customCodecRegister = <String, dynamic>{};
 
   MetadataV14Expander(List<dynamic> types) {
-    final id2Portable =
-        types.map((e) => (e as Map<String, dynamic>).toJson()).toList();
+    final id2Portable = types
+        .map((e) => (e as Map<String, dynamic>).toJson())
+        .toList(growable: false);
 
     for (var item in id2Portable) {
       if (item['type']?['def']?['Primitive'] != null) {
