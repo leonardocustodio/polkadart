@@ -22,10 +22,6 @@ extension ToJson<T> on T {
   }
 
   String toHuman() {
-    if (this is Some<dynamic>) {
-      return toString();
-    }
-
     if (this is List<Map<String, dynamic>> || this is Map<String, dynamic>) {
       return jsonEncode(
         this,
@@ -40,10 +36,8 @@ extension ToJson<T> on T {
 Object? _encodeJson(Object? value) {
   if (value is BigInt) {
     return value.toString();
-  } else if (value is Some) {
+  } else if (value is Option) {
     return _extractSomeValue(value);
-  } else if (value is NoneOption) {
-    return null;
   } else if (value is MapEntry) {
     final v = <String, dynamic>{
       value.key: _encodeJson(value.value),
@@ -53,11 +47,11 @@ Object? _encodeJson(Object? value) {
   return value;
 }
 
-dynamic _extractSomeValue(Some value) {
-  if (value.value is Some) {
-    return _extractSomeValue(value.value as Some);
+dynamic _extractSomeValue(Option value) {
+  if (value.isSome) {
+    return _encodeJson(value.value);
   }
-  if (value.value == None) {
+  if (value.isNone) {
     return null;
   }
   return value.value;

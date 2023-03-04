@@ -6,7 +6,7 @@ import 'package:polkadart_scale_codec/core/core.dart';
 import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';
 import 'package:equatable/equatable.dart';
-import 'dart:core' as core;
+import 'dart:convert' show utf8;
 import 'dart:core';
 
 part 'bool.dart';
