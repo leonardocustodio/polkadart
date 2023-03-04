@@ -6,7 +6,7 @@ import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:substrate_metadata/models/models.dart';
 import 'package:test/test.dart';
 
-import 'parachain_definitions/polkadot.dart';
+import '../parachain_definitions/polkadot.dart';
 
 void main() {
   // read lines
