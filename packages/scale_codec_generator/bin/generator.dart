@@ -51,18 +51,18 @@ void main(List<String> arguments) {
   // URL -> rpc.polkadot.io
   // outputPath -> ./generated
   final filePath = './metadata-polkadot.json';
-  final typesJson = (jsonDecode(File(filePath).readAsStringSync())["lookup"]
-      ["types"] as List<dynamic>);
-  final palletsJson = (jsonDecode(File(filePath).readAsStringSync())["pallets"]
+  final typesJson = (jsonDecode(File(filePath).readAsStringSync())['lookup']
+      ['types'] as List<dynamic>);
+  final palletsJson = (jsonDecode(File(filePath).readAsStringSync())['pallets']
       as List<dynamic>);
 
   // Type Definitions
-  Map<int, TypeMetadata> types = {
+  final Map<int, TypeMetadata> types = {
     for (var type in typesJson) type['id']: TypeMetadata.parseJSON(type)
   };
 
   // Create all Generators
-  Map<int, Generator> generators = {};
+  final Map<int, Generator> generators = {};
   final lazyLoader = LazyLoader();
   for (final type in types.values) {
     if (generators.containsKey(type.id)) {
@@ -118,7 +118,6 @@ void main(List<String> arguments) {
         continue;
       }
 
-      int index = 0;
       generators[type.id] = TupleGenerator.lazy(
         loader: lazyLoader,
         filePath: '$generatedPath/tuples.dart',
@@ -133,7 +132,7 @@ void main(List<String> arguments) {
       final storeTypeDef = types[bitSequence.bitStoreType]!.typeDef;
       final orderType = types[bitSequence.bitOrderType]!;
 
-      BitOrder bitOrder =
+      final BitOrder bitOrder =
           orderType.path.last == 'Lsb0' ? BitOrder.LSB : BitOrder.MSB;
       if (storeTypeDef is TypeDefPrimitive) {
         generators[type.id] = BitSequenceGenerator.fromPrimitive(
@@ -301,7 +300,7 @@ void main(List<String> arguments) {
                 name: variantName,
                 index: variant.index,
                 fields: variant.fields.map((field) {
-                  String name = Field.toFieldName(field.name ?? 'value$index');
+                  final String name = Field.toFieldName(field.name ?? 'value$index');
                   index++;
                   return Field.lazy(
                       loader: lazyLoader, codec: field.type, name: name);
@@ -319,7 +318,7 @@ void main(List<String> arguments) {
   }
 
   print('Generators found: ${generators.length}');
-  List<PalletGenerator> palletGenerators = palletsJson
+  final List<PalletGenerator> palletGenerators = palletsJson
       .map((json) => PalletGenerator.fromJson(
             filePrefix: palletsPath,
             json: json,
@@ -331,8 +330,8 @@ void main(List<String> arguments) {
   // Group generators per file
   // key = file path
   // value = list of generators
-  Map<String, List<Generator>> generatorPerFile = {};
-  generators.values.forEach((generator) {
+  final Map<String, List<Generator>> generatorPerFile = {};
+  for (final generator in generators.values) {
     if (generator is CompositeGenerator) {
       if (!generatorPerFile.containsKey(generator.filePath)) {
         generatorPerFile[generator.filePath] = [];
@@ -364,16 +363,12 @@ void main(List<String> arguments) {
       }
       generatorPerFile[generator.filePath]!.add(generator);
     }
-  });
+  }
 
   // Rename ambiguous generators
-  Map<String, List<Generator>>.from(generatorPerFile).entries.forEach((entry) {
+  for (final entry in Map<String, List<Generator>>.from(generatorPerFile).entries) {
     final generatorList = entry.value;
     if (generatorList.length > 1) {
-      // while (generatorList.length > 1) {
-      //   generatorList.removeLast();
-      // }
-      // return;
       int index = 0;
       generatorList.removeWhere((generator) {
         index++;
@@ -385,11 +380,11 @@ void main(List<String> arguments) {
         } else if (generator is VariantGenerator) {
           generator.filePath =
               '${generator.filePath.substring(0, generator.filePath.length - 5)}_$index.dart';
-          generator.variants.forEach((variant) {
+          for (final variant in generator.variants) {
             if (variant.name == generator.name) {
               variant.name = '${variant.name}Variant';
             }
-          });
+          }
           generatorPerFile[generator.filePath] = [generator];
           return true;
         } else if (generator is TypeDefGenerator) {
@@ -401,11 +396,11 @@ void main(List<String> arguments) {
         return false;
       });
     }
-  });
+  }
 
   final polkadartGenerator = PolkadartGenerator(
     filePath: 'generated/polkadart.dart',
-    name: "Polkadot",
+    name: 'Polkadot',
     pallets: palletGenerators,
   ).generated().build().replaceAll('import \'generated/', 'import \'./');
   Directory('./bin/generated').createSync(recursive: true);
@@ -413,7 +408,7 @@ void main(List<String> arguments) {
 
   // Write the Pallets Files
   for (final pallet in palletGenerators) {
-    List path = pallet.filePath.split('/').toList();
+    final List path = pallet.filePath.split('/').toList();
     final fileName = path.removeLast();
     final dir = './bin/${path.join('/')}';
     print('$dir/$fileName');
@@ -456,7 +451,7 @@ void main(List<String> arguments) {
       continue;
     }
 
-    List path = entry.key.split('/').toList();
+    final List path = entry.key.split('/').toList();
     final fileName = path.removeLast();
     final dir = './bin/${path.join('/')}';
     print('$dir/$fileName');
