@@ -26,7 +26,7 @@ class XXH64 {
 
     seed ??= defaultSeed;
 
-    List<int> array = data;
+    final List<int> array = data;
 
     final len = array.length;
 
@@ -151,7 +151,7 @@ class XXH64 {
   }
 
   static BigInt mergeRound({required BigInt acc, required BigInt val}) {
-    var val2 = round(acc: BigInt.zero, input: val);
+    final val2 = round(acc: BigInt.zero, input: val);
     var acc2 = acc ^ val2;
     acc2 = ((acc2 * prime1).toUnsigned(64) + prime4).toUnsigned(64);
     return acc2;

@@ -70,7 +70,7 @@ class I32ArrayCodec with Codec<Int32List> {
   void encodeTo(Int32List list, Output output) {
     if (list.length != length) {
       throw Exception(
-          "I32ArrayCodec: invalid length, expect $length found ${list.length}");
+          'I32ArrayCodec: invalid length, expect $length found ${list.length}');
     }
     for (var i = 0; i < length; i++) {
       I32Codec.codec.encodeTo(list[i], output);

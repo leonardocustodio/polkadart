@@ -75,7 +75,7 @@ class U32ArrayCodec with Codec<Uint32List> {
   void encodeTo(Uint32List list, Output output) {
     if (list.length != length) {
       throw Exception(
-          "U32ArrayCodec: invalid length, expect $length found ${list.length}");
+          'U32ArrayCodec: invalid length, expect $length found ${list.length}');
     }
     for (var i = 0; i < length; i++) {
       U32Codec.codec.encodeTo(list[i], output);

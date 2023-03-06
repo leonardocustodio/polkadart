@@ -10,10 +10,10 @@ class ResultCodec<R, E> with Codec<Result<R, E>> {
   void encodeTo(Result<R, E> value, Output dest) {
     if (value.isOk) {
       dest.pushByte(0);
-      okCodec.encodeTo(value.okValue!, dest);
+      okCodec.encodeTo(value.okValue as R, dest);
     } else {
       dest.pushByte(1);
-      errCodec.encodeTo(value.errValue!, dest);
+      errCodec.encodeTo(value.errValue as E, dest);
     }
   }
 
@@ -33,9 +33,9 @@ class ResultCodec<R, E> with Codec<Result<R, E>> {
   @override
   int sizeHint(Result<R, E> value) {
     if (value.isOk) {
-      return 1 + okCodec.sizeHint(value.okValue!);
+      return 1 + okCodec.sizeHint(value.okValue as R);
     }
-    return 1 + errCodec.sizeHint(value.errValue!);
+    return 1 + errCodec.sizeHint(value.errValue as E);
   }
 }
 
@@ -58,8 +58,8 @@ class Result<R, E> {
   @override
   String toString() {
     if (_isOk) {
-      return "Result.Ok($okValue)";
+      return 'Result.Ok($okValue)';
     }
-    return "Result.Err($okValue)";
+    return 'Result.Err($okValue)';
   }
 }

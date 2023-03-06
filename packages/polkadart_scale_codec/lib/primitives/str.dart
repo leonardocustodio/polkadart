@@ -21,7 +21,7 @@ class StrCodec with Codec<String> {
 
   @override
   int sizeHint(String str) {
-    var bytes = utf8.encode(str);
+    final bytes = utf8.encode(str);
     var size = CompactCodec.codec.sizeHint(bytes.length);
     size += bytes.length;
     return size;

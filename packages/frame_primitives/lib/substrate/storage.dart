@@ -46,7 +46,7 @@ class StorageHasher<K> {
 
   void hashTo({required K key, required Uint8List output}) {
     final bytes = codec.encode(key);
-    int offset = hasher?.digestSize ?? 0;
+    final int offset = hasher?.digestSize ?? 0;
     if (hasher != null) {
       hasher!.hashTo(data: bytes, output: output);
     }
@@ -73,7 +73,7 @@ class StorageValue<V> {
       {required this.prefix, required this.storage, required this.valueCodec});
 
   Uint8List hashedKey() {
-    Uint8List hash = Uint8List(32);
+    final Uint8List hash = Uint8List(32);
     Hasher.twoxx128.hashTo(
         data: Uint8List.fromList(utf8.encode(prefix)),
         output: hash.buffer.asUint8List(hash.offsetInBytes, 16));
@@ -102,7 +102,7 @@ class StorageMap<K, V> {
   });
 
   Uint8List hashedKeyFor(K key) {
-    Uint8List hash = Uint8List(32 + hasher.size(key));
+    final Uint8List hash = Uint8List(32 + hasher.size(key));
     Hasher.twoxx128.hashTo(
         data: Uint8List.fromList(utf8.encode(prefix)),
         output: hash.buffer.asUint8List(hash.offsetInBytes, 16));
@@ -135,7 +135,7 @@ class StorageDoubleMap<K1, K2, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2) {
-    Uint8List hash = Uint8List(32 + hasher1.size(key1) + hasher2.size(key2));
+    final Uint8List hash = Uint8List(32 + hasher1.size(key1) + hasher2.size(key2));
     Hasher.twoxx128.hashTo(
       data: Uint8List.fromList(utf8.encode(prefix)),
       output: hash.buffer.asUint8List(hash.offsetInBytes, 16),
@@ -174,7 +174,7 @@ class StorageTripleMap<K1, K2, K3, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2, K3 key3) {
-    Uint8List hash = Uint8List(
+    final Uint8List hash = Uint8List(
         32 + hasher1.size(key1) + hasher2.size(key2) + hasher3.size(key3));
     Hasher.twoxx128.hashTo(
       data: Uint8List.fromList(utf8.encode(prefix)),
@@ -218,7 +218,7 @@ class StorageQuadrupleMap<K1, K2, K3, K4, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2, K3 key3, K4 key4) {
-    Uint8List hash = Uint8List(32 +
+    final Uint8List hash = Uint8List(32 +
         hasher1.size(key1) +
         hasher2.size(key2) +
         hasher3.size(key3) +
@@ -269,7 +269,7 @@ class StorageQuintupleMap<K1, K2, K3, K4, K5, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2, K3 key3, K4 key4, K5 key5) {
-    Uint8List hash = Uint8List(32 +
+    final Uint8List hash = Uint8List(32 +
         hasher1.size(key1) +
         hasher2.size(key2) +
         hasher3.size(key3) +
@@ -325,7 +325,7 @@ class StorageSextupleMap<K1, K2, K3, K4, K5, K6, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2, K3 key3, K4 key4, K5 key5, K6 key6) {
-    Uint8List hash = Uint8List(32 +
+    final Uint8List hash = Uint8List(32 +
         hasher1.size(key1) +
         hasher2.size(key2) +
         hasher3.size(key3) +
@@ -381,7 +381,7 @@ class StorageNMap<V> {
     for (int i = 0; i < keys.length; i++) {
       keySize += hashers[i].size(keys[i]);
     }
-    Uint8List hash = Uint8List(keySize);
+    final Uint8List hash = Uint8List(keySize);
     Hasher.twoxx128.hashTo(
         data: Uint8List.fromList(utf8.encode(prefix)),
         output: hash.buffer.asUint8List(hash.offsetInBytes, 16));
