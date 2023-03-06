@@ -116,11 +116,4 @@ class Option<E> {
 
     return false;
   }
-
-
-
-
-
-  // @override
-  // List<Object?> get props => [_isSome, value];
 }
