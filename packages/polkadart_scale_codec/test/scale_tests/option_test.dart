@@ -97,21 +97,33 @@ void main() {
       final input = HexInput('0x0101');
       final codec = ScaleCodec(registry);
       final result = codec.decode('B', input);
-      expect(result, Option.some(true));
+      expect(result.runtimeType, Option);
+
+      final expected = Option.some(true);
+      expect(result.isNone, expected.isNone);
+      expect(result.value, expected.value);
     });
 
     test('Given a 0x0100 it should be decoded to Option.some(false)', () {
       final input = HexInput('0x0100');
       final codec = ScaleCodec(registry);
       final result = codec.decode('B', input);
-      expect(result, Option.some(false));
+      expect(result.runtimeType, Option);
+
+      final expected = Option.some(false);
+      expect(result.isNone, expected.isNone);
+      expect(result.value, expected.value);
     });
 
     test('Given a 0x0100 it should be decoded to Option.some(None)', () {
       final input = HexInput('0x0100');
       final codec = ScaleCodec(registry);
       final result = codec.decode('C', input);
-      expect(result, Option.some(None));
+      expect(result.runtimeType, Option);
+
+      final expected = Option.some(None);
+      expect(result.isNone, expected.isNone);
+      expect(result.value, expected.value);
     });
 
     test(
@@ -120,7 +132,11 @@ void main() {
       final input = HexInput('0x010101');
       final codec = ScaleCodec(registry);
       final result = codec.decode('C', input);
-      expect(result, Option.some(Option.some(true)));
+      expect(result.runtimeType, Option);
+
+      final expected = Option.some(Option.some(true));
+      expect(result.isNone, expected.isNone);
+      expect(result.value, expected.value);
     });
 
     test(
@@ -129,7 +145,11 @@ void main() {
       final input = HexInput('0x010100');
       final codec = ScaleCodec(registry);
       final result = codec.decode('C', input);
-      expect(result, Option.some(Option.some(false)));
+      expect(result.runtimeType, Option);
+
+      final expected = Option.some(Option.some(false));
+      expect(result.isNone, expected.isNone);
+      expect(result.value, expected.value);
     });
   });
 }

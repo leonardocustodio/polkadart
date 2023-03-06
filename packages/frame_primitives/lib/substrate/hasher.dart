@@ -37,8 +37,10 @@ class Blake2bHasher extends Hasher {
 class Twoxx64Hasher extends Hasher {
   final BigInt? seed;
 
-  const Twoxx64Hasher(): seed = null, super(8);
-  const Twoxx64Hasher.withSeed(this.seed): super(8);
+  const Twoxx64Hasher()
+      : seed = null,
+        super(8);
+  const Twoxx64Hasher.withSeed(this.seed) : super(8);
 
   @override
   void hashTo({required Uint8List data, required Uint8List output}) {
@@ -52,11 +54,14 @@ class Twoxx64Hasher extends Hasher {
 }
 
 class Twoxx128Hasher extends Hasher {
-  const Twoxx128Hasher(): super(16);
-  
+  const Twoxx128Hasher() : super(16);
+
   @override
   void hashTo({required Uint8List data, required Uint8List output}) {
-    Twoxx64Hasher.withSeed(BigInt.zero).hashTo(data: data, output: output.buffer.asUint8List(output.offsetInBytes, 8));
-    Twoxx64Hasher.withSeed(BigInt.one).hashTo(data: data, output: output.buffer.asUint8List(output.offsetInBytes + 8, 8));
+    Twoxx64Hasher.withSeed(BigInt.zero).hashTo(
+        data: data, output: output.buffer.asUint8List(output.offsetInBytes, 8));
+    Twoxx64Hasher.withSeed(BigInt.one).hashTo(
+        data: data,
+        output: output.buffer.asUint8List(output.offsetInBytes + 8, 8));
   }
 }

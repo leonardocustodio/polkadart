@@ -116,10 +116,10 @@ void main() {
       final input = HexInput(
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
       final codec = ScaleCodec(registry);
-      
+
       final result = codec.decode('OrderComposite', input);
 
-      expect(result , {
+      expect(result, {
         'index': 8,
         'note': 'This is a note',
         'Juice': {

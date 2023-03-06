@@ -20,7 +20,8 @@ class XXH64 {
 
   static BigInt defaultSeed = BigInt.from(0x1234567890);
 
-  static BigInt digest({required List<int> data, BigInt? seed, Endian? endian}) {
+  static BigInt digest(
+      {required List<int> data, BigInt? seed, Endian? endian}) {
     endian ??= XXH64.endian;
 
     seed ??= defaultSeed;
