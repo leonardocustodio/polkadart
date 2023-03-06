@@ -19,7 +19,7 @@ class MetadataDecoder {
 
     //
     // Decode the magic number
-    final magic = U32Codec.instance.decode(source);
+    final magic = U32Codec.codec.decode(source);
 
     //
     // assert that the magic number is 0x6174656d
@@ -27,7 +27,7 @@ class MetadataDecoder {
         'Expected magic number 0x6174656d, but got $magic');
 
     // decode the version information
-    final version = U8Codec.instance.decode(source);
+    final version = U8Codec.codec.decode(source);
     assertion(9 <= version,
         'Expected version greater then 9, but got $version. Versions below 9 are not supported by this lib');
     assertion(15 > version,
@@ -48,8 +48,8 @@ class MetadataDecoder {
       try {
         final clonnedSource = HexInput(metadataHex);
 
-        U32Codec.instance.decode(clonnedSource);
-        U8Codec.instance.decode(clonnedSource);
+        U32Codec.codec.decode(clonnedSource);
+        U8Codec.codec.decode(clonnedSource);
 
         final metadata = ScaleCodec(RegistryCreator.instance[10])
             .decode('MetadataV10', clonnedSource);
@@ -63,11 +63,11 @@ class MetadataDecoder {
   void encode(DecodedMetadata metadata, Output output) {
     //
     // encode magic number
-    U32Codec.instance.encodeTo(0x6174656d, output);
+    U32Codec.codec.encodeTo(0x6174656d, output);
 
     //
     // encode version
-    U8Codec.instance
+    U8Codec.codec
         .encodeTo(metadata.version == 10 ? 9 : metadata.version, output);
 
     final typeRegistry = RegistryCreator.instance[metadata.version];

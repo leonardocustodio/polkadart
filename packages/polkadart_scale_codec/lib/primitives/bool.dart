@@ -3,7 +3,7 @@ part of primitives;
 class BoolCodec with Codec<bool> {
   const BoolCodec._();
 
-  static final BoolCodec instance = BoolCodec._();
+  static final BoolCodec codec = BoolCodec._();
 
   @override
   void encodeTo(bool value, Output output) {

@@ -10,7 +10,7 @@ class StrCodec with Codec<String> {
     final utf8str = utf8.encode(value);
     CompactCodec.instance.encodeTo(utf8str.length, output);
     for (final charCode in utf8str) {
-      U8Codec.instance.encodeTo(charCode, output);
+      U8Codec.codec.encodeTo(charCode, output);
     }
   }
 

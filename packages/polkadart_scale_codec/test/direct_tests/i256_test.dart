@@ -6,7 +6,7 @@ void main() {
     test('Lowest value decoding', () {
       final input = HexInput(
           '0x0000000000000000000000000000000000000000000000000000000000000080');
-      final decoded = I256Codec.instance.decode(input);
+      final decoded = I256Codec.codec.decode(input);
       expect(
           decoded,
           BigInt.parse(
@@ -17,7 +17,7 @@ void main() {
     test('Highest value decoding', () {
       final input = HexInput(
           '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
-      final decoded = I256Codec.instance.decode(input);
+      final decoded = I256Codec.codec.decode(input);
       expect(
           decoded,
           BigInt.parse(
@@ -29,7 +29,7 @@ void main() {
   group('I256 Encode Test:', () {
     test('Lowest value encoding', () {
       final output = HexOutput();
-      I256Codec.instance.encodeTo(
+      I256Codec.codec.encodeTo(
           BigInt.parse(
               '-57896044618658097711785492504343953926634992332820282019728792003956564819968'),
           output);
@@ -39,7 +39,7 @@ void main() {
 
     test('Highest value encoding', () {
       final output = HexOutput();
-      I256Codec.instance.encodeTo(
+      I256Codec.codec.encodeTo(
           BigInt.parse(
               '57896044618658097711785492504343953926634992332820282019728792003956564819967'),
           output);

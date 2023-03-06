@@ -67,7 +67,7 @@ void main() {
       //
       // Test size hint
       test('Test for size hint at ${values[i]}', () {
-        expect(outputs[i], CompactBigIntCodec.instance.sizeHint(values[i]));
+        expect(outputs[i], CompactBigIntCodec.codec.sizeHint(values[i]));
       });
     }
   });
@@ -112,7 +112,7 @@ void main() {
     for (var i = 0; i < inputs.length; i++) {
       test('Testing decoding of ${inputs[i]} at index $i', () {
         final decoded =
-            CompactBigIntCodec.instance.decode(ByteInput(inputs[i]));
+            CompactBigIntCodec.codec.decode(ByteInput(inputs[i]));
         expect(outputs[i], decoded);
       });
     }
@@ -185,7 +185,7 @@ void main() {
 
     for (var i = 0; i < inputs.length; i++) {
       test('Testing encoding of ${inputs[i]} at index $i', () {
-        final encoded = CompactBigIntCodec.instance.encode(inputs[i]);
+        final encoded = CompactBigIntCodec.codec.encode(inputs[i]);
         expect(outputs[i], encoded);
         expect(sizes[i], encoded.lengthInBytes);
       });

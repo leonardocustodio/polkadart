@@ -3,7 +3,7 @@ part of primitives;
 class I64Codec with Codec<BigInt> {
   const I64Codec._();
 
-  static final I64Codec instance = I64Codec._();
+  static final I64Codec codec = I64Codec._();
 
   @override
   void encodeTo(BigInt value, Output output) {
@@ -11,12 +11,12 @@ class I64Codec with Codec<BigInt> {
         value > BigInt.from(9223372036854775807)) {
       throw OutOfBoundsException();
     }
-    U64Codec.instance.encodeTo(value.toUnsigned(64), output);
+    U64Codec.codec.encodeTo(value.toUnsigned(64), output);
   }
 
   @override
   BigInt decode(Input input) {
-    return U64Codec.instance.decode(input).toSigned(64);
+    return U64Codec.codec.decode(input).toSigned(64);
   }
 
   @override

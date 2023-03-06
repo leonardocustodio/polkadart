@@ -3,11 +3,11 @@ part of primitives;
 class U256Codec with Codec<BigInt> {
   const U256Codec._();
 
-  static U256Codec instance = U256Codec._();
+  static U256Codec codec = U256Codec._();
 
   @override
   void encodeTo(BigInt value, Output output) {
-    U128Codec.instance
+    U128Codec.codec
       ..encodeTo(
           (value & BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16))
               .toUnsigned(128),
@@ -17,8 +17,8 @@ class U256Codec with Codec<BigInt> {
 
   @override
   BigInt decode(Input input) {
-    final low = U128Codec.instance.decode(input);
-    final high = U128Codec.instance.decode(input);
+    final low = U128Codec.codec.decode(input);
+    final high = U128Codec.codec.decode(input);
     return low | (high << 128);
   }
 

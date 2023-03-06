@@ -9,7 +9,7 @@ void main() {
       const value = [3, true];
       const expectedResult = '0x0c01';
       final output = HexOutput();
-      TupleCodec([CompactCodec.instance, BoolCodec.instance])
+      TupleCodec([CompactCodec.instance, BoolCodec.codec])
           .encodeTo(value, output);
       expect(output.toString(), expectedResult);
     });
@@ -20,7 +20,7 @@ void main() {
       const value = ['Tuple', 133];
       const expectedResult = '0x145475706c6585';
       final output = HexOutput();
-      TupleCodec([StrCodec.instance, U8Codec.instance]).encodeTo(value, output);
+      TupleCodec([StrCodec.instance, U8Codec.codec]).encodeTo(value, output);
       expect(output.toString(), expectedResult);
     });
 
@@ -35,7 +35,7 @@ void main() {
       final output = HexOutput();
       TupleCodec([
         SequenceCodec(StrCodec.instance),
-        SequenceCodec(U8Codec.instance)
+        SequenceCodec(U8Codec.codec)
       ]).encodeTo(value, output);
       expect(output.toString(), expectedResult);
     });
@@ -50,7 +50,7 @@ void main() {
       final output = HexOutput();
       TupleCodec([
         TupleCodec([StrCodec.instance, StrCodec.instance]),
-        TupleCodec([U8Codec.instance, U8Codec.instance]),
+        TupleCodec([U8Codec.codec, U8Codec.codec]),
       ]).encodeTo(value, output);
       expect(output.toString(), expectedResult);
     });
@@ -64,7 +64,7 @@ void main() {
       const expectedResult = [3, true];
       final input = HexInput(value);
       final result =
-          TupleCodec([CompactCodec.instance, BoolCodec.instance]).decode(input);
+          TupleCodec([CompactCodec.instance, BoolCodec.codec]).decode(input);
       expect(result, expectedResult);
     });
 
@@ -75,7 +75,7 @@ void main() {
       const expectedResult = ['Tuple', 133];
       final input = HexInput(value);
       final result =
-          TupleCodec([StrCodec.instance, U8Codec.instance]).decode(input);
+          TupleCodec([StrCodec.instance, U8Codec.codec]).decode(input);
       expect(result, expectedResult);
     });
 
@@ -89,7 +89,7 @@ void main() {
       final input = HexInput(value);
       final result = TupleCodec([
         SequenceCodec(StrCodec.instance),
-        SequenceCodec(U8Codec.instance)
+        SequenceCodec(U8Codec.codec)
       ]).decode(input);
       expect(result, expectedResult);
     });
@@ -105,7 +105,7 @@ void main() {
       final input = HexInput(value);
       final result = TupleCodec([
         TupleCodec([StrCodec.instance, StrCodec.instance]),
-        TupleCodec([U8Codec.instance, U8Codec.instance]),
+        TupleCodec([U8Codec.codec, U8Codec.codec]),
       ]).decode(input);
       expect(result, expectedResult);
     });

@@ -3,7 +3,7 @@ part of primitives;
 class I8Codec with Codec<int> {
   const I8Codec._();
 
-  static final I8Codec instance = I8Codec._();
+  static final I8Codec codec = I8Codec._();
 
   @override
   void encodeTo(int value, Output output) {

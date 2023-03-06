@@ -5,7 +5,7 @@ void main() {
   group('BTreeMap Encode Test:', () {
     test('Given a {42: true} it should be encoded to 0x042a01', () {
       final output = HexOutput();
-      BTreeMapCodec(keyCodec: U8Codec.instance, valueCodec: BoolCodec.instance)
+      BTreeMapCodec(keyCodec: U8Codec.codec, valueCodec: BoolCodec.codec)
           .encodeTo({42: true}, output);
       expect(output.toString(), '0x042a01');
     });
@@ -16,8 +16,8 @@ void main() {
       final output = HexOutput();
       BTreeMapCodec(
               keyCodec: BTreeMapCodec(
-                  keyCodec: U32Codec.instance, valueCodec: BoolCodec.instance),
-              valueCodec: BoolCodec.instance)
+                  keyCodec: U32Codec.codec, valueCodec: BoolCodec.codec),
+              valueCodec: BoolCodec.codec)
           .encodeTo({
         {632: false}: true
       }, output);
@@ -30,9 +30,9 @@ void main() {
       BTreeMapCodec(
         keyCodec: BTreeMapCodec(
           keyCodec: StrCodec.instance,
-          valueCodec: BoolCodec.instance,
+          valueCodec: BoolCodec.codec,
         ),
-        valueCodec: BoolCodec.instance,
+        valueCodec: BoolCodec.codec,
       ).encodeTo(
         {
           {'1291': true}: false,
@@ -46,8 +46,8 @@ void main() {
         () {
       final output = HexOutput();
       BTreeMapCodec(
-        keyCodec: TupleCodec([U8Codec.instance, BoolCodec.instance]),
-        valueCodec: BoolCodec.instance,
+        keyCodec: TupleCodec([U8Codec.codec, BoolCodec.codec]),
+        valueCodec: BoolCodec.codec,
       ).encodeTo(
         {
           [42, true]: false,
@@ -62,8 +62,8 @@ void main() {
     test('Given a 0x042a01 it should be decoded to {42: true}', () {
       final input = HexInput('0x042a01');
       final result = BTreeMapCodec(
-        keyCodec: U8Codec.instance,
-        valueCodec: BoolCodec.instance,
+        keyCodec: U8Codec.codec,
+        valueCodec: BoolCodec.codec,
       ).decode(input);
       expect(result.toString(), {42: true}.toString());
     });
@@ -74,10 +74,10 @@ void main() {
       final input = HexInput('0x0404780200000001');
       final result = BTreeMapCodec(
         keyCodec: BTreeMapCodec(
-          keyCodec: U32Codec.instance,
-          valueCodec: BoolCodec.instance,
+          keyCodec: U32Codec.codec,
+          valueCodec: BoolCodec.codec,
         ),
-        valueCodec: BoolCodec.instance,
+        valueCodec: BoolCodec.codec,
       ).decode(input);
       expect(
           result.toString(),
@@ -93,9 +93,9 @@ void main() {
       final result = BTreeMapCodec(
         keyCodec: BTreeMapCodec(
           keyCodec: StrCodec.instance,
-          valueCodec: BoolCodec.instance,
+          valueCodec: BoolCodec.codec,
         ),
-        valueCodec: BoolCodec.instance,
+        valueCodec: BoolCodec.codec,
       ).decode(input);
       expect(
           result.toString(),
@@ -108,8 +108,8 @@ void main() {
         () {
       final input = HexInput('0x042a0100');
       final result = BTreeMapCodec(
-        keyCodec: TupleCodec([U8Codec.instance, BoolCodec.instance]),
-        valueCodec: BoolCodec.instance,
+        keyCodec: TupleCodec([U8Codec.codec, BoolCodec.codec]),
+        valueCodec: BoolCodec.codec,
       ).decode(input);
       expect(
           result.toString(),

@@ -13,10 +13,10 @@ class EventRecord with Codec<Map<String, dynamic>> {
 
     final result = <String, dynamic>{};
 
-    result['phase'] = U8Codec.instance.decode(input);
+    result['phase'] = U8Codec.codec.decode(input);
 
     if (result['phase'] == 0) {
-      result['phase'] = {'ApplyExtrinsic': U32Codec.instance.decode(input)};
+      result['phase'] = {'ApplyExtrinsic': U32Codec.codec.decode(input)};
     }
 
     final lookup = input.readBytes(2);
@@ -62,10 +62,10 @@ class EventRecord with Codec<Map<String, dynamic>> {
   @override
   void encodeTo(Map<String, dynamic> value, Output output) {
     if (value['phase'] is int) {
-      U8Codec.instance.encodeTo(value['phase'], output);
+      U8Codec.codec.encodeTo(value['phase'], output);
     } else {
-      U8Codec.instance.encodeTo(0, output);
-      U32Codec.instance.encodeTo(value['phase']['ApplyExtrinsic'], output);
+      U8Codec.codec.encodeTo(0, output);
+      U32Codec.codec.encodeTo(value['phase']['ApplyExtrinsic'], output);
     }
 
     final lookup = (value['lookup'] as String).padLeft(4, '0');

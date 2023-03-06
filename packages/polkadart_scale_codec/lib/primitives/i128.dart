@@ -11,12 +11,12 @@ class I128Codec with Codec<BigInt> {
         value > BigInt.parse('170141183460469231731687303715884105727')) {
       throw OutOfBoundsException();
     }
-    U128Codec.instance.encodeTo(value.toUnsigned(128), output);
+    U128Codec.codec.encodeTo(value.toUnsigned(128), output);
   }
 
   @override
   BigInt decode(Input input) {
-    return U128Codec.instance.decode(input).toSigned(128);
+    return U128Codec.codec.decode(input).toSigned(128);
   }
 
   @override

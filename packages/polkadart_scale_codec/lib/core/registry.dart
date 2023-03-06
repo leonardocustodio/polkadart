@@ -200,7 +200,7 @@ class Registry {
         subType is U128Codec ||
         subType is U256Codec ||
         subType is NullCodec) {
-      codec = CompactBigIntCodec.instance;
+      codec = CompactBigIntCodec.codec;
     } else {
       throw Exception('Compact type not supported for $subType');
     }
@@ -569,35 +569,35 @@ class Registry {
       case 'bitvec':
         return BitSequenceCodec(BitStore.U8, BitOrder.LSB);
       case 'bool':
-        return BoolCodec.instance;
+        return BoolCodec.codec;
       case 'u8':
-        return U8Codec.instance;
+        return U8Codec.codec;
       case 'u16':
-        return U16Codec.instance;
+        return U16Codec.codec;
       case 'u32':
-        return U32Codec.instance;
+        return U32Codec.codec;
       case 'u64':
-        return U64Codec.instance;
+        return U64Codec.codec;
       case 'u128':
-        return U128Codec.instance;
+        return U128Codec.codec;
       case 'u256':
-        return U256Codec.instance;
+        return U256Codec.codec;
       case 'string':
       case 'text':
       case 'str':
         return StrCodec.instance;
       case 'i8':
-        return I8Codec.instance;
+        return I8Codec.codec;
       case 'i16':
-        return I16Codec.instance;
+        return I16Codec.codec;
       case 'i32':
-        return I32Codec.instance;
+        return I32Codec.codec;
       case 'i64':
-        return I64Codec.instance;
+        return I64Codec.codec;
       case 'i128':
         return I128Codec.instance;
       case 'i256':
-        return I256Codec.instance;
+        return I256Codec.codec;
       case 'donotconstruct':
       case 'null':
         return NullCodec.instance;

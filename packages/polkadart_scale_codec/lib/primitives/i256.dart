@@ -3,7 +3,7 @@ part of primitives;
 class I256Codec with Codec<BigInt> {
   const I256Codec._();
 
-  static final I256Codec instance = I256Codec._();
+  static final I256Codec codec = I256Codec._();
 
   @override
   void encodeTo(BigInt value, Output output) {
@@ -15,12 +15,12 @@ class I256Codec with Codec<BigInt> {
                 '57896044618658097711785492504343953926634992332820282019728792003956564819967')) {
       throw OutOfBoundsException();
     }
-    U256Codec.instance.encodeTo(value.toUnsigned(256), output);
+    U256Codec.codec.encodeTo(value.toUnsigned(256), output);
   }
 
   @override
   BigInt decode(Input input) {
-    return U256Codec.instance.decode(input).toSigned(256);
+    return U256Codec.codec.decode(input).toSigned(256);
   }
 
   @override

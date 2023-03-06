@@ -10,8 +10,8 @@ void main() {
       final output = HexOutput();
       CompositeCodec(
         LinkedHashMap.from({
-          'a': U8Codec.instance,
-          'b': BoolCodec.instance,
+          'a': U8Codec.codec,
+          'b': BoolCodec.codec,
         }),
       ).encodeTo(
         LinkedHashMap.from(
@@ -31,12 +31,12 @@ void main() {
       final output = HexOutput();
       CompositeCodec(
         LinkedHashMap.from({
-          'index': U8Codec.instance,
+          'index': U8Codec.codec,
           'note': StrCodec.instance,
           'Juice': CompositeCodec(
             LinkedHashMap.from({
               'name': StrCodec.instance,
-              'ounces': U8Codec.instance,
+              'ounces': U8Codec.codec,
             }),
           ),
           'Remarks': OptionCodec(StrCodec.instance),
@@ -64,8 +64,8 @@ void main() {
       final input = HexInput('0x2a01');
       final decoded = CompositeCodec(
         LinkedHashMap.from({
-          'a': U8Codec.instance,
-          'b': BoolCodec.instance,
+          'a': U8Codec.codec,
+          'b': BoolCodec.codec,
         }),
       ).decode(input);
       expect(decoded, {
@@ -81,12 +81,12 @@ void main() {
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
       final decoded = CompositeCodec(
         LinkedHashMap.from({
-          'index': U8Codec.instance,
+          'index': U8Codec.codec,
           'note': StrCodec.instance,
           'Juice': CompositeCodec(
             LinkedHashMap.from({
               'name': StrCodec.instance,
-              'ounces': U8Codec.instance,
+              'ounces': U8Codec.codec,
             }),
           ),
           'Remarks': OptionCodec(StrCodec.instance),
