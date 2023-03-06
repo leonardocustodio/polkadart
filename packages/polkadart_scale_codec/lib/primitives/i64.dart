@@ -24,3 +24,62 @@ class I64Codec with Codec<BigInt> {
     return 8;
   }
 }
+
+class I64SequenceCodec with Codec<Int64List> {
+  const I64SequenceCodec._();
+
+  static const I64SequenceCodec codec = I64SequenceCodec._();
+
+  @override
+  Int64List decode(Input input) {
+    final length = CompactCodec.codec.decode(input).toInt();
+    final list = Int64List(length);
+    for (var i = 0; i < length; i++) {
+      list[i] = I64Codec.codec.decode(input).toInt();
+    }
+    return list;
+  }
+
+  @override
+  void encodeTo(Int64List list, Output output) {
+    CompactCodec.codec.encodeTo(list.length, output);
+    for (int value in list) {
+      I64Codec.codec.encodeTo(BigInt.from(value), output);
+    }
+  }
+
+  @override
+  int sizeHint(Int64List list) {
+    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  }
+}
+
+class I64ArrayCodec with Codec<Int64List> {
+  final int length;
+  const I64ArrayCodec(this.length);
+
+  @override
+  Int64List decode(Input input) {
+    final list = Int64List(length);
+    for (var i = 0; i < length; i++) {
+      list[i] = I64Codec.codec.decode(input).toInt();
+    }
+    return list;
+  }
+
+  @override
+  void encodeTo(Int64List list, Output output) {
+    if (list.length != length) {
+      throw Exception(
+          "I64ArrayCodec: invalid length, expect $length found ${list.length}");
+    }
+    for (var i = 0; i < length; i++) {
+      I64Codec.codec.encodeTo(BigInt.from(list[i]), output);
+    }
+  }
+
+  @override
+  int sizeHint(Int64List list) {
+    return length * 8;
+  }
+}

@@ -1,6 +1,8 @@
-import 'package:scale_codec/scale_codec.dart' show Input;
-import 'package:code_builder/code_builder.dart' show Expression, TypeReference, literalNull;
-import '../constants.dart' as constants show Nullable, option, optionCodec, nestedOptionCodec;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
+import 'package:code_builder/code_builder.dart'
+    show Expression, TypeReference, literalNull;
+import '../constants.dart' as constants
+    show Nullable, option, optionCodec, nestedOptionCodec;
 import './base.dart' show Generator, LazyLoader;
 
 class OptionGenerator extends Generator {
@@ -10,7 +12,8 @@ class OptionGenerator extends Generator {
 
   OptionGenerator._lazy();
 
-  factory OptionGenerator.lazy({ required LazyLoader loader, required int codec }) {
+  factory OptionGenerator.lazy(
+      {required LazyLoader loader, required int codec}) {
     final generator = OptionGenerator._lazy();
     loader.addLoader((Map<int, Generator> register) {
       generator.inner = register[codec]!;

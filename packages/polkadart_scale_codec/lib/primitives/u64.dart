@@ -24,3 +24,62 @@ class U64Codec with Codec<BigInt> {
     return 8;
   }
 }
+
+class U64SequenceCodec with Codec<Uint64List> {
+  const U64SequenceCodec._();
+
+  static const U64SequenceCodec codec = U64SequenceCodec._();
+
+  @override
+  Uint64List decode(Input input) {
+    final length = CompactCodec.codec.decode(input).toInt();
+    final list = Uint64List(length);
+    for (var i = 0; i < length; i++) {
+      list[i] = U64Codec.codec.decode(input).toInt();
+    }
+    return list;
+  }
+
+  @override
+  void encodeTo(Uint64List value, Output output) {
+    CompactCodec.codec.encodeTo(value.length, output);
+    for (var i = 0; i < value.length; i++) {
+      U64Codec.codec.encodeTo(BigInt.from(value[i]), output);
+    }
+  }
+
+  @override
+  int sizeHint(Uint64List value) {
+    return CompactCodec.codec.sizeHint(value.length) + value.lengthInBytes;
+  }
+}
+
+class U64ArrayCodec with Codec<Uint64List> {
+  final int length;
+  const U64ArrayCodec(this.length);
+
+  @override
+  Uint64List decode(Input input) {
+    final list = Uint64List(length);
+    for (var i = 0; i < length; i++) {
+      list[i] = U64Codec.codec.decode(input).toInt();
+    }
+    return list;
+  }
+
+  @override
+  void encodeTo(Uint64List value, Output output) {
+    if (value.length != length) {
+      throw Exception(
+          'U64ArrayCodec: invalid length, expect $length found ${value.length}');
+    }
+    for (var i = 0; i < length; i++) {
+      U64Codec.codec.encodeTo(BigInt.from(value[i]), output);
+    }
+  }
+
+  @override
+  int sizeHint(Uint64List list) {
+    return length * 8;
+  }
+}

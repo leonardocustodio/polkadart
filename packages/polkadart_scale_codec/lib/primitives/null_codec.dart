@@ -4,7 +4,7 @@ part of primitives;
 class NullCodec with Codec<dynamic> {
   const NullCodec._();
 
-  static const NullCodec instance = NullCodec._();
+  static const NullCodec codec = NullCodec._();
 
   @override
   dynamic decode(Input input) {}

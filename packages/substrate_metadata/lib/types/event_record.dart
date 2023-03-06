@@ -54,7 +54,7 @@ class EventRecord with Codec<Map<String, dynamic>> {
       },
     };
 
-    result['topic'] = SequenceCodec(StrCodec.instance).decode(input);
+    result['topic'] = SequenceCodec(StrCodec.codec).decode(input);
 
     return result;
   }
@@ -94,7 +94,7 @@ class EventRecord with Codec<Map<String, dynamic>> {
       chainInfo.scaleCodec.encodeTo(type, params[index], output);
     }
 
-    SequenceCodec(StrCodec.instance)
+    SequenceCodec(StrCodec.codec)
         .encodeTo(value['topic'] ?? <String>[], output);
   }
 }

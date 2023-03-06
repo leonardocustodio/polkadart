@@ -5,33 +5,33 @@ void main() {
   group('Option Encode Test:', () {
     test('Given a Option.some([3, true]) it should be encoded to 0x010c01', () {
       final output = HexOutput();
-      OptionCodec(TupleCodec([CompactCodec.instance, BoolCodec.codec]))
-          .encodeTo(Option.some([3, true]), output);
+      OptionCodec(TupleCodec([CompactCodec.codec, BoolCodec.codec]))
+          .encodeTo([3, true], output);
       expect(output.toString(), '0x010c01');
     });
 
     test('Given a None it should be encoded to 0x00', () {
       final output = HexOutput();
-      OptionCodec(U8Codec.codec).encodeTo(Option.none(), output);
+      OptionCodec(U8Codec.codec).encodeTo(null, output);
       expect(output.toString(), '0x00');
     });
 
     test('Given a Option.some(true) it should be encoded to 0x0101', () {
       final output = HexOutput();
-      OptionCodec(BoolCodec.codec).encodeTo(Option.some(true), output);
+      OptionCodec(BoolCodec.codec).encodeTo(true, output);
       expect(output.toString(), '0x0101');
     });
 
     test('Given a Option.some(false) it should be encoded to 0x0100', () {
       final output = HexOutput();
-      OptionCodec(BoolCodec.codec).encodeTo(Option.some(false), output);
+      OptionCodec(BoolCodec.codec).encodeTo(false, output);
       expect(output.toString(), '0x0100');
     });
 
     test('Given a Option.some(None) it should be encoded to 0x0100', () {
       final output = HexOutput();
-      OptionCodec(OptionCodec(BoolCodec.codec))
-          .encodeTo(Option.some(None), output);
+      NestedOptionCodec(OptionCodec(BoolCodec.codec))
+          .encodeTo(Option.some(null), output);
       expect(output.toString(), '0x0100');
     });
 
@@ -39,8 +39,8 @@ void main() {
         'Given a Option.some(Option.some(true)) it should be encoded to 0x010101',
         () {
       final output = HexOutput();
-      OptionCodec(OptionCodec(BoolCodec.codec))
-          .encodeTo(Option.some(Option.some(true)), output);
+      NestedOptionCodec(OptionCodec(BoolCodec.codec))
+          .encodeTo(Option.some(true), output);
       expect(output.toString(), '0x010101');
     });
 
@@ -48,8 +48,8 @@ void main() {
         'Given a Option.some(Option.some(false)) it should be encoded to 0x010100',
         () {
       final output = HexOutput();
-      OptionCodec(OptionCodec(BoolCodec.codec))
-          .encodeTo(Option.some(Option.some(false)), output);
+      NestedOptionCodec(OptionCodec(BoolCodec.codec))
+          .encodeTo(Option.some(false), output);
       expect(output.toString(), '0x010100');
     });
   });
@@ -58,49 +58,52 @@ void main() {
     test('Given a 0x010c01 it should be decoded to Option.some([3, true])', () {
       final input = HexInput('0x010c01');
       final result =
-          OptionCodec(TupleCodec([CompactCodec.instance, BoolCodec.codec]))
+          OptionCodec(TupleCodec([CompactCodec.codec, BoolCodec.codec]))
               .decode(input);
-      expect(result.toString(), Option.some([3, true]).toString());
+      expect(result.toString(), [3, true].toString());
     });
 
     test('Given a 0x00 it should be decoded to None', () {
       final input = HexInput('0x00');
       final result = OptionCodec(U8Codec.codec).decode(input);
-      expect(result, None);
+      expect(result, null);
     });
 
     test('Given a 0x0101 it should be decoded to Option.some(true)', () {
       final input = HexInput('0x0101');
       final result = OptionCodec(BoolCodec.codec).decode(input);
-      expect(result, Option.some(true));
+      expect(result, true);
     });
 
     test('Given a 0x0100 it should be decoded to Option.some(false)', () {
       final input = HexInput('0x0100');
       final result = OptionCodec(BoolCodec.codec).decode(input);
-      expect(result, Option.some(false));
+      expect(result, false);
     });
 
     test('Given a 0x0100 it should be decoded to Option.some(None)', () {
       final input = HexInput('0x0100');
-      final result = OptionCodec(OptionCodec(BoolCodec.codec)).decode(input);
-      expect(result, Option.some(None));
+      final result =
+          NestedOptionCodec(OptionCodec(BoolCodec.codec)).decode(input);
+      expect(result.toString(), Option.some(null).toString());
     });
 
     test(
         'Given a 0x010101 it should be decoded to Option.some(Option.some(true))',
         () {
       final input = HexInput('0x010101');
-      final result = OptionCodec(OptionCodec(BoolCodec.codec)).decode(input);
-      expect(result, Option.some(Option.some(true)));
+      final result =
+          NestedOptionCodec(OptionCodec(BoolCodec.codec)).decode(input);
+      expect(result.toString(), Option.some(true).toString());
     });
 
     test(
         'Given a 0x010100 it should be decoded to Option.some(Option.some(false))',
         () {
       final input = HexInput('0x010100');
-      final result = OptionCodec(OptionCodec(BoolCodec.codec)).decode(input);
-      expect(result, Option.some(Option.some(false)));
+      final result =
+          NestedOptionCodec(OptionCodec(BoolCodec.codec)).decode(input);
+      expect(result.toString(), Option.some(false).toString());
     });
   });
 }

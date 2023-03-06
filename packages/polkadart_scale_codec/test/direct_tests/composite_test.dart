@@ -32,14 +32,14 @@ void main() {
       CompositeCodec(
         LinkedHashMap.from({
           'index': U8Codec.codec,
-          'note': StrCodec.instance,
+          'note': StrCodec.codec,
           'Juice': CompositeCodec(
             LinkedHashMap.from({
-              'name': StrCodec.instance,
+              'name': StrCodec.codec,
               'ounces': U8Codec.codec,
             }),
           ),
-          'Remarks': OptionCodec(StrCodec.instance),
+          'Remarks': OptionCodec(StrCodec.codec),
         }),
       ).encodeTo(
         LinkedHashMap.from({
@@ -49,7 +49,7 @@ void main() {
             'name': 'Kiwi',
             'ounces': 1,
           },
-          'Remarks': Option.some('Hey Food was good'),
+          'Remarks': 'Hey Food was good',
         }),
         output,
       );
@@ -82,14 +82,14 @@ void main() {
       final decoded = CompositeCodec(
         LinkedHashMap.from({
           'index': U8Codec.codec,
-          'note': StrCodec.instance,
+          'note': StrCodec.codec,
           'Juice': CompositeCodec(
             LinkedHashMap.from({
-              'name': StrCodec.instance,
+              'name': StrCodec.codec,
               'ounces': U8Codec.codec,
             }),
           ),
-          'Remarks': OptionCodec(StrCodec.instance),
+          'Remarks': OptionCodec(StrCodec.codec),
         }),
       ).decode(input);
       expect(
@@ -101,7 +101,7 @@ void main() {
               'name': 'Kiwi',
               'ounces': 1,
             },
-            'Remarks': Option.some('Hey Food was good'),
+            'Remarks': 'Hey Food was good',
           }.toString());
     });
   });

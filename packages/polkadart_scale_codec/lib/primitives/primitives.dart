@@ -35,3 +35,4 @@ part 'bit_sequence.dart';
 part 'null_codec.dart';
 part 'set.dart';
 part 'referenced_codec.dart';
+part 'result.dart';

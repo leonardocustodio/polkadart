@@ -62,7 +62,7 @@ class BitSequenceCodec with Codec<BitArray> {
   }
 
   BitArray _decodeMSB(Input input) {
-    final bitArray = BitArray(CompactCodec.instance.decode(input));
+    final bitArray = BitArray(CompactCodec.codec.decode(input));
     final elementCount =
         bitStore.calculateByteSize(bitArray.length) ~/ bitStore.byteSize;
     final bitsPerElement = bitStore.byteSize * 8;
@@ -109,7 +109,7 @@ class BitSequenceCodec with Codec<BitArray> {
   }
 
   BitArray _decodeLSB(Input input) {
-    final bitArray = BitArray(CompactCodec.instance.decode(input));
+    final bitArray = BitArray(CompactCodec.codec.decode(input));
     final sizeInBytes = bitStore.calculateByteSize(bitArray.length);
     for (var i = 0; i < sizeInBytes; i++) {
       final int byte = input.read();
@@ -124,7 +124,7 @@ class BitSequenceCodec with Codec<BitArray> {
 
   @override
   void encodeTo(BitArray value, Output output) {
-    CompactCodec.instance.encodeTo(value.length, output);
+    CompactCodec.codec.encodeTo(value.length, output);
     switch (bitOrder) {
       case BitOrder.MSB:
         _encodeMSB(value, output);
@@ -146,7 +146,7 @@ class BitSequenceCodec with Codec<BitArray> {
 
   @override
   int sizeHint(BitArray value) {
-    int size = CompactCodec.instance.sizeHint(value.length);
+    int size = CompactCodec.codec.sizeHint(value.length);
     size += bitStore.calculateByteSize(value.length);
     return size;
   }

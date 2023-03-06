@@ -28,7 +28,8 @@ class Field {
   final List<String> docs;
 
   /// Creates a new field.
-  const Field({ required this.type, this.name, this.typeName, required this.docs });
+  const Field(
+      {required this.type, this.name, this.typeName, required this.docs});
 
   factory Field.parseJSON(Map<String, dynamic> json) {
     return Field(
@@ -47,7 +48,7 @@ class TypeParameter {
   /// The concrete type for the type parameter.
   final int? type;
 
-  const TypeParameter({ required this.name, this.type});
+  const TypeParameter({required this.name, this.type});
 }
 
 abstract class TypeDef {
@@ -58,33 +59,42 @@ abstract class TypeDef {
   factory TypeDef.parseJSON(Map<String, dynamic> json) {
     String typeName = json.keys.first;
     switch (typeName) {
-      case "Composite": {
-        return TypeDefComposite.parseJSON(json["Composite"]);
-      }
-      case "Variant": {
-        return TypeDefVariant.parseJSON(json["Variant"]);
-      }
-      case "Tuple": {
-        return TypeDefTuple(types: (json["Tuple"] as List).cast<int>());
-      }
-      case "Compact": {
-        return TypeDefCompact.parseJSON(json["Compact"]);
-      }
-      case "Array": {
-        return TypeDefArray.parseJSON(json["Array"]);
-      }
-      case "Sequence": {
-        return TypeDefSequence.parseJSON(json["Sequence"]);
-      }
-      case "Primitive": {
-        return TypeDefPrimitive.fromString(json["Primitive"]);
-      }
-      case "BitSequence": {
-        return TypeDefBitSequence.parseJSON(json["BitSequence"]);
-      }
-      default: {
-        throw Exception("Unknown primitive type $typeName");
-      }
+      case "Composite":
+        {
+          return TypeDefComposite.parseJSON(json["Composite"]);
+        }
+      case "Variant":
+        {
+          return TypeDefVariant.parseJSON(json["Variant"]);
+        }
+      case "Tuple":
+        {
+          return TypeDefTuple(types: (json["Tuple"] as List).cast<int>());
+        }
+      case "Compact":
+        {
+          return TypeDefCompact.parseJSON(json["Compact"]);
+        }
+      case "Array":
+        {
+          return TypeDefArray.parseJSON(json["Array"]);
+        }
+      case "Sequence":
+        {
+          return TypeDefSequence.parseJSON(json["Sequence"]);
+        }
+      case "Primitive":
+        {
+          return TypeDefPrimitive.fromString(json["Primitive"]);
+        }
+      case "BitSequence":
+        {
+          return TypeDefBitSequence.parseJSON(json["BitSequence"]);
+        }
+      default:
+        {
+          throw Exception("Unknown primitive type $typeName");
+        }
     }
   }
 }
@@ -94,13 +104,15 @@ class TypeDefComposite extends TypeDef {
   final List<Field> fields;
 
   /// Creates a new struct definition with named fields.
-  const TypeDefComposite({ required this.fields });
+  const TypeDefComposite({required this.fields});
 
   factory TypeDefComposite.parseJSON(Map<String, dynamic> json) {
-    List<Field> fields = (json["fields"] as List).map((field) => Field.parseJSON(field)).toList();
+    List<Field> fields = (json["fields"] as List)
+        .map((field) => Field.parseJSON(field))
+        .toList();
     return TypeDefComposite(fields: fields);
   }
-  
+
   @override
   Set<int> typeDependencies() {
     return fields.map((field) => field.type).toSet();
@@ -125,10 +137,16 @@ class Variant {
   final List<String> docs;
 
   /// Creates a new variant.
-  const Variant({ required this.index, required this.name, required this.fields, required this.docs });
+  const Variant(
+      {required this.index,
+      required this.name,
+      required this.fields,
+      required this.docs});
 
   factory Variant.parseJSON(Map<String, dynamic> json) {
-    List<Field> fields = (json["fields"] as List).map((field) => Field.parseJSON(field)).toList();
+    List<Field> fields = (json["fields"] as List)
+        .map((field) => Field.parseJSON(field))
+        .toList();
     return Variant(
       index: json["index"] as int,
       name: json["name"] as String,
@@ -147,10 +165,12 @@ class TypeDefVariant extends TypeDef {
   final List<Variant> variants;
 
   /// Create a new `TypeDefVariant` with the given variants
-  const TypeDefVariant({ required this.variants });
+  const TypeDefVariant({required this.variants});
 
   factory TypeDefVariant.parseJSON(Map<String, dynamic> json) {
-    List<Variant> variants = (json["variants"] as List).map((field) => Variant.parseJSON(field)).toList();
+    List<Variant> variants = (json["variants"] as List)
+        .map((field) => Variant.parseJSON(field))
+        .toList();
     return TypeDefVariant(variants: variants);
   }
 
@@ -169,12 +189,12 @@ class TypeDefSequence extends TypeDef {
   final int type;
 
   /// Creates a new sequence type.
-  const TypeDefSequence({ required this.type });
+  const TypeDefSequence({required this.type});
 
   factory TypeDefSequence.parseJSON(Map<String, dynamic> json) {
     return TypeDefSequence(type: json["type"] as int);
   }
-  
+
   @override
   Set<int> typeDependencies() {
     return {type};
@@ -189,7 +209,7 @@ class TypeDefArray extends TypeDef {
   final int length;
 
   /// Creates a new array type.
-  const TypeDefArray({ required this.type, required this.length});
+  const TypeDefArray({required this.type, required this.length});
 
   factory TypeDefArray.parseJSON(Map<String, dynamic> json) {
     return TypeDefArray(
@@ -209,7 +229,7 @@ class TypeDefCompact extends TypeDef {
   final int type;
 
   /// Creates a new compact type.
-  const TypeDefCompact({ required this.type });
+  const TypeDefCompact({required this.type});
 
   factory TypeDefCompact.parseJSON(Map<String, dynamic> json) {
     return TypeDefCompact(type: json["type"] as int);
@@ -226,7 +246,7 @@ class TypeDefTuple extends TypeDef {
   final List<int> types;
 
   /// Creates a new compact type.
-  const TypeDefTuple({ required this.types });
+  const TypeDefTuple({required this.types});
 
   @override
   Set<int> typeDependencies() {
@@ -235,21 +255,21 @@ class TypeDefTuple extends TypeDef {
 }
 
 enum Primitive {
-    Bool,
-    Char,
-    Str,
-    U8,
-    U16,
-    U32,
-    U64,
-    U128,
-    U256,
-    I8,
-    I16,
-    I32,
-    I64,
-    I128,
-    I256;
+  Bool,
+  Char,
+  Str,
+  U8,
+  U16,
+  U32,
+  U64,
+  U128,
+  U256,
+  I8,
+  I16,
+  I32,
+  I64,
+  I128,
+  I256;
 
   /// Creates a new compact type.
   const Primitive();
@@ -264,22 +284,38 @@ class TypeDefPrimitive extends TypeDef {
 
   factory TypeDefPrimitive.fromString(String primitive) {
     switch (primitive) {
-      case "Bool": return TypeDefPrimitive(Primitive.Bool);
-      case "Char": return TypeDefPrimitive(Primitive.Char);
-      case "Str": return TypeDefPrimitive(Primitive.Str);
-      case "U8": return TypeDefPrimitive(Primitive.U8);
-      case "U16": return TypeDefPrimitive(Primitive.U16);
-      case "U32": return TypeDefPrimitive(Primitive.U32);
-      case "U64": return TypeDefPrimitive(Primitive.U64);
-      case "U128": return TypeDefPrimitive(Primitive.U128);
-      case "U256": return TypeDefPrimitive(Primitive.U256);
-      case "I8": return TypeDefPrimitive(Primitive.I8);
-      case "I16": return TypeDefPrimitive(Primitive.I16);
-      case "I32": return TypeDefPrimitive(Primitive.I32);
-      case "I64": return TypeDefPrimitive(Primitive.I64);
-      case "I128": return TypeDefPrimitive(Primitive.I128);
-      case "I256": return TypeDefPrimitive(Primitive.I256);
-      default: throw Exception("Unknown primitive type $primitive");
+      case "Bool":
+        return TypeDefPrimitive(Primitive.Bool);
+      case "Char":
+        return TypeDefPrimitive(Primitive.Char);
+      case "Str":
+        return TypeDefPrimitive(Primitive.Str);
+      case "U8":
+        return TypeDefPrimitive(Primitive.U8);
+      case "U16":
+        return TypeDefPrimitive(Primitive.U16);
+      case "U32":
+        return TypeDefPrimitive(Primitive.U32);
+      case "U64":
+        return TypeDefPrimitive(Primitive.U64);
+      case "U128":
+        return TypeDefPrimitive(Primitive.U128);
+      case "U256":
+        return TypeDefPrimitive(Primitive.U256);
+      case "I8":
+        return TypeDefPrimitive(Primitive.I8);
+      case "I16":
+        return TypeDefPrimitive(Primitive.I16);
+      case "I32":
+        return TypeDefPrimitive(Primitive.I32);
+      case "I64":
+        return TypeDefPrimitive(Primitive.I64);
+      case "I128":
+        return TypeDefPrimitive(Primitive.I128);
+      case "I256":
+        return TypeDefPrimitive(Primitive.I256);
+      default:
+        throw Exception("Unknown primitive type $primitive");
     }
   }
 
@@ -297,7 +333,8 @@ class TypeDefBitSequence extends TypeDef {
   final int bitOrderType;
 
   /// Creates a new bit sequence type.
-  const TypeDefBitSequence({ required this.bitStoreType, required this.bitOrderType });
+  const TypeDefBitSequence(
+      {required this.bitStoreType, required this.bitOrderType});
 
   factory TypeDefBitSequence.parseJSON(Map<String, dynamic> json) {
     return TypeDefBitSequence(
@@ -328,13 +365,22 @@ class TypeMetadata {
   final List<String> docs;
 
   /// Create a [`Type`].
-  const TypeMetadata({ required this.id, required this.path, required this.params, required this.typeDef, required this.docs });
+  const TypeMetadata(
+      {required this.id,
+      required this.path,
+      required this.params,
+      required this.typeDef,
+      required this.docs});
 
   factory TypeMetadata.parseJSON(Map<String, dynamic> json) {
     final id = json['id'] as int;
     json = json['type'] as Map<String, dynamic>;
-    final path = json.containsKey('path') ? (json['path'] as List).cast<String>() : List<String>.empty(growable: false);
-    final docs = json.containsKey('docs') ? (json['docs'] as List).cast<String>() : List<String>.empty(growable: false);
+    final path = json.containsKey('path')
+        ? (json['path'] as List).cast<String>()
+        : List<String>.empty(growable: false);
+    final docs = json.containsKey('docs')
+        ? (json['docs'] as List).cast<String>()
+        : List<String>.empty(growable: false);
 
     final params = List<TypeParameter>.empty(growable: true);
     if (json.containsKey('params')) {
@@ -367,16 +413,20 @@ class TypeMetadata {
 
 /// Hashing Algoritmns
 enum Hasher {
-	/// 128-bit Blake2 hash.
-	blake2_128,
-	/// 256-bit Blake2 hash.
-	blake2_256,
+  /// 128-bit Blake2 hash.
+  blake2_128,
+
+  /// 256-bit Blake2 hash.
+  blake2_256,
+
   /// 64-bit XX hashes
-	twox64,
-	/// 128-bit XX hash.
-	twox128,
-	/// 256-bit XX hash.
-	twox256,
+  twox64,
+
+  /// 128-bit XX hash.
+  twox128,
+
+  /// 256-bit XX hash.
+  twox256,
 }
 
 /// Hasher used by storage maps
@@ -394,7 +444,7 @@ class StorageHasher {
     required this.hasher,
     required this.type,
     required this.concat,
-  }): assert(hasher != null || concat == true);
+  }) : assert(hasher != null || concat == true);
 
   /// 128-bit Blake2 hash.
   factory StorageHasher.blake2_128(int type) {
@@ -471,7 +521,8 @@ class StorageEntryType {
   /// The type of the value.
   final int value;
 
-  StorageEntryType({ required this.hashers, required this.key, required this.value});
+  StorageEntryType(
+      {required this.hashers, required this.key, required this.value});
 }
 
 /// A storage entry modifier indicates how a storage entry is returned when fetched and what the value will be if the key is not present.
@@ -481,35 +532,35 @@ class StorageEntryType {
 /// `default_` means you should expect a `T` with the default value of default if the key is not present.
 enum StorageEntryModifier {
   /// The storage entry returns an `Option<T>`, with `None` if the key is not present.
-	optional,
-	/// The storage entry returns `T::Default` if the key is not present.
-	default_;
+  optional,
+
+  /// The storage entry returns `T::Default` if the key is not present.
+  default_;
 }
 
 /// Metadata about one storage entry.
 class StorageEntryMetadata {
   /// Variable name of the storage entry.
-	final String name;
+  final String name;
 
-	/// An `Option` modifier of that storage entry.
-	final StorageEntryModifier modifier;
+  /// An `Option` modifier of that storage entry.
+  final StorageEntryModifier modifier;
 
-	/// Type of the value stored in the entry.
-	final StorageEntryType type;
+  /// Type of the value stored in the entry.
+  final StorageEntryType type;
 
-	/// Default value (SCALE encoded).
-	final Uint8List default_;
+  /// Default value (SCALE encoded).
+  final Uint8List default_;
 
-	/// Storage entry documentation.
-	final List<String> docs;
+  /// Storage entry documentation.
+  final List<String> docs;
 
-  const StorageEntryMetadata({
-    required this.name,
-    required this.modifier,
-    required this.type,
-    required this.default_,
-    required this.docs
-  });
+  const StorageEntryMetadata(
+      {required this.name,
+      required this.modifier,
+      required this.type,
+      required this.default_,
+      required this.docs});
 }
 
 /// All metadata of the pallet's storage.
@@ -518,9 +569,9 @@ class PalletStorageMetadata {
   final String prefix;
 
   /// Metadata for all storage entries.
-	final List<StorageEntryMetadata> entries;
+  final List<StorageEntryMetadata> entries;
 
-  const PalletStorageMetadata({ required this.prefix, required this.entries });
+  const PalletStorageMetadata({required this.prefix, required this.entries});
 }
 
 class PalletConstantMetadata {
@@ -539,15 +590,14 @@ class PalletMetadata {
   final List<PalletConstantMetadata> constants;
 
   /// Define the index of the pallet, this index will be used for the encoding of pallet event,
-	/// call and origin variants.
-	final int index;
+  /// call and origin variants.
+  final int index;
 
-  PalletMetadata({
-    required this.name,
-    required this.storage,
-    required this.constants,
-    required this.index
-  });
+  PalletMetadata(
+      {required this.name,
+      required this.storage,
+      required this.constants,
+      required this.index});
 
   factory PalletMetadata.fromJson(Map<String, dynamic> json) {
     // final storage = json["storage"] != null ? PalletStorageMetadata.fromJson(json["storage"]) : null;
@@ -563,27 +613,33 @@ class PalletMetadata {
 
 /// The metadata of a runtime.
 class RuntimeMetadataV14 {
-	/// Type registry containing all types used in the metadata.
-	final List<TypeMetadata> registry;
+  /// Type registry containing all types used in the metadata.
+  final List<TypeMetadata> registry;
 
-	/// Metadata of all the pallets.
-	final List<PalletMetadata> pallets;
+  /// Metadata of all the pallets.
+  final List<PalletMetadata> pallets;
 
-  RuntimeMetadataV14({ required this.registry, required this.pallets });
+  RuntimeMetadataV14({required this.registry, required this.pallets});
 
   factory RuntimeMetadataV14.fromJson(Map<String, dynamic> json) {
-    final types = (json["lookup"]["types"] as List).cast<Map<String, dynamic>>().map((json) => TypeMetadata.parseJSON(json)).toList();
-    final pallets = (json["pallets"] as List).cast<Map<String, dynamic>>().map((json) => PalletMetadata.fromJson(json)).toList();
+    final types = (json["lookup"]["types"] as List)
+        .cast<Map<String, dynamic>>()
+        .map((json) => TypeMetadata.parseJSON(json))
+        .toList();
+    final pallets = (json["pallets"] as List)
+        .cast<Map<String, dynamic>>()
+        .map((json) => PalletMetadata.fromJson(json))
+        .toList();
 
     return RuntimeMetadataV14(
       registry: types,
       pallets: pallets,
     );
   }
-  
-	// Metadata of the extrinsic.
-	// final ExtrinsicMetadata extrinsic;
-	
+
+  // Metadata of the extrinsic.
+  // final ExtrinsicMetadata extrinsic;
+
   // The type of the `Runtime`.
-	// pub int runtimeType;
+  // pub int runtimeType;
 }

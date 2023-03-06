@@ -111,8 +111,7 @@ void main() {
     });
     for (var i = 0; i < inputs.length; i++) {
       test('Testing decoding of ${inputs[i]} at index $i', () {
-        final decoded =
-            CompactBigIntCodec.codec.decode(ByteInput(inputs[i]));
+        final decoded = CompactBigIntCodec.codec.decode(ByteInput(inputs[i]));
         expect(outputs[i], decoded);
       });
     }

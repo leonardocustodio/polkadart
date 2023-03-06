@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart' show Expression, TypeReference;
-import 'package:scale_codec/scale_codec.dart' show Input;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import './base.dart' show Generator, LazyLoader;
 import '../constants.dart' as constants;
 
@@ -14,7 +14,8 @@ class ResultGenerator extends Generator {
 
   ResultGenerator._lazy();
 
-  factory ResultGenerator.lazy({ required LazyLoader loader, required int ok, required int err }) {
+  factory ResultGenerator.lazy(
+      {required LazyLoader loader, required int ok, required int err}) {
     final generator = ResultGenerator._lazy();
     loader.addLoader((Map<int, Generator> register) {
       generator.ok = register[ok]!;

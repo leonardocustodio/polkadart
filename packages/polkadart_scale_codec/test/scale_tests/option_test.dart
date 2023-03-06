@@ -77,7 +77,11 @@ void main() {
       final input = HexInput('0x010c01');
       final codec = ScaleCodec(registry);
       final result = codec.decode('A', input);
-      expect(result, Option.some([3, true]));
+      expect(result.runtimeType, Option);
+
+      final expected = Option.some([3, true]);
+      expect(result.isNone, expected.isNone);
+      expect(result.value, expected.value);
     });
 
     test('Given a 0x00 it should be decoded to None', () {
@@ -85,6 +89,8 @@ void main() {
       final codec = ScaleCodec(registry);
       final result = codec.decode('A', input);
       expect(result, None);
+      expect(result.isNone, true);
+      expect(result.value, null);
     });
 
     test('Given a 0x0101 it should be decoded to Option.some(true)', () {

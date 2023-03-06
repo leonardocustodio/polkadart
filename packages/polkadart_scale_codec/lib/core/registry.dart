@@ -72,7 +72,7 @@ class Registry {
   Codec _parseCodec(
       Map<String, dynamic> customJson, String key, dynamic value) {
     if (value == null) {
-      return NullCodec.instance;
+      return NullCodec.codec;
     }
 
     key = _renameType(key);
@@ -124,7 +124,7 @@ class Registry {
             case 'BitVec':
               return _parseBitSequence(customJson, key, value);
             case 'DoNotConstruct':
-              return NullCodec.instance;
+              return NullCodec.codec;
           }
           return _parseCodec(customJson, value, customJson[value]);
         }
@@ -195,7 +195,7 @@ class Registry {
     late Codec codec;
 
     if (subType is U8Codec || subType is U16Codec || subType is U32Codec) {
-      codec = CompactCodec.instance;
+      codec = CompactCodec.codec;
     } else if (subType is U64Codec ||
         subType is U128Codec ||
         subType is U256Codec ||
@@ -210,14 +210,14 @@ class Registry {
     return codec;
   }
 
-  OptionCodec _parseOption(
+  NestedOptionCodec _parseOption(
       Map<String, dynamic> customJson, String key, RegExpMatch match) {
     final match2 = match[2].toString();
 
     final Codec subType =
         _parseCodec(customJson, match2, customJson[match2] ?? match2);
 
-    final OptionCodec codec = OptionCodec(subType);
+    final NestedOptionCodec codec = NestedOptionCodec(subType);
 
     addCodec(key, codec);
 
@@ -585,7 +585,7 @@ class Registry {
       case 'string':
       case 'text':
       case 'str':
-        return StrCodec.instance;
+        return StrCodec.codec;
       case 'i8':
         return I8Codec.codec;
       case 'i16':
@@ -595,12 +595,12 @@ class Registry {
       case 'i64':
         return I64Codec.codec;
       case 'i128':
-        return I128Codec.instance;
+        return I128Codec.codec;
       case 'i256':
         return I256Codec.codec;
       case 'donotconstruct':
       case 'null':
-        return NullCodec.instance;
+        return NullCodec.codec;
       default:
         return null;
     }

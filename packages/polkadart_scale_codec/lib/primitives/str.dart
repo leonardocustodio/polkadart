@@ -3,28 +3,27 @@ part of primitives;
 class StrCodec with Codec<String> {
   const StrCodec._();
 
-  static const StrCodec instance = StrCodec._();
+  static const StrCodec codec = StrCodec._();
 
   @override
-  void encodeTo(String value, Output output) {
-    final utf8str = utf8.encode(value);
-    CompactCodec.instance.encodeTo(utf8str.length, output);
-    for (final charCode in utf8str) {
-      U8Codec.codec.encodeTo(charCode, output);
-    }
+  void encodeTo(String str, Output dest) {
+    final utf8str = Uint8List.fromList(utf8.encode(str));
+    CompactCodec.codec.encodeTo(utf8str.length, dest);
+    dest.write(utf8str);
   }
 
   @override
   String decode(Input input) {
-    final size = CompactCodec.instance.decode(input).toInt();
-    final bytes = input.readBytes(size).toList();
+    final size = CompactCodec.codec.decode(input);
+    final bytes = input.readBytes(size);
     return utf8.decode(bytes);
   }
 
   @override
-  int sizeHint(String value) {
-    var size = CompactCodec.instance.sizeHint(value.length);
-    size += utf8.encode(value).length;
+  int sizeHint(String str) {
+    var bytes = utf8.encode(str);
+    var size = CompactCodec.codec.sizeHint(bytes.length);
+    size += bytes.length;
     return size;
   }
 }

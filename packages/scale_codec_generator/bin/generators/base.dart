@@ -1,5 +1,6 @@
-import 'package:scale_codec/scale_codec.dart' show Input;
-import 'package:code_builder/code_builder.dart' show Class, Enum, TypeReference, TypeDef, Expression, Reference;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
+import 'package:code_builder/code_builder.dart'
+    show Class, Enum, TypeReference, TypeDef, Expression, Reference;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
 import 'package:code_builder/code_builder.dart' show DartEmitter, Library;
 import 'package:recase/recase.dart' show ReCase;
@@ -8,7 +9,8 @@ import '../utils.dart' show sanitize;
 abstract class Generator {
   const Generator();
 
-  Expression encode(Expression obj, [Expression output = const Reference('output')]) {
+  Expression encode(Expression obj,
+      [Expression output = const Reference('output')]) {
     return codecInstance().property('encodeTo').call([obj, output]);
   }
 
@@ -55,15 +57,16 @@ class GeneratedOutput {
 
   static final _dartfmt = DartFormatter();
 
-  const GeneratedOutput({ required this.classes, required this.enums, required this.typedefs });
+  const GeneratedOutput(
+      {required this.classes, required this.enums, required this.typedefs});
 
   String build() {
     final library3 = Library((b) => b
       ..body.addAll(typedefs)
       ..body.addAll(enums)
-      ..body.addAll(classes)
-    );
-    return _dartfmt.format('${library3.accept(DartEmitter.scoped(useNullSafetySyntax: true))}');
+      ..body.addAll(classes));
+    return _dartfmt.format(
+        '${library3.accept(DartEmitter.scoped(useNullSafetySyntax: true))}');
   }
 
   GeneratedOutput merge(GeneratedOutput other) {
@@ -88,17 +91,18 @@ class Field {
   late String name;
   late Generator codec;
 
-  Field({ required String name, required this.codec }) {
+  Field({required String name, required this.codec}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
     this.name = toFieldName(name);
   }
 
-  Field._lazy({ required String name }) {
+  Field._lazy({required String name}) {
     this.name = toFieldName(name);
   }
 
-  factory Field.lazy({ required LazyLoader loader, required int codec, required String name }) {
+  factory Field.lazy(
+      {required LazyLoader loader, required int codec, required String name}) {
     final field = Field._lazy(name: name);
     loader.addLoader((Map<int, Generator> register) {
       field.codec = register[codec]!;
@@ -123,8 +127,7 @@ class Field {
           selfPrimitive.isNullable != otherPrimitive.isNullable ||
           selfPrimitive.isConst != otherPrimitive.isConst ||
           selfPrimitive.bound != otherPrimitive.bound ||
-          selfPrimitive.types.length != otherPrimitive.types.length
-        ) {
+          selfPrimitive.types.length != otherPrimitive.types.length) {
         return false;
       }
 
@@ -135,8 +138,7 @@ class Field {
           selfCodec.isNullable != otherCodec.isNullable ||
           selfCodec.isConst != otherCodec.isConst ||
           selfCodec.bound != otherCodec.bound ||
-          selfCodec.types.length != otherCodec.types.length
-          ) {
+          selfCodec.types.length != otherCodec.types.length) {
         return false;
       }
       return true;

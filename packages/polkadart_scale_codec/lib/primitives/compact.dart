@@ -85,7 +85,7 @@ class CompactBigIntCodec with Codec<BigInt> {
 class CompactCodec with Codec<int> {
   const CompactCodec._();
 
-  static CompactCodec instance = CompactCodec._();
+  static CompactCodec codec = CompactCodec._();
 
   @override
   void encodeTo(int value, Output output) {

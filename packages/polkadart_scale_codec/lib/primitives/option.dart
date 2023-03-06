@@ -1,42 +1,75 @@
 // ignore_for_file: library_private_types_in_public_api
-
 part of primitives;
 
-class OptionCodec with Codec<Option> {
-  final Codec subType;
-  const OptionCodec(this.subType);
+// Only necessary when Option<Option<T>>
+class NestedOptionCodec<E> with Codec<Option<E>> {
+  final Codec<E> subtypeCodec;
+
+  const NestedOptionCodec(this.subtypeCodec);
 
   @override
-  void encodeTo(Option value, Output output) {
-    if (value.isNone) {
+  void encodeTo(Option<E> option, Output output) {
+    if (option.isNone) {
       output.pushByte(0);
-    } else if (value.isSome) {
-      output.pushByte(1);
-      subType.encodeTo(value.value, output);
     } else {
-      throw OptionException(
-          'Unable to encode due to invalid value type. Needed value either Option.some() or None, but found of type: \'${value.runtimeType}\'.');
+      output.pushByte(1);
+      subtypeCodec.encodeTo(option.value as E, output);
     }
   }
 
   @override
-  Option decode(Input input) {
-    final int b = input.read();
-    switch (b) {
-      case 0:
-        return Option.none();
-      case 1:
-        return Option.some(subType.decode(input));
-      default:
-        throw OptionException('Invalid Option Byte: $b');
+  Option<E> decode(Input input) {
+    if (input.read() == 0) {
+      return Option.none();
     }
+    return Option.some(subtypeCodec.decode(input));
+  }
+
+  @override
+  int sizeHint(Option<E> option) {
+    if (option.isNone) {
+      return 1;
+    }
+    return 1 + subtypeCodec.sizeHint(option.value as E);
+  }
+}
+
+class OptionCodec<E> with Codec<E?> {
+  final Codec<E> subtypeCodec;
+
+  const OptionCodec(this.subtypeCodec);
+
+  @override
+  void encodeTo(E? maybeValue, Output output) {
+    if (maybeValue == null) {
+      output.pushByte(0);
+    } else {
+      output.pushByte(1);
+      subtypeCodec.encodeTo(maybeValue, output);
+    }
+  }
+
+  @override
+  E? decode(Input input) {
+    if (input.read() == 0) {
+      return null;
+    }
+    return subtypeCodec.decode(input);
+  }
+
+  @override
+  int sizeHint(E? maybeValue) {
+    if (maybeValue == null) {
+      return 1;
+    }
+    return 1 + subtypeCodec.sizeHint(maybeValue);
   }
 }
 
 const None = Option.none();
 
-class Option extends Equatable {
-  final dynamic value;
+class Option<E> {
+  final E? value;
   final bool _isSome; // Workaround for Option<int?>.some(null)
 
   const Option.some(this.value) : _isSome = true;
@@ -56,5 +89,34 @@ class Option extends Equatable {
   }
 
   @override
-  List<Object?> get props => [_isSome, value];
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    if (other is Option) {
+      if (other._isSome != _isSome) return false;
+      if (other.value.runtimeType != value.runtimeType) return false;
+      if (value is Equatable && other.value is Equatable) {
+        final a = value as Equatable;
+        final b = other.value as Equatable;
+        return a == b;
+      }
+      if (value is List && other.value is List) {
+        final a = value as List;
+        final b = other.value as List;
+        if (a.length != b.length) {
+          return false;
+        }
+        for (int i=0; i<a.length; i++) {
+          if (a[i] != b[i]) return false;
+        }
+        return true;
+      }
+      return other.value == value;
+    }
+
+    return false;
+  }
+
+  // @override
+  // List<Object?> get props => [_isSome, value];
 }

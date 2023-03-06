@@ -29,7 +29,7 @@ void main() {
       final output = HexOutput();
       BTreeMapCodec(
         keyCodec: BTreeMapCodec(
-          keyCodec: StrCodec.instance,
+          keyCodec: StrCodec.codec,
           valueCodec: BoolCodec.codec,
         ),
         valueCodec: BoolCodec.codec,
@@ -92,7 +92,7 @@ void main() {
       final input = HexInput('0x040410313239310100');
       final result = BTreeMapCodec(
         keyCodec: BTreeMapCodec(
-          keyCodec: StrCodec.instance,
+          keyCodec: StrCodec.codec,
           valueCodec: BoolCodec.codec,
         ),
         valueCodec: BoolCodec.codec,

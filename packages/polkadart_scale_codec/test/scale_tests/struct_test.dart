@@ -116,19 +116,18 @@ void main() {
       final input = HexInput(
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
       final codec = ScaleCodec(registry);
+      
       final result = codec.decode('OrderComposite', input);
-      expect(
-        result,
-        equals({
-          'index': 8,
-          'note': 'This is a note',
-          'Juice': {
-            'name': 'Kiwi',
-            'ounces': 1,
-          },
-          'Remarks': Option.some('Hey Food was good'),
-        }),
-      );
+
+      expect(result , {
+        'index': 8,
+        'note': 'This is a note',
+        'Juice': {
+          'name': 'Kiwi',
+          'ounces': 1,
+        },
+        'Remarks': Option.some('Hey Food was good'),
+      });
     });
     test(
         'When struct "OrderCompositeList" is decoded then it returns correct value',
@@ -137,28 +136,26 @@ void main() {
           '0x080040546869732069732061206e6f74652030284b697769204a7569636501014448657920466f6f642077617320676f6f640840546869732069732061206e6f746520312042656574726f6f740200');
       final codec = ScaleCodec(registry);
       final result = codec.decode('OrderCompositeList', input);
-      expect(
-          result,
-          equals([
-            {
-              'index': 0,
-              'note': 'This is a note 0',
-              'Juice': {
-                'name': 'Kiwi Juice',
-                'ounces': 1,
-              },
-              'Remarks': Option.some('Hey Food was good'),
-            },
-            {
-              'index': 8,
-              'note': 'This is a note 1',
-              'Juice': {
-                'name': 'Beetroot',
-                'ounces': 2,
-              },
-              'Remarks': None,
-            },
-          ]));
+      expect(result, [
+        {
+          'index': 0,
+          'note': 'This is a note 0',
+          'Juice': {
+            'name': 'Kiwi Juice',
+            'ounces': 1,
+          },
+          'Remarks': Option.some('Hey Food was good'),
+        },
+        {
+          'index': 8,
+          'note': 'This is a note 1',
+          'Juice': {
+            'name': 'Beetroot',
+            'ounces': 2,
+          },
+          'Remarks': None,
+        },
+      ]);
     });
     test('When struct "JuiceName" is decoded then it returns correct value',
         () {
@@ -167,10 +164,10 @@ void main() {
       final result = codec.decode('JuiceName', input);
       expect(
         result,
-        equals({
+        {
           'name': 'Kiwi',
           'ounces': 1,
-        }),
+        },
       );
     });
   });

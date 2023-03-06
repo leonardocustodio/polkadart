@@ -1,5 +1,20 @@
-import 'package:scale_codec/scale_codec.dart' show Input, BoolCodec, StrCodec, U8Codec, U16Codec, U32Codec, U64Codec, U128Codec, I8Codec, I16Codec, I32Codec, I64Codec, I128Codec;
-import 'package:code_builder/code_builder.dart' show TypeReference, Expression, literalBool, literalString, literalNum;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    show
+        Input,
+        BoolCodec,
+        StrCodec,
+        U8Codec,
+        U16Codec,
+        U32Codec,
+        U64Codec,
+        U128Codec,
+        I8Codec,
+        I16Codec,
+        I32Codec,
+        I64Codec,
+        I128Codec;
+import 'package:code_builder/code_builder.dart'
+    show TypeReference, Expression, literalBool, literalString, literalNum;
 import '../metadata_parser.dart' show Primitive;
 import './base.dart' show Generator;
 import '../constants.dart' as constants;
@@ -12,20 +27,34 @@ class PrimitiveGenerator extends Generator {
 
   factory PrimitiveGenerator(Primitive primitive) {
     switch (primitive) {
-      case Primitive.Bool: return PrimitiveGenerator.bool;
-      case Primitive.Str: return PrimitiveGenerator.str;
-      case Primitive.Char: return PrimitiveGenerator.char;
-      case Primitive.U8: return PrimitiveGenerator.u8;
-      case Primitive.U16: return PrimitiveGenerator.u16;
-      case Primitive.U32: return PrimitiveGenerator.u32;
-      case Primitive.U64: return PrimitiveGenerator.u64;
-      case Primitive.U128: return PrimitiveGenerator.u128;
-      case Primitive.I8: return PrimitiveGenerator.i8;
-      case Primitive.I16: return PrimitiveGenerator.i16;
-      case Primitive.I32: return PrimitiveGenerator.i32;
-      case Primitive.I64: return PrimitiveGenerator.i64;
-      case Primitive.I128: return PrimitiveGenerator.u128;
-      default: throw Exception("Unsupported primitive $primitive");
+      case Primitive.Bool:
+        return PrimitiveGenerator.bool;
+      case Primitive.Str:
+        return PrimitiveGenerator.str;
+      case Primitive.Char:
+        return PrimitiveGenerator.char;
+      case Primitive.U8:
+        return PrimitiveGenerator.u8;
+      case Primitive.U16:
+        return PrimitiveGenerator.u16;
+      case Primitive.U32:
+        return PrimitiveGenerator.u32;
+      case Primitive.U64:
+        return PrimitiveGenerator.u64;
+      case Primitive.U128:
+        return PrimitiveGenerator.u128;
+      case Primitive.I8:
+        return PrimitiveGenerator.i8;
+      case Primitive.I16:
+        return PrimitiveGenerator.i16;
+      case Primitive.I32:
+        return PrimitiveGenerator.i32;
+      case Primitive.I64:
+        return PrimitiveGenerator.i64;
+      case Primitive.I128:
+        return PrimitiveGenerator.u128;
+      default:
+        throw Exception("Unsupported primitive $primitive");
     }
   }
 
@@ -63,7 +92,8 @@ class PrimitiveGenerator extends Generator {
       case Primitive.I64:
       case Primitive.I128:
         return constants.bigInt.type as TypeReference;
-      default: throw Exception("Unsupported primitive $primitive");
+      default:
+        throw Exception("Unsupported primitive $primitive");
     }
   }
 
@@ -95,7 +125,8 @@ class PrimitiveGenerator extends Generator {
         return constants.i64Codec.type as TypeReference;
       case Primitive.I128:
         return constants.i128Codec.type as TypeReference;
-      default: throw Exception("Unsupported primitive $primitive");
+      default:
+        throw Exception("Unsupported primitive $primitive");
     }
   }
 
@@ -127,7 +158,8 @@ class PrimitiveGenerator extends Generator {
         return utils.bigIntToExpression(I64Codec.codec.decode(input));
       case Primitive.I128:
         return utils.bigIntToExpression(I128Codec.codec.decode(input));
-      default: throw Exception("Unsupported primitive $primitive");
+      default:
+        throw Exception("Unsupported primitive $primitive");
     }
   }
 }

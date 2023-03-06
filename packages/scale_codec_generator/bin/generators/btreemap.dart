@@ -1,5 +1,7 @@
-import 'package:code_builder/code_builder.dart' show Expression, CodeExpression, Code, Block, TypeReference;
-import 'package:scale_codec/scale_codec.dart' show Input, CompactCodec;
+import 'package:code_builder/code_builder.dart'
+    show Expression, CodeExpression, Code, Block, TypeReference;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    show Input, CompactCodec;
 import '../constants.dart' as constants;
 import './base.dart' show Generator, LazyLoader;
 
@@ -14,7 +16,8 @@ class BTreeMapGenerator extends Generator {
 
   BTreeMapGenerator._lazy();
 
-  factory BTreeMapGenerator.lazy({ required LazyLoader loader, required int key, required int value }) {
+  factory BTreeMapGenerator.lazy(
+      {required LazyLoader loader, required int key, required int value}) {
     final generator = BTreeMapGenerator._lazy();
     loader.addLoader((Map<int, Generator> register) {
       generator.key = register[key]!;
@@ -44,7 +47,8 @@ class BTreeMapGenerator extends Generator {
   @override
   Expression valueFrom(Input input) {
     return CodeExpression(Block((builder) {
-      builder.statements.add(Code.scope((a) => '<${a(key.primitive())}, ${a(value.primitive())}>{'));
+      builder.statements.add(Code.scope(
+          (a) => '<${a(key.primitive())}, ${a(value.primitive())}>{'));
       final size = CompactCodec.codec.decode(input).toInt();
       for (var i = 0; i < size; i++) {
         final k = key.valueFrom(input);
