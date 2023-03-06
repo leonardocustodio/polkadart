@@ -58,7 +58,7 @@ void main(List<String> arguments) {
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
-    for (var type in typesJson) type['id']: TypeMetadata.parseJSON(type)
+    for (var type in typesJson) type['id']: TypeMetadata.fromJson(type)
   };
 
   // Create all Generators

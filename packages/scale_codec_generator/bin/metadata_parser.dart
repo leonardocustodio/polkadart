@@ -31,7 +31,7 @@ class Field {
   const Field(
       {required this.type, this.name, this.typeName, required this.docs});
 
-  factory Field.parseJSON(Map<String, dynamic> json) {
+  factory Field.fromJson(Map<String, dynamic> json) {
     return Field(
       type: json['type'] as int,
       name: parseOption(json['name']),
@@ -56,16 +56,16 @@ abstract class TypeDef {
 
   Set<int> typeDependencies();
 
-  factory TypeDef.parseJSON(Map<String, dynamic> json) {
+  factory TypeDef.fromJson(Map<String, dynamic> json) {
     final String typeName = json.keys.first;
     switch (typeName) {
       case 'Composite':
         {
-          return TypeDefComposite.parseJSON(json['Composite']);
+          return TypeDefComposite.fromJson(json['Composite']);
         }
       case 'Variant':
         {
-          return TypeDefVariant.parseJSON(json['Variant']);
+          return TypeDefVariant.fromJson(json['Variant']);
         }
       case 'Tuple':
         {
@@ -73,15 +73,15 @@ abstract class TypeDef {
         }
       case 'Compact':
         {
-          return TypeDefCompact.parseJSON(json['Compact']);
+          return TypeDefCompact.fromJson(json['Compact']);
         }
       case 'Array':
         {
-          return TypeDefArray.parseJSON(json['Array']);
+          return TypeDefArray.fromJson(json['Array']);
         }
       case 'Sequence':
         {
-          return TypeDefSequence.parseJSON(json['Sequence']);
+          return TypeDefSequence.fromJson(json['Sequence']);
         }
       case 'Primitive':
         {
@@ -89,7 +89,7 @@ abstract class TypeDef {
         }
       case 'BitSequence':
         {
-          return TypeDefBitSequence.parseJSON(json['BitSequence']);
+          return TypeDefBitSequence.fromJson(json['BitSequence']);
         }
       default:
         {
@@ -106,9 +106,9 @@ class TypeDefComposite extends TypeDef {
   /// Creates a new struct definition with named fields.
   const TypeDefComposite({required this.fields});
 
-  factory TypeDefComposite.parseJSON(Map<String, dynamic> json) {
+  factory TypeDefComposite.fromJson(Map<String, dynamic> json) {
     final List<Field> fields = (json['fields'] as List)
-        .map((field) => Field.parseJSON(field))
+        .map((field) => Field.fromJson(field))
         .toList();
     return TypeDefComposite(fields: fields);
   }
@@ -143,9 +143,9 @@ class Variant {
       required this.fields,
       required this.docs});
 
-  factory Variant.parseJSON(Map<String, dynamic> json) {
+  factory Variant.fromJson(Map<String, dynamic> json) {
     final List<Field> fields = (json['fields'] as List)
-        .map((field) => Field.parseJSON(field))
+        .map((field) => Field.fromJson(field))
         .toList();
     return Variant(
       index: json['index'] as int,
@@ -167,9 +167,9 @@ class TypeDefVariant extends TypeDef {
   /// Create a new `TypeDefVariant` with the given variants
   const TypeDefVariant({required this.variants});
 
-  factory TypeDefVariant.parseJSON(Map<String, dynamic> json) {
+  factory TypeDefVariant.fromJson(Map<String, dynamic> json) {
     final List<Variant> variants = (json['variants'] as List)
-        .map((field) => Variant.parseJSON(field))
+        .map((field) => Variant.fromJson(field))
         .toList();
     return TypeDefVariant(variants: variants);
   }
@@ -191,7 +191,7 @@ class TypeDefSequence extends TypeDef {
   /// Creates a new sequence type.
   const TypeDefSequence({required this.type});
 
-  factory TypeDefSequence.parseJSON(Map<String, dynamic> json) {
+  factory TypeDefSequence.fromJson(Map<String, dynamic> json) {
     return TypeDefSequence(type: json['type'] as int);
   }
 
@@ -211,7 +211,7 @@ class TypeDefArray extends TypeDef {
   /// Creates a new array type.
   const TypeDefArray({required this.type, required this.length});
 
-  factory TypeDefArray.parseJSON(Map<String, dynamic> json) {
+  factory TypeDefArray.fromJson(Map<String, dynamic> json) {
     return TypeDefArray(
       type: json['type'] as int,
       length: json['len'] as int,
@@ -231,7 +231,7 @@ class TypeDefCompact extends TypeDef {
   /// Creates a new compact type.
   const TypeDefCompact({required this.type});
 
-  factory TypeDefCompact.parseJSON(Map<String, dynamic> json) {
+  factory TypeDefCompact.fromJson(Map<String, dynamic> json) {
     return TypeDefCompact(type: json['type'] as int);
   }
 
@@ -336,7 +336,7 @@ class TypeDefBitSequence extends TypeDef {
   const TypeDefBitSequence(
       {required this.bitStoreType, required this.bitOrderType});
 
-  factory TypeDefBitSequence.parseJSON(Map<String, dynamic> json) {
+  factory TypeDefBitSequence.fromJson(Map<String, dynamic> json) {
     return TypeDefBitSequence(
       bitStoreType: json['bitStoreType'] as int,
       bitOrderType: json['bitOrderType'] as int,
@@ -372,7 +372,7 @@ class TypeMetadata {
       required this.typeDef,
       required this.docs});
 
-  factory TypeMetadata.parseJSON(Map<String, dynamic> json) {
+  factory TypeMetadata.fromJson(Map<String, dynamic> json) {
     final id = json['id'] as int;
     json = json['type'] as Map<String, dynamic>;
     final path = json.containsKey('path')
@@ -396,7 +396,7 @@ class TypeMetadata {
       id: id,
       path: path,
       params: params,
-      typeDef: TypeDef.parseJSON(json['def'] as Map<String, dynamic>),
+      typeDef: TypeDef.fromJson(json['def'] as Map<String, dynamic>),
       docs: docs,
     );
   }
@@ -624,7 +624,7 @@ class RuntimeMetadataV14 {
   factory RuntimeMetadataV14.fromJson(Map<String, dynamic> json) {
     final types = (json['lookup']['types'] as List)
         .cast<Map<String, dynamic>>()
-        .map((json) => TypeMetadata.parseJSON(json))
+        .map((json) => TypeMetadata.fromJson(json))
         .toList();
     final pallets = (json['pallets'] as List)
         .cast<Map<String, dynamic>>()
