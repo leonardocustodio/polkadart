@@ -300,7 +300,8 @@ void main(List<String> arguments) {
                 name: variantName,
                 index: variant.index,
                 fields: variant.fields.map((field) {
-                  final String name = Field.toFieldName(field.name ?? 'value$index');
+                  final String name =
+                      Field.toFieldName(field.name ?? 'value$index');
                   index++;
                   return Field.lazy(
                       loader: lazyLoader, codec: field.type, name: name);
@@ -366,7 +367,8 @@ void main(List<String> arguments) {
   }
 
   // Rename ambiguous generators
-  for (final entry in Map<String, List<Generator>>.from(generatorPerFile).entries) {
+  for (final entry
+      in Map<String, List<Generator>>.from(generatorPerFile).entries) {
     final generatorList = entry.value;
     if (generatorList.length > 1) {
       int index = 0;

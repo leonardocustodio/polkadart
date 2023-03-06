@@ -135,7 +135,8 @@ class StorageDoubleMap<K1, K2, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2) {
-    final Uint8List hash = Uint8List(32 + hasher1.size(key1) + hasher2.size(key2));
+    final Uint8List hash =
+        Uint8List(32 + hasher1.size(key1) + hasher2.size(key2));
     Hasher.twoxx128.hashTo(
       data: Uint8List.fromList(utf8.encode(prefix)),
       output: hash.buffer.asUint8List(hash.offsetInBytes, 16),

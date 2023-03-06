@@ -386,8 +386,7 @@ Enum createSimpleVariantEnum(
             ..name = 'codec'
             ..static = true
             ..modifier = FieldModifier.constant
-            ..type = refer(
-                'Codec<$typeName>', 'package:polkadart_scale_codec/polkadart_scale_codec.dart')
+            ..type = constants.codec(ref: refer(typeName))
             ..assignment = Code('$codecName()')),
         ])
         ..values.addAll(variants.map((variant) => EnumValue((b) => b
@@ -408,8 +407,7 @@ Class createSimpleVariantCodec(
       classBuilder
         ..name = codecName
         ..constructors.add(Constructor((b) => b..constant = true))
-        ..mixins.add(
-            refer('Codec<$typeName>', 'package:polkadart_scale_codec/polkadart_scale_codec.dart'))
+        ..mixins.add(constants.codec(ref: refer(typeName)))
         ..methods.add(Method((b) => b
           ..name = 'decode'
           ..returns = refer(typeName)
