@@ -9,9 +9,9 @@ environment:
   sdk: '>=2.18.5 <3.0.0'
 
 dependencies:
-  blake2b: ^0.2.2
-  http: ^0.13.5
-  hex: ^0.2.0
+  blake2b: ^0.2.2 # MulanPSL-1.0
+  http: ^0.13.5 # BSD-3-Clause
+  hex: ^0.2.0 # MIT
   polkadart_scale_codec: 
     path: ../polkadart_scale_codec
 

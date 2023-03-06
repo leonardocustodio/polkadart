@@ -7,9 +7,9 @@ environment:
   sdk: '>=2.18.5 <3.0.0'
 
 dependencies:
-  code_builder: ^4.4.0
-  dart_style: ^2.2.4
-  recase: ^4.1.0
+  code_builder: ^4.4.0 # BSD-3-Clause
+  dart_style: ^2.2.4 # BSD-3-Clause
+  recase: ^4.1.0 # BSD-2-Clause
   frame_primitives:
     path: ../frame_primitives
   polkadart_scale_codec:
