@@ -8,8 +8,8 @@ T? parseOption<T>(dynamic obj) {
   T? value;
   if (obj.runtimeType == T) {
     value = obj as T;
-  } else if ((obj as Map).containsKey("Some")) {
-    value = obj["Some"] as T;
+  } else if ((obj as Map).containsKey('Some')) {
+    value = obj['Some'] as T;
   }
   return value;
 }
@@ -33,10 +33,10 @@ class Field {
 
   factory Field.parseJSON(Map<String, dynamic> json) {
     return Field(
-      type: json["type"] as int,
-      name: parseOption(json["name"]),
-      typeName: parseOption(json["typeName"]),
-      docs: (json["docs"] as List).cast<String>(),
+      type: json['type'] as int,
+      name: parseOption(json['name']),
+      typeName: parseOption(json['typeName']),
+      docs: (json['docs'] as List).cast<String>(),
     );
   }
 }
@@ -57,43 +57,43 @@ abstract class TypeDef {
   Set<int> typeDependencies();
 
   factory TypeDef.parseJSON(Map<String, dynamic> json) {
-    String typeName = json.keys.first;
+    final String typeName = json.keys.first;
     switch (typeName) {
-      case "Composite":
+      case 'Composite':
         {
-          return TypeDefComposite.parseJSON(json["Composite"]);
+          return TypeDefComposite.parseJSON(json['Composite']);
         }
-      case "Variant":
+      case 'Variant':
         {
-          return TypeDefVariant.parseJSON(json["Variant"]);
+          return TypeDefVariant.parseJSON(json['Variant']);
         }
-      case "Tuple":
+      case 'Tuple':
         {
-          return TypeDefTuple(types: (json["Tuple"] as List).cast<int>());
+          return TypeDefTuple(types: (json['Tuple'] as List).cast<int>());
         }
-      case "Compact":
+      case 'Compact':
         {
-          return TypeDefCompact.parseJSON(json["Compact"]);
+          return TypeDefCompact.parseJSON(json['Compact']);
         }
-      case "Array":
+      case 'Array':
         {
-          return TypeDefArray.parseJSON(json["Array"]);
+          return TypeDefArray.parseJSON(json['Array']);
         }
-      case "Sequence":
+      case 'Sequence':
         {
-          return TypeDefSequence.parseJSON(json["Sequence"]);
+          return TypeDefSequence.parseJSON(json['Sequence']);
         }
-      case "Primitive":
+      case 'Primitive':
         {
-          return TypeDefPrimitive.fromString(json["Primitive"]);
+          return TypeDefPrimitive.fromString(json['Primitive']);
         }
-      case "BitSequence":
+      case 'BitSequence':
         {
-          return TypeDefBitSequence.parseJSON(json["BitSequence"]);
+          return TypeDefBitSequence.parseJSON(json['BitSequence']);
         }
       default:
         {
-          throw Exception("Unknown primitive type $typeName");
+          throw Exception('Unknown primitive type $typeName');
         }
     }
   }
@@ -107,7 +107,7 @@ class TypeDefComposite extends TypeDef {
   const TypeDefComposite({required this.fields});
 
   factory TypeDefComposite.parseJSON(Map<String, dynamic> json) {
-    List<Field> fields = (json["fields"] as List)
+    final List<Field> fields = (json['fields'] as List)
         .map((field) => Field.parseJSON(field))
         .toList();
     return TypeDefComposite(fields: fields);
@@ -144,14 +144,14 @@ class Variant {
       required this.docs});
 
   factory Variant.parseJSON(Map<String, dynamic> json) {
-    List<Field> fields = (json["fields"] as List)
+    final List<Field> fields = (json['fields'] as List)
         .map((field) => Field.parseJSON(field))
         .toList();
     return Variant(
-      index: json["index"] as int,
-      name: json["name"] as String,
+      index: json['index'] as int,
+      name: json['name'] as String,
       fields: fields,
-      docs: (json["docs"] as List).cast<String>(),
+      docs: (json['docs'] as List).cast<String>(),
     );
   }
 
@@ -168,7 +168,7 @@ class TypeDefVariant extends TypeDef {
   const TypeDefVariant({required this.variants});
 
   factory TypeDefVariant.parseJSON(Map<String, dynamic> json) {
-    List<Variant> variants = (json["variants"] as List)
+    final List<Variant> variants = (json['variants'] as List)
         .map((field) => Variant.parseJSON(field))
         .toList();
     return TypeDefVariant(variants: variants);
@@ -192,7 +192,7 @@ class TypeDefSequence extends TypeDef {
   const TypeDefSequence({required this.type});
 
   factory TypeDefSequence.parseJSON(Map<String, dynamic> json) {
-    return TypeDefSequence(type: json["type"] as int);
+    return TypeDefSequence(type: json['type'] as int);
   }
 
   @override
@@ -213,8 +213,8 @@ class TypeDefArray extends TypeDef {
 
   factory TypeDefArray.parseJSON(Map<String, dynamic> json) {
     return TypeDefArray(
-      type: json["type"] as int,
-      length: json["len"] as int,
+      type: json['type'] as int,
+      length: json['len'] as int,
     );
   }
 
@@ -232,7 +232,7 @@ class TypeDefCompact extends TypeDef {
   const TypeDefCompact({required this.type});
 
   factory TypeDefCompact.parseJSON(Map<String, dynamic> json) {
-    return TypeDefCompact(type: json["type"] as int);
+    return TypeDefCompact(type: json['type'] as int);
   }
 
   @override
@@ -284,38 +284,38 @@ class TypeDefPrimitive extends TypeDef {
 
   factory TypeDefPrimitive.fromString(String primitive) {
     switch (primitive) {
-      case "Bool":
+      case 'Bool':
         return TypeDefPrimitive(Primitive.Bool);
-      case "Char":
+      case 'Char':
         return TypeDefPrimitive(Primitive.Char);
-      case "Str":
+      case 'Str':
         return TypeDefPrimitive(Primitive.Str);
-      case "U8":
+      case 'U8':
         return TypeDefPrimitive(Primitive.U8);
-      case "U16":
+      case 'U16':
         return TypeDefPrimitive(Primitive.U16);
-      case "U32":
+      case 'U32':
         return TypeDefPrimitive(Primitive.U32);
-      case "U64":
+      case 'U64':
         return TypeDefPrimitive(Primitive.U64);
-      case "U128":
+      case 'U128':
         return TypeDefPrimitive(Primitive.U128);
-      case "U256":
+      case 'U256':
         return TypeDefPrimitive(Primitive.U256);
-      case "I8":
+      case 'I8':
         return TypeDefPrimitive(Primitive.I8);
-      case "I16":
+      case 'I16':
         return TypeDefPrimitive(Primitive.I16);
-      case "I32":
+      case 'I32':
         return TypeDefPrimitive(Primitive.I32);
-      case "I64":
+      case 'I64':
         return TypeDefPrimitive(Primitive.I64);
-      case "I128":
+      case 'I128':
         return TypeDefPrimitive(Primitive.I128);
-      case "I256":
+      case 'I256':
         return TypeDefPrimitive(Primitive.I256);
       default:
-        throw Exception("Unknown primitive type $primitive");
+        throw Exception('Unknown primitive type $primitive');
     }
   }
 
@@ -338,8 +338,8 @@ class TypeDefBitSequence extends TypeDef {
 
   factory TypeDefBitSequence.parseJSON(Map<String, dynamic> json) {
     return TypeDefBitSequence(
-      bitStoreType: json["bitStoreType"] as int,
-      bitOrderType: json["bitOrderType"] as int,
+      bitStoreType: json['bitStoreType'] as int,
+      bitOrderType: json['bitOrderType'] as int,
     );
   }
 
@@ -403,7 +403,7 @@ class TypeMetadata {
 
   @override
   String toString() {
-    return "Type {\n  id: $id,\n  path: $path, \n  params: $params, \n  typeDef: $typeDef, \n  docs: $docs\n}";
+    return 'Type {\n  id: $id,\n  path: $path, \n  params: $params, \n  typeDef: $typeDef, \n  docs: $docs\n}';
   }
 
   Set<int> typeDependencies() {
@@ -603,10 +603,10 @@ class PalletMetadata {
     // final storage = json["storage"] != null ? PalletStorageMetadata.fromJson(json["storage"]) : null;
 
     return PalletMetadata(
-      name: json["name"],
+      name: json['name'],
       storage: null,
       constants: [],
-      index: json["index"],
+      index: json['index'],
     );
   }
 }
@@ -622,11 +622,11 @@ class RuntimeMetadataV14 {
   RuntimeMetadataV14({required this.registry, required this.pallets});
 
   factory RuntimeMetadataV14.fromJson(Map<String, dynamic> json) {
-    final types = (json["lookup"]["types"] as List)
+    final types = (json['lookup']['types'] as List)
         .cast<Map<String, dynamic>>()
         .map((json) => TypeMetadata.parseJSON(json))
         .toList();
-    final pallets = (json["pallets"] as List)
+    final pallets = (json['pallets'] as List)
         .cast<Map<String, dynamic>>()
         .map((json) => PalletMetadata.fromJson(json))
         .toList();

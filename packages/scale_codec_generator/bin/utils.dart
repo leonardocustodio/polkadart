@@ -40,7 +40,7 @@ final Set<String> reservedWords = {
 };
 
 String sanitize(String name) =>
-    reservedWords.contains(name) ? "${name}_" : name;
+    reservedWords.contains(name) ? '${name}_' : name;
 
 Expression bigIntToExpression(BigInt value) {
   if (value == BigInt.zero) {

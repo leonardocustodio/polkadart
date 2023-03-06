@@ -98,7 +98,7 @@ class SequenceGenerator extends Generator {
 
   @override
   Expression codecInstance() {
-    TypeReference codec = this.codec();
+    final TypeReference codec = this.codec();
 
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {

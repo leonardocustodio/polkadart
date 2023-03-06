@@ -36,6 +36,10 @@ class Variant {
     }
     return false;
   }
+
+
+
+
 }
 
 class VariantGenerator extends Generator {
@@ -95,7 +99,7 @@ class VariantGenerator extends Generator {
     final valuesClass = createVariantValuesClass('_$name', variants);
     final codecClass = createVariantCodec('_\$${name}Codec', name, variants);
 
-    List<Class> classes = variants
+    final List<Class> classes = variants
         .fold(<Class>[baseClass, valuesClass, codecClass], (classes, variant) {
       classes.add(createVariantClass(name, '_\$${name}Codec', variant));
       return classes;
@@ -118,4 +122,8 @@ class VariantGenerator extends Generator {
     }
     return false;
   }
+
+
+
+
 }

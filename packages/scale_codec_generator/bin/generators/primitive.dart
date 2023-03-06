@@ -54,7 +54,7 @@ class PrimitiveGenerator extends Generator {
       case Primitive.I128:
         return PrimitiveGenerator.u128;
       default:
-        throw Exception("Unsupported primitive $primitive");
+        throw Exception('Unsupported primitive $primitive');
     }
   }
 
@@ -93,7 +93,7 @@ class PrimitiveGenerator extends Generator {
       case Primitive.I128:
         return constants.bigInt.type as TypeReference;
       default:
-        throw Exception("Unsupported primitive $primitive");
+        throw Exception('Unsupported primitive $primitive');
     }
   }
 
@@ -126,7 +126,7 @@ class PrimitiveGenerator extends Generator {
       case Primitive.I128:
         return constants.i128Codec.type as TypeReference;
       default:
-        throw Exception("Unsupported primitive $primitive");
+        throw Exception('Unsupported primitive $primitive');
     }
   }
 
@@ -159,7 +159,7 @@ class PrimitiveGenerator extends Generator {
       case Primitive.I128:
         return utils.bigIntToExpression(I128Codec.codec.decode(input));
       default:
-        throw Exception("Unsupported primitive $primitive");
+        throw Exception('Unsupported primitive $primitive');
     }
   }
 }
