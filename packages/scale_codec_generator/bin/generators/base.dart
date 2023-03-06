@@ -113,40 +113,4 @@ class Field {
   static String toFieldName(String name) {
     return sanitize(ReCase(name).camelCase);
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other is Field && name == other.name) {
-      final selfPrimitive = codec.primitive();
-      final otherPrimitive = other.codec.primitive();
-      if (selfPrimitive.symbol != otherPrimitive.symbol ||
-          selfPrimitive.url != otherPrimitive.url ||
-          selfPrimitive.isNullable != otherPrimitive.isNullable ||
-          selfPrimitive.isConst != otherPrimitive.isConst ||
-          selfPrimitive.bound != otherPrimitive.bound ||
-          selfPrimitive.types.length != otherPrimitive.types.length) {
-        return false;
-      }
-
-      final selfCodec = codec.primitive();
-      final otherCodec = other.codec.primitive();
-      if (selfCodec.symbol != otherCodec.symbol ||
-          selfCodec.url != otherCodec.url ||
-          selfCodec.isNullable != otherCodec.isNullable ||
-          selfCodec.isConst != otherCodec.isConst ||
-          selfCodec.bound != otherCodec.bound ||
-          selfCodec.types.length != otherCodec.types.length) {
-        return false;
-      }
-      return true;
-    }
-    return false;
-  }
-
-
-
-
 }

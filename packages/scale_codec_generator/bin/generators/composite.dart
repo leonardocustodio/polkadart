@@ -42,26 +42,4 @@ class CompositeGenerator extends Generator {
     return GeneratedOutput(
         classes: [typeBuilder, codecBuilder], enums: [], typedefs: []);
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other is CompositeGenerator &&
-        name == other.name &&
-        fields.length == other.fields.length) {
-      for (int i = 0; i < fields.length; i++) {
-        if (fields[i] != other.fields[i]) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
-
-
-
 }

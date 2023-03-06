@@ -60,24 +60,4 @@ class TupleGenerator extends Generator {
     return GeneratedOutput(
         classes: [tupleClass, tupleCodec], enums: [], typedefs: []);
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other is TupleGenerator) {
-      for (int i = 0; i < generators.length; i++) {
-        if (generators[i] != other.generators[i]) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
-
-
-
 }

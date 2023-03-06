@@ -18,28 +18,6 @@ class Variant {
   List<Field> fields;
 
   Variant({required this.index, required this.name, required this.fields});
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other is Variant &&
-        runtimeType == other.runtimeType &&
-        fields.length == other.fields.length) {
-      for (var i = 0; i < fields.length; i++) {
-        if (fields[i] != other.fields[i]) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
-
-
-
 }
 
 class VariantGenerator extends Generator {
@@ -106,24 +84,4 @@ class VariantGenerator extends Generator {
     });
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other is VariantGenerator && variants.length == other.variants.length) {
-      for (int i = 0; i < variants.length; i++) {
-        if (variants[i] != other.variants[i]) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
-
-
-
 }
