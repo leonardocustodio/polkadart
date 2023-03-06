@@ -3,7 +3,7 @@ part of primitives;
 class U16Codec with Codec<int> {
   const U16Codec._();
 
-  static final U16Codec codec = U16Codec._();
+  static const U16Codec codec = U16Codec._();
 
   @override
   void encodeTo(int value, Output output) {

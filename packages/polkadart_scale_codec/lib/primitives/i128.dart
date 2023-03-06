@@ -3,7 +3,7 @@ part of primitives;
 class I128Codec with Codec<BigInt> {
   const I128Codec._();
 
-  static final I128Codec codec = I128Codec._();
+  static const I128Codec codec = I128Codec._();
 
   @override
   void encodeTo(BigInt value, Output output) {

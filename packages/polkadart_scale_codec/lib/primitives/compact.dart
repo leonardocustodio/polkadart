@@ -3,7 +3,7 @@ part of primitives;
 class CompactBigIntCodec with Codec<BigInt> {
   const CompactBigIntCodec._();
 
-  static final CompactBigIntCodec codec = CompactBigIntCodec._();
+  static const CompactBigIntCodec codec = CompactBigIntCodec._();
 
   @override
   void encodeTo(BigInt value, Output output) {

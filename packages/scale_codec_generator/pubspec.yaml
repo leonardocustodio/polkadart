@@ -10,6 +10,8 @@ dependencies:
   code_builder: ^4.4.0
   dart_style: ^2.2.4
   recase: ^4.1.0
+  frame_primitives:
+    path: ../frame_primitives
   polkadart_scale_codec:
     path: ../polkadart_scale_codec
 

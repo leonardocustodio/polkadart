@@ -3,7 +3,7 @@ part of primitives;
 class I64Codec with Codec<BigInt> {
   const I64Codec._();
 
-  static final I64Codec codec = I64Codec._();
+  static const I64Codec codec = I64Codec._();
 
   @override
   void encodeTo(BigInt value, Output output) {

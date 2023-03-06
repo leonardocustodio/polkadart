@@ -3,7 +3,7 @@ part of primitives;
 class I32Codec with Codec<int> {
   const I32Codec._();
 
-  static final I32Codec codec = I32Codec._();
+  static const I32Codec codec = I32Codec._();
 
   @override
   void encodeTo(int value, Output output) {

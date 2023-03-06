@@ -3,7 +3,7 @@ part of primitives;
 class U256Codec with Codec<BigInt> {
   const U256Codec._();
 
-  static U256Codec codec = U256Codec._();
+  static const U256Codec codec = U256Codec._();
 
   @override
   void encodeTo(BigInt value, Output output) {

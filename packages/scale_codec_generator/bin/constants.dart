@@ -72,7 +72,7 @@ const output = Reference(
 const byteOutput = Reference(
     'ByteOutput', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const emptyCodec = Reference(
-    'EmptyCodec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
+    'NullCodec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const bitArray = Reference(
     'BitArray', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const bitStore = Reference(
@@ -212,22 +212,22 @@ TypeReference bTreeMapCodec(Reference key, Reference value) {
 /////////////////////
 // Substrate types //
 /////////////////////
-const storageHasher =
-    Reference('StorageHasher', 'package:scale_codec/substrate/substrate.dart');
+const storageHasher = Reference(
+    'StorageHasher', 'package:frame_primitives/frame_primitives.dart');
 const provider =
-    Reference('Provider', 'package:scale_codec/substrate/substrate.dart');
+    Reference('Provider', 'package:frame_primitives/frame_primitives.dart');
 
 TypeReference storageValue(Reference value) {
   return TypeReference((b) => b
     ..symbol = 'StorageValue'
-    ..url = 'package:scale_codec/substrate/substrate.dart'
+    ..url = 'package:frame_primitives/frame_primitives.dart'
     ..types.add(value));
 }
 
 TypeReference storageMap({required Reference key, required Reference value}) {
   return TypeReference((b) => b
     ..symbol = 'StorageMap'
-    ..url = 'package:scale_codec/substrate/substrate.dart'
+    ..url = 'package:frame_primitives/frame_primitives.dart'
     ..types.addAll([key, value]));
 }
 
@@ -237,7 +237,7 @@ TypeReference storageDoubleMap(
     required Reference value}) {
   return TypeReference((b) => b
     ..symbol = 'StorageDoubleMap'
-    ..url = 'package:scale_codec/substrate/substrate.dart'
+    ..url = 'package:frame_primitives/frame_primitives.dart'
     ..types.addAll([key1, key2, value]));
 }
 
@@ -248,7 +248,7 @@ TypeReference storageTripleMap(
     required Reference value}) {
   return TypeReference((b) => b
     ..symbol = 'StorageTripleMap'
-    ..url = 'package:scale_codec/substrate/substrate.dart'
+    ..url = 'package:frame_primitives/frame_primitives.dart'
     ..types.addAll([key1, key2, key3, value]));
 }
 
@@ -260,7 +260,7 @@ TypeReference storageQuadrupleMap(
     required Reference value}) {
   return TypeReference((b) => b
     ..symbol = 'StorageQuadrupleMap'
-    ..url = 'package:scale_codec/substrate/substrate.dart'
+    ..url = 'package:frame_primitives/frame_primitives.dart'
     ..types.addAll([key1, key2, key3, key4, value]));
 }
 
@@ -273,7 +273,7 @@ TypeReference storageQuintupleMap(
     required Reference value}) {
   return TypeReference((b) => b
     ..symbol = 'StorageQuintupleMap'
-    ..url = 'package:scale_codec/substrate/substrate.dart'
+    ..url = 'package:frame_primitives/frame_primitives.dart'
     ..types.addAll([key1, key2, key3, key4, key5, value]));
 }
 
@@ -287,6 +287,6 @@ TypeReference storageSextupleMap(
     required Reference value}) {
   return TypeReference((b) => b
     ..symbol = 'StorageSextupleMap'
-    ..url = 'package:scale_codec/substrate/substrate.dart'
+    ..url = 'package:frame_primitives/frame_primitives.dart'
     ..types.addAll([key1, key2, key3, key4, key5, key6, value]));
 }

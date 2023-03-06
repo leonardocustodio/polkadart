@@ -38,10 +38,10 @@ class BTreeMapGenerator extends Generator {
 
   @override
   Expression codecInstance() {
-    return codec().constInstance([
-      key.codecInstance(),
-      value.codecInstance(),
-    ]);
+    return codec().constInstance([], {
+      'keyCodec': key.codecInstance(),
+      'valueCodec': value.codecInstance(),
+    });
   }
 
   @override
