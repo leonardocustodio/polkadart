@@ -297,10 +297,10 @@ class Registry {
     final errCodec = getCodec(match3) ??
         _parseCodec(customJson, match3, customJson[match3] ?? match3);
 
-    final ComplexEnumCodec codec = ComplexEnumCodec([
-      MapEntry('Ok', okCodec),
-      MapEntry('Err', errCodec),
-    ]);
+    final ComplexEnumCodec codec = ComplexEnumCodec.sparse({
+      0: MapEntry('Ok', okCodec),
+      1: MapEntry('Err', errCodec),
+    });
     addCodec(key, codec);
     return codec;
   }
@@ -427,7 +427,7 @@ class Registry {
       //
       // Complex Enum
       return _parseComplexEnum(customJson, key, value);
-    } else if (value['_enum'] is List<MapEntry<String, dynamic>?>) {
+    } else if (value['_enum'] is Map<int, MapEntry<String, dynamic>>) {
       //
       // Complex Enum
       return _parseComplexEnum(customJson, key, value);
@@ -446,35 +446,37 @@ class Registry {
     // enumValue
     final enumValue = value['_enum'];
 
-    final List<MapEntry<String, Codec>?> codecMap =
-        List<MapEntry<String, Codec>?>.filled(enumValue.length, null);
+    final Map<int, MapEntry<String, Codec>> codecMap =
+        <int, MapEntry<String, Codec>>{};
 
-    late List<MapEntry<String, dynamic>?> entries;
+    final Map<int, MapEntry<String, dynamic>> entries =
+        <int, MapEntry<String, dynamic>>{};
 
     if (enumValue is Map<String, dynamic>) {
       //
       // convert enumValue to a list of MapEntry
-      entries = enumValue.entries.toList(growable: false);
-    } else if (enumValue is List<MapEntry<String, dynamic>?>) {
+      int index = 0;
+      for (final entry in enumValue.entries) {
+        entries[index] = MapEntry(entry.key, entry.value);
+        index++;
+      }
+    } else if (enumValue is Map<int, MapEntry<String, dynamic>>) {
       //
       // convert enumValue to a list of MapEntry
-      entries = enumValue.toList(growable: false);
+      entries.addAll(enumValue);
     }
     try {
-      for (var index = 0; index < entries.length; index++) {
-        final entry = entries[index];
-        if (entry == null) {
-          continue;
-        }
+      for (final map in entries.entries) {
+        final entry = map.value;
         if (entry.value is String) {
-          codecMap[index] = MapEntry(
+          codecMap[map.key] = MapEntry(
               entry.key, _parseCodec(customJson, entry.value, entry.value));
         } else {
-          codecMap[index] = MapEntry(
+          codecMap[map.key] = MapEntry(
               entry.key, _parseComposite(customJson, entry.key, entry.value));
         }
       }
-      final codec = ComplexEnumCodec(codecMap);
+      final codec = ComplexEnumCodec.sparse(codecMap);
       addCodec(key, codec);
       return codec;
     } catch (e) {
@@ -491,41 +493,48 @@ class Registry {
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
     final enumValue = value['_enum'];
 
-    final List<String?> referenceTypeList =
-        List<String?>.filled(enumValue.length, null);
+    final Map<int, String> referenceTypeMap = <int, String>{};
 
-    late List<MapEntry<String, dynamic>?> entries;
+    final Map<int, MapEntry<String, dynamic>> entries =
+        <int, MapEntry<String, dynamic>>{};
 
     if (enumValue is Map<String, dynamic>) {
       //
       // convert enumValue to a list of MapEntry
-      entries = enumValue.entries.toList(growable: false);
-    } else if (enumValue is List<MapEntry<String, dynamic>?>) {
+      int index = 0;
+      for (final entry in enumValue.entries) {
+        entries[index] = MapEntry(entry.key, entry.value);
+        index++;
+      }
+    } else if (enumValue is Map<int, MapEntry<String, dynamic>>) {
       //
       // convert enumValue to a list of MapEntry
-      entries = enumValue.toList(growable: false);
+      entries.addAll(enumValue);
     }
-    for (var index = 0; index < entries.length; index++) {
-      final entry = entries[index];
-      if (entry == null) {
-        continue;
-      }
-      referenceTypeList[index] = entry.key;
+    for (final map in entries.entries) {
+      final index = map.key;
+      final entry = map.value;
+
+      referenceTypeMap[index] = entry.key;
       _postVariantFieldsProcessor[entry.key] = entry.value;
     }
-    final codec = DynamicEnumCodec(registry: this, list: referenceTypeList);
+    final codec =
+        DynamicEnumCodec.sparse(registry: this, map: referenceTypeMap);
     addCodec(key, codec);
     return codec;
   }
 
   SimpleEnumCodec _parseSimplifiedEnum(String key, List<String?> values) {
-    final codec = SimpleEnumCodec(values);
+    final codec = SimpleEnumCodec.fromList(values);
     addCodec(key, codec);
     return codec;
   }
 
   SimpleEnumCodec _parseIndexedEnum(
       String key, Map<String, int> indexedEnumValues) {
+    if (indexedEnumValues.isEmpty) {
+      return _parseSimplifiedEnum(key, <String>[]); // empty enum
+    }
     final maxIndex = indexedEnumValues.values
         .toList(growable: false)
         .reduce((int value, int element) => value > element ? value : element);

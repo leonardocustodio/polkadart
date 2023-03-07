@@ -1,71 +1,85 @@
+// ignore_for_file: null_check_on_nullable_type_parameter
+
 part of primitives;
 
-class SimpleEnumCodec<A> with Codec<A?> {
-  final List<A?> list;
-  const SimpleEnumCodec(this.list);
+class SimpleEnumCodec<A> with Codec<A> {
+  final Map<int, A> map;
+
+  final Map<A, int> _keyedIndex;
+
+  SimpleEnumCodec.sparse(this.map)
+      : _keyedIndex = {for (final entry in map.entries) entry.value: entry.key};
+
+  SimpleEnumCodec.keyedIndex(this._keyedIndex)
+      : map = {for (final entry in _keyedIndex.entries) entry.value: entry.key};
+
+  SimpleEnumCodec.fromList(List<A?> list)
+      : map = {
+          for (var i = 0; i < list.length; i++)
+            if (list[i] != null) i: list[i]!
+        },
+        _keyedIndex = {
+          for (var i = 0; i < list.length; i++)
+            if (list[i] != null) list[i]!: i
+        };
 
   @override
-  void encodeTo(A? value, Output output) {
-    assertion(value != null, 'value should not be null.');
-    final index = list.indexOf(value);
-    if (index == -1) {
+  void encodeTo(A value, Output output) {
+    final index = _keyedIndex[value];
+
+    if (index == null) {
       throw EnumException('Invalid enum index: $index.');
     }
-    if (index >= list.length) {
-      throw EnumException(
-          '$index is out of range. Max index is ${list.length - 1}');
-    }
 
-    if (list[index] == null) {
-      throw EnumException('Value at index: $index is null, $index not usable.');
-    }
     return output.pushByte(index);
   }
 
   @override
   A decode(Input input) {
     final index = input.read();
-    if (index >= list.length) {
-      throw EnumException('Invalid enum index: $index.');
-    }
-    if (index >= list.length) {
-      throw EnumException(
-          '$index is out of range. Max index is ${list.length - 1}');
-    }
 
-    if (list[index] == null) {
+    final value = map[index];
+
+    if (value == null) {
       throw EnumException('Value at index: $index is null, $index not usable.');
     }
 
-    return list[index]!;
+    return value;
   }
 }
 
 class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
-  final List<MapEntry<String, Codec<V?>>?> list;
-  const ComplexEnumCodec(this.list);
+  final Map<int, MapEntry<String, Codec<V?>>> map;
+
+  final Map<String, int> _keyedIndex;
+
+  ComplexEnumCodec.sparse(this.map)
+      : _keyedIndex = {
+          for (final entry in map.entries) entry.value.key: entry.key
+        };
+
+  ComplexEnumCodec.fromList(List<MapEntry<String, Codec<V?>>?> list)
+      : map = {
+          for (var i = 0; i < list.length; i++)
+            if (list[i] != null) i: list[i]!
+        },
+        _keyedIndex = {
+          for (var i = 0; i < list.length; i++)
+            if (list[i] != null) list[i]!.key: i
+        };
 
   @override
   void encodeTo(MapEntry<String, V?> value, Output output) {
-    final index = list.indexWhere((MapEntry<String, Codec<V?>>? element) =>
-        element != null && element.key == value.key);
+    final index = _keyedIndex[value.key];
 
-    if (index == -1) {
+    if (index == null) {
       throw EnumException(
-          'Invalid enum value: $value. Can only accept: ${list.cast<MapEntry<String, Codec<V?>>>().map((e) => e.key).join(', ')}');
-    }
-    if (index >= list.length) {
-      throw EnumException(
-          '$index is out of range. Max index is ${list.length - 1}');
-    }
-
-    if (list[index] == null) {
-      throw EnumException('Value at index: $index is null, $index not usable.');
+          'Invalid enum value: ${value.key}. Can only accept: ${_keyedIndex.keys.join(', ')}');
     }
 
     output.pushByte(index);
 
-    final mapEntry = list[index]!;
+    final mapEntry = map[index]!;
 
     final codec = mapEntry.value;
 
@@ -75,13 +89,12 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
   @override
   MapEntry<String, V?> decode(Input input) {
     final index = input.read();
-    if (index >= list.length) {
+
+    if (map[index] == null) {
       throw EnumException('Invalid enum index: $index.');
     }
-    if (list[index] == null) {
-      throw EnumException('Invalid enum index: $index. $index not usable');
-    }
-    final mapEntry = list[index]!;
+
+    final mapEntry = map[index]!;
 
     final codec = mapEntry.value;
 
@@ -91,31 +104,29 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
 
 class DynamicEnumCodec<V> with Codec<MapEntry<String, V>> {
   final Registry registry;
-  final List<String?> list;
+  final Map<int, String> map;
 
-  /// Complex Constructor
-  const DynamicEnumCodec({required this.registry, required this.list});
+  final Map<String, int> keyedIndex;
+
+  DynamicEnumCodec.sparse({required this.registry, required this.map})
+      : keyedIndex = {for (final entry in map.entries) entry.value: entry.key};
+
+  DynamicEnumCodec.keyedIndex(
+      {required this.registry, required this.keyedIndex})
+      : map = {for (final entry in keyedIndex.entries) entry.value: entry.key};
 
   @override
   void encodeTo(MapEntry<String, V> value, Output output) {
-    final index = list.indexOf(value.key);
+    final type = value.key;
 
-    if (index == -1) {
-      throw EnumException(
-          'Invalid enum value: $value. Can only accept: ${list.cast<MapEntry<String, String>>().map((e) => e.key).join(', ')}');
-    }
-    if (index >= list.length) {
-      throw EnumException(
-          '$index is out of range. Max index is ${list.length - 1}');
-    }
+    final index = keyedIndex[type];
 
-    if (list[index] == null) {
-      throw EnumException('Value at index: $index is null, $index not usable.');
+    if (index == null) {
+      throw EnumException(
+          'Invalid enum value: $value. Can only accept: ${map.values.join(', ')}');
     }
 
     output.pushByte(index);
-
-    final type = list[index]!;
 
     final codec = registry.getCodec(type);
 
@@ -128,13 +139,11 @@ class DynamicEnumCodec<V> with Codec<MapEntry<String, V>> {
   MapEntry<String, V> decode(Input input) {
     final index = input.read();
 
-    if (index >= list.length) {
+    final type = map[index];
+
+    if (type == null) {
       throw EnumException('Invalid enum index: $index.');
     }
-    if (list[index] == null) {
-      throw EnumException('Invalid enum index: $index. $index not usable');
-    }
-    final type = list[index]!;
 
     final codec = registry.getCodec(type);
     if (codec == null) {
