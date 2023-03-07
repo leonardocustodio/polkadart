@@ -1,43 +1,28 @@
 import 'dart:typed_data';
 
+import 'package:frame_primitives/substrate/substrate.dart';
+
 import './base.dart' show Generator, GeneratedOutput;
 import '../class_builder.dart' show createPalletQueries;
+import '../metadata_parser.dart' as metadata show PalletMetadata, StorageEntryMetadata, StorageHasher, StorageEntryModifier;
 import '../constants.dart' as constants;
 import 'package:code_builder/code_builder.dart'
     show TypeReference, Expression, literalString;
 import 'tuple.dart' show TupleGenerator;
 
 enum StorageHasherType {
+  /// Identity hashing (no hashing).
   identity,
   blake128,
   blake128Concat,
+  blake256,
   twoxx64,
   twoxx64Concat,
   twoxx128,
-  twoxx128Concat;
+  twoxx128Concat,
+  twoxx256;
 
   const StorageHasherType();
-
-  factory StorageHasherType.fromMetadataName(String name) {
-    switch (name) {
-      case 'Identity':
-        return StorageHasherType.identity;
-      case 'Twox64':
-        return StorageHasherType.twoxx64;
-      case 'Twox64Concat':
-        return StorageHasherType.twoxx64Concat;
-      case 'Twox128':
-        return StorageHasherType.twoxx128;
-      case 'Twox128Concat':
-        return StorageHasherType.twoxx128Concat;
-      case 'Blake2_128':
-        return StorageHasherType.blake128;
-      case 'Blake2_128Concat':
-        return StorageHasherType.blake128Concat;
-      default:
-        throw Exception('Unknown StorageHasherType: $name');
-    }
-  }
 
   TypeReference type() {
     return constants.storageHasher.type as TypeReference;
@@ -59,6 +44,8 @@ class StorageHasher<G extends Generator> {
       : hasher = StorageHasherType.blake128;
   const StorageHasher.blake128Concat({required this.codec})
       : hasher = StorageHasherType.blake128Concat;
+  const StorageHasher.blake256({required this.codec})
+      : hasher = StorageHasherType.blake256;
   const StorageHasher.twoxx64({required this.codec})
       : hasher = StorageHasherType.twoxx64;
   const StorageHasher.twoxx64Concat({required this.codec})
@@ -67,9 +54,34 @@ class StorageHasher<G extends Generator> {
       : hasher = StorageHasherType.twoxx128;
   const StorageHasher.twoxx128Concat({required this.codec})
       : hasher = StorageHasherType.twoxx128Concat;
+  const StorageHasher.twoxx256({required this.codec})
+      : hasher = StorageHasherType.twoxx256;
 
   Expression instance() {
     return hasher.instance(codec.codecInstance());
+  }
+
+  factory StorageHasher.fromMetadata({
+    required metadata.StorageHasher hasher,
+    required G codec,
+  }) {
+    switch (hasher) {
+        case metadata.StorageHasher.blake2_128:
+          return StorageHasher.blake128(codec: codec);
+        case metadata.StorageHasher.blake2_128Concat:
+          return StorageHasher.blake128Concat(codec: codec);
+        case metadata.StorageHasher.blake2_256:
+          return StorageHasher.blake256(codec: codec);
+        case metadata.StorageHasher.twox64Concat:
+          return StorageHasher.twoxx64Concat(codec: codec);
+        case metadata.StorageHasher.twox128:
+          return StorageHasher.twoxx128(codec: codec);
+        case metadata.StorageHasher.twox256:
+          return StorageHasher.twoxx256(codec: codec);
+        case metadata.StorageHasher.identity:
+          return StorageHasher.identity(codec: codec);
+        default: throw Exception('Unknown hasher type: ${hasher.name}');
+    }
   }
 }
 
@@ -100,6 +112,53 @@ class Storage {
     this.isNullable = false,
     this.docs = const [],
   });
+
+  factory Storage.fromMetadata(
+    metadata.StorageEntryMetadata storageMetadata,
+    Map<int, Generator> registry
+  ) {
+    final type = storageMetadata.type;
+    final valueCodec = registry[type.value]!;
+    final List<Generator> keysCodec;
+
+    // Load key hashers
+    if (type.key != null) {
+      final keyId = type.key!;
+      if (type.hashers.isEmpty) {
+        throw Exception('Invalid storage, hashers cannot be empty when key is present');
+      } else if (type.hashers.length == 1) {
+        keysCodec = [registry[keyId]!];
+      } else {
+        final tupleCodec = registry[keyId]! as TupleGenerator;
+        keysCodec = tupleCodec.generators;
+      }
+    } else {
+      keysCodec = [];
+    }
+
+    // Check if hasher's amount matches key's amount
+    if (keysCodec.length != type.hashers.length) {
+      throw Exception(
+          'Invalid storage, hasher\'s amount does not match key\'s amount');
+    }
+
+    // Build storage hashers
+    final hashers = [
+      for (int i=0; i<type.hashers.length; i++) StorageHasher.fromMetadata(
+          hasher: type.hashers[i],
+          codec: keysCodec[i],
+      )
+    ];
+
+    return Storage(
+      name: storageMetadata.name,
+      hashers: hashers,
+      valueCodec: valueCodec,
+      defaultValue: storageMetadata.defaultValue,
+      isNullable: storageMetadata.modifier == metadata.StorageEntryModifier.optional,
+      docs: storageMetadata.docs,
+    );
+  }
 
   TypeReference type() {
     switch (hashers.length) {
@@ -193,90 +252,25 @@ class PalletGenerator {
     required this.constants,
   });
 
-  factory PalletGenerator.fromJson(
-      {required String filePrefix,
-      required Map<String, dynamic> json,
-      required Map<int, Generator> generators}) {
-    final palletName = json['name'] as String;
-    if (json['storage'] == null) {
-      return PalletGenerator(
-        filePath: '$filePrefix/$palletName.dart',
-        name: palletName,
-        storages: [],
-        constants: [],
-      );
-    }
+  factory PalletGenerator.fromMetadata({
+    required String filePath,
+    required metadata.PalletMetadata palletMetadata,
+    required Map<int, Generator> registry
+  }) {
 
-    final prefix = json['storage']['prefix'] as String;
-    final storages = (json['storage']['items'] as List).map((storage) {
-      final name = storage['name'] as String;
-      final isNullable = (storage['modifier'] as String) == 'Optional';
-      final fallback =
-          Uint8List.fromList((storage['fallback'] as List).cast<int>());
+    // Load storages
+    final List<Storage>? storages = palletMetadata
+      .storage?.entries
+      .map((storageMetadata) =>
+          Storage.fromMetadata(storageMetadata, registry))
+      .toList();
 
-      final docs = (storage['docs'] as List).cast<String>();
-      final type = storage['type'] as Map<String, dynamic>;
-
-      final List<StorageHasher> hashers;
-      final Generator valueGenerator;
-      switch (type.keys.first) {
-        case 'Map':
-          {
-            final map = type['Map'] as Map<String, dynamic>;
-            final hashersJson =
-                (map['hashers'] as List).cast<Map<String, dynamic>>();
-            valueGenerator = generators[map['value'] as int]!;
-            if (hashersJson.isEmpty) {
-              throw Exception(
-                  'Storage "$prefix.$name" of type Map cannot have empty hashers list');
-            }
-            if (hashersJson.length > 1 &&
-                generators[map['key'] as int] is! TupleGenerator) {
-              throw Exception('Invalid key generator type, must be Tuple!');
-            }
-            final List<Generator> keysGenerator;
-            if (hashersJson.length == 1) {
-              keysGenerator = [generators[map['key'] as int]!];
-            } else {
-              keysGenerator =
-                  (generators[map['key'] as int]! as TupleGenerator).generators;
-            }
-            if (keysGenerator.length != hashersJson.length) {
-              throw Exception('Number of keys and hashers doesn\'t match!!');
-            }
-            hashers = [];
-            for (int i = 0; i < keysGenerator.length; i++) {
-              final hasherType =
-                  StorageHasherType.fromMetadataName(hashersJson[i].keys.first);
-              hashers.add(
-                  StorageHasher(hasher: hasherType, codec: keysGenerator[i]));
-            }
-          }
-          break;
-        case 'Plain':
-          {
-            hashers = [];
-            valueGenerator = generators[type['Plain'] as int]!;
-          }
-          break;
-        default:
-          throw Exception('Unsupported storage type: ${type.keys.first}');
-      }
-      return Storage(
-        name: name,
-        hashers: hashers,
-        valueCodec: valueGenerator,
-        defaultValue: fallback,
-        isNullable: isNullable,
-        docs: docs,
-      );
-    }).toList();
-
+    // Build pallet
     return PalletGenerator(
-      filePath: '$filePrefix/$palletName.dart',
-      name: palletName,
-      storages: storages,
-      constants: [],
+        filePath: filePath,
+        name: palletMetadata.name,
+        storages: storages ?? [],
+        constants: []
     );
   }
 

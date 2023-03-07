@@ -411,102 +411,39 @@ class TypeMetadata {
   }
 }
 
-/// Hashing Algoritmns
-enum Hasher {
-  /// 128-bit Blake2 hash.
-  blake2_128,
-
-  /// 256-bit Blake2 hash.
-  blake2_256,
-
-  /// 64-bit XX hashes
-  twox64,
-
-  /// 128-bit XX hash.
-  twox128,
-
-  /// 256-bit XX hash.
-  twox256,
-}
-
 /// Hasher used by storage maps
-class StorageHasher {
-  /// Hashing Algoritm used by the storage
-  final Hasher? hasher;
+enum StorageHasher {
+  /// 128-bit Blake2 hash.
+	blake2_128(false),
+	/// 256-bit Blake2 hash.
+	blake2_256(false),
+	/// Multiple 128-bit Blake2 hashes concatenated.
+	blake2_128Concat(true),
+	/// 128-bit XX hash.
+	twox128(false),
+	/// 256-bit XX hash.
+	twox256(false),
+	/// Multiple 64-bit XX hashes concatenated.
+	twox64Concat(true),
+	/// Identity hashing (no hashing).
+	identity(true);
 
-  // The type of the key
-  final int type;
-
-  // Whether the hash is concatenated with the encoded key
   final bool concat;
 
-  StorageHasher({
-    required this.hasher,
-    required this.type,
-    required this.concat,
-  }) : assert(hasher != null || concat == true);
+  /// Creates a new storage hasher.
+  const StorageHasher(this.concat);
 
-  /// 128-bit Blake2 hash.
-  factory StorageHasher.blake2_128(int type) {
-    return StorageHasher(
-      hasher: Hasher.blake2_128,
-      type: type,
-      concat: false,
-    );
-  }
-
-  /// Multiple 128-bit Blake2 hashes concatenated.
-  factory StorageHasher.blake2_128Concat(int type) {
-    return StorageHasher(
-      hasher: Hasher.blake2_128,
-      type: type,
-      concat: true,
-    );
-  }
-
-  /// 256-bit Blake2 hash.
-  factory StorageHasher.blake2_256(int type) {
-    return StorageHasher(
-      hasher: Hasher.blake2_256,
-      type: type,
-      concat: false,
-    );
-  }
-
-  /// Multiple 64-bit XX hashes concatenated.
-  factory StorageHasher.twox64Concat(int type) {
-    return StorageHasher(
-      hasher: Hasher.twox64,
-      type: type,
-      concat: true,
-    );
-  }
-
-  /// 128-bit XX hash.
-  factory StorageHasher.twox128(int type) {
-    return StorageHasher(
-      hasher: Hasher.twox128,
-      type: type,
-      concat: false,
-    );
-  }
-
-  /// 256-bit XX hash.
-  factory StorageHasher.twox256(int type) {
-    return StorageHasher(
-      hasher: Hasher.twox256,
-      type: type,
-      concat: false,
-    );
-  }
-
-  /// Identity hashing (no hashing).
-  factory StorageHasher.identity(int type) {
-    return StorageHasher(
-      hasher: null,
-      type: type,
-      concat: true,
-    );
+  factory StorageHasher.fromJson(Map<String, dynamic> json) {
+    switch (json.keys.first) {
+      case 'Blake2_128': return blake2_128;
+      case 'Blake2_256': return blake2_256;
+      case 'Blake2_128Concat': return blake2_128Concat;
+      case 'Twox128': return twox128;
+      case 'Twox256': return twox256;
+      case 'Twox64Concat': return twox64Concat;
+      case 'Identity': return identity;
+      default: throw Exception('Unknown storage hasher: "${json.keys.first}"');
+    }
   }
 }
 
@@ -516,13 +453,45 @@ class StorageEntryType {
   final List<StorageHasher> hashers;
 
   /// The type of the key, can be a tuple with elements for each of the hashers.
-  final int key;
+  /// `null` when hashers.length == 0
+  final int? key;
 
   /// The type of the value.
   final int value;
 
   StorageEntryType(
-      {required this.hashers, required this.key, required this.value});
+      {required this.hashers, this.key, required this.value});
+
+  factory StorageEntryType.fromJson(Map<String, dynamic> json) {
+    final List<StorageHasher> hashers;
+    final int? key;
+    final int value;
+
+    switch (json.keys.first) {
+      case 'Map':
+        final map = json['Map'] as Map<String, dynamic>;
+        hashers = (map['hashers'] as List)
+          .cast<Map<String, dynamic>>()
+          .map((json) => StorageHasher.fromJson(json))
+          .toList();
+        key = map['key'] as int;
+        value = map['value'] as int;
+        break;
+      case 'Plain':
+        hashers = [];
+        key = null;
+        value = json['Plain'] as int;
+        break;
+      default:
+        throw Exception('Unknown storage type: ${json.keys.first}');
+    }
+
+    return StorageEntryType(
+      hashers: hashers,
+      key: key,
+      value: value,
+    );
+  }
 }
 
 /// A storage entry modifier indicates how a storage entry is returned when fetched and what the value will be if the key is not present.
@@ -550,7 +519,7 @@ class StorageEntryMetadata {
   final StorageEntryType type;
 
   /// Default value (SCALE encoded).
-  final Uint8List default_;
+  final Uint8List defaultValue;
 
   /// Storage entry documentation.
   final List<String> docs;
@@ -559,8 +528,18 @@ class StorageEntryMetadata {
       {required this.name,
       required this.modifier,
       required this.type,
-      required this.default_,
+      required this.defaultValue,
       required this.docs});
+
+  factory StorageEntryMetadata.fromJson(Map<String, dynamic> json) {
+    return StorageEntryMetadata(
+      name: (json['name'] as String),
+      modifier: json['prefix'] == 'Default' ? StorageEntryModifier.default_ : StorageEntryModifier.optional,
+      type: StorageEntryType.fromJson(json['type'] as Map<String, dynamic>),
+      defaultValue: Uint8List.fromList((json['fallback'] as List).cast<int>()),
+      docs: (json['docs'] as List).cast<String>(),
+    );
+  }
 }
 
 /// All metadata of the pallet's storage.
@@ -572,6 +551,19 @@ class PalletStorageMetadata {
   final List<StorageEntryMetadata> entries;
 
   const PalletStorageMetadata({required this.prefix, required this.entries});
+
+  factory PalletStorageMetadata.fromJson(Map<String, dynamic> json) {
+    final prefix = (json['prefix'] as String);
+    final items = (json['items'] as List)
+        .cast<Map<String, dynamic>>()
+        .map((json) => StorageEntryMetadata.fromJson(json))
+        .toList();
+
+    return PalletStorageMetadata(
+      prefix: prefix,
+      entries: items,
+    );
+  }
 }
 
 class PalletConstantMetadata {
@@ -600,11 +592,13 @@ class PalletMetadata {
       required this.index});
 
   factory PalletMetadata.fromJson(Map<String, dynamic> json) {
-    // final storage = json["storage"] != null ? PalletStorageMetadata.fromJson(json["storage"]) : null;
+    final storage = json['storage'] != null
+      ? PalletStorageMetadata.fromJson(json['storage'])
+      : null;
 
     return PalletMetadata(
       name: json['name'],
-      storage: null,
+      storage: storage,
       constants: [],
       index: json['index'],
     );

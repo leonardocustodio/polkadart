@@ -23,6 +23,8 @@ import './generators/pallet.dart' show PalletGenerator;
 import './generators/polkadart.dart' show PolkadartGenerator;
 import './metadata_parser.dart'
     show
+        RuntimeMetadataV14,
+        PalletStorageMetadata,
         TypeMetadata,
         TypeDefVariant,
         TypeDefSequence,
@@ -51,14 +53,11 @@ void main(List<String> arguments) {
   // URL -> rpc.polkadot.io
   // outputPath -> ./generated
   final filePath = './metadata-polkadot.json';
-  final typesJson = (jsonDecode(File(filePath).readAsStringSync())['lookup']
-      ['types'] as List<dynamic>);
-  final palletsJson = (jsonDecode(File(filePath).readAsStringSync())['pallets']
-      as List<dynamic>);
+  final metadata = RuntimeMetadataV14.fromJson(jsonDecode(File(filePath).readAsStringSync()));
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
-    for (var type in typesJson) type['id']: TypeMetadata.fromJson(type)
+    for (var type in metadata.registry) type.id: type
   };
 
   // Create all Generators
@@ -319,12 +318,12 @@ void main(List<String> arguments) {
   }
 
   print('Generators found: ${generators.length}');
-  final List<PalletGenerator> palletGenerators = palletsJson
-      .map((json) => PalletGenerator.fromJson(
-            filePrefix: palletsPath,
-            json: json,
-            generators: generators,
-          ))
+  final List<PalletGenerator> palletGenerators = metadata.pallets
+      .map((pallet) => PalletGenerator.fromMetadata(
+        filePath: '$palletsPath/${pallet.name}.dart',
+        palletMetadata: pallet,
+        registry: generators,
+      ))
       .toList();
   print('   Pallets found: ${palletGenerators.length}');
 
@@ -360,15 +359,14 @@ void main(List<String> arguments) {
         }
         return false;
       })) {
-        return;
+        continue;
       }
       generatorPerFile[generator.filePath]!.add(generator);
     }
   }
 
   // Rename ambiguous generators
-  for (final entry
-      in Map<String, List<Generator>>.from(generatorPerFile).entries) {
+  for (final entry in Map<String, List<Generator>>.from(generatorPerFile).entries) {
     final generatorList = entry.value;
     if (generatorList.length > 1) {
       int index = 0;
@@ -407,6 +405,7 @@ void main(List<String> arguments) {
   ).generated().build().replaceAll('import \'generated/', 'import \'./');
   Directory('./bin/generated').createSync(recursive: true);
   File('./bin/generated/polkadart.dart').writeAsStringSync(polkadartGenerator);
+  print('./bin/generated/polkadart.dart');
 
   // Write the Pallets Files
   for (final pallet in palletGenerators) {

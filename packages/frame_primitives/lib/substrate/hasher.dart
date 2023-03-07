@@ -6,10 +6,12 @@ abstract class Hasher {
 
   const Hasher(this.digestSize);
 
+  static const blake2b64 = Blake2bHasher(8);
   static const blake2b128 = Blake2bHasher(16);
   static const blake2b256 = Blake2bHasher(32);
-  static const twoxx64 = Twoxx64Hasher();
-  static const twoxx128 = Twoxx128Hasher();
+  static const twoxx64 = TwoxxHasher(1);
+  static const twoxx128 = TwoxxHasher(2);
+  static const twoxx256 = TwoxxHasher(4);
 
   void hashTo({
     required Uint8List data,
@@ -23,6 +25,7 @@ abstract class Hasher {
   }
 }
 
+/// Blake2b hash
 class Blake2bHasher extends Hasher {
   const Blake2bHasher(super.size);
 
@@ -34,34 +37,21 @@ class Blake2bHasher extends Hasher {
   }
 }
 
-class Twoxx64Hasher extends Hasher {
-  final BigInt? seed;
+/// XX hash
+class TwoxxHasher extends Hasher {
+  // Digest size in blocks of 64bit
+  final int blocks;
 
-  const Twoxx64Hasher()
-      : seed = null,
-        super(8);
-  const Twoxx64Hasher.withSeed(this.seed) : super(8);
+  const TwoxxHasher(this.blocks): super(blocks * 8);
 
   @override
   void hashTo({required Uint8List data, required Uint8List output}) {
-    final seed = this.seed ?? BigInt.zero;
-    BigInt hash = XXH64.digest(data: data, seed: seed, endian: Endian.little);
-    for (var i = 0; i < 8; i++) {
-      output[i] = hash.toUnsigned(8).toInt();
-      hash >>= 8;
+    for (int seed = 0; seed < blocks; seed++) {
+      BigInt hash = XXH64.digest(data: data, seed: BigInt.from(seed), endian: Endian.little);
+      for (var i = 0; i < 8; i++) {
+        output[(seed * 8) + i] = hash.toUnsigned(8).toInt();
+        hash >>= 8;
+      }
     }
-  }
-}
-
-class Twoxx128Hasher extends Hasher {
-  const Twoxx128Hasher() : super(16);
-
-  @override
-  void hashTo({required Uint8List data, required Uint8List output}) {
-    Twoxx64Hasher.withSeed(BigInt.zero).hashTo(
-        data: data, output: output.buffer.asUint8List(output.offsetInBytes, 8));
-    Twoxx64Hasher.withSeed(BigInt.one).hashTo(
-        data: data,
-        output: output.buffer.asUint8List(output.offsetInBytes + 8, 8));
   }
 }
