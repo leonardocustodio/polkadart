@@ -107,9 +107,8 @@ class TypeDefComposite extends TypeDef {
   const TypeDefComposite({required this.fields});
 
   factory TypeDefComposite.fromJson(Map<String, dynamic> json) {
-    final List<Field> fields = (json['fields'] as List)
-        .map((field) => Field.fromJson(field))
-        .toList();
+    final List<Field> fields =
+        (json['fields'] as List).map((field) => Field.fromJson(field)).toList();
     return TypeDefComposite(fields: fields);
   }
 
@@ -144,9 +143,8 @@ class Variant {
       required this.docs});
 
   factory Variant.fromJson(Map<String, dynamic> json) {
-    final List<Field> fields = (json['fields'] as List)
-        .map((field) => Field.fromJson(field))
-        .toList();
+    final List<Field> fields =
+        (json['fields'] as List).map((field) => Field.fromJson(field)).toList();
     return Variant(
       index: json['index'] as int,
       name: json['name'] as String,
@@ -414,19 +412,25 @@ class TypeMetadata {
 /// Hasher used by storage maps
 enum StorageHasher {
   /// 128-bit Blake2 hash.
-	blake2_128(false),
-	/// 256-bit Blake2 hash.
-	blake2_256(false),
-	/// Multiple 128-bit Blake2 hashes concatenated.
-	blake2_128Concat(true),
-	/// 128-bit XX hash.
-	twox128(false),
-	/// 256-bit XX hash.
-	twox256(false),
-	/// Multiple 64-bit XX hashes concatenated.
-	twox64Concat(true),
-	/// Identity hashing (no hashing).
-	identity(true);
+  blake2_128(false),
+
+  /// 256-bit Blake2 hash.
+  blake2_256(false),
+
+  /// Multiple 128-bit Blake2 hashes concatenated.
+  blake2_128Concat(true),
+
+  /// 128-bit XX hash.
+  twox128(false),
+
+  /// 256-bit XX hash.
+  twox256(false),
+
+  /// Multiple 64-bit XX hashes concatenated.
+  twox64Concat(true),
+
+  /// Identity hashing (no hashing).
+  identity(true);
 
   final bool concat;
 
@@ -435,14 +439,22 @@ enum StorageHasher {
 
   factory StorageHasher.fromJson(Map<String, dynamic> json) {
     switch (json.keys.first) {
-      case 'Blake2_128': return blake2_128;
-      case 'Blake2_256': return blake2_256;
-      case 'Blake2_128Concat': return blake2_128Concat;
-      case 'Twox128': return twox128;
-      case 'Twox256': return twox256;
-      case 'Twox64Concat': return twox64Concat;
-      case 'Identity': return identity;
-      default: throw Exception('Unknown storage hasher: "${json.keys.first}"');
+      case 'Blake2_128':
+        return blake2_128;
+      case 'Blake2_256':
+        return blake2_256;
+      case 'Blake2_128Concat':
+        return blake2_128Concat;
+      case 'Twox128':
+        return twox128;
+      case 'Twox256':
+        return twox256;
+      case 'Twox64Concat':
+        return twox64Concat;
+      case 'Identity':
+        return identity;
+      default:
+        throw Exception('Unknown storage hasher: "${json.keys.first}"');
     }
   }
 }
@@ -459,8 +471,7 @@ class StorageEntryType {
   /// The type of the value.
   final int value;
 
-  StorageEntryType(
-      {required this.hashers, this.key, required this.value});
+  StorageEntryType({required this.hashers, this.key, required this.value});
 
   factory StorageEntryType.fromJson(Map<String, dynamic> json) {
     final List<StorageHasher> hashers;
@@ -471,9 +482,9 @@ class StorageEntryType {
       case 'Map':
         final map = json['Map'] as Map<String, dynamic>;
         hashers = (map['hashers'] as List)
-          .cast<Map<String, dynamic>>()
-          .map((json) => StorageHasher.fromJson(json))
-          .toList();
+            .cast<Map<String, dynamic>>()
+            .map((json) => StorageHasher.fromJson(json))
+            .toList();
         key = map['key'] as int;
         value = map['value'] as int;
         break;
@@ -534,7 +545,9 @@ class StorageEntryMetadata {
   factory StorageEntryMetadata.fromJson(Map<String, dynamic> json) {
     return StorageEntryMetadata(
       name: (json['name'] as String),
-      modifier: json['prefix'] == 'Default' ? StorageEntryModifier.default_ : StorageEntryModifier.optional,
+      modifier: json['prefix'] == 'Default'
+          ? StorageEntryModifier.default_
+          : StorageEntryModifier.optional,
       type: StorageEntryType.fromJson(json['type'] as Map<String, dynamic>),
       defaultValue: Uint8List.fromList((json['fallback'] as List).cast<int>()),
       docs: (json['docs'] as List).cast<String>(),
@@ -593,8 +606,8 @@ class PalletMetadata {
 
   factory PalletMetadata.fromJson(Map<String, dynamic> json) {
     final storage = json['storage'] != null
-      ? PalletStorageMetadata.fromJson(json['storage'])
-      : null;
+        ? PalletStorageMetadata.fromJson(json['storage'])
+        : null;
 
     return PalletMetadata(
       name: json['name'],

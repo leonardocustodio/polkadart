@@ -2,7 +2,12 @@ import 'dart:typed_data';
 
 import './base.dart' show Generator, GeneratedOutput;
 import '../class_builder.dart' show createPalletQueries;
-import '../metadata_parser.dart' as metadata show PalletMetadata, StorageEntryMetadata, StorageHasher, StorageEntryModifier;
+import '../metadata_parser.dart' as metadata
+    show
+        PalletMetadata,
+        StorageEntryMetadata,
+        StorageHasher,
+        StorageEntryModifier;
 import '../constants.dart' as constants;
 import 'package:code_builder/code_builder.dart'
     show TypeReference, Expression, literalString;
@@ -65,21 +70,22 @@ class StorageHasher<G extends Generator> {
     required G codec,
   }) {
     switch (hasher) {
-        case metadata.StorageHasher.blake2_128:
-          return StorageHasher.blake128(codec: codec);
-        case metadata.StorageHasher.blake2_128Concat:
-          return StorageHasher.blake128Concat(codec: codec);
-        case metadata.StorageHasher.blake2_256:
-          return StorageHasher.blake256(codec: codec);
-        case metadata.StorageHasher.twox64Concat:
-          return StorageHasher.twoxx64Concat(codec: codec);
-        case metadata.StorageHasher.twox128:
-          return StorageHasher.twoxx128(codec: codec);
-        case metadata.StorageHasher.twox256:
-          return StorageHasher.twoxx256(codec: codec);
-        case metadata.StorageHasher.identity:
-          return StorageHasher.identity(codec: codec);
-        default: throw Exception('Unknown hasher type: ${hasher.name}');
+      case metadata.StorageHasher.blake2_128:
+        return StorageHasher.blake128(codec: codec);
+      case metadata.StorageHasher.blake2_128Concat:
+        return StorageHasher.blake128Concat(codec: codec);
+      case metadata.StorageHasher.blake2_256:
+        return StorageHasher.blake256(codec: codec);
+      case metadata.StorageHasher.twox64Concat:
+        return StorageHasher.twoxx64Concat(codec: codec);
+      case metadata.StorageHasher.twox128:
+        return StorageHasher.twoxx128(codec: codec);
+      case metadata.StorageHasher.twox256:
+        return StorageHasher.twoxx256(codec: codec);
+      case metadata.StorageHasher.identity:
+        return StorageHasher.identity(codec: codec);
+      default:
+        throw Exception('Unknown hasher type: ${hasher.name}');
     }
   }
 }
@@ -112,10 +118,8 @@ class Storage {
     this.docs = const [],
   });
 
-  factory Storage.fromMetadata(
-    metadata.StorageEntryMetadata storageMetadata,
-    Map<int, Generator> registry
-  ) {
+  factory Storage.fromMetadata(metadata.StorageEntryMetadata storageMetadata,
+      Map<int, Generator> registry) {
     final type = storageMetadata.type;
     final valueCodec = registry[type.value]!;
     final List<Generator> keysCodec;
@@ -124,7 +128,8 @@ class Storage {
     if (type.key != null) {
       final keyId = type.key!;
       if (type.hashers.isEmpty) {
-        throw Exception('Invalid storage, hashers cannot be empty when key is present');
+        throw Exception(
+            'Invalid storage, hashers cannot be empty when key is present');
       } else if (type.hashers.length == 1) {
         keysCodec = [registry[keyId]!];
       } else {
@@ -143,10 +148,11 @@ class Storage {
 
     // Build storage hashers
     final hashers = [
-      for (int i=0; i<type.hashers.length; i++) StorageHasher.fromMetadata(
+      for (int i = 0; i < type.hashers.length; i++)
+        StorageHasher.fromMetadata(
           hasher: type.hashers[i],
           codec: keysCodec[i],
-      )
+        )
     ];
 
     return Storage(
@@ -154,7 +160,8 @@ class Storage {
       hashers: hashers,
       valueCodec: valueCodec,
       defaultValue: storageMetadata.defaultValue,
-      isNullable: storageMetadata.modifier == metadata.StorageEntryModifier.optional,
+      isNullable:
+          storageMetadata.modifier == metadata.StorageEntryModifier.optional,
       docs: storageMetadata.docs,
     );
   }
@@ -251,26 +258,22 @@ class PalletGenerator {
     required this.constants,
   });
 
-  factory PalletGenerator.fromMetadata({
-    required String filePath,
-    required metadata.PalletMetadata palletMetadata,
-    required Map<int, Generator> registry
-  }) {
-
+  factory PalletGenerator.fromMetadata(
+      {required String filePath,
+      required metadata.PalletMetadata palletMetadata,
+      required Map<int, Generator> registry}) {
     // Load storages
-    final List<Storage>? storages = palletMetadata
-      .storage?.entries
-      .map((storageMetadata) =>
-          Storage.fromMetadata(storageMetadata, registry))
-      .toList();
+    final List<Storage>? storages = palletMetadata.storage?.entries
+        .map((storageMetadata) =>
+            Storage.fromMetadata(storageMetadata, registry))
+        .toList();
 
     // Build pallet
     return PalletGenerator(
         filePath: filePath,
         name: palletMetadata.name,
         storages: storages ?? [],
-        constants: []
-    );
+        constants: []);
   }
 
   TypeReference queries() {

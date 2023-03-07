@@ -53,7 +53,8 @@ void main(List<String> arguments) {
   // URL -> rpc.polkadot.io
   // outputPath -> ./generated
   final filePath = './metadata-polkadot.json';
-  final metadata = RuntimeMetadataV14.fromJson(jsonDecode(File(filePath).readAsStringSync()));
+  final metadata = RuntimeMetadataV14.fromJson(
+      jsonDecode(File(filePath).readAsStringSync()));
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
@@ -320,10 +321,10 @@ void main(List<String> arguments) {
   print('Generators found: ${generators.length}');
   final List<PalletGenerator> palletGenerators = metadata.pallets
       .map((pallet) => PalletGenerator.fromMetadata(
-        filePath: '$palletsPath/${pallet.name}.dart',
-        palletMetadata: pallet,
-        registry: generators,
-      ))
+            filePath: '$palletsPath/${pallet.name}.dart',
+            palletMetadata: pallet,
+            registry: generators,
+          ))
       .toList();
   print('   Pallets found: ${palletGenerators.length}');
 
@@ -366,7 +367,8 @@ void main(List<String> arguments) {
   }
 
   // Rename ambiguous generators
-  for (final entry in Map<String, List<Generator>>.from(generatorPerFile).entries) {
+  for (final entry
+      in Map<String, List<Generator>>.from(generatorPerFile).entries) {
     final generatorList = entry.value;
     if (generatorList.length > 1) {
       int index = 0;
