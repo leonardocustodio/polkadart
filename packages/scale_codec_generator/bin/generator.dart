@@ -331,7 +331,11 @@ void main(List<String> arguments) {
   }
 
   print('Generators found: ${generators.length}');
-  final List<PalletGenerator> palletGenerators = metadata.pallets
+  final List<PalletGenerator> palletGenerators = metadata
+      .pallets
+      // Remove Empty Pallets
+      // TODO: remove this field once we support extrinsics
+      .where((pallet) => pallet.storage != null || pallet.constants.isNotEmpty)
       .map((pallet) => PalletGenerator.fromMetadata(
             filePath: '$palletsPath/${pallet.name}.dart',
             palletMetadata: pallet,

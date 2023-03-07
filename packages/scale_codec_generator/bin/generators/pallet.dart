@@ -1,16 +1,17 @@
 import 'dart:typed_data';
 
 import './base.dart' show Generator, GeneratedOutput;
-import '../class_builder.dart' show createPalletQueries;
+import '../class_builder.dart' show createPalletQueries, createPalletConstants;
 import '../metadata_parser.dart' as metadata
     show
+        PalletConstantMetadata,
         PalletMetadata,
         StorageEntryMetadata,
         StorageHasher,
         StorageEntryModifier;
 import '../constants.dart' as constants;
 import 'package:code_builder/code_builder.dart'
-    show TypeReference, Expression, literalString;
+    show TypeReference, Expression, literalString, Class;
 import 'tuple.dart' show TupleGenerator;
 
 enum StorageHasherType {
@@ -240,11 +241,23 @@ class Constant {
   final Generator codec;
   final List<String> docs;
 
-  Constant(
+  const Constant(
       {required this.name,
       required this.value,
       required this.codec,
       required this.docs});
+  
+  factory Constant.fromMetadata(
+      metadata.PalletConstantMetadata constantMetadata,
+      Map<int, Generator> registry
+  ) {
+    // Build pallet
+    return Constant(
+        name: constantMetadata.name,
+        value: constantMetadata.value,
+        codec: registry[constantMetadata.type]!,
+        docs: constantMetadata.docs);
+  }
 }
 
 class PalletGenerator {
@@ -270,12 +283,18 @@ class PalletGenerator {
             Storage.fromMetadata(storageMetadata, registry))
         .toList();
 
+    // Load constants
+    final List<Constant> constants = palletMetadata.constants
+        .map((constantMetadata) =>
+            Constant.fromMetadata(constantMetadata, registry))
+        .toList();
+
     // Build pallet
     return PalletGenerator(
         filePath: filePath,
         name: palletMetadata.name,
         storages: storages ?? [],
-        constants: []);
+        constants: constants);
   }
 
   TypeReference queries() {
@@ -284,8 +303,20 @@ class PalletGenerator {
       ..url = filePath);
   }
 
+  TypeReference constantsType() {
+    return TypeReference((b) => b
+      ..symbol = 'Constants'
+      ..url = filePath);
+  }
+
   GeneratedOutput generated() {
-    final pallet = createPalletQueries(this);
-    return GeneratedOutput(classes: [pallet], enums: [], typedefs: []);
+    final List<Class> classes = [];
+    if (storages.isNotEmpty) {
+      classes.add(createPalletQueries(this));
+    }
+    if (constants.isNotEmpty) {
+      classes.add(createPalletConstants(this));
+    }
+    return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
 }

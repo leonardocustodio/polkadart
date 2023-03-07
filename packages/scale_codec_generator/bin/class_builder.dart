@@ -641,6 +641,22 @@ Class createPalletQueries(
             })));
     });
 
+Class createPalletConstants(
+  pallet.PalletGenerator generator,
+) =>
+    Class((classBuilder) {
+      classBuilder
+        ..name = 'Constants'
+        ..constructors.add(Constructor((b) => b
+          ..constant = false))
+        ..fields.addAll(generator.constants.map((constant) => Field((b) => b
+          ..name = sanitize(ReCase(constant.name).camelCase)
+          ..type = constant.codec.primitive()
+          ..modifier = FieldModifier.final$
+          ..docs.addAll(sanitizeDocs(constant.docs))
+          ..assignment = constant.codec.valueFrom(scale_codec.ByteInput(constant.value)).code)));
+    });
+
 Class createPolkadartQueries(
   PolkadartGenerator generator,
 ) =>
@@ -655,12 +671,28 @@ Class createPolkadartQueries(
             ..named = false
             ..type = constants.provider
             ..name = 'provider'))
-          ..initializers.addAll(generator.pallets.map((pallet) => Code.scope((a) =>
-              '${ReCase(pallet.name).camelCase} = ${a(pallet.queries())}(provider)')))))
-        ..fields.addAll(generator.pallets.map((pallet) => Field((b) => b
-          ..name = ReCase(pallet.name).camelCase
+          ..initializers.addAll(generator.pallets.where((pallet) => pallet.storages.isNotEmpty).map((pallet) => Code.scope((a) =>
+              '${sanitize(ReCase(pallet.name).camelCase)} = ${a(pallet.queries())}(provider)')))))
+        ..fields.addAll(generator.pallets.where((pallet) => pallet.storages.isNotEmpty).map((pallet) => Field((b) => b
+          ..name = sanitize(ReCase(pallet.name).camelCase)
           ..type = pallet.queries()
           ..modifier = FieldModifier.final$)));
+    });
+
+Class createPolkadartConstants(
+  PolkadartGenerator generator,
+) =>
+    Class((classBuilder) {
+      classBuilder
+        ..name = 'Constants'
+        ..constructors.add(Constructor((b) => b
+          ..constant = false))
+        ..fields.addAll(generator.pallets.where((pallet) => pallet.constants.isNotEmpty).map((pallet) => Field((b) => b
+          ..name = sanitize(ReCase(pallet.name).camelCase)
+          ..type = pallet.constantsType()
+          ..modifier = FieldModifier.final$
+          ..assignment = pallet.constantsType().newInstance([]).code
+        )));
     });
 
 Class createPolkadartClass(
@@ -677,9 +709,18 @@ Class createPolkadartClass(
             ..named = false
             ..type = constants.provider
             ..name = 'provider'))
-          ..initializers.add(Code('query = Queries(provider)'))))
-        ..fields.add(Field((b) => b
+          ..initializers.addAll([
+            Code('query = Queries(provider)'),
+            Code('constant = Constants()'),
+          ])))
+        ..fields.addAll([
+          Field((b) => b
           ..name = 'query'
           ..type = refer('Queries')
-          ..modifier = FieldModifier.final$));
+          ..modifier = FieldModifier.final$),
+          Field((b) => b
+          ..name = 'constant'
+          ..type = refer('Constants')
+          ..modifier = FieldModifier.final$)
+        ]);
     });

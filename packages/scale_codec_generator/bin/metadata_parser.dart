@@ -373,12 +373,8 @@ class TypeMetadata {
   factory TypeMetadata.fromJson(Map<String, dynamic> json) {
     final id = json['id'] as int;
     json = json['type'] as Map<String, dynamic>;
-    final path = json.containsKey('path')
-        ? (json['path'] as List).cast<String>()
-        : List<String>.empty(growable: false);
-    final docs = json.containsKey('docs')
-        ? (json['docs'] as List).cast<String>()
-        : List<String>.empty(growable: false);
+    final path = (json['path'] as List).cast<String>();
+    final docs = (json['docs'] as List).cast<String>();
 
     final params = List<TypeParameter>.empty(growable: true);
     if (json.containsKey('params')) {
@@ -589,7 +585,30 @@ class PalletStorageMetadata {
 }
 
 class PalletConstantMetadata {
-  const PalletConstantMetadata();
+  /// Name of the pallet constant.
+	final String name;
+	/// Type of the pallet constant.
+	final int type;
+	/// Value stored in the constant (SCALE encoded).
+	final Uint8List value;
+	/// Documentation of the constant.
+	final List<String> docs;
+
+  const PalletConstantMetadata({
+    required this.name,
+    required this.type,
+    required this.value,
+    required this.docs,
+  });
+
+  factory PalletConstantMetadata.fromJson(Map<String, dynamic> json) {
+    return PalletConstantMetadata(
+      name: json['name'],
+      type: json['type'],
+      value: Uint8List.fromList((json['value'] as List).cast<int>()),
+      docs: (json['docs'] as List).cast<String>(),
+    );
+  }
 }
 
 /// All metadata about an runtime pallet.
@@ -617,11 +636,16 @@ class PalletMetadata {
     final storage = json['storage'] != null
         ? PalletStorageMetadata.fromJson(json['storage'])
         : null;
+    
+    final constants = (json['constants'] as List)
+        .cast<Map<String, dynamic>>()
+        .map((json) => PalletConstantMetadata.fromJson(json))
+        .toList();
 
     return PalletMetadata(
       name: json['name'],
       storage: storage,
-      constants: [],
+      constants: constants,
       index: json['index'],
     );
   }
