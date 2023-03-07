@@ -22,10 +22,10 @@ class WsProvider extends Provider {
   Future<List<Uint8List?>> queryStorage(List<Uint8List> keys,
       {Uint8List? block}) async {
     final result =
-        await send('state_getStorage', <String>['0x${HEX.encode(keys.first)}']);
+        await send('state_getStorage', <String>['0x${hex.encode(keys.first)}']);
     final data = result['result'] as String?;
     if (data != null) {
-      return [Uint8List.fromList(HEX.decode(data.substring(2)))];
+      return [Uint8List.fromList(hex.decode(data.substring(2)))];
     }
     return [null];
   }
