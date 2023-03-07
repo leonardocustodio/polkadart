@@ -12,11 +12,11 @@ class StorageHasher<K> {
       : hasher = null,
         concat = true;
 
-  const StorageHasher.blake128(this.codec)
+  const StorageHasher.blake2b128(this.codec)
       : hasher = Hasher.blake2b128,
         concat = false;
 
-  const StorageHasher.blake128Concat(this.codec)
+  const StorageHasher.blake2b128Concat(this.codec)
       : hasher = Hasher.blake2b128,
         concat = true;
 
@@ -34,6 +34,14 @@ class StorageHasher<K> {
 
   const StorageHasher.twoxx128Concat(this.codec)
       : hasher = Hasher.twoxx128,
+        concat = true;
+  
+  const StorageHasher.twoxx256(this.codec)
+      : hasher = Hasher.twoxx256,
+        concat = false;
+
+  const StorageHasher.twoxx256Concat(this.codec)
+      : hasher = Hasher.twoxx256,
         concat = true;
 
   int size(K key) {

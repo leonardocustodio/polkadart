@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:frame_primitives/substrate/substrate.dart';
-
 import './base.dart' show Generator, GeneratedOutput;
 import '../class_builder.dart' show createPalletQueries;
 import '../metadata_parser.dart' as metadata show PalletMetadata, StorageEntryMetadata, StorageHasher, StorageEntryModifier;
@@ -13,9 +11,9 @@ import 'tuple.dart' show TupleGenerator;
 enum StorageHasherType {
   /// Identity hashing (no hashing).
   identity,
-  blake128,
-  blake128Concat,
-  blake256,
+  blake2b128,
+  blake2b128Concat,
+  blake2b256,
   twoxx64,
   twoxx64Concat,
   twoxx128,
@@ -29,6 +27,7 @@ enum StorageHasherType {
   }
 
   Expression instance(Expression codecInstance) {
+    // StorageHasher.blake2b128(codec);
     return type().property(name).call([codecInstance]);
   }
 }
@@ -41,11 +40,11 @@ class StorageHasher<G extends Generator> {
   const StorageHasher.identity({required this.codec})
       : hasher = StorageHasherType.identity;
   const StorageHasher.blake128({required this.codec})
-      : hasher = StorageHasherType.blake128;
+      : hasher = StorageHasherType.blake2b128;
   const StorageHasher.blake128Concat({required this.codec})
-      : hasher = StorageHasherType.blake128Concat;
+      : hasher = StorageHasherType.blake2b128Concat;
   const StorageHasher.blake256({required this.codec})
-      : hasher = StorageHasherType.blake256;
+      : hasher = StorageHasherType.blake2b256;
   const StorageHasher.twoxx64({required this.codec})
       : hasher = StorageHasherType.twoxx64;
   const StorageHasher.twoxx64Concat({required this.codec})
