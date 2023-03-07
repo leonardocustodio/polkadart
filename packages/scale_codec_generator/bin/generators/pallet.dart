@@ -246,11 +246,10 @@ class Constant {
       required this.value,
       required this.codec,
       required this.docs});
-  
+
   factory Constant.fromMetadata(
       metadata.PalletConstantMetadata constantMetadata,
-      Map<int, Generator> registry
-  ) {
+      Map<int, Generator> registry) {
     // Build pallet
     return Constant(
         name: constantMetadata.name,

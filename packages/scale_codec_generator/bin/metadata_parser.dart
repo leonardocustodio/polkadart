@@ -586,13 +586,16 @@ class PalletStorageMetadata {
 
 class PalletConstantMetadata {
   /// Name of the pallet constant.
-	final String name;
-	/// Type of the pallet constant.
-	final int type;
-	/// Value stored in the constant (SCALE encoded).
-	final Uint8List value;
-	/// Documentation of the constant.
-	final List<String> docs;
+  final String name;
+
+  /// Type of the pallet constant.
+  final int type;
+
+  /// Value stored in the constant (SCALE encoded).
+  final Uint8List value;
+
+  /// Documentation of the constant.
+  final List<String> docs;
 
   const PalletConstantMetadata({
     required this.name,
@@ -636,7 +639,7 @@ class PalletMetadata {
     final storage = json['storage'] != null
         ? PalletStorageMetadata.fromJson(json['storage'])
         : null;
-    
+
     final constants = (json['constants'] as List)
         .cast<Map<String, dynamic>>()
         .map((json) => PalletConstantMetadata.fromJson(json))
