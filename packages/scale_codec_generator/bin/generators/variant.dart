@@ -16,17 +16,24 @@ class Variant {
   int index;
   String name;
   List<Field> fields;
+  List<String> docs;
 
-  Variant({required this.index, required this.name, required this.fields});
+  Variant({
+    required this.index,
+    required this.name,
+    required this.fields,
+    required this.docs,
+  });
 }
 
 class VariantGenerator extends Generator {
   String filePath;
   String name;
   List<Variant> variants;
+  List<String> docs;
 
   VariantGenerator(
-      {required this.filePath, required this.name, required this.variants});
+      {required this.filePath, required this.name, required this.variants, required this.docs});
 
   @override
   TypeReference codec() {
@@ -66,14 +73,15 @@ class VariantGenerator extends Generator {
     if (variants.isNotEmpty &&
         variants.every((variant) => variant.fields.isEmpty)) {
       final simpleEnum =
-          createSimpleVariantEnum(name, '_\$${name}Codec', variants);
+          createSimpleVariantEnum(this);
       final simpleCodec =
           createSimpleVariantCodec('_\$${name}Codec', name, variants);
       return GeneratedOutput(
           classes: [simpleCodec], enums: [simpleEnum], typedefs: []);
     }
 
-    final baseClass = createVariantBaseClass(name, '_\$${name}Codec', variants);
+    // final baseClass = createVariantBaseClass(name, '_\$${name}Codec', variants);
+    final baseClass = createVariantBaseClass(this);
     final valuesClass = createVariantValuesClass('_$name', variants);
     final codecClass = createVariantCodec('_\$${name}Codec', name, variants);
 

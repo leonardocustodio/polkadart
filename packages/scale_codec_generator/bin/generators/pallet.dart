@@ -154,7 +154,9 @@ class Storage {
           codec: keysCodec[i],
         )
     ];
-
+    if (storageMetadata.modifier != metadata.StorageEntryModifier.optional) {
+      print(storageMetadata.name);
+    }
     return Storage(
       name: storageMetadata.name,
       hashers: hashers,

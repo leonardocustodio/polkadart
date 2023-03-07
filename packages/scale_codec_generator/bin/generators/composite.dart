@@ -8,9 +8,15 @@ class CompositeGenerator extends Generator {
   String filePath;
   String name;
   late List<Field> fields;
+  List<String> docs;
 
   CompositeGenerator(
-      {required this.filePath, required this.name, required this.fields});
+      {
+        required this.filePath,
+        required this.name,
+        required this.fields,
+        required this.docs,
+      });
 
   @override
   TypeReference codec() {
@@ -37,7 +43,7 @@ class CompositeGenerator extends Generator {
   GeneratedOutput? generated() {
     final codecName = '_\$${name}Codec';
     final typeBuilder = createCompositeClass(name, fields,
-        staticCodec: codecName, implDecode: true);
+        staticCodec: codecName, implDecode: true, docs: docs);
     final codecBuilder = createCompositeCodec(codecName, refer(name), fields);
     return GeneratedOutput(
         classes: [typeBuilder, codecBuilder], enums: [], typedefs: []);

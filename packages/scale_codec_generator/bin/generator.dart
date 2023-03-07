@@ -114,7 +114,8 @@ void main(List<String> arguments) {
         generators[type.id] = TypeDefGenerator(
             filePath: '$generatedPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
-            generator: EmptyGenerator());
+            generator: EmptyGenerator(),
+            docs: type.docs);
         continue;
       }
 
@@ -159,7 +160,8 @@ void main(List<String> arguments) {
         generators[type.id] = TypeDefGenerator(
             filePath: '$generatedPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
-            generator: EmptyGenerator());
+            generator: EmptyGenerator(),
+            docs: type.docs);
         continue;
       }
 
@@ -220,6 +222,7 @@ void main(List<String> arguments) {
           filePath: '$generatedPath/${type.path.join('/')}.dart',
           name: ReCase(type.path.last).pascalCase,
           codec: composite.fields[0].type,
+          docs: type.docs,
         );
         continue;
       }
@@ -229,10 +232,12 @@ void main(List<String> arguments) {
       generators[type.id] = CompositeGenerator(
           filePath: '$generatedPath/${type.path.join('/')}.dart',
           name: type.path.last,
+          docs: type.docs,
           fields: composite.fields
               .map((field) => Field.lazy(
                   loader: lazyLoader,
                   codec: field.type,
+                  docs: field.docs,
                   name: field.name ?? 'value${index++}'))
               .toList());
       continue;
@@ -253,7 +258,8 @@ void main(List<String> arguments) {
         generators[type.id] = TypeDefGenerator(
             filePath: '$generatedPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
-            generator: EmptyGenerator());
+            generator: EmptyGenerator(),
+            docs: type.docs);
         continue;
       }
 
@@ -290,6 +296,7 @@ void main(List<String> arguments) {
       generators[type.id] = VariantGenerator(
           filePath: '$generatedPath/${type.path.join('/')}.dart',
           name: type.path.last,
+          docs: type.docs,
           variants: variant.variants.map((variant) {
             String variantName = ReCase(variant.name).pascalCase;
             if (variantName == type.path.last) {
@@ -299,12 +306,17 @@ void main(List<String> arguments) {
             return Variant(
                 name: variantName,
                 index: variant.index,
+                docs: variant.docs,
                 fields: variant.fields.map((field) {
                   final String name =
                       Field.toFieldName(field.name ?? 'value$index');
                   index++;
                   return Field.lazy(
-                      loader: lazyLoader, codec: field.type, name: name);
+                      loader: lazyLoader,
+                      codec: field.type,
+                      name: name,
+                      docs: field.docs,
+                    );
                 }).toList());
           }).toList());
       continue;

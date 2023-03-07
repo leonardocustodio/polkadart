@@ -516,6 +516,16 @@ enum StorageEntryModifier {
 
   /// The storage entry returns `T::Default` if the key is not present.
   default_;
+
+  factory StorageEntryModifier.fromString(String str) {
+    switch (str) {
+      case 'Optional':
+        return optional;
+      case 'Default':
+        return default_;
+      default: throw Exception('Unknown storage modifier: "$str"');
+    }
+  }
 }
 
 /// Metadata about one storage entry.
@@ -545,9 +555,7 @@ class StorageEntryMetadata {
   factory StorageEntryMetadata.fromJson(Map<String, dynamic> json) {
     return StorageEntryMetadata(
       name: (json['name'] as String),
-      modifier: json['prefix'] == 'Default'
-          ? StorageEntryModifier.default_
-          : StorageEntryModifier.optional,
+      modifier: StorageEntryModifier.fromString(json['modifier'] as String),
       type: StorageEntryType.fromJson(json['type'] as Map<String, dynamic>),
       defaultValue: Uint8List.fromList((json['fallback'] as List).cast<int>()),
       docs: (json['docs'] as List).cast<String>(),

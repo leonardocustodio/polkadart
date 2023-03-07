@@ -90,20 +90,25 @@ class LazyLoader {
 class Field {
   late String name;
   late Generator codec;
+  late List<String> docs;
 
-  Field({required String name, required this.codec}) {
+  Field({required String name, required this.codec, required this.docs }) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
     this.name = toFieldName(name);
   }
 
-  Field._lazy({required String name}) {
+  Field._lazy({ required String name, required this.docs }) {
     this.name = toFieldName(name);
   }
 
-  factory Field.lazy(
-      {required LazyLoader loader, required int codec, required String name}) {
-    final field = Field._lazy(name: name);
+  factory Field.lazy({
+    required LazyLoader loader,
+    required int codec,
+    required String name,
+    List<String> docs = const [],
+  }) {
+    final field = Field._lazy(name: name, docs: docs);
     loader.addLoader((Map<int, Generator> register) {
       field.codec = register[codec]!;
     });

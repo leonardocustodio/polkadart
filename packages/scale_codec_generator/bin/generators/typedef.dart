@@ -8,18 +8,26 @@ class TypeDefGenerator extends Generator {
   String filePath;
   String name;
   late Generator generator;
+  List<String> docs;
 
   TypeDefGenerator(
-      {required this.filePath, required this.name, required this.generator});
+      {
+        required this.filePath,
+        required this.name,
+        required this.generator,
+        required this.docs,
+      });
 
-  TypeDefGenerator._lazy(this.filePath, this.name);
+  TypeDefGenerator._lazy(this.filePath, this.name, this.docs);
 
   factory TypeDefGenerator.lazy(
       {required LazyLoader loader,
       required int codec,
       required String filePath,
-      required String name}) {
-    final generator = TypeDefGenerator._lazy(filePath, name);
+      required String name,
+      required List<String> docs,
+    }) {
+    final generator = TypeDefGenerator._lazy(filePath, name, docs);
     loader.addLoader((Map<int, Generator> register) {
       generator.generator = register[codec]!;
     });

@@ -23,16 +23,27 @@ import 'package:code_builder/code_builder.dart'
         TypeReference,
         MethodModifier;
 import './generators/base.dart' as generator show Field;
-import './generators/variant.dart' as v show Variant;
+import './generators/variant.dart' as v show Variant, VariantGenerator;
 import './generators/primitive.dart' show PrimitiveGenerator;
 import './generators/pallet.dart' as pallet;
 import './generators/polkadart.dart' show PolkadartGenerator;
 import './constants.dart' as constants;
 import './utils.dart' show sanitize;
 
+List<String> sanitizeDocs(List<String> docs) => docs
+  .map((doc) {
+    if (doc.startsWith('///')) return doc;
+    if (!doc.startsWith(' ')) {
+      doc = ' $doc';
+    }
+    return '///${doc.replaceAll('\n', '\n///')}';
+  })
+  .toList();
+
 Class createCompositeClass(
   String typeName,
   List<generator.Field> fields, {
+  List<String> docs = const [],
   bool implDecode = false,
   String? staticCodec,
   String? extension,
@@ -44,6 +55,7 @@ Class createCompositeClass(
       classBuilder
         ..name = typeName
         ..extend = extension == null ? null : refer(extension)
+        ..docs.addAll(sanitizeDocs(docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
           ..optionalParameters.addAll(fields.map((field) => Parameter((b) => b
@@ -54,6 +66,7 @@ Class createCompositeClass(
         ..fields.addAll(fields.map((field) => Field((b) => b
           ..name = field.name
           ..type = field.codec.primitive()
+          ..docs.addAll(sanitizeDocs(field.docs))
           ..modifier = FieldModifier.final$)));
 
       // Generate static codec
@@ -138,14 +151,17 @@ Class createCompositeCodec(
 }
 
 Class createVariantBaseClass(
-  String typeName,
-  String codecName,
-  List<v.Variant> variants,
+  v.VariantGenerator generator,
 ) =>
     Class((classBuilder) {
+      final Reference variantNameRef = refer(generator.name);
+      final Reference valueRef = refer('_${generator.name}');
+      final Reference codecRef = refer('_\$${generator.name}Codec');
+
       classBuilder
-        ..name = typeName
+        ..name = variantNameRef.symbol
         ..abstract = true
+        ..docs.addAll(sanitizeDocs(generator.docs))
         ..constructors.add(Constructor((b) => b..constant = true))
         ..constructors.add(Constructor((b) => b
           ..name = 'decode'
@@ -159,14 +175,14 @@ Class createVariantBaseClass(
             ..name = 'codec'
             ..static = true
             ..modifier = FieldModifier.constant
-            ..type = refer(codecName)
-            ..assignment = Code('$codecName()')),
+            ..type = codecRef
+            ..assignment = codecRef.newInstance([]).code),
           Field((b) => b
             ..name = 'values'
             ..static = true
             ..modifier = FieldModifier.constant
-            ..type = refer('_$typeName')
-            ..assignment = Code('_$typeName()'))
+            ..type = valueRef
+            ..assignment = valueRef.constInstance([]).code)
         ])
         ..methods.add(Method((b) => b
           ..name = 'encode'
@@ -295,6 +311,7 @@ Class createVariantClass(
       classBuilder
         ..name = variant.name
         ..extend = refer(typeName)
+        ..docs.addAll(sanitizeDocs(variant.docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
           ..optionalParameters
@@ -306,6 +323,7 @@ Class createVariantClass(
         ..fields.addAll(variant.fields.map((field) => Field((b) => b
           ..name = field.name
           ..type = field.codec.primitive()
+          ..docs.addAll(sanitizeDocs(field.docs))
           ..modifier = FieldModifier.final$)));
 
       // Create a constructor for decoding
@@ -357,14 +375,13 @@ Class createVariantClass(
         )));
     });
 
-Enum createSimpleVariantEnum(
-  String typeName,
-  String codecName,
-  List<v.Variant> variants,
-) =>
+Enum createSimpleVariantEnum(v.VariantGenerator variant) =>
     Enum((enumBuilder) {
+      final Reference typeRef = refer(variant.name);
+      final Reference codecRef = refer('_\$${variant.name}Codec');
+
       enumBuilder
-        ..name = typeName
+        ..name = typeRef.symbol
         ..constructors.add(Constructor((b) => b
           ..constant = true
           ..requiredParameters.add(Parameter((b) => b
@@ -386,10 +403,10 @@ Enum createSimpleVariantEnum(
             ..name = 'codec'
             ..static = true
             ..modifier = FieldModifier.constant
-            ..type = constants.codec(ref: refer(typeName))
-            ..assignment = Code('$codecName()')),
+            ..type = codecRef
+            ..assignment = codecRef.newInstance([]).code),
         ])
-        ..values.addAll(variants.map((variant) => EnumValue((b) => b
+        ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
           ..name = generator.Field.toFieldName(variant.name)
           ..arguments.add(literalNum(variant.index)))))
         ..methods.add(Method((b) => b
@@ -574,6 +591,7 @@ Class createPalletQueries(
               final storageName = ReCase(storage.name).camelCase;
               builder
                 ..name = sanitize(storageName)
+                ..docs.addAll(sanitizeDocs(storage.docs))
                 ..returns = constants.future(storage.valueCodec.primitive(),
                     nullable: storage.isNullable)
                 ..modifier = MethodModifier.async
