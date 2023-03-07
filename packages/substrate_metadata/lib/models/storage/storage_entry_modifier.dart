@@ -39,15 +39,26 @@ class StorageEntryTypeV14 {
   const StorageEntryTypeV14({required this.kind, required this.value});
 
   /// Creates Class Object from `Json`
-  static StorageEntryTypeV14 fromJson(Map<String, dynamic> map) {
-    final key = map.keys.first;
-    switch (key) {
+  static StorageEntryTypeV14 fromJson(MapEntry<String, dynamic> map) {
+    switch (map.key) {
       case 'Plain':
-        return StorageEntryTypeV14_Plain(value: map['Plain']);
+        return StorageEntryTypeV14_Plain(value: map.value);
       case 'Map':
-        return StorageEntryTypeV14_Map.fromJson(map['Map']);
+        return StorageEntryTypeV14_Map.fromJson(map.value);
       default:
-        throw UnexpectedTypeException('Unexpected type: $key');
+        throw UnexpectedTypeException('Unexpected type: ${map.key}');
+    }
+  }
+
+  /// Creates `Map` from Class Object
+  MapEntry<String, dynamic> toJson() {
+    switch (kind) {
+      case 'Plain':
+        return MapEntry(kind, value);
+      case 'Map':
+        return MapEntry(kind, (this as StorageEntryTypeV14_Map).toMap());
+      default:
+        throw UnexpectedTypeException('Unexpected type: $kind');
     }
   }
 }
@@ -73,4 +84,11 @@ class StorageEntryTypeV14_Map extends StorageEntryTypeV14 {
             .toList(),
         value: map['value'],
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toMap() => {
+        'hashers': hashers.map((e) => e.toJson()).toList(),
+        'key': key,
+        'value': value,
+      };
 }

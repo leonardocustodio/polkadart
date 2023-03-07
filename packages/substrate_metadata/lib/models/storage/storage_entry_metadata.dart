@@ -21,9 +21,19 @@ class StorageEntryMetadataV9 {
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV9.fromJson(map['type']),
-        fallback: Uint8List.fromList(map['fallback'] as List<int>),
+        fallback:
+            Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'modifier': modifier.kind,
+        'type': StorageEntryTypeV9.toJson(type),
+        'fallback': fallback.toList(),
+        'docs': docs,
+      };
 }
 
 /// Storage Entry Metadata [V10]
@@ -47,9 +57,19 @@ class StorageEntryMetadataV10 {
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV10.fromJson(map['type']),
-        fallback: Uint8List.fromList(map['fallback'] as List<int>),
+        fallback:
+            Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'modifier': modifier.kind,
+        'type': StorageEntryTypeV10.toJson(type),
+        'fallback': fallback.toList(),
+        'docs': docs,
+      };
 }
 
 /// Storage Entry Metadata [V11]
@@ -76,6 +96,15 @@ class StorageEntryMetadataV11 {
         fallback: Uint8List.fromList((map['fallback'] as List).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'modifier': modifier.kind,
+        'type': StorageEntryTypeV11.toJson(type),
+        'fallback': fallback.toList(),
+        'docs': docs,
+      };
 }
 
 /// Storage Entry Metadata [V13]
@@ -102,6 +131,15 @@ class StorageEntryMetadataV13 {
         fallback: Uint8List.fromList((map['fallback'] as List).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'modifier': modifier.kind,
+        'type': StorageEntryTypeV13.toJson(type),
+        'fallback': fallback.toList(),
+        'docs': docs,
+      };
 }
 
 class StorageEntryMetadataV14 {
@@ -127,4 +165,13 @@ class StorageEntryMetadataV14 {
         fallback: Uint8List.fromList((map['fallback'] as List).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'modifier': modifier.kind,
+        'type': type.toJson(),
+        'fallback': fallback.toList(),
+        'docs': docs,
+      };
 }

@@ -5,6 +5,7 @@ on:
       - master
       - main
       - develop
+      - re-design
       - release-v*
     types:
       - opened
@@ -17,6 +18,7 @@ on:
     branches:
       - master
       - main
+      - re-design
     paths-ignore:
       - "**.md"
 
@@ -64,8 +66,24 @@ jobs:
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
       codecov-flag: "substrate_metadata"
-      generate-code: true
       working-directory: "./packages/substrate_metadata"
+
+  scale_codec_generator:
+    name: Test scale_codec_generator
+    needs: [lints]
+    uses: ./.github/workflows/reuseable_workflow.yml
+    with:
+      codecov-flag: "scale_codec_generator"
+      working-directory: "./packages/scale_codec_generator"
+  
+  frame_primitives:
+    name: Test frame_primitives
+    needs: [lints]
+    uses: ./.github/workflows/reuseable_workflow.yml
+    with:
+      codecov-flag: "frame_primitives"
+      working-directory: "./packages/frame_primitives"
+
 #  polkadart:
 #    name: Test polkadart
 #    needs: [lints, markdown-link-check]

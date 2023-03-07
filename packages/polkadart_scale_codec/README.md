@@ -16,7 +16,7 @@
 | Bytes        | `Bytes`                         |
 | Compact      | `Compact<T>`                    |
 | Enum         | `_enum`                         |
-| Struct       | `_struct`                       |
+| Composite    | `{}`                            |
 | FixedVec     | `[u8, length]`                  |
 | BitVec       | `BitVec`                        |
 | Option       | `Option<T>`                     |
@@ -197,12 +197,12 @@
   // Initializing Scale-Codec object
   final codec = Codec(types);
 
-  final value = Some(true);
+  final value = Option.some(true);
 
   // 0x0101
   var encoded = codec.encode(registryIndex, value);
 
-  // Some(true)
+  // Option.some(true)
   var decoded = codec.decode(registryIndex, encoded);
 
   // or
@@ -312,7 +312,7 @@
   var decoded = codec.decode(typeIndex, encoded);
 ```
 
-### Struct
+### Composite
 
 ```dart
   // Creates the registry for parsing the types
@@ -322,20 +322,20 @@
         '_enum': ['Orange', 'Apple', 'Kiwi']
       },
       'OuncesEnum': {
-        '_struct': {'ounces': 'u8', 'Remarks': 'Option<Text>'}
+        'ounces': 'u8',
+        'Remarks': 'Option<Text>',
       },
-      'OrderStruct': {
-        '_struct': {
+      'OrderComposite': {
           'index': 'u8',
           'note': 'Text',
           'Juice': 'OrderJuiceEnum',
           'Ounces': 'OuncesEnum'
-        }
+
       },
     },
   );
 
-  final typeIndex = registry.getIndex('OrderStruct');
+  final typeIndex = registry.getIndex('OrderComposite');
 
   // fetching the parsed types from `Json` to `Type`
   final types = registry.getTypes();
@@ -349,23 +349,23 @@
     'Juice': 'Kiwi',
     'Ounces': {
       'ounces': 1,
-      'Remarks': Some('This is the first order.'),
+      'Remarks': Option.some('This is the first order.'),
     }
   };
-  
+
   final encoded = codec.encode(typeIndex, order);
-  
+
   // {
   //   'index': 8,
   //   'note': 'This is a note',
   //   'Juice': 'Kiwi',
   //   'Ounces': {
   //     'ounces': 1,
-  //     'Remarks': Some('This is the first order.'),
+  //     'Remarks': Option.some('This is the first order.'),
   //   }
   // }
   final decoded = codec.decode(typeIndex, encoded);
-  
+
   print(decoded);
 ```
 

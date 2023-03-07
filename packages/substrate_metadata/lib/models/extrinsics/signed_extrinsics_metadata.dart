@@ -19,4 +19,11 @@ class SignedExtensionMetadataV14 {
       );
     }
   }
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'identifier': identifier,
+        'type': type,
+        'additionalSigned': additionalSigned,
+      };
 }

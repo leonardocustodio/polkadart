@@ -1,4 +1,6 @@
 library polkadart_scale_codec;
 
-export 'src/core/core.dart';
-export 'src/util/utils.dart';
+export 'core/core.dart';
+export 'io/io.dart';
+export 'primitives/primitives.dart';
+export 'utils/utils.dart';

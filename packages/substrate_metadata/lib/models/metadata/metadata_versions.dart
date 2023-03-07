@@ -3,80 +3,103 @@
 part of models;
 
 class Metadata_V9 extends Metadata {
-  const Metadata_V9({super.value}) : super(kind: 'V9');
+  const Metadata_V9({super.value}) : super(version: 9);
 
   /// Creates Class Object from `Json`
   static Metadata_V9 fromJson(Map<String, dynamic> map) =>
       Metadata_V9(value: MetadataV9.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V10 extends Metadata {
-  const Metadata_V10({super.value}) : super(kind: 'V10');
+  const Metadata_V10({super.value}) : super(version: 10);
 
   /// Creates Class Object from `Json`
   static Metadata_V10 fromJson(Map<String, dynamic> map) =>
       Metadata_V10(value: MetadataV10.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V11 extends Metadata {
-  const Metadata_V11({super.value}) : super(kind: 'V11');
+  const Metadata_V11({super.value}) : super(version: 11);
 
   /// Creates Class Object from `Json`
   static Metadata_V11 fromJson(Map<String, dynamic> map) =>
       Metadata_V11(value: MetadataV11.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V12 extends Metadata {
-  const Metadata_V12({super.value}) : super(kind: 'V12');
+  const Metadata_V12({super.value}) : super(version: 12);
 
   /// Creates Class Object from `Json`
   static Metadata_V12 fromJson(Map<String, dynamic> map) =>
       Metadata_V12(value: MetadataV12.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V13 extends Metadata {
-  const Metadata_V13({super.value}) : super(kind: 'V13');
+  const Metadata_V13({super.value}) : super(version: 13);
 
   /// Creates Class Object from `Json`
   static Metadata_V13 fromJson(Map<String, dynamic> map) =>
       Metadata_V13(value: MetadataV13.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class Metadata_V14 extends Metadata {
-  const Metadata_V14({super.value}) : super(kind: 'V14');
+  const Metadata_V14({super.value}) : super(version: 14);
 
   /// Creates Class Object from `Json`
   static Metadata_V14 fromJson(Map<String, dynamic> map) =>
       Metadata_V14(value: MetadataV14.fromJson(map));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => value.toJson();
 }
 
 class MetadataV14 {
-  PortableRegistryV14? lookup;
-  List<PalletMetadataV14>? pallets;
-  ExtrinsicMetadataV14? extrinsic;
-  int? type;
+  final PortableRegistryV14 lookup;
+  final List<PalletMetadataV14> pallets;
+  final ExtrinsicMetadataV14 extrinsic;
+  final int type;
 
-  MetadataV14({this.lookup, this.pallets, this.extrinsic, this.type});
+  const MetadataV14({
+    required this.lookup,
+    required this.pallets,
+    required this.extrinsic,
+    required this.type,
+  });
 
   /// Creates Class Object from `Json`
   static MetadataV14 fromJson(Map<String, dynamic> map) {
-    var obj = MetadataV14(type: map['type']);
+    return MetadataV14(
+        type: map['type'],
+        lookup: PortableRegistryV14.fromJson(map['lookup']),
+        pallets: (map['pallets'] as List)
+            .map((value) => PalletMetadataV14.fromJson(value))
+            .toList(),
+        extrinsic: ExtrinsicMetadataV14.fromJson(map['extrinsic']));
+  }
 
-    if (map['lookup'] != null) {
-      obj.lookup = PortableRegistryV14.fromJson(map['lookup']);
-    }
-
-    if (map['extrinsic'] != null) {
-      obj.extrinsic = ExtrinsicMetadataV14.fromJson(map['extrinsic']);
-    }
-
-    if (map['pallets'] != null) {
-      obj.pallets = (map['pallets'] as List)
-          .map((value) => PalletMetadataV14.fromJson(value))
-          .toList();
-    }
-
-    return obj;
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'lookup': lookup.toJson(),
+      'pallets': pallets.map((value) => value.toJson()).toList(),
+      'extrinsic': extrinsic.toJson(),
+      'type': type,
+    };
   }
 }
 
@@ -89,6 +112,11 @@ class MetadataV9 {
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV9.fromJson(value))
           .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+      };
 }
 
 class MetadataV10 {
@@ -100,6 +128,11 @@ class MetadataV10 {
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV10.fromJson(value))
           .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+      };
 }
 
 class MetadataV11 {
@@ -113,6 +146,12 @@ class MetadataV11 {
           .map((value) => ModuleMetadataV11.fromJson(value))
           .toList(),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+        'extrinsic': extrinsic.toJson(),
+      };
 }
 
 class MetadataV12 {
@@ -126,6 +165,12 @@ class MetadataV12 {
           .map((value) => ModuleMetadataV12.fromJson(value))
           .toList(),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+        'extrinsic': extrinsic.toJson(),
+      };
 }
 
 class MetadataV13 {
@@ -139,4 +184,10 @@ class MetadataV13 {
           .map((value) => ModuleMetadataV13.fromJson(value))
           .toList(),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'modules': modules.map((value) => value.toJson()).toList(),
+        'extrinsic': extrinsic.toJson(),
+      };
 }
