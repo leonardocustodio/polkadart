@@ -35,7 +35,7 @@ class StorageHasher<K> {
   const StorageHasher.twoxx128Concat(this.codec)
       : hasher = Hasher.twoxx128,
         concat = true;
-  
+
   const StorageHasher.twoxx256(this.codec)
       : hasher = Hasher.twoxx256,
         concat = false;
