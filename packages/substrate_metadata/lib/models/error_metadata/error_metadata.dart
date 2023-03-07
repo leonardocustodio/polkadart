@@ -11,4 +11,10 @@ class ErrorMetadataV9 {
         name: map['name'],
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'docs': docs,
+      };
 }

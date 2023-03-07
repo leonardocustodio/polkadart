@@ -16,6 +16,15 @@ class FunctionMetadataV9 {
           args: (map['args'] as List)
               .map((value) => FunctionArgumentMetadataV9.fromJson(value))
               .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'args': args
+            .map((FunctionArgumentMetadataV9 value) => value.toJson())
+            .toList(),
+        'docs': docs,
+      };
 }
 
 class FunctionArgumentMetadataV9 {
@@ -27,4 +36,11 @@ class FunctionArgumentMetadataV9 {
   /// Creates Class Object from `Json`
   static FunctionArgumentMetadataV9 fromJson(Map<String, dynamic> map) =>
       FunctionArgumentMetadataV9(name: map['name'], type: map['type']);
+
+  ///
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'type': type,
+      };
 }

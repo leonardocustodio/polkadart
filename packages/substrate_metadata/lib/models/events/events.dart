@@ -13,4 +13,11 @@ class EventMetadataV9 {
         args: (map['args'] as List).cast<String>(),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'args': args,
+        'docs': docs,
+      };
 }

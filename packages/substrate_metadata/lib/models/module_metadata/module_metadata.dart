@@ -15,6 +15,9 @@ abstract class AnyLegacyModule {
       this.events,
       required this.constants,
       required this.errors});
+
+  /// Creates Map from Class Object
+  Map<String, dynamic> toJson();
 }
 
 class ModuleMetadataV9 extends AnyLegacyModule {
@@ -30,7 +33,7 @@ class ModuleMetadataV9 extends AnyLegacyModule {
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV9 fromJson(Map<String, dynamic> map) {
-    var obj = ModuleMetadataV9(
+    final obj = ModuleMetadataV9(
       name: map['name'],
       constants: (map['constants'] as List)
           .map((val) => ModuleConstantMetadataV9.fromJson(val))
@@ -41,27 +44,47 @@ class ModuleMetadataV9 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is scale_codec.Some &&
-        (map['storage'] as scale_codec.Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV9.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is scale_codec.Some &&
-        (map['calls'] as scale_codec.Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is scale_codec.Some &&
-        (map['events'] as scale_codec.Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
     return obj;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+    return map;
   }
 }
 
@@ -78,7 +101,7 @@ class ModuleMetadataV10 extends AnyLegacyModule {
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV10 fromJson(Map<String, dynamic> map) {
-    var obj = ModuleMetadataV10(
+    final obj = ModuleMetadataV10(
       name: map['name'],
       constants: (map['constants'] as List)
           .map((val) => ModuleConstantMetadataV9.fromJson(val))
@@ -89,27 +112,47 @@ class ModuleMetadataV10 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is scale_codec.Some &&
-        (map['storage'] as scale_codec.Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV10.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is scale_codec.Some &&
-        (map['calls'] as scale_codec.Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is scale_codec.Some &&
-        (map['events'] as scale_codec.Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
     return obj;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+    return map;
   }
 }
 
@@ -126,7 +169,7 @@ class ModuleMetadataV11 extends AnyLegacyModule {
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV11 fromJson(Map<String, dynamic> map) {
-    var obj = ModuleMetadataV11(
+    final obj = ModuleMetadataV11(
       name: map['name'],
       constants: (map['constants'] as List)
           .map((val) => ModuleConstantMetadataV9.fromJson(val))
@@ -137,27 +180,47 @@ class ModuleMetadataV11 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is scale_codec.Some &&
-        (map['storage'] as scale_codec.Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV11.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is scale_codec.Some &&
-        (map['calls'] as scale_codec.Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is scale_codec.Some &&
-        (map['events'] as scale_codec.Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
     return obj;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+    return map;
   }
 }
 
@@ -176,7 +239,7 @@ class ModuleMetadataV12 extends AnyLegacyModule {
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV12 fromJson(Map<String, dynamic> map) {
-    var obj = ModuleMetadataV12(
+    final obj = ModuleMetadataV12(
       name: map['name'],
       index: map['index'],
       constants: (map['constants'] as List)
@@ -188,27 +251,49 @@ class ModuleMetadataV12 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is scale_codec.Some &&
-        (map['storage'] as scale_codec.Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV11.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is scale_codec.Some &&
-        (map['calls'] as scale_codec.Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is scale_codec.Some &&
-        (map['events'] as scale_codec.Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
     return obj;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+
+    map['index'] = index;
+    return map;
   }
 }
 
@@ -227,7 +312,7 @@ class ModuleMetadataV13 extends AnyLegacyModule {
 
   /// Creates Class Object from `Json`
   static ModuleMetadataV13 fromJson(Map<String, dynamic> map) {
-    var obj = ModuleMetadataV13(
+    final obj = ModuleMetadataV13(
       name: map['name'],
       index: map['index'],
       constants: (map['constants'] as List)
@@ -239,27 +324,49 @@ class ModuleMetadataV13 extends AnyLegacyModule {
     );
 
     if (map['storage'] != null &&
-        map['storage'] is scale_codec.Some &&
-        (map['storage'] as scale_codec.Some).value != null) {
+        map['storage'] is Option &&
+        (map['storage'] as Option).value != null) {
       obj.storage = StorageMetadataV13.fromJson(map['storage'].value);
     }
 
     if (map['calls'] != null &&
-        map['calls'] is scale_codec.Some &&
-        (map['calls'] as scale_codec.Some).value != null) {
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList();
     }
 
     if (map['events'] != null &&
-        map['events'] is scale_codec.Some &&
-        (map['events'] as scale_codec.Some).value != null) {
+        map['events'] is Option &&
+        (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
           .toList();
     }
     return obj;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['name'] = name;
+
+    final localStorage = storage?.toJson();
+    map['storage'] = localStorage == null ? None : Option.some(localStorage);
+
+    final localCalls = calls?.map((e) => e.toJson()).toList();
+    map['calls'] = localCalls == null ? None : Option.some(localCalls);
+
+    final localEvents = events?.map((e) => e.toJson()).toList();
+    map['events'] = localEvents == null ? None : Option.some(localEvents);
+
+    map['constants'] = constants.map((e) => e.toJson()).toList();
+
+    map['errors'] = errors.map((e) => e.toJson()).toList();
+
+    map['index'] = index;
+    return map;
   }
 }
 
@@ -281,7 +388,15 @@ class ModuleConstantMetadataV9 {
       ModuleConstantMetadataV9(
         name: map['name'],
         type: map['type'],
-        value: Uint8List.fromList(map['value'] as List<int>),
+        value: Uint8List.fromList((map['value'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
+
+  /// Creates Map Object from Class Object
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'type': type,
+        'value': value,
+        'docs': docs,
+      };
 }

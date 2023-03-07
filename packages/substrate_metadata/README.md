@@ -8,7 +8,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final decoderInstance = MetadataDecoder();
+  final decoderInstance = MetadataDecoder.instance;
 
   // decode metadata
   final Metadata decodedMetadata = decoderInstance.decodeAsMetadata('0x6d657.....790b807d0b');
@@ -23,7 +23,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final MetadataDecoder decoderInstance = MetadataDecoder();
+  final MetadataDecoder decoderInstance = MetadataDecoder.instance;
 
   // decode metadata
   final Metadata decodedMetadata = decoderInstance.decodeAsMetadata('0x6d657.....790b807d0b');
@@ -36,7 +36,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder();
+  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
 
   final String metadataV14 = '0x6d657.....790b807d0b';
 
@@ -56,7 +56,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder();
+  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
 
   final String metadataV14 = '0x6d657.....790b807d0b';
 
@@ -76,7 +76,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder();
+  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
 
   final String metadataV14 = '0x6d657.....790b807d0b';
 
@@ -98,7 +98,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder();
+  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
 
   final String metadataV14 = '0x6d657.....790b807d0b';
 
@@ -120,7 +120,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder();
+  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
 
   final String metadataV14 = '0x6d657.....790b807d0b';
 
@@ -154,7 +154,7 @@
 
 ```dart
   // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder();
+  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
 
   final String metadataV14 = '0x6d657.....790b807d0b';
 

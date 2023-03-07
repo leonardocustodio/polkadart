@@ -7,8 +7,8 @@ class StorageHasherV9 {
   const StorageHasherV9({required this.kind});
 
   /// Creates Class Object from `Json`
-  static StorageHasherV9 fromKey(String key) {
-    switch (key) {
+  static StorageHasherV9 fromKey(MapEntry entry) {
+    switch (entry.key) {
       case 'Blake2_128':
         return StorageHasherV9_Blake2_128();
       case 'Blake2_256':
@@ -20,7 +20,25 @@ class StorageHasherV9 {
       case 'Twox64Concat':
         return StorageHasherV9_Twox64Concat();
       default:
-        throw UnexpectedTypeException('Unexpected type: $key');
+        throw UnexpectedTypeException('Unexpected type: ${entry.key}');
+    }
+  }
+
+  /// Creates Map Object from `Class`
+  MapEntry<String, dynamic> toJson() {
+    switch (kind) {
+      case 'Blake2_128':
+        return MapEntry('Blake2_128', null);
+      case 'Blake2_256':
+        return MapEntry('Blake2_256', null);
+      case 'Twox128':
+        return MapEntry('Twox128', null);
+      case 'Twox256':
+        return MapEntry('Twox256', null);
+      case 'Twox64Concat':
+        return MapEntry('Twox64Concat', null);
+      default:
+        throw UnexpectedTypeException('Unexpected type: $kind');
     }
   }
 }
@@ -50,8 +68,8 @@ class StorageHasherV10 {
   const StorageHasherV10({required this.kind});
 
   /// Creates Class Object from `Json`
-  static StorageHasherV10 fromKey(String key) {
-    switch (key) {
+  static StorageHasherV10 fromKey(MapEntry entry) {
+    switch (entry.key) {
       case 'Blake2_128':
         return StorageHasherV10_Blake2_128();
       case 'Blake2_256':
@@ -65,7 +83,27 @@ class StorageHasherV10 {
       case 'Twox64Concat':
         return StorageHasherV10_Twox64Concat();
       default:
-        throw UnexpectedTypeException('Unexpected type: $key');
+        throw UnexpectedTypeException('Unexpected type: ${entry.key}');
+    }
+  }
+
+  /// Creates Map Object from `Class`
+  MapEntry<String, dynamic> toJson() {
+    switch (kind) {
+      case 'Blake2_128':
+        return MapEntry('Blake2_128', null);
+      case 'Blake2_256':
+        return MapEntry('Blake2_256', null);
+      case 'Blake2_128Concat':
+        return MapEntry('Blake2_128Concat', null);
+      case 'Twox128':
+        return MapEntry('Twox128', null);
+      case 'Twox256':
+        return MapEntry('Twox256', null);
+      case 'Twox64Concat':
+        return MapEntry('Twox64Concat', null);
+      default:
+        throw UnexpectedTypeException('Unexpected type: $kind');
     }
   }
 }
@@ -99,8 +137,8 @@ class StorageHasherV11 {
   const StorageHasherV11({required this.kind});
 
   /// Creates Class Object from `Json`
-  static StorageHasherV11 fromKey(String key) {
-    switch (key) {
+  static StorageHasherV11 fromKey(MapEntry entry) {
+    switch (entry.key) {
       case 'Blake2_128':
         return StorageHasherV11_Blake2_128();
       case 'Blake2_256':
@@ -116,7 +154,29 @@ class StorageHasherV11 {
       case 'Identity':
         return StorageHasherV11_Identity();
       default:
-        throw UnexpectedTypeException('Unexpected type: $key');
+        throw UnexpectedTypeException('Unexpected type: ${entry.key}');
+    }
+  }
+
+  /// Creates Map Object from `Class`
+  MapEntry<String, dynamic> toJson() {
+    switch (kind) {
+      case 'Blake2_128':
+        return MapEntry('Blake2_128', null);
+      case 'Blake2_256':
+        return MapEntry('Blake2_256', null);
+      case 'Blake2_128Concat':
+        return MapEntry('Blake2_128Concat', null);
+      case 'Twox128':
+        return MapEntry('Twox128', null);
+      case 'Twox256':
+        return MapEntry('Twox256', null);
+      case 'Twox64Concat':
+        return MapEntry('Twox64Concat', null);
+      case 'Identity':
+        return MapEntry('Identity', null);
+      default:
+        throw UnexpectedTypeException('Unexpected type: $kind');
     }
   }
 }

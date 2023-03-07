@@ -2,7 +2,7 @@
 ///
 /// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/polkadot.ts
 
-const sharedTypes = <String, dynamic>{
+const _sharedTypes = <String, dynamic>{
   'CompactAssignments': 'CompactAssignmentsWith16',
   'RawSolution': 'RawSolutionWith16',
   'Keys': 'SessionKeys6',
@@ -20,7 +20,7 @@ const sharedTypes = <String, dynamic>{
   }
 };
 
-const addrAccountIdTypes = <String, String>{
+const _addrAccountIdTypes = <String, String>{
   'AccountInfo': 'AccountInfoWithRefCount',
   'Address': 'AccountId',
   'Keys': 'SessionKeys5',
@@ -34,8 +34,8 @@ final polkadotTypesBundle = <String, dynamic>{
     {
       'minmax': [0, 12],
       'types': {
-        ...sharedTypes,
-        ...addrAccountIdTypes,
+        ..._sharedTypes,
+        ..._addrAccountIdTypes,
         'CompactAssignments': 'CompactAssignmentsTo257',
         'OpenTip': 'OpenTipTo225',
         'RefCount': 'RefCountTo259'
@@ -44,8 +44,8 @@ final polkadotTypesBundle = <String, dynamic>{
     {
       'minmax': [13, 22],
       'types': {
-        ...sharedTypes,
-        ...addrAccountIdTypes,
+        ..._sharedTypes,
+        ..._addrAccountIdTypes,
         'CompactAssignments': 'CompactAssignmentsTo257',
         'RefCount': 'RefCountTo259'
       }
@@ -53,22 +53,22 @@ final polkadotTypesBundle = <String, dynamic>{
     {
       'minmax': [23, 24],
       'types': {
-        ...sharedTypes,
-        ...addrAccountIdTypes,
+        ..._sharedTypes,
+        ..._addrAccountIdTypes,
         'RefCount': 'RefCountTo259'
       }
     },
     {
       'minmax': [25, 27],
-      'types': {...sharedTypes, ...addrAccountIdTypes}
+      'types': {..._sharedTypes, ..._addrAccountIdTypes}
     },
     {
       'minmax': [28, 29],
-      'types': {...sharedTypes, 'AccountInfo': 'AccountInfoWithDualRefCount'}
+      'types': {..._sharedTypes, 'AccountInfo': 'AccountInfoWithDualRefCount'}
     },
     {
       'minmax': [30, 9109],
-      'types': sharedTypes
+      'types': _sharedTypes
     },
     {
       // metadata v14

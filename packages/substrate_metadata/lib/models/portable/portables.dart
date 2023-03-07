@@ -10,6 +10,11 @@ class PortableRegistryV14 {
           types: (map['types'] as List)
               .map((value) => PortableTypeV14.fromJson(value))
               .toList());
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'types': types.map((PortableTypeV14 value) => value.toJson()).toList(),
+      };
 }
 
 class PortableTypeV14 {
@@ -22,4 +27,10 @@ class PortableTypeV14 {
         id: map['id'],
         type: Si1Type.fromJson(map['type']),
       );
+
+  /// Creates `Map` from Class Object
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'type': type.toJson(),
+      };
 }
