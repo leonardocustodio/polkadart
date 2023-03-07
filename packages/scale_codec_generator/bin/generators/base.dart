@@ -92,13 +92,13 @@ class Field {
   late Generator codec;
   late List<String> docs;
 
-  Field({required String name, required this.codec, required this.docs }) {
+  Field({required String name, required this.codec, required this.docs}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
     this.name = toFieldName(name);
   }
 
-  Field._lazy({ required String name, required this.docs }) {
+  Field._lazy({required String name, required this.docs}) {
     this.name = toFieldName(name);
   }
 

@@ -312,11 +312,11 @@ void main(List<String> arguments) {
                       Field.toFieldName(field.name ?? 'value$index');
                   index++;
                   return Field.lazy(
-                      loader: lazyLoader,
-                      codec: field.type,
-                      name: name,
-                      docs: field.docs,
-                    );
+                    loader: lazyLoader,
+                    codec: field.type,
+                    name: name,
+                    docs: field.docs,
+                  );
                 }).toList());
           }).toList());
       continue;

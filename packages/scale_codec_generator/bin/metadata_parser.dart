@@ -523,7 +523,8 @@ enum StorageEntryModifier {
         return optional;
       case 'Default':
         return default_;
-      default: throw Exception('Unknown storage modifier: "$str"');
+      default:
+        throw Exception('Unknown storage modifier: "$str"');
     }
   }
 }

@@ -30,15 +30,13 @@ import './generators/polkadart.dart' show PolkadartGenerator;
 import './constants.dart' as constants;
 import './utils.dart' show sanitize;
 
-List<String> sanitizeDocs(List<String> docs) => docs
-  .map((doc) {
-    if (doc.startsWith('///')) return doc;
-    if (!doc.startsWith(' ')) {
-      doc = ' $doc';
-    }
-    return '///${doc.replaceAll('\n', '\n///')}';
-  })
-  .toList();
+List<String> sanitizeDocs(List<String> docs) => docs.map((doc) {
+      if (doc.startsWith('///')) return doc;
+      if (!doc.startsWith(' ')) {
+        doc = ' $doc';
+      }
+      return '///${doc.replaceAll('\n', '\n///')}';
+    }).toList();
 
 Class createCompositeClass(
   String typeName,
@@ -375,8 +373,7 @@ Class createVariantClass(
         )));
     });
 
-Enum createSimpleVariantEnum(v.VariantGenerator variant) =>
-    Enum((enumBuilder) {
+Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
       final Reference typeRef = refer(variant.name);
       final Reference codecRef = refer('_\$${variant.name}Codec');
 

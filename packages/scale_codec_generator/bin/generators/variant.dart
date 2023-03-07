@@ -33,7 +33,10 @@ class VariantGenerator extends Generator {
   List<String> docs;
 
   VariantGenerator(
-      {required this.filePath, required this.name, required this.variants, required this.docs});
+      {required this.filePath,
+      required this.name,
+      required this.variants,
+      required this.docs});
 
   @override
   TypeReference codec() {
@@ -72,15 +75,13 @@ class VariantGenerator extends Generator {
   GeneratedOutput? generated() {
     if (variants.isNotEmpty &&
         variants.every((variant) => variant.fields.isEmpty)) {
-      final simpleEnum =
-          createSimpleVariantEnum(this);
+      final simpleEnum = createSimpleVariantEnum(this);
       final simpleCodec =
           createSimpleVariantCodec('_\$${name}Codec', name, variants);
       return GeneratedOutput(
           classes: [simpleCodec], enums: [simpleEnum], typedefs: []);
     }
 
-    // final baseClass = createVariantBaseClass(name, '_\$${name}Codec', variants);
     final baseClass = createVariantBaseClass(this);
     final valuesClass = createVariantValuesClass('_$name', variants);
     final codecClass = createVariantCodec('_\$${name}Codec', name, variants);

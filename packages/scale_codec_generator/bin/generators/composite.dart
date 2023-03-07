@@ -10,13 +10,12 @@ class CompositeGenerator extends Generator {
   late List<Field> fields;
   List<String> docs;
 
-  CompositeGenerator(
-      {
-        required this.filePath,
-        required this.name,
-        required this.fields,
-        required this.docs,
-      });
+  CompositeGenerator({
+    required this.filePath,
+    required this.name,
+    required this.fields,
+    required this.docs,
+  });
 
   @override
   TypeReference codec() {
