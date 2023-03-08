@@ -3,7 +3,7 @@ import 'package:code_builder/code_builder.dart'
     show refer, TypeReference, Expression;
 import 'package:path/path.dart' as p;
 import '../class_builder.dart' show createCompositeCodec, createCompositeClass;
-import './base.dart' show Generator, GeneratedOutput, Field;
+import './base.dart' show BasePath, Generator, GeneratedOutput, Field;
 
 class CompositeGenerator extends Generator {
   String filePath;
@@ -19,24 +19,24 @@ class CompositeGenerator extends Generator {
   });
 
   @override
-  TypeReference codec([String? from]) {
+  TypeReference codec(BasePath from) {
     return TypeReference((b) => b
       ..symbol = name
-      ..url = from == null ? filePath : p.relative(filePath, from: from));
+      ..url = p.relative(filePath, from: from));
   }
 
   @override
-  TypeReference primitive([String? from]) {
+  TypeReference primitive(BasePath from) {
     return TypeReference((b) => b
       ..symbol = name
-      ..url = from == null ? filePath : p.relative(filePath, from: from));
+      ..url = p.relative(filePath, from: from));
   }
 
   @override
-  Expression valueFrom(Input input, [String? from]) {
+  Expression valueFrom(BasePath from, Input input) {
     return primitive(from).newInstance([], {
       for (final field in fields)
-        field.name: field.codec.valueFrom(input, from),
+        field.name: field.codec.valueFrom(from, input),
     });
   }
 

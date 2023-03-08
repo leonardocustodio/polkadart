@@ -2,7 +2,7 @@ import 'package:code_builder/code_builder.dart'
     show Expression, Reference, TypeReference;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:path/path.dart' as p;
-import './base.dart' show Generator, GeneratedOutput, LazyLoader;
+import './base.dart' show BasePath, Generator, GeneratedOutput, LazyLoader;
 import '../class_builder.dart' show createTypeDef;
 
 class TypeDefGenerator extends Generator {
@@ -35,37 +35,36 @@ class TypeDefGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([String? from]) {
+  TypeReference primitive(BasePath from) {
     return TypeReference((b) => b
       ..symbol = name
-      ..url = from == null ? filePath : p.relative(filePath, from: from));
+      ..url = p.relative(filePath, from: from));
   }
 
   @override
-  TypeReference codec([String? from]) {
+  TypeReference codec(BasePath from) {
     return generator.codec(from);
   }
 
   @override
-  Expression codecInstance([String? from]) {
+  Expression codecInstance(BasePath from) {
     return generator.codecInstance(from);
   }
 
   @override
-  Expression valueFrom(Input input, [String? from]) {
-    return generator.valueFrom(input, from);
+  Expression valueFrom(BasePath from, Input input) {
+    return generator.valueFrom(from, input);
   }
 
   @override
-  Expression encode(Expression obj,
-      [Expression output = const Reference('output'), String? from]) {
-    return generator.encode(obj, output, from);
+  Expression encode(String from, Expression obj,
+      [Expression output = const Reference('output')]) {
+    return generator.encode(from, obj, output);
   }
 
   @override
-  Expression decode(
-      [Expression input = const Reference('input'), String? from]) {
-    return generator.decode(input, from);
+  Expression decode(String from, [Expression input = const Reference('input')]) {
+    return generator.decode(from, input);
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:code_builder/code_builder.dart' show Expression, TypeReference;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import './base.dart' show Generator, LazyLoader;
+import './base.dart' show BasePath, Generator, LazyLoader;
 import '../constants.dart' as constants;
 
 class ResultGenerator extends Generator {
@@ -25,28 +25,28 @@ class ResultGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([String? from]) {
+  TypeReference primitive(BasePath from) {
     return constants.result(ok.primitive(from), err.primitive(from));
   }
 
   @override
-  TypeReference codec([String? from]) {
+  TypeReference codec(BasePath from) {
     return constants.resultCodec(ok.primitive(from), err.primitive(from));
   }
 
   @override
-  Expression valueFrom(Input input, [String? from]) {
+  Expression valueFrom(BasePath from, Input input) {
     if (input.read() == 0) {
       return primitive(from)
-          .newInstanceNamed('ok', [ok.valueFrom(input, from)]);
+          .newInstanceNamed('ok', [ok.valueFrom(from, input)]);
     } else {
       return primitive(from)
-          .newInstanceNamed('err', [err.valueFrom(input, from)]);
+          .newInstanceNamed('err', [err.valueFrom(from, input)]);
     }
   }
 
   @override
-  Expression codecInstance([String? from]) {
+  Expression codecInstance(String from) {
     return codec(from)
         .constInstance([ok.codecInstance(from), err.codecInstance(from)]);
   }

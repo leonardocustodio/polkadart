@@ -3,7 +3,7 @@ import 'package:code_builder/code_builder.dart'
     show Expression, TypeReference, literalNull;
 import '../constants.dart' as constants
     show Nullable, option, optionCodec, nestedOptionCodec;
-import './base.dart' show Generator, LazyLoader;
+import './base.dart' show BasePath, Generator, LazyLoader;
 
 class OptionGenerator extends Generator {
   late Generator inner;
@@ -22,7 +22,7 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([String? from]) {
+  TypeReference primitive(BasePath from) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       return constants.option(inner.primitive(from));
     }
@@ -30,7 +30,7 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  TypeReference codec([String? from]) {
+  TypeReference codec(BasePath from) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       return constants.nestedOptionCodec(inner.primitive(from));
     }
@@ -38,12 +38,12 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  Expression codecInstance([String? from]) {
+  Expression codecInstance(BasePath from) {
     return codec(from).constInstance([inner.codecInstance(from)]);
   }
 
   @override
-  Expression valueFrom(Input input, [String? from]) {
+  Expression valueFrom(BasePath from, Input input) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       if (input.read() == 0) {
         return constants
@@ -53,7 +53,7 @@ class OptionGenerator extends Generator {
         return constants
             .option(inner.primitive(from))
             .newInstanceNamed('some', [
-          inner.valueFrom(input, from),
+          inner.valueFrom(from, input),
         ]);
       }
     }
@@ -61,7 +61,7 @@ class OptionGenerator extends Generator {
     if (input.read() == 0) {
       return literalNull;
     } else {
-      return inner.valueFrom(input, from);
+      return inner.valueFrom(from, input);
     }
   }
 }

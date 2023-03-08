@@ -4,7 +4,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show Input, BitSequenceCodec, BitStore, BitOrder;
 import '../metadata_parser.dart' show Primitive;
 import '../constants.dart' as constants;
-import './base.dart' show Generator;
+import './base.dart' show BasePath, Generator;
 
 class BitSequenceGenerator extends Generator {
   BitStore store;
@@ -48,17 +48,17 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([String? from]) {
+  TypeReference primitive(BasePath from) {
     return constants.bitArray.type as TypeReference;
   }
 
   @override
-  TypeReference codec([String? from]) {
+  TypeReference codec(BasePath from) {
     return constants.bitSequenceCodec.type as TypeReference;
   }
 
   @override
-  Expression codecInstance([String? from]) {
+  Expression codecInstance(BasePath from) {
     return codec(from).constInstance([
       constants.bitStore.property(store.name),
       constants.bitOrder.property(order.name),
@@ -66,7 +66,7 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(Input input, [String? from]) {
+  Expression valueFrom(BasePath from, Input input) {
     final bitArray = BitSequenceCodec(store, order).decode(input);
     return primitive(from).property('fromByteBuffer').call([
       literalNum(bitArray.length),

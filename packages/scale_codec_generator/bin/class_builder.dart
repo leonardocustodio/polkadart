@@ -102,7 +102,7 @@ Class createCompositeCodec(CompositeGenerator compositeGenerator) {
             ..name = 'output'),
         ])
         ..body = Block.of(compositeGenerator.fields.map((field) => field.codec
-            .encode(refer('obj').property(field.name), refer('output'), dirname)
+            .encode(dirname, refer('obj').property(field.name))
             .statement))))
       ..methods.add(Method((b) => b
         ..name = 'decode'
@@ -115,7 +115,7 @@ Class createCompositeCodec(CompositeGenerator compositeGenerator) {
           ..statements.add(classType
               .newInstance([], {
                 for (var field in compositeGenerator.fields)
-                  field.name: field.codec.decode(refer('input'), dirname)
+                  field.name: field.codec.decode(dirname)
               })
               .returned
               .statement))))
@@ -238,7 +238,7 @@ Class createVariantCodec(v.VariantGenerator variantGenerator) =>
             ..name = 'input'))
           ..body = Block.of([
             declareFinal('index')
-                .assign(PrimitiveGenerator.u8.decode(refer('input'), dirname))
+                .assign(PrimitiveGenerator.u8.decode(dirname))
                 .statement,
             Code('switch (index) {'),
             Block.of(variantGenerator.variants.map((variant) => Block.of([
@@ -335,7 +335,7 @@ Class createVariantClass(
               Code('return ${variant.name}('),
               Block.of(variant.fields.map((field) => Block.of([
                     Code('${field.name}: '),
-                    field.codec.decode(refer('input'), dirname).code,
+                    field.codec.decode(dirname).code,
                     Code(', '),
                   ]))),
               Code(');'),
@@ -364,10 +364,10 @@ Class createVariantClass(
         ..body = Block(
           (b) => b
             ..statements.add(PrimitiveGenerator.u8
-                .encode(literalNum(variant.index), refer('output'), dirname)
+                .encode(dirname, literalNum(variant.index))
                 .statement)
             ..statements.addAll(variant.fields.map((field) => field.codec
-                .encode(refer(field.name), refer('output'), dirname)
+                .encode(dirname, refer(field.name))
                 .statement)),
         )));
     });
@@ -412,11 +412,14 @@ Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
     });
 
 Class createSimpleVariantCodec(
+  String filePath,
   String codecName,
   String typeName,
   List<v.Variant> variants,
 ) =>
     Class((classBuilder) {
+      final dirname = p.dirname(filePath);
+
       classBuilder
         ..name = codecName
         ..constructors.add(Constructor((b) => b..constant = true))
@@ -430,7 +433,7 @@ Class createSimpleVariantCodec(
             ..name = 'input'))
           ..body = Block((b) => b
             ..statements.add(declareFinal('index')
-                .assign(PrimitiveGenerator.u8.decode())
+                .assign(PrimitiveGenerator.u8.decode(dirname))
                 .statement)
             ..statements.add(Code('switch (index) {'))
             ..statements.add(Block.of(variants.map((variant) => Block.of([
@@ -453,7 +456,7 @@ Class createSimpleVariantCodec(
               ..name = 'output'),
           ])
           ..body = PrimitiveGenerator.u8
-              .encode(refer('value').property('codecIndex'))
+              .encode(dirname, refer('value').property('codecIndex'))
               .statement));
     });
 
@@ -583,7 +586,7 @@ Class createPalletQueries(
           ..name = '_${ReCase(storage.name).camelCase}'
           ..type = storage.type(dirname)
           ..modifier = FieldModifier.final$
-          ..assignment = storage.instance(generator.name, dirname).code)))
+          ..assignment = storage.instance(dirname, generator.name).code)))
         ..methods.addAll(generator.storages.map((storage) => Method((builder) {
               final storageName = ReCase(storage.name).camelCase;
               builder
@@ -634,8 +637,9 @@ Class createPalletQueries(
                       ? Code('return null; /* Nullable */')
                       : storage.valueCodec
                           .valueFrom(
+                              dirname,
                               scale_codec.ByteInput(storage.defaultValue),
-                              dirname)
+                              )
                           .returned
                           .statement)
                   ..statements.add(
@@ -657,7 +661,7 @@ Class createPalletConstants(
           ..modifier = FieldModifier.final$
           ..docs.addAll(sanitizeDocs(constant.docs))
           ..assignment = constant.codec
-              .valueFrom(scale_codec.ByteInput(constant.value), dirname)
+              .valueFrom(dirname, scale_codec.ByteInput(constant.value))
               .code)));
     });
 

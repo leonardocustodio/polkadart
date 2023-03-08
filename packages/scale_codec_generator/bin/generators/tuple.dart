@@ -1,7 +1,7 @@
 import 'package:code_builder/code_builder.dart' show Expression, TypeReference;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:path/path.dart' as p;
-import './base.dart' show Generator, GeneratedOutput, LazyLoader;
+import './base.dart' show BasePath, Generator, GeneratedOutput, LazyLoader;
 import '../class_builder.dart' show createTupleClass, createTupleCodec;
 
 class TupleGenerator extends Generator {
@@ -26,32 +26,31 @@ class TupleGenerator extends Generator {
   }
 
   @override
-  TypeReference codec([String? from]) {
+  TypeReference codec(BasePath from) {
     return TypeReference((b) => b
       ..symbol = 'Tuple${generators.length}Codec'
-      ..url = from == null ? filePath : p.relative(filePath, from: from)
+      ..url = p.relative(filePath, from: from)
       ..types.addAll(generators.map((e) => e.primitive(from))));
   }
 
   @override
-  TypeReference primitive([String? from]) {
+  TypeReference primitive(BasePath from) {
     return TypeReference((b) => b
       ..symbol = 'Tuple${generators.length}'
-      ..url = from == null ? filePath : p.relative(filePath, from: from)
+      ..url = p.relative(filePath, from: from)
       ..types.addAll(generators.map((e) => e.primitive(from))));
   }
 
   @override
-  Expression codecInstance([String? from]) {
+  Expression codecInstance(BasePath from) {
     return codec(from)
         .constInstance(generators.map((type) => type.codecInstance(from)));
   }
 
   @override
-  Expression valueFrom(Input input, [String? from]) {
-    // return primitive().newInstance([]);
+  Expression valueFrom(BasePath from, Input input) {
     return primitive(from).newInstance(
-        generators.map((type) => type.valueFrom(input, from)).toList());
+        generators.map((type) => type.valueFrom(from, input)).toList());
   }
 
   @override

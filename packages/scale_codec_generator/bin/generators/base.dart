@@ -6,28 +6,30 @@ import 'package:code_builder/code_builder.dart' show DartEmitter, Library;
 import 'package:recase/recase.dart' show ReCase;
 import '../utils.dart' show sanitize;
 
+typedef BasePath = String;
+
 abstract class Generator {
   const Generator();
 
-  Expression encode(Expression obj,
-      [Expression output = const Reference('output'), String? from]) {
+  Expression encode(BasePath from, Expression obj,
+      [Expression output = const Reference('output')]) {
     return codecInstance(from).property('encodeTo').call([obj, output]);
   }
 
-  Expression decode(
-      [Expression input = const Reference('input'), String? from]) {
+  Expression decode(BasePath from,
+      [Expression input = const Reference('input')]) {
     return codecInstance(from).property('decode').call([input]);
   }
 
-  TypeReference primitive([String? from]);
+  TypeReference primitive(BasePath from);
 
-  TypeReference codec([String? from]);
+  TypeReference codec(BasePath from);
 
-  Expression codecInstance([String? from]) {
+  Expression codecInstance(String from) {
     return codec(from).property('codec');
   }
 
-  Expression valueFrom(Input input, [String? from]);
+  Expression valueFrom(BasePath from, Input input);
 
   GeneratedOutput? generated() {
     return null;
@@ -70,8 +72,6 @@ class LazyLoader {
     loaders.add(loader);
   }
 }
-
-class FilePath {}
 
 class Field {
   late String name;

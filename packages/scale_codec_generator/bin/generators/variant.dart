@@ -11,7 +11,7 @@ import '../class_builder.dart'
         createVariantClass,
         createSimpleVariantEnum,
         createSimpleVariantCodec;
-import './base.dart' show Generator, GeneratedOutput, Field;
+import './base.dart' show BasePath, Generator, GeneratedOutput, Field;
 
 class Variant {
   int index;
@@ -40,21 +40,21 @@ class VariantGenerator extends Generator {
       required this.docs});
 
   @override
-  TypeReference codec([String? from]) {
+  TypeReference codec(BasePath from) {
     return TypeReference((b) => b
       ..symbol = name
-      ..url = from == null ? filePath : p.relative(filePath, from: from));
+      ..url = p.relative(filePath, from: from));
   }
 
   @override
-  TypeReference primitive([String? from]) {
+  TypeReference primitive(BasePath from) {
     return TypeReference((b) => b
       ..symbol = name
-      ..url = from == null ? filePath : p.relative(filePath, from: from));
+      ..url = p.relative(filePath, from: from));
   }
 
   @override
-  Expression valueFrom(Input input, [String? from]) {
+  Expression valueFrom(BasePath from, Input input) {
     final index = input.read();
     final variant = variants.firstWhere((variant) => variant.index == index);
 
@@ -68,7 +68,7 @@ class VariantGenerator extends Generator {
         .property(ReCase(variant.name).camelCase)
         .call([], {
       for (final field in variant.fields)
-        field.name: field.codec.valueFrom(input, from)
+        field.name: field.codec.valueFrom(from, input)
     });
   }
 
@@ -78,7 +78,7 @@ class VariantGenerator extends Generator {
         variants.every((variant) => variant.fields.isEmpty)) {
       final simpleEnum = createSimpleVariantEnum(this);
       final simpleCodec =
-          createSimpleVariantCodec('_\$${name}Codec', name, variants);
+          createSimpleVariantCodec(filePath, '_\$${name}Codec', name, variants);
       return GeneratedOutput(
           classes: [simpleCodec], enums: [simpleEnum], typedefs: []);
     }

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:path/path.dart' as p;
-import './base.dart' show Generator, GeneratedOutput;
+import './base.dart' show BasePath, Generator, GeneratedOutput;
 import '../class_builder.dart' show createPalletQueries, createPalletConstants;
 import '../metadata_parser.dart' as metadata
     show
@@ -28,11 +28,11 @@ enum StorageHasherType {
 
   const StorageHasherType();
 
-  TypeReference type([String? from]) {
+  TypeReference type(BasePath from) {
     return constants.storageHasher.type as TypeReference;
   }
 
-  Expression instance(Expression codecInstance, [String? from]) {
+  Expression instance(Expression codecInstance, BasePath from) {
     // StorageHasher.blake2b128(codec);
     return type(from).property(name).call([codecInstance]);
   }
@@ -62,8 +62,8 @@ class StorageHasher<G extends Generator> {
   const StorageHasher.twoxx256({required this.codec})
       : hasher = StorageHasherType.twoxx256;
 
-  Expression instance([String? from]) {
-    return hasher.instance(codec.codecInstance(from));
+  Expression instance(BasePath from) {
+    return hasher.instance(codec.codecInstance(from), from);
   }
 
   factory StorageHasher.fromMetadata({
@@ -167,7 +167,7 @@ class Storage {
     );
   }
 
-  TypeReference type([String? from]) {
+  TypeReference type(String from) {
     switch (hashers.length) {
       case 0:
         return constants.storageValue(valueCodec.primitive(from));
@@ -215,7 +215,7 @@ class Storage {
     }
   }
 
-  Expression instance(String palletName, [String? from]) {
+  Expression instance(BasePath from, String palletName) {
     final Map<String, Expression> arguments = {
       'prefix': literalString(palletName),
       'storage': literalString(name),
@@ -295,16 +295,16 @@ class PalletGenerator {
         constants: constants);
   }
 
-  TypeReference queries([String? from]) {
+  TypeReference queries(BasePath from) {
     return TypeReference((b) => b
       ..symbol = 'Queries'
-      ..url = from == null ? filePath : p.relative(filePath, from: from));
+      ..url = p.relative(filePath, from: from));
   }
 
-  TypeReference constantsType([String? from]) {
+  TypeReference constantsType(BasePath from) {
     return TypeReference((b) => b
       ..symbol = 'Constants'
-      ..url = from == null ? filePath : p.relative(filePath, from: from));
+      ..url = p.relative(filePath, from: from));
   }
 
   GeneratedOutput generated() {

@@ -20,7 +20,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         I64ArrayCodec;
 import '../metadata_parser.dart' show Primitive;
 import '../constants.dart' as constants;
-import './base.dart' show Generator, LazyLoader;
+import './base.dart' show BasePath, Generator, LazyLoader;
 import './primitive.dart' show PrimitiveGenerator;
 
 class ArrayGenerator extends Generator {
@@ -41,7 +41,7 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([String? from]) {
+  TypeReference primitive(BasePath from) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -68,7 +68,7 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  TypeReference codec([String? from]) {
+  TypeReference codec(BasePath from) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -96,7 +96,7 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  Expression codecInstance([String? from]) {
+  Expression codecInstance(BasePath from) {
     final TypeReference codec = this.codec(from);
 
     if (typeDef is PrimitiveGenerator) {
@@ -122,7 +122,7 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(Input input, [String? from]) {
+  Expression valueFrom(BasePath from, Input input) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -198,7 +198,7 @@ class ArrayGenerator extends Generator {
     return CodeExpression(Block((builder) {
       builder.statements.add(Code('['));
       for (var i = 0; i < length; i++) {
-        builder.statements.add(typeDef.valueFrom(input, from).code);
+        builder.statements.add(typeDef.valueFrom(from, input).code);
         if (i < (length - 1)) {
           builder.statements.add(Code(', '));
         }
