@@ -11,6 +11,7 @@ environment:
 dependencies:
   pointycastle: ^3.6.2 # MIT
   http: ^0.13.5 # BSD-3-Clause
+  convert: ^3.1.1 # BSD-3-Clause
   polkadart_scale_codec: 
     path: ../polkadart_scale_codec
 

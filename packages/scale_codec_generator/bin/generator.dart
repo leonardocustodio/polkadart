@@ -1,8 +1,11 @@
-import 'dart:convert' show jsonDecode;
+import 'dart:convert' show jsonDecode, jsonEncode;
 import 'dart:io' show File, Directory;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show BitStore, BitOrder;
+import 'package:substrate_metadata/substrate_metadata.dart' show MetadataDecoder;
+import 'package:substrate_metadata/utils/utils.dart' show ToJson;
+import 'package:http/http.dart' as http;
 
 import './generators/array.dart' show ArrayGenerator;
 import './generators/btreemap.dart' show BTreeMapGenerator;
@@ -24,7 +27,6 @@ import './generators/polkadart.dart' show PolkadartGenerator;
 import './metadata_parser.dart'
     show
         RuntimeMetadataV14,
-        PalletStorageMetadata,
         TypeMetadata,
         TypeDefVariant,
         TypeDefSequence,
@@ -38,23 +40,29 @@ import './metadata_parser.dart'
 const generatedPath = 'generated/types';
 const palletsPath = 'generated/pallets';
 
-class SimpleEnumCodec {
-  final Map<int, String> variants;
+Future<RuntimeMetadataV14> downloadMetadata(Uri url) async {
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'id': 1,
+      'jsonrpc': '2.0',
+      'method': 'state_getMetadata',
+      'params': <String>[],
+    })
+  );
 
-  const SimpleEnumCodec.sparse(this.variants);
-
-  factory SimpleEnumCodec(List<String> variants) {
-    return SimpleEnumCodec.sparse(
-        {for (var i = 0; i < variants.length; i++) i: variants[i]});
-  }
+  final jsonMetadata = jsonDecode(response.body)['result'] as String;
+  final decodedMetadata = MetadataDecoder.instance.decode(jsonMetadata);
+  return RuntimeMetadataV14.fromJson(decodedMetadata.metadata.toJson());
 }
 
-void main(List<String> arguments) {
+void main(List<String> arguments) async {
   // URL -> rpc.polkadot.io
   // outputPath -> ./generated
-  final filePath = './metadata-polkadot.json';
-  final metadata = RuntimeMetadataV14.fromJson(
-      jsonDecode(File(filePath).readAsStringSync()));
+  final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('astar.public.blastapi.io'));
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {

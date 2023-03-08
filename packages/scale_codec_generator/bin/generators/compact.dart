@@ -1,7 +1,7 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show Input, CompactBigIntCodec;
 import 'package:code_builder/code_builder.dart'
-    show Expression, TypeReference, literalString, literalNum;
+    show Expression, TypeReference;
 import '../constants.dart' as constants;
 import '../utils.dart' as utils show bigIntToExpression;
 import './base.dart' show Generator;
