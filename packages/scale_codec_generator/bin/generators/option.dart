@@ -3,7 +3,7 @@ import 'package:code_builder/code_builder.dart'
     show Expression, TypeReference, literalNull;
 import '../constants.dart' as constants
     show Nullable, option, optionCodec, nestedOptionCodec;
-import './base.dart' show Generator, LazyLoader;
+import './base.dart' show BasePath, Generator, LazyLoader;
 
 class OptionGenerator extends Generator {
   late Generator inner;
@@ -22,34 +22,38 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
-    if (inner is OptionGenerator || inner.primitive().isNullable == true) {
-      return constants.option(inner.primitive());
+  TypeReference primitive(BasePath from) {
+    if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
+      return constants.option(inner.primitive(from));
     }
-    return inner.primitive().asNullable();
+    return inner.primitive(from).asNullable();
   }
 
   @override
-  TypeReference codec() {
-    if (inner is OptionGenerator || inner.primitive().isNullable == true) {
-      return constants.nestedOptionCodec(inner.primitive());
+  TypeReference codec(BasePath from) {
+    if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
+      return constants.nestedOptionCodec(inner.primitive(from));
     }
-    return constants.optionCodec(inner.primitive());
+    return constants.optionCodec(inner.primitive(from));
   }
 
   @override
-  Expression codecInstance() {
-    return codec().constInstance([inner.codecInstance()]);
+  Expression codecInstance(BasePath from) {
+    return codec(from).constInstance([inner.codecInstance(from)]);
   }
 
   @override
-  Expression valueFrom(Input input) {
-    if (inner is OptionGenerator || inner.primitive().isNullable == true) {
+  Expression valueFrom(BasePath from, Input input) {
+    if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       if (input.read() == 0) {
-        return constants.option(inner.primitive()).newInstanceNamed('none', []);
+        return constants
+            .option(inner.primitive(from))
+            .newInstanceNamed('none', []);
       } else {
-        return constants.option(inner.primitive()).newInstanceNamed('some', [
-          inner.valueFrom(input),
+        return constants
+            .option(inner.primitive(from))
+            .newInstanceNamed('some', [
+          inner.valueFrom(from, input),
         ]);
       }
     }
@@ -57,7 +61,14 @@ class OptionGenerator extends Generator {
     if (input.read() == 0) {
       return literalNull;
     } else {
-      return inner.valueFrom(input);
+      return inner.valueFrom(from, input);
     }
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj
+        .equalTo(literalNull)
+        .conditional(literalNull, inner.instanceToJson(from, obj.nullChecked));
   }
 }

@@ -16,7 +16,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
 import 'package:code_builder/code_builder.dart'
     show TypeReference, Expression, literalBool, literalString, literalNum;
 import '../metadata_parser.dart' show Primitive;
-import './base.dart' show Generator;
+import './base.dart' show BasePath, Generator;
 import '../constants.dart' as constants;
 import '../utils.dart' as utils show bigIntToExpression;
 
@@ -73,7 +73,7 @@ class PrimitiveGenerator extends Generator {
   static const PrimitiveGenerator u128 = PrimitiveGenerator._(Primitive.U128);
 
   @override
-  TypeReference primitive() {
+  TypeReference primitive(BasePath from) {
     switch (primitiveType) {
       case Primitive.Bool:
         return constants.bool.type as TypeReference;
@@ -98,7 +98,7 @@ class PrimitiveGenerator extends Generator {
   }
 
   @override
-  TypeReference codec() {
+  TypeReference codec(BasePath from) {
     switch (primitiveType) {
       case Primitive.Bool:
         return constants.boolCodec.type as TypeReference;
@@ -131,7 +131,7 @@ class PrimitiveGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(Input input) {
+  Expression valueFrom(BasePath from, Input input) {
     switch (primitiveType) {
       case Primitive.Bool:
         return literalBool(BoolCodec.codec.decode(input));
@@ -161,5 +161,10 @@ class PrimitiveGenerator extends Generator {
       default:
         throw Exception('Unsupported primitive $primitive');
     }
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj;
   }
 }
