@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:path/path.dart' as p;
 import './base.dart' show Generator, GeneratedOutput;
 import '../class_builder.dart' show createPalletQueries, createPalletConstants;
 import '../metadata_parser.dart' as metadata
@@ -28,13 +28,13 @@ enum StorageHasherType {
 
   const StorageHasherType();
 
-  TypeReference type() {
+  TypeReference type([ String? from ]) {
     return constants.storageHasher.type as TypeReference;
   }
 
-  Expression instance(Expression codecInstance) {
+  Expression instance(Expression codecInstance, [ String? from ]) {
     // StorageHasher.blake2b128(codec);
-    return type().property(name).call([codecInstance]);
+    return type(from).property(name).call([codecInstance]);
   }
 }
 
@@ -62,8 +62,8 @@ class StorageHasher<G extends Generator> {
   const StorageHasher.twoxx256({required this.codec})
       : hasher = StorageHasherType.twoxx256;
 
-  Expression instance() {
-    return hasher.instance(codec.codecInstance());
+  Expression instance([ String? from ]) {
+    return hasher.instance(codec.codecInstance(from));
   }
 
   factory StorageHasher.fromMetadata({
@@ -155,9 +155,7 @@ class Storage {
           codec: keysCodec[i],
         )
     ];
-    if (storageMetadata.modifier != metadata.StorageEntryModifier.optional) {
-      print(storageMetadata.name);
-    }
+    
     return Storage(
       name: storageMetadata.name,
       hashers: hashers,
@@ -169,69 +167,69 @@ class Storage {
     );
   }
 
-  TypeReference type() {
+  TypeReference type([ String? from ]) {
     switch (hashers.length) {
       case 0:
-        return constants.storageValue(valueCodec.primitive());
+        return constants.storageValue(valueCodec.primitive(from));
       case 1:
         return constants.storageMap(
-            key: hashers[0].codec.primitive(), value: valueCodec.primitive());
+            key: hashers[0].codec.primitive(from), value: valueCodec.primitive(from));
       case 2:
         return constants.storageDoubleMap(
-            key1: hashers[0].codec.primitive(),
-            key2: hashers[1].codec.primitive(),
-            value: valueCodec.primitive());
+            key1: hashers[0].codec.primitive(from),
+            key2: hashers[1].codec.primitive(from),
+            value: valueCodec.primitive(from));
       case 3:
         return constants.storageTripleMap(
-            key1: hashers[0].codec.primitive(),
-            key2: hashers[1].codec.primitive(),
-            key3: hashers[2].codec.primitive(),
-            value: valueCodec.primitive());
+            key1: hashers[0].codec.primitive(from),
+            key2: hashers[1].codec.primitive(from),
+            key3: hashers[2].codec.primitive(from),
+            value: valueCodec.primitive(from));
       case 4:
         return constants.storageQuadrupleMap(
-            key1: hashers[0].codec.primitive(),
-            key2: hashers[1].codec.primitive(),
-            key3: hashers[2].codec.primitive(),
-            key4: hashers[3].codec.primitive(),
-            value: valueCodec.primitive());
+            key1: hashers[0].codec.primitive(from),
+            key2: hashers[1].codec.primitive(from),
+            key3: hashers[2].codec.primitive(from),
+            key4: hashers[3].codec.primitive(from),
+            value: valueCodec.primitive(from));
       case 5:
         return constants.storageQuintupleMap(
-            key1: hashers[0].codec.primitive(),
-            key2: hashers[1].codec.primitive(),
-            key3: hashers[2].codec.primitive(),
-            key4: hashers[3].codec.primitive(),
-            key5: hashers[4].codec.primitive(),
-            value: valueCodec.primitive());
+            key1: hashers[0].codec.primitive(from),
+            key2: hashers[1].codec.primitive(from),
+            key3: hashers[2].codec.primitive(from),
+            key4: hashers[3].codec.primitive(from),
+            key5: hashers[4].codec.primitive(from),
+            value: valueCodec.primitive(from));
       case 6:
         return constants.storageSextupleMap(
-            key1: hashers[0].codec.primitive(),
-            key2: hashers[1].codec.primitive(),
-            key3: hashers[2].codec.primitive(),
-            key4: hashers[3].codec.primitive(),
-            key5: hashers[4].codec.primitive(),
-            key6: hashers[5].codec.primitive(),
-            value: valueCodec.primitive());
+            key1: hashers[0].codec.primitive(from),
+            key2: hashers[1].codec.primitive(from),
+            key3: hashers[2].codec.primitive(from),
+            key4: hashers[3].codec.primitive(from),
+            key5: hashers[4].codec.primitive(from),
+            key6: hashers[5].codec.primitive(from),
+            value: valueCodec.primitive(from));
       default:
         throw Exception('Invalid hashers length');
     }
   }
 
-  Expression instance(String palletName) {
+  Expression instance(String palletName, [ String? from ]) {
     final Map<String, Expression> arguments = {
       'prefix': literalString(palletName),
       'storage': literalString(name),
-      'valueCodec': valueCodec.codecInstance(),
+      'valueCodec': valueCodec.codecInstance(from),
     };
 
     if (hashers.length == 1) {
-      arguments['hasher'] = hashers[0].instance();
+      arguments['hasher'] = hashers[0].instance(from);
     } else {
       for (int i = 0; i < hashers.length; i++) {
-        arguments['hasher${i + 1}'] = hashers[i].instance();
+        arguments['hasher${i + 1}'] = hashers[i].instance(from);
       }
     }
 
-    return type().constInstance([], arguments);
+    return type(from).constInstance([], arguments);
   }
 }
 
@@ -296,16 +294,16 @@ class PalletGenerator {
         constants: constants);
   }
 
-  TypeReference queries() {
+  TypeReference queries([ String? from ]) {
     return TypeReference((b) => b
       ..symbol = 'Queries'
-      ..url = filePath);
+      ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
-  TypeReference constantsType() {
+  TypeReference constantsType([ String? from ]) {
     return TypeReference((b) => b
       ..symbol = 'Constants'
-      ..url = filePath);
+      ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
   GeneratedOutput generated() {

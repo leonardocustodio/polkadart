@@ -1,6 +1,7 @@
 import 'package:code_builder/code_builder.dart'
     show Expression, Reference, TypeReference;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
+import 'package:path/path.dart' as p;
 import './base.dart' show Generator, GeneratedOutput, LazyLoader;
 import '../class_builder.dart' show createTypeDef;
 
@@ -34,41 +35,41 @@ class TypeDefGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
+  TypeReference primitive([ String? from ]) {
     return TypeReference((b) => b
       ..symbol = name
-      ..url = filePath);
+      ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
   @override
-  TypeReference codec() {
-    return generator.codec();
+  TypeReference codec([ String? from ]) {
+    return generator.codec(from);
   }
 
   @override
-  Expression codecInstance() {
-    return generator.codecInstance();
+  Expression codecInstance([ String? from ]) {
+    return generator.codecInstance(from);
   }
 
   @override
-  Expression valueFrom(Input input) {
-    return generator.valueFrom(input);
+  Expression valueFrom(Input input, [ String? from ]) {
+    return generator.valueFrom(input, from);
   }
 
   @override
   Expression encode(Expression obj,
-      [Expression output = const Reference('output')]) {
-    return generator.encode(obj, output);
+      [Expression output = const Reference('output'), String? from]) {
+    return generator.encode(obj, output, from);
   }
 
   @override
-  Expression decode([Expression input = const Reference('input')]) {
-    return generator.decode(input);
+  Expression decode([Expression input = const Reference('input'), String? from]) {
+    return generator.decode(input, from);
   }
 
   @override
   GeneratedOutput? generated() {
-    final typeDef = createTypeDef(name: name, reference: generator.primitive());
+    final typeDef = createTypeDef(name: name, reference: generator.primitive(p.dirname(filePath)));
     return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
   }
 }

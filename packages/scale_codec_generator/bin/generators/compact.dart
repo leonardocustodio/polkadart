@@ -10,17 +10,17 @@ class CompactGenerator extends Generator {
   const CompactGenerator();
 
   @override
-  TypeReference primitive() {
+  TypeReference primitive([ String? from ]) {
     return constants.bigInt.type as TypeReference;
   }
 
   @override
-  TypeReference codec() {
+  TypeReference codec([ String? from ]) {
     return constants.compactBigIntCodec.type as TypeReference;
   }
 
   @override
-  Expression valueFrom(Input input) {
+  Expression valueFrom(Input input, [ String? from ]) {
     final value = CompactBigIntCodec.codec.decode(input);
     return utils.bigIntToExpression(value);
   }

@@ -37,8 +37,9 @@ import './metadata_parser.dart'
         TypeDefPrimitive,
         TypeDefTuple;
 
-const generatedPath = 'generated/types';
-const palletsPath = 'generated/pallets';
+const basePath = 'generated';
+const typesPath = '$basePath/types';
+const palletsPath = '$basePath/pallets';
 
 Future<RuntimeMetadataV14> downloadMetadata(Uri url) async {
   final response = await http.post(
@@ -120,7 +121,7 @@ void main(List<String> arguments) async {
       // Create TypeDef Generator
       if (tuple.types.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$generatedPath/${type.path.join('/')}.dart',
+            filePath: '$typesPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -129,7 +130,7 @@ void main(List<String> arguments) async {
 
       generators[type.id] = TupleGenerator.lazy(
         loader: lazyLoader,
-        filePath: '$generatedPath/tuples.dart',
+        filePath: '$typesPath/tuples.dart',
         codecs: tuple.types,
       );
       continue;
@@ -166,7 +167,7 @@ void main(List<String> arguments) async {
       // Create TypeDef Generator
       if (composite.fields.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$generatedPath/${type.path.join('/')}.dart',
+            filePath: '$typesPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -227,7 +228,7 @@ void main(List<String> arguments) async {
 
         generators[type.id] = TypeDefGenerator.lazy(
           loader: lazyLoader,
-          filePath: '$generatedPath/${type.path.join('/')}.dart',
+          filePath: '$typesPath/${type.path.join('/')}.dart',
           name: ReCase(type.path.last).pascalCase,
           codec: composite.fields[0].type,
           docs: type.docs,
@@ -238,7 +239,7 @@ void main(List<String> arguments) async {
       // Create Compose Generator
       int index = 0;
       generators[type.id] = CompositeGenerator(
-          filePath: '$generatedPath/${type.path.join('/')}.dart',
+          filePath: '$typesPath/${type.path.join('/')}.dart',
           name: type.path.last,
           docs: type.docs,
           fields: composite.fields
@@ -264,7 +265,7 @@ void main(List<String> arguments) async {
       // Create TypeDef Generator
       if (variant.variants.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$generatedPath/${type.path.join('/')}.dart',
+            filePath: '$typesPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -302,7 +303,7 @@ void main(List<String> arguments) async {
 
       // Create Variant Generator
       generators[type.id] = VariantGenerator(
-          filePath: '$generatedPath/${type.path.join('/')}.dart',
+          filePath: '$typesPath/${type.path.join('/')}.dart',
           name: type.path.last,
           docs: type.docs,
           variants: variant.variants.map((variant) {
@@ -424,13 +425,13 @@ void main(List<String> arguments) async {
   }
 
   final polkadartGenerator = PolkadartGenerator(
-    filePath: 'generated/polkadart.dart',
-    name: 'Polkadot',
+    filePath: '$basePath/polkadart.dart',
+    name: 'Polkadart',
     pallets: palletGenerators,
-  ).generated().build().replaceAll('import \'generated/', 'import \'./');
-  Directory('./bin/generated').createSync(recursive: true);
-  File('./bin/generated/polkadart.dart').writeAsStringSync(polkadartGenerator);
-  print('./bin/generated/polkadart.dart');
+  ).generated().build();
+  Directory('./bin/$basePath').createSync(recursive: true);
+  File('./bin/$basePath/polkadart.dart').writeAsStringSync(polkadartGenerator);
+  print('./bin/$basePath/polkadart.dart');
 
   // Write the Pallets Files
   for (final pallet in palletGenerators) {
@@ -438,35 +439,7 @@ void main(List<String> arguments) async {
     final fileName = path.removeLast();
     final dir = './bin/${path.join('/')}';
     print('$dir/$fileName');
-
-    String code = pallet.generated().build();
-
-    if (path.length == 1) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../types/');
-    } else if (path.length == 2) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../types/');
-    } else if (path.length == 3) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../types/');
-    } else if (path.length == 4) {
-      code =
-          code.replaceAll('import \'$generatedPath/', 'import \'../../types/');
-    } else if (path.length == 5) {
-      code = code.replaceAll(
-          'import \'$generatedPath/', 'import \'../../../types/');
-    }
-
-    if (path.length == 1) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'');
-    } else if (path.length == 2) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'');
-    } else if (path.length == 3) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'../');
-    } else if (path.length == 4) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'../../');
-    } else if (path.length == 5) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'../../../');
-    }
-
+    final String code = pallet.generated().build();
     Directory(dir).createSync(recursive: true);
     File('$dir/$fileName').writeAsStringSync(code);
   }
@@ -494,25 +467,12 @@ void main(List<String> arguments) async {
       }
     }
 
-    String code = entry.value
+    final String code = entry.value
         .fold(
             GeneratedOutput(classes: [], enums: [], typedefs: []),
             (previousValue, element) =>
                 previousValue.merge(element.generated()!))
         .build();
-
-    if (path.length == 1) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'');
-    } else if (path.length == 2) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'');
-    } else if (path.length == 3) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../');
-    } else if (path.length == 4) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../../');
-    } else if (path.length == 5) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../../../');
-    }
-
     Directory(dir).createSync(recursive: true);
     File('$dir/$fileName').writeAsStringSync(code);
   }

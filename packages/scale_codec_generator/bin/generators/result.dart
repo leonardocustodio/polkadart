@@ -25,26 +25,26 @@ class ResultGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
-    return constants.result(ok.primitive(), err.primitive());
+  TypeReference primitive([ String? from ]) {
+    return constants.result(ok.primitive(from), err.primitive(from));
   }
 
   @override
-  TypeReference codec() {
-    return constants.resultCodec(ok.primitive(), err.primitive());
+  TypeReference codec([ String? from ]) {
+    return constants.resultCodec(ok.primitive(from), err.primitive(from));
   }
 
   @override
-  Expression valueFrom(Input input) {
+  Expression valueFrom(Input input, [ String? from ]) {
     if (input.read() == 0) {
-      return primitive().newInstanceNamed('ok', [ok.valueFrom(input)]);
+      return primitive(from).newInstanceNamed('ok', [ok.valueFrom(input, from)]);
     } else {
-      return primitive().newInstanceNamed('err', [err.valueFrom(input)]);
+      return primitive(from).newInstanceNamed('err', [err.valueFrom(input, from)]);
     }
   }
 
   @override
-  Expression codecInstance() {
-    return codec().constInstance([ok.codecInstance(), err.codecInstance()]);
+  Expression codecInstance([ String? from ]) {
+    return codec(from).constInstance([ok.codecInstance(from), err.codecInstance(from)]);
   }
 }

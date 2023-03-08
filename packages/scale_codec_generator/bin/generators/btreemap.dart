@@ -27,32 +27,32 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
-    return constants.map(key.primitive(), value.primitive());
+  TypeReference primitive([ String? from ]) {
+    return constants.map(key.primitive(from), value.primitive(from));
   }
 
   @override
-  TypeReference codec() {
-    return constants.bTreeMapCodec(key.primitive(), value.primitive());
+  TypeReference codec([ String? from ]) {
+    return constants.bTreeMapCodec(key.primitive(from), value.primitive(from));
   }
 
   @override
-  Expression codecInstance() {
-    return codec().constInstance([], {
-      'keyCodec': key.codecInstance(),
-      'valueCodec': value.codecInstance(),
+  Expression codecInstance([ String? from ]) {
+    return codec(from).constInstance([], {
+      'keyCodec': key.codecInstance(from),
+      'valueCodec': value.codecInstance(from),
     });
   }
 
   @override
-  Expression valueFrom(Input input) {
+  Expression valueFrom(Input input, [ String? from ]) {
     return CodeExpression(Block((builder) {
       builder.statements.add(Code.scope(
-          (a) => '<${a(key.primitive())}, ${a(value.primitive())}>{'));
+          (a) => '<${a(key.primitive(from))}, ${a(value.primitive(from))}>{'));
       final size = CompactCodec.codec.decode(input).toInt();
       for (var i = 0; i < size; i++) {
-        final k = key.valueFrom(input);
-        final v = value.valueFrom(input);
+        final k = key.valueFrom(input, from);
+        final v = value.valueFrom(input, from);
         builder.statements.addAll([
           k.code,
           Code(': '),

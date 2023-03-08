@@ -41,7 +41,7 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
+  TypeReference primitive([ String? from ]) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -64,11 +64,11 @@ class ArrayGenerator extends Generator {
           break;
       }
     }
-    return constants.list(ref: typeDef.primitive());
+    return constants.list(ref: typeDef.primitive(from));
   }
 
   @override
-  TypeReference codec() {
+  TypeReference codec([ String? from ]) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -92,12 +92,12 @@ class ArrayGenerator extends Generator {
       }
     }
 
-    return constants.arrayCodec(typeDef.primitive());
+    return constants.arrayCodec(typeDef.primitive(from));
   }
 
   @override
-  Expression codecInstance() {
-    final TypeReference codec = this.codec();
+  Expression codecInstance([ String? from ]) {
+    final TypeReference codec = this.codec(from);
 
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
@@ -122,7 +122,7 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(Input input) {
+  Expression valueFrom(Input input, [ String? from ]) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -198,7 +198,7 @@ class ArrayGenerator extends Generator {
     return CodeExpression(Block((builder) {
       builder.statements.add(Code('['));
       for (var i = 0; i < length; i++) {
-        builder.statements.add(typeDef.valueFrom(input).code);
+        builder.statements.add(typeDef.valueFrom(input, from).code);
         if (i < (length - 1)) {
           builder.statements.add(Code(', '));
         }

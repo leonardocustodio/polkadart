@@ -10,43 +10,26 @@ abstract class Generator {
   const Generator();
 
   Expression encode(Expression obj,
-      [Expression output = const Reference('output')]) {
-    return codecInstance().property('encodeTo').call([obj, output]);
+      [Expression output = const Reference('output'), String? from]) {
+    return codecInstance(from).property('encodeTo').call([obj, output]);
   }
 
-  Expression decode([Expression input = const Reference('input')]) {
-    return codecInstance().property('decode').call([input]);
+  Expression decode([Expression input = const Reference('input'), String? from]) {
+    return codecInstance(from).property('decode').call([input]);
   }
 
-  TypeReference primitive();
+  TypeReference primitive([ String? from ]);
 
-  TypeReference codec();
+  TypeReference codec([ String? from ]);
 
-  Expression codecInstance() {
-    return codec().property('codec');
+  Expression codecInstance([ String? from ]) {
+    return codec(from).property('codec');
   }
 
-  Expression valueFrom(Input input);
+  Expression valueFrom(Input input, [ String? from ]);
 
   GeneratedOutput? generated() {
     return null;
-  }
-
-  bool isEquivalentTo(Generator other, [Set<Generator> visited = const {}]) {
-    if (identical(this, other) || visited.contains(this)) {
-      return true;
-    }
-    final selfPrimitive = primitive();
-    final otherPrimitive = other.primitive();
-    if (selfPrimitive.symbol != otherPrimitive.symbol) {
-      return false;
-    }
-
-    if (runtimeType != other.runtimeType) {
-      return false;
-    }
-    visited.add(this);
-    return other.isEquivalentTo(this);
   }
 }
 
@@ -85,6 +68,10 @@ class LazyLoader {
   void addLoader(Function(Map<int, Generator>) loader) {
     loaders.add(loader);
   }
+}
+
+class FilePath {
+
 }
 
 class Field {
