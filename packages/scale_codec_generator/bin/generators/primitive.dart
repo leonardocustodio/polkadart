@@ -164,7 +164,7 @@ class PrimitiveGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     switch (primitiveType) {
       case Primitive.Bool:
         return constants.bool.type as TypeReference;

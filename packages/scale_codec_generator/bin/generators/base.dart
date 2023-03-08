@@ -9,8 +9,6 @@ import 'package:frame_primitives/frame_primitives.dart' show XXH64;
 
 typedef BasePath = String;
 
-
-
 abstract class Generator {
   const Generator();
 
@@ -18,9 +16,9 @@ abstract class Generator {
   static Map<Generator, int> generatorToId = {};
   static Map<String, TypeReference> jsonTypeCache = {};
 
-  static String cachedKey(BasePath from, Set<Generator> visited) {
+  static String _cachedKey(BasePath from, Set<Generator> visited) {
     bool created = false;
-    StringBuffer sb = StringBuffer(from);
+    final StringBuffer sb = StringBuffer(from);
     for (final generator in visited) {
       int? id = generatorToId[generator];
       if (id == null) {
@@ -31,15 +29,15 @@ abstract class Generator {
       sb.write('$id');
     }
     final key = sb.toString();
-    if (created && jsonTypeCache[key] != null) {
-      print('$key -> ${jsonTypeCache[key]}');
-      throw Exception('Error, cache key collision');
+    if (created && jsonTypeCache.containsKey(key)) {
+      throw Exception('Error, cached key collision: "$key"');
     }
     return key;
   }
 
-  static TypeReference cacheOrCreate(BasePath from, Set<Generator> visited, TypeReference Function() callback) {
-    final String hash = cachedKey(from, visited);
+  static TypeReference cacheOrCreate(BasePath from, Set<Generator> visited,
+      TypeReference Function() callback) {
+    final String hash = _cachedKey(from, visited);
     TypeReference? type = jsonTypeCache[hash];
     if (type == null) {
       type = callback();
@@ -47,16 +45,6 @@ abstract class Generator {
     }
     return type;
   }
-
-  // static void storeCache(BasePath from, Set<Generator> visited, TypeReference type) {
-  //   final String hash = cachedKey(from, visited);
-  //   jsonTypeCache[hash] = type;
-  // }
-
-  // static TypeReference? readCache(BasePath from, Set<Generator> visited) {
-  //   final String hash = cachedKey(from, visited);
-  //   return jsonTypeCache[hash];
-  // }
 
   Expression encode(BasePath from, Expression obj,
       [Expression output = const Reference('output')]) {
@@ -78,7 +66,7 @@ abstract class Generator {
 
   Expression valueFrom(BasePath from, Input input);
 
-  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]);
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]);
 
   Expression instanceToJson(BasePath from, Expression obj);
 
@@ -130,7 +118,10 @@ class Field {
   late Generator codec;
   late List<String> docs;
 
-  Field({required String? originalName, required this.codec, required this.docs}) {
+  Field(
+      {required String? originalName,
+      required this.codec,
+      required this.docs}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
     originalName = originalName;

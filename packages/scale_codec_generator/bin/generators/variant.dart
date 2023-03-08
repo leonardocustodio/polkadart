@@ -1,5 +1,12 @@
 import 'package:code_builder/code_builder.dart'
-    show Class, Expression, TypeReference, literalNull, literalMap, literalList, refer;
+    show
+        Class,
+        Expression,
+        TypeReference,
+        literalNull,
+        literalMap,
+        literalList,
+        refer;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:path/path.dart' as p;
 import 'package:recase/recase.dart' show ReCase;
@@ -27,7 +34,7 @@ class Variant extends Generator {
     required this.fields,
     required this.docs,
   }) {
-    for (int i=0; i < fields.length; i++) {
+    for (int i = 0; i < fields.length; i++) {
       if (fields[i].originalName == null) {
         fields[i].sanitizedName = 'value$i';
       }
@@ -39,7 +46,7 @@ class Variant extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (fields.isEmpty) {
       return constants.map(constants.string, constants.dynamic);
     }
@@ -53,15 +60,19 @@ class Variant extends Generator {
 
     final TypeReference newType;
     if (fields.length == 1 && fields.first.originalName == null) {
-      newType = constants.map(constants.string, fields.first.codec.jsonType(from, visited));
+      newType = constants.map(
+          constants.string, fields.first.codec.jsonType(from, visited));
     } else {
       // Check if all fields are of the same type, otherwise use dynamic
-      final type = utils.findCommonType(fields.map((field) => field.codec.jsonType(from, visited))) ?? constants.dynamic;
+      final type = utils.findCommonType(
+              fields.map((field) => field.codec.jsonType(from, visited))) ??
+          constants.dynamic;
 
       if (fields.every((field) => field.originalName == null)) {
         newType = constants.map(constants.string, constants.list(ref: type));
       } else {
-        newType = constants.map(constants.string, constants.map(constants.string, type));
+        newType = constants.map(
+            constants.string, constants.map(constants.string, type));
       }
     }
     visited.remove(this);
@@ -71,34 +82,44 @@ class Variant extends Generator {
 
   Expression toJson(BasePath from) {
     if (fields.isEmpty) {
-      return literalMap({ name: literalNull });
+      return literalMap({name: literalNull});
     }
     if (fields.length == 1 && fields.first.originalName == null) {
-      return literalMap({ name: fields.first.codec.instanceToJson(from, refer(fields.first.sanitizedName)) });
+      return literalMap({
+        name: fields.first.codec
+            .instanceToJson(from, refer(fields.first.sanitizedName))
+      });
     }
     if (fields.every((field) => field.originalName == null)) {
-      return literalMap({ name: literalList(fields.map((field) => field.codec.instanceToJson(from, refer(field.sanitizedName)))) });
+      return literalMap({
+        name: literalList(fields.map((field) =>
+            field.codec.instanceToJson(from, refer(field.sanitizedName))))
+      });
     }
-    return literalMap({ name: literalMap({
-      for (final field in fields) field.originalOrSanitizedName(): field.codec.instanceToJson(from, refer(field.sanitizedName))
-    }) });
+    return literalMap({
+      name: literalMap({
+        for (final field in fields)
+          field.originalOrSanitizedName():
+              field.codec.instanceToJson(from, refer(field.sanitizedName))
+      })
+    });
   }
-  
+
   @override
   TypeReference codec(BasePath from) {
     throw UnimplementedError();
   }
-  
+
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
     throw UnimplementedError();
   }
-  
+
   @override
   TypeReference primitive(BasePath from) {
     throw UnimplementedError();
   }
-  
+
   @override
   Expression valueFrom(BasePath from, Input input) {
     throw UnimplementedError();
@@ -170,15 +191,15 @@ class VariantGenerator extends Generator {
 
     final List<Class> classes = variants
         .fold(<Class>[baseClass, valuesClass, codecClass], (classes, variant) {
-      classes
-          .add(createVariantClass(filePath, name, '_\$${name}Codec', variant, complexJsonType));
+      classes.add(createVariantClass(
+          filePath, name, '_\$${name}Codec', variant, complexJsonType));
       return classes;
     });
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
 
   @override
-  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     // For Simple Variants json type is String
     if (variants.isNotEmpty &&
         variants.every((variant) => variant.fields.isEmpty)) {
@@ -192,9 +213,12 @@ class VariantGenerator extends Generator {
     visited.add(this);
     final type = Generator.cacheOrCreate(from, visited, () {
       // Check if all variants are of the same type, otherwise use Map<String, dynamic>
-      final complexJsonType = utils.findCommonType(variants.map((variant) => variant.jsonType(from, visited))) ?? constants.map(constants.string, constants.dynamic);
+      final complexJsonType = utils.findCommonType(
+              variants.map((variant) => variant.jsonType(from, visited))) ??
+          constants.map(constants.string, constants.dynamic);
       if (complexJsonType.symbol != 'Map') {
-        throw Exception('$name: Invalid complex variant type: $complexJsonType');
+        throw Exception(
+            '$name: Invalid complex variant type: $complexJsonType');
       }
       return complexJsonType;
     });

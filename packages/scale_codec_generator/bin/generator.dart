@@ -344,12 +344,14 @@ void main(List<String> arguments) async {
                 name: variantName,
                 index: variant.index,
                 docs: variant.docs,
-                fields: variant.fields.map((field) => Field.lazy(
-                    loader: lazyLoader,
-                    codec: field.type,
-                    name: field.name,
-                    docs: field.docs,
-                )).toList());
+                fields: variant.fields
+                    .map((field) => Field.lazy(
+                          loader: lazyLoader,
+                          codec: field.type,
+                          name: field.name,
+                          docs: field.docs,
+                        ))
+                    .toList());
           }).toList());
       continue;
     }

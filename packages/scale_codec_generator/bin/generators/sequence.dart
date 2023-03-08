@@ -210,7 +210,7 @@ class SequenceGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (visited.contains(this)) {
       return constants.list(ref: constants.dynamic);
     }
@@ -240,11 +240,15 @@ class SequenceGenerator extends Generator {
       }
     }
 
-    return obj.property('map').call([
-      Method.returnsVoid((b) => b
-        ..requiredParameters.add(Parameter((b) => b..name = 'value'))
-        ..lambda = true
-        ..body = typeDef.instanceToJson(from, refer('value')).code).closure
-    ]).property('toList').call([]);
+    return obj
+        .property('map')
+        .call([
+          Method.returnsVoid((b) => b
+            ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+            ..lambda = true
+            ..body = typeDef.instanceToJson(from, refer('value')).code).closure
+        ])
+        .property('toList')
+        .call([]);
   }
 }

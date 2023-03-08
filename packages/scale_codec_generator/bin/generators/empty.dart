@@ -23,7 +23,7 @@ class EmptyGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     return constants.dynamic.type as TypeReference;
   }
 

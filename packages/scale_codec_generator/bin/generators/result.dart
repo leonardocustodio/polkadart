@@ -52,7 +52,7 @@ class ResultGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     return constants.map(constants.string, constants.dynamic);
   }
 

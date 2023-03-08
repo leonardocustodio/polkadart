@@ -219,8 +219,8 @@ Class createVariantValuesClass(
                   ? Code('return const ${variant.name}();')
                   : Block.of([
                       Code('return ${variant.name}('),
-                      Block.of(variant.fields.map(
-                          (field) => Code('${field.sanitizedName}: ${field.sanitizedName},'))),
+                      Block.of(variant.fields.map((field) => Code(
+                          '${field.sanitizedName}: ${field.sanitizedName},'))),
                       Code(');'),
                     ])
               ..optionalParameters
@@ -384,8 +384,9 @@ Class createVariantClass(
             ..statements.add(PrimitiveGenerator.u8
                 .encode(dirname, literalNum(variant.index))
                 .statement)
-            ..statements.addAll(variant.fields.map((field) =>
-                field.codec.encode(dirname, refer(field.sanitizedName)).statement)),
+            ..statements.addAll(variant.fields.map((field) => field.codec
+                .encode(dirname, refer(field.sanitizedName))
+                .statement)),
         )));
     });
 
@@ -400,11 +401,11 @@ Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
           ..constant = true
           ..requiredParameters.addAll([
             Parameter((b) => b
-            ..toThis = true
-            ..name = 'variantName'),
+              ..toThis = true
+              ..name = 'variantName'),
             Parameter((b) => b
-            ..toThis = true
-            ..name = 'codecIndex'),
+              ..toThis = true
+              ..name = 'codecIndex'),
           ])))
         ..constructors.add(Constructor((b) => b
           ..name = 'decode'
@@ -435,10 +436,8 @@ Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
         ])
         ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
           ..name = generator.Field.toFieldName(variant.name)
-          ..arguments.addAll([
-            literalString(variant.name),
-            literalNum(variant.index)
-          ]))))
+          ..arguments.addAll(
+              [literalString(variant.name), literalNum(variant.index)]))))
         ..methods.add(Method((b) => b
           ..name = 'encode'
           ..returns = constants.uint8List

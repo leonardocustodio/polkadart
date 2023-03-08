@@ -19,7 +19,7 @@ class CompositeGenerator extends Generator {
     required this.fields,
     required this.docs,
   }) {
-    for (int i=0; i < fields.length; i++) {
+    for (int i = 0; i < fields.length; i++) {
       if (fields[i].originalName == null) {
         fields[i].sanitizedName = 'value$i';
       }
@@ -27,7 +27,8 @@ class CompositeGenerator extends Generator {
   }
 
   bool unnamedFields() {
-    return fields.isNotEmpty && fields.every((field) => field.originalName == null);
+    return fields.isNotEmpty &&
+        fields.every((field) => field.originalName == null);
   }
 
   @override
@@ -61,7 +62,7 @@ class CompositeGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (fields.isEmpty) {
       return constants.dynamic.type as TypeReference;
     }
@@ -83,7 +84,9 @@ class CompositeGenerator extends Generator {
       }
 
       // Check if all fields are of the same type, otherwise use dynamic
-      final type = utils.findCommonType(fields.map((field) => field.codec.jsonType(from, visited))) ?? constants.dynamic.type as TypeReference;
+      final type = utils.findCommonType(
+              fields.map((field) => field.codec.jsonType(from, visited))) ??
+          constants.dynamic.type as TypeReference;
 
       // If all field are unnamed, return a list
       if (fields.every((field) => field.originalName == null)) {
@@ -102,13 +105,17 @@ class CompositeGenerator extends Generator {
       return literalNull;
     }
     if (fields.length == 1 && fields.first.originalName == null) {
-      return fields.first.codec.instanceToJson(from, refer(fields.first.sanitizedName));
+      return fields.first.codec
+          .instanceToJson(from, refer(fields.first.sanitizedName));
     }
     if (fields.every((field) => field.originalName == null)) {
-      return literalList(fields.map((field) => field.codec.instanceToJson(from, refer(field.sanitizedName))));
+      return literalList(fields.map((field) =>
+          field.codec.instanceToJson(from, refer(field.sanitizedName))));
     }
     return literalMap({
-      for (final field in fields) field.originalOrSanitizedName(): field.codec.instanceToJson(from, refer(field.sanitizedName))
+      for (final field in fields)
+        field.originalOrSanitizedName():
+            field.codec.instanceToJson(from, refer(field.sanitizedName))
     });
   }
 

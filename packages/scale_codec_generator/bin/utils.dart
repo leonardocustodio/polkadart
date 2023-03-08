@@ -78,11 +78,10 @@ TypeReference _toCompatibleType(TypeReference a, TypeReference b) {
   }
 
   // Check if the types are compatible
-  if (a.symbol != b.symbol
-    || a.url != b.url
-    || a.types.length != b.types.length
-    || a.bound != b.bound
-  ) {
+  if (a.symbol != b.symbol ||
+      a.url != b.url ||
+      a.types.length != b.types.length ||
+      a.bound != b.bound) {
     return constants.dynamic.type as TypeReference;
   }
 
@@ -92,10 +91,11 @@ TypeReference _toCompatibleType(TypeReference a, TypeReference b) {
       ..symbol = a.symbol
       ..url = a.url
       ..bound = a.bound;
-    
+
     // Recusively convert subtypes
     for (int i = 0; i < a.types.length; i++) {
-      final type = _toCompatibleType(a.types[i].type as TypeReference, b.types[i].type as TypeReference);
+      final type = _toCompatibleType(
+          a.types[i].type as TypeReference, b.types[i].type as TypeReference);
       builder.types.add(type);
     }
 
