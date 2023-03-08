@@ -116,7 +116,7 @@ class ArrayGenerator extends Generator {
     }
 
     return codec.constInstance([
-      typeDef.codecInstance(),
+      typeDef.codecInstance(from),
       literalNum(length),
     ]);
   }

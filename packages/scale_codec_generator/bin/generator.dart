@@ -64,8 +64,9 @@ void main(List<String> arguments) async {
   // URL -> rpc.polkadot.io
   // outputPath -> ./generated
   // final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('astar.public.blastapi.io'));
+  // final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('rpc.efinity.io'));
   final RuntimeMetadataV14 metadata =
-      await downloadMetadata(Uri.https('rpc.efinity.io'));
+      await downloadMetadata(Uri.https('kusama-rpc.polkadot.io'));
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
