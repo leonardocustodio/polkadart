@@ -2,9 +2,12 @@ import 'package:code_builder/code_builder.dart'
     show
         Code,
         CodeExpression,
+        Method,
+        Parameter,
         TypeReference,
         Expression,
         Block,
+        refer,
         literalNum,
         literalList;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
@@ -20,7 +23,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         I64ArrayCodec;
 import '../metadata_parser.dart' show Primitive;
 import '../constants.dart' as constants;
-import './base.dart' show Generator, LazyLoader;
+import './base.dart' show BasePath, Generator, LazyLoader;
 import './primitive.dart' show PrimitiveGenerator;
 
 class ArrayGenerator extends Generator {
@@ -41,7 +44,7 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
+  TypeReference primitive(BasePath from) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -64,11 +67,11 @@ class ArrayGenerator extends Generator {
           break;
       }
     }
-    return constants.list(ref: typeDef.primitive());
+    return constants.list(ref: typeDef.primitive(from));
   }
 
   @override
-  TypeReference codec() {
+  TypeReference codec(BasePath from) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -92,12 +95,12 @@ class ArrayGenerator extends Generator {
       }
     }
 
-    return constants.arrayCodec(typeDef.primitive());
+    return constants.arrayCodec(typeDef.primitive(from));
   }
 
   @override
-  Expression codecInstance() {
-    final TypeReference codec = this.codec();
+  Expression codecInstance(BasePath from) {
+    final TypeReference codec = this.codec(from);
 
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
@@ -116,13 +119,13 @@ class ArrayGenerator extends Generator {
     }
 
     return codec.constInstance([
-      typeDef.codecInstance(),
+      typeDef.codecInstance(from),
       literalNum(length),
     ]);
   }
 
   @override
-  Expression valueFrom(Input input) {
+  Expression valueFrom(BasePath from, Input input) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -198,12 +201,40 @@ class ArrayGenerator extends Generator {
     return CodeExpression(Block((builder) {
       builder.statements.add(Code('['));
       for (var i = 0; i < length; i++) {
-        builder.statements.add(typeDef.valueFrom(input).code);
+        builder.statements.add(typeDef.valueFrom(from, input).code);
         if (i < (length - 1)) {
           builder.statements.add(Code(', '));
         }
       }
       builder.statements.add(Code(']'));
     }));
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    if (typeDef is PrimitiveGenerator) {
+      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+        case Primitive.Str:
+        case Primitive.U8:
+        case Primitive.Char:
+        case Primitive.U16:
+        case Primitive.U32:
+        case Primitive.U64:
+        case Primitive.I8:
+        case Primitive.I16:
+        case Primitive.I32:
+        case Primitive.I64:
+          return obj.property('toList').call([]);
+        default:
+          break;
+      }
+    }
+
+    return obj.property('map').call([
+      Method.returnsVoid((b) => b
+        ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+        ..lambda = true
+        ..body = typeDef.instanceToJson(from, refer('value')).code).closure
+    ]);
   }
 }

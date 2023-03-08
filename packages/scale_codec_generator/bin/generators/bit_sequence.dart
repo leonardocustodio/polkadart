@@ -4,7 +4,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show Input, BitSequenceCodec, BitStore, BitOrder;
 import '../metadata_parser.dart' show Primitive;
 import '../constants.dart' as constants;
-import './base.dart' show Generator;
+import './base.dart' show BasePath, Generator;
 
 class BitSequenceGenerator extends Generator {
   BitStore store;
@@ -48,31 +48,36 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
+  TypeReference primitive(BasePath from) {
     return constants.bitArray.type as TypeReference;
   }
 
   @override
-  TypeReference codec() {
+  TypeReference codec(BasePath from) {
     return constants.bitSequenceCodec.type as TypeReference;
   }
 
   @override
-  Expression codecInstance() {
-    return codec().constInstance([
+  Expression codecInstance(BasePath from) {
+    return codec(from).constInstance([
       constants.bitStore.property(store.name),
       constants.bitOrder.property(order.name),
     ]);
   }
 
   @override
-  Expression valueFrom(Input input) {
+  Expression valueFrom(BasePath from, Input input) {
     final bitArray = BitSequenceCodec(store, order).decode(input);
-    return primitive().property('fromByteBuffer').call([
+    return primitive(from).property('fromByteBuffer').call([
       literalNum(bitArray.length),
       constants.uint32List
           .property('fromList')
           .call([literalList(bitArray.asUint32Iterable())]).property('buffer'),
     ]);
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj.property('toJson').call([]);
   }
 }

@@ -1,7 +1,10 @@
-import 'package:code_builder/code_builder.dart' show Expression, TypeReference;
+import 'package:code_builder/code_builder.dart'
+    show Expression, TypeReference, literalList;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import './base.dart' show Generator, GeneratedOutput, LazyLoader;
+import 'package:path/path.dart' as p;
+import './base.dart' show BasePath, Generator, GeneratedOutput, LazyLoader;
 import '../class_builder.dart' show createTupleClass, createTupleCodec;
+import '../constants.dart' as constants;
 
 class TupleGenerator extends Generator {
   String filePath;
@@ -25,32 +28,31 @@ class TupleGenerator extends Generator {
   }
 
   @override
-  TypeReference codec() {
+  TypeReference codec(BasePath from) {
     return TypeReference((b) => b
       ..symbol = 'Tuple${generators.length}Codec'
-      ..url = filePath
-      ..types.addAll(generators.map((e) => e.primitive())));
+      ..url = p.relative(filePath, from: from)
+      ..types.addAll(generators.map((e) => e.primitive(from))));
   }
 
   @override
-  TypeReference primitive() {
+  TypeReference primitive(BasePath from) {
     return TypeReference((b) => b
       ..symbol = 'Tuple${generators.length}'
-      ..url = filePath
-      ..types.addAll(generators.map((e) => e.primitive())));
+      ..url = p.relative(filePath, from: from)
+      ..types.addAll(generators.map((e) => e.primitive(from))));
   }
 
   @override
-  Expression codecInstance() {
-    return codec()
-        .constInstance(generators.map((type) => type.codecInstance()));
+  Expression codecInstance(BasePath from) {
+    return codec(from)
+        .constInstance(generators.map((type) => type.codecInstance(from)));
   }
 
   @override
-  Expression valueFrom(Input input) {
-    // return primitive().newInstance([]);
-    return primitive()
-        .newInstance(generators.map((type) => type.valueFrom(input)).toList());
+  Expression valueFrom(BasePath from, Input input) {
+    return primitive(from).newInstance(
+        generators.map((type) => type.valueFrom(from, input)).toList());
   }
 
   @override
@@ -59,5 +61,13 @@ class TupleGenerator extends Generator {
     final tupleCodec = createTupleCodec(generators.length);
     return GeneratedOutput(
         classes: [tupleClass, tupleCodec], enums: [], typedefs: []);
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return literalList([
+      for (int i = 0; i < generators.length; i++)
+        generators[i].instanceToJson(from, obj.property('value$i'))
+    ], constants.dynamic);
   }
 }

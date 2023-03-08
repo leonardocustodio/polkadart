@@ -1,7 +1,8 @@
 import 'package:code_builder/code_builder.dart'
     show Expression, Reference, TypeReference;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import './base.dart' show Generator, GeneratedOutput, LazyLoader;
+import 'package:path/path.dart' as p;
+import './base.dart' show BasePath, Generator, GeneratedOutput, LazyLoader;
 import '../class_builder.dart' show createTypeDef;
 
 class TypeDefGenerator extends Generator {
@@ -34,41 +35,48 @@ class TypeDefGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
+  TypeReference primitive(BasePath from) {
     return TypeReference((b) => b
       ..symbol = name
-      ..url = filePath);
+      ..url = p.relative(filePath, from: from));
   }
 
   @override
-  TypeReference codec() {
-    return generator.codec();
+  TypeReference codec(BasePath from) {
+    return generator.codec(from);
   }
 
   @override
-  Expression codecInstance() {
-    return generator.codecInstance();
+  Expression codecInstance(BasePath from) {
+    return generator.codecInstance(from);
   }
 
   @override
-  Expression valueFrom(Input input) {
-    return generator.valueFrom(input);
+  Expression valueFrom(BasePath from, Input input) {
+    return generator.valueFrom(from, input);
   }
 
   @override
-  Expression encode(Expression obj,
+  Expression encode(String from, Expression obj,
       [Expression output = const Reference('output')]) {
-    return generator.encode(obj, output);
+    return generator.encode(from, obj, output);
   }
 
   @override
-  Expression decode([Expression input = const Reference('input')]) {
-    return generator.decode(input);
+  Expression decode(String from,
+      [Expression input = const Reference('input')]) {
+    return generator.decode(from, input);
   }
 
   @override
   GeneratedOutput? generated() {
-    final typeDef = createTypeDef(name: name, reference: generator.primitive());
+    final typeDef = createTypeDef(
+        name: name, reference: generator.primitive(p.dirname(filePath)));
     return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return generator.instanceToJson(from, obj);
   }
 }

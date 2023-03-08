@@ -1,8 +1,12 @@
-import 'dart:convert' show jsonDecode;
+import 'dart:convert' show jsonDecode, jsonEncode;
 import 'dart:io' show File, Directory;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show BitStore, BitOrder;
+import 'package:substrate_metadata/substrate_metadata.dart'
+    show MetadataDecoder;
+import 'package:substrate_metadata/utils/utils.dart' show ToJson;
+import 'package:http/http.dart' as http;
 
 import './generators/array.dart' show ArrayGenerator;
 import './generators/btreemap.dart' show BTreeMapGenerator;
@@ -23,8 +27,8 @@ import './generators/pallet.dart' show PalletGenerator;
 import './generators/polkadart.dart' show PolkadartGenerator;
 import './metadata_parser.dart'
     show
+        Primitive,
         RuntimeMetadataV14,
-        PalletStorageMetadata,
         TypeMetadata,
         TypeDefVariant,
         TypeDefSequence,
@@ -35,26 +39,34 @@ import './metadata_parser.dart'
         TypeDefPrimitive,
         TypeDefTuple;
 
-const generatedPath = 'generated/types';
-const palletsPath = 'generated/pallets';
+const basePath = 'generated';
+const typesPath = '$basePath/types';
+const palletsPath = '$basePath/pallets';
 
-class SimpleEnumCodec {
-  final Map<int, String> variants;
+Future<RuntimeMetadataV14> downloadMetadata(Uri url) async {
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'id': 1,
+        'jsonrpc': '2.0',
+        'method': 'state_getMetadata',
+        'params': <String>[],
+      }));
 
-  const SimpleEnumCodec.sparse(this.variants);
-
-  factory SimpleEnumCodec(List<String> variants) {
-    return SimpleEnumCodec.sparse(
-        {for (var i = 0; i < variants.length; i++) i: variants[i]});
-  }
+  final jsonMetadata = jsonDecode(response.body)['result'] as String;
+  final decodedMetadata = MetadataDecoder.instance.decode(jsonMetadata);
+  return RuntimeMetadataV14.fromJson(decodedMetadata.metadata.toJson());
 }
 
-void main(List<String> arguments) {
+void main(List<String> arguments) async {
   // URL -> rpc.polkadot.io
   // outputPath -> ./generated
-  final filePath = './metadata-polkadot.json';
-  final metadata = RuntimeMetadataV14.fromJson(
-      jsonDecode(File(filePath).readAsStringSync()));
+  // final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('astar.public.blastapi.io'));
+  // final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('rpc.efinity.io'));
+  final RuntimeMetadataV14 metadata =
+      await downloadMetadata(Uri.https('kusama-rpc.polkadot.io'));
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
@@ -112,7 +124,7 @@ void main(List<String> arguments) {
       // Create TypeDef Generator
       if (tuple.types.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$generatedPath/${type.path.join('/')}.dart',
+            filePath: '$typesPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -121,7 +133,7 @@ void main(List<String> arguments) {
 
       generators[type.id] = TupleGenerator.lazy(
         loader: lazyLoader,
-        filePath: '$generatedPath/tuples.dart',
+        filePath: '$typesPath/tuples.dart',
         codecs: tuple.types,
       );
       continue;
@@ -158,7 +170,7 @@ void main(List<String> arguments) {
       // Create TypeDef Generator
       if (composite.fields.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$generatedPath/${type.path.join('/')}.dart',
+            filePath: '$typesPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -197,6 +209,7 @@ void main(List<String> arguments) {
           }
         }
 
+        // BoundedBTreeMap
         if (type.path.isNotEmpty && type.path.last == 'BoundedBTreeMap') {
           final btreemap = types[composite.fields.first.type]!.typeDef;
           if (btreemap is TypeDefComposite &&
@@ -217,9 +230,35 @@ void main(List<String> arguments) {
           }
         }
 
+        // BoundedString
+        if (type.path.isNotEmpty && type.path.last == 'BoundedString') {
+          final boundedVec = types[composite.fields.first.type]!.typeDef;
+          if (boundedVec is TypeDefComposite &&
+              boundedVec.fields.length == 1 &&
+              boundedVec.fields.first.name == null) {
+            final sequenceTypeDef =
+                types[boundedVec.fields.first.type]!.typeDef;
+            if (sequenceTypeDef is TypeDefSequence) {
+              final primitiveTypeDef = types[sequenceTypeDef.type]!.typeDef;
+              if (primitiveTypeDef is TypeDefPrimitive &&
+                  primitiveTypeDef.primitive == Primitive.U8) {
+                generators[type.id] = PrimitiveGenerator.str;
+                continue;
+              }
+            }
+          } else if (boundedVec is TypeDefSequence) {
+            final primitiveTypeDef = types[boundedVec.type]!.typeDef;
+            if (primitiveTypeDef is TypeDefPrimitive &&
+                primitiveTypeDef.primitive == Primitive.U8) {
+              generators[type.id] = PrimitiveGenerator.str;
+              continue;
+            }
+          }
+        }
+
         generators[type.id] = TypeDefGenerator.lazy(
           loader: lazyLoader,
-          filePath: '$generatedPath/${type.path.join('/')}.dart',
+          filePath: '$typesPath/${type.path.join('/')}.dart',
           name: ReCase(type.path.last).pascalCase,
           codec: composite.fields[0].type,
           docs: type.docs,
@@ -230,7 +269,7 @@ void main(List<String> arguments) {
       // Create Compose Generator
       int index = 0;
       generators[type.id] = CompositeGenerator(
-          filePath: '$generatedPath/${type.path.join('/')}.dart',
+          filePath: '$typesPath/${type.path.join('/')}.dart',
           name: type.path.last,
           docs: type.docs,
           fields: composite.fields
@@ -256,7 +295,7 @@ void main(List<String> arguments) {
       // Create TypeDef Generator
       if (variant.variants.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$generatedPath/${type.path.join('/')}.dart',
+            filePath: '$typesPath/${type.path.join('/')}.dart',
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -294,7 +333,7 @@ void main(List<String> arguments) {
 
       // Create Variant Generator
       generators[type.id] = VariantGenerator(
-          filePath: '$generatedPath/${type.path.join('/')}.dart',
+          filePath: '$typesPath/${type.path.join('/')}.dart',
           name: type.path.last,
           docs: type.docs,
           variants: variant.variants.map((variant) {
@@ -416,13 +455,13 @@ void main(List<String> arguments) {
   }
 
   final polkadartGenerator = PolkadartGenerator(
-    filePath: 'generated/polkadart.dart',
-    name: 'Polkadot',
+    filePath: '$basePath/polkadart.dart',
+    name: 'Polkadart',
     pallets: palletGenerators,
-  ).generated().build().replaceAll('import \'generated/', 'import \'./');
-  Directory('./bin/generated').createSync(recursive: true);
-  File('./bin/generated/polkadart.dart').writeAsStringSync(polkadartGenerator);
-  print('./bin/generated/polkadart.dart');
+  ).generated().build();
+  Directory('./bin/$basePath').createSync(recursive: true);
+  File('./bin/$basePath/polkadart.dart').writeAsStringSync(polkadartGenerator);
+  print('./bin/$basePath/polkadart.dart');
 
   // Write the Pallets Files
   for (final pallet in palletGenerators) {
@@ -430,35 +469,7 @@ void main(List<String> arguments) {
     final fileName = path.removeLast();
     final dir = './bin/${path.join('/')}';
     print('$dir/$fileName');
-
-    String code = pallet.generated().build();
-
-    if (path.length == 1) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../types/');
-    } else if (path.length == 2) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../types/');
-    } else if (path.length == 3) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../types/');
-    } else if (path.length == 4) {
-      code =
-          code.replaceAll('import \'$generatedPath/', 'import \'../../types/');
-    } else if (path.length == 5) {
-      code = code.replaceAll(
-          'import \'$generatedPath/', 'import \'../../../types/');
-    }
-
-    if (path.length == 1) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'');
-    } else if (path.length == 2) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'');
-    } else if (path.length == 3) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'../');
-    } else if (path.length == 4) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'../../');
-    } else if (path.length == 5) {
-      code = code.replaceAll('import \'$palletsPath/', 'import \'../../../');
-    }
-
+    final String code = pallet.generated().build();
     Directory(dir).createSync(recursive: true);
     File('$dir/$fileName').writeAsStringSync(code);
   }
@@ -486,25 +497,12 @@ void main(List<String> arguments) {
       }
     }
 
-    String code = entry.value
+    final String code = entry.value
         .fold(
             GeneratedOutput(classes: [], enums: [], typedefs: []),
             (previousValue, element) =>
                 previousValue.merge(element.generated()!))
         .build();
-
-    if (path.length == 1) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'');
-    } else if (path.length == 2) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'');
-    } else if (path.length == 3) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../');
-    } else if (path.length == 4) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../../');
-    } else if (path.length == 5) {
-      code = code.replaceAll('import \'$generatedPath/', 'import \'../../../');
-    }
-
     Directory(dir).createSync(recursive: true);
     File('$dir/$fileName').writeAsStringSync(code);
   }
