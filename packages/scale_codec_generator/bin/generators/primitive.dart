@@ -164,6 +164,31 @@ class PrimitiveGenerator extends Generator {
   }
 
   @override
+  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+    switch (primitiveType) {
+      case Primitive.Bool:
+        return constants.bool.type as TypeReference;
+      case Primitive.Str:
+        return constants.string.type as TypeReference;
+      case Primitive.Char:
+      case Primitive.U8:
+      case Primitive.U16:
+      case Primitive.U32:
+      case Primitive.I8:
+      case Primitive.I16:
+      case Primitive.I32:
+        return constants.int.type as TypeReference;
+      case Primitive.U64:
+      case Primitive.U128:
+      case Primitive.I64:
+      case Primitive.I128:
+        return constants.bigInt.type as TypeReference;
+      default:
+        throw Exception('Unsupported primitive $primitive');
+    }
+  }
+
+  @override
   Expression instanceToJson(BasePath from, Expression obj) {
     return obj;
   }

@@ -210,6 +210,17 @@ class SequenceGenerator extends Generator {
   }
 
   @override
+  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+    if (visited.contains(this)) {
+      return constants.list(ref: constants.dynamic);
+    }
+    visited.add(this);
+    final newType = constants.list(ref: typeDef.jsonType(from, visited));
+    visited.remove(this);
+    return newType;
+  }
+
+  @override
   Expression instanceToJson(BasePath from, Expression obj) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
@@ -234,6 +245,6 @@ class SequenceGenerator extends Generator {
         ..requiredParameters.add(Parameter((b) => b..name = 'value'))
         ..lambda = true
         ..body = typeDef.instanceToJson(from, refer('value')).code).closure
-    ]);
+    ]).property('toList').call([]);
   }
 }

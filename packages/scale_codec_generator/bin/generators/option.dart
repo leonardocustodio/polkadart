@@ -2,7 +2,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:code_builder/code_builder.dart'
     show Expression, TypeReference, literalNull;
 import '../constants.dart' as constants
-    show Nullable, option, optionCodec, nestedOptionCodec;
+    show Nullable, option, optionCodec, nestedOptionCodec, dynamic;
 import './base.dart' show BasePath, Generator, LazyLoader;
 
 class OptionGenerator extends Generator {
@@ -63,6 +63,17 @@ class OptionGenerator extends Generator {
     } else {
       return inner.valueFrom(from, input);
     }
+  }
+
+  @override
+  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]) {
+    if (visited.contains(this)) {
+      return constants.dynamic.type as TypeReference;
+    }
+    visited.add(this);
+    final newType = inner.jsonType(from, visited).asNullable();
+    visited.remove(this);
+    return newType;
   }
 
   @override

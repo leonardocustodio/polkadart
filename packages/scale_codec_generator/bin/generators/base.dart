@@ -5,11 +5,58 @@ import 'package:dart_style/dart_style.dart' show DartFormatter;
 import 'package:code_builder/code_builder.dart' show DartEmitter, Library;
 import 'package:recase/recase.dart' show ReCase;
 import '../utils.dart' show sanitize;
+import 'package:frame_primitives/frame_primitives.dart' show XXH64;
 
 typedef BasePath = String;
 
+
+
 abstract class Generator {
   const Generator();
+
+  static int _idSequence = 1;
+  static Map<Generator, int> generatorToId = {};
+  static Map<String, TypeReference> jsonTypeCache = {};
+
+  static String cachedKey(BasePath from, Set<Generator> visited) {
+    bool created = false;
+    StringBuffer sb = StringBuffer(from);
+    for (final generator in visited) {
+      int? id = generatorToId[generator];
+      if (id == null) {
+        id = _idSequence++;
+        generatorToId[generator] = id;
+        created = true;
+      }
+      sb.write('$id');
+    }
+    final key = sb.toString();
+    if (created && jsonTypeCache[key] != null) {
+      print('$key -> ${jsonTypeCache[key]}');
+      throw Exception('Error, cache key collision');
+    }
+    return key;
+  }
+
+  static TypeReference cacheOrCreate(BasePath from, Set<Generator> visited, TypeReference Function() callback) {
+    final String hash = cachedKey(from, visited);
+    TypeReference? type = jsonTypeCache[hash];
+    if (type == null) {
+      type = callback();
+      jsonTypeCache[hash] = type;
+    }
+    return type;
+  }
+
+  // static void storeCache(BasePath from, Set<Generator> visited, TypeReference type) {
+  //   final String hash = cachedKey(from, visited);
+  //   jsonTypeCache[hash] = type;
+  // }
+
+  // static TypeReference? readCache(BasePath from, Set<Generator> visited) {
+  //   final String hash = cachedKey(from, visited);
+  //   return jsonTypeCache[hash];
+  // }
 
   Expression encode(BasePath from, Expression obj,
       [Expression output = const Reference('output')]) {
@@ -30,6 +77,8 @@ abstract class Generator {
   }
 
   Expression valueFrom(BasePath from, Input input);
+
+  TypeReference jsonType(BasePath from, [ Set<Generator> visited = const {}]);
 
   Expression instanceToJson(BasePath from, Expression obj);
 
@@ -76,24 +125,31 @@ class LazyLoader {
 }
 
 class Field {
-  late String name;
+  late String? originalName;
+  late String sanitizedName;
   late Generator codec;
   late List<String> docs;
 
-  Field({required String name, required this.codec, required this.docs}) {
+  Field({required String? originalName, required this.codec, required this.docs}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
-    this.name = toFieldName(name);
+    originalName = originalName;
+    if (originalName != null) {
+      sanitizedName = toFieldName(originalName);
+    }
   }
 
-  Field._lazy({required String name, required this.docs}) {
-    this.name = toFieldName(name);
+  Field._lazy({required String? name, required this.docs}) {
+    originalName = name;
+    if (originalName != null) {
+      sanitizedName = toFieldName(originalName!);
+    }
   }
 
   factory Field.lazy({
     required LazyLoader loader,
     required int codec,
-    required String name,
+    required String? name,
     List<String> docs = const [],
   }) {
     final field = Field._lazy(name: name, docs: docs);
@@ -101,6 +157,10 @@ class Field {
       field.codec = register[codec]!;
     });
     return field;
+  }
+
+  String originalOrSanitizedName() {
+    return originalName ?? sanitizedName;
   }
 
   static String toFieldName(String name) {
