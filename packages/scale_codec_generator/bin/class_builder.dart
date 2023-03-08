@@ -366,9 +366,8 @@ Class createVariantClass(
             ..statements.add(PrimitiveGenerator.u8
                 .encode(dirname, literalNum(variant.index))
                 .statement)
-            ..statements.addAll(variant.fields.map((field) => field.codec
-                .encode(dirname, refer(field.name))
-                .statement)),
+            ..statements.addAll(variant.fields.map((field) =>
+                field.codec.encode(dirname, refer(field.name)).statement)),
         )));
     });
 
@@ -637,9 +636,9 @@ Class createPalletQueries(
                       ? Code('return null; /* Nullable */')
                       : storage.valueCodec
                           .valueFrom(
-                              dirname,
-                              scale_codec.ByteInput(storage.defaultValue),
-                              )
+                            dirname,
+                            scale_codec.ByteInput(storage.defaultValue),
+                          )
                           .returned
                           .statement)
                   ..statements.add(

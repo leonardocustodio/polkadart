@@ -63,7 +63,8 @@ class TypeDefGenerator extends Generator {
   }
 
   @override
-  Expression decode(String from, [Expression input = const Reference('input')]) {
+  Expression decode(String from,
+      [Expression input = const Reference('input')]) {
     return generator.decode(from, input);
   }
 
