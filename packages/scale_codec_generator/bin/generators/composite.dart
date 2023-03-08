@@ -19,23 +19,24 @@ class CompositeGenerator extends Generator {
   });
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     return TypeReference((b) => b
       ..symbol = name
       ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     return TypeReference((b) => b
       ..symbol = name
       ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     return primitive(from).newInstance([], {
-      for (final field in fields) field.name: field.codec.valueFrom(input, from),
+      for (final field in fields)
+        field.name: field.codec.valueFrom(input, from),
     });
   }
 

@@ -73,7 +73,7 @@ class PrimitiveGenerator extends Generator {
   static const PrimitiveGenerator u128 = PrimitiveGenerator._(Primitive.U128);
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     switch (primitiveType) {
       case Primitive.Bool:
         return constants.bool.type as TypeReference;
@@ -98,7 +98,7 @@ class PrimitiveGenerator extends Generator {
   }
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     switch (primitiveType) {
       case Primitive.Bool:
         return constants.boolCodec.type as TypeReference;
@@ -131,7 +131,7 @@ class PrimitiveGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     switch (primitiveType) {
       case Primitive.Bool:
         return literalBool(BoolCodec.codec.decode(input));

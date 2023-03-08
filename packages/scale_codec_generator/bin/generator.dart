@@ -3,7 +3,8 @@ import 'dart:io' show File, Directory;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show BitStore, BitOrder;
-import 'package:substrate_metadata/substrate_metadata.dart' show MetadataDecoder;
+import 'package:substrate_metadata/substrate_metadata.dart'
+    show MetadataDecoder;
 import 'package:substrate_metadata/utils/utils.dart' show ToJson;
 import 'package:http/http.dart' as http;
 
@@ -43,18 +44,16 @@ const typesPath = '$basePath/types';
 const palletsPath = '$basePath/pallets';
 
 Future<RuntimeMetadataV14> downloadMetadata(Uri url) async {
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'id': 1,
-      'jsonrpc': '2.0',
-      'method': 'state_getMetadata',
-      'params': <String>[],
-    })
-  );
+  final response = await http.post(url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'id': 1,
+        'jsonrpc': '2.0',
+        'method': 'state_getMetadata',
+        'params': <String>[],
+      }));
 
   final jsonMetadata = jsonDecode(response.body)['result'] as String;
   final decodedMetadata = MetadataDecoder.instance.decode(jsonMetadata);
@@ -65,8 +64,8 @@ void main(List<String> arguments) async {
   // URL -> rpc.polkadot.io
   // outputPath -> ./generated
   // final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('astar.public.blastapi.io'));
-  final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('rpc.efinity.io'));
-  
+  final RuntimeMetadataV14 metadata =
+      await downloadMetadata(Uri.https('rpc.efinity.io'));
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
@@ -231,14 +230,13 @@ void main(List<String> arguments) async {
         }
 
         // BoundedString
-        if (
-          type.path.isNotEmpty &&
-          type.path.last == 'BoundedString') {
+        if (type.path.isNotEmpty && type.path.last == 'BoundedString') {
           final boundedVec = types[composite.fields.first.type]!.typeDef;
           if (boundedVec is TypeDefComposite &&
               boundedVec.fields.length == 1 &&
               boundedVec.fields.first.name == null) {
-            final sequenceTypeDef = types[boundedVec.fields.first.type]!.typeDef;
+            final sequenceTypeDef =
+                types[boundedVec.fields.first.type]!.typeDef;
             if (sequenceTypeDef is TypeDefSequence) {
               final primitiveTypeDef = types[sequenceTypeDef.type]!.typeDef;
               if (primitiveTypeDef is TypeDefPrimitive &&

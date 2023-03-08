@@ -48,17 +48,17 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     return constants.bitArray.type as TypeReference;
   }
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     return constants.bitSequenceCodec.type as TypeReference;
   }
 
   @override
-  Expression codecInstance([ String? from ]) {
+  Expression codecInstance([String? from]) {
     return codec(from).constInstance([
       constants.bitStore.property(store.name),
       constants.bitOrder.property(order.name),
@@ -66,7 +66,7 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     final bitArray = BitSequenceCodec(store, order).decode(input);
     return primitive(from).property('fromByteBuffer').call([
       literalNum(bitArray.length),

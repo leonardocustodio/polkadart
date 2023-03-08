@@ -28,11 +28,11 @@ enum StorageHasherType {
 
   const StorageHasherType();
 
-  TypeReference type([ String? from ]) {
+  TypeReference type([String? from]) {
     return constants.storageHasher.type as TypeReference;
   }
 
-  Expression instance(Expression codecInstance, [ String? from ]) {
+  Expression instance(Expression codecInstance, [String? from]) {
     // StorageHasher.blake2b128(codec);
     return type(from).property(name).call([codecInstance]);
   }
@@ -62,7 +62,7 @@ class StorageHasher<G extends Generator> {
   const StorageHasher.twoxx256({required this.codec})
       : hasher = StorageHasherType.twoxx256;
 
-  Expression instance([ String? from ]) {
+  Expression instance([String? from]) {
     return hasher.instance(codec.codecInstance(from));
   }
 
@@ -155,7 +155,7 @@ class Storage {
           codec: keysCodec[i],
         )
     ];
-    
+
     return Storage(
       name: storageMetadata.name,
       hashers: hashers,
@@ -167,13 +167,14 @@ class Storage {
     );
   }
 
-  TypeReference type([ String? from ]) {
+  TypeReference type([String? from]) {
     switch (hashers.length) {
       case 0:
         return constants.storageValue(valueCodec.primitive(from));
       case 1:
         return constants.storageMap(
-            key: hashers[0].codec.primitive(from), value: valueCodec.primitive(from));
+            key: hashers[0].codec.primitive(from),
+            value: valueCodec.primitive(from));
       case 2:
         return constants.storageDoubleMap(
             key1: hashers[0].codec.primitive(from),
@@ -214,7 +215,7 @@ class Storage {
     }
   }
 
-  Expression instance(String palletName, [ String? from ]) {
+  Expression instance(String palletName, [String? from]) {
     final Map<String, Expression> arguments = {
       'prefix': literalString(palletName),
       'storage': literalString(name),
@@ -294,13 +295,13 @@ class PalletGenerator {
         constants: constants);
   }
 
-  TypeReference queries([ String? from ]) {
+  TypeReference queries([String? from]) {
     return TypeReference((b) => b
       ..symbol = 'Queries'
       ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
-  TypeReference constantsType([ String? from ]) {
+  TypeReference constantsType([String? from]) {
     return TypeReference((b) => b
       ..symbol = 'Constants'
       ..url = from == null ? filePath : p.relative(filePath, from: from));

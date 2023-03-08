@@ -35,24 +35,24 @@ class TypeDefGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     return TypeReference((b) => b
       ..symbol = name
       ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     return generator.codec(from);
   }
 
   @override
-  Expression codecInstance([ String? from ]) {
+  Expression codecInstance([String? from]) {
     return generator.codecInstance(from);
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     return generator.valueFrom(input, from);
   }
 
@@ -63,13 +63,15 @@ class TypeDefGenerator extends Generator {
   }
 
   @override
-  Expression decode([Expression input = const Reference('input'), String? from]) {
+  Expression decode(
+      [Expression input = const Reference('input'), String? from]) {
     return generator.decode(input, from);
   }
 
   @override
   GeneratedOutput? generated() {
-    final typeDef = createTypeDef(name: name, reference: generator.primitive(p.dirname(filePath)));
+    final typeDef = createTypeDef(
+        name: name, reference: generator.primitive(p.dirname(filePath)));
     return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
   }
 }

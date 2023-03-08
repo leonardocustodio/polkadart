@@ -43,7 +43,8 @@ List<String> sanitizeDocs(List<String> docs) => docs.map((doc) {
 Class createCompositeClass(CompositeGenerator compositeGenerator) =>
     Class((classBuilder) {
       final dirname = p.dirname(compositeGenerator.filePath);
-      final classType = TypeReference((b) => b..symbol = compositeGenerator.name);
+      final classType =
+          TypeReference((b) => b..symbol = compositeGenerator.name);
       final codecType = refer('_\$${compositeGenerator.name}Codec');
 
       classBuilder
@@ -51,18 +52,19 @@ Class createCompositeClass(CompositeGenerator compositeGenerator) =>
         ..docs.addAll(sanitizeDocs(compositeGenerator.docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
-          ..optionalParameters.addAll(compositeGenerator.fields.map((field) => Parameter((b) => b
-            ..toThis = true
-            ..required = field.codec.primitive(dirname).isNullable != true
-            ..named = true
-            ..name = field.name)))))
+          ..optionalParameters.addAll(
+              compositeGenerator.fields.map((field) => Parameter((b) => b
+                ..toThis = true
+                ..required = field.codec.primitive(dirname).isNullable != true
+                ..named = true
+                ..name = field.name)))))
         ..constructors.add(Constructor((b) => b
-            ..name = 'decode'
-            ..factory = true
-            ..requiredParameters.add(Parameter((b) => b
-              ..type = constants.input
-              ..name = 'input'))
-            ..body = Code('return codec.decode(input);')))
+          ..name = 'decode'
+          ..factory = true
+          ..requiredParameters.add(Parameter((b) => b
+            ..type = constants.input
+            ..name = 'input'))
+          ..body = Code('return codec.decode(input);')))
         ..methods.add(Method((b) => b
           ..name = 'encode'
           ..returns = constants.uint8List
@@ -80,8 +82,7 @@ Class createCompositeClass(CompositeGenerator compositeGenerator) =>
           ..assignment = codecType.newInstance([]).code));
     });
 
-Class createCompositeCodec(
-    CompositeGenerator compositeGenerator) {
+Class createCompositeCodec(CompositeGenerator compositeGenerator) {
   return Class((classBuilder) {
     final dirname = p.dirname(compositeGenerator.filePath);
     final classType = TypeReference((b) => b..symbol = compositeGenerator.name);
@@ -100,8 +101,9 @@ Class createCompositeCodec(
             ..type = constants.output
             ..name = 'output'),
         ])
-        ..body = Block.of(compositeGenerator.fields.map((field) =>
-            field.codec.encode(refer('obj').property(field.name), refer('output'), dirname).statement))))
+        ..body = Block.of(compositeGenerator.fields.map((field) => field.codec
+            .encode(refer('obj').property(field.name), refer('output'), dirname)
+            .statement))))
       ..methods.add(Method((b) => b
         ..name = 'decode'
         ..returns = classType
@@ -111,8 +113,10 @@ Class createCompositeCodec(
           ..name = 'input'))
         ..body = Block((b) => b
           ..statements.add(classType
-              .newInstance([],
-                  {for (var field in compositeGenerator.fields) field.name: field.codec.decode(refer('input'), dirname)})
+              .newInstance([], {
+                for (var field in compositeGenerator.fields)
+                  field.name: field.codec.decode(refer('input'), dirname)
+              })
               .returned
               .statement))))
       ..methods.add(Method((b) => b
@@ -126,12 +130,13 @@ Class createCompositeCodec(
         )
         ..body = Block((b) => b
           ..statements.add(Code('int size = 0;'))
-          ..statements.addAll(compositeGenerator.fields.map((field) => refer('size')
-              .assign(refer('size').operatorAdd(field.codec
-                  .codecInstance(dirname)
-                  .property('sizeHint')
-                  .call([refer('obj').property(field.name)])))
-              .statement))
+          ..statements.addAll(compositeGenerator.fields.map((field) =>
+              refer('size')
+                  .assign(refer('size').operatorAdd(field.codec
+                      .codecInstance(dirname)
+                      .property('sizeHint')
+                      .call([refer('obj').property(field.name)])))
+                  .statement))
           ..statements.add(refer('size').returned.statement))));
   });
 }
@@ -194,28 +199,28 @@ Class createVariantValuesClass(
       classBuilder
         ..name = '_${variantGenerator.name}'
         ..constructors.add(Constructor((b) => b..constant = true))
-        ..methods.addAll(variantGenerator.variants.map((variant) => Method((b) => b
-          ..returns = refer(variant.name)
-          ..name = generator.Field.toFieldName(variant.name)
-          ..body = variant.fields.isEmpty
-              ? Code('return const ${variant.name}();')
-              : Block.of([
-                  Code('return ${variant.name}('),
-                  Block.of(variant.fields
-                      .map((field) => Code('${field.name}: ${field.name},'))),
-                  Code(');'),
-                ])
-          ..optionalParameters
-              .addAll(variant.fields.map((field) => Parameter((b) => b
-                ..required = field.codec.primitive(dirname).isNullable != true
-                ..named = true
-                ..type = field.codec.primitive(dirname)
-                ..name = field.name))))));
+        ..methods.addAll(variantGenerator.variants.map((variant) => Method(
+            (b) => b
+              ..returns = refer(variant.name)
+              ..name = generator.Field.toFieldName(variant.name)
+              ..body = variant.fields.isEmpty
+                  ? Code('return const ${variant.name}();')
+                  : Block.of([
+                      Code('return ${variant.name}('),
+                      Block.of(variant.fields.map(
+                          (field) => Code('${field.name}: ${field.name},'))),
+                      Code(');'),
+                    ])
+              ..optionalParameters
+                  .addAll(variant.fields.map((field) => Parameter((b) => b
+                    ..required =
+                        field.codec.primitive(dirname).isNullable != true
+                    ..named = true
+                    ..type = field.codec.primitive(dirname)
+                    ..name = field.name))))));
     });
 
-Class createVariantCodec(
-  v.VariantGenerator variantGenerator
-) =>
+Class createVariantCodec(v.VariantGenerator variantGenerator) =>
     Class((classBuilder) {
       final dirname = p.dirname(variantGenerator.filePath);
       final Reference classType = refer(variantGenerator.name);
@@ -361,8 +366,9 @@ Class createVariantClass(
             ..statements.add(PrimitiveGenerator.u8
                 .encode(literalNum(variant.index), refer('output'), dirname)
                 .statement)
-            ..statements.addAll(variant.fields.map(
-                (field) => field.codec.encode(refer(field.name), refer('output'), dirname).statement)),
+            ..statements.addAll(variant.fields.map((field) => field.codec
+                .encode(refer(field.name), refer('output'), dirname)
+                .statement)),
         )));
     });
 
@@ -583,7 +589,8 @@ Class createPalletQueries(
               builder
                 ..name = sanitize(storageName)
                 ..docs.addAll(sanitizeDocs(storage.docs))
-                ..returns = constants.future(storage.valueCodec.primitive(dirname),
+                ..returns = constants.future(
+                    storage.valueCodec.primitive(dirname),
                     nullable: storage.isNullable)
                 ..modifier = MethodModifier.async
                 ..requiredParameters
@@ -627,7 +634,8 @@ Class createPalletQueries(
                       ? Code('return null; /* Nullable */')
                       : storage.valueCodec
                           .valueFrom(
-                              scale_codec.ByteInput(storage.defaultValue), dirname)
+                              scale_codec.ByteInput(storage.defaultValue),
+                              dirname)
                           .returned
                           .statement)
                   ..statements.add(
@@ -694,7 +702,8 @@ Class createPolkadartConstants(
               ..name = sanitize(ReCase(pallet.name).camelCase)
               ..type = pallet.constantsType(dirname)
               ..modifier = FieldModifier.final$
-              ..assignment = pallet.constantsType(dirname).newInstance([]).code)));
+              ..assignment =
+                  pallet.constantsType(dirname).newInstance([]).code)));
     });
 
 Class createPolkadartClass(

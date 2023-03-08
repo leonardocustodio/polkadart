@@ -41,7 +41,7 @@ class SequenceGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -69,7 +69,7 @@ class SequenceGenerator extends Generator {
   }
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -97,7 +97,7 @@ class SequenceGenerator extends Generator {
   }
 
   @override
-  Expression codecInstance([ String? from ]) {
+  Expression codecInstance([String? from]) {
     final TypeReference codec = this.codec(from);
 
     if (typeDef is PrimitiveGenerator) {
@@ -120,7 +120,7 @@ class SequenceGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:

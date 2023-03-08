@@ -14,19 +14,20 @@ abstract class Generator {
     return codecInstance(from).property('encodeTo').call([obj, output]);
   }
 
-  Expression decode([Expression input = const Reference('input'), String? from]) {
+  Expression decode(
+      [Expression input = const Reference('input'), String? from]) {
     return codecInstance(from).property('decode').call([input]);
   }
 
-  TypeReference primitive([ String? from ]);
+  TypeReference primitive([String? from]);
 
-  TypeReference codec([ String? from ]);
+  TypeReference codec([String? from]);
 
-  Expression codecInstance([ String? from ]) {
+  Expression codecInstance([String? from]) {
     return codec(from).property('codec');
   }
 
-  Expression valueFrom(Input input, [ String? from ]);
+  Expression valueFrom(Input input, [String? from]);
 
   GeneratedOutput? generated() {
     return null;
@@ -70,9 +71,7 @@ class LazyLoader {
   }
 }
 
-class FilePath {
-
-}
+class FilePath {}
 
 class Field {
   late String name;

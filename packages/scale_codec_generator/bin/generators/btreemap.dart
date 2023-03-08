@@ -27,17 +27,17 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     return constants.map(key.primitive(from), value.primitive(from));
   }
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     return constants.bTreeMapCodec(key.primitive(from), value.primitive(from));
   }
 
   @override
-  Expression codecInstance([ String? from ]) {
+  Expression codecInstance([String? from]) {
     return codec(from).constInstance([], {
       'keyCodec': key.codecInstance(from),
       'valueCodec': value.codecInstance(from),
@@ -45,7 +45,7 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     return CodeExpression(Block((builder) {
       builder.statements.add(Code.scope(
           (a) => '<${a(key.primitive(from))}, ${a(value.primitive(from))}>{'));

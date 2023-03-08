@@ -22,7 +22,7 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       return constants.option(inner.primitive(from));
     }
@@ -30,7 +30,7 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       return constants.nestedOptionCodec(inner.primitive(from));
     }
@@ -38,17 +38,21 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  Expression codecInstance([ String? from ]) {
+  Expression codecInstance([String? from]) {
     return codec(from).constInstance([inner.codecInstance(from)]);
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       if (input.read() == 0) {
-        return constants.option(inner.primitive(from)).newInstanceNamed('none', []);
+        return constants
+            .option(inner.primitive(from))
+            .newInstanceNamed('none', []);
       } else {
-        return constants.option(inner.primitive(from)).newInstanceNamed('some', [
+        return constants
+            .option(inner.primitive(from))
+            .newInstanceNamed('some', [
           inner.valueFrom(input, from),
         ]);
       }

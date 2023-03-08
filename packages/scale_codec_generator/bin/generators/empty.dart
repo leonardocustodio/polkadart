@@ -8,17 +8,17 @@ class EmptyGenerator extends Generator {
   const EmptyGenerator();
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     return constants.dynamic.type as TypeReference;
   }
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     return constants.emptyCodec.type as TypeReference;
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     return literalNull;
   }
 }

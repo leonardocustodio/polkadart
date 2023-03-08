@@ -40,21 +40,21 @@ class VariantGenerator extends Generator {
       required this.docs});
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     return TypeReference((b) => b
       ..symbol = name
       ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     return TypeReference((b) => b
       ..symbol = name
       ..url = from == null ? filePath : p.relative(filePath, from: from));
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     final index = input.read();
     final variant = variants.firstWhere((variant) => variant.index == index);
 
@@ -89,7 +89,8 @@ class VariantGenerator extends Generator {
 
     final List<Class> classes = variants
         .fold(<Class>[baseClass, valuesClass, codecClass], (classes, variant) {
-      classes.add(createVariantClass(filePath, name, '_\$${name}Codec', variant));
+      classes
+          .add(createVariantClass(filePath, name, '_\$${name}Codec', variant));
       return classes;
     });
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);

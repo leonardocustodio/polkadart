@@ -26,7 +26,7 @@ class TupleGenerator extends Generator {
   }
 
   @override
-  TypeReference codec([ String? from ]) {
+  TypeReference codec([String? from]) {
     return TypeReference((b) => b
       ..symbol = 'Tuple${generators.length}Codec'
       ..url = from == null ? filePath : p.relative(filePath, from: from)
@@ -34,7 +34,7 @@ class TupleGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive([ String? from ]) {
+  TypeReference primitive([String? from]) {
     return TypeReference((b) => b
       ..symbol = 'Tuple${generators.length}'
       ..url = from == null ? filePath : p.relative(filePath, from: from)
@@ -42,16 +42,16 @@ class TupleGenerator extends Generator {
   }
 
   @override
-  Expression codecInstance([ String? from ]) {
+  Expression codecInstance([String? from]) {
     return codec(from)
         .constInstance(generators.map((type) => type.codecInstance(from)));
   }
 
   @override
-  Expression valueFrom(Input input, [ String? from ]) {
+  Expression valueFrom(Input input, [String? from]) {
     // return primitive().newInstance([]);
-    return primitive(from)
-        .newInstance(generators.map((type) => type.valueFrom(input, from)).toList());
+    return primitive(from).newInstance(
+        generators.map((type) => type.valueFrom(input, from)).toList());
   }
 
   @override
