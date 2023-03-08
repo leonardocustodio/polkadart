@@ -85,8 +85,7 @@ class CompositeGenerator extends Generator {
 
       // Check if all fields are of the same type, otherwise use dynamic
       final type = utils.findCommonType(
-              fields.map((field) => field.codec.jsonType(from, visited))) ??
-          constants.dynamic.type as TypeReference;
+          fields.map((field) => field.codec.jsonType(from, visited)));
 
       // If all field are unnamed, return a list
       if (fields.every((field) => field.originalName == null)) {

@@ -107,7 +107,7 @@ TypeReference _toCompatibleType(TypeReference a, TypeReference b) {
 }
 
 /// Find a type which is common for all types in the list.
-TypeReference? findCommonType(Iterable<TypeReference> types) {
+TypeReference findCommonType(Iterable<TypeReference> types) {
   if (types.isEmpty) {
     return constants.dynamic.type as TypeReference;
   }

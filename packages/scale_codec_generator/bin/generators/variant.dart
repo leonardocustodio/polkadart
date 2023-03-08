@@ -65,8 +65,7 @@ class Variant extends Generator {
     } else {
       // Check if all fields are of the same type, otherwise use dynamic
       final type = utils.findCommonType(
-              fields.map((field) => field.codec.jsonType(from, visited))) ??
-          constants.dynamic;
+          fields.map((field) => field.codec.jsonType(from, visited)));
 
       if (fields.every((field) => field.originalName == null)) {
         newType = constants.map(constants.string, constants.list(ref: type));
@@ -214,8 +213,7 @@ class VariantGenerator extends Generator {
     final type = Generator.cacheOrCreate(from, visited, () {
       // Check if all variants are of the same type, otherwise use Map<String, dynamic>
       final complexJsonType = utils.findCommonType(
-              variants.map((variant) => variant.jsonType(from, visited))) ??
-          constants.map(constants.string, constants.dynamic);
+          variants.map((variant) => variant.jsonType(from, visited)));
       if (complexJsonType.symbol != 'Map') {
         throw Exception(
             '$name: Invalid complex variant type: $complexJsonType');
