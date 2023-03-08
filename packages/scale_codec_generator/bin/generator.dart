@@ -26,6 +26,7 @@ import './generators/pallet.dart' show PalletGenerator;
 import './generators/polkadart.dart' show PolkadartGenerator;
 import './metadata_parser.dart'
     show
+        Primitive,
         RuntimeMetadataV14,
         TypeMetadata,
         TypeDefVariant,
@@ -63,7 +64,9 @@ Future<RuntimeMetadataV14> downloadMetadata(Uri url) async {
 void main(List<String> arguments) async {
   // URL -> rpc.polkadot.io
   // outputPath -> ./generated
-  final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('astar.public.blastapi.io'));
+  // final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('astar.public.blastapi.io'));
+  final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('rpc.efinity.io'));
+  
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
@@ -206,6 +209,7 @@ void main(List<String> arguments) async {
           }
         }
 
+        // BoundedBTreeMap
         if (type.path.isNotEmpty && type.path.last == 'BoundedBTreeMap') {
           final btreemap = types[composite.fields.first.type]!.typeDef;
           if (btreemap is TypeDefComposite &&
@@ -222,6 +226,33 @@ void main(List<String> arguments) async {
                     value: tupleTypeDef.types[1]);
                 continue;
               }
+            }
+          }
+        }
+
+        // BoundedString
+        if (
+          type.path.isNotEmpty &&
+          type.path.last == 'BoundedString') {
+          final boundedVec = types[composite.fields.first.type]!.typeDef;
+          if (boundedVec is TypeDefComposite &&
+              boundedVec.fields.length == 1 &&
+              boundedVec.fields.first.name == null) {
+            final sequenceTypeDef = types[boundedVec.fields.first.type]!.typeDef;
+            if (sequenceTypeDef is TypeDefSequence) {
+              final primitiveTypeDef = types[sequenceTypeDef.type]!.typeDef;
+              if (primitiveTypeDef is TypeDefPrimitive &&
+                  primitiveTypeDef.primitive == Primitive.U8) {
+                generators[type.id] = PrimitiveGenerator.str;
+                continue;
+              }
+            }
+          } else if (boundedVec is TypeDefSequence) {
+            final primitiveTypeDef = types[boundedVec.type]!.typeDef;
+            if (primitiveTypeDef is TypeDefPrimitive &&
+                primitiveTypeDef.primitive == Primitive.U8) {
+              generators[type.id] = PrimitiveGenerator.str;
+              continue;
             }
           }
         }
