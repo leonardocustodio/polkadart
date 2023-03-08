@@ -162,4 +162,9 @@ class PrimitiveGenerator extends Generator {
         throw Exception('Unsupported primitive $primitive');
     }
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj;
+  }
 }

@@ -1,8 +1,10 @@
-import 'package:code_builder/code_builder.dart' show Expression, TypeReference;
+import 'package:code_builder/code_builder.dart'
+    show Expression, TypeReference, literalList;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:path/path.dart' as p;
 import './base.dart' show BasePath, Generator, GeneratedOutput, LazyLoader;
 import '../class_builder.dart' show createTupleClass, createTupleCodec;
+import '../constants.dart' as constants;
 
 class TupleGenerator extends Generator {
   String filePath;
@@ -59,5 +61,13 @@ class TupleGenerator extends Generator {
     final tupleCodec = createTupleCodec(generators.length);
     return GeneratedOutput(
         classes: [tupleClass, tupleCodec], enums: [], typedefs: []);
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return literalList([
+      for (int i = 0; i < generators.length; i++)
+        generators[i].instanceToJson(from, obj.property('value$i'))
+    ], constants.dynamic);
   }
 }

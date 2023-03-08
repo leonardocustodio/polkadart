@@ -31,6 +31,8 @@ abstract class Generator {
 
   Expression valueFrom(BasePath from, Input input);
 
+  Expression instanceToJson(BasePath from, Expression obj);
+
   GeneratedOutput? generated() {
     return null;
   }

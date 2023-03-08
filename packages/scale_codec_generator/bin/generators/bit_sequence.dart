@@ -75,4 +75,9 @@ class BitSequenceGenerator extends Generator {
           .call([literalList(bitArray.asUint32Iterable())]).property('buffer'),
     ]);
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj.property('toJson').call([]);
+  }
 }

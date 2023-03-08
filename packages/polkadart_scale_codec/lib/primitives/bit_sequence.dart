@@ -357,4 +357,12 @@ class BitArray {
       asUint32Iterable().fold(
           0, (int previousValue, element) => previousValue ^ element.hashCode) ^
       length.hashCode;
+
+  List<int> toJson() {
+    final list = <int>[];
+    for (var i = 0; i < length; i++) {
+      list.add(this[i] ? 1 : 0);
+    }
+    return list;
+  }
 }

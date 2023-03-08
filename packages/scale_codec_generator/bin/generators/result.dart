@@ -50,4 +50,11 @@ class ResultGenerator extends Generator {
     return codec(from)
         .constInstance([ok.codecInstance(from), err.codecInstance(from)]);
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj.property('isOk').conditional(
+        ok.instanceToJson(from, obj.property('okValue').nullChecked),
+        err.instanceToJson(from, obj.property('errValue').nullChecked));
+  }
 }

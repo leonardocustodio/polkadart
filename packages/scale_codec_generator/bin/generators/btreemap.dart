@@ -65,4 +65,9 @@ class BTreeMapGenerator extends Generator {
       builder.statements.add(Code('}'));
     }));
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj;
+  }
 }

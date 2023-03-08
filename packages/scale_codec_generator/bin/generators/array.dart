@@ -2,9 +2,12 @@ import 'package:code_builder/code_builder.dart'
     show
         Code,
         CodeExpression,
+        Method,
+        Parameter,
         TypeReference,
         Expression,
         Block,
+        refer,
         literalNum,
         literalList;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
@@ -205,5 +208,33 @@ class ArrayGenerator extends Generator {
       }
       builder.statements.add(Code(']'));
     }));
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    if (typeDef is PrimitiveGenerator) {
+      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+        case Primitive.Str:
+        case Primitive.U8:
+        case Primitive.Char:
+        case Primitive.U16:
+        case Primitive.U32:
+        case Primitive.U64:
+        case Primitive.I8:
+        case Primitive.I16:
+        case Primitive.I32:
+        case Primitive.I64:
+          return obj.property('toList').call([]);
+        default:
+          break;
+      }
+    }
+
+    return obj.property('map').call([
+      Method.returnsVoid((b) => b
+        ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+        ..lambda = true
+        ..body = typeDef.instanceToJson(from, refer('value')).code).closure
+    ]);
   }
 }

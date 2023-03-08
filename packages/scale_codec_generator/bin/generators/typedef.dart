@@ -74,4 +74,9 @@ class TypeDefGenerator extends Generator {
         name: name, reference: generator.primitive(p.dirname(filePath)));
     return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return generator.instanceToJson(from, obj);
+  }
 }

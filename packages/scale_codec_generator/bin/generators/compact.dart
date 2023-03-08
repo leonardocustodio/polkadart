@@ -23,4 +23,9 @@ class CompactGenerator extends Generator {
     final value = CompactBigIntCodec.codec.decode(input);
     return utils.bigIntToExpression(value);
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj;
+  }
 }

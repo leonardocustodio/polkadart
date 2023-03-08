@@ -20,6 +20,9 @@ import 'package:code_builder/code_builder.dart'
         Enum,
         EnumValue,
         literalNum,
+        literalMap,
+        literalString,
+        literalNull,
         TypeDef,
         TypeReference,
         MethodModifier;
@@ -69,6 +72,18 @@ Class createCompositeClass(CompositeGenerator compositeGenerator) =>
           ..name = 'encode'
           ..returns = constants.uint8List
           ..body = Code('return codec.encode(this);')))
+        ..methods.add(Method((b) => b
+          ..name = 'toJson'
+          ..returns = constants.map(constants.string, constants.dynamic)
+          ..body = literalMap(
+            {
+              for (var field in compositeGenerator.fields)
+                field.name:
+                    field.codec.instanceToJson(dirname, refer(field.name))
+            },
+            constants.string,
+            constants.dynamic,
+          ).code))
         ..fields.addAll(compositeGenerator.fields.map((field) => Field((b) => b
           ..name = field.name
           ..type = field.codec.primitive(dirname)
@@ -187,7 +202,10 @@ Class createVariantBaseClass(
         ..methods.add(Method((b) => b
           ..name = 'sizeHint'
           ..returns = constants.int
-          ..body = Code('return codec.sizeHint(this);')));
+          ..body = Code('return codec.sizeHint(this);')))
+        ..methods.add(Method((b) => b
+          ..name = 'toJson'
+          ..returns = constants.map(constants.string, constants.dynamic)));
     });
 
 Class createVariantValuesClass(
@@ -316,6 +334,21 @@ Class createVariantClass(
                 ..required = field.codec.primitive(dirname).isNullable != true
                 ..named = true
                 ..name = field.name)))))
+        ..methods.add(Method((b) => b
+          ..name = 'toJson'
+          ..annotations.add(refer('override'))
+          ..returns = constants.map(constants.string, constants.dynamic)
+          ..body = literalMap(
+            {
+              variant.name: variant.fields.isEmpty
+                  ? literalNull
+                  : literalMap({
+                      for (var field in variant.fields)
+                        field.name: field.codec
+                            .instanceToJson(dirname, refer(field.name))
+                    }),
+            },
+          ).code))
         ..fields.addAll(variant.fields.map((field) => Field((b) => b
           ..name = field.name
           ..type = field.codec.primitive(dirname)
@@ -389,6 +422,16 @@ Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
             ..type = constants.input
             ..name = 'input'))
           ..body = Code('return codec.decode(input);')))
+        ..methods.add(Method((b) => b
+          ..name = 'toJson'
+          ..returns = constants.map(constants.string, constants.dynamic)
+          ..body = literalMap(
+            {
+              variant.name: null,
+            },
+            constants.string,
+            constants.dynamic,
+          ).code))
         ..fields.addAll([
           Field((b) => b
             ..modifier = FieldModifier.final$

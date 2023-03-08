@@ -47,4 +47,9 @@ class CompositeGenerator extends Generator {
     return GeneratedOutput(
         classes: [typeBuilder, codecBuilder], enums: [], typedefs: []);
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj.property('toJson').call([]);
+  }
 }

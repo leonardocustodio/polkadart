@@ -21,4 +21,9 @@ class EmptyGenerator extends Generator {
   Expression valueFrom(BasePath from, Input input) {
     return literalNull;
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return literalNull;
+  }
 }

@@ -64,4 +64,11 @@ class OptionGenerator extends Generator {
       return inner.valueFrom(from, input);
     }
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj
+        .equalTo(literalNull)
+        .conditional(literalNull, inner.instanceToJson(from, obj.nullChecked));
+  }
 }

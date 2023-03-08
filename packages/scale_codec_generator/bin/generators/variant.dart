@@ -95,4 +95,9 @@ class VariantGenerator extends Generator {
     });
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj.property('toJson').call([]);
+  }
 }
