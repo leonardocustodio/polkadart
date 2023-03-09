@@ -211,6 +211,18 @@ class ArrayGenerator extends Generator {
   }
 
   @override
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+    if (visited.contains(this)) {
+      return constants.list(ref: constants.dynamic);
+    }
+    visited.add(this);
+    final type = Generator.cacheOrCreate(from, visited,
+        () => constants.list(ref: typeDef.jsonType(from, visited)));
+    visited.remove(this);
+    return type;
+  }
+
+  @override
   Expression instanceToJson(BasePath from, Expression obj) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
@@ -230,11 +242,15 @@ class ArrayGenerator extends Generator {
       }
     }
 
-    return obj.property('map').call([
-      Method.returnsVoid((b) => b
-        ..requiredParameters.add(Parameter((b) => b..name = 'value'))
-        ..lambda = true
-        ..body = typeDef.instanceToJson(from, refer('value')).code).closure
-    ]);
+    return obj
+        .property('map')
+        .call([
+          Method.returnsVoid((b) => b
+            ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+            ..lambda = true
+            ..body = typeDef.instanceToJson(from, refer('value')).code).closure
+        ])
+        .property('toList')
+        .call([]);
   }
 }

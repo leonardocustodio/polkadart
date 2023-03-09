@@ -52,9 +52,12 @@ class ResultGenerator extends Generator {
   }
 
   @override
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+    return constants.map(constants.string, constants.dynamic);
+  }
+
+  @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    return obj.property('isOk').conditional(
-        ok.instanceToJson(from, obj.property('okValue').nullChecked),
-        err.instanceToJson(from, obj.property('errValue').nullChecked));
+    return obj.property('toJson').call([]);
   }
 }

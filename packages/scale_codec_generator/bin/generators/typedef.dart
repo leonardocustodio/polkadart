@@ -4,6 +4,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:path/path.dart' as p;
 import './base.dart' show BasePath, Generator, GeneratedOutput, LazyLoader;
 import '../class_builder.dart' show createTypeDef;
+import '../constants.dart' as constants;
 
 class TypeDefGenerator extends Generator {
   String filePath;
@@ -73,6 +74,17 @@ class TypeDefGenerator extends Generator {
     final typeDef = createTypeDef(
         name: name, reference: generator.primitive(p.dirname(filePath)));
     return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
+  }
+
+  @override
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+    if (visited.contains(this)) {
+      return constants.dynamic.type as TypeReference;
+    }
+    visited.add(this);
+    final newType = generator.jsonType(from, visited);
+    visited.remove(this);
+    return newType;
   }
 
   @override

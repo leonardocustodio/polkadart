@@ -267,7 +267,6 @@ void main(List<String> arguments) async {
       }
 
       // Create Compose Generator
-      int index = 0;
       generators[type.id] = CompositeGenerator(
           filePath: '$typesPath/${type.path.join('/')}.dart',
           name: type.path.last,
@@ -277,7 +276,7 @@ void main(List<String> arguments) async {
                   loader: lazyLoader,
                   codec: field.type,
                   docs: field.docs,
-                  name: field.name ?? 'value${index++}'))
+                  name: field.name))
               .toList());
       continue;
     }
@@ -341,22 +340,18 @@ void main(List<String> arguments) async {
             if (variantName == type.path.last) {
               variantName = '${variantName}Variant';
             }
-            int index = 0;
             return Variant(
                 name: variantName,
                 index: variant.index,
                 docs: variant.docs,
-                fields: variant.fields.map((field) {
-                  final String name =
-                      Field.toFieldName(field.name ?? 'value$index');
-                  index++;
-                  return Field.lazy(
-                    loader: lazyLoader,
-                    codec: field.type,
-                    name: name,
-                    docs: field.docs,
-                  );
-                }).toList());
+                fields: variant.fields
+                    .map((field) => Field.lazy(
+                          loader: lazyLoader,
+                          codec: field.type,
+                          name: field.name,
+                          docs: field.docs,
+                        ))
+                    .toList());
           }).toList());
       continue;
     }

@@ -77,6 +77,11 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
+  TypeReference jsonType(BasePath from, [Set<Object> visited = const {}]) {
+    return constants.list(ref: constants.int);
+  }
+
+  @override
   Expression instanceToJson(BasePath from, Expression obj) {
     return obj.property('toJson').call([]);
   }

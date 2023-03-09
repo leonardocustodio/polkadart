@@ -1,5 +1,13 @@
 import 'package:code_builder/code_builder.dart'
-    show Expression, CodeExpression, Code, Block, TypeReference;
+    show
+        Expression,
+        CodeExpression,
+        Code,
+        Block,
+        TypeReference,
+        Method,
+        Parameter,
+        refer;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show Input, CompactCodec;
 import '../constants.dart' as constants;
@@ -67,7 +75,33 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+    if (visited.contains(this)) {
+      return constants.map(constants.dynamic, constants.dynamic);
+    }
+    visited.add(this);
+    final type = Generator.cacheOrCreate(
+        from,
+        visited,
+        () => constants.map(
+            key.jsonType(from, visited), value.jsonType(from, visited)));
+    visited.remove(this);
+    return type;
+  }
+
+  @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    return obj;
+    return obj.property('map').call([
+      Method.returnsVoid((b) => b
+        ..requiredParameters.addAll([
+          Parameter((b) => b..name = 'key'),
+          Parameter((b) => b..name = 'value'),
+        ])
+        ..lambda = true
+        ..body = constants.mapEntry.newInstance([
+          key.instanceToJson(from, refer('key')),
+          value.instanceToJson(from, refer('value')),
+        ]).code).closure
+    ]);
   }
 }

@@ -3,6 +3,7 @@ import 'package:code_builder/code_builder.dart'
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:path/path.dart' as p;
 import './base.dart' show BasePath, Generator, GeneratedOutput, LazyLoader;
+import '../utils.dart' as utils show findCommonType;
 import '../class_builder.dart' show createTupleClass, createTupleCodec;
 import '../constants.dart' as constants;
 
@@ -61,6 +62,25 @@ class TupleGenerator extends Generator {
     final tupleCodec = createTupleCodec(generators.length);
     return GeneratedOutput(
         classes: [tupleClass, tupleCodec], enums: [], typedefs: []);
+  }
+
+  @override
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+    if (generators.isEmpty) {
+      return constants.dynamic.type as TypeReference;
+    }
+
+    if (visited.contains(this)) {
+      return constants.list(ref: constants.dynamic);
+    }
+    visited.add(this);
+
+    // Check if all fields are of the same type, otherwise use dynamic
+    final type = utils.findCommonType(
+        generators.map((generator) => generator.jsonType(from, visited)));
+    final newType = constants.list(ref: type);
+    visited.remove(this);
+    return newType;
   }
 
   @override
