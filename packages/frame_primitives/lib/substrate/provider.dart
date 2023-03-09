@@ -17,7 +17,7 @@ class WsProvider extends Provider {
 
   WsProvider(String url) {
     channel = WebSocketChannel.connect(Uri.parse(url));
-    
+
     channel.stream.listen((message) {
       final data = jsonDecode(message) as Map<String, dynamic>;
       final id = data['id'] as int;
@@ -52,7 +52,7 @@ class WsProvider extends Provider {
 
     return completer.future;
   }
-  
+
   void close() {
     channel.sink.close(status.goingAway);
   }
