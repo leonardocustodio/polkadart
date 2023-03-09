@@ -8,15 +8,22 @@ abstract class Provider {
       {Uint8List? block});
 
   Future<Map<String, dynamic>> send(String method, List<String> params);
-
-  /// New storage subscription
-  // Future<StreamSubscription<StorageChangeSet>> subscribeStorage(List<Uint8List> keys);
 }
 
 class WsProvider extends Provider {
-  final String url;
+  int sequence = 0;
+  late WebSocketChannel channel;
+  late Map<int, Completer<Map<String, dynamic>>> subscriptions = {};
 
-  const WsProvider({required this.url});
+  WsProvider(String url) {
+    channel = WebSocketChannel.connect(Uri.parse(url));
+    
+    channel.stream.listen((message) {
+      final data = jsonDecode(message) as Map<String, dynamic>;
+      final id = data['id'] as int;
+      subscriptions.remove(id)!.complete(data);
+    });
+  }
 
   @override
   Future<List<Uint8List?>> queryStorage(List<Uint8List> keys,
@@ -32,19 +39,22 @@ class WsProvider extends Provider {
 
   @override
   Future<Map<String, dynamic>> send(String method, List<String> params) async {
-    final url = Uri.https(this.url);
-    final response = await http.post(url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'id': 1,
-          'jsonrpc': '2.0',
-          'method': method,
-          'params': params,
-        }));
+    final id = sequence++;
+    final completer = Completer<Map<String, dynamic>>();
+    subscriptions[id] = completer;
 
-    return jsonDecode(response.body) as Map<String, dynamic>;
+    channel.sink.add(jsonEncode({
+      'id': id,
+      'jsonrpc': '2.0',
+      'method': method,
+      'params': params,
+    }));
+
+    return completer.future;
+  }
+  
+  void close() {
+    channel.sink.close(status.goingAway);
   }
 
   // @override
