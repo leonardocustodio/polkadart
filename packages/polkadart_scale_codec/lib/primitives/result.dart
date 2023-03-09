@@ -55,6 +55,13 @@ class Result<R, E> {
   bool get isOk => _isOk;
   bool get isErr => !_isOk;
 
+  Map<String, dynamic> toJson() {
+    if (_isOk) {
+      return {'Ok': okValue};
+    }
+    return {'Err': errValue};
+  }
+
   @override
   String toString() {
     if (_isOk) {

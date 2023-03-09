@@ -5,7 +5,7 @@ import '../constants.dart' as constants;
 import './base.dart' show BasePath, Generator;
 
 class EmptyGenerator extends Generator {
-  const EmptyGenerator();
+  EmptyGenerator();
 
   @override
   TypeReference primitive(BasePath from) {
@@ -20,6 +20,11 @@ class EmptyGenerator extends Generator {
   @override
   Expression valueFrom(BasePath from, Input input) {
     return literalNull;
+  }
+
+  @override
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+    return constants.dynamic.type as TypeReference;
   }
 
   @override
