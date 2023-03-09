@@ -1,6 +1,6 @@
 library substrate_core;
 
-import 'dart:async';
+import 'dart:async' show Future, Completer;
 import 'dart:convert' show utf8, jsonEncode, jsonDecode;
 import 'dart:typed_data' show ByteData, Uint8List, Uint16List;
 import 'package:convert/convert.dart' show hex;
