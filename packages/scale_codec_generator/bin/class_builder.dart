@@ -1,4 +1,4 @@
-import 'dart:core' show String, List, bool, int;
+import 'dart:core' show String, List, int;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale_codec
     show ByteInput;
@@ -8,7 +8,6 @@ import 'package:code_builder/code_builder.dart'
         Class,
         Code,
         declareFinal,
-        Expression,
         literalList,
         Block,
         refer,
@@ -21,13 +20,11 @@ import 'package:code_builder/code_builder.dart'
         Enum,
         EnumValue,
         literalNum,
-        literalMap,
-        literalNull,
         literalString,
         TypeDef,
         TypeReference,
         MethodModifier;
-import './generators/base.dart' as generator show BasePath, Field;
+import './generators/base.dart' as generator show Field;
 import './generators/variant.dart' as v show Variant, VariantGenerator;
 import './generators/primitive.dart' show PrimitiveGenerator;
 import './generators/composite.dart' show CompositeGenerator;
