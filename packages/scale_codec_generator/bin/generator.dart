@@ -25,7 +25,7 @@ import './generators/base.dart'
     show Field, Generator, LazyLoader, GeneratedOutput;
 import './generators/pallet.dart' show PalletGenerator;
 import './generators/polkadart.dart' show PolkadartGenerator;
-import './metadata_parser.dart'
+import 'frame_metadata.dart'
     show
         Primitive,
         RuntimeMetadataV14,

@@ -15,7 +15,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         I128Codec;
 import 'package:code_builder/code_builder.dart'
     show TypeReference, Expression, literalBool, literalString, literalNum;
-import '../metadata_parser.dart' show Primitive;
+import '../frame_metadata.dart' show Primitive;
 import './base.dart' show BasePath, Generator;
 import '../constants.dart' as constants;
 import '../utils.dart' as utils show bigIntToExpression;
