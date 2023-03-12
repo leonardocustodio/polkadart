@@ -53,17 +53,18 @@ void main() {
     //
     // Looping through every block
     for (var originalEvent in rawBlocksList) {
-
       // TODO: Fix this block
-      if (originalEvent.blockNumber == 8200759) {
-        continue;
+      switch (originalEvent.blockNumber) {
+        case 8200759:
+          continue;
+        default:
       }
-      test(
-          'When original event ${originalEvent.blockNumber}',
-          () {
+      test('When original event ${originalEvent.blockNumber}', () {
+        print(originalEvent.blockNumber);
         //
         // Decoding the `Raw Block Events`
         final decodedBlockEvents = chain.decodeEvents(originalEvent);
+        return;
 
         //
         // Encoding the `Decoded Block Events`

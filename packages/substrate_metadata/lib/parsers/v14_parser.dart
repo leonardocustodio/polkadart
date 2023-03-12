@@ -157,8 +157,7 @@ class V14Parser {
 
     //
     // Register the Call type
-    registry.addCodec(
-        'Call', Call(registry: registry, metadata: rawMetadata));
+    registry.addCodec('Call', Call(registry: registry, metadata: rawMetadata));
     registry.addCodec('Era', EraExtrinsic.codec);
     registry.registerCustomCodec(metadataExpander.customCodecRegister);
 

@@ -1,4 +1,4 @@
-part of parsers;
+/* part of parsers;
 
 class NewLegacyParser {
   static ChainInfo getChainInfo(
@@ -127,8 +127,7 @@ class NewLegacyParser {
 
     //
     // Register the Call type
-    registry.addCodec(
-        'Call', Call(registry: registry, metadata: rawMetadata));
+    registry.addCodec('Call', Call(registry: registry, metadata: rawMetadata));
     registry.registerCustomCodec(
         // ignore: unnecessary_cast
         {...extraTypes, ...legacyTypes.types as Map<String, dynamic>});
@@ -166,3 +165,4 @@ class NewLegacyParser {
         version: decodedMetadata.version);
   }
 }
+ */

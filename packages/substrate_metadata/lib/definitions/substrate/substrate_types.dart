@@ -3,6 +3,8 @@
 /// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/substrate/types.ts
 
 const substrateTypes = {
+  'Type': 'Str',
+  'Bytes': 'Vec<U8>',
   'GenericAccountId': '[u8; 32]',
   'GenericAccountIndex': 'u32',
   'GenericLookupSource': 'DoNotConstruct',
@@ -2736,7 +2738,7 @@ const substrateTypes = {
   'Event': 'GenericEvent',
   'EventId': '[u8; 2]',
   'EventIndex': 'u32',
-  'EventRecord': {'phase': 'Phase', 'event': 'Event', 'topics': 'Vec<Hash>'},
+  'EventRecord': {'phase': 'Phase', 'event': 'Event', 'topics': 'Vec<Str>'},
   'Health': {'peers': 'u64', 'isSyncing': 'bool', 'shouldHavePeers': 'bool'},
   'InvalidTransaction': {
     '_enum': {

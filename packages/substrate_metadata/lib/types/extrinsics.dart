@@ -45,11 +45,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
           chainInfo.scaleCodec.decode('ExtrinsicSignatureCodec', input);
     }
 
-    result['calls'] = <String, dynamic>{};
-
-    result['calls'].addAll(
-        Call(registry: chainInfo.registry, metadata: chainInfo.metadata)
-            .decode(input));
+    result['calls'] = chainInfo.scaleCodec.decode('CallCodec', input);
 
     return result;
   }

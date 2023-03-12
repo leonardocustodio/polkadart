@@ -123,11 +123,18 @@ class Chain {
     if (versionDescription == null) {
       throw BlockNotFoundException(blockNumber);
     }
+    if (versionDescription.chainInfo.version == 14) {
+      print(blockNumber);
+    }
     assertion(blockNumber >= versionDescription.blockNumber);
 
-    final events = EventCodec(chainInfo: versionDescription.chainInfo)
-        .decode(HexInput(rawBlockEvents.events));
-    return DecodedBlockEvents(blockNumber: blockNumber, events: events);
+    final input = HexInput(rawBlockEvents.events);
+
+    final List<dynamic> events =
+        versionDescription.chainInfo.scaleCodec.decode('EventCodec', input);
+    return DecodedBlockEvents(
+        blockNumber: blockNumber,
+        events: events.cast<Map<String, dynamic>>().toJson());
   }
 
   RawBlockEvents encodeEvents(DecodedBlockEvents decodedBlockEvents) {
@@ -166,7 +173,10 @@ class Chain {
       return;
     }
 
-    final ChainInfo chainInfo = getChainInfoFromSpecVersion(specVersion);
+    final ChainInfo? chainInfo = getChainInfoFromSpecVersion(specVersion);
+    if (chainInfo == null) {
+      return;
+    }
     VersionDescription? versionDescription;
     versionDescription = VersionDescription(
       /// local to class params
@@ -183,9 +193,12 @@ class Chain {
     _versionDescriptionMap[specVersion.blockNumber] = versionDescription;
   }
 
-  ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
+  ChainInfo? getChainInfoFromSpecVersion(SpecVersion specVersion) {
     final DecodedMetadata decodedMetadata =
         MetadataDecoder.instance.decode(specVersion.metadata);
+    if (decodedMetadata.version >= 14) {
+      return null;
+    }
 
     /*  // create a File
     final file = File('./blocks_json/${specVersion.blockNumber}.json');

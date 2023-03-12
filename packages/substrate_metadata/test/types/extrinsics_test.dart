@@ -9,31 +9,31 @@ import 'package:test/test.dart';
 import '../parachain_definitions/polkadot.dart';
 
 void main() {
-  // read lines
-  List<dynamic> readLines(String filePath) {
-    // check if the file exists
-    if (File(filePath).existsSync() == false) {
-      // return with empty list
-      return <dynamic>[];
-    }
-    // As File exists, now start reading line by line.
-    //
-    // mapping lines to jsonDecode so as to convert `stringified` lines to `List<HashMap>`.
-    final result = File(filePath)
-        .readAsLinesSync()
-        .map(jsonDecode)
-        .toList(growable: false);
-    return result;
-  }
-
-  // read the blocks of the polkadot chain
-  List<RawBlockExtrinsics> getBlocks(String filePath) {
-    return readLines(filePath)
-        .map((dynamic map) => RawBlockExtrinsics.fromJson(map))
-        .toList(growable: false);
-  }
-
   group('Polkadot Extrinsics Test', () {
+    // read lines
+    List<dynamic> readLines(String filePath) {
+      // check if the file exists
+      if (File(filePath).existsSync() == false) {
+        // return with empty list
+        return <dynamic>[];
+      }
+      // As File exists, now start reading line by line.
+      //
+      // mapping lines to jsonDecode so as to convert `stringified` lines to `List<HashMap>`.
+      final result = File(filePath)
+          .readAsLinesSync()
+          .map(jsonDecode)
+          .toList(growable: false);
+      return result;
+    }
+
+    // read the blocks of the polkadot chain
+    List<RawBlockExtrinsics> getBlocks(String filePath) {
+      return readLines(filePath)
+          .map((dynamic map) => RawBlockExtrinsics.fromJson(map))
+          .toList(growable: false);
+    }
+
     //
     // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
     final LegacyTypesBundle typesDefinitions =
@@ -54,12 +54,9 @@ void main() {
     // Looping through every block
     for (var originalExtrinsics in rawBlocksList) {
       // TODO: Fix this block
-      if (originalExtrinsics.blockNumber == 8200759) {
+      /* if (originalExtrinsics.blockNumber == 8200759) {
         continue;
-      }
-      if (originalExtrinsics.blockNumber != 240888) {
-        continue;
-      }
+      } */
       test('When original extrinsics is decode it should return normally ', () {
         count++;
         print('${originalExtrinsics.blockNumber}');

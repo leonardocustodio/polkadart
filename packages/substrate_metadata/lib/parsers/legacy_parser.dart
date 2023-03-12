@@ -4,15 +4,18 @@ class LegacyParser {
   static ChainInfo getChainInfo(
       DecodedMetadata decodedMetadata, LegacyTypes legacyTypes) {
     final rawMetadata = decodedMetadata.metadataJson;
-    final modules = rawMetadata['modules'];
 
     int callModuleIndex = -1;
     int eventModuleIndex = -1;
-    for (final module in modules) {
 
+    final resultingRegistry = Registry();
+
+    final callsCodec = <int, MapEntry<String, Codec>>{};
+    final eventsCodec = <int, MapEntry<String, Codec>>{};
+    for (final module in rawMetadata['modules']) {
       // Getting the module name and converting it to camelCase
-      final String moduleName =
-          module['name'][0].toLowerCase() + module['name'].substring(1);
+      String moduleName = module['name'];
+      moduleName = moduleName[0].toLowerCase() + moduleName.substring(1);
 
       // Getting the aliases for this specific module
       final Map<String, String>? moduleNameAlias =
@@ -26,83 +29,136 @@ class LegacyParser {
         types.addAll(moduleNameAlias);
       }
 
+      final callRegistry = Registry();
+      callRegistry.addCodec(
+          'GenericCall',
+          ReferencedCodec(
+              referencedType: 'CallCodec', registry: resultingRegistry));
+
       if (module['calls'] != null) {
         callModuleIndex++;
+
+        final index = module['index'] ?? callModuleIndex;
+
+        final callEnumCodec = <int, MapEntry<String, Codec>>{};
         for (var callIndex = 0;
             callIndex < module['calls'].length;
             callIndex++) {
           final call = module['calls'][callIndex];
 
-          final lookup =
-              encodeHex([module['index'] ?? callModuleIndex, callIndex]);
-
           final List<dynamic> args = call['args'];
+          Codec argsCodec = TupleCodec([]);
 
-          for (final arg in args) {
-            late String type;
-            if (arg is String) {
-              // In case of legacy metadata
-              type = arg;
-            } else if (arg is Map<String, dynamic>) {
-              type = arg['type'];
+          if (args.isNotEmpty) {
+            if (args.first is String) {
+              // It is List<String>
+              final codecs = <Codec>[];
+              for (final String arg in args) {
+                final String type = legacyTypeSimplifier(arg);
+                final Codec codec =
+                    callRegistry.parseSpecificCodec(types, type);
+                codecs.add(codec);
+              }
+              argsCodec = TupleCodec(codecs);
+            } else if (args.first is Map<String, dynamic>) {
+              // It is List<Map<String, dynamic>>
+              final Map<String, Codec> codecs = <String, Codec>{};
+
+              for (final arg in args) {
+                final String name = arg['name'];
+
+                final String type = legacyTypeSimplifier(arg['type']);
+
+                final Codec codec =
+                    callRegistry.parseSpecificCodec(types, type);
+
+                codecs[name] = codec;
+              }
+              argsCodec = CompositeCodec(codecs);
             } else {
-              throw Exception('Unknown type of arg: $arg');
+              throw Exception('Unknown type of args: $args');
             }
           }
-
-          rawMetadata['call_index'][lookup] = {
-            'module': {'name': module['name']},
-            'call': call,
-          };
+          callEnumCodec[callIndex] = MapEntry(call['name'], argsCodec);
         }
+        callsCodec[index] =
+            MapEntry(module['name'], ComplexEnumCodec.sparse(callEnumCodec));
       }
 
-      if (module['events'] != null && module['events'].isNotEmpty) {
+      //
+      // Events Parsing
+      final eventRegistry = Registry();
+
+      if (module['events'] != null) {
         eventModuleIndex++;
-        rawMetadata['event_index'] ??= <String, dynamic>{};
+
+        final index = module['index'] ?? eventModuleIndex;
+
+        final eventEnumCodec = <int, MapEntry<String, Codec>>{};
         for (var eventIndex = 0;
             eventIndex < module['events'].length;
             eventIndex++) {
           final event = module['events'][eventIndex];
 
-          final lookup =
-              encodeHex([module['index'] ?? eventModuleIndex, eventIndex]);
+          final List<dynamic> args = event['args'];
 
-          rawMetadata['event_index'][lookup] = {
-            'module': {'name': module['name']},
-            'call': event,
-          };
-          final args = event['args'];
-          for (final arg in args) {
-            late String type;
-            if (arg is String) {
-              // In case of legacy metadata
-              type = arg;
-            } else if (arg is Map<String, dynamic>) {
-              // In case of v14 metadata
-              type = arg['type'];
+          Codec argsCodec = TupleCodec([]);
+
+          if (args.isNotEmpty) {
+            if (args.first is String) {
+              // It is List<String>
+              final codecs = <Codec>[];
+              for (final String arg in args) {
+                final String type = legacyTypeSimplifier(arg);
+                final Codec codec =
+                    eventRegistry.parseSpecificCodec(types, type);
+                codecs.add(codec);
+              }
+              argsCodec = TupleCodec(codecs);
+            } else if (args.first is Map<String, dynamic>) {
+              // It is List<Map<String, dynamic>>
+              final Map<String, Codec> codecs = <String, Codec>{};
+
+              for (final arg in args) {
+                final String name = arg['name'];
+
+                final String type = legacyTypeSimplifier(arg['type']);
+
+                final Codec codec =
+                    eventRegistry.parseSpecificCodec(types, type);
+
+                codecs[name] = codec;
+              }
+              argsCodec = CompositeCodec(codecs);
             } else {
-              throw Exception('Unknown type of arg: $arg');
+              throw Exception('Unknown type of args: $args');
             }
           }
+          if (event['name'].toString().toLowerCase().contains('offence')){
+            print('offence event found');
+          }
+          eventEnumCodec[eventIndex] = MapEntry(event['name'], argsCodec);
         }
+        eventsCodec[index] =
+            MapEntry(module['name'], ComplexEnumCodec.sparse(eventEnumCodec));
       }
     }
+    resultingRegistry.addCodec(
+        'CallCodec', ComplexEnumCodec.sparse(callsCodec));
+    resultingRegistry.addCodec(
+        'GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
 
-    //
-    // Get already processed versioned registry from singleton
-    final registry = RegistryCreator.instance[decodedMetadata.version];
+    final eventCodec =
+        resultingRegistry.parseSpecificCodec(legacyTypes.types, 'EventRecord');
 
-    //
-    // Register the Call type
-    registry.addCodec(
-        'Call', Call(registry: registry, metadata: rawMetadata));
-    registry.registerCustomCodec(
-        // ignore: unnecessary_cast
-        {...legacyTypes.types as Map<String, dynamic>});
+    resultingRegistry
+      ..addCodec('EventRecord', eventCodec)
+      ..addCodec('EventCodec', SequenceCodec(eventCodec));
+
+    print('legacy parser parsing finished');
 
     return ChainInfo(
-        registry: registry,
+        registry: resultingRegistry,
         metadata: rawMetadata,
         version: decodedMetadata.version);
   }
