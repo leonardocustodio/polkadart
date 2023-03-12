@@ -6,47 +6,71 @@ import 'package:code_builder/code_builder.dart' show DartEmitter, Library;
 import 'package:recase/recase.dart' show ReCase;
 import '../utils.dart' show sanitize;
 
+typedef BasePath = String;
+
 abstract class Generator {
   const Generator();
 
-  Expression encode(Expression obj,
+  static int _idSequence = 1;
+  static Map<Generator, int> generatorToId = {};
+  static Map<String, TypeReference> jsonTypeCache = {};
+
+  static String _cachedKey(BasePath from, Set<Generator> visited) {
+    bool created = false;
+    final StringBuffer sb = StringBuffer(from);
+    for (final generator in visited) {
+      int? id = generatorToId[generator];
+      if (id == null) {
+        id = _idSequence++;
+        generatorToId[generator] = id;
+        created = true;
+      }
+      sb.write('$id');
+    }
+    final key = sb.toString();
+    if (created && jsonTypeCache.containsKey(key)) {
+      throw Exception('Error, cached key collision: "$key"');
+    }
+    return key;
+  }
+
+  static TypeReference cacheOrCreate(BasePath from, Set<Generator> visited,
+      TypeReference Function() callback) {
+    final String hash = _cachedKey(from, visited);
+    TypeReference? type = jsonTypeCache[hash];
+    if (type == null) {
+      type = callback();
+      jsonTypeCache[hash] = type;
+    }
+    return type;
+  }
+
+  Expression encode(BasePath from, Expression obj,
       [Expression output = const Reference('output')]) {
-    return codecInstance().property('encodeTo').call([obj, output]);
+    return codecInstance(from).property('encodeTo').call([obj, output]);
   }
 
-  Expression decode([Expression input = const Reference('input')]) {
-    return codecInstance().property('decode').call([input]);
+  Expression decode(BasePath from,
+      [Expression input = const Reference('input')]) {
+    return codecInstance(from).property('decode').call([input]);
   }
 
-  TypeReference primitive();
+  TypeReference primitive(BasePath from);
 
-  TypeReference codec();
+  TypeReference codec(BasePath from);
 
-  Expression codecInstance() {
-    return codec().property('codec');
+  Expression codecInstance(String from) {
+    return codec(from).property('codec');
   }
 
-  Expression valueFrom(Input input);
+  Expression valueFrom(BasePath from, Input input);
+
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]);
+
+  Expression instanceToJson(BasePath from, Expression obj);
 
   GeneratedOutput? generated() {
     return null;
-  }
-
-  bool isEquivalentTo(Generator other, [Set<Generator> visited = const {}]) {
-    if (identical(this, other) || visited.contains(this)) {
-      return true;
-    }
-    final selfPrimitive = primitive();
-    final otherPrimitive = other.primitive();
-    if (selfPrimitive.symbol != otherPrimitive.symbol) {
-      return false;
-    }
-
-    if (runtimeType != other.runtimeType) {
-      return false;
-    }
-    visited.add(this);
-    return other.isEquivalentTo(this);
   }
 }
 
@@ -88,24 +112,34 @@ class LazyLoader {
 }
 
 class Field {
-  late String name;
+  late String? originalName;
+  late String sanitizedName;
   late Generator codec;
   late List<String> docs;
 
-  Field({required String name, required this.codec, required this.docs}) {
+  Field(
+      {required String? originalName,
+      required this.codec,
+      required this.docs}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
-    this.name = toFieldName(name);
+    originalName = originalName;
+    if (originalName != null) {
+      sanitizedName = toFieldName(originalName);
+    }
   }
 
-  Field._lazy({required String name, required this.docs}) {
-    this.name = toFieldName(name);
+  Field._lazy({required String? name, required this.docs}) {
+    originalName = name;
+    if (originalName != null) {
+      sanitizedName = toFieldName(originalName!);
+    }
   }
 
   factory Field.lazy({
     required LazyLoader loader,
     required int codec,
-    required String name,
+    required String? name,
     List<String> docs = const [],
   }) {
     final field = Field._lazy(name: name, docs: docs);
@@ -113,6 +147,10 @@ class Field {
       field.codec = register[codec]!;
     });
     return field;
+  }
+
+  String originalOrSanitizedName() {
+    return originalName ?? sanitizedName;
   }
 
   static String toFieldName(String name) {

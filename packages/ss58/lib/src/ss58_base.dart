@@ -44,7 +44,7 @@ class Codec {
   /// [Exceptions]
   /// throw InvalidAddressPrefixException: when (prefix != decodedAddress.prefix)
   /// ```
-  List<int> decode(String encodedAddress) {
+  Uint8List decode(String encodedAddress) {
     final Address address = SS58Codec.decode(encodedAddress);
     if (address.prefix != prefix) {
       throw InvalidAddressPrefixException(
