@@ -9,17 +9,17 @@ void main() {
         () {
       final output = HexOutput();
       CompositeCodec(
-        LinkedHashMap.from({
+        {
           'a': U8Codec.codec,
           'b': BoolCodec.codec,
-        }),
+        },
       ).encodeTo(
-        LinkedHashMap.from(
+        
           {
             'a': 42,
             'b': true,
           },
-        ),
+        
         output,
       );
       expect(output.toString(), '0x2a01');
@@ -30,19 +30,19 @@ void main() {
         () {
       final output = HexOutput();
       CompositeCodec(
-        LinkedHashMap.from({
+        {
           'index': U8Codec.codec,
           'note': StrCodec.codec,
           'Juice': CompositeCodec(
-            LinkedHashMap.from({
+            {
               'name': StrCodec.codec,
               'ounces': U8Codec.codec,
-            }),
+            },
           ),
           'Remarks': OptionCodec(StrCodec.codec),
-        }),
+        },
       ).encodeTo(
-        LinkedHashMap.from({
+        {
           'index': 8,
           'note': 'This is a note',
           'Juice': {
@@ -50,7 +50,7 @@ void main() {
             'ounces': 1,
           },
           'Remarks': 'Hey Food was good',
-        }),
+        },
         output,
       );
       expect(output.toString(),
@@ -63,10 +63,10 @@ void main() {
         () {
       final input = HexInput('0x2a01');
       final decoded = CompositeCodec(
-        LinkedHashMap.from({
+{
           'a': U8Codec.codec,
           'b': BoolCodec.codec,
-        }),
+        },
       ).decode(input);
       expect(decoded, {
         'a': 42,
@@ -80,17 +80,17 @@ void main() {
       final input = HexInput(
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
       final decoded = CompositeCodec(
-        LinkedHashMap.from({
+        {
           'index': U8Codec.codec,
           'note': StrCodec.codec,
           'Juice': CompositeCodec(
-            LinkedHashMap.from({
+            {
               'name': StrCodec.codec,
               'ounces': U8Codec.codec,
-            }),
+            },
           ),
           'Remarks': OptionCodec(StrCodec.codec),
-        }),
+        },
       ).decode(input);
       expect(
           decoded.toString(),

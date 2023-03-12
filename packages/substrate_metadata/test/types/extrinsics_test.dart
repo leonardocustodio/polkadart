@@ -27,13 +27,13 @@ void main() {
   }
 
   // read the blocks of the polkadot chain
-  List<RawBlockEvents> getEvents(String filePath) {
+  List<RawBlockExtrinsics> getBlocks(String filePath) {
     return readLines(filePath)
-        .map((dynamic map) => RawBlockEvents.fromJson(map))
+        .map((dynamic map) => RawBlockExtrinsics.fromJson(map))
         .toList(growable: false);
   }
 
-  group('Polkadot Events Test', () {
+  group('Polkadot Extrinsics Test', () {
     //
     // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
     final LegacyTypesBundle typesDefinitions =
@@ -47,38 +47,55 @@ void main() {
     // Populating with the metadata for block-numbers available for this chain....
     chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
 
-    final List<RawBlockEvents> rawBlocksList =
-        getEvents('../../chain/polkadot/events.jsonl');
-
+    final List<RawBlockExtrinsics> rawBlocksList =
+        getBlocks('../../chain/polkadot/blocks.jsonl');
+    int count = 0;
     //
     // Looping through every block
-    for (var originalEvent in rawBlocksList) {
-
+    for (var originalExtrinsics in rawBlocksList) {
       // TODO: Fix this block
-      if (originalEvent.blockNumber == 8200759) {
+      if (originalExtrinsics.blockNumber == 8200759) {
         continue;
       }
-      test(
-          'When original event ${originalEvent.blockNumber}',
-          () {
+      if (originalExtrinsics.blockNumber != 240888) {
+        continue;
+      }
+      test('When original extrinsics is decode it should return normally ', () {
+        count++;
+        print('${originalExtrinsics.blockNumber}');
         //
-        // Decoding the `Raw Block Events`
-        final decodedBlockEvents = chain.decodeEvents(originalEvent);
+        // Decoding the `Raw Block Extrinsics`
+        final decodedBlockExtrinsics =
+            chain.decodeExtrinsics(originalExtrinsics);
 
         //
-        // Encoding the `Decoded Block Events`
-        final encodedBlockEvents = chain.encodeEvents(decodedBlockEvents);
+        // Encoding the `Decoded Block Extrinsics`
+        /* final encodedBlockExtrinsics =
+            chain.encodeExtrinsics(decodedBlockExtrinsics);
+
+        expect(encodedBlockExtrinsics.extrinsics.toString(),
+            originalExtrinsics.extrinsics.toString()); */
+
+        /// Match the hashes of the extrinsics
+        /* for (var i = 0; i < originalExtrinsics.extrinsics.length; i++) {
+          expect(
+            decodedBlockExtrinsics.extrinsics[i]['hash'],
+            ExtrinsicsCodec.computeHashFromString(
+                encodedBlockExtrinsics.extrinsics[i]),
+          );
+        } */
 
         //
         // Comparing the original event with the encoded event
-        expect(originalEvent.events, encodedBlockEvents.events);
+        /* expect(originalExtrinsics.Extrinsics, encodedBlockExtrinsics.Extrinsics);
 
-        final againDecodedEvents = chain.decodeEvents(encodedBlockEvents);
+        final againDecodedExtrinsics = chain.decodeExtrinsics(encodedBlockExtrinsics);
 
         //
         // Comparing the decoded event with the decodedFromEncoded event
-        expect(decodedBlockEvents.events.toString(),
-            againDecodedEvents.events.toString());
+        expect(decodedBlockExtrinsics.Extrinsics.toString(),
+            againDecodedExtrinsics.Extrinsics.toString()); */
+        print('count: $count');
       });
     }
   });

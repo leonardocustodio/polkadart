@@ -9,4 +9,6 @@ mixin Output {
   void pushByte(int byte) {
     write(Uint8List.fromList([byte]));
   }
+
+  List<int> get bytes;
 }

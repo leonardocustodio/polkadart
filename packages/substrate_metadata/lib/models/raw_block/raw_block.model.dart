@@ -40,12 +40,13 @@ abstract class RpcBlock {
   const RpcBlock({this.header, required this.extrinsics});
 }
 
-class RawBlock extends RpcBlock implements Equatable {
+class RawBlockExtrinsics extends RpcBlock implements Equatable {
   final int blockNumber;
-  const RawBlock(
+  const RawBlockExtrinsics(
       {required this.blockNumber, super.header, required super.extrinsics});
 
-  static RawBlock fromJson(Map<String, dynamic> map) => RawBlock(
+  static RawBlockExtrinsics fromJson(Map<String, dynamic> map) =>
+      RawBlockExtrinsics(
         blockNumber: map['blockNumber'],
         header: map['header'] == null
             ? null

@@ -3,7 +3,11 @@ part of core;
 class Registry {
   final Map<String, Codec> codecs = <String, Codec>{};
 
+  int iterations = 0;
+
   Registry();
+
+  //final Map<int, String> hashCodes = <int, String>{};
 
   Registry.from(Map<String, Codec> codecs) {
     this.codecs.addAll(codecs);
@@ -19,8 +23,21 @@ class Registry {
 
   ///
   /// Add a codec to the registry
-  void addCodec(String codecName, Codec codec) {
-    codecs[codecName] = codec;
+  void addCodec(String codecName, Codec codec, [bool overwrite = false]) {
+    if (overwrite){
+      codecs[codecName] = codec;
+      return;
+    }
+    if (codecs[codecName] != null) {
+      final storedCodec = codecs[codecName];
+      if (storedCodec.runtimeType != codec.runtimeType &&
+          storedCodec.hashCode != codec.hashCode) {
+        throw Exception(
+            'Tried overriting: $codecName: Stored: ${storedCodec.runtimeType}, New:${codec.runtimeType}');
+      }
+    }
+    codecs[codecName] ??= codec;
+    //hashCodes[codecs[codecName].hashCode] = codecName;
   }
 
   ///
@@ -34,7 +51,7 @@ class Registry {
   ///
   /// Parses customJson and adds it to registry
   void registerCustomCodec(Map<String, dynamic> customJson,
-      [String? selectedKey]) {
+      {String? selectedKey}) {
     if (selectedKey != null) {
       final codec =
           _parseCodec(customJson, selectedKey, customJson[selectedKey]);
@@ -70,12 +87,13 @@ class Registry {
   }
 
   Codec _parseCodec(
-      Map<String, dynamic> customJson, String key, dynamic value) {
-    if (value == null) {
+      Map<String, dynamic> customJson, String originalKey, dynamic value) {
+    iterations++;
+    if (value == 'Null') {
       return NullCodec.codec;
     }
 
-    key = _renameType(key);
+    final String key = renameType(originalKey);
     //
     // Check if the codec is already in the registry
     final Codec? codec = getCodec(key);
@@ -86,7 +104,7 @@ class Registry {
     //
     //Check if the value is a string
     if (value is String) {
-      key = _renameType(key);
+      value = renameType(value);
       //
       // Check if the value is present in the registry
       Codec? codec = getCodec(value);
@@ -115,8 +133,10 @@ class Registry {
               return _parseCompact(customJson, key, match);
             case 'Option':
               return _parseOption(customJson, key, match);
+            case 'BTreeSet':
             case 'Vec':
               return _parseSequence(customJson, key, match);
+            case 'HashMap':
             case 'BTreeMap':
               return _parseBTreeMap(customJson, key, value);
             case 'Result':
@@ -147,11 +167,12 @@ class Registry {
       }
 
       throw Exception('Type not found for `$value`');
-    } else if (value is Map<String, dynamic>) {
+    } else if (value is Map) {
       //
       // enum
       if (value['_enum'] != null) {
-        return _parseEnum(customJson, key, value);
+        return _parseEnum(
+            customJson, key, value.map((k, v) => MapEntry(k.toString(), v)));
       }
       //
       // set
@@ -160,9 +181,14 @@ class Registry {
       }
       //
       // composite
-      return _parseComposite(customJson, key, value);
+      return _parseComposite(
+          customJson, key, value.map((k, v) => MapEntry(k.toString(), v)));
     }
-
+    if (value == null) {
+      print('${value.runtimeType}');
+      print('key: $key, value: $value, customJson: ${customJson[value]}');
+      throw Exception('Type not found for `$value`');
+    }
     return _parseCodec(customJson, key, customJson[value]);
   }
 
@@ -181,8 +207,6 @@ class Registry {
     }
 
     final TupleCodec codec = TupleCodec(codecs);
-    addCodec(key, codec);
-
     return codec;
   }
 
@@ -205,8 +229,6 @@ class Registry {
       throw Exception('Compact type not supported for $subType');
     }
 
-    addCodec(key, codec);
-
     return codec;
   }
 
@@ -219,8 +241,6 @@ class Registry {
 
     final NestedOptionCodec codec = NestedOptionCodec(subType);
 
-    addCodec(key, codec);
-
     return codec;
   }
 
@@ -232,8 +252,6 @@ class Registry {
         _parseCodec(customJson, match2, customJson[match2] ?? match2);
 
     final SequenceCodec codec = SequenceCodec(subType);
-
-    addCodec(key, codec);
 
     return codec;
   }
@@ -277,7 +295,7 @@ class Registry {
       store,
       order,
     );
-    addCodec(key, codec);
+
     return codec;
   }
 
@@ -301,7 +319,7 @@ class Registry {
       0: MapEntry('Ok', okCodec),
       1: MapEntry('Err', errCodec),
     });
-    addCodec(key, codec);
+
     return codec;
   }
 
@@ -325,7 +343,7 @@ class Registry {
       keyCodec: keyCodec,
       valueCodec: valueCodec,
     );
-    addCodec(key, codec);
+
     return codec;
   }
 
@@ -345,7 +363,7 @@ class Registry {
         .toList(growable: false);
 
     final codec = SetCodec(bitLength, values);
-    addCodec(key, codec);
+
     return codec;
   }
 
@@ -374,7 +392,7 @@ class Registry {
       }
       codecMap[key] = subCodec;
     }
-    final codec = CompositeCodec(LinkedHashMap.from(codecMap));
+    final codec = CompositeCodec(codecMap);
 
     addCodec(mainKey, codec);
     return codec;
@@ -413,7 +431,6 @@ class Registry {
     // Get the Codec based on the subType
     final ArrayCodec codec = ArrayCodec(subType, length);
 
-    addCodec(key, codec);
     return codec;
   }
 
@@ -477,7 +494,7 @@ class Registry {
         }
       }
       final codec = ComplexEnumCodec.sparse(codecMap);
-      addCodec(key, codec);
+
       return codec;
     } catch (e) {
       // If the enum is too complex and is calling itself back again and again then,
@@ -520,13 +537,13 @@ class Registry {
     }
     final codec =
         DynamicEnumCodec.sparse(registry: this, map: referenceTypeMap);
-    addCodec(key, codec);
+
     return codec;
   }
 
   SimpleEnumCodec _parseSimplifiedEnum(String key, List<String?> values) {
     final codec = SimpleEnumCodec.fromList(values);
-    addCodec(key, codec);
+
     return codec;
   }
 
@@ -550,7 +567,7 @@ class Registry {
     return _parseSimplifiedEnum(key, enumValues);
   }
 
-  String _renameType(String type) {
+  String renameType(String type) {
     type = type.trim();
     if (type == '()') {
       return 'Null';

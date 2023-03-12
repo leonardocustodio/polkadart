@@ -157,8 +157,63 @@ class V14Parser {
 
     //
     // Register the Call type
-    registry.addCodec('Call', Call(registry: registry, metadata: rawMetadata));
+    registry.addCodec(
+        'Call', Call(registry: registry, metadata: rawMetadata));
+    registry.addCodec('Era', EraExtrinsic.codec);
     registry.registerCustomCodec(metadataExpander.customCodecRegister);
+
+    // integrating Code for ExtrinsicSignature
+    final extrinsicTypeId = rawMetadata['extrinsic']['type'];
+    final extrinsicDef = rawMetadata['lookup']['types'][extrinsicTypeId];
+
+    final extrinsicSignature = <String, Codec>{};
+
+    for (final params in extrinsicDef['type']['params']) {
+      final name = params['name'].toString().toLowerCase();
+      switch (name) {
+        case 'extra':
+        case 'call':
+          break;
+        default:
+          final siTypeName = siTypes[params['type']]!;
+          final codec = registry.getCodec(siTypeName);
+          extrinsicSignature[name] = codec!;
+      }
+    }
+    final signedExtensionsCompositeCodec = <String, Codec>{};
+
+    for (final signedExtensions in rawMetadata['extrinsic']
+        ['signedExtensions']) {
+      final type = siTypes[signedExtensions['type']];
+
+      if (type == null || type.toLowerCase() == 'null') {
+        continue;
+      }
+      final typeCodec = registry.getCodec(type)!;
+
+      final identifier =
+          signedExtensions['identifier'].toString().replaceAll('Check', '');
+      String newIdentifier = identifier;
+      switch (identifier) {
+        case 'Mortality':
+          signedExtensionsCompositeCodec['era'] = registry.getCodec('Era')!;
+          continue;
+        case 'ChargeTransactionPayment':
+          newIdentifier = 'tip';
+          break;
+        default:
+      }
+      signedExtensionsCompositeCodec[newIdentifier.snakeCase()] = typeCodec;
+    }
+
+    final extrinsicCodec = CompositeCodec(
+      {
+        ...extrinsicSignature,
+        'signedExtensions': CompositeCodec(signedExtensionsCompositeCodec),
+      },
+    );
+
+    registry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
 
     return ChainInfo(
         registry: registry, metadata: rawMetadata, version: metadata.version);

@@ -4,7 +4,7 @@ part of io;
 class ByteOutput with Output {
   late BytesBuilder buffer;
 
-  ByteOutput(int length) {
+  ByteOutput() {
     buffer = BytesBuilder();
   }
 
@@ -19,4 +19,7 @@ class ByteOutput with Output {
   }
 
   int get length => buffer.length;
+
+  @override
+  List<int> get bytes => buffer.toBytes();
 }

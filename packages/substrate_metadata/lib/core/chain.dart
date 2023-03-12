@@ -62,6 +62,57 @@ class Chain {
     return vd;
   }
 
+  DecodedBlockExtrinsics decodeExtrinsics(
+      RawBlockExtrinsics rawBlockExtrinsics) {
+    final blockNumber = rawBlockExtrinsics.blockNumber;
+
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
+
+    // Check if this is not empty, throw Exception if it is.
+    if (versionDescription == null) {
+      throw BlockNotFoundException(blockNumber);
+    }
+    assertion(blockNumber >= versionDescription.blockNumber);
+
+    final List<Map<String, dynamic>> extrinsics = <Map<String, dynamic>>[];
+
+    for (var extrinsic in rawBlockExtrinsics.extrinsics) {
+      final extrinsicInput = HexInput(extrinsic);
+      final value = ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
+          .decode(extrinsicInput);
+      extrinsics.add(value);
+      extrinsicInput.assertEndOfDataReached(' At block: $blockNumber');
+    }
+
+    return DecodedBlockExtrinsics(
+        blockNumber: blockNumber, extrinsics: extrinsics);
+  }
+
+  RawBlockExtrinsics encodeExtrinsics(
+      DecodedBlockExtrinsics decodedBlockExtrinsics) {
+    final blockNumber = decodedBlockExtrinsics.blockNumber;
+
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
+
+    // Check if this is not empty, throw Exception if it is.
+    if (versionDescription == null) {
+      throw BlockNotFoundException(blockNumber);
+    }
+
+    final List<String> encodedExtrinsicsHex =
+        decodedBlockExtrinsics.extrinsics.map((extrinsic) {
+      final output = HexOutput();
+      ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
+          .encodeTo(extrinsic, output);
+      return output.toString();
+    }).toList();
+
+    return RawBlockExtrinsics(
+        blockNumber: blockNumber, extrinsics: encodedExtrinsicsHex);
+  }
+
   DecodedBlockEvents decodeEvents(RawBlockEvents rawBlockEvents) {
     final blockNumber = rawBlockEvents.blockNumber;
 
@@ -135,6 +186,12 @@ class Chain {
   ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
     final DecodedMetadata decodedMetadata =
         MetadataDecoder.instance.decode(specVersion.metadata);
+
+    /*  // create a File
+    final file = File('./blocks_json/${specVersion.blockNumber}.json');
+    file.createSync(recursive: true);
+    // write the file
+    file.writeAsStringSync(jsonEncode(decodedMetadata.metadataJson)); */
 
     LegacyTypes? types;
 

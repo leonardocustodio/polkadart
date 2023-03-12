@@ -22,4 +22,7 @@ class HexOutput with Output {
   String toString() {
     return _buffer.toString();
   }
+
+  @override
+  List<int> get bytes => decodeHex(toString()).toList();
 }

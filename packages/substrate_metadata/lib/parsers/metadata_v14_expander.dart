@@ -3,7 +3,7 @@ part of parsers;
 class MetadataV14Expander {
   final registeredSiType = <int, String>{};
 
-  final registeredTypeNames = <String>[];
+  final registeredTypeNames = <String>{};
 
   final customCodecRegister = <String, dynamic>{};
 
@@ -26,15 +26,10 @@ class MetadataV14Expander {
             registeredSiType[id] = 'Call';
             continue;
           }
-          /* if (one['path'].last == 'Call' &&
-              one['path'][one['path'].length - 2] == 'pallet') {
-            registeredSiType[id] = 'Call';
+          if (one['path'].last == 'Era') {
+            registeredSiType[id] = 'Era';
             continue;
-          } */
-          /* if (one['path'].last == 'Instruction') {
-            registeredSiType[id] = 'Call';
-            continue;
-          } */
+          }
         }
       }
     }
@@ -130,9 +125,15 @@ class MetadataV14Expander {
       }
     }
 
-    String genName = path.join(':');
+    String genName = path.isNotEmpty ? path.last : '';
+    if (registeredTypeNames.contains(genName)) {
+      genName = path.join(':');
+    }
     if (registeredTypeNames.contains(genName)) {
       genName = '$genName@$siTypeId';
+    }
+    if (registeredTypeNames.contains(genName)) {
+      throw Exception('Unexpected Exception: duplicate type name $genName');
     }
     if (genName == '' && one.isNotEmpty) {
       // can't return empty path names
@@ -221,14 +222,15 @@ class MetadataV14Expander {
       registeredSiType[id] = 'Null';
       return 'Null';
     }
-    final int tuple1 = one['def']['Tuple'][0];
-    final int tuple2 = one['def']['Tuple'][1];
-    final String tuple1Type = registeredSiType[tuple1] ??
-        _fetchTypeName(tuple1, id2Portable[tuple1], id2Portable);
-    final String tuple2Type = registeredSiType[tuple2] ??
-        _fetchTypeName(tuple2, id2Portable[tuple2], id2Portable);
-    // combine (a,b) Tuple
-    registeredSiType[id] = '($tuple1Type, $tuple2Type)';
+    final List<String> tuplesList = <String>[];
+    for (final tuple in one['def']['Tuple']) {
+      final int siType = tuple as int;
+      final String tupleType = registeredSiType[siType] ??
+          _fetchTypeName(siType, id2Portable[siType], id2Portable);
+      tuplesList.add(tupleType);
+    }
+
+    registeredSiType[id] = '(${tuplesList.join(', ')})';
     return registeredSiType[id]!;
   }
 

@@ -6,14 +6,28 @@ class LegacyParser {
     final rawMetadata = decodedMetadata.metadataJson;
     final modules = rawMetadata['modules'];
 
-    final extraTypes = <String, String>{};
-
     int callModuleIndex = -1;
     int eventModuleIndex = -1;
     for (final module in modules) {
+
+      // Getting the module name and converting it to camelCase
+      final String moduleName =
+          module['name'][0].toLowerCase() + module['name'].substring(1);
+
+      // Getting the aliases for this specific module
+      final Map<String, String>? moduleNameAlias =
+          substrateTypesAlias[moduleName];
+
+      final Map<String, dynamic> types =
+          Map<String, dynamic>.from(legacyTypes.types);
+
+      if (moduleNameAlias != null) {
+        // overriding the types with the aliases for this specific module
+        types.addAll(moduleNameAlias);
+      }
+
       if (module['calls'] != null) {
         callModuleIndex++;
-        rawMetadata['call_index'] ??= <String, dynamic>{};
         for (var callIndex = 0;
             callIndex < module['calls'].length;
             callIndex++) {
@@ -22,13 +36,28 @@ class LegacyParser {
           final lookup =
               encodeHex([module['index'] ?? callModuleIndex, callIndex]);
 
+          final List<dynamic> args = call['args'];
+
+          for (final arg in args) {
+            late String type;
+            if (arg is String) {
+              // In case of legacy metadata
+              type = arg;
+            } else if (arg is Map<String, dynamic>) {
+              type = arg['type'];
+            } else {
+              throw Exception('Unknown type of arg: $arg');
+            }
+          }
+
           rawMetadata['call_index'][lookup] = {
             'module': {'name': module['name']},
             'call': call,
           };
         }
       }
-      if (module['events'] != null) {
+
+      if (module['events'] != null && module['events'].isNotEmpty) {
         eventModuleIndex++;
         rawMetadata['event_index'] ??= <String, dynamic>{};
         for (var eventIndex = 0;
@@ -55,16 +84,8 @@ class LegacyParser {
             } else {
               throw Exception('Unknown type of arg: $arg');
             }
-            extraTypes[type] = type;
           }
         }
-      }
-    }
-    final List<String> extraTypesKeys = extraTypes.keys.toList();
-
-    for (final type in extraTypesKeys) {
-      if (legacyTypes.types[type] != null) {
-        extraTypes.remove(type);
       }
     }
 
@@ -74,10 +95,11 @@ class LegacyParser {
 
     //
     // Register the Call type
-    registry.addCodec('Call', Call(registry: registry, metadata: rawMetadata));
+    registry.addCodec(
+        'Call', Call(registry: registry, metadata: rawMetadata));
     registry.registerCustomCodec(
         // ignore: unnecessary_cast
-        {...extraTypes, ...legacyTypes.types as Map<String, dynamic>});
+        {...legacyTypes.types as Map<String, dynamic>});
 
     return ChainInfo(
         registry: registry,
