@@ -90,9 +90,12 @@ void main(List<String> args) async {
         '[ERROR] Provided directory doesn\'t exists: "${path.normalize(arguments['output'])}"');
     return;
   }
+
+  // Create pallets and types directory
   Directory(typesPath).createSync(recursive: false);
   Directory(palletsPath).createSync(recursive: false);
 
+  // Get chain properties
   final ChainProperties properties = await chainProperties(arguments['url']);
   final polkadartPath = path.setExtension(
       path.join(basePath, ReCase(properties.version.specName).snakeCase),
