@@ -2,7 +2,8 @@ import 'dart:io' show File, Directory;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show BitStore, BitOrder;
-import 'package:frame_primitives/frame_primitives.dart' show Provider, StateApi;
+import 'package:frame_primitives/frame_primitives.dart'
+    show Provider, StateApi, RuntimeVersion;
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
 
@@ -37,12 +38,27 @@ import 'frame_metadata.dart'
         TypeDefPrimitive,
         TypeDefTuple;
 
-Future<RuntimeMetadataV14> downloadMetadata(String url) async {
+class ChainProperties {
+  final RuntimeMetadataV14 metadata;
+  final RuntimeVersion version;
+
+  ChainProperties(this.metadata, this.version);
+}
+
+Future<ChainProperties> chainProperties(String url) async {
   final provider = Provider(url);
   final api = StateApi(provider);
   final decodedMetadata = await api.getMetadata();
+  if (decodedMetadata.version != 14) {
+    await provider.disconnect();
+    throw Exception('Only metadata version 14 is supported');
+  }
+  final version = await api.getRuntimeVersion();
   await provider.disconnect();
-  return RuntimeMetadataV14.fromJson(decodedMetadata.toJson()['metadata']);
+  return ChainProperties(
+    RuntimeMetadataV14.fromJson(decodedMetadata.toJson()['metadata']),
+    version,
+  );
 }
 
 String listToFilePath(List<String> filePath) {
@@ -68,7 +84,6 @@ void main(List<String> args) async {
   final basePath = path.normalize(path.absolute(arguments['output']));
   final typesPath = path.join(basePath, 'types');
   final palletsPath = path.join(basePath, 'pallets');
-  final polkadartPath = path.join(basePath, 'polkadart.dart');
 
   if (!Directory(basePath).existsSync()) {
     print(
@@ -78,11 +93,14 @@ void main(List<String> args) async {
   Directory(typesPath).createSync(recursive: false);
   Directory(palletsPath).createSync(recursive: false);
 
-  final RuntimeMetadataV14 metadata = await downloadMetadata(arguments['url']);
+  final ChainProperties properties = await chainProperties(arguments['url']);
+  final polkadartPath = path.setExtension(
+      path.join(basePath, ReCase(properties.version.specName).snakeCase),
+      '.dart');
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
-    for (var type in metadata.registry) type.id: type
+    for (var type in properties.metadata.registry) type.id: type
   };
 
   // Create all Generators
@@ -377,7 +395,7 @@ void main(List<String> args) async {
   }
 
   print('Generators found: ${generators.length}');
-  final List<PalletGenerator> palletGenerators = metadata.pallets
+  final List<PalletGenerator> palletGenerators = properties.metadata.pallets
       // Remove Empty Pallets
       // TODO: remove this field once we support extrinsics
       .where((pallet) => pallet.storage != null || pallet.constants.isNotEmpty)
@@ -467,7 +485,7 @@ void main(List<String> args) async {
 
   final polkadartGenerator = PolkadartGenerator(
     filePath: polkadartPath,
-    name: 'Polkadart',
+    name: ReCase(properties.version.specName).pascalCase,
     pallets: palletGenerators,
   ).generated().build();
   File(polkadartPath).writeAsStringSync(polkadartGenerator);

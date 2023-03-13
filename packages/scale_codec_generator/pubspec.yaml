@@ -17,8 +17,6 @@ dependencies:
     path: ../frame_primitives
   polkadart_scale_codec:
     path: ../polkadart_scale_codec
-  substrate_metadata:
-    path: ../substrate_metadata
 
 dev_dependencies:
   lints: ^2.0.0

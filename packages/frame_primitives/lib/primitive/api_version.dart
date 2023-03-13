@@ -39,7 +39,7 @@ class ApiVersion {
 
   factory ApiVersion.fromJson(List<dynamic> json) {
     return ApiVersion(
-      id: BigInt.parse(json[0] as String, radix: 16),
+      id: U64Codec.codec.decode(HexInput(json[0] as String)),
       version: json[1] as int,
     );
   }
@@ -49,7 +49,7 @@ class ApiVersion {
   }
 
   List<dynamic> toJson() => [
-        id.toRadixString(16),
+        '0x${id.toRadixString(16)}',
         version,
       ];
 }

@@ -8,7 +8,6 @@ import 'package:code_builder/code_builder.dart'
         Class,
         Code,
         declareFinal,
-        literalList,
         Block,
         refer,
         Reference,
@@ -731,44 +730,94 @@ Class createPolkadartConstants(
                   pallet.constantsType(dirname).newInstance([]).code)));
     });
 
+Class createPolkadartRpc(
+  PolkadartGenerator generator,
+) =>
+    Class((classBuilder) {
+      classBuilder
+        ..name = 'Rpc'
+        ..constructors.add(Constructor((b) => b
+          ..constant = true
+          ..optionalParameters.add(Parameter((b) => b
+            ..toThis = true
+            ..required = true
+            ..named = true
+            ..name = 'state'))))
+        ..fields.addAll([
+          Field((b) => b
+            ..name = 'state'
+            ..type = constants.stateApi
+            ..modifier = FieldModifier.final$)
+        ]);
+    });
+
 Class createPolkadartClass(
   PolkadartGenerator generator,
 ) =>
     Class((classBuilder) {
       classBuilder
         ..name = generator.name
-        ..constructors.add(Constructor((b) => b
-          ..name = 'fromProvider'
-          ..constant = false
-          ..requiredParameters.add(Parameter((b) => b
-            ..toThis = false
-            ..required = false
-            ..named = false
-            ..type = constants.provider
-            ..name = 'api'))
-          ..initializers.addAll([
-            Code('_provider = api'),
-            Code.scope((a) => 'query = Queries(${a(constants.stateApi)}(api))'),
-            Code('constant = Constants()'),
-          ])))
-        ..constructors.add(Constructor((b) => b
-          ..constant = false
-          ..factory = true
-          ..requiredParameters.add(Parameter((b) => b
-            ..toThis = false
-            ..required = false
-            ..named = false
-            ..type = constants.string
-            ..name = 'url'))
-          ..body = Block.of([
-            declareFinal('provider')
-                .assign(constants.provider.newInstance([refer('url')]))
-                .statement,
-            refer(generator.name)
-                .newInstanceNamed('fromProvider', [refer('provider')])
-                .returned
-                .statement,
-          ])))
+        ..constructors.addAll([
+          Constructor((b) => b
+            ..name = '_'
+            ..constant = false
+            ..requiredParameters.addAll([
+              Parameter((b) => b
+                ..toThis = true
+                ..required = false
+                ..named = false
+                ..name = '_provider'),
+              Parameter((b) => b
+                ..toThis = true
+                ..required = false
+                ..named = false
+                ..name = 'rpc'),
+            ])
+            ..initializers.addAll([
+              Code.scope((a) => 'query = Queries(rpc.state)'),
+              Code('constant = Constants()'),
+            ])),
+          Constructor((b) => b
+            ..name = 'fromProvider'
+            ..factory = true
+            ..requiredParameters.addAll([
+              Parameter((b) => b
+                ..toThis = false
+                ..required = false
+                ..named = false
+                ..type = constants.provider
+                ..name = 'provider'),
+            ])
+            ..body = Block.of([
+              declareFinal('rpc')
+                  .assign(refer('Rpc').newInstance([], {
+                    'state': constants.stateApi.newInstance([refer('provider')])
+                  }))
+                  .statement,
+              refer(generator.name)
+                  .newInstanceNamed('_', [refer('provider'), refer('rpc')])
+                  .returned
+                  .statement,
+            ])),
+          Constructor((b) => b
+            ..constant = false
+            ..factory = true
+            ..requiredParameters.add(Parameter((b) => b
+              ..toThis = false
+              ..required = false
+              ..named = false
+              ..type = constants.string
+              ..name = 'url'))
+            ..body = Block.of([
+              declareFinal('provider')
+                  .assign(constants.provider.newInstance([refer('url')]))
+                  .statement,
+              refer(generator.name)
+                  .newInstanceNamed('fromProvider', [refer('provider')])
+                  .returned
+                  .statement,
+            ])),
+        ])
         ..fields.addAll([
           Field((b) => b
             ..name = '_provider'
@@ -781,7 +830,11 @@ Class createPolkadartClass(
           Field((b) => b
             ..name = 'constant'
             ..type = refer('Constants')
-            ..modifier = FieldModifier.final$)
+            ..modifier = FieldModifier.final$),
+          Field((b) => b
+            ..name = 'rpc'
+            ..type = refer('Rpc')
+            ..modifier = FieldModifier.final$),
         ])
         ..methods.addAll([
           Method(

@@ -28,17 +28,16 @@ class RuntimeVersion {
         .toList();
 
     return RuntimeVersion(
-      specName: json['spec_name'] as String,
-      implName: json['impl_name'] as String,
-      authoringVersion: json['authoring_version'] as int,
-      specVersion: json['spec_version'] as int,
-      implVersion: json['impl_version'] as int,
+      specName: json['specName'] as String,
+      implName: json['implName'] as String,
+      authoringVersion: json['authoringVersion'] as int,
+      specVersion: json['specVersion'] as int,
+      implVersion: json['implVersion'] as int,
       apis: apis,
-      transactionVersion: json.containsKey('transaction_version')
-          ? json['transaction_version']
+      transactionVersion: json.containsKey('transactionVersion')
+          ? json['transactionVersion']
           : 1,
-      stateVersion:
-          json.containsKey('state_version') ? json['state_version'] : 0,
+      stateVersion: json.containsKey('stateVersion') ? json['stateVersion'] : 0,
     );
   }
 
@@ -97,14 +96,14 @@ class RuntimeVersion {
   }
 
   Map<String, dynamic> toJson() => {
-        'spec_name': specName,
-        'impl_name': implName,
-        'authoring_version': authoringVersion,
-        'spec_version': specVersion,
-        'impl_version': implVersion,
+        'specName': specName,
+        'implName': implName,
+        'authoringVersion': authoringVersion,
+        'specVersion': specVersion,
+        'implVersion': implVersion,
         'apis': apis.map((value) => value.toJson()).toList(),
-        'transaction_version': transactionVersion,
-        'state_version': stateVersion,
+        'transactionVersion': transactionVersion,
+        'stateVersion': stateVersion,
       };
 }
 

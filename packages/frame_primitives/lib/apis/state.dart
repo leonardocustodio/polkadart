@@ -2,9 +2,9 @@ part of apis;
 
 /// Substrate state API
 class StateApi<P extends Provider> {
-  final P provider;
+  final P _provider;
 
-  const StateApi(this.provider);
+  const StateApi(this._provider);
 
   /// Call a contract at a block's state.
   Future<Uint8List> call(String method, Uint8List bytes,
@@ -13,7 +13,7 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final result = await provider.send('state_call', params);
+    final result = await _provider.send('state_call', params);
     final data = result.result as String;
     return Uint8List.fromList(hex.decode(data.substring(2)));
   }
@@ -25,7 +25,7 @@ class StateApi<P extends Provider> {
       params.add('0x${hex.encode(at)}');
     }
 
-    final response = await provider.send('state_getPairs', params);
+    final response = await _provider.send('state_getPairs', params);
     return (response.result as List)
         .cast<List>()
         .map((keyValue) => KeyValue.fromJson(keyValue))
@@ -50,7 +50,7 @@ class StateApi<P extends Provider> {
       }
       params.add('0x${hex.encode(at)}');
     }
-    final response = await provider.send('state_getKeysPaged', params);
+    final response = await _provider.send('state_getKeysPaged', params);
     return (response.result as List)
         .cast<String>()
         .map((key) => Uint8List.fromList(hex.decode(key.substring(2))))
@@ -63,7 +63,7 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final result = await provider.send('state_getStorage', params);
+    final result = await _provider.send('state_getStorage', params);
     final data = result.result as String?;
     return data == null
         ? null
@@ -76,7 +76,7 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final result = await provider.send('state_getStorageHash', params);
+    final result = await _provider.send('state_getStorageHash', params);
     final data = result.result as String?;
     return data == null
         ? null
@@ -89,7 +89,7 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final response = await provider.send('state_getStorageSize', params);
+    final response = await _provider.send('state_getStorageSize', params);
     return response.result as int?;
   }
 
@@ -108,7 +108,7 @@ class StateApi<P extends Provider> {
     if (toBlock != null) {
       params.add('0x${hex.encode(toBlock)}');
     }
-    final response = await provider.send('state_queryStorage', params);
+    final response = await _provider.send('state_queryStorage', params);
     return (response.result as List)
         .cast<Map<String, dynamic>>()
         .map((changeSet) => StorageChangeSet.fromJson(changeSet))
@@ -124,7 +124,7 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final response = await provider.send('state_queryStorageAt', params);
+    final response = await _provider.send('state_queryStorageAt', params);
     return (response.result as List)
         .cast<Map<String, dynamic>>()
         .map((changeSet) => StorageChangeSet.fromJson(changeSet))
@@ -139,31 +139,31 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final response = await provider.send('state_getReadProof', params);
+    final response = await _provider.send('state_getReadProof', params);
     return ReadProof.fromJson(response.result);
   }
 
   /// Returns the runtime metadata
   Future<RuntimeMetadata> getMetadata({BlockHash? at}) async {
     final List<String> params = at != null ? ['0x${hex.encode(at)}'] : const [];
-    final response = await provider.send('state_getMetadata', params);
+    final response = await _provider.send('state_getMetadata', params);
     return RuntimeMetadata.fromHex(response.result);
   }
 
   /// Get the runtime version.
   Future<RuntimeVersion> getRuntimeVersion({BlockHash? at}) async {
     final List<String> params = at != null ? ['0x${hex.encode(at)}'] : const [];
-    final response = await provider.send('state_getRuntimeVersion', params);
+    final response = await _provider.send('state_getRuntimeVersion', params);
     return RuntimeVersion.fromJson(response.result);
   }
 
   /// Retrieves the runtime version via subscription
   Future<StreamSubscription<RuntimeVersion>> subscribeRuntimeVersion(
       Function(RuntimeVersion) onData) async {
-    final subscription = await provider
+    final subscription = await _provider
         .subscribe('state_subscribeRuntimeVersion', const [],
             onCancel: (subscription) async {
-      await provider.send('state_unsubscribeRuntimeVersion', [subscription]);
+      await _provider.send('state_unsubscribeRuntimeVersion', [subscription]);
     });
     return subscription.stream
         .map((response) => RuntimeVersion.fromJson(response.result))
@@ -173,10 +173,10 @@ class StateApi<P extends Provider> {
   /// Subscribes to storage changes for the provided keys
   Future<StreamSubscription<StorageChangeSet>> subscribeStorage(
       Function(StorageChangeSet) onData) async {
-    final subscription = await provider
+    final subscription = await _provider
         .subscribe('state_subscribeRuntimeVersion', const [],
             onCancel: (subscription) async {
-      await provider.send('state_unsubscribeRuntimeVersion', [subscription]);
+      await _provider.send('state_unsubscribeRuntimeVersion', [subscription]);
     });
 
     return subscription.stream
