@@ -30,7 +30,8 @@ import '../utils.dart' show listToFilePath;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show BitStore, BitOrder;
 
- Map<int, Generator> generatorsFromTypes(List<TypeMetadata> registry, String typesPath) {
+Map<int, Generator> generatorsFromTypes(
+    List<TypeMetadata> registry, String typesPath) {
   // Type Definitions
   final Map<int, TypeMetadata> types = {
     for (var type in registry) type.id: type

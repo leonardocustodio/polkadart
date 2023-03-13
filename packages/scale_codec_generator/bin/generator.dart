@@ -10,8 +10,7 @@ import './generators/composite.dart' show CompositeGenerator;
 import './generators/variant.dart' show VariantGenerator;
 import './generators/typedef.dart' show TypeDefGenerator;
 import './generators/tuple.dart' show TupleGenerator;
-import './generators/base.dart'
-    show Generator, GeneratedOutput;
+import './generators/base.dart' show Generator, GeneratedOutput;
 import './generators/pallet.dart' show PalletGenerator;
 import './generators/polkadart.dart' show PolkadartGenerator;
 import 'frame_metadata.dart' show RuntimeMetadataV14;
@@ -71,7 +70,8 @@ void main(List<String> args) async {
       '.dart');
 
   // Get type generators
-  final Map<int, Generator> generators = generatorsFromTypes(properties.metadata.registry, typesPath);
+  final Map<int, Generator> generators =
+      generatorsFromTypes(properties.metadata.registry, typesPath);
 
   // Get pallet generators
   final List<PalletGenerator> palletGenerators = properties.metadata.pallets
