@@ -26,11 +26,11 @@ class CompactGenerator extends Generator {
 
   @override
   TypeReference jsonType(BasePath from, [Set<Object> visited = const {}]) {
-    return constants.bigInt.type as TypeReference;
+    return constants.string.type as TypeReference;
   }
 
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    return obj;
+    return obj.property('toString').call([]);
   }
 }

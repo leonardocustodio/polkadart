@@ -49,18 +49,16 @@ TypeReference map(Reference key, Reference value) {
     ..types.addAll([key, value]));
 }
 
-TypeReference future(Reference ref, {core.bool nullable = false}) {
-  TypeReference typeRef = ref.type as TypeReference;
-  if (nullable && typeRef.isNullable != true) {
-    final builder = typeRef.toBuilder();
-    builder.isNullable = true;
-    typeRef = builder.build();
-  }
+TypeReference future([Reference? ref]) {
+  return TypeReference((builder) {
+    builder
+      ..symbol = 'Future'
+      ..url = 'dart:async';
 
-  return TypeReference((b) => b
-    ..symbol = 'Future'
-    ..url = 'dart:async'
-    ..types.add(typeRef));
+    if (ref != null) {
+      builder.types.add(ref);
+    }
+  });
 }
 
 ///////////////////////
@@ -217,6 +215,8 @@ const storageHasher = Reference(
     'StorageHasher', 'package:frame_primitives/frame_primitives.dart');
 const provider =
     Reference('Provider', 'package:frame_primitives/frame_primitives.dart');
+const stateApi =
+    Reference('StateApi', 'package:frame_primitives/frame_primitives.dart');
 
 TypeReference storageValue(Reference value) {
   return TypeReference((b) => b

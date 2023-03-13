@@ -182,7 +182,7 @@ class PrimitiveGenerator extends Generator {
       case Primitive.U128:
       case Primitive.I64:
       case Primitive.I128:
-        return constants.bigInt.type as TypeReference;
+        return constants.string.type as TypeReference;
       default:
         throw Exception('Unsupported primitive $primitive');
     }
@@ -190,6 +190,16 @@ class PrimitiveGenerator extends Generator {
 
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    return obj;
+    switch (primitiveType) {
+      case Primitive.U64:
+      case Primitive.U128:
+      case Primitive.U256:
+      case Primitive.I64:
+      case Primitive.I128:
+      case Primitive.I256:
+        return obj.property('toString').call([]);
+      default:
+        return obj;
+    }
   }
 }

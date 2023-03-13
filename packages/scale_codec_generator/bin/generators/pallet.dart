@@ -33,7 +33,6 @@ enum StorageHasherType {
   }
 
   Expression instance(Expression codecInstance, BasePath from) {
-    // StorageHasher.blake2b128(codec);
     return type(from).property(name).call([codecInstance]);
   }
 }
