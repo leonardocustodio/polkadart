@@ -1,17 +1,6 @@
 import 'dart:core' as core;
 import 'package:code_builder/code_builder.dart' show TypeReference, Reference;
 
-// extension Nullable on TypeReference {
-//   TypeReference asNullable() {
-//     if (isNullable != true) {
-//       final builder = toBuilder();
-//       builder.isNullable = true;
-//       return builder.build();
-//     }
-//     return this;
-//   }
-// }
-
 extension Nullable on Reference {
   TypeReference asNullable() {
     final type = this.type as TypeReference;
