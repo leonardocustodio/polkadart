@@ -1259,18 +1259,7 @@ const substrateTypes = {
   'ExitSucceed': {
     '_enum': ['Stopped', 'Returned', 'Suicided']
   },
-  //'Extrinsic': 'GenericExtrinsic',
-  //'ExtrinsicEra': 'GenericExtrinsicEra',
-  //'ExtrinsicPayload': 'GenericExtrinsicPayload',
   'ExtrinsicSignature': 'MultiSignature',
-  //'ExtrinsicV4': 'GenericExtrinsicV4',
-  //'ExtrinsicPayloadV4': 'GenericExtrinsicPayloadV4',
-  //'ExtrinsicSignatureV4': 'GenericExtrinsicSignatureV4',
-  //'ExtrinsicUnknown': 'GenericExtrinsicUnknown',
-  //'ExtrinsicPayloadUnknown': 'GenericExtrinsicPayloadUnknown',
-  //'Era': 'ExtrinsicEra',
-  //'ImmortalEra': 'GenericImmortalEra',
-  //'MortalEra': 'GenericMortalEra',
   'AnySignature': 'H512',
   'MultiSignature': {
     '_enum': {
@@ -1280,7 +1269,6 @@ const substrateTypes = {
     }
   },
   'Signature': 'H512',
-  //'SignerPayload': 'GenericSignerPayload',
   'EcdsaSignature': '[u8; 65]',
   'Ed25519Signature': 'H512',
   'Sr25519Signature': 'H512',
@@ -2037,7 +2025,6 @@ const substrateTypes = {
   'BlockNumber': 'u32',
   'BlockNumberFor': 'BlockNumber',
   'BlockNumberOf': 'BlockNumber',
-  'Call': 'GenericCall',
   'CallHash': 'Hash',
   'CallHashOf': 'CallHash',
   'ChangesTrieConfiguration': {'digestInterval': 'u32', 'digestLevels': 'u32'},

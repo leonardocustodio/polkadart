@@ -31,9 +31,9 @@ class LegacyParser {
 
       final callRegistry = Registry();
       callRegistry.addCodec(
-          'GenericCall',
+          'Call',
           ReferencedCodec(
-              referencedType: 'CallCodec', registry: resultingRegistry));
+              referencedType: 'GenericCall', registry: resultingRegistry));
 
       if (module['calls'] != null) {
         callModuleIndex++;
@@ -51,7 +51,7 @@ class LegacyParser {
 
           if (args.isNotEmpty) {
             if (args.first is String) {
-              // It is List<String>
+              // List<String>
               final codecs = <Codec>[];
               for (final String arg in args) {
                 final String type = legacyTypeSimplifier(arg);
@@ -61,7 +61,7 @@ class LegacyParser {
               }
               argsCodec = TupleCodec(codecs);
             } else if (args.first is Map<String, dynamic>) {
-              // It is List<Map<String, dynamic>>
+              // List<Map<String, dynamic>>
               final Map<String, Codec> codecs = <String, Codec>{};
 
               for (final arg in args) {
@@ -106,7 +106,7 @@ class LegacyParser {
 
           if (args.isNotEmpty) {
             if (args.first is String) {
-              // It is List<String>
+              // List<String>
               final codecs = <Codec>[];
               for (final String arg in args) {
                 final String type = legacyTypeSimplifier(arg);
@@ -116,7 +116,7 @@ class LegacyParser {
               }
               argsCodec = TupleCodec(codecs);
             } else if (args.first is Map<String, dynamic>) {
-              // It is List<Map<String, dynamic>>
+              // List<Map<String, dynamic>>
               final Map<String, Codec> codecs = <String, Codec>{};
 
               for (final arg in args) {
@@ -134,32 +134,67 @@ class LegacyParser {
               throw Exception('Unknown type of args: $args');
             }
           }
-          if (event['name'].toString().toLowerCase().contains('offence')){
-            print('offence event found');
-          }
           eventEnumCodec[eventIndex] = MapEntry(event['name'], argsCodec);
         }
         eventsCodec[index] =
             MapEntry(module['name'], ComplexEnumCodec.sparse(eventEnumCodec));
       }
     }
-    resultingRegistry.addCodec(
-        'CallCodec', ComplexEnumCodec.sparse(callsCodec));
-    resultingRegistry.addCodec(
-        'GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
-
-    final eventCodec =
-        resultingRegistry.parseSpecificCodec(legacyTypes.types, 'EventRecord');
-
     resultingRegistry
-      ..addCodec('EventRecord', eventCodec)
-      ..addCodec('EventCodec', SequenceCodec(eventCodec));
+      ..addCodec('GenericCall', ComplexEnumCodec.sparse(callsCodec))
+      ..addCodec('GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
 
-    print('legacy parser parsing finished');
+    {
+      //
+      // Configure the events codec
+      final eventCodec = resultingRegistry.parseSpecificCodec(
+          legacyTypes.types, 'EventRecord');
+
+      resultingRegistry
+        ..addCodec('EventRecord', eventCodec)
+        ..addCodec('EventCodec', SequenceCodec(eventCodec));
+    }
+
+    {
+      //
+      // Configure the Extrinsic Signature Codec
+      final eraCodec = EraExtrinsic.codec;
+      final nonceCodec = CompactBigIntCodec.codec;
+      Codec? tipCodec;
+
+      final extrinsic = rawMetadata['extrinsic'];
+      if (extrinsic != null &&
+          extrinsic['signedExtensions'] is List &&
+          extrinsic['signedExtensions'] != null &&
+          extrinsic['signedExtensions'].isNotEmpty) {
+        final signedExtensions =
+            (extrinsic['signedExtensions'] as List<dynamic>).cast<String>();
+        if (signedExtensions.contains('ChargeTransactionPayment')) {
+          tipCodec = CompactBigIntCodec.codec;
+        }
+      }
+
+      final addressCodec =
+          resultingRegistry.parseSpecificCodec(legacyTypes.types, 'Address');
+
+      final signatureCodec = resultingRegistry.parseSpecificCodec(
+          legacyTypes.types, 'ExtrinsicSignature');
+
+      final extrinsicCodec = CompositeCodec({
+        'address': addressCodec,
+        'signature': signatureCodec,
+        'signedExtensions': CompositeCodec({
+          'era': eraCodec,
+          'nonce': nonceCodec,
+          if (tipCodec != null) 'tip': tipCodec,
+        }),
+      });
+
+      resultingRegistry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
+    }
 
     return ChainInfo(
-        registry: resultingRegistry,
-        metadata: rawMetadata,
+        scaleCodec: ScaleCodec(resultingRegistry),
         version: decodedMetadata.version);
   }
 }

@@ -2,17 +2,14 @@ part of models;
 
 class ChainInfo {
   final int version;
-  final Registry registry;
-  final Map<String, dynamic> metadata;
   final ScaleCodec scaleCodec;
 
   ChainInfo({
     required this.version,
-    required this.registry,
-    required this.metadata,
-  }) : scaleCodec = ScaleCodec(registry);
+    required this.scaleCodec,
+  });
 
-  static ChainInfo? fromMetadata(DecodedMetadata metadata,
+  static ChainInfo fromMetadata(DecodedMetadata metadata,
       [LegacyTypes? legacyTypes]) {
     if (metadata.isPreV14) {
       assertion(legacyTypes != null,

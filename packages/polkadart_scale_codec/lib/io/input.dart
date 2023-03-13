@@ -91,13 +91,14 @@ mixin Input {
     return encodeHex(_buffer);
   }
 
-  /// 
+  ///
   /// Asserts if the end of data is reached or not
-  /// 
+  ///
   /// If the end of data is not reached, it throws an exception.
   void assertEndOfDataReached([String message = '']) {
     if (hasBytes()) {
-      print('End of data not reached. There are ${remainingLength} bytes left to be processed.$message');
+      throw Exception(
+          'End of data not reached. There are ${remainingLength} bytes left to be processed.$message');
     }
   }
 }

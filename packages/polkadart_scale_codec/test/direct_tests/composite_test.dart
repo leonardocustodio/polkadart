@@ -14,12 +14,10 @@ void main() {
           'b': BoolCodec.codec,
         },
       ).encodeTo(
-        
-          {
-            'a': 42,
-            'b': true,
-          },
-        
+        {
+          'a': 42,
+          'b': true,
+        },
         output,
       );
       expect(output.toString(), '0x2a01');
@@ -63,7 +61,7 @@ void main() {
         () {
       final input = HexInput('0x2a01');
       final decoded = CompositeCodec(
-{
+        {
           'a': U8Codec.codec,
           'b': BoolCodec.codec,
         },

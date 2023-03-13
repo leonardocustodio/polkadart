@@ -81,8 +81,10 @@ class Chain {
       final extrinsicInput = HexInput(extrinsic);
       final value = ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
           .decode(extrinsicInput);
-      extrinsics.add(value);
+
+      // Check if the extrinsic is fully consumed
       extrinsicInput.assertEndOfDataReached(' At block: $blockNumber');
+      extrinsics.add(value);
     }
 
     return DecodedBlockExtrinsics(
@@ -123,18 +125,21 @@ class Chain {
     if (versionDescription == null) {
       throw BlockNotFoundException(blockNumber);
     }
-    if (versionDescription.chainInfo.version == 14) {
-      print(blockNumber);
-    }
+
     assertion(blockNumber >= versionDescription.blockNumber);
 
     final input = HexInput(rawBlockEvents.events);
 
     final List<dynamic> events =
         versionDescription.chainInfo.scaleCodec.decode('EventCodec', input);
+
+    // Check if the event is fully consumed
+    input.assertEndOfDataReached(' At block: $blockNumber');
+
     return DecodedBlockEvents(
-        blockNumber: blockNumber,
-        events: events.cast<Map<String, dynamic>>().toJson());
+      blockNumber: blockNumber,
+      events: events,
+    );
   }
 
   RawBlockEvents encodeEvents(DecodedBlockEvents decodedBlockEvents) {
@@ -150,8 +155,9 @@ class Chain {
 
     final output = HexOutput();
 
-    EventCodec(chainInfo: versionDescription.chainInfo)
-        .encodeTo(decodedBlockEvents.events, output);
+    versionDescription.chainInfo.scaleCodec
+        .encodeTo('EventCodec', decodedBlockEvents.events, output);
+
     return RawBlockEvents(blockNumber: blockNumber, events: output.toString());
   }
 
@@ -173,10 +179,7 @@ class Chain {
       return;
     }
 
-    final ChainInfo? chainInfo = getChainInfoFromSpecVersion(specVersion);
-    if (chainInfo == null) {
-      return;
-    }
+    final ChainInfo chainInfo = getChainInfoFromSpecVersion(specVersion);
     VersionDescription? versionDescription;
     versionDescription = VersionDescription(
       /// local to class params
@@ -193,18 +196,9 @@ class Chain {
     _versionDescriptionMap[specVersion.blockNumber] = versionDescription;
   }
 
-  ChainInfo? getChainInfoFromSpecVersion(SpecVersion specVersion) {
+  ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
     final DecodedMetadata decodedMetadata =
         MetadataDecoder.instance.decode(specVersion.metadata);
-    if (decodedMetadata.version >= 14) {
-      return null;
-    }
-
-    /*  // create a File
-    final file = File('./blocks_json/${specVersion.blockNumber}.json');
-    file.createSync(recursive: true);
-    // write the file
-    file.writeAsStringSync(jsonEncode(decodedMetadata.metadataJson)); */
 
     LegacyTypes? types;
 
@@ -215,7 +209,7 @@ class Chain {
     }
 
     final ChainInfo description =
-        ChainInfo.fromMetadata(decodedMetadata, types)!;
+        ChainInfo.fromMetadata(decodedMetadata, types);
 
     return description;
   }

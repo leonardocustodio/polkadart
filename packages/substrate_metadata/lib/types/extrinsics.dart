@@ -7,10 +7,6 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> decode(Input input) {
-    if (chainInfo.metadata.isEmpty) {
-      throw Exception('Metadata is empty');
-    }
-
     final result = <String, dynamic>{};
 
     result['hash'] = ExtrinsicsCodec.computeHash(input.buffer);
@@ -20,16 +16,13 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
     if (result['extrinsic_length'] != input.remainingLength) {
       result['extrinsic_length'] = 0;
       input.offset = 0;
-      throw Exception('why it happens?');
     }
 
     final meta = input.read();
-    //print('meta: $meta');
 
     //
     // 0b01111111 ~ 127 in BigInt
     final version = meta & BigInt.from(127).toInt();
-    //print('version: $version');
 
     assertion(version == 4, 'unsupported extrinsic version');
 
@@ -38,23 +31,19 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
     //
     // 0b10000000 ~ 128 in BigInt
     final signed = meta & BigInt.from(128).toInt();
-    //print('signed: $signed');
 
     if (signed != 0) {
       result['signature'] =
           chainInfo.scaleCodec.decode('ExtrinsicSignatureCodec', input);
     }
 
-    result['calls'] = chainInfo.scaleCodec.decode('CallCodec', input);
+    result['calls'] = chainInfo.scaleCodec.decode('GenericCall', input);
 
     return result;
   }
 
   @override
   void encodeTo(Map<String, dynamic> value, Output output) {
-    if (chainInfo.metadata.isEmpty) {
-      throw Exception('Metadata is empty.');
-    }
     assertion(value['version'] == 4,
         'Unsupported extrinsic version, Expected 4 but got ${value['version']}');
     assertion(value['calls'] != null, 'No calls found to encode.');
@@ -74,8 +63,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
           .encodeTo('ExtrinsicSignatureCodec', value['signature'], tempOutput);
     }
 
-    Call(registry: chainInfo.registry, metadata: chainInfo.metadata)
-        .encodeTo(value['calls'], tempOutput);
+    chainInfo.scaleCodec.encodeTo('GenericCall', value['calls'], tempOutput);
 
     CompactCodec.codec.encodeTo(tempOutput.length + 1, output);
 

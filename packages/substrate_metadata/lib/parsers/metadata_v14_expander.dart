@@ -13,8 +13,9 @@ class MetadataV14Expander {
         .toList(growable: false);
 
     for (var item in id2Portable) {
-      if (item['type']?['def']?['Primitive'] != null) {
-        registeredSiType[item['id']] = item['type']['def']['Primitive'];
+      final primitive = item['type']?['def']?['Primitive'];
+      if (primitive != null) {
+        registeredSiType[item['id']] = primitive;
       }
     }
     for (var item in id2Portable) {
@@ -22,8 +23,12 @@ class MetadataV14Expander {
       final one = item['type'];
       if (item['type']?['def']?['Variant'] != null) {
         if (one['path'].length >= 2) {
-          if (['Call', 'Event'].contains(one['path'].last)) {
+          if (['Call'].contains(one['path'].last)) {
             registeredSiType[id] = 'Call';
+            continue;
+          }
+          if ('Event' == one['path'].last) {
+            registeredSiType[id] = 'Event';
             continue;
           }
           if (one['path'].last == 'Era') {
@@ -83,21 +88,6 @@ class MetadataV14Expander {
         case 'Result':
           return _exploreResult(id, one, id2Portable);
       }
-      /* if (one['path'].length >= 2) {
-        if (['Call', 'Event'].contains(one['path'].last)) {
-          registeredSiType[id] = 'Call';
-          return registeredSiType[id]!;
-        }
-        if (one['path'].last == 'Call' &&
-            one['path'][one['path'].length - 2] == 'pallet') {
-          registeredSiType[id] = 'Call';
-          return registeredSiType[id]!;
-        }
-        if (one['path'].last == 'Instruction') {
-          registeredSiType[id] = 'Call';
-          return registeredSiType[id]!;
-        }
-      } */
       return _exploreEnum(id, one, id2Portable);
     }
     registeredSiType[id] = 'Null';
@@ -164,6 +154,10 @@ class MetadataV14Expander {
 
   String _exploreComposite(
       int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+    final String typeString = _genPathName(one['path'], id, {}, []);
+    registeredTypeNames.add(typeString);
+    registeredSiType[id] = typeString;
+
     if (one['def']['Composite']['fields'].length == 0) {
       registeredSiType[id] = 'Null';
       return 'Null';
@@ -188,10 +182,7 @@ class MetadataV14Expander {
           field['typeName']?.toLowerCase() ??
           subTypeName.toLowerCase()] = subTypeName;
     }
-    final String typeString = _genPathName(one['path'], id, {}, []);
-    registeredTypeNames.add(typeString);
     customCodecRegister[typeString] = tempStruct;
-    registeredSiType[id] = typeString;
     return typeString;
   }
 
@@ -279,6 +270,10 @@ class MetadataV14Expander {
       return registeredSiType[id]!;
     }
 
+    final String typeString = _genPathName(one['path'], id, {}, []);
+    registeredTypeNames.add(typeString);
+    registeredSiType[id] = typeString;
+
     final List<dynamic> variants = one['def']['Variant']['variants'];
 
     variants.sort((a, b) => a['index'] < b['index'] ? -1 : 1);
@@ -340,24 +335,18 @@ class MetadataV14Expander {
     // hence should throw error from the Enum Codec if the index is being tried to use.
     // This is done to avoid the need of having a separate codec for each enum.
 
-    if (variantNameMap.values.any((MapEntry<String, dynamic> e) =>
-        e.value is String && e.value != 'Null')) {
-      // enum one element is composite or parameterized
-      result = variantNameMap;
-    } else {
+    if (variantNameMap.values.every((MapEntry<String, dynamic> e) =>
+        e.value is String && e.value == 'Null')) {
       // enum all values are 'Null' Type or null and hence it is not a parameterized enum
       result = <String, int>{};
       variantNameMap.forEach((int index, MapEntry<String, dynamic> e) {
         result[e.key] = index;
       });
+    } else {
+      // enum one element is composite or parameterized
+      result = variantNameMap;
     }
-
-    final String typeString = _genPathName(one['path'], id, {}, []);
-
-    registeredTypeNames.add(typeString);
     customCodecRegister[typeString] = {'_enum': result};
-
-    registeredSiType[id] = typeString;
     return typeString;
   }
 }

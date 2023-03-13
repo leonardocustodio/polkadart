@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:substrate_metadata/core/chain.dart';
 import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:substrate_metadata/models/models.dart';
+import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/test.dart';
 
 import '../parachain_definitions/polkadot.dart';
@@ -53,18 +54,12 @@ void main() {
     //
     // Looping through every block
     for (var originalEvent in rawBlocksList) {
-      // TODO: Fix this block
-      switch (originalEvent.blockNumber) {
-        case 8200759:
-          continue;
-        default:
-      }
-      test('When original event ${originalEvent.blockNumber}', () {
-        print(originalEvent.blockNumber);
+      test(
+          'When original event is decoded and encoded back then it matches the original event value.',
+          () {
         //
         // Decoding the `Raw Block Events`
         final decodedBlockEvents = chain.decodeEvents(originalEvent);
-        return;
 
         //
         // Encoding the `Decoded Block Events`
@@ -78,8 +73,8 @@ void main() {
 
         //
         // Comparing the decoded event with the decodedFromEncoded event
-        expect(decodedBlockEvents.events.toString(),
-            againDecodedEvents.events.toString());
+        expect(decodedBlockEvents.events.toJson().toString(),
+            againDecodedEvents.events.toJson().toString());
       });
     }
   });
