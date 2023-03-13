@@ -29,6 +29,7 @@ const int8List = Reference('Int8List', 'dart:typed_data');
 const int16List = Reference('Int16List', 'dart:typed_data');
 const int32List = Reference('Int32List', 'dart:typed_data');
 const int64List = Reference('Int64List', 'dart:typed_data');
+const mapEntry = Reference('MapEntry', 'dart:core');
 
 TypeReference list({Reference? ref}) {
   return TypeReference((b) {

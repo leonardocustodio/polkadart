@@ -1,9 +1,17 @@
 import 'package:code_builder/code_builder.dart'
-    show Expression, CodeExpression, Code, Block, TypeReference;
+    show
+        Expression,
+        CodeExpression,
+        Code,
+        Block,
+        TypeReference,
+        Method,
+        Parameter,
+        refer;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show Input, CompactCodec;
 import '../constants.dart' as constants;
-import './base.dart' show Generator, LazyLoader;
+import './base.dart' show BasePath, Generator, LazyLoader;
 
 class BTreeMapGenerator extends Generator {
   late Generator key;
@@ -27,32 +35,32 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
-  TypeReference primitive() {
-    return constants.map(key.primitive(), value.primitive());
+  TypeReference primitive(BasePath from) {
+    return constants.map(key.primitive(from), value.primitive(from));
   }
 
   @override
-  TypeReference codec() {
-    return constants.bTreeMapCodec(key.primitive(), value.primitive());
+  TypeReference codec(BasePath from) {
+    return constants.bTreeMapCodec(key.primitive(from), value.primitive(from));
   }
 
   @override
-  Expression codecInstance() {
-    return codec().constInstance([], {
-      'keyCodec': key.codecInstance(),
-      'valueCodec': value.codecInstance(),
+  Expression codecInstance(BasePath from) {
+    return codec(from).constInstance([], {
+      'keyCodec': key.codecInstance(from),
+      'valueCodec': value.codecInstance(from),
     });
   }
 
   @override
-  Expression valueFrom(Input input) {
+  Expression valueFrom(BasePath from, Input input) {
     return CodeExpression(Block((builder) {
       builder.statements.add(Code.scope(
-          (a) => '<${a(key.primitive())}, ${a(value.primitive())}>{'));
+          (a) => '<${a(key.primitive(from))}, ${a(value.primitive(from))}>{'));
       final size = CompactCodec.codec.decode(input).toInt();
       for (var i = 0; i < size; i++) {
-        final k = key.valueFrom(input);
-        final v = value.valueFrom(input);
+        final k = key.valueFrom(from, input);
+        final v = value.valueFrom(from, input);
         builder.statements.addAll([
           k.code,
           Code(': '),
@@ -64,5 +72,36 @@ class BTreeMapGenerator extends Generator {
       }
       builder.statements.add(Code('}'));
     }));
+  }
+
+  @override
+  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+    if (visited.contains(this)) {
+      return constants.map(constants.dynamic, constants.dynamic);
+    }
+    visited.add(this);
+    final type = Generator.cacheOrCreate(
+        from,
+        visited,
+        () => constants.map(
+            key.jsonType(from, visited), value.jsonType(from, visited)));
+    visited.remove(this);
+    return type;
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj.property('map').call([
+      Method.returnsVoid((b) => b
+        ..requiredParameters.addAll([
+          Parameter((b) => b..name = 'key'),
+          Parameter((b) => b..name = 'value'),
+        ])
+        ..lambda = true
+        ..body = constants.mapEntry.newInstance([
+          key.instanceToJson(from, refer('key')),
+          value.instanceToJson(from, refer('value')),
+        ]).code).closure
+    ]);
   }
 }
