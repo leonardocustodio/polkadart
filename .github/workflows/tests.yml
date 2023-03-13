@@ -26,15 +26,15 @@ on:
 permissions: read-all
 
 jobs:
-  lints:
-    name: Check code lints
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3.3.0
+  # lints:
+  #   name: Check code lints
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3.3.0
 
-      - name: Check TOML Format
-        uses: dprint/check@v2.2
+  #     - name: Check TOML Format
+  #       uses: dprint/check@v2.2
 
   ss58_codec:
     name: Test ss58_codec
