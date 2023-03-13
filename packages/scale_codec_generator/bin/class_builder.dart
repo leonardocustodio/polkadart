@@ -629,6 +629,10 @@ Class createPalletQueries(
                 ..docs.addAll(sanitizeDocs(storage.docs))
                 ..returns = constants.future(primitive)
                 ..modifier = MethodModifier.async
+                ..optionalParameters.add(Parameter((b) => b
+                  ..type = constants.blockHash.asNullable()
+                  ..named = true
+                  ..name = 'at'))
                 ..requiredParameters
                     .addAll(storage.hashers.map((hasher) => Parameter((b) => b
                       ..type = hasher.codec.primitive(dirname)
@@ -645,9 +649,8 @@ Class createPalletQueries(
                       .statement)
                   // final bytes = await api.queryStorage([hashedKey]);
                   ..statements.add(declareFinal('bytes')
-                      .assign(refer('api')
-                          .property('getStorage')
-                          .call([refer('hashedKey')]).awaited)
+                      .assign(refer('api').property('getStorage').call(
+                          [refer('hashedKey')], {'at': refer('at')}).awaited)
                       .statement)
                   ..statements.add(Code('if (bytes != null) {'))
                   ..statements
@@ -778,7 +781,6 @@ Class createPolkadartClass(
               Code('constant = Constants()'),
             ])),
           Constructor((b) => b
-            ..name = 'fromProvider'
             ..factory = true
             ..requiredParameters.addAll([
               Parameter((b) => b
@@ -800,6 +802,7 @@ Class createPolkadartClass(
                   .statement,
             ])),
           Constructor((b) => b
+            ..name = 'url'
             ..constant = false
             ..factory = true
             ..requiredParameters.add(Parameter((b) => b
@@ -813,7 +816,7 @@ Class createPolkadartClass(
                   .assign(constants.provider.newInstance([refer('url')]))
                   .statement,
               refer(generator.name)
-                  .newInstanceNamed('fromProvider', [refer('provider')])
+                  .newInstance([refer('provider')])
                   .returned
                   .statement,
             ])),

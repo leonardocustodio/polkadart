@@ -1,14 +1,26 @@
 import 'dart:core' as core;
 import 'package:code_builder/code_builder.dart' show TypeReference, Reference;
 
-extension Nullable on TypeReference {
+// extension Nullable on TypeReference {
+//   TypeReference asNullable() {
+//     if (isNullable != true) {
+//       final builder = toBuilder();
+//       builder.isNullable = true;
+//       return builder.build();
+//     }
+//     return this;
+//   }
+// }
+
+extension Nullable on Reference {
   TypeReference asNullable() {
-    if (isNullable != true) {
-      final builder = toBuilder();
+    final type = this.type as TypeReference;
+    if (type.isNullable != true) {
+      final builder = type.toBuilder();
       builder.isNullable = true;
       return builder.build();
     }
-    return this;
+    return type;
   }
 }
 
@@ -114,6 +126,8 @@ const u64SequenceCodec = Reference('U64SequenceCodec',
     'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const u128Codec = Reference(
     'U128Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
+const u256Codec = Reference(
+    'U256Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const i8Codec = Reference(
     'I8Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const i8ArrayCodec = Reference(
@@ -140,6 +154,8 @@ const i64SequenceCodec = Reference('I64SequenceCodec',
     'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const i128Codec = Reference(
     'I128Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
+const i256Codec = Reference(
+    'I256Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 
 TypeReference codec({Reference? ref}) {
   return TypeReference((b) {
@@ -217,6 +233,8 @@ const provider =
     Reference('Provider', 'package:frame_primitives/frame_primitives.dart');
 const stateApi =
     Reference('StateApi', 'package:frame_primitives/frame_primitives.dart');
+const blockHash =
+    Reference('BlockHash', 'package:frame_primitives/frame_primitives.dart');
 
 TypeReference storageValue(Reference value) {
   return TypeReference((b) => b
