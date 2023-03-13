@@ -98,7 +98,7 @@ class Variant extends Generator {
     return literalMap({
       name: literalMap({
         for (final field in fields)
-          field.originalOrSanitizedName():
+          ReCase(field.originalOrSanitizedName()).camelCase:
               field.codec.instanceToJson(from, refer(field.sanitizedName))
       })
     });

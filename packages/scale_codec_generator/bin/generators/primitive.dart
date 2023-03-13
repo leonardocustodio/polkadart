@@ -15,7 +15,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         I128Codec;
 import 'package:code_builder/code_builder.dart'
     show TypeReference, Expression, literalBool, literalString, literalNum;
-import '../metadata_parser.dart' show Primitive;
+import '../frame_metadata.dart' show Primitive;
 import './base.dart' show BasePath, Generator;
 import '../constants.dart' as constants;
 import '../utils.dart' as utils show bigIntToExpression;
@@ -182,7 +182,7 @@ class PrimitiveGenerator extends Generator {
       case Primitive.U128:
       case Primitive.I64:
       case Primitive.I128:
-        return constants.bigInt.type as TypeReference;
+        return constants.string.type as TypeReference;
       default:
         throw Exception('Unsupported primitive $primitive');
     }
@@ -190,6 +190,16 @@ class PrimitiveGenerator extends Generator {
 
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    return obj;
+    switch (primitiveType) {
+      case Primitive.U64:
+      case Primitive.U128:
+      case Primitive.U256:
+      case Primitive.I64:
+      case Primitive.I128:
+      case Primitive.I256:
+        return obj.property('toString').call([]);
+      default:
+        return obj;
+    }
   }
 }
