@@ -82,7 +82,7 @@ abstract class Provider {
 class HttpProvider extends Provider {
   HttpProvider(this.url) : super._();
 
-  // Websocket uri to connect to
+  // uri to connect to
   final Uri url;
 
   // Sequence used to generate unique query ids

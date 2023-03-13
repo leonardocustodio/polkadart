@@ -1,12 +1,10 @@
-import 'dart:convert' show jsonDecode, jsonEncode;
 import 'dart:io' show File, Directory;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show BitStore, BitOrder;
-import 'package:substrate_metadata/substrate_metadata.dart'
-    show MetadataDecoder;
-import 'package:substrate_metadata/utils/utils.dart' show ToJson;
-import 'package:http/http.dart' as http;
+import 'package:frame_primitives/frame_primitives.dart' show Provider, StateApi;
+import 'package:args/args.dart' show ArgParser;
+import 'package:path/path.dart' as path;
 
 import './generators/array.dart' show ArrayGenerator;
 import './generators/btreemap.dart' show BTreeMapGenerator;
@@ -39,34 +37,48 @@ import 'frame_metadata.dart'
         TypeDefPrimitive,
         TypeDefTuple;
 
-const basePath = 'generated';
-const typesPath = '$basePath/types';
-const palletsPath = '$basePath/pallets';
-
-Future<RuntimeMetadataV14> downloadMetadata(Uri url) async {
-  final response = await http.post(url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'id': 1,
-        'jsonrpc': '2.0',
-        'method': 'state_getMetadata',
-        'params': <String>[],
-      }));
-
-  final jsonMetadata = jsonDecode(response.body)['result'] as String;
-  final decodedMetadata = MetadataDecoder.instance.decode(jsonMetadata);
-  return RuntimeMetadataV14.fromJson(decodedMetadata.metadata.toJson());
+Future<RuntimeMetadataV14> downloadMetadata(String url) async {
+  final provider = Provider(url);
+  final api = StateApi(provider);
+  final decodedMetadata = await api.getMetadata();
+  await provider.disconnect();
+  return RuntimeMetadataV14.fromJson(decodedMetadata.toJson()['metadata']);
 }
 
-void main(List<String> arguments) async {
-  // URL -> rpc.polkadot.io
-  // outputPath -> ./generated
-  // final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('astar.public.blastapi.io'));
-  // final RuntimeMetadataV14 metadata = await downloadMetadata(Uri.https('rpc.efinity.io'));
-  final RuntimeMetadataV14 metadata =
-      await downloadMetadata(Uri.https('kusama-rpc.polkadot.io'));
+String listToFilePath(List<String> filePath) {
+  if (filePath.isEmpty) {
+    throw Exception('File path cannot be empty');
+  }
+  final fileName = '${ReCase(filePath.last).snakeCase}.dart';
+  if (filePath.length == 1) {
+    return fileName;
+  }
+  return path.joinAll([...filePath.sublist(0, filePath.length - 1), fileName]);
+}
+
+void main(List<String> args) async {
+  final parser = ArgParser();
+  parser.addOption('url',
+      mandatory: true,
+      help: 'Substrate\'s node endpoint url, accept http and websocket');
+  parser.addOption('output',
+      defaultsTo: './generated', help: 'Output directory for generated files');
+  final arguments = parser.parse(args);
+
+  final basePath = path.normalize(path.absolute(arguments['output']));
+  final typesPath = path.join(basePath, 'types');
+  final palletsPath = path.join(basePath, 'pallets');
+  final polkadartPath = path.join(basePath, 'polkadart.dart');
+
+  if (!Directory(basePath).existsSync()) {
+    print(
+        '[ERROR] Provided directory doesn\'t exists: "${path.normalize(arguments['output'])}"');
+    return;
+  }
+  Directory(typesPath).createSync(recursive: false);
+  Directory(palletsPath).createSync(recursive: false);
+
+  final RuntimeMetadataV14 metadata = await downloadMetadata(arguments['url']);
 
   // Type Definitions
   final Map<int, TypeMetadata> types = {
@@ -124,7 +136,7 @@ void main(List<String> arguments) async {
       // Create TypeDef Generator
       if (tuple.types.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$typesPath/${type.path.join('/')}.dart',
+            filePath: listToFilePath([typesPath, ...type.path]),
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -133,7 +145,7 @@ void main(List<String> arguments) async {
 
       generators[type.id] = TupleGenerator.lazy(
         loader: lazyLoader,
-        filePath: '$typesPath/tuples.dart',
+        filePath: path.join(typesPath, 'tuples.dart'),
         codecs: tuple.types,
       );
       continue;
@@ -170,7 +182,7 @@ void main(List<String> arguments) async {
       // Create TypeDef Generator
       if (composite.fields.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$typesPath/${type.path.join('/')}.dart',
+            filePath: listToFilePath([typesPath, ...type.path]),
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -258,7 +270,7 @@ void main(List<String> arguments) async {
 
         generators[type.id] = TypeDefGenerator.lazy(
           loader: lazyLoader,
-          filePath: '$typesPath/${type.path.join('/')}.dart',
+          filePath: listToFilePath([typesPath, ...type.path]),
           name: ReCase(type.path.last).pascalCase,
           codec: composite.fields[0].type,
           docs: type.docs,
@@ -268,7 +280,7 @@ void main(List<String> arguments) async {
 
       // Create Compose Generator
       generators[type.id] = CompositeGenerator(
-          filePath: '$typesPath/${type.path.join('/')}.dart',
+          filePath: listToFilePath([typesPath, ...type.path]),
           name: type.path.last,
           docs: type.docs,
           fields: composite.fields
@@ -294,7 +306,7 @@ void main(List<String> arguments) async {
       // Create TypeDef Generator
       if (variant.variants.isEmpty) {
         generators[type.id] = TypeDefGenerator(
-            filePath: '$typesPath/${type.path.join('/')}.dart',
+            filePath: listToFilePath([typesPath, ...type.path]),
             name: ReCase(type.path.last).pascalCase,
             generator: EmptyGenerator(),
             docs: type.docs);
@@ -332,7 +344,7 @@ void main(List<String> arguments) async {
 
       // Create Variant Generator
       generators[type.id] = VariantGenerator(
-          filePath: '$typesPath/${type.path.join('/')}.dart',
+          filePath: listToFilePath([typesPath, ...type.path]),
           name: type.path.last,
           docs: type.docs,
           variants: variant.variants.map((variant) {
@@ -370,7 +382,8 @@ void main(List<String> arguments) async {
       // TODO: remove this field once we support extrinsics
       .where((pallet) => pallet.storage != null || pallet.constants.isNotEmpty)
       .map((pallet) => PalletGenerator.fromMetadata(
-            filePath: '$palletsPath/${pallet.name}.dart',
+            filePath:
+                path.join(palletsPath, '${ReCase(pallet.name).snakeCase}.dart'),
             palletMetadata: pallet,
             registry: generators,
           ))
@@ -424,13 +437,15 @@ void main(List<String> arguments) async {
       generatorList.removeWhere((generator) {
         index++;
         if (generator is CompositeGenerator) {
-          generator.filePath =
-              '${generator.filePath.substring(0, generator.filePath.length - 5)}_$index.dart';
+          final filename = path.basenameWithoutExtension(generator.filePath);
+          generator.filePath = path.join(
+              path.dirname(generator.filePath), '${filename}_$index.dart');
           generatorPerFile[generator.filePath] = [generator];
           return true;
         } else if (generator is VariantGenerator) {
-          generator.filePath =
-              '${generator.filePath.substring(0, generator.filePath.length - 5)}_$index.dart';
+          final filename = path.basenameWithoutExtension(generator.filePath);
+          generator.filePath = path.join(
+              path.dirname(generator.filePath), '${filename}_$index.dart');
           for (final variant in generator.variants) {
             if (variant.name == generator.name) {
               variant.name = '${variant.name}Variant';
@@ -439,8 +454,9 @@ void main(List<String> arguments) async {
           generatorPerFile[generator.filePath] = [generator];
           return true;
         } else if (generator is TypeDefGenerator) {
-          generator.filePath =
-              '${generator.filePath.substring(0, generator.filePath.length - 5)}_$index.dart';
+          final filename = path.basenameWithoutExtension(generator.filePath);
+          generator.filePath = path.join(
+              path.dirname(generator.filePath), '${filename}_$index.dart');
           generatorPerFile[generator.filePath] = [generator];
           return true;
         }
@@ -450,23 +466,19 @@ void main(List<String> arguments) async {
   }
 
   final polkadartGenerator = PolkadartGenerator(
-    filePath: '$basePath/polkadart.dart',
+    filePath: polkadartPath,
     name: 'Polkadart',
     pallets: palletGenerators,
   ).generated().build();
-  Directory('./bin/$basePath').createSync(recursive: true);
-  File('./bin/$basePath/polkadart.dart').writeAsStringSync(polkadartGenerator);
-  print('./bin/$basePath/polkadart.dart');
+  File(polkadartPath).writeAsStringSync(polkadartGenerator);
+  print(path.relative(polkadartPath, from: basePath));
 
   // Write the Pallets Files
   for (final pallet in palletGenerators) {
-    final List path = pallet.filePath.split('/').toList();
-    final fileName = path.removeLast();
-    final dir = './bin/${path.join('/')}';
-    print('$dir/$fileName');
     final String code = pallet.generated().build();
-    Directory(dir).createSync(recursive: true);
-    File('$dir/$fileName').writeAsStringSync(code);
+    Directory(path.dirname(pallet.filePath)).createSync(recursive: true);
+    File(pallet.filePath).writeAsStringSync(code);
+    print(path.relative(pallet.filePath, from: basePath));
   }
 
   // Write the Generated Files
@@ -474,11 +486,7 @@ void main(List<String> arguments) async {
     if (entry.value.isEmpty) {
       continue;
     }
-
-    final List path = entry.key.split('/').toList();
-    final fileName = path.removeLast();
-    final dir = './bin/${path.join('/')}';
-    print('$dir/$fileName');
+    print(path.relative(entry.key, from: basePath));
 
     for (final generator in entry.value) {
       if (generator is CompositeGenerator) {
@@ -498,7 +506,7 @@ void main(List<String> arguments) async {
             (previousValue, element) =>
                 previousValue.merge(element.generated()!))
         .build();
-    Directory(dir).createSync(recursive: true);
-    File('$dir/$fileName').writeAsStringSync(code);
+    Directory(path.dirname(entry.key)).createSync(recursive: true);
+    File(entry.key).writeAsStringSync(code);
   }
 }
