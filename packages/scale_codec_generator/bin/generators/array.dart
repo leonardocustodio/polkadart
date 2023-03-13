@@ -21,7 +21,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         I16ArrayCodec,
         I32ArrayCodec,
         I64ArrayCodec;
-import '../metadata_parser.dart' show Primitive;
+import '../frame_metadata.dart' show Primitive;
 import '../constants.dart' as constants;
 import './base.dart' show BasePath, Generator, LazyLoader;
 import './primitive.dart' show PrimitiveGenerator;

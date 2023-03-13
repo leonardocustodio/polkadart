@@ -2,7 +2,7 @@ import 'package:code_builder/code_builder.dart'
     show Expression, TypeReference, literalList, literalNum;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show Input, BitSequenceCodec, BitStore, BitOrder;
-import '../metadata_parser.dart' show Primitive;
+import '../frame_metadata.dart' show Primitive;
 import '../constants.dart' as constants;
 import './base.dart' show BasePath, Generator;
 

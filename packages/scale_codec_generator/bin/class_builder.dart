@@ -1,4 +1,4 @@
-import 'dart:core' show String, List, bool, int;
+import 'dart:core' show String, List, int;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale_codec
     show ByteInput;
@@ -8,8 +8,6 @@ import 'package:code_builder/code_builder.dart'
         Class,
         Code,
         declareFinal,
-        Expression,
-        literalList,
         Block,
         refer,
         Reference,
@@ -21,13 +19,11 @@ import 'package:code_builder/code_builder.dart'
         Enum,
         EnumValue,
         literalNum,
-        literalMap,
-        literalNull,
         literalString,
         TypeDef,
         TypeReference,
         MethodModifier;
-import './generators/base.dart' as generator show BasePath, Field;
+import './generators/base.dart' as generator show Field;
 import './generators/variant.dart' as v show Variant, VariantGenerator;
 import './generators/primitive.dart' show PrimitiveGenerator;
 import './generators/composite.dart' show CompositeGenerator;
@@ -610,10 +606,10 @@ Class createPalletQueries(
             ..toThis = true
             ..required = false
             ..named = false
-            ..name = 'provider'))))
+            ..name = 'api'))))
         ..fields.add(Field((b) => b
-          ..name = 'provider'
-          ..type = constants.provider
+          ..name = 'api'
+          ..type = constants.stateApi
           ..modifier = FieldModifier.final$))
         ..fields.addAll(generator.storages.map((storage) => Field((b) => b
           ..name = '_${ReCase(storage.name).camelCase}'
@@ -622,12 +618,16 @@ Class createPalletQueries(
           ..assignment = storage.instance(dirname, generator.name).code)))
         ..methods.addAll(generator.storages.map((storage) => Method((builder) {
               final storageName = ReCase(storage.name).camelCase;
+              final Reference primitive;
+              if (storage.isNullable) {
+                primitive = storage.valueCodec.primitive(dirname).asNullable();
+              } else {
+                primitive = storage.valueCodec.primitive(dirname);
+              }
               builder
                 ..name = sanitize(storageName)
                 ..docs.addAll(sanitizeDocs(storage.docs))
-                ..returns = constants.future(
-                    storage.valueCodec.primitive(dirname),
-                    nullable: storage.isNullable)
+                ..returns = constants.future(primitive)
                 ..modifier = MethodModifier.async
                 ..requiredParameters
                     .addAll(storage.hashers.map((hasher) => Parameter((b) => b
@@ -643,28 +643,15 @@ Class createPalletQueries(
                           .call(storage.hashers.map((hasher) => refer(
                               'key${storage.hashers.indexOf(hasher) + 1}'))))
                       .statement)
-                  // final value = await provider.queryStorage([hashedKey]).then((values) => values.first);
-                  ..statements.add(declareFinal('value')
-                      .assign(refer('provider')
-                          .property('queryStorage')
-                          .call([
-                            literalList([refer('hashedKey')])
-                          ])
-                          .property('then')
-                          .call([
-                            Method.returnsVoid((b) => b
-                                  ..requiredParameters
-                                      .add(Parameter((b) => b..name = 'values'))
-                                  ..lambda = true
-                                  ..body =
-                                      refer('values').property('first').code)
-                                .closure
-                          ])
-                          .awaited)
+                  // final bytes = await api.queryStorage([hashedKey]);
+                  ..statements.add(declareFinal('bytes')
+                      .assign(refer('api')
+                          .property('getStorage')
+                          .call([refer('hashedKey')]).awaited)
                       .statement)
-                  ..statements.add(Code('if (value != null) {'))
+                  ..statements.add(Code('if (bytes != null) {'))
                   ..statements
-                      .add(Code('  return _$storageName.decodeValue(value);'))
+                      .add(Code('  return _$storageName.decodeValue(bytes);'))
                   ..statements.add(Code('}'))
                   ..statements.add(storage.isNullable
                       ? Code('return null; /* Nullable */')
@@ -711,12 +698,12 @@ Class createPolkadartQueries(
             ..toThis = false
             ..required = false
             ..named = false
-            ..type = constants.provider
-            ..name = 'provider'))
+            ..type = constants.stateApi
+            ..name = 'api'))
           ..initializers.addAll(generator.pallets
               .where((pallet) => pallet.storages.isNotEmpty)
               .map((pallet) => Code.scope((a) =>
-                  '${sanitize(ReCase(pallet.name).camelCase)} = ${a(pallet.queries(dirname))}(provider)')))))
+                  '${sanitize(ReCase(pallet.name).camelCase)} = ${a(pallet.queries(dirname))}(api)')))))
         ..fields.addAll(generator.pallets
             .where((pallet) => pallet.storages.isNotEmpty)
             .map((pallet) => Field((b) => b
@@ -743,25 +730,99 @@ Class createPolkadartConstants(
                   pallet.constantsType(dirname).newInstance([]).code)));
     });
 
+Class createPolkadartRpc(
+  PolkadartGenerator generator,
+) =>
+    Class((classBuilder) {
+      classBuilder
+        ..name = 'Rpc'
+        ..constructors.add(Constructor((b) => b
+          ..constant = true
+          ..optionalParameters.add(Parameter((b) => b
+            ..toThis = true
+            ..required = true
+            ..named = true
+            ..name = 'state'))))
+        ..fields.addAll([
+          Field((b) => b
+            ..name = 'state'
+            ..type = constants.stateApi
+            ..modifier = FieldModifier.final$)
+        ]);
+    });
+
 Class createPolkadartClass(
   PolkadartGenerator generator,
 ) =>
     Class((classBuilder) {
       classBuilder
         ..name = generator.name
-        ..constructors.add(Constructor((b) => b
-          ..constant = false
-          ..requiredParameters.add(Parameter((b) => b
-            ..toThis = false
-            ..required = false
-            ..named = false
-            ..type = constants.provider
-            ..name = 'provider'))
-          ..initializers.addAll([
-            Code('query = Queries(provider)'),
-            Code('constant = Constants()'),
-          ])))
+        ..constructors.addAll([
+          Constructor((b) => b
+            ..name = '_'
+            ..constant = false
+            ..requiredParameters.addAll([
+              Parameter((b) => b
+                ..toThis = true
+                ..required = false
+                ..named = false
+                ..name = '_provider'),
+              Parameter((b) => b
+                ..toThis = true
+                ..required = false
+                ..named = false
+                ..name = 'rpc'),
+            ])
+            ..initializers.addAll([
+              Code.scope((a) => 'query = Queries(rpc.state)'),
+              Code('constant = Constants()'),
+            ])),
+          Constructor((b) => b
+            ..name = 'fromProvider'
+            ..factory = true
+            ..requiredParameters.addAll([
+              Parameter((b) => b
+                ..toThis = false
+                ..required = false
+                ..named = false
+                ..type = constants.provider
+                ..name = 'provider'),
+            ])
+            ..body = Block.of([
+              declareFinal('rpc')
+                  .assign(refer('Rpc').newInstance([], {
+                    'state': constants.stateApi.newInstance([refer('provider')])
+                  }))
+                  .statement,
+              refer(generator.name)
+                  .newInstanceNamed('_', [refer('provider'), refer('rpc')])
+                  .returned
+                  .statement,
+            ])),
+          Constructor((b) => b
+            ..constant = false
+            ..factory = true
+            ..requiredParameters.add(Parameter((b) => b
+              ..toThis = false
+              ..required = false
+              ..named = false
+              ..type = constants.string
+              ..name = 'url'))
+            ..body = Block.of([
+              declareFinal('provider')
+                  .assign(constants.provider.newInstance([refer('url')]))
+                  .statement,
+              refer(generator.name)
+                  .newInstanceNamed('fromProvider', [refer('provider')])
+                  .returned
+                  .statement,
+            ])),
+        ])
         ..fields.addAll([
+          Field((b) => b
+            ..name = '_provider'
+            ..type = constants.provider
+            ..modifier = FieldModifier.final$),
           Field((b) => b
             ..name = 'query'
             ..type = refer('Queries')
@@ -769,6 +830,36 @@ Class createPolkadartClass(
           Field((b) => b
             ..name = 'constant'
             ..type = refer('Constants')
-            ..modifier = FieldModifier.final$)
+            ..modifier = FieldModifier.final$),
+          Field((b) => b
+            ..name = 'rpc'
+            ..type = refer('Rpc')
+            ..modifier = FieldModifier.final$),
+        ])
+        ..methods.addAll([
+          Method(
+            (b) => b
+              ..name = 'connect'
+              ..returns = constants.future()
+              ..modifier = MethodModifier.async
+              ..body = refer('_provider')
+                  .property('connect')
+                  .call([])
+                  .awaited
+                  .returned
+                  .statement,
+          ),
+          Method(
+            (b) => b
+              ..name = 'disconnect'
+              ..returns = constants.future()
+              ..modifier = MethodModifier.async
+              ..body = refer('_provider')
+                  .property('disconnect')
+                  .call([])
+                  .awaited
+                  .returned
+                  .statement,
+          ),
         ]);
     });

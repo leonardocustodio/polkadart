@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:path/path.dart' as p;
 import './base.dart' show BasePath, Generator, GeneratedOutput;
 import '../class_builder.dart' show createPalletQueries, createPalletConstants;
-import '../metadata_parser.dart' as metadata
+import '../frame_metadata.dart' as metadata
     show
         PalletConstantMetadata,
         PalletMetadata,
@@ -33,7 +33,6 @@ enum StorageHasherType {
   }
 
   Expression instance(Expression codecInstance, BasePath from) {
-    // StorageHasher.blake2b128(codec);
     return type(from).property(name).call([codecInstance]);
   }
 }
