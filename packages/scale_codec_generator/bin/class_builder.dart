@@ -23,12 +23,12 @@ import 'package:code_builder/code_builder.dart'
         TypeDef,
         TypeReference,
         MethodModifier;
-import './generators/base.dart' as generator show Field;
-import './generators/variant.dart' as v show Variant, VariantGenerator;
-import './generators/primitive.dart' show PrimitiveGenerator;
-import './generators/composite.dart' show CompositeGenerator;
-import './generators/pallet.dart' as pallet;
-import './generators/polkadart.dart' show PolkadartGenerator;
+import './generator/base.dart' as generator show Field;
+import './generator/variant.dart' as v show Variant, VariantGenerator;
+import './generator/primitive.dart' show PrimitiveGenerator;
+import './generator/composite.dart' show CompositeGenerator;
+import './generator/pallet.dart' as pallet;
+import './generator/polkadart.dart' show PolkadartGenerator;
 import './constants.dart' as constants;
 import './utils.dart' show sanitize;
 

@@ -1,6 +1,5 @@
 import 'package:code_builder/code_builder.dart'
     show
-        Class,
         Expression,
         TypeReference,
         literalNull,

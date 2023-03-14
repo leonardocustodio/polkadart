@@ -4,16 +4,16 @@ import 'package:frame_primitives/frame_primitives.dart'
     show Provider, StateApi, RuntimeVersion;
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
-import './generators/generators.dart' show generatorsFromTypes;
+import 'generator/generators.dart' show generatorsFromTypes;
 
-import './generators/composite.dart' show CompositeGenerator;
-import './generators/variant.dart' show VariantGenerator;
-import './generators/typedef.dart' show TypeDefGenerator;
-import './generators/tuple.dart' show TupleGenerator;
-import './generators/base.dart' show Generator, GeneratedOutput;
-import './generators/pallet.dart' show PalletGenerator;
-import './generators/polkadart.dart' show PolkadartGenerator;
-import 'frame_metadata.dart' show RuntimeMetadataV14;
+import './generator/composite.dart' show CompositeGenerator;
+import './generator/variant.dart' show VariantGenerator;
+import './generator/typedef.dart' show TypeDefGenerator;
+import './generator/tuple.dart' show TupleGenerator;
+import './generator/base.dart' show Generator, GeneratedOutput;
+import './generator/pallet.dart' show PalletGenerator;
+import './generator/polkadart.dart' show PolkadartGenerator;
+import './frame_metadata.dart' show RuntimeMetadataV14;
 
 class ChainProperties {
   final RuntimeMetadataV14 metadata;
