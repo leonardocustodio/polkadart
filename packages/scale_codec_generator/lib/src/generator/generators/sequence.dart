@@ -1,30 +1,4 @@
-import 'package:code_builder/code_builder.dart'
-    show
-        Expression,
-        Parameter,
-        Method,
-        refer,
-        literalList,
-        literalConstList,
-        literalNum,
-        literalTrue,
-        TypeReference;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
-    show
-        Input,
-        CompactCodec,
-        U8SequenceCodec,
-        U16SequenceCodec,
-        U32SequenceCodec,
-        U64SequenceCodec,
-        I8SequenceCodec,
-        I16SequenceCodec,
-        I32SequenceCodec,
-        I64SequenceCodec;
-import './base.dart' show BasePath, Generator, LazyLoader;
-import '../frame_metadata.dart' show Primitive;
-import './primitive.dart' show PrimitiveGenerator;
-import '../constants.dart' as constants;
+part of generators;
 
 class SequenceGenerator extends Generator {
   late Generator typeDef;
@@ -46,15 +20,15 @@ class SequenceGenerator extends Generator {
   TypeReference primitive(BasePath from) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
-        case Primitive.Char:
-        case Primitive.U8:
-        case Primitive.U16:
-        case Primitive.U32:
-        case Primitive.U64:
-        case Primitive.I8:
-        case Primitive.I16:
-        case Primitive.I32:
-        case Primitive.I64:
+        case metadata.Primitive.Char:
+        case metadata.Primitive.U8:
+        case metadata.Primitive.U16:
+        case metadata.Primitive.U32:
+        case metadata.Primitive.U64:
+        case metadata.Primitive.I8:
+        case metadata.Primitive.I16:
+        case metadata.Primitive.I32:
+        case metadata.Primitive.I64:
           return constants.list(ref: constants.int);
         default:
           break;
@@ -68,21 +42,21 @@ class SequenceGenerator extends Generator {
   TypeReference codec(BasePath from) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
-        case Primitive.U8:
+        case metadata.Primitive.U8:
           return constants.u8SequenceCodec.type as TypeReference;
-        case Primitive.U16:
+        case metadata.Primitive.U16:
           return constants.u16SequenceCodec.type as TypeReference;
-        case Primitive.U32:
+        case metadata.Primitive.U32:
           return constants.u32SequenceCodec.type as TypeReference;
-        case Primitive.U64:
+        case metadata.Primitive.U64:
           return constants.u64SequenceCodec.type as TypeReference;
-        case Primitive.I8:
+        case metadata.Primitive.I8:
           return constants.i8SequenceCodec.type as TypeReference;
-        case Primitive.I16:
+        case metadata.Primitive.I16:
           return constants.i16SequenceCodec.type as TypeReference;
-        case Primitive.I32:
+        case metadata.Primitive.I32:
           return constants.i32SequenceCodec.type as TypeReference;
-        case Primitive.I64:
+        case metadata.Primitive.I64:
           return constants.i64SequenceCodec.type as TypeReference;
         default:
           break;
@@ -98,15 +72,15 @@ class SequenceGenerator extends Generator {
 
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
-        case Primitive.Char:
-        case Primitive.U8:
-        case Primitive.U16:
-        case Primitive.U32:
-        case Primitive.U64:
-        case Primitive.I8:
-        case Primitive.I16:
-        case Primitive.I32:
-        case Primitive.I64:
+        case metadata.Primitive.Char:
+        case metadata.Primitive.U8:
+        case metadata.Primitive.U16:
+        case metadata.Primitive.U32:
+        case metadata.Primitive.U64:
+        case metadata.Primitive.I8:
+        case metadata.Primitive.I16:
+        case metadata.Primitive.I32:
+        case metadata.Primitive.I64:
           return codec.property('codec');
         default:
           break;
@@ -133,29 +107,29 @@ class SequenceGenerator extends Generator {
   Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
-        case Primitive.U8:
-        case Primitive.Char:
+        case metadata.Primitive.U8:
+        case metadata.Primitive.Char:
           final list = U8SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
-        case Primitive.U16:
+        case metadata.Primitive.U16:
           final list = U16SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
-        case Primitive.U32:
+        case metadata.Primitive.U32:
           final list = U32SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
-        case Primitive.U64:
+        case metadata.Primitive.U64:
           final list = U64SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
-        case Primitive.I8:
+        case metadata.Primitive.I8:
           final list = I8SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
-        case Primitive.I16:
+        case metadata.Primitive.I16:
           final list = I16SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
-        case Primitive.I32:
+        case metadata.Primitive.I32:
           final list = I32SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
-        case Primitive.I64:
+        case metadata.Primitive.I64:
           final list = I64SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         default:
@@ -179,24 +153,24 @@ class SequenceGenerator extends Generator {
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
-        case Primitive.U8:
-        case Primitive.Char:
-        case Primitive.U16:
-        case Primitive.U32:
-        case Primitive.U64:
-        case Primitive.I8:
-        case Primitive.I16:
-        case Primitive.I32:
-        case Primitive.I64:
+        case metadata.Primitive.U8:
+        case metadata.Primitive.Char:
+        case metadata.Primitive.U16:
+        case metadata.Primitive.U32:
+        case metadata.Primitive.U64:
+        case metadata.Primitive.I8:
+        case metadata.Primitive.I16:
+        case metadata.Primitive.I32:
+        case metadata.Primitive.I64:
           return constants.list(ref: constants.int);
-        case Primitive.U128:
-        case Primitive.I128:
-        case Primitive.U256:
-        case Primitive.I256:
+        case metadata.Primitive.U128:
+        case metadata.Primitive.I128:
+        case metadata.Primitive.U256:
+        case metadata.Primitive.I256:
           return constants.list(ref: constants.bigInt);
-        case Primitive.Str:
+        case metadata.Primitive.Str:
           return constants.list(ref: constants.string);
-        case Primitive.Bool:
+        case metadata.Primitive.Bool:
           return constants.list(ref: constants.bool);
         default:
           break;
@@ -215,16 +189,16 @@ class SequenceGenerator extends Generator {
   Expression instanceToJson(BasePath from, Expression obj) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
-        case Primitive.Str:
-        case Primitive.U8:
-        case Primitive.Char:
-        case Primitive.U16:
-        case Primitive.U32:
-        case Primitive.U64:
-        case Primitive.I8:
-        case Primitive.I16:
-        case Primitive.I32:
-        case Primitive.I64:
+        case metadata.Primitive.Str:
+        case metadata.Primitive.U8:
+        case metadata.Primitive.Char:
+        case metadata.Primitive.U16:
+        case metadata.Primitive.U32:
+        case metadata.Primitive.U64:
+        case metadata.Primitive.I8:
+        case metadata.Primitive.I16:
+        case metadata.Primitive.I32:
+        case metadata.Primitive.I64:
           return obj;
         default:
           break;

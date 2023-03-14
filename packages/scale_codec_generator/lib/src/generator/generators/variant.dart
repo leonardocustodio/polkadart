@@ -1,26 +1,4 @@
-import 'package:code_builder/code_builder.dart'
-    show
-        Class,
-        Expression,
-        TypeReference,
-        literalNull,
-        literalMap,
-        literalList,
-        refer;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import 'package:path/path.dart' as p;
-import 'package:recase/recase.dart' show ReCase;
-import '../utils.dart' as utils show findCommonType;
-import '../constants.dart' as constants;
-import '../class_builder.dart'
-    show
-        createVariantBaseClass,
-        createVariantValuesClass,
-        createVariantCodec,
-        createVariantClass,
-        createSimpleVariantEnum,
-        createSimpleVariantCodec;
-import './base.dart' show BasePath, Generator, GeneratedOutput, Field;
+part of generators;
 
 class Variant extends Generator {
   int index;
@@ -63,7 +41,7 @@ class Variant extends Generator {
           constants.string, fields.first.codec.jsonType(from, visited));
     } else {
       // Check if all fields are of the same type, otherwise use dynamic
-      final type = utils.findCommonType(
+      final type = findCommonType(
           fields.map((field) => field.codec.jsonType(from, visited)));
 
       if (fields.every((field) => field.originalName == null)) {
@@ -129,12 +107,14 @@ class Variant extends Generator {
 class VariantGenerator extends Generator {
   String filePath;
   String name;
+  String orginalName;
   List<Variant> variants;
   List<String> docs;
 
   VariantGenerator(
       {required this.filePath,
       required this.name,
+      required this.orginalName,
       required this.variants,
       required this.docs}) {
     for (final variant in variants) {
@@ -182,25 +162,26 @@ class VariantGenerator extends Generator {
     // Simple Variants
     if (variants.isNotEmpty &&
         variants.every((variant) => variant.fields.isEmpty)) {
-      final simpleEnum = createSimpleVariantEnum(this);
-      final simpleCodec =
-          createSimpleVariantCodec(filePath, '_\$${name}Codec', name, variants);
+      final simpleEnum = classbuilder.createSimpleVariantEnum(this);
+      final simpleCodec = classbuilder.createSimpleVariantCodec(this);
       return GeneratedOutput(
           classes: [simpleCodec], enums: [simpleEnum], typedefs: []);
     }
 
     // Complex Variants
-    final complexJsonType = jsonType(p.dirname(filePath), {});
-    final baseClass = createVariantBaseClass(this, complexJsonType);
-    final valuesClass = createVariantValuesClass(this);
-    final codecClass = createVariantCodec(this);
-
-    final List<Class> classes = variants
-        .fold(<Class>[baseClass, valuesClass, codecClass], (classes, variant) {
-      classes.add(createVariantClass(
-          filePath, name, '_\$${name}Codec', variant, complexJsonType));
-      return classes;
-    });
+    final dirname = p.dirname(filePath);
+    final variantsJsonType =
+        variants.map((variant) => variant.jsonType(dirname, {this})).toList();
+    final baseClassJsonType = findCommonType(variantsJsonType);
+    final baseClass =
+        classbuilder.createVariantBaseClass(this, baseClassJsonType);
+    final valuesClass = classbuilder.createVariantValuesClass(this);
+    final codecClass = classbuilder.createVariantCodec(this);
+    final classes = [baseClass, valuesClass, codecClass];
+    for (int i = 0; i < variants.length; i++) {
+      classes.add(classbuilder.createVariantClass(
+          filePath, name, variants[i], variantsJsonType[i]));
+    }
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
 
@@ -219,7 +200,7 @@ class VariantGenerator extends Generator {
     visited.add(this);
     final type = Generator.cacheOrCreate(from, visited, () {
       // Check if all variants are of the same type, otherwise use Map<String, dynamic>
-      final complexJsonType = utils.findCommonType(
+      final complexJsonType = findCommonType(
           variants.map((variant) => variant.jsonType(from, visited)));
       if (complexJsonType.symbol != 'Map') {
         throw Exception(

@@ -1,12 +1,4 @@
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import 'package:code_builder/code_builder.dart'
-    show TypeReference, Expression, literalNull, literalList, literalMap, refer;
-import 'package:path/path.dart' as p;
-import 'package:recase/recase.dart' show ReCase;
-import '../utils.dart' as utils show findCommonType;
-import '../constants.dart' as constants;
-import '../class_builder.dart' show createCompositeCodec, createCompositeClass;
-import './base.dart' show BasePath, Generator, GeneratedOutput, Field;
+part of generators;
 
 class CompositeGenerator extends Generator {
   String filePath;
@@ -67,8 +59,8 @@ class CompositeGenerator extends Generator {
 
   @override
   GeneratedOutput? generated() {
-    final typeBuilder = createCompositeClass(this);
-    final codecBuilder = createCompositeCodec(this);
+    final typeBuilder = classbuilder.createCompositeClass(this);
+    final codecBuilder = classbuilder.createCompositeCodec(this);
     return GeneratedOutput(
         classes: [typeBuilder, codecBuilder], enums: [], typedefs: []);
   }
@@ -96,7 +88,7 @@ class CompositeGenerator extends Generator {
       }
 
       // Check if all fields are of the same type, otherwise use dynamic
-      final type = utils.findCommonType(
+      final type = findCommonType(
           fields.map((field) => field.codec.jsonType(from, visited)));
 
       // If all field are unnamed, return a list
