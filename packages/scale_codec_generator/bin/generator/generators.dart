@@ -95,6 +95,7 @@ Map<int, Generator> generatorsFromTypes(
         continue;
       }
 
+      // Create a Tuple Generator
       generators[type.id] = TupleGenerator.lazy(
         loader: lazyLoader,
         filePath: path.join(typesPath, 'tuples.dart'),
