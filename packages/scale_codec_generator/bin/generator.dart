@@ -4,16 +4,10 @@ import 'package:frame_primitives/frame_primitives.dart'
     show Provider, StateApi, RuntimeVersion;
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
-import 'generator/generators.dart' show generatorsFromTypes;
-
-import './generator/composite.dart' show CompositeGenerator;
-import './generator/variant.dart' show VariantGenerator;
-import './generator/typedef.dart' show TypeDefGenerator;
-import './generator/tuple.dart' show TupleGenerator;
-import './generator/base.dart' show Generator, GeneratedOutput;
-import './generator/pallet.dart' show PalletGenerator;
-import './generator/polkadart.dart' show PolkadartGenerator;
-import './frame_metadata.dart' show RuntimeMetadataV14;
+import 'package:scale_codec_generator/scale_codec_generator.dart'
+  show CompositeGenerator, VariantGenerator, TypeDefGenerator, TupleGenerator, Generator, GeneratedOutput, PalletGenerator, PolkadartGenerator;
+import 'package:scale_codec_generator/src/generator/frame_metadata.dart'
+  show RuntimeMetadataV14;
 
 class ChainProperties {
   final RuntimeMetadataV14 metadata;
@@ -74,7 +68,7 @@ void main(List<String> args) async {
 
   // Get type generators
   final Map<int, Generator> generators =
-      generatorsFromTypes(properties.metadata.registry, typesPath);
+      Generator.fromTypes(properties.metadata.registry, typesPath);
 
   // Get pallet generators
   final List<PalletGenerator> palletGenerators = properties.metadata.pallets

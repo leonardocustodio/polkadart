@@ -1,4 +1,5 @@
 import 'dart:core' show String, List, int;
+import 'dart:typed_data' show Uint8List;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale_codec
     show ByteInput;
@@ -23,12 +24,7 @@ import 'package:code_builder/code_builder.dart'
         TypeDef,
         TypeReference,
         MethodModifier;
-import './generator/base.dart' as generator show Field;
-import './generator/variant.dart' as v show Variant, VariantGenerator;
-import './generator/primitive.dart' show PrimitiveGenerator;
-import './generator/composite.dart' show CompositeGenerator;
-import './generator/pallet.dart' as pallet;
-import './generator/polkadart.dart' show PolkadartGenerator;
+import './generators/generators.dart' as generators show Field, Variant, VariantGenerator, PrimitiveGenerator, CompositeGenerator, PolkadartGenerator, PalletGenerator;
 import './constants.dart' as constants;
 import './utils.dart' show sanitize;
 
@@ -44,7 +40,7 @@ String classToCodecName(String className) {
   return '\$${className}Codec';
 }
 
-Class createCompositeClass(CompositeGenerator compositeGenerator) =>
+Class createCompositeClass(generators.CompositeGenerator compositeGenerator) =>
     Class((classBuilder) {
       final dirname = p.dirname(compositeGenerator.filePath);
       final classType =
@@ -90,7 +86,7 @@ Class createCompositeClass(CompositeGenerator compositeGenerator) =>
           ..assignment = codecType.newInstance([]).code));
     });
 
-Class createCompositeCodec(CompositeGenerator compositeGenerator) {
+Class createCompositeCodec(generators.CompositeGenerator compositeGenerator) {
   return Class((classBuilder) {
     final dirname = p.dirname(compositeGenerator.filePath);
     final classType = TypeReference((b) => b..symbol = compositeGenerator.name);
@@ -150,7 +146,7 @@ Class createCompositeCodec(CompositeGenerator compositeGenerator) {
 }
 
 Class createVariantBaseClass(
-  v.VariantGenerator generator,
+  generators.VariantGenerator generator,
   TypeReference jsonType,
 ) =>
     Class((classBuilder) {
@@ -203,7 +199,7 @@ Class createVariantBaseClass(
     });
 
 Class createVariantValuesClass(
-  v.VariantGenerator variantGenerator,
+  generators.VariantGenerator variantGenerator,
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(variantGenerator.filePath);
@@ -214,7 +210,7 @@ Class createVariantValuesClass(
         ..methods.addAll(variantGenerator.variants.map((variant) => Method(
             (b) => b
               ..returns = refer(variant.name)
-              ..name = generator.Field.toFieldName(variant.name)
+              ..name = generators.Field.toFieldName(variant.name)
               ..body = variant.fields.isEmpty
                   ? Code('return const ${variant.name}();')
                   : Block.of([
@@ -232,7 +228,7 @@ Class createVariantValuesClass(
                     ..name = field.sanitizedName))))));
     });
 
-Class createVariantCodec(v.VariantGenerator variantGenerator) =>
+Class createVariantCodec(generators.VariantGenerator variantGenerator) =>
     Class((classBuilder) {
       final dirname = p.dirname(variantGenerator.filePath);
       final Reference classType = refer(variantGenerator.name);
@@ -250,7 +246,7 @@ Class createVariantCodec(v.VariantGenerator variantGenerator) =>
             ..name = 'input'))
           ..body = Block.of([
             declareFinal('index')
-                .assign(PrimitiveGenerator.u8.decode(dirname))
+                .assign(generators.PrimitiveGenerator.u8.decode(dirname))
                 .statement,
             Code('switch (index) {'),
             Block.of(variantGenerator.variants.map((variant) => Block.of([
@@ -310,7 +306,7 @@ Class createVariantCodec(v.VariantGenerator variantGenerator) =>
 Class createVariantClass(
   String filePath,
   String typeName,
-  v.Variant variant,
+  generators.Variant variant,
   TypeReference jsonType,
 ) =>
     Class((classBuilder) {
@@ -384,7 +380,7 @@ Class createVariantClass(
         ])
         ..body = Block(
           (b) => b
-            ..statements.add(PrimitiveGenerator.u8
+            ..statements.add(generators.PrimitiveGenerator.u8
                 .encode(dirname, literalNum(variant.index))
                 .statement)
             ..statements.addAll(variant.fields.map((field) => field.codec
@@ -397,7 +393,7 @@ Class createVariantClass(
         )));
     });
 
-Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
+Enum createSimpleVariantEnum(generators.VariantGenerator variant) => Enum((enumBuilder) {
       final dirname = p.dirname(variant.filePath);
       final Reference typeRef = refer(variant.name);
       final Reference codecRef = refer(classToCodecName(variant.name));
@@ -442,7 +438,7 @@ Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
             ..assignment = codecRef.newInstance([]).code),
         ])
         ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
-          ..name = generator.Field.toFieldName(variant.name)
+          ..name = generators.Field.toFieldName(variant.name)
           ..arguments.addAll([
             literalString(variant.orignalName),
             literalNum(variant.index)
@@ -454,7 +450,7 @@ Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
     });
 
 Class createSimpleVariantCodec(
-  v.VariantGenerator variant,
+  generators.VariantGenerator variant,
 ) =>
     Class((classBuilder) {
       final className = refer(variant.name);
@@ -473,14 +469,14 @@ Class createSimpleVariantCodec(
             ..name = 'input'))
           ..body = Block((b) => b
             ..statements.add(declareFinal('index')
-                .assign(PrimitiveGenerator.u8.decode(dirname))
+                .assign(generators.PrimitiveGenerator.u8.decode(dirname))
                 .statement)
             ..statements.add(Code('switch (index) {'))
             ..statements
                 .add(Block.of(variant.variants.map((variant) => Block.of([
                       Code('case ${variant.index}:'),
                       Code(
-                          'return ${className.symbol}.${generator.Field.toFieldName(variant.name)};')
+                          'return ${className.symbol}.${generators.Field.toFieldName(variant.name)};')
                     ]))))
             ..statements.add(Code(
                 'default: throw Exception(\'${className.symbol}: Invalid variant index: "\$index"\');'))
@@ -496,7 +492,7 @@ Class createSimpleVariantCodec(
               ..type = constants.output
               ..name = 'output'),
           ])
-          ..body = PrimitiveGenerator.u8
+          ..body = generators.PrimitiveGenerator.u8
               .encode(dirname, refer('value').property('codecIndex'))
               .statement));
     });
@@ -606,7 +602,7 @@ Class createTupleCodec(
     });
 
 Class createPalletQueries(
-  pallet.PalletGenerator generator,
+  generators.PalletGenerator generator,
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
@@ -673,7 +669,7 @@ Class createPalletQueries(
                       : storage.valueCodec
                           .valueFrom(
                             dirname,
-                            scale_codec.ByteInput(storage.defaultValue),
+                            scale_codec.ByteInput(Uint8List.fromList(storage.defaultValue)),
                           )
                           .returned
                           .statement)
@@ -683,7 +679,7 @@ Class createPalletQueries(
     });
 
 Class createPalletConstants(
-  pallet.PalletGenerator generator,
+  generators.PalletGenerator generator,
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
@@ -696,13 +692,13 @@ Class createPalletConstants(
           ..modifier = FieldModifier.final$
           ..docs.addAll(sanitizeDocs(constant.docs))
           ..assignment = constant.codec
-              .valueFrom(dirname, scale_codec.ByteInput(constant.value),
+              .valueFrom(dirname, scale_codec.ByteInput(Uint8List.fromList(constant.value)),
                   constant: true)
               .code)));
     });
 
 Class createPolkadartQueries(
-  PolkadartGenerator generator,
+  generators.PolkadartGenerator generator,
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
@@ -729,7 +725,7 @@ Class createPolkadartQueries(
     });
 
 Class createPolkadartConstants(
-  PolkadartGenerator generator,
+  generators.PolkadartGenerator generator,
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
@@ -747,7 +743,7 @@ Class createPolkadartConstants(
     });
 
 Class createPolkadartRpc(
-  PolkadartGenerator generator,
+  generators.PolkadartGenerator generator,
 ) =>
     Class((classBuilder) {
       classBuilder
@@ -768,7 +764,7 @@ Class createPolkadartRpc(
     });
 
 Class createPolkadartClass(
-  PolkadartGenerator generator,
+  generators.PolkadartGenerator generator,
 ) =>
     Class((classBuilder) {
       classBuilder

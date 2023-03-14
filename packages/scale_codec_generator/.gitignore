@@ -2,7 +2,7 @@
 .dart_tool/
 .packages
 
-bin/generated/
+example/polkadot/
 
 # Conventional directory for build outputs.
 build/

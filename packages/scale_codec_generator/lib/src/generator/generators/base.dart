@@ -1,10 +1,4 @@
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import 'package:code_builder/code_builder.dart'
-    show Class, Enum, TypeReference, TypeDef, Expression, Reference;
-import 'package:dart_style/dart_style.dart' show DartFormatter;
-import 'package:code_builder/code_builder.dart' show DartEmitter, Library;
-import 'package:recase/recase.dart' show ReCase;
-import '../utils.dart' show sanitize;
+part of generators;
 
 typedef BasePath = String;
 
@@ -44,6 +38,10 @@ abstract class Generator {
       jsonTypeCache[hash] = type;
     }
     return type;
+  }
+
+  static Map<int, Generator> fromTypes(List<metadata.TypeMetadata> registry, String typesPath) {
+    return _generatorsFromTypes(registry, typesPath);
   }
 
   Expression encode(BasePath from, Expression obj,
