@@ -1,11 +1,5 @@
 import 'package:code_builder/code_builder.dart'
-    show
-        Expression,
-        TypeReference,
-        literalNull,
-        literalMap,
-        literalList,
-        refer;
+    show Expression, TypeReference, literalNull, literalMap, literalList, refer;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:path/path.dart' as p;
 import 'package:recase/recase.dart' show ReCase;
