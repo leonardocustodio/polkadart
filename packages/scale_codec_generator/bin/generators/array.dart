@@ -119,7 +119,10 @@ class ArrayGenerator extends Generator {
   Expression listToExpression(List<int> values, bool constant) {
     final TypeReference listType = constants.list(ref: constants.int);
     if (!constant && values.every((value) => value == 0)) {
-      return listType.newInstanceNamed('filled', [literalNum(values.length), literalNum(0)], { 'growable': literalFalse });
+      return listType.newInstanceNamed(
+          'filled',
+          [literalNum(values.length), literalNum(0)],
+          {'growable': literalFalse});
     } else if (constant) {
       return literalConstList(values, constants.int);
     }
@@ -127,7 +130,7 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case Primitive.U8:
@@ -161,7 +164,8 @@ class ArrayGenerator extends Generator {
     }
 
     final values = <Expression>[
-      for (int i=0; i<length; i++) typeDef.valueFrom(from, input, constant: constant)
+      for (int i = 0; i < length; i++)
+        typeDef.valueFrom(from, input, constant: constant)
     ];
 
     if (values.every((value) => value.isConst)) {

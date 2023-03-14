@@ -1,8 +1,27 @@
 library primitives;
 
 import 'dart:collection';
-import 'dart:typed_data' show ByteBuffer, Uint8List, Uint16List, Uint32List, Uint64List, Int8List, Int16List, Int32List, Int64List;
-import 'package:typed_data/typed_buffers.dart' show Uint8Buffer, Uint16Buffer, Uint32Buffer, Uint64Buffer, Int8Buffer, Int16Buffer, Int32Buffer, Int64Buffer;
+import 'dart:typed_data'
+    show
+        ByteBuffer,
+        Uint8List,
+        Uint16List,
+        Uint32List,
+        Uint64List,
+        Int8List,
+        Int16List,
+        Int32List,
+        Int64List;
+import 'package:typed_data/typed_buffers.dart'
+    show
+        Uint8Buffer,
+        Uint16Buffer,
+        Uint32Buffer,
+        Uint64Buffer,
+        Int8Buffer,
+        Int16Buffer,
+        Int32Buffer,
+        Int64Buffer;
 import 'package:polkadart_scale_codec/core/core.dart';
 import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';

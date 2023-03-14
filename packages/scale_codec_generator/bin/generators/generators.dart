@@ -295,13 +295,15 @@ Map<int, Generator> generatorsFromTypes(
       }
 
       // Create Variant Generator
-      final enumName = sanitizeClassName(type.path.last, prefix: 'Enum', suffix: 'Enum');
+      final enumName =
+          sanitizeClassName(type.path.last, prefix: 'Enum', suffix: 'Enum');
       generators[type.id] = VariantGenerator(
           filePath: listToFilePath([typesPath, ...type.path]),
           name: enumName,
           docs: type.docs,
           variants: variant.variants.map((variant) {
-            String variantName = sanitizeClassName(variant.name, prefix: 'Variant', suffix: 'Variant');
+            String variantName = sanitizeClassName(variant.name,
+                prefix: 'Variant', suffix: 'Variant');
             if (variantName == enumName) {
               variantName = '${variantName}Variant';
             }

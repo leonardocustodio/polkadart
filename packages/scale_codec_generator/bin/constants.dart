@@ -23,29 +23,45 @@ const void_ = Reference('void', 'dart:core');
 const string = Reference('String', 'dart:core');
 const bigInt = Reference('BigInt', 'dart:core');
 const uint8List = Reference('Uint8List', 'dart:typed_data');
-const uint8Buffer = Reference('Uint8Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableUint8ListView = Reference('UnmodifiableUint8ListView', 'dart:typed_data');
+const uint8Buffer =
+    Reference('Uint8Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableUint8ListView =
+    Reference('UnmodifiableUint8ListView', 'dart:typed_data');
 const uint16List = Reference('Uint16List', 'dart:typed_data');
-const uint16Buffer = Reference('Uint16Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableUint16ListView = Reference('UnmodifiableUint16ListView', 'dart:typed_data');
+const uint16Buffer =
+    Reference('Uint16Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableUint16ListView =
+    Reference('UnmodifiableUint16ListView', 'dart:typed_data');
 const uint32List = Reference('Uint32List', 'dart:typed_data');
-const uint32Buffer = Reference('Uint32Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableUint32ListView = Reference('UnmodifiableUint32ListView', 'dart:typed_data');
+const uint32Buffer =
+    Reference('Uint32Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableUint32ListView =
+    Reference('UnmodifiableUint32ListView', 'dart:typed_data');
 const uint64List = Reference('Uint64List', 'dart:typed_data');
-const uint64Buffer = Reference('Uint64Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableUint64ListView = Reference('UnmodifiableUint64ListView', 'dart:typed_data');
+const uint64Buffer =
+    Reference('Uint64Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableUint64ListView =
+    Reference('UnmodifiableUint64ListView', 'dart:typed_data');
 const int8List = Reference('Int8List', 'dart:typed_data');
-const int8Buffer = Reference('Int8Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableInt8ListView = Reference('UnmodifiableInt8ListView', 'dart:typed_data');
+const int8Buffer =
+    Reference('Int8Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableInt8ListView =
+    Reference('UnmodifiableInt8ListView', 'dart:typed_data');
 const int16List = Reference('Int16List', 'dart:typed_data');
-const int16Buffer = Reference('Int16Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableInt16ListView = Reference('UnmodifiableInt16ListView', 'dart:typed_data');
+const int16Buffer =
+    Reference('Int16Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableInt16ListView =
+    Reference('UnmodifiableInt16ListView', 'dart:typed_data');
 const int32List = Reference('Int32List', 'dart:typed_data');
-const int32Buffer = Reference('Int32Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableInt32ListView = Reference('UnmodifiableInt32ListView', 'dart:typed_data');
+const int32Buffer =
+    Reference('Int32Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableInt32ListView =
+    Reference('UnmodifiableInt32ListView', 'dart:typed_data');
 const int64List = Reference('Int64List', 'dart:typed_data');
-const int64Buffer = Reference('Int64Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableInt64ListView = Reference('UnmodifiableInt64ListView', 'dart:typed_data');
+const int64Buffer =
+    Reference('Int64Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableInt64ListView =
+    Reference('UnmodifiableInt64ListView', 'dart:typed_data');
 const mapEntry = Reference('MapEntry', 'dart:core');
 
 TypeReference list({Reference? ref}) {

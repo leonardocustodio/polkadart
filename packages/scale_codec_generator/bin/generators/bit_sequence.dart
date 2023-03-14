@@ -66,13 +66,13 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     final bitArray = BitSequenceCodec(store, order).decode(input);
     return primitive(from).property('fromByteBuffer').call([
       literalNum(bitArray.length),
-      constants.uint32List
-          .property('fromList')
-          .call([literalConstList(bitArray.asUint32Iterable().toList())]).property('buffer'),
+      constants.uint32List.property('fromList').call([
+        literalConstList(bitArray.asUint32Iterable().toList())
+      ]).property('buffer'),
     ]);
   }
 

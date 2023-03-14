@@ -55,12 +55,15 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     final size = CompactCodec.codec.decode(input);
     Map<Expression, Expression> map = {
-      for (var i = 0; i < size; i++)  key.valueFrom(from, input, constant: constant): value.valueFrom(from, input, constant: constant)
+      for (var i = 0; i < size; i++)
+        key.valueFrom(from, input, constant: constant):
+            value.valueFrom(from, input, constant: constant)
     };
-    if (map.values.every((value) => value.isConst) && map.keys.every((key) => key.isConst)) {
+    if (map.values.every((value) => value.isConst) &&
+        map.keys.every((key) => key.isConst)) {
       return literalConstMap(map, key.primitive(from), value.primitive(from));
     }
     return literalMap(map, key.primitive(from), value.primitive(from));

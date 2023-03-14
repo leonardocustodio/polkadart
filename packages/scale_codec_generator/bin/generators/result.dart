@@ -35,7 +35,7 @@ class ResultGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {constant = false}) {
     if (input.read() == 0) {
       return primitive(from)
           .newInstanceNamed('ok', [ok.valueFrom(from, input)]);

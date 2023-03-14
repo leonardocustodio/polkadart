@@ -96,16 +96,15 @@ const Set<String> reservedClassnNames = {
   'Error',
 };
 
-String sanitize(String name, { recase = true}) {
+String sanitize(String name, {recase = true}) {
   if (name.startsWith('r#')) {
     name = name.substring(2);
   }
   name = ReCase(name).camelCase;
-  return 
-    reservedWords.contains(name) ? '${name}_' : name;
+  return reservedWords.contains(name) ? '${name}_' : name;
 }
 
-String sanitizeClassName(String name, { String suffix = '_', prefix = 'Class' }) {
+String sanitizeClassName(String name, {String suffix = '_', prefix = 'Class'}) {
   if (name.startsWith('r#')) {
     name = name.substring(2);
   }

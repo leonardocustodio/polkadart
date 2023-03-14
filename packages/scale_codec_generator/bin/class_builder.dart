@@ -363,7 +363,11 @@ Class createVariantClass(
                   .assign(refer('size').operatorAdd(field.codec
                       .codecInstance(dirname)
                       .property('sizeHint')
-                      .call([field.sanitizedName == 'size' ? refer('this').property(field.sanitizedName) : refer(field.sanitizedName)])))
+                      .call([
+                    field.sanitizedName == 'size'
+                        ? refer('this').property(field.sanitizedName)
+                        : refer(field.sanitizedName)
+                  ])))
                   .statement))
               ..statements.add(refer('size').returned.statement))));
       }
@@ -381,7 +385,11 @@ Class createVariantClass(
                 .encode(dirname, literalNum(variant.index))
                 .statement)
             ..statements.addAll(variant.fields.map((field) => field.codec
-                .encode(dirname, field.sanitizedName == 'output' ? refer('this').property(field.sanitizedName) : refer(field.sanitizedName))
+                .encode(
+                    dirname,
+                    field.sanitizedName == 'output'
+                        ? refer('this').property(field.sanitizedName)
+                        : refer(field.sanitizedName))
                 .statement)),
         )));
     });
@@ -432,8 +440,10 @@ Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
         ])
         ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
           ..name = generator.Field.toFieldName(variant.name)
-          ..arguments.addAll(
-              [literalString(variant.orignalName), literalNum(variant.index)]))))
+          ..arguments.addAll([
+            literalString(variant.orignalName),
+            literalNum(variant.index)
+          ]))))
         ..methods.add(Method((b) => b
           ..name = 'encode'
           ..returns = constants.uint8List
@@ -684,7 +694,8 @@ Class createPalletConstants(
           ..modifier = FieldModifier.final$
           ..docs.addAll(sanitizeDocs(constant.docs))
           ..assignment = constant.codec
-              .valueFrom(dirname, scale_codec.ByteInput(constant.value), constant: true)
+              .valueFrom(dirname, scale_codec.ByteInput(constant.value),
+                  constant: true)
               .code)));
     });
 

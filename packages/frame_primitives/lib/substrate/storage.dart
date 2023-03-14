@@ -19,7 +19,7 @@ class StorageHasher<K> {
   const StorageHasher.blake2b128Concat(this.codec)
       : hasher = Hasher.blake2b128,
         concat = true;
-  
+
   const StorageHasher.blake2b256(this.codec)
       : hasher = Hasher.blake2b256,
         concat = false;

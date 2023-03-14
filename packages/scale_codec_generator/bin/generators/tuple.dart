@@ -51,9 +51,10 @@ class TupleGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     final values = <Expression>[
-      for (final generator in generators) generator.valueFrom(from, input, constant: constant)
+      for (final generator in generators)
+        generator.valueFrom(from, input, constant: constant)
     ];
 
     if (values.every((value) => value.isConst)) {

@@ -66,7 +66,7 @@ abstract class Generator {
     return codec(from).property('codec');
   }
 
-  Expression valueFrom(BasePath from, Input input, { bool constant = false });
+  Expression valueFrom(BasePath from, Input input, {bool constant = false});
 
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]);
 
@@ -93,10 +93,12 @@ class GeneratedOutput {
       ..body.addAll(enums)
       ..body.addAll(classes));
 
-    final code = library3.accept(DartEmitter.scoped(useNullSafetySyntax: true)).toString();
+    final code = library3
+        .accept(DartEmitter.scoped(useNullSafetySyntax: true))
+        .toString();
     try {
       return _dartfmt.format(code);
-    } catch(error) {
+    } catch (error) {
       throw error;
       // return code;
     }

@@ -70,8 +70,7 @@ void main(List<String> args) async {
 
   // Polkadart path
   final polkadartPath = path.setExtension(
-      path.join(basePath, chainDirectory, chainDirectory),
-      '.dart');
+      path.join(basePath, chainDirectory, chainDirectory), '.dart');
 
   // Get type generators
   final Map<int, Generator> generators =

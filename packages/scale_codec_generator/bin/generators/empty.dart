@@ -18,7 +18,7 @@ class EmptyGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     return literalNull;
   }
 

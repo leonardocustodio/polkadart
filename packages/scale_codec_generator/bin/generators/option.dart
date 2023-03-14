@@ -1,6 +1,13 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:code_builder/code_builder.dart'
-    show Expression, TypeReference, literalNull, literalMap, Code, Block, CodeExpression;
+    show
+        Expression,
+        TypeReference,
+        literalNull,
+        literalMap,
+        Code,
+        Block,
+        CodeExpression;
 import '../constants.dart' as constants
     show Nullable, option, optionCodec, nestedOptionCodec, dynamic, map, string;
 import './base.dart' show BasePath, Generator, LazyLoader;
@@ -44,7 +51,7 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       if (input.read() == 0) {
         return constants
@@ -91,9 +98,9 @@ class OptionGenerator extends Generator {
       final valueInstance = obj.property('value');
       final innerInstance = inner.instanceToJson(from, valueInstance);
       return obj.property('isNone').conditional(
-        literalMap({ 'None': literalNull }),
-        literalMap({ 'Some': innerInstance }),
-      );
+            literalMap({'None': literalNull}),
+            literalMap({'Some': innerInstance}),
+          );
     }
     final valueInstance = CodeExpression(Block.of([obj.code, Code('?')]));
     final innerInstance = inner.instanceToJson(from, valueInstance);

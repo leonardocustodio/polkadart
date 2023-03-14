@@ -121,7 +121,7 @@ class Variant extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     throw UnimplementedError();
   }
 }
@@ -137,10 +137,10 @@ class VariantGenerator extends Generator {
       required this.name,
       required this.variants,
       required this.docs}) {
-        for (final variant in variants) {
-          variant.generator = this;
-        }
-      }
+    for (final variant in variants) {
+      variant.generator = this;
+    }
+  }
 
   @override
   TypeReference codec(BasePath from) {
@@ -157,7 +157,7 @@ class VariantGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     final index = input.read();
     final variant = variants.firstWhere((variant) => variant.index == index);
 
