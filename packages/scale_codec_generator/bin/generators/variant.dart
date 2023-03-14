@@ -129,12 +129,14 @@ class Variant extends Generator {
 class VariantGenerator extends Generator {
   String filePath;
   String name;
+  String orginalName;
   List<Variant> variants;
   List<String> docs;
 
   VariantGenerator(
       {required this.filePath,
       required this.name,
+      required this.orginalName,
       required this.variants,
       required this.docs}) {
     for (final variant in variants) {
@@ -183,24 +185,24 @@ class VariantGenerator extends Generator {
     if (variants.isNotEmpty &&
         variants.every((variant) => variant.fields.isEmpty)) {
       final simpleEnum = createSimpleVariantEnum(this);
-      final simpleCodec =
-          createSimpleVariantCodec(filePath, '_\$${name}Codec', name, variants);
+      final simpleCodec = createSimpleVariantCodec(this);
       return GeneratedOutput(
           classes: [simpleCodec], enums: [simpleEnum], typedefs: []);
     }
 
     // Complex Variants
-    final complexJsonType = jsonType(p.dirname(filePath), {});
-    final baseClass = createVariantBaseClass(this, complexJsonType);
+    final dirname = p.dirname(filePath);
+    final variantsJsonType =
+        variants.map((variant) => variant.jsonType(dirname, {this})).toList();
+    final baseClassJsonType = utils.findCommonType(variantsJsonType);
+    final baseClass = createVariantBaseClass(this, baseClassJsonType);
     final valuesClass = createVariantValuesClass(this);
     final codecClass = createVariantCodec(this);
-
-    final List<Class> classes = variants
-        .fold(<Class>[baseClass, valuesClass, codecClass], (classes, variant) {
-      classes.add(createVariantClass(
-          filePath, name, '_\$${name}Codec', variant, complexJsonType));
-      return classes;
-    });
+    final classes = [baseClass, valuesClass, codecClass];
+    for (int i = 0; i < variants.length; i++) {
+      classes.add(
+          createVariantClass(filePath, name, variants[i], variantsJsonType[i]));
+    }
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
 

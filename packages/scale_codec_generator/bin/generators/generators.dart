@@ -300,6 +300,7 @@ Map<int, Generator> generatorsFromTypes(
       generators[type.id] = VariantGenerator(
           filePath: listToFilePath([typesPath, ...type.path]),
           name: enumName,
+          orginalName: type.path.last,
           docs: type.docs,
           variants: variant.variants.map((variant) {
             String variantName = sanitizeClassName(variant.name,
