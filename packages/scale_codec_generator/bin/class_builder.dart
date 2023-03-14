@@ -363,7 +363,11 @@ Class createVariantClass(
                   .assign(refer('size').operatorAdd(field.codec
                       .codecInstance(dirname)
                       .property('sizeHint')
-                      .call([refer(field.sanitizedName)])))
+                      .call([
+                    field.sanitizedName == 'size'
+                        ? refer('this').property(field.sanitizedName)
+                        : refer(field.sanitizedName)
+                  ])))
                   .statement))
               ..statements.add(refer('size').returned.statement))));
       }
@@ -381,7 +385,11 @@ Class createVariantClass(
                 .encode(dirname, literalNum(variant.index))
                 .statement)
             ..statements.addAll(variant.fields.map((field) => field.codec
-                .encode(dirname, refer(field.sanitizedName))
+                .encode(
+                    dirname,
+                    field.sanitizedName == 'output'
+                        ? refer('this').property(field.sanitizedName)
+                        : refer(field.sanitizedName))
                 .statement)),
         )));
     });
@@ -432,8 +440,10 @@ Enum createSimpleVariantEnum(v.VariantGenerator variant) => Enum((enumBuilder) {
         ])
         ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
           ..name = generator.Field.toFieldName(variant.name)
-          ..arguments.addAll(
-              [literalString(variant.name), literalNum(variant.index)]))))
+          ..arguments.addAll([
+            literalString(variant.orignalName),
+            literalNum(variant.index)
+          ]))))
         ..methods.add(Method((b) => b
           ..name = 'encode'
           ..returns = constants.uint8List
@@ -625,10 +635,14 @@ Class createPalletQueries(
                 primitive = storage.valueCodec.primitive(dirname);
               }
               builder
-                ..name = sanitize(storageName)
+                ..name = sanitize(storageName, recase: false)
                 ..docs.addAll(sanitizeDocs(storage.docs))
                 ..returns = constants.future(primitive)
                 ..modifier = MethodModifier.async
+                ..optionalParameters.add(Parameter((b) => b
+                  ..type = constants.blockHash.asNullable()
+                  ..named = true
+                  ..name = 'at'))
                 ..requiredParameters
                     .addAll(storage.hashers.map((hasher) => Parameter((b) => b
                       ..type = hasher.codec.primitive(dirname)
@@ -645,9 +659,8 @@ Class createPalletQueries(
                       .statement)
                   // final bytes = await api.queryStorage([hashedKey]);
                   ..statements.add(declareFinal('bytes')
-                      .assign(refer('api')
-                          .property('getStorage')
-                          .call([refer('hashedKey')]).awaited)
+                      .assign(refer('api').property('getStorage').call(
+                          [refer('hashedKey')], {'at': refer('at')}).awaited)
                       .statement)
                   ..statements.add(Code('if (bytes != null) {'))
                   ..statements
@@ -676,12 +689,13 @@ Class createPalletConstants(
         ..name = 'Constants'
         ..constructors.add(Constructor((b) => b..constant = false))
         ..fields.addAll(generator.constants.map((constant) => Field((b) => b
-          ..name = sanitize(ReCase(constant.name).camelCase)
+          ..name = sanitize(constant.name)
           ..type = constant.codec.primitive(dirname)
           ..modifier = FieldModifier.final$
           ..docs.addAll(sanitizeDocs(constant.docs))
           ..assignment = constant.codec
-              .valueFrom(dirname, scale_codec.ByteInput(constant.value))
+              .valueFrom(dirname, scale_codec.ByteInput(constant.value),
+                  constant: true)
               .code)));
     });
 
@@ -699,15 +713,15 @@ Class createPolkadartQueries(
             ..required = false
             ..named = false
             ..type = constants.stateApi
-            ..name = 'api'))
+            ..name = '__api'))
           ..initializers.addAll(generator.pallets
               .where((pallet) => pallet.storages.isNotEmpty)
               .map((pallet) => Code.scope((a) =>
-                  '${sanitize(ReCase(pallet.name).camelCase)} = ${a(pallet.queries(dirname))}(api)')))))
+                  '${sanitize(pallet.name)} = ${a(pallet.queries(dirname))}(__api)')))))
         ..fields.addAll(generator.pallets
             .where((pallet) => pallet.storages.isNotEmpty)
             .map((pallet) => Field((b) => b
-              ..name = sanitize(ReCase(pallet.name).camelCase)
+              ..name = sanitize(pallet.name)
               ..type = pallet.queries(dirname)
               ..modifier = FieldModifier.final$)));
     });
@@ -723,7 +737,7 @@ Class createPolkadartConstants(
         ..fields.addAll(generator.pallets
             .where((pallet) => pallet.constants.isNotEmpty)
             .map((pallet) => Field((b) => b
-              ..name = sanitize(ReCase(pallet.name).camelCase)
+              ..name = sanitize(pallet.name)
               ..type = pallet.constantsType(dirname)
               ..modifier = FieldModifier.final$
               ..assignment =
@@ -778,7 +792,6 @@ Class createPolkadartClass(
               Code('constant = Constants()'),
             ])),
           Constructor((b) => b
-            ..name = 'fromProvider'
             ..factory = true
             ..requiredParameters.addAll([
               Parameter((b) => b
@@ -800,6 +813,7 @@ Class createPolkadartClass(
                   .statement,
             ])),
           Constructor((b) => b
+            ..name = 'url'
             ..constant = false
             ..factory = true
             ..requiredParameters.add(Parameter((b) => b
@@ -813,7 +827,7 @@ Class createPolkadartClass(
                   .assign(constants.provider.newInstance([refer('url')]))
                   .statement,
               refer(generator.name)
-                  .newInstanceNamed('fromProvider', [refer('provider')])
+                  .newInstance([refer('provider')])
                   .returned
                   .statement,
             ])),

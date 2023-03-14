@@ -16,11 +16,7 @@ class ArrayCodec<A> with Codec<List<A>> {
 
   @override
   List<A> decode(Input input) {
-    final elements = <A>[];
-    for (var i = 0; i < size; i++) {
-      elements.add(codec.decode(input));
-    }
-    return elements;
+    return List.generate(size, (index) => codec.decode(input), growable: false);
   }
 
   @override

@@ -163,9 +163,13 @@ class WsProvider extends Provider {
     return false;
   }
 
-  // Open websocket channel
+  /// Open websocket channel
   @override
   Future connect() async {
+    if (this.channel != null) {
+      throw Exception('Already connected');
+    }
+
     _sequence = 0;
     final WebSocketChannel channel = WebSocketChannel.connect(url);
     final jsonStream = channel.stream.map((response) {

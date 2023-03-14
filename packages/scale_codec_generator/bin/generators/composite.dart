@@ -47,11 +47,22 @@ class CompositeGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
-    return primitive(from).newInstance([], {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+    if (fields.isEmpty) {
+      return literalNull;
+    }
+
+    final Map<String, Expression> map = {
       for (final field in fields)
-        field.sanitizedName: field.codec.valueFrom(from, input),
-    });
+        field.sanitizedName:
+            field.codec.valueFrom(from, input, constant: constant),
+    };
+
+    if (constant && map.values.every((value) => value.isConst)) {
+      return primitive(from).constInstance([], map);
+    }
+
+    return primitive(from).newInstance([], map);
   }
 
   @override

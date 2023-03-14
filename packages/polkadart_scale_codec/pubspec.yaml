@@ -2,6 +2,7 @@ name: polkadart_scale_codec
 description: polkadart_scale_codec description
 version: 1.0.0
 homepage: https://github.com/rankanizer/polkadart
+publish_to: none
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -9,6 +10,7 @@ environment:
 dependencies: 
   convert: ^3.0.2 # BSD-3-Clause
   equatable: ^2.0.5 # MIT
+  typed_data: ^1.3.1 # BSD-3-Clause
 
 dev_dependencies:
   lints: ^2.0.0 # BSD-3-Clause
