@@ -9,9 +9,6 @@ class SimpleEnumCodec<A> with Codec<A> {
     this.map.addAll(map);
   }
 
-  /* SimpleEnumCodec.keyedIndex(this._keyedIndex)
-      : map = {for (final entry in _keyedIndex.entries) entry.value: entry.key}; */
-
   SimpleEnumCodec.fromList(List<A?> list) {
     map.addAll({
       for (var i = 0; i < list.length; i++)
