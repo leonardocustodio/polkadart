@@ -24,15 +24,15 @@ class I32Codec with Codec<int> {
   }
 }
 
-class I32SequenceCodec with Codec<Int32List> {
+class I32SequenceCodec with Codec<List<int>> {
   const I32SequenceCodec._();
 
   static const I32SequenceCodec codec = I32SequenceCodec._();
 
   @override
-  Int32List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Int32List(length);
+  Int32Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Int32Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = I32Codec.codec.decode(input);
     }
@@ -40,7 +40,7 @@ class I32SequenceCodec with Codec<Int32List> {
   }
 
   @override
-  void encodeTo(Int32List list, Output output) {
+  void encodeTo(List<int> list, Output output) {
     CompactCodec.codec.encodeTo(list.length, output);
     for (int value in list) {
       I32Codec.codec.encodeTo(value, output);
@@ -48,8 +48,8 @@ class I32SequenceCodec with Codec<Int32List> {
   }
 
   @override
-  int sizeHint(Int32List list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  int sizeHint(List<int> list) {
+    return CompactCodec.codec.sizeHint(list.length) + list.length * 4;
   }
 }
 

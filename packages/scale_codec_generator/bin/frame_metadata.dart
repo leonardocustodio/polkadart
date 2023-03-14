@@ -14,6 +14,36 @@ T? parseOption<T>(dynamic obj) {
   return value;
 }
 
+/// A field of a struct-like data type.
+///
+/// Name is optional so it can represent both named and unnamed fields.
+///
+/// This can be a named field of a struct type or an enum struct variant, or an
+/// unnamed field of a tuple struct.
+///
+/// # Type name
+///
+/// The `type_name` field contains a string which is the name of the type of the
+/// field as it appears in the source code. The exact contents and format of the
+/// type name are not specified, but in practice will be the name of any valid
+/// type for a field e.g.
+///
+///   - Concrete types e.g `"u32"`, `"bool"`, `"Foo"` etc.
+///   - Type parameters e.g `"T"`, `"U"`
+///   - Generic types e.g `"Vec<u32>"`, `"Vec<T>"`
+///   - Associated types e.g. `"T::MyType"`, `"<T as MyTrait>::MyType"`
+///   - Type aliases e.g. `"MyTypeAlias"`, `"MyTypeAlias<T>"`
+///   - Other built in Rust types e.g. arrays, references etc.
+///
+/// Note that the type name doesn't correspond to the underlying type of the
+/// field, unless using a concrete type directly. Any given type may be referred
+/// to by multiple field type names, when using generic type parameters and type
+/// aliases.
+///
+/// This is intended for informational and diagnostic purposes only. Although it
+/// is possible to infer certain properties e.g. whether a type name is a type
+/// alias, there are no guarantees provided, and the type name representation
+/// may change.
 class Field {
   /// The type of the field.
   final int type;
@@ -41,11 +71,14 @@ class Field {
   }
 }
 
+/// A generic type parameter.
 class TypeParameter {
   /// The name of the generic type parameter e.g. "T".
   final String name;
 
   /// The concrete type for the type parameter.
+  ///
+  /// `null` if the type parameter is skipped.
   final int? type;
 
   const TypeParameter({required this.name, this.type});
@@ -99,6 +132,8 @@ abstract class TypeDef {
   }
 }
 
+/// A composite type, consisting of either named (struct) or unnamed (tuple
+/// struct) fields
 class TypeDefComposite extends TypeDef {
   /// The fields of the composite type.
   final List<Field> fields;
@@ -118,12 +153,10 @@ class TypeDefComposite extends TypeDef {
   }
 }
 
+/// A struct enum variant with either named (struct) or unnamed (tuple struct)
+/// fields.
 class Variant {
   /// Index of the variant, used in `parity-scale-codec`.
-  ///
-  /// The value of this will be, in order of precedence:
-  ///     1. The explicit index defined by a `#[codec(index = N)]` attribute.
-  ///     2. The implicit index from the position of the variant in the `enum` definition.
   final int index;
 
   /// The name of the variant.
@@ -158,6 +191,7 @@ class Variant {
   }
 }
 
+/// A Enum type (consisting of variants).
 class TypeDefVariant extends TypeDef {
   /// The variants of a variant type
   final List<Variant> variants;
@@ -182,6 +216,7 @@ class TypeDefVariant extends TypeDef {
   }
 }
 
+/// A type to refer to a sequence of elements of the same type.
 class TypeDefSequence extends TypeDef {
   /// The element type of the sequence type.
   final int type;
@@ -199,6 +234,7 @@ class TypeDefSequence extends TypeDef {
   }
 }
 
+/// An array type.
 class TypeDefArray extends TypeDef {
   /// The element type of the array type.
   final int type;
@@ -222,6 +258,7 @@ class TypeDefArray extends TypeDef {
   }
 }
 
+/// A type wrapped in [`Compact`].
 class TypeDefCompact extends TypeDef {
   /// The element type of the compact type.
   final int type;
@@ -239,6 +276,7 @@ class TypeDefCompact extends TypeDef {
   }
 }
 
+/// A type to refer to tuple types.
 class TypeDefTuple extends TypeDef {
   /// The element type of the compact type.
   final List<int> types;
@@ -273,6 +311,7 @@ enum Primitive {
   const Primitive();
 }
 
+/// A primitive Rust type.
 class TypeDefPrimitive extends TypeDef {
   /// The primitive type.
   final Primitive primitive;
@@ -323,6 +362,7 @@ class TypeDefPrimitive extends TypeDef {
   }
 }
 
+/// Type describing a [`bitvec::vec::BitVec`].
 class TypeDefBitSequence extends TypeDef {
   /// The type of the BitStore
   final int bitStoreType;
@@ -347,6 +387,7 @@ class TypeDefBitSequence extends TypeDef {
   }
 }
 
+/// A [`Type`] definition with optional metadata.
 class TypeMetadata {
   final int id;
 
@@ -584,6 +625,7 @@ class PalletStorageMetadata {
   }
 }
 
+/// Metadata about one pallet constant.
 class PalletConstantMetadata {
   /// Name of the pallet constant.
   final String name;
@@ -654,6 +696,61 @@ class PalletMetadata {
   }
 }
 
+/// Metadata of an extrinsic's signed extension.
+class SignedExtensionMetadata {
+  /// The unique signed extension identifier, which may be different from the type name.
+  final String identifier;
+
+  /// The type of the signed extension, with the data to be included in the extrinsic.
+  final int type;
+
+  /// The type of the additional signed data, with the data to be included in the signed payload
+  final int additionalSigned;
+
+  SignedExtensionMetadata(
+      {required this.identifier,
+      required this.type,
+      required this.additionalSigned});
+
+  factory SignedExtensionMetadata.fromJson(Map<String, dynamic> json) {
+    return SignedExtensionMetadata(
+      identifier: json['identifier'],
+      type: json['type'],
+      additionalSigned: json['additionalSigned'],
+    );
+  }
+}
+
+/// Metadata of the extrinsic used by the runtime.
+class ExtrinsicMetadata {
+  /// The type of the extrinsic.
+  final int type;
+
+  /// Extrinsic version.
+  final int version;
+
+  /// The signed extensions in the order they appear in the extrinsic.
+  final List<SignedExtensionMetadata> signedExtensions;
+
+  ExtrinsicMetadata(
+      {required this.type,
+      required this.version,
+      required this.signedExtensions});
+
+  factory ExtrinsicMetadata.fromJson(Map<String, dynamic> json) {
+    final signedExtensions = (json['signedExtensions'] as List)
+        .cast<Map<String, dynamic>>()
+        .map((json) => SignedExtensionMetadata.fromJson(json))
+        .toList();
+
+    return ExtrinsicMetadata(
+      type: json['type'],
+      version: json['version'],
+      signedExtensions: signedExtensions,
+    );
+  }
+}
+
 /// The metadata of a runtime.
 class RuntimeMetadataV14 {
   /// Type registry containing all types used in the metadata.
@@ -662,7 +759,17 @@ class RuntimeMetadataV14 {
   /// Metadata of all the pallets.
   final List<PalletMetadata> pallets;
 
-  RuntimeMetadataV14({required this.registry, required this.pallets});
+  // Metadata of the extrinsic.
+  final ExtrinsicMetadata extrinsic;
+
+  // The type of the `Runtime`.
+  final int runtimeTypeId;
+
+  RuntimeMetadataV14(
+      {required this.registry,
+      required this.pallets,
+      required this.extrinsic,
+      required this.runtimeTypeId});
 
   factory RuntimeMetadataV14.fromJson(Map<String, dynamic> json) {
     final types = (json['lookup']['types'] as List)
@@ -677,12 +784,8 @@ class RuntimeMetadataV14 {
     return RuntimeMetadataV14(
       registry: types,
       pallets: pallets,
+      extrinsic: ExtrinsicMetadata.fromJson(json['extrinsic']),
+      runtimeTypeId: json['type'],
     );
   }
-
-  // Metadata of the extrinsic.
-  // final ExtrinsicMetadata extrinsic;
-
-  // The type of the `Runtime`.
-  // pub int runtimeType;
 }
