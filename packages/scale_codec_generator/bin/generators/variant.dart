@@ -25,12 +25,15 @@ import './base.dart' show BasePath, Generator, GeneratedOutput, Field;
 class Variant extends Generator {
   int index;
   String name;
+  String orignalName;
   List<Field> fields;
   List<String> docs;
+  late VariantGenerator generator;
 
   Variant({
     required this.index,
     required this.name,
+    required this.orignalName,
     required this.fields,
     required this.docs,
   }) {
@@ -39,10 +42,6 @@ class Variant extends Generator {
         fields[i].sanitizedName = 'value$i';
       }
     }
-  }
-
-  bool unnamedFields() {
-    return fields.every((field) => field.originalName == null);
   }
 
   @override
@@ -81,22 +80,22 @@ class Variant extends Generator {
 
   Expression toJson(BasePath from) {
     if (fields.isEmpty) {
-      return literalMap({name: literalNull});
+      return literalMap({orignalName: literalNull});
     }
     if (fields.length == 1 && fields.first.originalName == null) {
       return literalMap({
-        name: fields.first.codec
+        orignalName: fields.first.codec
             .instanceToJson(from, refer(fields.first.sanitizedName))
       });
     }
     if (fields.every((field) => field.originalName == null)) {
       return literalMap({
-        name: literalList(fields.map((field) =>
+        orignalName: literalList(fields.map((field) =>
             field.codec.instanceToJson(from, refer(field.sanitizedName))))
       });
     }
     return literalMap({
-      name: literalMap({
+      orignalName: literalMap({
         for (final field in fields)
           ReCase(field.originalOrSanitizedName()).camelCase:
               field.codec.instanceToJson(from, refer(field.sanitizedName))
@@ -116,11 +115,13 @@ class Variant extends Generator {
 
   @override
   TypeReference primitive(BasePath from) {
-    throw UnimplementedError();
+    return TypeReference((b) => b
+      ..symbol = name
+      ..url = p.relative(generator.filePath, from: from));
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     throw UnimplementedError();
   }
 }
@@ -135,7 +136,11 @@ class VariantGenerator extends Generator {
       {required this.filePath,
       required this.name,
       required this.variants,
-      required this.docs});
+      required this.docs}) {
+    for (final variant in variants) {
+      variant.generator = this;
+    }
+  }
 
   @override
   TypeReference codec(BasePath from) {
@@ -152,7 +157,7 @@ class VariantGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     final index = input.read();
     final variant = variants.firstWhere((variant) => variant.index == index);
 
@@ -161,13 +166,15 @@ class VariantGenerator extends Generator {
       return primitive(from).property(ReCase(variant.name).camelCase);
     }
 
-    return primitive(from)
-        .property('values')
-        .property(ReCase(variant.name).camelCase)
-        .call([], {
+    final variantType = variant.primitive(from);
+    final values = <String, Expression>{
       for (final field in variant.fields)
         field.sanitizedName: field.codec.valueFrom(from, input)
-    });
+    };
+    if (values.values.every((value) => value.isConst)) {
+      return variantType.constInstance([], values);
+    }
+    return variantType.newInstance([], values);
   }
 
   @override
@@ -183,7 +190,7 @@ class VariantGenerator extends Generator {
     }
 
     // Complex Variants
-    final complexJsonType = jsonType(p.dirname(filePath), {this});
+    final complexJsonType = jsonType(p.dirname(filePath), {});
     final baseClass = createVariantBaseClass(this, complexJsonType);
     final valuesClass = createVariantValuesClass(this);
     final codecClass = createVariantCodec(this);

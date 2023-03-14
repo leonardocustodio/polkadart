@@ -1,4 +1,3 @@
-import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as path;
 import './base.dart' show Generator, LazyLoader, Field;
 import './array.dart' show ArrayGenerator;
@@ -26,10 +25,11 @@ import '../frame_metadata.dart'
         TypeDefComposite,
         TypeDefPrimitive,
         TypeDefTuple;
-import '../utils.dart' show listToFilePath;
+import '../utils.dart' show listToFilePath, sanitizeClassName;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show BitStore, BitOrder;
 
+/// Transform a list of [TypeMetadata] into a [Map] of [Generator]
 Map<int, Generator> generatorsFromTypes(
     List<TypeMetadata> registry, String typesPath) {
   // Type Definitions
@@ -89,7 +89,7 @@ Map<int, Generator> generatorsFromTypes(
       if (tuple.types.isEmpty) {
         generators[type.id] = TypeDefGenerator(
             filePath: listToFilePath([typesPath, ...type.path]),
-            name: ReCase(type.path.last).pascalCase,
+            name: sanitizeClassName(type.path.last),
             generator: EmptyGenerator(),
             docs: type.docs);
         continue;
@@ -135,7 +135,7 @@ Map<int, Generator> generatorsFromTypes(
       if (composite.fields.isEmpty) {
         generators[type.id] = TypeDefGenerator(
             filePath: listToFilePath([typesPath, ...type.path]),
-            name: ReCase(type.path.last).pascalCase,
+            name: sanitizeClassName(type.path.last),
             generator: EmptyGenerator(),
             docs: type.docs);
         continue;
@@ -223,7 +223,7 @@ Map<int, Generator> generatorsFromTypes(
         generators[type.id] = TypeDefGenerator.lazy(
           loader: lazyLoader,
           filePath: listToFilePath([typesPath, ...type.path]),
-          name: ReCase(type.path.last).pascalCase,
+          name: sanitizeClassName(type.path.last),
           codec: composite.fields[0].type,
           docs: type.docs,
         );
@@ -233,7 +233,7 @@ Map<int, Generator> generatorsFromTypes(
       // Create Compose Generator
       generators[type.id] = CompositeGenerator(
           filePath: listToFilePath([typesPath, ...type.path]),
-          name: type.path.last,
+          name: sanitizeClassName(type.path.last),
           docs: type.docs,
           fields: composite.fields
               .map((field) => Field.lazy(
@@ -259,7 +259,7 @@ Map<int, Generator> generatorsFromTypes(
       if (variant.variants.isEmpty) {
         generators[type.id] = TypeDefGenerator(
             filePath: listToFilePath([typesPath, ...type.path]),
-            name: ReCase(type.path.last).pascalCase,
+            name: sanitizeClassName(type.path.last),
             generator: EmptyGenerator(),
             docs: type.docs);
         continue;
@@ -295,17 +295,21 @@ Map<int, Generator> generatorsFromTypes(
       }
 
       // Create Variant Generator
+      final enumName =
+          sanitizeClassName(type.path.last, prefix: 'Enum', suffix: 'Enum');
       generators[type.id] = VariantGenerator(
           filePath: listToFilePath([typesPath, ...type.path]),
-          name: type.path.last,
+          name: enumName,
           docs: type.docs,
           variants: variant.variants.map((variant) {
-            String variantName = ReCase(variant.name).pascalCase;
-            if (variantName == type.path.last) {
+            String variantName = sanitizeClassName(variant.name,
+                prefix: 'Variant', suffix: 'Variant');
+            if (variantName == enumName) {
               variantName = '${variantName}Variant';
             }
             return Variant(
                 name: variantName,
+                orignalName: variant.name,
                 index: variant.index,
                 docs: variant.docs,
                 fields: variant.fields

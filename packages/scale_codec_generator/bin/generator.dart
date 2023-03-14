@@ -44,10 +44,12 @@ void main(List<String> args) async {
       mandatory: true,
       help: 'Substrate\'s node endpoint url, accept http and websocket');
   parser.addOption('output',
-      defaultsTo: './generated', help: 'Output directory for generated files');
+      defaultsTo: './', help: 'Output directory for generated files');
+  parser.addFlag('verbose', abbr: 'v', defaultsTo: true);
   final arguments = parser.parse(args);
 
   final basePath = path.normalize(path.absolute(arguments['output']));
+  final verbose = arguments['verbose'] as bool;
 
   if (!Directory(basePath).existsSync()) {
     print(
@@ -57,17 +59,18 @@ void main(List<String> args) async {
 
   // Get chain properties
   final ChainProperties properties = await chainProperties(arguments['url']);
+  final chainDirectory = ReCase(properties.version.specName).snakeCase;
 
   // Create pallets and types directory
-  final typesPath = path.join(basePath, 'types');
-  final palletsPath = path.join(basePath, 'pallets');
+  final typesPath = path.join(basePath, chainDirectory, 'types');
+  final palletsPath = path.join(basePath, chainDirectory, 'pallets');
+  Directory(path.join(basePath, chainDirectory)).createSync(recursive: false);
   Directory(typesPath).createSync(recursive: false);
   Directory(palletsPath).createSync(recursive: false);
 
   // Polkadart path
   final polkadartPath = path.setExtension(
-      path.join(basePath, ReCase(properties.version.specName).snakeCase),
-      '.dart');
+      path.join(basePath, chainDirectory, chainDirectory), '.dart');
 
   // Get type generators
   final Map<int, Generator> generators =
@@ -86,8 +89,10 @@ void main(List<String> args) async {
           ))
       .toList();
 
-  print('     Types found: ${generators.length}');
-  print('   Pallets found: ${palletGenerators.length}');
+  if (verbose) {
+    print('  Types found: ${generators.length}');
+    print('Pallets found: ${palletGenerators.length}');
+  }
 
   // Group generators per file
   // key = file path
@@ -169,7 +174,9 @@ void main(List<String> args) async {
     if (entry.value.isEmpty) {
       continue;
     }
-    print(path.relative(entry.key, from: basePath));
+    if (verbose) {
+      print(path.relative(entry.key, from: basePath));
+    }
 
     for (final generator in entry.value) {
       if (generator is CompositeGenerator) {
@@ -198,7 +205,9 @@ void main(List<String> args) async {
     final String code = pallet.generated().build();
     Directory(path.dirname(pallet.filePath)).createSync(recursive: true);
     File(pallet.filePath).writeAsStringSync(code);
-    print(path.relative(pallet.filePath, from: basePath));
+    if (verbose) {
+      print(path.relative(pallet.filePath, from: basePath));
+    }
   }
 
   // Write the Polkadart File
@@ -208,5 +217,7 @@ void main(List<String> args) async {
     pallets: palletGenerators,
   ).generated().build();
   File(polkadartPath).writeAsStringSync(polkadartGenerator);
-  print(path.relative(polkadartPath, from: basePath));
+  if (verbose) {
+    print(path.relative(polkadartPath, from: basePath));
+  }
 }

@@ -17,7 +17,7 @@ abstract class Generator {
 
   static String _cachedKey(BasePath from, Set<Generator> visited) {
     bool created = false;
-    final StringBuffer sb = StringBuffer(from);
+    final ids = <int>[];
     for (final generator in visited) {
       int? id = generatorToId[generator];
       if (id == null) {
@@ -25,9 +25,10 @@ abstract class Generator {
         generatorToId[generator] = id;
         created = true;
       }
-      sb.write('$id');
+      ids.add(id);
     }
-    final key = sb.toString();
+    ids.sort();
+    final key = '$from | ${ids.join('.')}';
     if (created && jsonTypeCache.containsKey(key)) {
       throw Exception('Error, cached key collision: "$key"');
     }
@@ -63,7 +64,7 @@ abstract class Generator {
     return codec(from).property('codec');
   }
 
-  Expression valueFrom(BasePath from, Input input);
+  Expression valueFrom(BasePath from, Input input, {bool constant = false});
 
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]);
 
@@ -89,8 +90,15 @@ class GeneratedOutput {
       ..body.addAll(typedefs)
       ..body.addAll(enums)
       ..body.addAll(classes));
-    return _dartfmt.format(
-        '${library3.accept(DartEmitter.scoped(useNullSafetySyntax: true))}');
+
+    final code = library3
+        .accept(DartEmitter.scoped(useNullSafetySyntax: true))
+        .toString();
+    try {
+      return _dartfmt.format(code);
+    } catch (error) {
+      return code;
+    }
   }
 
   GeneratedOutput merge(GeneratedOutput other) {

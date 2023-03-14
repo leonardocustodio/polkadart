@@ -38,11 +38,85 @@ const Set<String> reservedWords = {
   'var',
   'void',
   'while',
-  'with'
+  'with',
+
+  // Object methods
+  'toString',
+  'hashCode',
+  'noSuchMethod',
+  'runtimeType',
+
+  // Internal auto-generated methods
+  'codec',
+  'encode',
+  'decode',
+  'toJson'
 };
 
-String sanitize(String name) =>
-    reservedWords.contains(name) ? '${name}_' : name;
+// Classes from dart:core
+const Set<String> reservedClassnNames = {
+  'BigInt',
+  'Comparable',
+  'DateTime',
+  'Deprecated',
+  'Duration',
+  'Enum',
+  'Expando',
+  'Finalizer',
+  'Function',
+  'Future',
+  'Invocation',
+  'Iterable',
+  'Iterator',
+  'List',
+  'Map',
+  'MapEntry',
+  'Match',
+  'Null',
+  'Object',
+  'Pattern',
+  'Record',
+  'RegExp',
+  'RegExpMatch',
+  'RuneIterator',
+  'Runes',
+  'Set',
+  'Sink',
+  'StackTrace',
+  'Stopwatch',
+  'Stream',
+  'String',
+  'StringBuffer',
+  'StringSink',
+  'Symbol',
+  'Type',
+  'Uri',
+  'UriData',
+  'WeakReference',
+  'Error',
+};
+
+String sanitize(String name, {recase = true}) {
+  if (name.startsWith('r#')) {
+    name = name.substring(2);
+  }
+  name = ReCase(name).camelCase;
+  return reservedWords.contains(name) ? '${name}_' : name;
+}
+
+String sanitizeClassName(String name, {String suffix = '_', prefix = 'Class'}) {
+  if (name.startsWith('r#')) {
+    name = name.substring(2);
+  }
+  name = ReCase(name).pascalCase;
+  if (reservedClassnNames.contains(name)) {
+    return '$name$suffix';
+  }
+  if (RegExp(r'^\d').hasMatch(name)) {
+    return '$prefix$name';
+  }
+  return name;
+}
 
 Expression bigIntToExpression(BigInt value) {
   if (value == BigInt.zero) {

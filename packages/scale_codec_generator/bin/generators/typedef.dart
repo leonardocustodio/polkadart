@@ -53,8 +53,8 @@ class TypeDefGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
-    return generator.valueFrom(from, input);
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+    return generator.valueFrom(from, input, constant: constant);
   }
 
   @override
