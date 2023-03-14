@@ -1,16 +1,4 @@
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import 'package:code_builder/code_builder.dart'
-    show
-        Expression,
-        TypeReference,
-        literalNull,
-        literalMap,
-        Code,
-        Block,
-        CodeExpression;
-import '../constants.dart' as constants
-    show Nullable, option, optionCodec, nestedOptionCodec, dynamic, map, string;
-import './base.dart' show BasePath, Generator, LazyLoader;
+part of generators;
 
 class OptionGenerator extends Generator {
   late Generator inner;

@@ -1,16 +1,11 @@
-import 'package:scale_codec_generator/scale_codec_generator.dart';
+import 'package:scale_codec_generator/scale_codec_generator.dart'
+    show Generator;
 import 'package:test/test.dart';
 
 void main() {
-  group('A group of tests', () {
-    final awesome = Awesome();
-
-    setUp(() {
-      // Additional setup goes here.
-    });
-
-    test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
+  group('Generator', () {
+    test('Generator json type cache is empty', () {
+      expect(Generator.jsonTypeCache.length, 0);
     });
   });
 }

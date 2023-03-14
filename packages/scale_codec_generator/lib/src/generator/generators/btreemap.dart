@@ -1,16 +1,4 @@
-import 'package:code_builder/code_builder.dart'
-    show
-        Expression,
-        TypeReference,
-        Method,
-        Parameter,
-        literalMap,
-        literalConstMap,
-        refer;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
-    show Input, CompactCodec;
-import '../constants.dart' as constants;
-import './base.dart' show BasePath, Generator, LazyLoader;
+part of generators;
 
 class BTreeMapGenerator extends Generator {
   late Generator key;

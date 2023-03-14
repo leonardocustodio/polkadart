@@ -3,6 +3,9 @@ import 'package:code_builder/code_builder.dart' show TypeReference, Reference;
 
 extension Nullable on Reference {
   TypeReference asNullable() {
+    if (symbol == 'dynamic') {
+      return this.type as TypeReference;
+    }
     final type = this.type as TypeReference;
     if (type.isNullable != true) {
       final builder = type.toBuilder();
