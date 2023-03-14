@@ -9,6 +9,8 @@ import 'package:equatable/equatable.dart';
 import 'dart:convert' show utf8;
 import 'dart:core';
 
+import 'package:quiver/collection.dart';
+
 part 'bool.dart';
 part 'array.dart';
 part 'compact.dart';
