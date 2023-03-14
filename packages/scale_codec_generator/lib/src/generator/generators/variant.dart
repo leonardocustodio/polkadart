@@ -173,13 +173,14 @@ class VariantGenerator extends Generator {
     final variantsJsonType =
         variants.map((variant) => variant.jsonType(dirname, {this})).toList();
     final baseClassJsonType = findCommonType(variantsJsonType);
-    final baseClass = classbuilder.createVariantBaseClass(this, baseClassJsonType);
+    final baseClass =
+        classbuilder.createVariantBaseClass(this, baseClassJsonType);
     final valuesClass = classbuilder.createVariantValuesClass(this);
     final codecClass = classbuilder.createVariantCodec(this);
     final classes = [baseClass, valuesClass, codecClass];
     for (int i = 0; i < variants.length; i++) {
-      classes.add(
-          classbuilder.createVariantClass(filePath, name, variants[i], variantsJsonType[i]));
+      classes.add(classbuilder.createVariantClass(
+          filePath, name, variants[i], variantsJsonType[i]));
     }
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }

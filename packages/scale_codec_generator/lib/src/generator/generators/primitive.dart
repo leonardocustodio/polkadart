@@ -42,21 +42,36 @@ class PrimitiveGenerator extends Generator {
     }
   }
 
-  static const PrimitiveGenerator str = PrimitiveGenerator._(metadata.Primitive.Str);
-  static const PrimitiveGenerator char = PrimitiveGenerator._(metadata.Primitive.Char);
-  static const PrimitiveGenerator bool = PrimitiveGenerator._(metadata.Primitive.Bool);
-  static const PrimitiveGenerator i8 = PrimitiveGenerator._(metadata.Primitive.I8);
-  static const PrimitiveGenerator i16 = PrimitiveGenerator._(metadata.Primitive.I16);
-  static const PrimitiveGenerator i32 = PrimitiveGenerator._(metadata.Primitive.I32);
-  static const PrimitiveGenerator i64 = PrimitiveGenerator._(metadata.Primitive.I64);
-  static const PrimitiveGenerator i128 = PrimitiveGenerator._(metadata.Primitive.I128);
-  static const PrimitiveGenerator i256 = PrimitiveGenerator._(metadata.Primitive.I256);
-  static const PrimitiveGenerator u8 = PrimitiveGenerator._(metadata.Primitive.U8);
-  static const PrimitiveGenerator u16 = PrimitiveGenerator._(metadata.Primitive.U16);
-  static const PrimitiveGenerator u32 = PrimitiveGenerator._(metadata.Primitive.U32);
-  static const PrimitiveGenerator u64 = PrimitiveGenerator._(metadata.Primitive.U64);
-  static const PrimitiveGenerator u128 = PrimitiveGenerator._(metadata.Primitive.U128);
-  static const PrimitiveGenerator u256 = PrimitiveGenerator._(metadata.Primitive.U256);
+  static const PrimitiveGenerator str =
+      PrimitiveGenerator._(metadata.Primitive.Str);
+  static const PrimitiveGenerator char =
+      PrimitiveGenerator._(metadata.Primitive.Char);
+  static const PrimitiveGenerator bool =
+      PrimitiveGenerator._(metadata.Primitive.Bool);
+  static const PrimitiveGenerator i8 =
+      PrimitiveGenerator._(metadata.Primitive.I8);
+  static const PrimitiveGenerator i16 =
+      PrimitiveGenerator._(metadata.Primitive.I16);
+  static const PrimitiveGenerator i32 =
+      PrimitiveGenerator._(metadata.Primitive.I32);
+  static const PrimitiveGenerator i64 =
+      PrimitiveGenerator._(metadata.Primitive.I64);
+  static const PrimitiveGenerator i128 =
+      PrimitiveGenerator._(metadata.Primitive.I128);
+  static const PrimitiveGenerator i256 =
+      PrimitiveGenerator._(metadata.Primitive.I256);
+  static const PrimitiveGenerator u8 =
+      PrimitiveGenerator._(metadata.Primitive.U8);
+  static const PrimitiveGenerator u16 =
+      PrimitiveGenerator._(metadata.Primitive.U16);
+  static const PrimitiveGenerator u32 =
+      PrimitiveGenerator._(metadata.Primitive.U32);
+  static const PrimitiveGenerator u64 =
+      PrimitiveGenerator._(metadata.Primitive.U64);
+  static const PrimitiveGenerator u128 =
+      PrimitiveGenerator._(metadata.Primitive.U128);
+  static const PrimitiveGenerator u256 =
+      PrimitiveGenerator._(metadata.Primitive.U256);
 
   @override
   TypeReference primitive(BasePath from) {

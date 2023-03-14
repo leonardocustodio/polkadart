@@ -18,8 +18,8 @@ Map<int, Generator> _generatorsFromTypes(
 
     // Create Primitive Generator
     if (type.typeDef is metadata.TypeDefPrimitive) {
-      generators[type.id] =
-          PrimitiveGenerator((type.typeDef as metadata.TypeDefPrimitive).primitive);
+      generators[type.id] = PrimitiveGenerator(
+          (type.typeDef as metadata.TypeDefPrimitive).primitive);
       continue;
     }
 
@@ -121,7 +121,8 @@ Map<int, Generator> _generatorsFromTypes(
         final sequenceTypeDef = types[composite.fields.first.type]!.typeDef;
         if (sequenceTypeDef is metadata.TypeDefSequence) {
           final tupleTypeDef = types[sequenceTypeDef.type]!.typeDef;
-          if (tupleTypeDef is metadata.TypeDefTuple && tupleTypeDef.types.length == 2) {
+          if (tupleTypeDef is metadata.TypeDefTuple &&
+              tupleTypeDef.types.length == 2) {
             generators[type.id] = BTreeMapGenerator.lazy(
                 loader: lazyLoader,
                 key: tupleTypeDef.types[0],

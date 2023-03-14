@@ -5,9 +5,17 @@ import 'package:frame_primitives/frame_primitives.dart'
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
 import 'package:scale_codec_generator/scale_codec_generator.dart'
-  show CompositeGenerator, VariantGenerator, TypeDefGenerator, TupleGenerator, Generator, GeneratedOutput, PalletGenerator, PolkadartGenerator;
+    show
+        CompositeGenerator,
+        VariantGenerator,
+        TypeDefGenerator,
+        TupleGenerator,
+        Generator,
+        GeneratedOutput,
+        PalletGenerator,
+        PolkadartGenerator;
 import 'package:scale_codec_generator/src/generator/frame_metadata.dart'
-  show RuntimeMetadataV14;
+    show RuntimeMetadataV14;
 
 class ChainProperties {
   final RuntimeMetadataV14 metadata;

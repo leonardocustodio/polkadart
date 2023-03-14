@@ -67,7 +67,13 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         I64SequenceCodec;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as p;
-import '../utils.dart' show sanitize, bigIntToExpression, findCommonType, listToFilePath, sanitizeClassName;
+import '../utils.dart'
+    show
+        sanitize,
+        bigIntToExpression,
+        findCommonType,
+        listToFilePath,
+        sanitizeClassName;
 import '../class_builder.dart' as classbuilder;
 import '../frame_metadata.dart' as metadata;
 import '../constants.dart' as constants;

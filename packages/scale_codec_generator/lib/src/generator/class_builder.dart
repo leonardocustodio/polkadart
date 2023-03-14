@@ -24,7 +24,15 @@ import 'package:code_builder/code_builder.dart'
         TypeDef,
         TypeReference,
         MethodModifier;
-import './generators/generators.dart' as generators show Field, Variant, VariantGenerator, PrimitiveGenerator, CompositeGenerator, PolkadartGenerator, PalletGenerator;
+import './generators/generators.dart' as generators
+    show
+        Field,
+        Variant,
+        VariantGenerator,
+        PrimitiveGenerator,
+        CompositeGenerator,
+        PolkadartGenerator,
+        PalletGenerator;
 import './constants.dart' as constants;
 import './utils.dart' show sanitize;
 
@@ -393,7 +401,8 @@ Class createVariantClass(
         )));
     });
 
-Enum createSimpleVariantEnum(generators.VariantGenerator variant) => Enum((enumBuilder) {
+Enum createSimpleVariantEnum(generators.VariantGenerator variant) =>
+    Enum((enumBuilder) {
       final dirname = p.dirname(variant.filePath);
       final Reference typeRef = refer(variant.name);
       final Reference codecRef = refer(classToCodecName(variant.name));
@@ -669,7 +678,8 @@ Class createPalletQueries(
                       : storage.valueCodec
                           .valueFrom(
                             dirname,
-                            scale_codec.ByteInput(Uint8List.fromList(storage.defaultValue)),
+                            scale_codec.ByteInput(
+                                Uint8List.fromList(storage.defaultValue)),
                           )
                           .returned
                           .statement)
@@ -692,7 +702,8 @@ Class createPalletConstants(
           ..modifier = FieldModifier.final$
           ..docs.addAll(sanitizeDocs(constant.docs))
           ..assignment = constant.codec
-              .valueFrom(dirname, scale_codec.ByteInput(Uint8List.fromList(constant.value)),
+              .valueFrom(dirname,
+                  scale_codec.ByteInput(Uint8List.fromList(constant.value)),
                   constant: true)
               .code)));
     });
