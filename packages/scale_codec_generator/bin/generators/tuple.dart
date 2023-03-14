@@ -51,9 +51,15 @@ class TupleGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
-    return primitive(from).newInstance(
-        generators.map((type) => type.valueFrom(from, input)).toList());
+  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+    final values = <Expression>[
+      for (final generator in generators) generator.valueFrom(from, input, constant: constant)
+    ];
+
+    if (values.every((value) => value.isConst)) {
+      return primitive(from).constInstance(values);
+    }
+    return primitive(from).newInstance(values);
   }
 
   @override
@@ -88,6 +94,6 @@ class TupleGenerator extends Generator {
     return literalList([
       for (int i = 0; i < generators.length; i++)
         generators[i].instanceToJson(from, obj.property('value$i'))
-    ], constants.dynamic);
+    ]);
   }
 }

@@ -23,15 +23,15 @@ class U16Codec with Codec<int> {
   }
 }
 
-class U16SequenceCodec with Codec<Uint16List> {
+class U16SequenceCodec with Codec<List<int>> {
   const U16SequenceCodec._();
 
   static const U16SequenceCodec codec = U16SequenceCodec._();
 
   @override
-  Uint16List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Uint16List(length);
+  Uint16Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Uint16Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = U16Codec.codec.decode(input);
     }
@@ -39,7 +39,7 @@ class U16SequenceCodec with Codec<Uint16List> {
   }
 
   @override
-  void encodeTo(Uint16List list, Output output) {
+  void encodeTo(List<int> list, Output output) {
     CompactCodec.codec.encodeTo(list.length, output);
     for (int value in list) {
       U16Codec.codec.encodeTo(value, output);
@@ -47,12 +47,12 @@ class U16SequenceCodec with Codec<Uint16List> {
   }
 
   @override
-  int sizeHint(Uint16List list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  int sizeHint(List<int> list) {
+    return CompactCodec.codec.sizeHint(list.length) + list.length * 2;
   }
 }
 
-class U16ArrayCodec with Codec<Uint16List> {
+class U16ArrayCodec with Codec<List<int>> {
   final int length;
   const U16ArrayCodec(this.length);
 
@@ -66,7 +66,7 @@ class U16ArrayCodec with Codec<Uint16List> {
   }
 
   @override
-  void encodeTo(Uint16List list, Output output) {
+  void encodeTo(List<int> list, Output output) {
     if (list.length != length) {
       throw Exception(
           'U16ArrayCodec: invalid length, expect $length found ${list.length}');
@@ -77,7 +77,7 @@ class U16ArrayCodec with Codec<Uint16List> {
   }
 
   @override
-  int sizeHint(Uint16List list) {
+  int sizeHint(List<int> list) {
     return length * 2;
   }
 }

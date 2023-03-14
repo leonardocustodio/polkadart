@@ -22,15 +22,15 @@ class U8Codec with Codec<int> {
   }
 }
 
-class U8SequenceCodec with Codec<Uint8List> {
+class U8SequenceCodec with Codec<List<int>> {
   const U8SequenceCodec._();
 
   static const U8SequenceCodec codec = U8SequenceCodec._();
 
   @override
-  Uint8List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Uint8List(length);
+  Uint8Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Uint8Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = U8Codec.codec.decode(input);
     }
@@ -38,7 +38,7 @@ class U8SequenceCodec with Codec<Uint8List> {
   }
 
   @override
-  void encodeTo(Uint8List list, Output output) {
+  void encodeTo(List<int> list, Output output) {
     CompactCodec.codec.encodeTo(list.length, output);
     for (int value in list) {
       U8Codec.codec.encodeTo(value, output);
@@ -46,12 +46,12 @@ class U8SequenceCodec with Codec<Uint8List> {
   }
 
   @override
-  int sizeHint(Uint8List list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  int sizeHint(List<int> list) {
+    return CompactCodec.codec.sizeHint(list.length) + list.length;
   }
 }
 
-class U8ArrayCodec with Codec<Uint8List> {
+class U8ArrayCodec with Codec<List<int>> {
   final int length;
   const U8ArrayCodec(this.length);
 
@@ -65,7 +65,7 @@ class U8ArrayCodec with Codec<Uint8List> {
   }
 
   @override
-  void encodeTo(Uint8List list, Output output) {
+  void encodeTo(List<int> list, Output output) {
     if (list.length != length) {
       throw Exception(
           'U8ArrayCodec: invalid length, expect $length found ${list.length}');
@@ -76,7 +76,7 @@ class U8ArrayCodec with Codec<Uint8List> {
   }
 
   @override
-  int sizeHint(Uint8List list) {
+  int sizeHint(List<int> list) {
     return length;
   }
 }

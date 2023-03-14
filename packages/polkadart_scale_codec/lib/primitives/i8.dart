@@ -24,15 +24,15 @@ class I8Codec with Codec<int> {
   }
 }
 
-class I8SequenceCodec with Codec<Int8List> {
+class I8SequenceCodec with Codec<List<int>> {
   const I8SequenceCodec._();
 
   static const I8SequenceCodec codec = I8SequenceCodec._();
 
   @override
-  Int8List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Int8List(length);
+  Int8Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Int8Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = I8Codec.codec.decode(input);
     }
@@ -40,7 +40,7 @@ class I8SequenceCodec with Codec<Int8List> {
   }
 
   @override
-  void encodeTo(Int8List list, Output output) {
+  void encodeTo(List<int> list, Output output) {
     CompactCodec.codec.encodeTo(list.length, output);
     for (int value in list) {
       I8Codec.codec.encodeTo(value, output);
@@ -48,8 +48,8 @@ class I8SequenceCodec with Codec<Int8List> {
   }
 
   @override
-  int sizeHint(Int8List list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  int sizeHint(List<int> list) {
+    return CompactCodec.codec.sizeHint(list.length) + list.length;
   }
 }
 

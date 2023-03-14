@@ -44,7 +44,7 @@ void main(List<String> args) async {
       mandatory: true,
       help: 'Substrate\'s node endpoint url, accept http and websocket');
   parser.addOption('output',
-      defaultsTo: './generated', help: 'Output directory for generated files');
+      defaultsTo: './', help: 'Output directory for generated files');
   parser.addFlag('verbose', abbr: 'v', defaultsTo: true);
   final arguments = parser.parse(args);
 
@@ -59,16 +59,18 @@ void main(List<String> args) async {
 
   // Get chain properties
   final ChainProperties properties = await chainProperties(arguments['url']);
+  final chainDirectory = ReCase(properties.version.specName).snakeCase;
 
   // Create pallets and types directory
-  final typesPath = path.join(basePath, 'types');
-  final palletsPath = path.join(basePath, 'pallets');
+  final typesPath = path.join(basePath, chainDirectory, 'types');
+  final palletsPath = path.join(basePath, chainDirectory, 'pallets');
+  Directory(path.join(basePath, chainDirectory)).createSync(recursive: false);
   Directory(typesPath).createSync(recursive: false);
   Directory(palletsPath).createSync(recursive: false);
 
   // Polkadart path
   final polkadartPath = path.setExtension(
-      path.join(basePath, ReCase(properties.version.specName).snakeCase),
+      path.join(basePath, chainDirectory, chainDirectory),
       '.dart');
 
   // Get type generators

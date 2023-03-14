@@ -145,7 +145,7 @@ class PrimitiveGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
+  Expression valueFrom(BasePath from, Input input, { constant = false }) {
     switch (primitiveType) {
       case Primitive.Bool:
         return literalBool(BoolCodec.codec.decode(input));

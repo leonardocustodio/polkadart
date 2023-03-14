@@ -1,9 +1,10 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:code_builder/code_builder.dart'
-    show Expression, TypeReference, literalNull;
+    show Expression, TypeReference, literalNull, literalMap, Code, Block, CodeExpression;
 import '../constants.dart' as constants
-    show Nullable, option, optionCodec, nestedOptionCodec, dynamic;
+    show Nullable, option, optionCodec, nestedOptionCodec, dynamic, map, string;
 import './base.dart' show BasePath, Generator, LazyLoader;
+import 'primitive.dart' show PrimitiveGenerator;
 
 class OptionGenerator extends Generator {
   late Generator inner;
@@ -43,7 +44,7 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
+  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       if (input.read() == 0) {
         return constants
@@ -71,15 +72,31 @@ class OptionGenerator extends Generator {
       return constants.dynamic.type as TypeReference;
     }
     visited.add(this);
-    final newType = inner.jsonType(from, visited).asNullable();
+    final newType = Generator.cacheOrCreate(from, visited, () {
+      if (inner is OptionGenerator) {
+        return constants.map(
+          constants.string,
+          inner.jsonType(from, visited).asNullable(),
+        );
+      }
+      return inner.jsonType(from, visited).asNullable();
+    });
     visited.remove(this);
     return newType;
   }
 
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    return obj
-        .equalTo(literalNull)
-        .conditional(literalNull, inner.instanceToJson(from, obj.nullChecked));
+    if (inner is OptionGenerator) {
+      final valueInstance = obj.property('value');
+      final innerInstance = inner.instanceToJson(from, valueInstance);
+      return obj.property('isNone').conditional(
+        literalMap({ 'None': literalNull }),
+        literalMap({ 'Some': innerInstance }),
+      );
+    }
+    final valueInstance = CodeExpression(Block.of([obj.code, Code('?')]));
+    final innerInstance = inner.instanceToJson(from, valueInstance);
+    return innerInstance == valueInstance ? obj : innerInstance;
   }
 }

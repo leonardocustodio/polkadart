@@ -15,13 +15,8 @@ class SequenceCodec<A> with Codec<List<A>> {
 
   @override
   List<A> decode(Input input) {
-    final size = CompactCodec.codec.decode(input).toInt();
-    final elements = <A>[];
-    for (var i = 0; i < size; i++) {
-      final value = codec.decode(input);
-      elements.add(value);
-    }
-    return elements;
+    final size = CompactCodec.codec.decode(input);
+    return List.generate(size, (index) => codec.decode(input), growable: true);
   }
 
   @override

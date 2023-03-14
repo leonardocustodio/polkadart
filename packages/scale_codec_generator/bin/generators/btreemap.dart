@@ -7,6 +7,8 @@ import 'package:code_builder/code_builder.dart'
         TypeReference,
         Method,
         Parameter,
+        literalMap,
+        literalConstMap,
         refer;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show Input, CompactCodec;
@@ -53,25 +55,34 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
-    return CodeExpression(Block((builder) {
-      builder.statements.add(Code.scope(
-          (a) => '<${a(key.primitive(from))}, ${a(value.primitive(from))}>{'));
-      final size = CompactCodec.codec.decode(input).toInt();
-      for (var i = 0; i < size; i++) {
-        final k = key.valueFrom(from, input);
-        final v = value.valueFrom(from, input);
-        builder.statements.addAll([
-          k.code,
-          Code(': '),
-          v.code,
-        ]);
-        if (i < (size - 1)) {
-          builder.statements.add(Code(', '));
-        }
-      }
-      builder.statements.add(Code('}'));
-    }));
+  Expression valueFrom(BasePath from, Input input, { bool constant = false }) {
+    final size = CompactCodec.codec.decode(input);
+    Map<Expression, Expression> map = {
+      for (var i = 0; i < size; i++)  key.valueFrom(from, input, constant: constant): value.valueFrom(from, input, constant: constant)
+    };
+    if (map.values.every((value) => value.isConst) && map.keys.every((key) => key.isConst)) {
+      return literalConstMap(map, key.primitive(from), value.primitive(from));
+    }
+    return literalMap(map, key.primitive(from), value.primitive(from));
+
+    // return CodeExpression(Block((builder) {
+    //   builder.statements.add(Code.scope(
+    //       (a) => '<${a(key.primitive(from))}, ${a(value.primitive(from))}>{'));
+    //   final size = CompactCodec.codec.decode(input).toInt();
+    //   for (var i = 0; i < size; i++) {
+    //     final k = key.valueFrom(from, input);
+    //     final v = value.valueFrom(from, input);
+    //     builder.statements.addAll([
+    //       k.code,
+    //       Code(': '),
+    //       v.code,
+    //     ]);
+    //     if (i < (size - 1)) {
+    //       builder.statements.add(Code(', '));
+    //     }
+    //   }
+    //   builder.statements.add(Code('}'));
+    // }));
   }
 
   @override
