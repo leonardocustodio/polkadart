@@ -11,7 +11,6 @@ import 'package:code_builder/code_builder.dart'
 import '../constants.dart' as constants
     show Nullable, option, optionCodec, nestedOptionCodec, dynamic, map, string;
 import './base.dart' show BasePath, Generator, LazyLoader;
-import 'primitive.dart' show PrimitiveGenerator;
 
 class OptionGenerator extends Generator {
   late Generator inner;

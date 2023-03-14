@@ -5,8 +5,6 @@ import 'package:dart_style/dart_style.dart' show DartFormatter;
 import 'package:code_builder/code_builder.dart' show DartEmitter, Library;
 import 'package:recase/recase.dart' show ReCase;
 import '../utils.dart' show sanitize;
-import 'composite.dart' show CompositeGenerator;
-import 'variant.dart' show VariantGenerator, Variant;
 
 typedef BasePath = String;
 
