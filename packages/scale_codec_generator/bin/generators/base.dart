@@ -97,8 +97,7 @@ class GeneratedOutput {
     try {
       return _dartfmt.format(code);
     } catch (error) {
-      throw error;
-      // return code;
+      return code;
     }
   }
 
