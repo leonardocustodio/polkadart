@@ -1,8 +1,8 @@
 import 'package:code_builder/code_builder.dart'
-    show Expression, TypeReference, literalList, literalNum;
+    show Expression, TypeReference, literalConstList, literalNum;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show Input, BitSequenceCodec, BitStore, BitOrder;
-import '../metadata_parser.dart' show Primitive;
+import '../frame_metadata.dart' show Primitive;
 import '../constants.dart' as constants;
 import './base.dart' show BasePath, Generator;
 
@@ -66,13 +66,13 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     final bitArray = BitSequenceCodec(store, order).decode(input);
     return primitive(from).property('fromByteBuffer').call([
       literalNum(bitArray.length),
-      constants.uint32List
-          .property('fromList')
-          .call([literalList(bitArray.asUint32Iterable())]).property('buffer'),
+      constants.uint32List.property('fromList').call([
+        literalConstList(bitArray.asUint32Iterable().toList())
+      ]).property('buffer'),
     ]);
   }
 

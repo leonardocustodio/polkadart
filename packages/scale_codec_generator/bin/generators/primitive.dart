@@ -8,14 +8,16 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         U32Codec,
         U64Codec,
         U128Codec,
+        U256Codec,
         I8Codec,
         I16Codec,
         I32Codec,
         I64Codec,
-        I128Codec;
+        I128Codec,
+        I256Codec;
 import 'package:code_builder/code_builder.dart'
     show TypeReference, Expression, literalBool, literalString, literalNum;
-import '../metadata_parser.dart' show Primitive;
+import '../frame_metadata.dart' show Primitive;
 import './base.dart' show BasePath, Generator;
 import '../constants.dart' as constants;
 import '../utils.dart' as utils show bigIntToExpression;
@@ -43,6 +45,8 @@ class PrimitiveGenerator extends Generator {
         return PrimitiveGenerator.u64;
       case Primitive.U128:
         return PrimitiveGenerator.u128;
+      case Primitive.U256:
+        return PrimitiveGenerator.u256;
       case Primitive.I8:
         return PrimitiveGenerator.i8;
       case Primitive.I16:
@@ -52,7 +56,9 @@ class PrimitiveGenerator extends Generator {
       case Primitive.I64:
         return PrimitiveGenerator.i64;
       case Primitive.I128:
-        return PrimitiveGenerator.u128;
+        return PrimitiveGenerator.i128;
+      case Primitive.I256:
+        return PrimitiveGenerator.i256;
       default:
         throw Exception('Unsupported primitive $primitive');
     }
@@ -66,11 +72,13 @@ class PrimitiveGenerator extends Generator {
   static const PrimitiveGenerator i32 = PrimitiveGenerator._(Primitive.I32);
   static const PrimitiveGenerator i64 = PrimitiveGenerator._(Primitive.I64);
   static const PrimitiveGenerator i128 = PrimitiveGenerator._(Primitive.I128);
+  static const PrimitiveGenerator i256 = PrimitiveGenerator._(Primitive.I256);
   static const PrimitiveGenerator u8 = PrimitiveGenerator._(Primitive.U8);
   static const PrimitiveGenerator u16 = PrimitiveGenerator._(Primitive.U16);
   static const PrimitiveGenerator u32 = PrimitiveGenerator._(Primitive.U32);
   static const PrimitiveGenerator u64 = PrimitiveGenerator._(Primitive.U64);
   static const PrimitiveGenerator u128 = PrimitiveGenerator._(Primitive.U128);
+  static const PrimitiveGenerator u256 = PrimitiveGenerator._(Primitive.U256);
 
   @override
   TypeReference primitive(BasePath from) {
@@ -89,8 +97,10 @@ class PrimitiveGenerator extends Generator {
         return constants.int.type as TypeReference;
       case Primitive.U64:
       case Primitive.U128:
+      case Primitive.U256:
       case Primitive.I64:
       case Primitive.I128:
+      case Primitive.I256:
         return constants.bigInt.type as TypeReference;
       default:
         throw Exception('Unsupported primitive $primitive');
@@ -115,6 +125,8 @@ class PrimitiveGenerator extends Generator {
         return constants.u64Codec.type as TypeReference;
       case Primitive.U128:
         return constants.u128Codec.type as TypeReference;
+      case Primitive.U256:
+        return constants.u256Codec.type as TypeReference;
       case Primitive.I8:
         return constants.i8Codec.type as TypeReference;
       case Primitive.I16:
@@ -125,13 +137,15 @@ class PrimitiveGenerator extends Generator {
         return constants.i64Codec.type as TypeReference;
       case Primitive.I128:
         return constants.i128Codec.type as TypeReference;
+      case Primitive.I256:
+        return constants.i256Codec.type as TypeReference;
       default:
         throw Exception('Unsupported primitive $primitive');
     }
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
+  Expression valueFrom(BasePath from, Input input, {constant = false}) {
     switch (primitiveType) {
       case Primitive.Bool:
         return literalBool(BoolCodec.codec.decode(input));
@@ -148,6 +162,8 @@ class PrimitiveGenerator extends Generator {
         return utils.bigIntToExpression(U64Codec.codec.decode(input));
       case Primitive.U128:
         return utils.bigIntToExpression(U128Codec.codec.decode(input));
+      case Primitive.U256:
+        return utils.bigIntToExpression(U256Codec.codec.decode(input));
       case Primitive.I8:
         return literalNum(I8Codec.codec.decode(input));
       case Primitive.I16:
@@ -158,6 +174,8 @@ class PrimitiveGenerator extends Generator {
         return utils.bigIntToExpression(I64Codec.codec.decode(input));
       case Primitive.I128:
         return utils.bigIntToExpression(I128Codec.codec.decode(input));
+      case Primitive.I256:
+        return utils.bigIntToExpression(I256Codec.codec.decode(input));
       default:
         throw Exception('Unsupported primitive $primitive');
     }
@@ -180,8 +198,10 @@ class PrimitiveGenerator extends Generator {
         return constants.int.type as TypeReference;
       case Primitive.U64:
       case Primitive.U128:
+      case Primitive.U256:
       case Primitive.I64:
       case Primitive.I128:
+      case Primitive.I256:
         return constants.bigInt.type as TypeReference;
       default:
         throw Exception('Unsupported primitive $primitive');

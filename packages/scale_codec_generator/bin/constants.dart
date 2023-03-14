@@ -1,14 +1,15 @@
 import 'dart:core' as core;
 import 'package:code_builder/code_builder.dart' show TypeReference, Reference;
 
-extension Nullable on TypeReference {
+extension Nullable on Reference {
   TypeReference asNullable() {
-    if (isNullable != true) {
-      final builder = toBuilder();
+    final type = this.type as TypeReference;
+    if (type.isNullable != true) {
+      final builder = type.toBuilder();
       builder.isNullable = true;
       return builder.build();
     }
-    return this;
+    return type;
   }
 }
 
@@ -22,13 +23,45 @@ const void_ = Reference('void', 'dart:core');
 const string = Reference('String', 'dart:core');
 const bigInt = Reference('BigInt', 'dart:core');
 const uint8List = Reference('Uint8List', 'dart:typed_data');
+const uint8Buffer =
+    Reference('Uint8Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableUint8ListView =
+    Reference('UnmodifiableUint8ListView', 'dart:typed_data');
 const uint16List = Reference('Uint16List', 'dart:typed_data');
+const uint16Buffer =
+    Reference('Uint16Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableUint16ListView =
+    Reference('UnmodifiableUint16ListView', 'dart:typed_data');
 const uint32List = Reference('Uint32List', 'dart:typed_data');
+const uint32Buffer =
+    Reference('Uint32Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableUint32ListView =
+    Reference('UnmodifiableUint32ListView', 'dart:typed_data');
 const uint64List = Reference('Uint64List', 'dart:typed_data');
+const uint64Buffer =
+    Reference('Uint64Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableUint64ListView =
+    Reference('UnmodifiableUint64ListView', 'dart:typed_data');
 const int8List = Reference('Int8List', 'dart:typed_data');
+const int8Buffer =
+    Reference('Int8Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableInt8ListView =
+    Reference('UnmodifiableInt8ListView', 'dart:typed_data');
 const int16List = Reference('Int16List', 'dart:typed_data');
+const int16Buffer =
+    Reference('Int16Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableInt16ListView =
+    Reference('UnmodifiableInt16ListView', 'dart:typed_data');
 const int32List = Reference('Int32List', 'dart:typed_data');
+const int32Buffer =
+    Reference('Int32Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableInt32ListView =
+    Reference('UnmodifiableInt32ListView', 'dart:typed_data');
 const int64List = Reference('Int64List', 'dart:typed_data');
+const int64Buffer =
+    Reference('Int64Buffer', 'package:typed_data/typed_buffers.dart');
+const unmodifiableInt64ListView =
+    Reference('UnmodifiableInt64ListView', 'dart:typed_data');
 const mapEntry = Reference('MapEntry', 'dart:core');
 
 TypeReference list({Reference? ref}) {
@@ -49,18 +82,16 @@ TypeReference map(Reference key, Reference value) {
     ..types.addAll([key, value]));
 }
 
-TypeReference future(Reference ref, {core.bool nullable = false}) {
-  TypeReference typeRef = ref.type as TypeReference;
-  if (nullable && typeRef.isNullable != true) {
-    final builder = typeRef.toBuilder();
-    builder.isNullable = true;
-    typeRef = builder.build();
-  }
+TypeReference future([Reference? ref]) {
+  return TypeReference((builder) {
+    builder
+      ..symbol = 'Future'
+      ..url = 'dart:async';
 
-  return TypeReference((b) => b
-    ..symbol = 'Future'
-    ..url = 'dart:async'
-    ..types.add(typeRef));
+    if (ref != null) {
+      builder.types.add(ref);
+    }
+  });
 }
 
 ///////////////////////
@@ -116,6 +147,8 @@ const u64SequenceCodec = Reference('U64SequenceCodec',
     'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const u128Codec = Reference(
     'U128Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
+const u256Codec = Reference(
+    'U256Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const i8Codec = Reference(
     'I8Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const i8ArrayCodec = Reference(
@@ -142,6 +175,8 @@ const i64SequenceCodec = Reference('I64SequenceCodec',
     'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 const i128Codec = Reference(
     'I128Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
+const i256Codec = Reference(
+    'I256Codec', 'package:polkadart_scale_codec/polkadart_scale_codec.dart');
 
 TypeReference codec({Reference? ref}) {
   return TypeReference((b) {
@@ -217,6 +252,10 @@ const storageHasher = Reference(
     'StorageHasher', 'package:frame_primitives/frame_primitives.dart');
 const provider =
     Reference('Provider', 'package:frame_primitives/frame_primitives.dart');
+const stateApi =
+    Reference('StateApi', 'package:frame_primitives/frame_primitives.dart');
+const blockHash =
+    Reference('BlockHash', 'package:frame_primitives/frame_primitives.dart');
 
 TypeReference storageValue(Reference value) {
   return TypeReference((b) => b

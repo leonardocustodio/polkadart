@@ -2,6 +2,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:code_builder/code_builder.dart'
     show TypeReference, Expression, literalNull, literalList, literalMap, refer;
 import 'package:path/path.dart' as p;
+import 'package:recase/recase.dart' show ReCase;
 import '../utils.dart' as utils show findCommonType;
 import '../constants.dart' as constants;
 import '../class_builder.dart' show createCompositeCodec, createCompositeClass;
@@ -46,11 +47,22 @@ class CompositeGenerator extends Generator {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input) {
-    return primitive(from).newInstance([], {
+  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+    if (fields.isEmpty) {
+      return literalNull;
+    }
+
+    final Map<String, Expression> map = {
       for (final field in fields)
-        field.sanitizedName: field.codec.valueFrom(from, input),
-    });
+        field.sanitizedName:
+            field.codec.valueFrom(from, input, constant: constant),
+    };
+
+    if (constant && map.values.every((value) => value.isConst)) {
+      return primitive(from).constInstance([], map);
+    }
+
+    return primitive(from).newInstance([], map);
   }
 
   @override
@@ -113,7 +125,7 @@ class CompositeGenerator extends Generator {
     }
     return literalMap({
       for (final field in fields)
-        field.originalOrSanitizedName():
+        ReCase(field.originalOrSanitizedName()).camelCase:
             field.codec.instanceToJson(from, refer(field.sanitizedName))
     });
   }

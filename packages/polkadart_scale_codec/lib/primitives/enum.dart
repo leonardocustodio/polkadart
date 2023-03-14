@@ -3,29 +3,22 @@
 part of primitives;
 
 class SimpleEnumCodec<A> with Codec<A> {
-  final Map<int, A> map;
+  final BiMap<int, A> map = BiMap();
 
-  final Map<A, int> _keyedIndex;
+  SimpleEnumCodec.sparse(Map<int, A> map) {
+    this.map.addAll(map);
+  }
 
-  SimpleEnumCodec.sparse(this.map)
-      : _keyedIndex = {for (final entry in map.entries) entry.value: entry.key};
-
-  SimpleEnumCodec.keyedIndex(this._keyedIndex)
-      : map = {for (final entry in _keyedIndex.entries) entry.value: entry.key};
-
-  SimpleEnumCodec.fromList(List<A?> list)
-      : map = {
-          for (var i = 0; i < list.length; i++)
-            if (list[i] != null) i: list[i]!
-        },
-        _keyedIndex = {
-          for (var i = 0; i < list.length; i++)
-            if (list[i] != null) list[i]!: i
-        };
+  SimpleEnumCodec.fromList(List<A?> list) {
+    map.addAll({
+      for (var i = 0; i < list.length; i++)
+        if (list[i] != null) i: list[i]!
+    });
+  }
 
   @override
   void encodeTo(A value, Output output) {
-    final index = _keyedIndex[value];
+    final index = map.inverse[value];
 
     if (index == null) {
       throw EnumException('Invalid enum index: $index.');
@@ -104,22 +97,18 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
 
 class DynamicEnumCodec<V> with Codec<MapEntry<String, V>> {
   final Registry registry;
-  final Map<int, String> map;
+  final BiMap<int, String> map = BiMap();
 
-  final Map<String, int> keyedIndex;
-
-  DynamicEnumCodec.sparse({required this.registry, required this.map})
-      : keyedIndex = {for (final entry in map.entries) entry.value: entry.key};
-
-  DynamicEnumCodec.keyedIndex(
-      {required this.registry, required this.keyedIndex})
-      : map = {for (final entry in keyedIndex.entries) entry.value: entry.key};
+  DynamicEnumCodec.sparse(
+      {required this.registry, required Map<int, String> map}) {
+    this.map.addAll(map);
+  }
 
   @override
   void encodeTo(MapEntry<String, V> value, Output output) {
     final type = value.key;
 
-    final index = keyedIndex[type];
+    final index = map.inverse[type];
 
     if (index == null) {
       throw EnumException(

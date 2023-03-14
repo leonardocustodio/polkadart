@@ -23,6 +23,11 @@ abstract class Hasher {
     hashTo(data: data, output: output);
     return output;
   }
+
+  Uint8List hashString(String str) {
+    final data = Uint8List.fromList(utf8.encode(str));
+    return hash(data);
+  }
 }
 
 /// Blake2b hash
