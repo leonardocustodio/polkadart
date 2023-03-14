@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/core/metadata_decoder.dart';
 import 'package:substrate_metadata/models/models.dart';
@@ -5,9 +8,12 @@ import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
-import 'metadata_v14.dart';
-
 void main() {
+  final metadataFile = File('../../chain/metadata/metadata_v14.json');
+
+  final metatadaJson = jsonDecode(metadataFile.readAsStringSync());
+
+  final metadataV14 = metatadaJson['v14'];
   group('Events Decode/Encode: ', () {
     test('Encode Test', () {
       final DecodedMetadata metadata =
