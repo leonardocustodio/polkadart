@@ -4,14 +4,14 @@ import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/types/metadata_types.dart';
 import 'package:test/test.dart';
 
-import '../../parachain_definitions/polkadot.dart';
+import '../../parachain_definitions/kusama.dart';
 
 void main() {
-  group('Polkadot Extrinsics Test', () {
+  group('Kusama Extrinsics Test', () {
     //
     // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
     final LegacyTypesBundle typesDefinitions =
-        LegacyTypesBundle.fromJson(polkadotTypesBundle);
+        LegacyTypesBundle.fromJson(kusamaTypesBundle);
 
     //
     // Initiate chain constructor with chain specific types-definition
@@ -19,11 +19,12 @@ void main() {
 
     //
     // Populating with the metadata for block-numbers available for this chain....
-    chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
+    chain.initSpecVersionFromFile('../../chain/kusama/versions.jsonl');
 
     final List<RawBlockExtrinsics> rawBlocksList =
         RawBlockExtrinsics.readBlocksFromPath(
-            '../../chain/polkadot/blocks.jsonl');
+            '../../chain/kusama/blocks.jsonl');
+
     //
     // Looping through every block
     for (var originalExtrinsics in rawBlocksList) {
