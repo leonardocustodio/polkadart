@@ -73,18 +73,18 @@ You can run all tests from the library by running `docker compose up`.
 🟡 = Partially implemented and under active development.<br/>
 🔴 = Not supported yet but on-deck to be implemented soon.
 
-|                     | Status |
-| ------------------- | :----: |
-| [Scale Codec Encoder](./packages/polkadart_scale_codec/) |   ✅    |
-| [Scale Codec Decoder](./packages/polkadart_scale_codec/) |   ✅    |
-| [SS58 Format](./packages/ss58/)         |   ✅    |
-| [Parse Metadata v14](./packages/substrate_metadata/lib/core/metadata_decoder.dart) |   ✅    |
-| [Substrate Metadata](./packages/substrate_metadata/lib/definitions/metadata/metadata.dart)  |   ✅    |
-| [RPC](./packages/frame_primitives/lib/apis/apis.dart)                 |   ✅    |
-| Constants           |   ✅    |
-| [Websocket Provider](./packages/frame_primitives/lib/provider.dart)  |   ✅    |
-| [Http Provider](./packages/frame_primitives/lib/provider.dart)      |   ✅    |
-| Signed Extrinsics   |   🔴    |
+|                                                                                            | Status |
+| ------------------------------------------------------------------------------------------ | :----: |
+| [Scale Codec Encoder](./packages/polkadart_scale_codec/)                                   |   ✅    |
+| [Scale Codec Decoder](./packages/polkadart_scale_codec/)                                   |   ✅    |
+| [SS58 Format](./packages/ss58/)                                                            |   ✅    |
+| [Parse Metadata v14](./packages/substrate_metadata/lib/core/metadata_decoder.dart)         |   ✅    |
+| [Substrate Metadata](./packages/substrate_metadata/lib/definitions/metadata/metadata.dart) |   ✅    |
+| [RPC](./packages/frame_primitives/lib/apis/apis.dart)                                      |   ✅    |
+| Constants                                                                                  |   ✅    |
+| [Websocket Provider](./packages/frame_primitives/lib/provider.dart)                        |   ✅    |
+| [Http Provider](./packages/frame_primitives/lib/provider.dart)                             |   ✅    |
+| Signed Extrinsics                                                                          |   🔴    |
 
 ## **License**
 
