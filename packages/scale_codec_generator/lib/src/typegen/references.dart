@@ -11,7 +11,7 @@ extension Nullable on Reference {
       type = this.type as TypeReference;
     }
 
-    // The type 'dynamic?' is invalid
+    // The type 'dynamic' cannot be nullable
     if (type.symbol == 'dynamic' && type.types.isEmpty) {
       return type;
     }
