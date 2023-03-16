@@ -1,6 +1,3 @@
-// TODO: Put public facing types in this file.
+library scale_codec_generator;
 
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
-}
+export 'typegen/typegen.dart';

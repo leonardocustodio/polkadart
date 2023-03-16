@@ -1,6 +1,9 @@
-import 'package:scale_codec_generator/scale_codec_generator.dart';
+import 'package:frame_primitives/frame_primitives.dart' show Provider, StateApi;
 
-void main() {
-  final awesome = Awesome();
-  print('awesome: ${awesome.isAwesome}');
+void main() async {
+  final polkadart = Provider('wss://kusama-rpc.polkadot.io');
+  final api = StateApi(polkadart);
+  final runtimeVersion = await api.getRuntimeVersion();
+  print(runtimeVersion.toJson());
+  await polkadart.disconnect();
 }

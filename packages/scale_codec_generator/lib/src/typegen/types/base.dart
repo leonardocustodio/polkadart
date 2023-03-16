@@ -1,10 +1,4 @@
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import 'package:code_builder/code_builder.dart'
-    show Class, Enum, TypeReference, TypeDef, Expression, Reference;
-import 'package:dart_style/dart_style.dart' show DartFormatter;
-import 'package:code_builder/code_builder.dart' show DartEmitter, Library;
-import 'package:recase/recase.dart' show ReCase;
-import '../utils.dart' show sanitize;
+part of generators;
 
 typedef BasePath = String;
 
@@ -45,6 +39,14 @@ abstract class Generator {
     }
     return type;
   }
+
+  static Map<int, Generator> fromTypes(
+      List<metadata.TypeMetadata> registry, String typesPath) {
+    return parseTypes(registry, typesPath);
+  }
+
+  /// Returns the id of type in the registry.
+  int id();
 
   Expression encode(BasePath from, Expression obj,
       [Expression output = const Reference('output')]) {
@@ -125,15 +127,11 @@ class Field {
   late Generator codec;
   late List<String> docs;
 
-  Field(
-      {required String? originalName,
-      required this.codec,
-      required this.docs}) {
+  Field({required this.originalName, required this.codec, required this.docs}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
-    originalName = originalName;
     if (originalName != null) {
-      sanitizedName = toFieldName(originalName);
+      sanitizedName = toFieldName(originalName!);
     }
   }
 

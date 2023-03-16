@@ -2,9 +2,9 @@ import 'package:code_builder/code_builder.dart'
     show Expression, TypeReference, literalString, literalNum;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as path;
-import './constants.dart' as constants;
+import '../references.dart' as constants;
 
-// reference: https://www.codesansar.com/dart/keywords.htm
+// Dart reserved keywords
 const Set<String> reservedWords = {
   'assert',
   'break',
@@ -56,45 +56,14 @@ const Set<String> reservedWords = {
 // Classes from dart:core
 const Set<String> reservedClassnNames = {
   'BigInt',
-  'Comparable',
-  'DateTime',
-  'Deprecated',
-  'Duration',
-  'Enum',
-  'Expando',
-  'Finalizer',
-  'Function',
-  'Future',
-  'Invocation',
-  'Iterable',
-  'Iterator',
   'List',
   'Map',
-  'MapEntry',
-  'Match',
-  'Null',
-  'Object',
-  'Pattern',
-  'Record',
-  'RegExp',
-  'RegExpMatch',
-  'RuneIterator',
-  'Runes',
-  'Set',
-  'Sink',
-  'StackTrace',
-  'Stopwatch',
-  'Stream',
   'String',
-  'StringBuffer',
-  'StringSink',
-  'Symbol',
-  'Type',
-  'Uri',
-  'UriData',
-  'WeakReference',
-  'Error',
 };
+
+bool isValidClassName(String value) =>
+    RegExp(r'^[A-Z][a-zA-Z0-9]*$').hasMatch(value) &&
+    !reservedClassnNames.contains(value);
 
 String sanitize(String name, {recase = true}) {
   if (name.startsWith('r#')) {

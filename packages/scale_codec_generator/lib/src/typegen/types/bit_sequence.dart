@@ -1,40 +1,37 @@
-import 'package:code_builder/code_builder.dart'
-    show Expression, TypeReference, literalConstList, literalNum;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
-    show Input, BitSequenceCodec, BitStore, BitOrder;
-import '../frame_metadata.dart' show Primitive;
-import '../constants.dart' as constants;
-import './base.dart' show BasePath, Generator;
+part of generators;
 
 class BitSequenceGenerator extends Generator {
+  final int _id;
   BitStore store;
   BitOrder order;
 
   BitSequenceGenerator({
+    required int id,
     required this.store,
     required this.order,
-  });
+  }) : _id = id;
 
   factory BitSequenceGenerator.fromPrimitive({
-    required Primitive primitive,
+    required int id,
+    required metadata.Primitive primitive,
     required BitOrder order,
   }) {
     BitStore store;
     switch (primitive) {
-      case Primitive.U8:
-      case Primitive.I8:
+      case metadata.Primitive.U8:
+      case metadata.Primitive.I8:
         store = BitStore.U8;
         break;
-      case Primitive.U16:
-      case Primitive.I16:
+      case metadata.Primitive.U16:
+      case metadata.Primitive.I16:
         store = BitStore.U16;
         break;
-      case Primitive.U32:
-      case Primitive.I32:
+      case metadata.Primitive.U32:
+      case metadata.Primitive.I32:
         store = BitStore.U32;
         break;
-      case Primitive.U64:
-      case Primitive.I64:
+      case metadata.Primitive.U64:
+      case metadata.Primitive.I64:
         store = BitStore.U64;
         break;
       default:
@@ -42,26 +39,30 @@ class BitSequenceGenerator extends Generator {
         break;
     }
     return BitSequenceGenerator(
+      id: id,
       store: store,
       order: order,
     );
   }
 
   @override
+  int id() => _id;
+
+  @override
   TypeReference primitive(BasePath from) {
-    return constants.bitArray.type as TypeReference;
+    return refs.bitArray.type as TypeReference;
   }
 
   @override
   TypeReference codec(BasePath from) {
-    return constants.bitSequenceCodec.type as TypeReference;
+    return refs.bitSequenceCodec.type as TypeReference;
   }
 
   @override
   Expression codecInstance(BasePath from) {
     return codec(from).constInstance([
-      constants.bitStore.property(store.name),
-      constants.bitOrder.property(order.name),
+      refs.bitStore.property(store.name),
+      refs.bitOrder.property(order.name),
     ]);
   }
 
@@ -70,7 +71,7 @@ class BitSequenceGenerator extends Generator {
     final bitArray = BitSequenceCodec(store, order).decode(input);
     return primitive(from).property('fromByteBuffer').call([
       literalNum(bitArray.length),
-      constants.uint32List.property('fromList').call([
+      refs.uint32List.property('fromList').call([
         literalConstList(bitArray.asUint32Iterable().toList())
       ]).property('buffer'),
     ]);
@@ -78,7 +79,7 @@ class BitSequenceGenerator extends Generator {
 
   @override
   TypeReference jsonType(BasePath from, [Set<Object> visited = const {}]) {
-    return constants.list(ref: constants.int);
+    return refs.list(ref: refs.int);
   }
 
   @override

@@ -1,10 +1,4 @@
-import 'package:code_builder/code_builder.dart'
-    show Expression, Reference, TypeReference;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import 'package:path/path.dart' as p;
-import './base.dart' show BasePath, Generator, GeneratedOutput, LazyLoader;
-import '../class_builder.dart' show createTypeDef;
-import '../constants.dart' as constants;
+part of generators;
 
 class TypeDefGenerator extends Generator {
   String filePath;
@@ -22,6 +16,7 @@ class TypeDefGenerator extends Generator {
   TypeDefGenerator._lazy(this.filePath, this.name, this.docs);
 
   factory TypeDefGenerator.lazy({
+    required int id,
     required LazyLoader loader,
     required int codec,
     required String filePath,
@@ -34,6 +29,9 @@ class TypeDefGenerator extends Generator {
     });
     return generator;
   }
+
+  @override
+  int id() => generator.id();
 
   @override
   TypeReference primitive(BasePath from) {
@@ -71,7 +69,7 @@ class TypeDefGenerator extends Generator {
 
   @override
   GeneratedOutput? generated() {
-    final typeDef = createTypeDef(
+    final typeDef = classbuilder.createTypeDef(
         name: name, reference: generator.primitive(p.dirname(filePath)));
     return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
   }
@@ -79,7 +77,7 @@ class TypeDefGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (visited.contains(this)) {
-      return constants.dynamic.type as TypeReference;
+      return refs.dynamic.type as TypeReference;
     }
     visited.add(this);
     final newType = generator.jsonType(from, visited);

@@ -1,22 +1,24 @@
-import 'package:code_builder/code_builder.dart' show Expression, TypeReference;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
-import './base.dart' show BasePath, Generator, LazyLoader;
-import '../constants.dart' as constants;
+part of generators;
 
 class ResultGenerator extends Generator {
+  final int _id;
   late Generator ok;
   late Generator err;
 
   ResultGenerator({
+    required int id,
     required this.ok,
     required this.err,
-  });
+  }) : _id = id;
 
-  ResultGenerator._lazy();
+  ResultGenerator._lazy(this._id);
 
   factory ResultGenerator.lazy(
-      {required LazyLoader loader, required int ok, required int err}) {
-    final generator = ResultGenerator._lazy();
+      {required int id,
+      required LazyLoader loader,
+      required int ok,
+      required int err}) {
+    final generator = ResultGenerator._lazy(id);
     loader.addLoader((Map<int, Generator> register) {
       generator.ok = register[ok]!;
       generator.err = register[err]!;
@@ -25,13 +27,16 @@ class ResultGenerator extends Generator {
   }
 
   @override
+  int id() => _id;
+
+  @override
   TypeReference primitive(BasePath from) {
-    return constants.result(ok.primitive(from), err.primitive(from));
+    return refs.result(ok.primitive(from), err.primitive(from));
   }
 
   @override
   TypeReference codec(BasePath from) {
-    return constants.resultCodec(ok.primitive(from), err.primitive(from));
+    return refs.resultCodec(ok.primitive(from), err.primitive(from));
   }
 
   @override
@@ -53,7 +58,7 @@ class ResultGenerator extends Generator {
 
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
-    return constants.map(constants.string, constants.dynamic);
+    return refs.map(refs.string, refs.dynamic);
   }
 
   @override

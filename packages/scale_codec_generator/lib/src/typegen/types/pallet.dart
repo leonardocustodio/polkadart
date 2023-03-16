@@ -1,18 +1,4 @@
-import 'dart:typed_data';
-import 'package:path/path.dart' as p;
-import './base.dart' show BasePath, Generator, GeneratedOutput;
-import '../class_builder.dart' show createPalletQueries, createPalletConstants;
-import '../frame_metadata.dart' as metadata
-    show
-        PalletConstantMetadata,
-        PalletMetadata,
-        StorageEntryMetadata,
-        StorageHasher,
-        StorageEntryModifier;
-import '../constants.dart' as constants;
-import 'package:code_builder/code_builder.dart'
-    show TypeReference, Expression, literalString, Class;
-import 'tuple.dart' show TupleGenerator;
+part of generators;
 
 enum StorageHasherType {
   /// Identity hashing (no hashing).
@@ -29,7 +15,7 @@ enum StorageHasherType {
   const StorageHasherType();
 
   TypeReference type(BasePath from) {
-    return constants.storageHasher.type as TypeReference;
+    return refs.storageHasher.type as TypeReference;
   }
 
   Expression instance(Expression codecInstance, BasePath from) {
@@ -101,7 +87,7 @@ class Storage {
   final Generator valueCodec;
 
   /// Default value (SCALE encoded)
-  final Uint8List defaultValue;
+  final List<int> defaultValue;
 
   /// Storage entry documentation.
   final List<String> docs;
@@ -169,31 +155,31 @@ class Storage {
   TypeReference type(String from) {
     switch (hashers.length) {
       case 0:
-        return constants.storageValue(valueCodec.primitive(from));
+        return refs.storageValue(valueCodec.primitive(from));
       case 1:
-        return constants.storageMap(
+        return refs.storageMap(
             key: hashers[0].codec.primitive(from),
             value: valueCodec.primitive(from));
       case 2:
-        return constants.storageDoubleMap(
+        return refs.storageDoubleMap(
             key1: hashers[0].codec.primitive(from),
             key2: hashers[1].codec.primitive(from),
             value: valueCodec.primitive(from));
       case 3:
-        return constants.storageTripleMap(
+        return refs.storageTripleMap(
             key1: hashers[0].codec.primitive(from),
             key2: hashers[1].codec.primitive(from),
             key3: hashers[2].codec.primitive(from),
             value: valueCodec.primitive(from));
       case 4:
-        return constants.storageQuadrupleMap(
+        return refs.storageQuadrupleMap(
             key1: hashers[0].codec.primitive(from),
             key2: hashers[1].codec.primitive(from),
             key3: hashers[2].codec.primitive(from),
             key4: hashers[3].codec.primitive(from),
             value: valueCodec.primitive(from));
       case 5:
-        return constants.storageQuintupleMap(
+        return refs.storageQuintupleMap(
             key1: hashers[0].codec.primitive(from),
             key2: hashers[1].codec.primitive(from),
             key3: hashers[2].codec.primitive(from),
@@ -201,7 +187,7 @@ class Storage {
             key5: hashers[4].codec.primitive(from),
             value: valueCodec.primitive(from));
       case 6:
-        return constants.storageSextupleMap(
+        return refs.storageSextupleMap(
             key1: hashers[0].codec.primitive(from),
             key2: hashers[1].codec.primitive(from),
             key3: hashers[2].codec.primitive(from),
@@ -235,7 +221,7 @@ class Storage {
 
 class Constant {
   final String name;
-  final Uint8List value;
+  final List<int> value;
   final Generator codec;
   final List<String> docs;
 
@@ -309,10 +295,10 @@ class PalletGenerator {
   GeneratedOutput generated() {
     final List<Class> classes = [];
     if (storages.isNotEmpty) {
-      classes.add(createPalletQueries(this));
+      classes.add(classbuilder.createPalletQueries(this));
     }
     if (constants.isNotEmpty) {
-      classes.add(createPalletConstants(this));
+      classes.add(classbuilder.createPalletConstants(this));
     }
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
