@@ -128,14 +128,13 @@ class Field {
   late List<String> docs;
 
   Field(
-      {required String? originalName,
+      {required this.originalName,
       required this.codec,
       required this.docs}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
-    originalName = originalName;
     if (originalName != null) {
-      sanitizedName = toFieldName(originalName);
+      sanitizedName = toFieldName(originalName!);
     }
   }
 
