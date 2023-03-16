@@ -1,18 +1,24 @@
 part of generators;
 
 class TupleGenerator extends Generator {
+  final int _id;
   String filePath;
   List<Generator> generators;
 
-  TupleGenerator({required this.filePath, required this.generators});
+  TupleGenerator(
+      {required int id, required this.filePath, required this.generators})
+      : _id = id;
 
-  TupleGenerator._lazy({required this.filePath}) : generators = [];
+  TupleGenerator._lazy({required int id, required this.filePath})
+      : generators = [],
+        _id = id;
 
   factory TupleGenerator.lazy(
-      {required LazyLoader loader,
+      {required int id,
+      required LazyLoader loader,
       required String filePath,
       required List<int> codecs}) {
-    final generator = TupleGenerator._lazy(filePath: filePath);
+    final generator = TupleGenerator._lazy(id: id, filePath: filePath);
     loader.addLoader((Map<int, Generator> register) {
       for (final codec in codecs) {
         generator.generators.add(register[codec]!);
@@ -20,6 +26,9 @@ class TupleGenerator extends Generator {
     });
     return generator;
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference codec(BasePath from) {

@@ -1,20 +1,24 @@
 part of generators;
 
 class OptionGenerator extends Generator {
+  final int _id;
   late Generator inner;
 
-  OptionGenerator(this.inner);
+  OptionGenerator(int id, this.inner) : _id = id;
 
-  OptionGenerator._lazy();
+  OptionGenerator._lazy(int id) : _id = id;
 
   factory OptionGenerator.lazy(
-      {required LazyLoader loader, required int codec}) {
-    final generator = OptionGenerator._lazy();
+      {required int id, required LazyLoader loader, required int codec}) {
+    final generator = OptionGenerator._lazy(id);
     loader.addLoader((Map<int, Generator> register) {
       generator.inner = register[codec]!;
     });
     return generator;
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {

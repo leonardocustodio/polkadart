@@ -1,20 +1,24 @@
 part of generators;
 
 class SequenceGenerator extends Generator {
+  final int _id;
   late Generator typeDef;
 
-  SequenceGenerator(this.typeDef);
+  SequenceGenerator(this._id, this.typeDef);
 
-  SequenceGenerator._lazy();
+  SequenceGenerator._lazy(this._id);
 
   factory SequenceGenerator.lazy(
-      {required LazyLoader loader, required int codec}) {
-    final generator = SequenceGenerator._lazy();
+      {required int id, required LazyLoader loader, required int codec}) {
+    final generator = SequenceGenerator._lazy(id);
     loader.addLoader((Map<int, Generator> register) {
       generator.typeDef = register[codec]!;
     });
     return generator;
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {

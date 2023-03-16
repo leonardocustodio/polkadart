@@ -23,6 +23,9 @@ class Variant extends Generator {
   }
 
   @override
+  int id() => -1;
+
+  @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (fields.isEmpty) {
       return refs.map(refs.string, refs.dynamic);
@@ -104,6 +107,7 @@ class Variant extends Generator {
 }
 
 class VariantGenerator extends Generator {
+  final int _id;
   String filePath;
   String name;
   String orginalName;
@@ -111,15 +115,20 @@ class VariantGenerator extends Generator {
   List<String> docs;
 
   VariantGenerator(
-      {required this.filePath,
+      {required int id,
+      required this.filePath,
       required this.name,
       required this.orginalName,
       required this.variants,
-      required this.docs}) {
+      required this.docs})
+      : _id = id {
     for (final variant in variants) {
       variant.generator = this;
     }
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference codec(BasePath from) {

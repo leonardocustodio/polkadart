@@ -18,23 +18,24 @@ Map<int, Generator> parseTypes(
 
     // Create Primitive Generator
     if (type.typeDef is metadata.TypeDefPrimitive) {
+      final primitiveTypeDef = type.typeDef as metadata.TypeDefPrimitive;
       generators[type.id] = PrimitiveGenerator(
-          (type.typeDef as metadata.TypeDefPrimitive).primitive);
+          id: type.id, primitive: primitiveTypeDef.primitive);
       continue;
     }
 
     // Create Compact Generator
     if (type.typeDef is metadata.TypeDefCompact) {
       // Ignore the compact type, is not important
-      generators[type.id] = CompactGenerator();
+      generators[type.id] = CompactGenerator(type.id);
       continue;
     }
 
     // Create Sequences Generator
     if (type.typeDef is metadata.TypeDefSequence) {
       final sequence = type.typeDef as metadata.TypeDefSequence;
-      generators[type.id] =
-          SequenceGenerator.lazy(loader: lazyLoader, codec: sequence.type);
+      generators[type.id] = SequenceGenerator.lazy(
+          id: type.id, loader: lazyLoader, codec: sequence.type);
       continue;
     }
 
@@ -42,7 +43,10 @@ Map<int, Generator> parseTypes(
     if (type.typeDef is metadata.TypeDefArray) {
       final array = type.typeDef as metadata.TypeDefArray;
       generators[type.id] = ArrayGenerator.lazy(
-          loader: lazyLoader, codec: array.type, length: array.length);
+          id: type.id,
+          loader: lazyLoader,
+          codec: array.type,
+          length: array.length);
       continue;
     }
 
@@ -52,7 +56,7 @@ Map<int, Generator> parseTypes(
 
       // Create an Empty Type
       if (tuple.types.isEmpty && type.path.isEmpty) {
-        generators[type.id] = EmptyGenerator();
+        generators[type.id] = EmptyGenerator(type.id);
         continue;
       }
 
@@ -61,13 +65,14 @@ Map<int, Generator> parseTypes(
         generators[type.id] = TypeDefGenerator(
             filePath: listToFilePath([typesPath, ...type.path]),
             name: sanitizeClassName(type.path.last),
-            generator: EmptyGenerator(),
+            generator: EmptyGenerator(type.id),
             docs: type.docs);
         continue;
       }
 
       // Create a Tuple Generator
       generators[type.id] = TupleGenerator.lazy(
+        id: type.id,
         loader: lazyLoader,
         filePath: p.join(typesPath, 'tuples.dart'),
         codecs: tuple.types,
@@ -85,11 +90,11 @@ Map<int, Generator> parseTypes(
           orderType.path.last == 'Lsb0' ? BitOrder.LSB : BitOrder.MSB;
       if (storeTypeDef is metadata.TypeDefPrimitive) {
         generators[type.id] = BitSequenceGenerator.fromPrimitive(
-            primitive: storeTypeDef.primitive, order: bitOrder);
+            id: type.id, primitive: storeTypeDef.primitive, order: bitOrder);
         continue;
       }
-      generators[type.id] =
-          BitSequenceGenerator(store: BitStore.U8, order: bitOrder);
+      generators[type.id] = BitSequenceGenerator(
+          id: type.id, store: BitStore.U8, order: bitOrder);
       continue;
     }
 
@@ -99,7 +104,7 @@ Map<int, Generator> parseTypes(
 
       // Create an Empty Type
       if (composite.fields.isEmpty && type.path.isEmpty) {
-        generators[type.id] = EmptyGenerator();
+        generators[type.id] = EmptyGenerator(type.id);
         continue;
       }
 
@@ -108,7 +113,7 @@ Map<int, Generator> parseTypes(
         generators[type.id] = TypeDefGenerator(
             filePath: listToFilePath([typesPath, ...type.path]),
             name: sanitizeClassName(type.path.last),
-            generator: EmptyGenerator(),
+            generator: EmptyGenerator(type.id),
             docs: type.docs);
         continue;
       }
@@ -124,6 +129,7 @@ Map<int, Generator> parseTypes(
           if (tupleTypeDef is metadata.TypeDefTuple &&
               tupleTypeDef.types.length == 2) {
             generators[type.id] = BTreeMapGenerator.lazy(
+                id: type.id,
                 loader: lazyLoader,
                 key: tupleTypeDef.types[0],
                 value: tupleTypeDef.types[1]);
@@ -141,7 +147,7 @@ Map<int, Generator> parseTypes(
           final sequence = types[composite.fields.first.type]!.typeDef;
           if (sequence is metadata.TypeDefSequence) {
             generators[type.id] = SequenceGenerator.lazy(
-                loader: lazyLoader, codec: sequence.type);
+                id: type.id, loader: lazyLoader, codec: sequence.type);
             continue;
           }
         }
@@ -158,6 +164,7 @@ Map<int, Generator> parseTypes(
               if (tupleTypeDef is metadata.TypeDefTuple &&
                   tupleTypeDef.types.length == 2) {
                 generators[type.id] = BTreeMapGenerator.lazy(
+                    id: type.id,
                     loader: lazyLoader,
                     key: tupleTypeDef.types[0],
                     value: tupleTypeDef.types[1]);
@@ -179,7 +186,7 @@ Map<int, Generator> parseTypes(
               final primitiveTypeDef = types[sequenceTypeDef.type]!.typeDef;
               if (primitiveTypeDef is metadata.TypeDefPrimitive &&
                   primitiveTypeDef.primitive == metadata.Primitive.U8) {
-                generators[type.id] = PrimitiveGenerator.str;
+                generators[type.id] = PrimitiveGenerator.str(type.id);
                 continue;
               }
             }
@@ -187,13 +194,14 @@ Map<int, Generator> parseTypes(
             final primitiveTypeDef = types[boundedVec.type]!.typeDef;
             if (primitiveTypeDef is metadata.TypeDefPrimitive &&
                 primitiveTypeDef.primitive == metadata.Primitive.U8) {
-              generators[type.id] = PrimitiveGenerator.str;
+              generators[type.id] = PrimitiveGenerator.str(type.id);
               continue;
             }
           }
         }
 
         generators[type.id] = TypeDefGenerator.lazy(
+          id: type.id,
           loader: lazyLoader,
           filePath: listToFilePath([typesPath, ...type.path]),
           name: sanitizeClassName(type.path.last),
@@ -205,6 +213,7 @@ Map<int, Generator> parseTypes(
 
       // Create Compose Generator
       generators[type.id] = CompositeGenerator(
+          id: type.id,
           filePath: listToFilePath([typesPath, ...type.path]),
           name: sanitizeClassName(type.path.last),
           docs: type.docs,
@@ -224,7 +233,7 @@ Map<int, Generator> parseTypes(
 
       // Create Empty Generator
       if (variant.variants.isEmpty && type.path.isEmpty) {
-        generators[type.id] = EmptyGenerator();
+        generators[type.id] = EmptyGenerator(type.id);
         continue;
       }
 
@@ -233,7 +242,7 @@ Map<int, Generator> parseTypes(
         generators[type.id] = TypeDefGenerator(
             filePath: listToFilePath([typesPath, ...type.path]),
             name: sanitizeClassName(type.path.last),
-            generator: EmptyGenerator(),
+            generator: EmptyGenerator(type.id),
             docs: type.docs);
         continue;
       }
@@ -247,7 +256,9 @@ Map<int, Generator> parseTypes(
           variant.variants[1].fields.length == 1 &&
           variant.variants[1].name == 'Some') {
         generators[type.id] = OptionGenerator.lazy(
-            loader: lazyLoader, codec: variant.variants[1].fields[0].type);
+            id: type.id,
+            loader: lazyLoader,
+            codec: variant.variants[1].fields[0].type);
         continue;
       }
 
@@ -260,6 +271,7 @@ Map<int, Generator> parseTypes(
           variant.variants[1].index == 1 &&
           variant.variants[1].fields.length == 1) {
         generators[type.id] = ResultGenerator.lazy(
+          id: type.id,
           loader: lazyLoader,
           ok: variant.variants[0].fields[0].type,
           err: variant.variants[1].fields[0].type,
@@ -271,6 +283,7 @@ Map<int, Generator> parseTypes(
       final enumName =
           sanitizeClassName(type.path.last, prefix: 'Enum', suffix: 'Enum');
       generators[type.id] = VariantGenerator(
+          id: type.id,
           filePath: listToFilePath([typesPath, ...type.path]),
           name: enumName,
           orginalName: type.path.last,

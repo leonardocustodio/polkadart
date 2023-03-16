@@ -1,25 +1,33 @@
 part of generators;
 
 class BTreeMapGenerator extends Generator {
+  final int _id;
   late Generator key;
   late Generator value;
 
   BTreeMapGenerator({
+    required int id,
     required this.key,
     required this.value,
-  });
+  }) : _id = id;
 
-  BTreeMapGenerator._lazy();
+  BTreeMapGenerator._lazy(int id) : _id = id;
 
   factory BTreeMapGenerator.lazy(
-      {required LazyLoader loader, required int key, required int value}) {
-    final generator = BTreeMapGenerator._lazy();
+      {required int id,
+      required LazyLoader loader,
+      required int key,
+      required int value}) {
+    final generator = BTreeMapGenerator._lazy(id);
     loader.addLoader((Map<int, Generator> register) {
       generator.key = register[key]!;
       generator.value = register[value]!;
     });
     return generator;
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {

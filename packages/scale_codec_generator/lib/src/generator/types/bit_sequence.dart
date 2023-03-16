@@ -1,15 +1,18 @@
 part of generators;
 
 class BitSequenceGenerator extends Generator {
+  final int _id;
   BitStore store;
   BitOrder order;
 
   BitSequenceGenerator({
+    required int id,
     required this.store,
     required this.order,
-  });
+  }) : _id = id;
 
   factory BitSequenceGenerator.fromPrimitive({
+    required int id,
     required metadata.Primitive primitive,
     required BitOrder order,
   }) {
@@ -36,6 +39,7 @@ class BitSequenceGenerator extends Generator {
         break;
     }
     return BitSequenceGenerator(
+      id: id,
       store: store,
       order: order,
     );

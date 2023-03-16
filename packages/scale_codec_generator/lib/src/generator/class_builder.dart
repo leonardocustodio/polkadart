@@ -254,7 +254,7 @@ Class createVariantCodec(generators.VariantGenerator variantGenerator) =>
             ..name = 'input'))
           ..body = Block.of([
             declareFinal('index')
-                .assign(generators.PrimitiveGenerator.u8.decode(dirname))
+                .assign(generators.PrimitiveGenerator.u8(1).decode(dirname))
                 .statement,
             Code('switch (index) {'),
             Block.of(variantGenerator.variants.map((variant) => Block.of([
@@ -388,7 +388,7 @@ Class createVariantClass(
         ])
         ..body = Block(
           (b) => b
-            ..statements.add(generators.PrimitiveGenerator.u8
+            ..statements.add(generators.PrimitiveGenerator.u8(1)
                 .encode(dirname, literalNum(variant.index))
                 .statement)
             ..statements.addAll(variant.fields.map((field) => field.codec
@@ -478,7 +478,7 @@ Class createSimpleVariantCodec(
             ..name = 'input'))
           ..body = Block((b) => b
             ..statements.add(declareFinal('index')
-                .assign(generators.PrimitiveGenerator.u8.decode(dirname))
+                .assign(generators.PrimitiveGenerator.u8(1).decode(dirname))
                 .statement)
             ..statements.add(Code('switch (index) {'))
             ..statements
@@ -501,7 +501,7 @@ Class createSimpleVariantCodec(
               ..type = refs.output
               ..name = 'output'),
           ])
-          ..body = generators.PrimitiveGenerator.u8
+          ..body = generators.PrimitiveGenerator.u8(1)
               .encode(dirname, refer('value').property('codecIndex'))
               .statement));
     });

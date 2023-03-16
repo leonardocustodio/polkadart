@@ -1,7 +1,11 @@
 part of generators;
 
 class EmptyGenerator extends Generator {
-  EmptyGenerator();
+  final int _id;
+  EmptyGenerator(int id) : _id = id;
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {

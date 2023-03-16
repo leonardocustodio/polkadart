@@ -1,7 +1,11 @@
 part of generators;
 
 class CompactGenerator extends Generator {
-  const CompactGenerator();
+  final int _id;
+  const CompactGenerator(this._id);
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {

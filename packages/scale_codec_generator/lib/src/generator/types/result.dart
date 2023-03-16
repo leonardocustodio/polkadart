@@ -1,25 +1,33 @@
 part of generators;
 
 class ResultGenerator extends Generator {
+  final int _id;
   late Generator ok;
   late Generator err;
 
   ResultGenerator({
+    required int id,
     required this.ok,
     required this.err,
-  });
+  }) : _id = id;
 
-  ResultGenerator._lazy();
+  ResultGenerator._lazy(this._id);
 
   factory ResultGenerator.lazy(
-      {required LazyLoader loader, required int ok, required int err}) {
-    final generator = ResultGenerator._lazy();
+      {required int id,
+      required LazyLoader loader,
+      required int ok,
+      required int err}) {
+    final generator = ResultGenerator._lazy(id);
     loader.addLoader((Map<int, Generator> register) {
       generator.ok = register[ok]!;
       generator.err = register[err]!;
     });
     return generator;
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {

@@ -45,6 +45,9 @@ abstract class Generator {
     return parseTypes(registry, typesPath);
   }
 
+  /// Returns the id of type in the registry.
+  int id();
+
   Expression encode(BasePath from, Expression obj,
       [Expression output = const Reference('output')]) {
     return codecInstance(from).property('encodeTo').call([obj, output]);

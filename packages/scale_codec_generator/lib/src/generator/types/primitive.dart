@@ -1,77 +1,48 @@
 part of generators;
 
 class PrimitiveGenerator extends Generator {
+  final int _id;
   final metadata.Primitive primitiveType;
 
-  const PrimitiveGenerator._(this.primitiveType);
+  const PrimitiveGenerator._(int id, this.primitiveType) : _id = id;
 
-  factory PrimitiveGenerator(metadata.Primitive primitive) {
-    switch (primitive) {
-      case metadata.Primitive.Bool:
-        return PrimitiveGenerator.bool;
-      case metadata.Primitive.Str:
-        return PrimitiveGenerator.str;
-      case metadata.Primitive.Char:
-        return PrimitiveGenerator.char;
-      case metadata.Primitive.U8:
-        return PrimitiveGenerator.u8;
-      case metadata.Primitive.U16:
-        return PrimitiveGenerator.u16;
-      case metadata.Primitive.U32:
-        return PrimitiveGenerator.u32;
-      case metadata.Primitive.U64:
-        return PrimitiveGenerator.u64;
-      case metadata.Primitive.U128:
-        return PrimitiveGenerator.u128;
-      case metadata.Primitive.U256:
-        return PrimitiveGenerator.u256;
-      case metadata.Primitive.I8:
-        return PrimitiveGenerator.i8;
-      case metadata.Primitive.I16:
-        return PrimitiveGenerator.i16;
-      case metadata.Primitive.I32:
-        return PrimitiveGenerator.i32;
-      case metadata.Primitive.I64:
-        return PrimitiveGenerator.i64;
-      case metadata.Primitive.I128:
-        return PrimitiveGenerator.i128;
-      case metadata.Primitive.I256:
-        return PrimitiveGenerator.i256;
-      default:
-        throw Exception('Unsupported primitive $primitive');
-    }
-  }
+  PrimitiveGenerator({required int id, required metadata.Primitive primitive})
+      : primitiveType = primitive,
+        _id = id;
 
-  static const PrimitiveGenerator str =
-      PrimitiveGenerator._(metadata.Primitive.Str);
-  static const PrimitiveGenerator char =
-      PrimitiveGenerator._(metadata.Primitive.Char);
-  static const PrimitiveGenerator bool =
-      PrimitiveGenerator._(metadata.Primitive.Bool);
-  static const PrimitiveGenerator i8 =
-      PrimitiveGenerator._(metadata.Primitive.I8);
-  static const PrimitiveGenerator i16 =
-      PrimitiveGenerator._(metadata.Primitive.I16);
-  static const PrimitiveGenerator i32 =
-      PrimitiveGenerator._(metadata.Primitive.I32);
-  static const PrimitiveGenerator i64 =
-      PrimitiveGenerator._(metadata.Primitive.I64);
-  static const PrimitiveGenerator i128 =
-      PrimitiveGenerator._(metadata.Primitive.I128);
-  static const PrimitiveGenerator i256 =
-      PrimitiveGenerator._(metadata.Primitive.I256);
-  static const PrimitiveGenerator u8 =
-      PrimitiveGenerator._(metadata.Primitive.U8);
-  static const PrimitiveGenerator u16 =
-      PrimitiveGenerator._(metadata.Primitive.U16);
-  static const PrimitiveGenerator u32 =
-      PrimitiveGenerator._(metadata.Primitive.U32);
-  static const PrimitiveGenerator u64 =
-      PrimitiveGenerator._(metadata.Primitive.U64);
-  static const PrimitiveGenerator u128 =
-      PrimitiveGenerator._(metadata.Primitive.U128);
-  static const PrimitiveGenerator u256 =
-      PrimitiveGenerator._(metadata.Primitive.U256);
+  factory PrimitiveGenerator.str(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.Str);
+  factory PrimitiveGenerator.char(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.Char);
+  factory PrimitiveGenerator.bool(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.Bool);
+  factory PrimitiveGenerator.i8(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.I8);
+  factory PrimitiveGenerator.i16(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.I16);
+  factory PrimitiveGenerator.i32(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.I32);
+  factory PrimitiveGenerator.i64(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.I64);
+  factory PrimitiveGenerator.i128(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.I128);
+  factory PrimitiveGenerator.i256(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.I256);
+  factory PrimitiveGenerator.u8(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.U8);
+  factory PrimitiveGenerator.u16(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.U16);
+  factory PrimitiveGenerator.u32(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.U32);
+  factory PrimitiveGenerator.u64(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.U64);
+  factory PrimitiveGenerator.u128(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.U128);
+  factory PrimitiveGenerator.u256(int id) =>
+      PrimitiveGenerator._(id, metadata.Primitive.U256);
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {

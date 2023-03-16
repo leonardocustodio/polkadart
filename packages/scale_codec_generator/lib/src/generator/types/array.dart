@@ -1,21 +1,30 @@
 part of generators;
 
 class ArrayGenerator extends Generator {
+  final int _id;
   late Generator typeDef;
   final int length;
 
-  ArrayGenerator({required Generator codec, required this.length})
-      : typeDef = codec;
-  ArrayGenerator._lazy({required this.length});
+  ArrayGenerator(
+      {required int id, required Generator codec, required this.length})
+      : typeDef = codec,
+        _id = id;
+  ArrayGenerator._lazy(this._id, this.length);
 
   factory ArrayGenerator.lazy(
-      {required LazyLoader loader, required int codec, required int length}) {
-    final generator = ArrayGenerator._lazy(length: length);
+      {required int id,
+      required LazyLoader loader,
+      required int codec,
+      required int length}) {
+    final generator = ArrayGenerator._lazy(id, length);
     loader.addLoader((Map<int, Generator> register) {
       generator.typeDef = register[codec]!;
     });
     return generator;
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {

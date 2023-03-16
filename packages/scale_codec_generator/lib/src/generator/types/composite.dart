@@ -1,17 +1,19 @@
 part of generators;
 
 class CompositeGenerator extends Generator {
+  final int _id;
   String filePath;
   String name;
   late List<Field> fields;
   List<String> docs;
 
   CompositeGenerator({
+    required int id,
     required this.filePath,
     required this.name,
     required this.fields,
     required this.docs,
-  }) {
+  }) : _id = id {
     for (int i = 0; i < fields.length; i++) {
       if (fields[i].originalName == null) {
         fields[i].sanitizedName = 'value$i';
@@ -23,6 +25,9 @@ class CompositeGenerator extends Generator {
     return fields.isNotEmpty &&
         fields.every((field) => field.originalName == null);
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference codec(BasePath from) {
