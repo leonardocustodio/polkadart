@@ -1,7 +1,7 @@
 part of generators;
 
 /// Transform a list of [TypeMetadata] into a [Map] of [Generator]
-Map<int, Generator> parseFromTypes(
+Map<int, Generator> parseTypes(
     List<metadata.TypeMetadata> registry, String typesPath) {
   // Type Definitions
   final Map<int, metadata.TypeMetadata> types = {
