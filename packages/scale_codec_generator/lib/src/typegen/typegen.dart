@@ -67,7 +67,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         I64SequenceCodec;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as p;
-import './utils.dart'
+import './utils/utils.dart'
     show
         sanitize,
         bigIntToExpression,

@@ -34,7 +34,7 @@ import './typegen.dart' as generators
         PolkadartGenerator,
         PalletGenerator;
 import './references.dart' as refs;
-import './utils.dart' show sanitize;
+import './utils/utils.dart' show sanitize;
 
 List<String> sanitizeDocs(List<String> docs) => docs.map((doc) {
       if (doc.startsWith('///')) return doc;
