@@ -1,19 +1,24 @@
 part of generators;
 
 class BTreeMapGenerator extends Generator {
+  final int _id;
   late Generator key;
   late Generator value;
 
   BTreeMapGenerator({
+    required int id,
     required this.key,
     required this.value,
-  });
+  }) : _id = id;
 
-  BTreeMapGenerator._lazy();
+  BTreeMapGenerator._lazy(int id) : _id = id;
 
   factory BTreeMapGenerator.lazy(
-      {required LazyLoader loader, required int key, required int value}) {
-    final generator = BTreeMapGenerator._lazy();
+      {required int id,
+      required LazyLoader loader,
+      required int key,
+      required int value}) {
+    final generator = BTreeMapGenerator._lazy(id);
     loader.addLoader((Map<int, Generator> register) {
       generator.key = register[key]!;
       generator.value = register[value]!;
@@ -22,13 +27,16 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
+  int id() => _id;
+
+  @override
   TypeReference primitive(BasePath from) {
-    return constants.map(key.primitive(from), value.primitive(from));
+    return refs.map(key.primitive(from), value.primitive(from));
   }
 
   @override
   TypeReference codec(BasePath from) {
-    return constants.bTreeMapCodec(key.primitive(from), value.primitive(from));
+    return refs.bTreeMapCodec(key.primitive(from), value.primitive(from));
   }
 
   @override
@@ -57,13 +65,13 @@ class BTreeMapGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (visited.contains(this)) {
-      return constants.map(constants.dynamic, constants.dynamic);
+      return refs.map(refs.dynamic, refs.dynamic);
     }
     visited.add(this);
     final type = Generator.cacheOrCreate(
         from,
         visited,
-        () => constants.map(
+        () => refs.map(
             key.jsonType(from, visited), value.jsonType(from, visited)));
     visited.remove(this);
     return type;
@@ -78,7 +86,7 @@ class BTreeMapGenerator extends Generator {
           Parameter((b) => b..name = 'value'),
         ])
         ..lambda = true
-        ..body = constants.mapEntry.newInstance([
+        ..body = refs.mapEntry.newInstance([
           key.instanceToJson(from, refer('key')),
           value.instanceToJson(from, refer('value')),
         ]).code).closure

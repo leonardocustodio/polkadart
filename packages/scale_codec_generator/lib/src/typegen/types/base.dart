@@ -42,8 +42,11 @@ abstract class Generator {
 
   static Map<int, Generator> fromTypes(
       List<metadata.TypeMetadata> registry, String typesPath) {
-    return _generatorsFromTypes(registry, typesPath);
+    return parseTypes(registry, typesPath);
   }
+
+  /// Returns the id of type in the registry.
+  int id();
 
   Expression encode(BasePath from, Expression obj,
       [Expression output = const Reference('output')]) {
@@ -124,15 +127,11 @@ class Field {
   late Generator codec;
   late List<String> docs;
 
-  Field(
-      {required String? originalName,
-      required this.codec,
-      required this.docs}) {
+  Field({required this.originalName, required this.codec, required this.docs}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
-    originalName = originalName;
     if (originalName != null) {
-      sanitizedName = toFieldName(originalName);
+      sanitizedName = toFieldName(originalName!);
     }
   }
 

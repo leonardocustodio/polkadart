@@ -1,18 +1,24 @@
 part of generators;
 
 class TupleGenerator extends Generator {
+  final int _id;
   String filePath;
   List<Generator> generators;
 
-  TupleGenerator({required this.filePath, required this.generators});
+  TupleGenerator(
+      {required int id, required this.filePath, required this.generators})
+      : _id = id;
 
-  TupleGenerator._lazy({required this.filePath}) : generators = [];
+  TupleGenerator._lazy({required int id, required this.filePath})
+      : generators = [],
+        _id = id;
 
   factory TupleGenerator.lazy(
-      {required LazyLoader loader,
+      {required int id,
+      required LazyLoader loader,
       required String filePath,
       required List<int> codecs}) {
-    final generator = TupleGenerator._lazy(filePath: filePath);
+    final generator = TupleGenerator._lazy(id: id, filePath: filePath);
     loader.addLoader((Map<int, Generator> register) {
       for (final codec in codecs) {
         generator.generators.add(register[codec]!);
@@ -20,6 +26,9 @@ class TupleGenerator extends Generator {
     });
     return generator;
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference codec(BasePath from) {
@@ -67,18 +76,18 @@ class TupleGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (generators.isEmpty) {
-      return constants.dynamic.type as TypeReference;
+      return refs.dynamic.type as TypeReference;
     }
 
     if (visited.contains(this)) {
-      return constants.list(ref: constants.dynamic);
+      return refs.list(ref: refs.dynamic);
     }
     visited.add(this);
 
     // Check if all fields are of the same type, otherwise use dynamic
     final type = findCommonType(
         generators.map((generator) => generator.jsonType(from, visited)));
-    final newType = constants.list(ref: type);
+    final newType = refs.list(ref: type);
     visited.remove(this);
     return newType;
   }

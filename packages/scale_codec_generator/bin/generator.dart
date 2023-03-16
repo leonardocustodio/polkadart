@@ -14,7 +14,7 @@ import 'package:scale_codec_generator/scale_codec_generator.dart'
         GeneratedOutput,
         PalletGenerator,
         PolkadartGenerator;
-import 'package:scale_codec_generator/src/generator/frame_metadata.dart'
+import 'package:scale_codec_generator/src/typegen/frame_metadata.dart'
     show RuntimeMetadataV14;
 
 class ChainProperties {
