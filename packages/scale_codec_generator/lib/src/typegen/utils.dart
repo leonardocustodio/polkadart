@@ -2,7 +2,7 @@ import 'package:code_builder/code_builder.dart'
     show Expression, TypeReference, literalString, literalNum;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as path;
-import 'references.dart' as constants;
+import './references.dart' as constants;
 
 // reference: https://www.codesansar.com/dart/keywords.htm
 const Set<String> reservedWords = {

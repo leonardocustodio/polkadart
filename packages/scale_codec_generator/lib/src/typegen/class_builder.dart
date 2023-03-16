@@ -24,7 +24,7 @@ import 'package:code_builder/code_builder.dart'
         TypeDef,
         TypeReference,
         MethodModifier;
-import 'generator.dart' as generators
+import './typegen.dart' as generators
     show
         Field,
         Variant,
@@ -33,7 +33,7 @@ import 'generator.dart' as generators
         CompositeGenerator,
         PolkadartGenerator,
         PalletGenerator;
-import 'references.dart' as refs;
+import './references.dart' as refs;
 import './utils.dart' show sanitize;
 
 List<String> sanitizeDocs(List<String> docs) => docs.map((doc) {
