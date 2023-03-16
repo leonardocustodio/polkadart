@@ -46,6 +46,9 @@ class BitSequenceGenerator extends Generator {
   }
 
   @override
+  int id() => _id;
+
+  @override
   TypeReference primitive(BasePath from) {
     return refs.bitArray.type as TypeReference;
   }
