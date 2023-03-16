@@ -1,5 +1,9 @@
 import 'package:scale_codec_generator/scale_codec_generator.dart'
-    show TypeDefGenerator, PrimitiveGenerator, SequenceGenerator, CompositeGenerator;
+    show
+        TypeDefGenerator,
+        PrimitiveGenerator,
+        SequenceGenerator,
+        CompositeGenerator;
 import 'package:test/test.dart';
 
 void main() {
@@ -27,23 +31,22 @@ void main() {
         filePath: './types/some_type.dart',
         name: 'SomeType',
         generator: CompositeGenerator(
-          id: 5,
-          filePath: './types/point.dart',
-          name: 'Point',
-          docs: [],
-          fields: []
-        ),
+            id: 5,
+            filePath: './types/point.dart',
+            name: 'Point',
+            docs: [],
+            fields: []),
         docs: [],
       );
       expect(
-        generator.generated()!.build(), [
-          '// ignore_for_file: no_leading_underscores_for_library_prefixes',
-          'import \'point.dart\' as _i1;',
-          '',
-          'typedef SomeType = _i1.Point;',
-          '',
-        ].join('\n')
-      );
+          generator.generated()!.build(),
+          [
+            '// ignore_for_file: no_leading_underscores_for_library_prefixes',
+            'import \'point.dart\' as _i1;',
+            '',
+            'typedef SomeType = _i1.Point;',
+            '',
+          ].join('\n'));
     });
   });
 }

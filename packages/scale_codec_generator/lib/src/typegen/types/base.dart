@@ -127,10 +127,7 @@ class Field {
   late Generator codec;
   late List<String> docs;
 
-  Field(
-      {required this.originalName,
-      required this.codec,
-      required this.docs}) {
+  Field({required this.originalName, required this.codec, required this.docs}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
     if (originalName != null) {
