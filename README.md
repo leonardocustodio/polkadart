@@ -64,6 +64,8 @@ You can run all tests from the library by running `docker compose up`.
 | ss58 | [packages/ss58/](./packages/ss58/) |
 | ss58_codec | [packages/ss58_codec/](./packages/ss58_codec/) |
 | substrate_metadata | [packages/substrate_metadata/](./packages/substrate_metadata/) |
+| Http/Websocket providers | [packages/frame_primitives/lib/provider.dart](./packages/frame_primitives/lib/provider.dart) |
+| typegen | [packages/scale_codec_generator/](./packages/scale_codec_generator/) |
 
 ## Road map and current state
 
@@ -73,29 +75,16 @@ You can run all tests from the library by running `docker compose up`.
 
 |                     | Status |
 | ------------------- | :----: |
-| Scale Codec Encoder |   ✅    |
-| Scale Codec Decoder |   ✅    |
-| SS58 Format         |   ✅    |
-| Parse Metadata v14  |   ✅    |
-| Coverage and Tests  |   ✅    |
-| Substrate Metadata  |   🟡    |
-| RPC                 |   🔴    |
-| Websockets          |   🔴    |
-| Crypto              |   🔴    |
-
-### Substrate Metadata
-
-|                        | Status |
-| ---------------------- | :----: |
-| Parse Metadata v14     |   ✅    |
-| Parse Metadata pre-v14 |   ✅    |
-| JSON-RPC               |   🔴    |
-| Constants              |   🔴    |
-| Read Storage           |   🔴    |
-| Extrinsics             |   🔴    |
-| Events                 |   🔴    |
-| Errors                 |   🔴    |
-| SmartContracts         |   🔴    |
+| [Scale Codec Encoder](./packages/polkadart_scale_codec/) |   ✅    |
+| [Scale Codec Decoder](./packages/polkadart_scale_codec/) |   ✅    |
+| [SS58 Format](./packages/ss58/)         |   ✅    |
+| [Parse Metadata v14](./packages/substrate_metadata/lib/core/metadata_decoder.dart) |   ✅    |
+| [Substrate Metadata](./packages/substrate_metadata/lib/definitions/metadata/metadata.dart)  |   ✅    |
+| [RPC](./packages/frame_primitives/lib/apis/apis.dart)                 |   ✅    |
+| Constants           |   ✅    |
+| [Websocket Provider](./packages/frame_primitives/lib/provider.dart)  |   ✅    |
+| [Http Provider](./packages/frame_primitives/lib/provider.dart)      |   ✅    |
+| Signed Extrinsics   |   🔴    |
 
 ## **License**
 
