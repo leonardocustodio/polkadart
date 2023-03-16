@@ -1,17 +1,19 @@
 part of generators;
 
 class CompositeGenerator extends Generator {
+  final int _id;
   String filePath;
   String name;
   late List<Field> fields;
   List<String> docs;
 
   CompositeGenerator({
+    required int id,
     required this.filePath,
     required this.name,
     required this.fields,
     required this.docs,
-  }) {
+  }) : _id = id {
     for (int i = 0; i < fields.length; i++) {
       if (fields[i].originalName == null) {
         fields[i].sanitizedName = 'value$i';
@@ -23,6 +25,9 @@ class CompositeGenerator extends Generator {
     return fields.isNotEmpty &&
         fields.every((field) => field.originalName == null);
   }
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference codec(BasePath from) {
@@ -68,16 +73,16 @@ class CompositeGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (fields.isEmpty) {
-      return constants.dynamic.type as TypeReference;
+      return refs.dynamic.type as TypeReference;
     }
 
     if (visited.contains(this)) {
       if (fields.length == 1 && fields.first.originalName == null) {
-        return constants.dynamic.type as TypeReference;
+        return refs.dynamic.type as TypeReference;
       } else if (fields.every((field) => field.originalName == null)) {
-        return constants.list(ref: constants.dynamic);
+        return refs.list(ref: refs.dynamic);
       } else {
-        return constants.map(constants.string, constants.dynamic);
+        return refs.map(refs.string, refs.dynamic);
       }
     }
 
@@ -93,11 +98,11 @@ class CompositeGenerator extends Generator {
 
       // If all field are unnamed, return a list
       if (fields.every((field) => field.originalName == null)) {
-        return constants.list(ref: type);
+        return refs.list(ref: type);
       }
 
       // Otherwise return a map
-      return constants.map(constants.string, type);
+      return refs.map(refs.string, type);
     });
     visited.remove(this);
     return type;

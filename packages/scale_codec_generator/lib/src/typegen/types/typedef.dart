@@ -16,6 +16,7 @@ class TypeDefGenerator extends Generator {
   TypeDefGenerator._lazy(this.filePath, this.name, this.docs);
 
   factory TypeDefGenerator.lazy({
+    required int id,
     required LazyLoader loader,
     required int codec,
     required String filePath,
@@ -28,6 +29,9 @@ class TypeDefGenerator extends Generator {
     });
     return generator;
   }
+
+  @override
+  int id() => generator.id();
 
   @override
   TypeReference primitive(BasePath from) {
@@ -73,7 +77,7 @@ class TypeDefGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (visited.contains(this)) {
-      return constants.dynamic.type as TypeReference;
+      return refs.dynamic.type as TypeReference;
     }
     visited.add(this);
     final newType = generator.jsonType(from, visited);

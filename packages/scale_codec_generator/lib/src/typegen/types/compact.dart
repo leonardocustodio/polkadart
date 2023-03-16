@@ -1,16 +1,20 @@
 part of generators;
 
 class CompactGenerator extends Generator {
-  const CompactGenerator();
+  final int _id;
+  const CompactGenerator(this._id);
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {
-    return constants.bigInt.type as TypeReference;
+    return refs.bigInt.type as TypeReference;
   }
 
   @override
   TypeReference codec(BasePath from) {
-    return constants.compactBigIntCodec.type as TypeReference;
+    return refs.compactBigIntCodec.type as TypeReference;
   }
 
   @override
@@ -21,7 +25,7 @@ class CompactGenerator extends Generator {
 
   @override
   TypeReference jsonType(BasePath from, [Set<Object> visited = const {}]) {
-    return constants.bigInt.type as TypeReference;
+    return refs.bigInt.type as TypeReference;
   }
 
   @override

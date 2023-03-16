@@ -1,16 +1,20 @@
 part of generators;
 
 class EmptyGenerator extends Generator {
-  EmptyGenerator();
+  final int _id;
+  EmptyGenerator(int id) : _id = id;
+
+  @override
+  int id() => _id;
 
   @override
   TypeReference primitive(BasePath from) {
-    return constants.dynamic.type as TypeReference;
+    return refs.dynamic.type as TypeReference;
   }
 
   @override
   TypeReference codec(BasePath from) {
-    return constants.emptyCodec.type as TypeReference;
+    return refs.emptyCodec.type as TypeReference;
   }
 
   @override
@@ -20,7 +24,7 @@ class EmptyGenerator extends Generator {
 
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
-    return constants.dynamic.type as TypeReference;
+    return refs.dynamic.type as TypeReference;
   }
 
   @override

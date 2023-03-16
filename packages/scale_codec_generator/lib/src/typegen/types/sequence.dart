@@ -1,16 +1,16 @@
 part of generators;
 
-class ArrayGenerator extends Generator {
+class SequenceGenerator extends Generator {
+  final int _id;
   late Generator typeDef;
-  final int length;
 
-  ArrayGenerator({required Generator codec, required this.length})
-      : typeDef = codec;
-  ArrayGenerator._lazy({required this.length});
+  SequenceGenerator(this._id, this.typeDef);
 
-  factory ArrayGenerator.lazy(
-      {required LazyLoader loader, required int codec, required int length}) {
-    final generator = ArrayGenerator._lazy(length: length);
+  SequenceGenerator._lazy(this._id);
+
+  factory SequenceGenerator.lazy(
+      {required int id, required LazyLoader loader, required int codec}) {
+    final generator = SequenceGenerator._lazy(id);
     loader.addLoader((Map<int, Generator> register) {
       generator.typeDef = register[codec]!;
     });
@@ -18,9 +18,13 @@ class ArrayGenerator extends Generator {
   }
 
   @override
+  int id() => _id;
+
+  @override
   TypeReference primitive(BasePath from) {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
+        case metadata.Primitive.Char:
         case metadata.Primitive.U8:
         case metadata.Primitive.U16:
         case metadata.Primitive.U32:
@@ -29,12 +33,13 @@ class ArrayGenerator extends Generator {
         case metadata.Primitive.I16:
         case metadata.Primitive.I32:
         case metadata.Primitive.I64:
-          return constants.list(ref: constants.int);
+          return refs.list(ref: refs.int);
         default:
           break;
       }
     }
-    return constants.list(ref: typeDef.primitive(from));
+
+    return refs.list(ref: typeDef.primitive(from));
   }
 
   @override
@@ -42,27 +47,27 @@ class ArrayGenerator extends Generator {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case metadata.Primitive.U8:
-          return constants.u8ArrayCodec.type as TypeReference;
+          return refs.u8SequenceCodec.type as TypeReference;
         case metadata.Primitive.U16:
-          return constants.u16ArrayCodec.type as TypeReference;
+          return refs.u16SequenceCodec.type as TypeReference;
         case metadata.Primitive.U32:
-          return constants.u32ArrayCodec.type as TypeReference;
+          return refs.u32SequenceCodec.type as TypeReference;
         case metadata.Primitive.U64:
-          return constants.u64ArrayCodec.type as TypeReference;
+          return refs.u64SequenceCodec.type as TypeReference;
         case metadata.Primitive.I8:
-          return constants.i8ArrayCodec.type as TypeReference;
+          return refs.i8SequenceCodec.type as TypeReference;
         case metadata.Primitive.I16:
-          return constants.i16ArrayCodec.type as TypeReference;
+          return refs.i16SequenceCodec.type as TypeReference;
         case metadata.Primitive.I32:
-          return constants.i32ArrayCodec.type as TypeReference;
+          return refs.i32SequenceCodec.type as TypeReference;
         case metadata.Primitive.I64:
-          return constants.i64ArrayCodec.type as TypeReference;
+          return refs.i64SequenceCodec.type as TypeReference;
         default:
           break;
       }
     }
 
-    return constants.arrayCodec(typeDef.primitive(from));
+    return refs.sequenceCodec(typeDef.primitive(from));
   }
 
   @override
@@ -71,6 +76,7 @@ class ArrayGenerator extends Generator {
 
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
+        case metadata.Primitive.Char:
         case metadata.Primitive.U8:
         case metadata.Primitive.U16:
         case metadata.Primitive.U32:
@@ -79,29 +85,26 @@ class ArrayGenerator extends Generator {
         case metadata.Primitive.I16:
         case metadata.Primitive.I32:
         case metadata.Primitive.I64:
-          return codec.constInstance([literalNum(length)]);
+          return codec.property('codec');
         default:
           break;
       }
     }
 
-    return codec.constInstance([
-      typeDef.codecInstance(from),
-      literalNum(length),
-    ]);
+    return codec.constInstance([typeDef.codecInstance(from)]);
   }
 
   Expression listToExpression(List<int> values, bool constant) {
-    final TypeReference listType = constants.list(ref: constants.int);
+    final TypeReference listType = refs.list(ref: refs.int);
     if (!constant && values.every((value) => value == 0)) {
       return listType.newInstanceNamed(
           'filled',
           [literalNum(values.length), literalNum(0)],
-          {'growable': literalFalse});
+          {'growable': literalTrue});
     } else if (constant) {
-      return literalConstList(values, constants.int);
+      return literalConstList(values, refs.int);
     }
-    return literalList(values, constants.int);
+    return literalList(values, refs.int);
   }
 
   @override
@@ -110,34 +113,35 @@ class ArrayGenerator extends Generator {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case metadata.Primitive.U8:
         case metadata.Primitive.Char:
-          final list = U8ArrayCodec(length).decode(input);
+          final list = U8SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         case metadata.Primitive.U16:
-          final list = U16ArrayCodec(length).decode(input);
+          final list = U16SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         case metadata.Primitive.U32:
-          final list = U32ArrayCodec(length).decode(input);
+          final list = U32SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         case metadata.Primitive.U64:
-          final list = U64ArrayCodec(length).decode(input);
+          final list = U64SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         case metadata.Primitive.I8:
-          final list = I8ArrayCodec(length).decode(input);
+          final list = I8SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         case metadata.Primitive.I16:
-          final list = I16ArrayCodec(length).decode(input);
+          final list = I16SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         case metadata.Primitive.I32:
-          final list = I32ArrayCodec(length).decode(input);
+          final list = I32SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         case metadata.Primitive.I64:
-          final list = I64ArrayCodec(length).decode(input);
+          final list = I64SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
         default:
           break;
       }
     }
 
+    final length = CompactCodec.codec.decode(input);
     final values = <Expression>[
       for (int i = 0; i < length; i++)
         typeDef.valueFrom(from, input, constant: constant)
@@ -162,28 +166,27 @@ class ArrayGenerator extends Generator {
         case metadata.Primitive.I16:
         case metadata.Primitive.I32:
         case metadata.Primitive.I64:
-          return constants.list(ref: constants.int);
+          return refs.list(ref: refs.int);
         case metadata.Primitive.U128:
         case metadata.Primitive.I128:
         case metadata.Primitive.U256:
         case metadata.Primitive.I256:
-          return constants.list(ref: constants.bigInt);
+          return refs.list(ref: refs.bigInt);
         case metadata.Primitive.Str:
-          return constants.list(ref: constants.string);
+          return refs.list(ref: refs.string);
         case metadata.Primitive.Bool:
-          return constants.list(ref: constants.bool);
+          return refs.list(ref: refs.bool);
         default:
           break;
       }
     }
     if (visited.contains(this)) {
-      return constants.list(ref: constants.dynamic);
+      return refs.list(ref: refs.dynamic);
     }
     visited.add(this);
-    final type = Generator.cacheOrCreate(from, visited,
-        () => constants.list(ref: typeDef.jsonType(from, visited)));
+    final newType = refs.list(ref: typeDef.jsonType(from, visited));
     visited.remove(this);
-    return type;
+    return newType;
   }
 
   @override
@@ -200,7 +203,7 @@ class ArrayGenerator extends Generator {
         case metadata.Primitive.I16:
         case metadata.Primitive.I32:
         case metadata.Primitive.I64:
-          return obj.property('toList').call([]);
+          return obj;
         default:
           break;
       }
