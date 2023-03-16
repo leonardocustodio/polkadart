@@ -68,16 +68,16 @@ class CompositeGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (fields.isEmpty) {
-      return constants.dynamic.type as TypeReference;
+      return refs.dynamic.type as TypeReference;
     }
 
     if (visited.contains(this)) {
       if (fields.length == 1 && fields.first.originalName == null) {
-        return constants.dynamic.type as TypeReference;
+        return refs.dynamic.type as TypeReference;
       } else if (fields.every((field) => field.originalName == null)) {
-        return constants.list(ref: constants.dynamic);
+        return refs.list(ref: refs.dynamic);
       } else {
-        return constants.map(constants.string, constants.dynamic);
+        return refs.map(refs.string, refs.dynamic);
       }
     }
 
@@ -93,11 +93,11 @@ class CompositeGenerator extends Generator {
 
       // If all field are unnamed, return a list
       if (fields.every((field) => field.originalName == null)) {
-        return constants.list(ref: type);
+        return refs.list(ref: type);
       }
 
       // Otherwise return a map
-      return constants.map(constants.string, type);
+      return refs.map(refs.string, type);
     });
     visited.remove(this);
     return type;

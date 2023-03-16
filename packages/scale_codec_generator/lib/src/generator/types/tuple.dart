@@ -67,18 +67,18 @@ class TupleGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (generators.isEmpty) {
-      return constants.dynamic.type as TypeReference;
+      return refs.dynamic.type as TypeReference;
     }
 
     if (visited.contains(this)) {
-      return constants.list(ref: constants.dynamic);
+      return refs.list(ref: refs.dynamic);
     }
     visited.add(this);
 
     // Check if all fields are of the same type, otherwise use dynamic
     final type = findCommonType(
         generators.map((generator) => generator.jsonType(from, visited)));
-    final newType = constants.list(ref: type);
+    final newType = refs.list(ref: type);
     visited.remove(this);
     return newType;
   }

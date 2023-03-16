@@ -25,30 +25,29 @@ class Variant extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (fields.isEmpty) {
-      return constants.map(constants.string, constants.dynamic);
+      return refs.map(refs.string, refs.dynamic);
     }
 
     if (visited.contains(this)) {
       if (fields.length == 1 && fields.first.originalName == null) {
-        return constants.map(constants.string, constants.dynamic);
+        return refs.map(refs.string, refs.dynamic);
       }
     }
     visited.add(this);
 
     final TypeReference newType;
     if (fields.length == 1 && fields.first.originalName == null) {
-      newType = constants.map(
-          constants.string, fields.first.codec.jsonType(from, visited));
+      newType =
+          refs.map(refs.string, fields.first.codec.jsonType(from, visited));
     } else {
       // Check if all fields are of the same type, otherwise use dynamic
       final type = findCommonType(
           fields.map((field) => field.codec.jsonType(from, visited)));
 
       if (fields.every((field) => field.originalName == null)) {
-        newType = constants.map(constants.string, constants.list(ref: type));
+        newType = refs.map(refs.string, refs.list(ref: type));
       } else {
-        newType = constants.map(
-            constants.string, constants.map(constants.string, type));
+        newType = refs.map(refs.string, refs.map(refs.string, type));
       }
     }
     visited.remove(this);
@@ -190,11 +189,11 @@ class VariantGenerator extends Generator {
     // For Simple Variants json type is String
     if (variants.isNotEmpty &&
         variants.every((variant) => variant.fields.isEmpty)) {
-      return constants.string.type as TypeReference;
+      return refs.string.type as TypeReference;
     }
 
     if (visited.contains(this)) {
-      return constants.map(constants.string, constants.dynamic);
+      return refs.map(refs.string, refs.dynamic);
     }
 
     visited.add(this);

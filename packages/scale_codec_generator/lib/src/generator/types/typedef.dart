@@ -73,7 +73,7 @@ class TypeDefGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (visited.contains(this)) {
-      return constants.dynamic.type as TypeReference;
+      return refs.dynamic.type as TypeReference;
     }
     visited.add(this);
     final newType = generator.jsonType(from, visited);

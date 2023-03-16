@@ -23,12 +23,12 @@ class ResultGenerator extends Generator {
 
   @override
   TypeReference primitive(BasePath from) {
-    return constants.result(ok.primitive(from), err.primitive(from));
+    return refs.result(ok.primitive(from), err.primitive(from));
   }
 
   @override
   TypeReference codec(BasePath from) {
-    return constants.resultCodec(ok.primitive(from), err.primitive(from));
+    return refs.resultCodec(ok.primitive(from), err.primitive(from));
   }
 
   @override
@@ -50,7 +50,7 @@ class ResultGenerator extends Generator {
 
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
-    return constants.map(constants.string, constants.dynamic);
+    return refs.map(refs.string, refs.dynamic);
   }
 
   @override

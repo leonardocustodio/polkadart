@@ -77,9 +77,9 @@ class PrimitiveGenerator extends Generator {
   TypeReference primitive(BasePath from) {
     switch (primitiveType) {
       case metadata.Primitive.Bool:
-        return constants.bool.type as TypeReference;
+        return refs.bool.type as TypeReference;
       case metadata.Primitive.Str:
-        return constants.string.type as TypeReference;
+        return refs.string.type as TypeReference;
       case metadata.Primitive.Char:
       case metadata.Primitive.U8:
       case metadata.Primitive.U16:
@@ -87,14 +87,14 @@ class PrimitiveGenerator extends Generator {
       case metadata.Primitive.I8:
       case metadata.Primitive.I16:
       case metadata.Primitive.I32:
-        return constants.int.type as TypeReference;
+        return refs.int.type as TypeReference;
       case metadata.Primitive.U64:
       case metadata.Primitive.U128:
       case metadata.Primitive.U256:
       case metadata.Primitive.I64:
       case metadata.Primitive.I128:
       case metadata.Primitive.I256:
-        return constants.bigInt.type as TypeReference;
+        return refs.bigInt.type as TypeReference;
       default:
         throw Exception('Unsupported primitive $primitive');
     }
@@ -104,34 +104,34 @@ class PrimitiveGenerator extends Generator {
   TypeReference codec(BasePath from) {
     switch (primitiveType) {
       case metadata.Primitive.Bool:
-        return constants.boolCodec.type as TypeReference;
+        return refs.boolCodec.type as TypeReference;
       case metadata.Primitive.Str:
-        return constants.strCodec.type as TypeReference;
+        return refs.strCodec.type as TypeReference;
       case metadata.Primitive.Char:
       case metadata.Primitive.U8:
-        return constants.u8Codec.type as TypeReference;
+        return refs.u8Codec.type as TypeReference;
       case metadata.Primitive.U16:
-        return constants.u16Codec.type as TypeReference;
+        return refs.u16Codec.type as TypeReference;
       case metadata.Primitive.U32:
-        return constants.u32Codec.type as TypeReference;
+        return refs.u32Codec.type as TypeReference;
       case metadata.Primitive.U64:
-        return constants.u64Codec.type as TypeReference;
+        return refs.u64Codec.type as TypeReference;
       case metadata.Primitive.U128:
-        return constants.u128Codec.type as TypeReference;
+        return refs.u128Codec.type as TypeReference;
       case metadata.Primitive.U256:
-        return constants.u256Codec.type as TypeReference;
+        return refs.u256Codec.type as TypeReference;
       case metadata.Primitive.I8:
-        return constants.i8Codec.type as TypeReference;
+        return refs.i8Codec.type as TypeReference;
       case metadata.Primitive.I16:
-        return constants.i16Codec.type as TypeReference;
+        return refs.i16Codec.type as TypeReference;
       case metadata.Primitive.I32:
-        return constants.i32Codec.type as TypeReference;
+        return refs.i32Codec.type as TypeReference;
       case metadata.Primitive.I64:
-        return constants.i64Codec.type as TypeReference;
+        return refs.i64Codec.type as TypeReference;
       case metadata.Primitive.I128:
-        return constants.i128Codec.type as TypeReference;
+        return refs.i128Codec.type as TypeReference;
       case metadata.Primitive.I256:
-        return constants.i256Codec.type as TypeReference;
+        return refs.i256Codec.type as TypeReference;
       default:
         throw Exception('Unsupported primitive $primitive');
     }
@@ -178,9 +178,9 @@ class PrimitiveGenerator extends Generator {
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     switch (primitiveType) {
       case metadata.Primitive.Bool:
-        return constants.bool.type as TypeReference;
+        return refs.bool.type as TypeReference;
       case metadata.Primitive.Str:
-        return constants.string.type as TypeReference;
+        return refs.string.type as TypeReference;
       case metadata.Primitive.Char:
       case metadata.Primitive.U8:
       case metadata.Primitive.U16:
@@ -188,14 +188,14 @@ class PrimitiveGenerator extends Generator {
       case metadata.Primitive.I8:
       case metadata.Primitive.I16:
       case metadata.Primitive.I32:
-        return constants.int.type as TypeReference;
+        return refs.int.type as TypeReference;
       case metadata.Primitive.U64:
       case metadata.Primitive.U128:
       case metadata.Primitive.U256:
       case metadata.Primitive.I64:
       case metadata.Primitive.I128:
       case metadata.Primitive.I256:
-        return constants.bigInt.type as TypeReference;
+        return refs.bigInt.type as TypeReference;
       default:
         throw Exception('Unsupported primitive $primitive');
     }

@@ -19,7 +19,7 @@ class OptionGenerator extends Generator {
   @override
   TypeReference primitive(BasePath from) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
-      return constants.option(inner.primitive(from));
+      return refs.option(inner.primitive(from));
     }
     return inner.primitive(from).asNullable();
   }
@@ -27,9 +27,9 @@ class OptionGenerator extends Generator {
   @override
   TypeReference codec(BasePath from) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
-      return constants.nestedOptionCodec(inner.primitive(from));
+      return refs.nestedOptionCodec(inner.primitive(from));
     }
-    return constants.optionCodec(inner.primitive(from));
+    return refs.optionCodec(inner.primitive(from));
   }
 
   @override
@@ -41,13 +41,9 @@ class OptionGenerator extends Generator {
   Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
       if (input.read() == 0) {
-        return constants
-            .option(inner.primitive(from))
-            .newInstanceNamed('none', []);
+        return refs.option(inner.primitive(from)).newInstanceNamed('none', []);
       } else {
-        return constants
-            .option(inner.primitive(from))
-            .newInstanceNamed('some', [
+        return refs.option(inner.primitive(from)).newInstanceNamed('some', [
           inner.valueFrom(from, input),
         ]);
       }
@@ -63,13 +59,13 @@ class OptionGenerator extends Generator {
   @override
   TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
     if (visited.contains(this)) {
-      return constants.dynamic.type as TypeReference;
+      return refs.dynamic.type as TypeReference;
     }
     visited.add(this);
     final newType = Generator.cacheOrCreate(from, visited, () {
       if (inner is OptionGenerator) {
-        return constants.map(
-          constants.string,
+        return refs.map(
+          refs.string,
           inner.jsonType(from, visited).asNullable(),
         );
       }

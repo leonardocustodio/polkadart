@@ -67,31 +67,31 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         I64SequenceCodec;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as p;
-import '../utils.dart'
+import './utils.dart'
     show
         sanitize,
         bigIntToExpression,
         findCommonType,
         listToFilePath,
         sanitizeClassName;
-import '../class_builder.dart' as classbuilder;
-import '../frame_metadata.dart' as metadata;
-import '../constants.dart' as constants;
+import './class_builder.dart' as classbuilder;
+import './frame_metadata.dart' as metadata;
+import 'references.dart' as refs;
 
-part 'array.dart';
-part 'base.dart';
-part 'bit_sequence.dart';
-part 'btreemap.dart';
-part 'compact.dart';
-part 'composite.dart';
-part 'empty.dart';
-part 'from_types.dart';
-part 'option.dart';
-part 'pallet.dart';
-part 'polkadart.dart';
-part 'primitive.dart';
-part 'result.dart';
-part 'sequence.dart';
-part 'tuple.dart';
-part 'typedef.dart';
-part 'variant.dart';
+part 'types/array.dart';
+part 'types/base.dart';
+part 'types/bit_sequence.dart';
+part 'types/btreemap.dart';
+part 'types/compact.dart';
+part 'types/composite.dart';
+part 'types/empty.dart';
+part 'parser.dart';
+part 'types/option.dart';
+part 'types/pallet.dart';
+part 'types/polkadart.dart';
+part 'types/primitive.dart';
+part 'types/result.dart';
+part 'types/sequence.dart';
+part 'types/tuple.dart';
+part 'types/typedef.dart';
+part 'types/variant.dart';

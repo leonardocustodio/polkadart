@@ -29,13 +29,13 @@ class SequenceGenerator extends Generator {
         case metadata.Primitive.I16:
         case metadata.Primitive.I32:
         case metadata.Primitive.I64:
-          return constants.list(ref: constants.int);
+          return refs.list(ref: refs.int);
         default:
           break;
       }
     }
 
-    return constants.list(ref: typeDef.primitive(from));
+    return refs.list(ref: typeDef.primitive(from));
   }
 
   @override
@@ -43,27 +43,27 @@ class SequenceGenerator extends Generator {
     if (typeDef is PrimitiveGenerator) {
       switch ((typeDef as PrimitiveGenerator).primitiveType) {
         case metadata.Primitive.U8:
-          return constants.u8SequenceCodec.type as TypeReference;
+          return refs.u8SequenceCodec.type as TypeReference;
         case metadata.Primitive.U16:
-          return constants.u16SequenceCodec.type as TypeReference;
+          return refs.u16SequenceCodec.type as TypeReference;
         case metadata.Primitive.U32:
-          return constants.u32SequenceCodec.type as TypeReference;
+          return refs.u32SequenceCodec.type as TypeReference;
         case metadata.Primitive.U64:
-          return constants.u64SequenceCodec.type as TypeReference;
+          return refs.u64SequenceCodec.type as TypeReference;
         case metadata.Primitive.I8:
-          return constants.i8SequenceCodec.type as TypeReference;
+          return refs.i8SequenceCodec.type as TypeReference;
         case metadata.Primitive.I16:
-          return constants.i16SequenceCodec.type as TypeReference;
+          return refs.i16SequenceCodec.type as TypeReference;
         case metadata.Primitive.I32:
-          return constants.i32SequenceCodec.type as TypeReference;
+          return refs.i32SequenceCodec.type as TypeReference;
         case metadata.Primitive.I64:
-          return constants.i64SequenceCodec.type as TypeReference;
+          return refs.i64SequenceCodec.type as TypeReference;
         default:
           break;
       }
     }
 
-    return constants.sequenceCodec(typeDef.primitive(from));
+    return refs.sequenceCodec(typeDef.primitive(from));
   }
 
   @override
@@ -91,16 +91,16 @@ class SequenceGenerator extends Generator {
   }
 
   Expression listToExpression(List<int> values, bool constant) {
-    final TypeReference listType = constants.list(ref: constants.int);
+    final TypeReference listType = refs.list(ref: refs.int);
     if (!constant && values.every((value) => value == 0)) {
       return listType.newInstanceNamed(
           'filled',
           [literalNum(values.length), literalNum(0)],
           {'growable': literalTrue});
     } else if (constant) {
-      return literalConstList(values, constants.int);
+      return literalConstList(values, refs.int);
     }
-    return literalList(values, constants.int);
+    return literalList(values, refs.int);
   }
 
   @override
@@ -162,25 +162,25 @@ class SequenceGenerator extends Generator {
         case metadata.Primitive.I16:
         case metadata.Primitive.I32:
         case metadata.Primitive.I64:
-          return constants.list(ref: constants.int);
+          return refs.list(ref: refs.int);
         case metadata.Primitive.U128:
         case metadata.Primitive.I128:
         case metadata.Primitive.U256:
         case metadata.Primitive.I256:
-          return constants.list(ref: constants.bigInt);
+          return refs.list(ref: refs.bigInt);
         case metadata.Primitive.Str:
-          return constants.list(ref: constants.string);
+          return refs.list(ref: refs.string);
         case metadata.Primitive.Bool:
-          return constants.list(ref: constants.bool);
+          return refs.list(ref: refs.bool);
         default:
           break;
       }
     }
     if (visited.contains(this)) {
-      return constants.list(ref: constants.dynamic);
+      return refs.list(ref: refs.dynamic);
     }
     visited.add(this);
-    final newType = constants.list(ref: typeDef.jsonType(from, visited));
+    final newType = refs.list(ref: typeDef.jsonType(from, visited));
     visited.remove(this);
     return newType;
   }

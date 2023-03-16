@@ -42,7 +42,7 @@ abstract class Generator {
 
   static Map<int, Generator> fromTypes(
       List<metadata.TypeMetadata> registry, String typesPath) {
-    return _generatorsFromTypes(registry, typesPath);
+    return parseFromTypes(registry, typesPath);
   }
 
   Expression encode(BasePath from, Expression obj,

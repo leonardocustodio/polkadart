@@ -43,19 +43,19 @@ class BitSequenceGenerator extends Generator {
 
   @override
   TypeReference primitive(BasePath from) {
-    return constants.bitArray.type as TypeReference;
+    return refs.bitArray.type as TypeReference;
   }
 
   @override
   TypeReference codec(BasePath from) {
-    return constants.bitSequenceCodec.type as TypeReference;
+    return refs.bitSequenceCodec.type as TypeReference;
   }
 
   @override
   Expression codecInstance(BasePath from) {
     return codec(from).constInstance([
-      constants.bitStore.property(store.name),
-      constants.bitOrder.property(order.name),
+      refs.bitStore.property(store.name),
+      refs.bitOrder.property(order.name),
     ]);
   }
 
@@ -64,7 +64,7 @@ class BitSequenceGenerator extends Generator {
     final bitArray = BitSequenceCodec(store, order).decode(input);
     return primitive(from).property('fromByteBuffer').call([
       literalNum(bitArray.length),
-      constants.uint32List.property('fromList').call([
+      refs.uint32List.property('fromList').call([
         literalConstList(bitArray.asUint32Iterable().toList())
       ]).property('buffer'),
     ]);
@@ -72,7 +72,7 @@ class BitSequenceGenerator extends Generator {
 
   @override
   TypeReference jsonType(BasePath from, [Set<Object> visited = const {}]) {
-    return constants.list(ref: constants.int);
+    return refs.list(ref: refs.int);
   }
 
   @override
