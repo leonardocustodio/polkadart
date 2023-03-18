@@ -1,26 +1,26 @@
-import 'dart:core' show String, List, int;
+import 'dart:core' show List, String, int;
 import 'package:path/path.dart' as p;
 import 'package:code_builder/code_builder.dart'
     show
+        Block,
         Class,
         Code,
-        declareFinal,
-        Block,
-        refer,
-        Reference,
-        Method,
-        Field,
-        FieldModifier,
-        Parameter,
         Constructor,
         Enum,
         EnumValue,
+        Field,
+        FieldModifier,
+        Method,
+        Parameter,
+        Reference,
+        TypeDef,
+        TypeReference,
+        declareFinal,
         literalNum,
         literalString,
-        TypeDef,
-        TypeReference;
+        refer;
 import './typegen.dart' as generators
-    show Field, Variant, VariantBuilder, PrimitiveDescriptor, CompositeBuilder;
+    show CompositeBuilder, Field, PrimitiveDescriptor, Variant, VariantBuilder;
 import './references.dart' as refs;
 import './utils/utils.dart' show sanitizeDocs;
 
