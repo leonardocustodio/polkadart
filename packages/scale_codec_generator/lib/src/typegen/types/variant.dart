@@ -1,12 +1,12 @@
 part of generators;
 
-class Variant extends Generator {
+class Variant extends TypeDescriptor {
   int index;
   String name;
   String orignalName;
   List<Field> fields;
   List<String> docs;
-  late VariantGenerator generator;
+  late VariantBuilder generator;
 
   Variant({
     required this.index,
@@ -26,7 +26,8 @@ class Variant extends Generator {
   int id() => -1;
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     if (fields.isEmpty) {
       return refs.map(refs.string, refs.dynamic);
     }
@@ -106,22 +107,22 @@ class Variant extends Generator {
   }
 }
 
-class VariantGenerator extends Generator {
+class VariantBuilder extends TypeBuilder {
   final int _id;
-  String filePath;
   String name;
   String orginalName;
   List<Variant> variants;
   List<String> docs;
 
-  VariantGenerator(
+  VariantBuilder(
       {required int id,
-      required this.filePath,
+      required String filePath,
       required this.name,
       required this.orginalName,
       required this.variants,
       required this.docs})
-      : _id = id {
+      : _id = id,
+        super(filePath) {
     for (final variant in variants) {
       variant.generator = this;
     }
@@ -166,7 +167,40 @@ class VariantGenerator extends Generator {
   }
 
   @override
-  GeneratedOutput? generated() {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
+    // For Simple Variants json type is String
+    if (variants.isNotEmpty &&
+        variants.every((variant) => variant.fields.isEmpty)) {
+      return refs.string.type as TypeReference;
+    }
+
+    if (visited.contains(this)) {
+      return refs.map(refs.string, refs.dynamic);
+    }
+
+    visited.add(this);
+    final type = TypeDescriptor.cacheOrCreate(from, visited, () {
+      // Check if all variants are of the same type, otherwise use Map<String, dynamic>
+      final complexJsonType = findCommonType(
+          variants.map((variant) => variant.jsonType(from, visited)));
+      if (complexJsonType.symbol != 'Map') {
+        throw Exception(
+            '$name: Invalid complex variant type: $complexJsonType');
+      }
+      return complexJsonType;
+    });
+    visited.remove(this);
+    return type;
+  }
+
+  @override
+  Expression instanceToJson(BasePath from, Expression obj) {
+    return obj.property('toJson').call([]);
+  }
+
+  @override
+  GeneratedOutput build() {
     // Simple Variants
     if (variants.isNotEmpty &&
         variants.every((variant) => variant.fields.isEmpty)) {
@@ -191,37 +225,5 @@ class VariantGenerator extends Generator {
           filePath, name, variants[i], variantsJsonType[i]));
     }
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
-  }
-
-  @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
-    // For Simple Variants json type is String
-    if (variants.isNotEmpty &&
-        variants.every((variant) => variant.fields.isEmpty)) {
-      return refs.string.type as TypeReference;
-    }
-
-    if (visited.contains(this)) {
-      return refs.map(refs.string, refs.dynamic);
-    }
-
-    visited.add(this);
-    final type = Generator.cacheOrCreate(from, visited, () {
-      // Check if all variants are of the same type, otherwise use Map<String, dynamic>
-      final complexJsonType = findCommonType(
-          variants.map((variant) => variant.jsonType(from, visited)));
-      if (complexJsonType.symbol != 'Map') {
-        throw Exception(
-            '$name: Invalid complex variant type: $complexJsonType');
-      }
-      return complexJsonType;
-    });
-    visited.remove(this);
-    return type;
-  }
-
-  @override
-  Expression instanceToJson(BasePath from, Expression obj) {
-    return obj.property('toJson').call([]);
   }
 }

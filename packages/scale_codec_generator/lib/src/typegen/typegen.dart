@@ -2,77 +2,77 @@ library generators;
 
 import 'package:code_builder/code_builder.dart'
     show
+        Block,
         Class,
         Code,
-        Block,
         CodeExpression,
         DartEmitter,
         Enum,
-        Method,
-        Parameter,
-        TypeReference,
-        TypeDef,
-        Reference,
         Expression,
         Library,
-        refer,
+        Method,
+        Parameter,
+        Reference,
+        TypeDef,
+        TypeReference,
         literalBool,
-        literalTrue,
+        literalConstList,
+        literalConstMap,
+        literalFalse,
+        literalList,
+        literalMap,
         literalNull,
         literalNum,
-        literalFalse,
-        literalConstList,
-        literalList,
-        literalConstMap,
-        literalMap,
-        literalString;
+        literalString,
+        literalTrue,
+        refer;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show
-        Input,
-        BoolCodec,
-        CompactCodec,
-        CompactBigIntCodec,
-        U8ArrayCodec,
-        U16ArrayCodec,
-        U32ArrayCodec,
-        U64ArrayCodec,
-        I8ArrayCodec,
-        I16ArrayCodec,
-        I32ArrayCodec,
-        I64ArrayCodec,
-        StrCodec,
-        U8Codec,
-        U16Codec,
-        U32Codec,
-        U64Codec,
-        U128Codec,
-        U256Codec,
-        I8Codec,
-        I16Codec,
-        I32Codec,
-        I64Codec,
-        I128Codec,
-        I256Codec,
+        BitOrder,
         BitSequenceCodec,
         BitStore,
-        BitOrder,
-        U8SequenceCodec,
-        U16SequenceCodec,
-        U32SequenceCodec,
-        U64SequenceCodec,
-        I8SequenceCodec,
+        BoolCodec,
+        CompactBigIntCodec,
+        CompactCodec,
+        I128Codec,
+        I16ArrayCodec,
+        I16Codec,
         I16SequenceCodec,
+        I256Codec,
+        I32ArrayCodec,
+        I32Codec,
         I32SequenceCodec,
-        I64SequenceCodec;
+        I64ArrayCodec,
+        I64Codec,
+        I64SequenceCodec,
+        I8ArrayCodec,
+        I8Codec,
+        I8SequenceCodec,
+        Input,
+        StrCodec,
+        U128Codec,
+        U16ArrayCodec,
+        U16Codec,
+        U16SequenceCodec,
+        U256Codec,
+        U32ArrayCodec,
+        U32Codec,
+        U32SequenceCodec,
+        U64ArrayCodec,
+        U64Codec,
+        U64SequenceCodec,
+        U8ArrayCodec,
+        U8Codec,
+        U8SequenceCodec;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as p;
 import './utils/utils.dart'
     show
-        sanitize,
         bigIntToExpression,
         findCommonType,
         listToFilePath,
+        sanitize,
         sanitizeClassName;
 import './class_builder.dart' as classbuilder;
 import './frame_metadata.dart' as metadata;
@@ -87,8 +87,6 @@ part './types/composite.dart';
 part './types/empty.dart';
 part './parser.dart';
 part './types/option.dart';
-part './types/pallet.dart';
-part './types/polkadart.dart';
 part './types/primitive.dart';
 part './types/result.dart';
 part './types/sequence.dart';
