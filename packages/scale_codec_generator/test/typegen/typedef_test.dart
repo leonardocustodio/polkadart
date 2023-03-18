@@ -15,7 +15,7 @@ void main() {
         generator: PrimitiveDescriptor.u8(1),
         docs: [],
       );
-      expect(generator.generated()!.build(), 'typedef SomeType = int;\n');
+      expect(generator.build().build(), 'typedef SomeType = int;\n');
     });
     test('sequence typedef', () {
       final generator = TypeDefBuilder(
@@ -24,7 +24,7 @@ void main() {
         generator: SequenceDescriptor(2, PrimitiveDescriptor.u8(1)),
         docs: [],
       );
-      expect(generator.generated()!.build(), 'typedef SomeType = List<int>;\n');
+      expect(generator.build().build(), 'typedef SomeType = List<int>;\n');
     });
     test('sequence typedef', () {
       final generator = TypeDefBuilder(
@@ -39,7 +39,7 @@ void main() {
         docs: [],
       );
       expect(
-          generator.generated()!.build(),
+          generator.build().build(),
           [
             '// ignore_for_file: no_leading_underscores_for_library_prefixes',
             'import \'point.dart\' as _i1;',

@@ -24,7 +24,7 @@ void main() {
           ]);
 
       // Check the point class
-      final output = generator.generated()!;
+      final output = generator.build();
       expect(output.classes.length, 2);
       final pointClass = output.classes.first;
       expect(pointClass.name, 'Point');
@@ -65,7 +65,7 @@ void main() {
           'int');
 
       expect(
-          generator.generated()!.build(),
+          generator.build().build(),
           [
             '// ignore_for_file: no_leading_underscores_for_library_prefixes\n',
             'import \'package:polkadart_scale_codec/polkadart_scale_codec.dart\' as _i1;\n',
