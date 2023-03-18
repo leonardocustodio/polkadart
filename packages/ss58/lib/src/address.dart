@@ -64,8 +64,8 @@ class Address extends Equatable {
       // they make the LE-encoded 16-bit value: aaaaaabb 00cccccc
       // so the lower byte is formed of aaaaaabb and the higher byte is 00cccccc
       var lower = ((data[0] << 2) | (data[1] >> 6));
-      var upper = data[1] & BigInt.from(63).toInt();
-      prefix = (lower & BigInt.from(255).toInt()) | (upper << 8);
+      var upper = data[1] & 63;
+      prefix = (lower & 255) | (upper << 8);
       offset = 2;
     } else {
       throw InvalidPrefixException();
@@ -139,18 +139,17 @@ class Address extends Equatable {
       data[0] = prefix;
       offset = 1;
     } else {
-      // 0b1111_1100  ->  BigInt(252)
-      // 0b01000000   ->  BigInt(64)
-      // 0b11         ->  BigInt(3)
+      // 0b1111_1100  ->  252
+      // 0b01000000   ->  64
+      // 0b11         ->  3
       data = Uint8List(2 + hashLen + len);
 
       // upper six bits of the lower byte(!)
-      data[0] =
-          ((prefix & BigInt.from(252).toInt()) >> 2) | BigInt.from(64).toInt();
+      data[0] = ((prefix & 252) >> 2) | 64;
 
       // lower two bits of the lower byte in the high pos,
       // lower bits of the upper byte in the low pos
-      data[1] = (prefix >> 8) | ((prefix & BigInt.from(3).toInt()) << 6);
+      data[1] = (prefix >> 8) | ((prefix & 3) << 6);
       offset = 2;
     }
 
