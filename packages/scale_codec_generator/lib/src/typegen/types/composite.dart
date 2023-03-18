@@ -1,19 +1,19 @@
 part of generators;
 
-class CompositeGenerator extends Generator {
+class CompositeBuilder extends TypeBuilder {
   final int _id;
-  String filePath;
   String name;
   late List<Field> fields;
   List<String> docs;
 
-  CompositeGenerator({
+  CompositeBuilder({
     required int id,
-    required this.filePath,
+    required String filePath,
     required this.name,
     required this.fields,
     required this.docs,
-  }) : _id = id {
+  })  : _id = id,
+        super(filePath) {
     for (int i = 0; i < fields.length; i++) {
       if (fields[i].originalName == null) {
         fields[i].sanitizedName = 'value$i';
@@ -63,15 +63,8 @@ class CompositeGenerator extends Generator {
   }
 
   @override
-  GeneratedOutput? generated() {
-    final typeBuilder = classbuilder.createCompositeClass(this);
-    final codecBuilder = classbuilder.createCompositeCodec(this);
-    return GeneratedOutput(
-        classes: [typeBuilder, codecBuilder], enums: [], typedefs: []);
-  }
-
-  @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     if (fields.isEmpty) {
       return refs.dynamic.type as TypeReference;
     }
@@ -87,7 +80,7 @@ class CompositeGenerator extends Generator {
     }
 
     visited.add(this);
-    final type = Generator.cacheOrCreate(from, visited, () {
+    final type = TypeDescriptor.cacheOrCreate(from, visited, () {
       if (fields.length == 1 && fields.first.originalName == null) {
         return fields.first.codec.jsonType(from, visited);
       }
@@ -130,5 +123,13 @@ class CompositeGenerator extends Generator {
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
     return obj.property('toJson').call([]);
+  }
+
+  @override
+  GeneratedOutput build() {
+    final typeBuilder = classbuilder.createCompositeClass(this);
+    final codecBuilder = classbuilder.createCompositeCodec(this);
+    return GeneratedOutput(
+        classes: [typeBuilder, codecBuilder], enums: [], typedefs: []);
   }
 }

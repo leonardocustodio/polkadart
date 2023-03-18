@@ -1,8 +1,8 @@
 part of generators;
 
-class CompactGenerator extends Generator {
+class CompactDescriptor extends TypeDescriptor {
   final int _id;
-  const CompactGenerator(this._id);
+  const CompactDescriptor(this._id);
 
   @override
   int id() => _id;

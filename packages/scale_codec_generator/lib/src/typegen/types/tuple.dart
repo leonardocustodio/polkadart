@@ -1,25 +1,26 @@
 part of generators;
 
-class TupleGenerator extends Generator {
+class TupleBuilder extends TypeBuilder {
   final int _id;
-  String filePath;
-  List<Generator> generators;
+  List<TypeDescriptor> generators;
 
-  TupleGenerator(
-      {required int id, required this.filePath, required this.generators})
-      : _id = id;
+  TupleBuilder(
+      {required int id, required String filePath, required this.generators})
+      : _id = id,
+        super(filePath);
 
-  TupleGenerator._lazy({required int id, required this.filePath})
+  TupleBuilder._lazy({required int id, required String filePath})
       : generators = [],
-        _id = id;
+        _id = id,
+        super(filePath);
 
-  factory TupleGenerator.lazy(
+  factory TupleBuilder.lazy(
       {required int id,
       required LazyLoader loader,
       required String filePath,
       required List<int> codecs}) {
-    final generator = TupleGenerator._lazy(id: id, filePath: filePath);
-    loader.addLoader((Map<int, Generator> register) {
+    final generator = TupleBuilder._lazy(id: id, filePath: filePath);
+    loader.addLoader((Map<int, TypeDescriptor> register) {
       for (final codec in codecs) {
         generator.generators.add(register[codec]!);
       }
@@ -66,15 +67,8 @@ class TupleGenerator extends Generator {
   }
 
   @override
-  GeneratedOutput? generated() {
-    final tupleClass = classbuilder.createTupleClass(generators.length);
-    final tupleCodec = classbuilder.createTupleCodec(generators.length);
-    return GeneratedOutput(
-        classes: [tupleClass, tupleCodec], enums: [], typedefs: []);
-  }
-
-  @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     if (generators.isEmpty) {
       return refs.dynamic.type as TypeReference;
     }
@@ -98,5 +92,13 @@ class TupleGenerator extends Generator {
       for (int i = 0; i < generators.length; i++)
         generators[i].instanceToJson(from, obj.property('value$i'))
     ]);
+  }
+
+  @override
+  GeneratedOutput build() {
+    final tupleClass = classbuilder.createTupleClass(generators.length);
+    final tupleCodec = classbuilder.createTupleCodec(generators.length);
+    return GeneratedOutput(
+        classes: [tupleClass, tupleCodec], enums: [], typedefs: []);
   }
 }

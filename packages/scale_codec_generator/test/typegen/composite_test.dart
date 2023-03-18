@@ -1,11 +1,11 @@
 import 'package:scale_codec_generator/scale_codec_generator.dart'
-    show PrimitiveGenerator, CompositeGenerator, Field;
+    show PrimitiveDescriptor, CompositeBuilder, Field;
 import 'package:test/test.dart';
 
 void main() {
   group('CompositeGenerator', () {
     test('Point(x, y)', () {
-      final generator = CompositeGenerator(
+      final generator = CompositeBuilder(
           id: 5,
           filePath: './types/point.dart',
           name: 'Point',
@@ -13,12 +13,12 @@ void main() {
           fields: [
             Field(
               originalName: 'x',
-              codec: PrimitiveGenerator.i32(1),
+              codec: PrimitiveDescriptor.i32(1),
               docs: [],
             ),
             Field(
               originalName: 'y',
-              codec: PrimitiveGenerator.i32(1),
+              codec: PrimitiveDescriptor.i32(1),
               docs: [],
             ),
           ]);

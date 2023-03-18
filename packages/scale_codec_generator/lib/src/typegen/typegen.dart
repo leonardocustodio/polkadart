@@ -87,8 +87,6 @@ part './types/composite.dart';
 part './types/empty.dart';
 part './parser.dart';
 part './types/option.dart';
-part './types/pallet.dart';
-part './types/polkadart.dart';
 part './types/primitive.dart';
 part './types/result.dart';
 part './types/sequence.dart';
