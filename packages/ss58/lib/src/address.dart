@@ -1,15 +1,21 @@
-import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:typed_data' show Uint8List;
 
-import 'package:base_x/base_x.dart';
-import 'package:cryptography/dart.dart';
-import 'package:ss58_codec/src/address.dart';
-import 'package:ss58_codec/src/exceptions.dart';
+import 'package:convert/convert.dart' show hex;
+import 'package:equatable/equatable.dart' show Equatable;
+import 'package:base_x/base_x.dart' show BaseXCodec;
+import 'package:cryptography/dart.dart' show DartBlake2b;
+
+import './exceptions.dart'
+    show
+        InvalidCheckSumException,
+        InvalidPrefixException,
+        BadAddressLengthException;
 
 /// [Private]
 ///
 /// Hash Prefix to be added before hashing data.
-final List<int> _hashPrefix = utf8.encode('SS58PRE');
+/// Same as 'SS58PRE' string utf8 encoded.
+const List<int> _hashPrefix = [83, 83, 53, 56, 80, 82, 69];
 
 /// [Private]
 ///
@@ -17,10 +23,18 @@ final List<int> _hashPrefix = utf8.encode('SS58PRE');
 final _base58 =
     BaseXCodec('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
-/// Key that can be encoded to/from SS58.
-///
-/// For more information see [Substrate (ss58)](https://docs.substrate.io/v3/advanced/ss58/)
-class SS58Codec {
+class Address extends Equatable {
+  ///
+  /// Address [type](https://docs.substrate.io/v3/advanced/ss58/#address-type)
+  final int prefix;
+
+  ///
+  /// Raw address public key
+  final Uint8List pubkey;
+
+  /// constructor to initiate Address Object
+  const Address({required this.prefix, required this.pubkey});
+
   ///
   /// Decode SS58 address string.
   ///
@@ -29,10 +43,11 @@ class SS58Codec {
   /// ```
   /// [Exceptions]
   /// throw InvalidPrefixException:    when (first byte of decoded address > 127)
+  /// throw InvalidPrefixException:    when (prefix < 0 || prefix > 16383)
   /// throw BadAddressLengthException: when (address.length < 3)
-  /// throw InvalidCheckSumException: when hashed data is invalid
+  /// throw InvalidCheckSumException:  when hashed data is invalid
   /// ```
-  static Address decode(String address) {
+  factory Address.decode(String address) {
     var data = _base58.decode(address);
     if (data.length < 3) {
       throw BadAddressLengthException(address);
@@ -49,11 +64,15 @@ class SS58Codec {
       // they make the LE-encoded 16-bit value: aaaaaabb 00cccccc
       // so the lower byte is formed of aaaaaabb and the higher byte is 00cccccc
       var lower = ((data[0] << 2) | (data[1] >> 6));
-      var upper = data[1] & BigInt.from(63).toInt();
-      prefix = (lower & BigInt.from(255).toInt()) | (upper << 8);
+      var upper = data[1] & 63;
+      prefix = (lower & 255) | (upper << 8);
       offset = 2;
     } else {
       throw InvalidPrefixException();
+    }
+
+    if (prefix < 0 || prefix > 16383) {
+      throw InvalidPrefixException(prefix);
     }
 
     late int hashLen;
@@ -81,7 +100,7 @@ class SS58Codec {
 
     return Address(
       prefix: prefix,
-      bytes: data.sublist(offset, data.length - hashLen),
+      pubkey: data.sublist(offset, data.length - hashLen),
     );
   }
 
@@ -93,12 +112,11 @@ class SS58Codec {
   /// throw InvalidPrefixException:    when (prefix < 0 || prefix >= 16384)
   /// throw BadAddressLengthException: when (address.bytes are of improper length)
   /// ```
-  static String encode(Address address) {
-    final int prefix = address.prefix;
+  String encode() {
     if (prefix < 0 || prefix > 16383) {
       throw InvalidPrefixException(prefix);
     }
-    final int len = address.bytes.length;
+    final int len = pubkey.length;
     late int hashLen;
     switch (len) {
       case 1:
@@ -112,7 +130,7 @@ class SS58Codec {
         hashLen = 2;
         break;
       default:
-        throw BadAddressLengthException(address.toString());
+        throw BadAddressLengthException(toString());
     }
     late Uint8List data;
     late int offset;
@@ -121,27 +139,34 @@ class SS58Codec {
       data[0] = prefix;
       offset = 1;
     } else {
-      // 0b1111_1100  ->  BigInt(252)
-      // 0b01000000   ->  BigInt(64)
-      // 0b11         ->  BigInt(3)
+      // 0b1111_1100  ->  252
+      // 0b01000000   ->  64
+      // 0b11         ->  3
       data = Uint8List(2 + hashLen + len);
 
       // upper six bits of the lower byte(!)
-      data[0] =
-          ((prefix & BigInt.from(252).toInt()) >> 2) | BigInt.from(64).toInt();
+      data[0] = ((prefix & 252) >> 2) | 64;
 
       // lower two bits of the lower byte in the high pos,
       // lower bits of the upper byte in the low pos
-      data[1] = (prefix >> 8) | ((prefix & BigInt.from(3).toInt()) << 6);
+      data[1] = (prefix >> 8) | ((prefix & 3) << 6);
       offset = 2;
     }
 
-    data.setAll(offset, address.bytes);
+    data.setAll(offset, pubkey);
     final List<int> hashedData = computeHash(data, hashLen);
     for (var i = 0; i < hashLen; i++) {
       data[offset + len + i] = hashedData[i];
     }
     return _base58.encode(data);
+  }
+
+  @override
+  List<Object?> get props => [prefix, pubkey];
+
+  @override
+  String toString() {
+    return 'Address(prefix: $prefix, bytes: 0x${hex.encode(pubkey)})';
   }
 }
 
