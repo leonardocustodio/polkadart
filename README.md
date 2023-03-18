@@ -62,10 +62,9 @@ You can run all tests from the library by running `docker compose up`.
 |----------|----------|
 | polkadart_scale_codec | [packages/polkadart_scale_codec/](./packages/polkadart_scale_codec/) |
 | ss58 | [packages/ss58/](./packages/ss58/) |
-| ss58_codec | [packages/ss58_codec/](./packages/ss58_codec/) |
 | substrate_metadata | [packages/substrate_metadata/](./packages/substrate_metadata/) |
-| Http/Websocket providers | [packages/frame_primitives/lib/provider.dart](./packages/frame_primitives/lib/provider.dart) |
-| typegen | [packages/scale_codec_generator/](./packages/scale_codec_generator/) |
+| frame_primitives | [packages/frame_primitives](./packages/frame_primitives) |
+| scale_codec_generator | [packages/scale_codec_generator/](./packages/scale_codec_generator/) |
 
 ## Road map and current state
 
