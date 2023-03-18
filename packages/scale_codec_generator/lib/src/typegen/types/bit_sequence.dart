@@ -1,17 +1,17 @@
 part of generators;
 
-class BitSequenceGenerator extends Generator {
+class BitSequenceDescriptor extends TypeDescriptor {
   final int _id;
   BitStore store;
   BitOrder order;
 
-  BitSequenceGenerator({
+  BitSequenceDescriptor({
     required int id,
     required this.store,
     required this.order,
   }) : _id = id;
 
-  factory BitSequenceGenerator.fromPrimitive({
+  factory BitSequenceDescriptor.fromPrimitive({
     required int id,
     required metadata.Primitive primitive,
     required BitOrder order,
@@ -38,7 +38,7 @@ class BitSequenceGenerator extends Generator {
         store = BitStore.U8;
         break;
     }
-    return BitSequenceGenerator(
+    return BitSequenceDescriptor(
       id: id,
       store: store,
       order: order,

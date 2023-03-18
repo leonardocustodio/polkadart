@@ -8,12 +8,13 @@ environment:
 
 dependencies:
   args: ^2.4.0 # BSD-3-Clause
-  http: ^0.13.5 # BSD-3-Clause
   code_builder: ^4.4.0 # BSD-3-Clause
   convert: ^3.1.1 # BSD-3-Clause
   dart_style: ^2.2.4 # BSD-3-Clause
+  http: ^0.13.5 # BSD-3-Clause
   recase: ^4.1.0 # BSD-2-Clause
   path: ^1.8.3 # BSD-3-Clause
+  yaml: ^3.1.1 # MIT
   frame_primitives:
     path: ../frame_primitives
   polkadart_scale_codec:

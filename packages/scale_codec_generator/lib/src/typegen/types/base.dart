@@ -2,14 +2,14 @@ part of generators;
 
 typedef BasePath = String;
 
-abstract class Generator {
-  const Generator();
+abstract class TypeDescriptor {
+  const TypeDescriptor();
 
   static int _idSequence = 1;
-  static Map<Generator, int> generatorToId = {};
+  static Map<TypeDescriptor, int> generatorToId = {};
   static Map<String, TypeReference> jsonTypeCache = {};
 
-  static String _cachedKey(BasePath from, Set<Generator> visited) {
+  static String _cachedKey(BasePath from, Set<TypeDescriptor> visited) {
     bool created = false;
     final ids = <int>[];
     for (final generator in visited) {
@@ -29,7 +29,7 @@ abstract class Generator {
     return key;
   }
 
-  static TypeReference cacheOrCreate(BasePath from, Set<Generator> visited,
+  static TypeReference cacheOrCreate(BasePath from, Set<TypeDescriptor> visited,
       TypeReference Function() callback) {
     final String hash = _cachedKey(from, visited);
     TypeReference? type = jsonTypeCache[hash];
@@ -40,7 +40,7 @@ abstract class Generator {
     return type;
   }
 
-  static Map<int, Generator> fromTypes(
+  static Map<int, TypeDescriptor> fromTypes(
       List<metadata.TypeMetadata> registry, String typesPath) {
     return parseTypes(registry, typesPath);
   }
@@ -68,13 +68,22 @@ abstract class Generator {
 
   Expression valueFrom(BasePath from, Input input, {bool constant = false});
 
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]);
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]);
 
   Expression instanceToJson(BasePath from, Expression obj);
 
-  GeneratedOutput? generated() {
-    return null;
-  }
+  // GeneratedOutput? generated() {
+  //   return null;
+  // }
+}
+
+abstract class TypeBuilder extends TypeDescriptor {
+  String filePath;
+
+  TypeBuilder(this.filePath);
+
+  GeneratedOutput build();
 }
 
 class GeneratedOutput {
@@ -112,11 +121,11 @@ class GeneratedOutput {
 }
 
 class LazyLoader {
-  final List<Function(Map<int, Generator>)> loaders = [];
+  final List<Function(Map<int, TypeDescriptor>)> loaders = [];
   final Map<int, int> aliases = {};
   LazyLoader();
 
-  void addLoader(Function(Map<int, Generator>) loader) {
+  void addLoader(Function(Map<int, TypeDescriptor>) loader) {
     loaders.add(loader);
   }
 }
@@ -124,7 +133,7 @@ class LazyLoader {
 class Field {
   late String? originalName;
   late String sanitizedName;
-  late Generator codec;
+  late TypeDescriptor codec;
   late List<String> docs;
 
   Field({required this.originalName, required this.codec, required this.docs}) {
@@ -149,7 +158,7 @@ class Field {
     List<String> docs = const [],
   }) {
     final field = Field._lazy(name: name, docs: docs);
-    loader.addLoader((Map<int, Generator> register) {
+    loader.addLoader((Map<int, TypeDescriptor> register) {
       field.codec = register[codec]!;
     });
     return field;

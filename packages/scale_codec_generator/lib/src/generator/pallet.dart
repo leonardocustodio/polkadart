@@ -1,4 +1,30 @@
-part of generators;
+import 'dart:typed_data' show Uint8List;
+import 'package:code_builder/code_builder.dart'
+    show
+        refer,
+        Block,
+        TypeReference,
+        Reference,
+        Expression,
+        literalString,
+        declareFinal,
+        Code,
+        Class,
+        Constructor,
+        Parameter,
+        Method,
+        Field,
+        FieldModifier,
+        MethodModifier;
+import 'package:path/path.dart' as p;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    as scale_codec;
+import 'package:recase/recase.dart' show ReCase;
+import '../typegen/typegen.dart'
+    show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput;
+import '../typegen/frame_metadata.dart' as metadata;
+import '../typegen/references.dart' as refs;
+import '../typegen/utils/utils.dart' show sanitize, sanitizeDocs;
 
 enum StorageHasherType {
   /// Identity hashing (no hashing).
@@ -23,7 +49,7 @@ enum StorageHasherType {
   }
 }
 
-class StorageHasher<G extends Generator> {
+class StorageHasher<G extends TypeDescriptor> {
   final StorageHasherType hasher;
   final G codec;
 
@@ -84,7 +110,7 @@ class Storage {
   final List<StorageHasher> hashers;
 
   /// Type of the value stored
-  final Generator valueCodec;
+  final TypeDescriptor valueCodec;
 
   /// Default value (SCALE encoded)
   final List<int> defaultValue;
@@ -105,10 +131,10 @@ class Storage {
   });
 
   factory Storage.fromMetadata(metadata.StorageEntryMetadata storageMetadata,
-      Map<int, Generator> registry) {
+      Map<int, TypeDescriptor> registry) {
     final type = storageMetadata.type;
     final valueCodec = registry[type.value]!;
-    final List<Generator> keysCodec;
+    final List<TypeDescriptor> keysCodec;
 
     // Load key hashers
     if (type.key != null) {
@@ -119,7 +145,7 @@ class Storage {
       } else if (type.hashers.length == 1) {
         keysCodec = [registry[keyId]!];
       } else {
-        final tupleCodec = registry[keyId]! as TupleGenerator;
+        final tupleCodec = registry[keyId]! as TupleBuilder;
         keysCodec = tupleCodec.generators;
       }
     } else {
@@ -222,7 +248,7 @@ class Storage {
 class Constant {
   final String name;
   final List<int> value;
-  final Generator codec;
+  final TypeDescriptor codec;
   final List<String> docs;
 
   const Constant(
@@ -233,7 +259,7 @@ class Constant {
 
   factory Constant.fromMetadata(
       metadata.PalletConstantMetadata constantMetadata,
-      Map<int, Generator> registry) {
+      Map<int, TypeDescriptor> registry) {
     // Build pallet
     return Constant(
         name: constantMetadata.name,
@@ -259,7 +285,7 @@ class PalletGenerator {
   factory PalletGenerator.fromMetadata(
       {required String filePath,
       required metadata.PalletMetadata palletMetadata,
-      required Map<int, Generator> registry}) {
+      required Map<int, TypeDescriptor> registry}) {
     // Load storages
     final List<Storage>? storages = palletMetadata.storage?.entries
         .map((storageMetadata) =>
@@ -295,11 +321,109 @@ class PalletGenerator {
   GeneratedOutput generated() {
     final List<Class> classes = [];
     if (storages.isNotEmpty) {
-      classes.add(classbuilder.createPalletQueries(this));
+      classes.add(createPalletQueries(this));
     }
     if (constants.isNotEmpty) {
-      classes.add(classbuilder.createPalletConstants(this));
+      classes.add(createPalletConstants(this));
     }
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
 }
+
+Class createPalletQueries(
+  PalletGenerator generator,
+) =>
+    Class((classBuilder) {
+      final dirname = p.dirname(generator.filePath);
+      classBuilder
+        ..name = 'Queries'
+        ..constructors.add(Constructor((b) => b
+          ..constant = true
+          ..requiredParameters.add(Parameter((b) => b
+            ..toThis = true
+            ..required = false
+            ..named = false
+            ..name = '__api'))))
+        ..fields.add(Field((b) => b
+          ..name = '__api'
+          ..type = refs.stateApi
+          ..modifier = FieldModifier.final$))
+        ..fields.addAll(generator.storages.map((storage) => Field((b) => b
+          ..name = '_${ReCase(storage.name).camelCase}'
+          ..type = storage.type(dirname)
+          ..modifier = FieldModifier.final$
+          ..assignment = storage.instance(dirname, generator.name).code)))
+        ..methods.addAll(generator.storages.map((storage) => Method((builder) {
+              final storageName = ReCase(storage.name).camelCase;
+              final Reference primitive;
+              if (storage.isNullable) {
+                primitive = storage.valueCodec.primitive(dirname).asNullable();
+              } else {
+                primitive = storage.valueCodec.primitive(dirname);
+              }
+              builder
+                ..name = sanitize(storageName, recase: false)
+                ..docs.addAll(sanitizeDocs(storage.docs))
+                ..returns = refs.future(primitive)
+                ..modifier = MethodModifier.async
+                ..optionalParameters.add(Parameter((b) => b
+                  ..type = refs.blockHash.asNullable()
+                  ..named = true
+                  ..name = 'at'))
+                ..requiredParameters
+                    .addAll(storage.hashers.map((hasher) => Parameter((b) => b
+                      ..type = hasher.codec.primitive(dirname)
+                      ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
+                ..body = Block((b) => b
+                  // final hashedKey = _storageName.hashedKeyFor(key1);
+                  ..statements.add(declareFinal('hashedKey')
+                      .assign(refer('_$storageName')
+                          .property(storage.hashers.isEmpty
+                              ? 'hashedKey'
+                              : 'hashedKeyFor')
+                          .call(storage.hashers.map((hasher) => refer(
+                              'key${storage.hashers.indexOf(hasher) + 1}'))))
+                      .statement)
+                  // final bytes = await api.queryStorage([hashedKey]);
+                  ..statements.add(declareFinal('bytes')
+                      .assign(refer('__api').property('getStorage').call(
+                          [refer('hashedKey')], {'at': refer('at')}).awaited)
+                      .statement)
+                  ..statements.add(Code('if (bytes != null) {'))
+                  ..statements
+                      .add(Code('  return _$storageName.decodeValue(bytes);'))
+                  ..statements.add(Code('}'))
+                  ..statements.add(storage.isNullable
+                      ? Code('return null; /* Nullable */')
+                      : storage.valueCodec
+                          .valueFrom(
+                            dirname,
+                            scale_codec.ByteInput(
+                                Uint8List.fromList(storage.defaultValue)),
+                          )
+                          .returned
+                          .statement)
+                  ..statements.add(
+                      storage.isNullable ? Code('') : Code('/* Default */')));
+            })));
+    });
+
+Class createPalletConstants(
+  PalletGenerator generator,
+) =>
+    Class((classBuilder) {
+      final dirname = p.dirname(generator.filePath);
+      classBuilder
+        ..name = 'Constants'
+        ..constructors.add(Constructor((b) => b..constant = false))
+        ..fields.addAll(generator.constants.map((constant) => Field((b) => b
+          ..name = sanitize(constant.name)
+          ..type = constant.codec.primitive(dirname)
+          ..modifier = FieldModifier.final$
+          ..docs.addAll(sanitizeDocs(constant.docs))
+          ..assignment = constant.codec
+              .valueFrom(dirname,
+                  scale_codec.ByteInput(Uint8List.fromList(constant.value)),
+                  constant: true)
+              .code)));
+    });

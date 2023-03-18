@@ -87,6 +87,14 @@ String sanitizeClassName(String name, {String suffix = '_', prefix = 'Class'}) {
   return name;
 }
 
+List<String> sanitizeDocs(List<String> docs) => docs.map((doc) {
+      if (doc.startsWith('///')) return doc;
+      if (!doc.startsWith(' ')) {
+        doc = ' $doc';
+      }
+      return '///${doc.replaceAll('\n', '\n///')}';
+    }).toList();
+
 Expression bigIntToExpression(BigInt value) {
   if (value == BigInt.zero) {
     return constants.bigInt.property('zero');

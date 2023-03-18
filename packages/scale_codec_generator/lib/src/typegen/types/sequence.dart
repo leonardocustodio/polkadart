@@ -1,17 +1,17 @@
 part of generators;
 
-class SequenceGenerator extends Generator {
+class SequenceDescriptor extends TypeDescriptor {
   final int _id;
-  late Generator typeDef;
+  late TypeDescriptor typeDef;
 
-  SequenceGenerator(this._id, this.typeDef);
+  SequenceDescriptor(this._id, this.typeDef);
 
-  SequenceGenerator._lazy(this._id);
+  SequenceDescriptor._lazy(this._id);
 
-  factory SequenceGenerator.lazy(
+  factory SequenceDescriptor.lazy(
       {required int id, required LazyLoader loader, required int codec}) {
-    final generator = SequenceGenerator._lazy(id);
-    loader.addLoader((Map<int, Generator> register) {
+    final generator = SequenceDescriptor._lazy(id);
+    loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.typeDef = register[codec]!;
     });
     return generator;
@@ -22,8 +22,8 @@ class SequenceGenerator extends Generator {
 
   @override
   TypeReference primitive(BasePath from) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.Char:
         case metadata.Primitive.U8:
         case metadata.Primitive.U16:
@@ -44,8 +44,8 @@ class SequenceGenerator extends Generator {
 
   @override
   TypeReference codec(BasePath from) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
           return refs.u8SequenceCodec.type as TypeReference;
         case metadata.Primitive.U16:
@@ -74,8 +74,8 @@ class SequenceGenerator extends Generator {
   Expression codecInstance(BasePath from) {
     final TypeReference codec = this.codec(from);
 
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.Char:
         case metadata.Primitive.U8:
         case metadata.Primitive.U16:
@@ -109,8 +109,8 @@ class SequenceGenerator extends Generator {
 
   @override
   Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
         case metadata.Primitive.Char:
           final list = U8SequenceCodec.codec.decode(input);
@@ -154,9 +154,10 @@ class SequenceGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
         case metadata.Primitive.Char:
         case metadata.Primitive.U16:
@@ -191,8 +192,8 @@ class SequenceGenerator extends Generator {
 
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.Str:
         case metadata.Primitive.U8:
         case metadata.Primitive.Char:

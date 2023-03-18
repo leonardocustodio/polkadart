@@ -1,12 +1,22 @@
 import 'dart:core' as core;
 import 'package:code_builder/code_builder.dart' show TypeReference, Reference;
 
+/// Helper to make a type nullable
 extension Nullable on Reference {
   TypeReference asNullable() {
-    if (symbol == 'dynamic') {
-      return this.type as TypeReference;
+    final TypeReference type;
+    if (this is TypeReference) {
+      type = this as TypeReference;
+    } else {
+      type = this.type as TypeReference;
     }
-    final type = this.type as TypeReference;
+
+    // The type 'dynamic' cannot be nullable
+    if (type.symbol == 'dynamic' && type.types.isEmpty) {
+      return type;
+    }
+
+    // Make type nullable
     if (type.isNullable != true) {
       final builder = type.toBuilder();
       builder.isNullable = true;
