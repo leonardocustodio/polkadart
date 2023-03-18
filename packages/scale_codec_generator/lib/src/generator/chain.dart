@@ -1,7 +1,5 @@
 import 'dart:io' show File, Directory;
 import 'package:recase/recase.dart' show ReCase;
-import 'package:frame_primitives/frame_primitives.dart'
-    show Provider, StateApi, RuntimeVersion;
 import 'package:path/path.dart' as path;
 import '../typegen/typegen.dart'
     show
@@ -13,29 +11,6 @@ import '../typegen/typegen.dart'
 import '../typegen/frame_metadata.dart' show RuntimeMetadataV14;
 import './pallet.dart' show PalletGenerator;
 import './polkadart.dart' show PolkadartGenerator;
-
-class ChainProperties {
-  final RuntimeMetadataV14 metadata;
-  final RuntimeVersion version;
-
-  ChainProperties(this.metadata, this.version);
-
-  static Future<ChainProperties> fromURL(String url) async {
-    final provider = Provider(url);
-    final api = StateApi(provider);
-    final decodedMetadata = await api.getMetadata();
-    if (decodedMetadata.version != 14) {
-      await provider.disconnect();
-      throw Exception('Only metadata version 14 is supported');
-    }
-    final version = await api.getRuntimeVersion();
-    await provider.disconnect();
-    return ChainProperties(
-      RuntimeMetadataV14.fromJson(decodedMetadata.toJson()['metadata']),
-      version,
-    );
-  }
-}
 
 class ChainGenerator {
   final String name;
@@ -49,36 +24,29 @@ class ChainGenerator {
       required this.polkadart,
       required this.types});
 
-  factory ChainGenerator.fromChainProperties(
+  factory ChainGenerator.fromMetadata(
       {required Directory basePath,
-      required ChainProperties properties,
+      required chainName,
+      required RuntimeMetadataV14 metadata,
       bool verbose = true}) {
     if (!basePath.existsSync()) {
       throw Exception(
           '[ERROR] Provided directory doesn\'t exists: "${path.normalize(basePath.path)}"');
     }
 
-    // Get chain properties
-    final chainDirectory = ReCase(properties.version.specName).snakeCase;
-
     // Create pallets and types directory
-    final typesPath = path.join(basePath.path, chainDirectory, 'types');
-    final palletsPath = path.join(basePath.path, chainDirectory, 'pallets');
-    Directory(path.join(basePath.path, chainDirectory))
-        .createSync(recursive: false);
+    final typesPath = path.join(basePath.path, 'types');
+    final palletsPath = path.join(basePath.path, 'pallets');
+    Directory(path.join(basePath.path)).createSync(recursive: false);
     Directory(typesPath).createSync(recursive: false);
     Directory(palletsPath).createSync(recursive: false);
 
-    // Polkadart path
-    final polkadartPath = path.setExtension(
-        path.join(basePath.path, chainDirectory, chainDirectory), '.dart');
-
     // Get type generators
     final Map<int, TypeDescriptor> typeGenerators =
-        TypeDescriptor.fromTypes(properties.metadata.registry, typesPath);
+        TypeDescriptor.fromTypes(metadata.registry, typesPath);
 
     // Get pallet generators
-    final List<PalletGenerator> palletGenerators = properties.metadata.pallets
+    final List<PalletGenerator> palletGenerators = metadata.pallets
         // Remove Empty Pallets
         // TODO: remove this field once we support extrinsics
         .where(
@@ -121,11 +89,12 @@ class ChainGenerator {
     }
 
     return ChainGenerator(
-      name: chainDirectory,
+      name: chainName,
       directory: basePath,
       polkadart: PolkadartGenerator(
-        filePath: polkadartPath,
-        name: ReCase(properties.version.specName).pascalCase,
+        filePath: path.setExtension(
+            path.join(basePath.path, ReCase(chainName).snakeCase), '.dart'),
+        name: ReCase(chainName).pascalCase,
         pallets: palletGenerators,
       ),
       types: typeGenerators,

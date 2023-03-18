@@ -1,11 +1,36 @@
-import 'dart:io' show File, Directory;
-import 'package:frame_primitives/frame_primitives.dart' show Provider, StateApi;
+import 'dart:io' show Directory;
+import 'package:frame_primitives/frame_primitives.dart'
+    show Provider, StateApi, RuntimeVersion;
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
+import 'package:recase/recase.dart' show ReCase;
 import 'package:scale_codec_generator/scale_codec_generator.dart'
-    show ChainGenerator, ChainProperties;
+    show ChainGenerator;
 import 'package:scale_codec_generator/src/typegen/frame_metadata.dart'
     show RuntimeMetadataV14;
+
+class ChainProperties {
+  final RuntimeMetadataV14 metadata;
+  final RuntimeVersion version;
+
+  ChainProperties(this.metadata, this.version);
+
+  static Future<ChainProperties> fromURL(String url) async {
+    final provider = Provider(url);
+    final api = StateApi(provider);
+    final decodedMetadata = await api.getMetadata();
+    if (decodedMetadata.version != 14) {
+      await provider.disconnect();
+      throw Exception('Only metadata version 14 is supported');
+    }
+    final version = await api.getRuntimeVersion();
+    await provider.disconnect();
+    return ChainProperties(
+      RuntimeMetadataV14.fromJson(decodedMetadata.toJson()['metadata']),
+      version,
+    );
+  }
+}
 
 Future<ChainProperties> chainProperties(String url) async {
   final provider = Provider(url);
@@ -44,7 +69,15 @@ void main(List<String> args) async {
 
   // Get chain properties
   final ChainProperties properties = await chainProperties(arguments['url']);
-  final generator = ChainGenerator.fromChainProperties(
-      basePath: Directory(basePath), properties: properties);
+
+  // Create chain directory
+  final chainDirectory = Directory(
+      path.join(basePath, ReCase(properties.version.implName).snakeCase));
+  chainDirectory.createSync(recursive: false);
+
+  final generator = ChainGenerator.fromMetadata(
+      chainName: properties.version.implName,
+      basePath: chainDirectory,
+      metadata: properties.metadata);
   generator.build(verbose: verbose);
 }
