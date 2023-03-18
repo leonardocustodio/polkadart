@@ -74,8 +74,7 @@ You can run all tests from the library by running `docker compose up`.
 
 |                                                                                            | Status |
 | ------------------------------------------------------------------------------------------ | :----: |
-| [Scale Codec Encoder](./packages/polkadart_scale_codec/)                                   |   ✅    |
-| [Scale Codec Decoder](./packages/polkadart_scale_codec/)                                   |   ✅    |
+| [Scale Codec](./packages/polkadart_scale_codec/)                                           |   ✅    |
 | [SS58 Format](./packages/ss58/)                                                            |   ✅    |
 | [Parse Metadata v14](./packages/substrate_metadata/lib/core/metadata_decoder.dart)         |   ✅    |
 | [Substrate Metadata](./packages/substrate_metadata/lib/definitions/metadata/metadata.dart) |   ✅    |
