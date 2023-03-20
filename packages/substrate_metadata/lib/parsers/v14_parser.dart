@@ -21,10 +21,7 @@ class V14Parser {
     // Temporariy referencing it to GenericCall until the real GenericCall is created below
     // and
     // then add it to the resultingRegistry
-    resultingRegistry.addCodec(
-        'Call',
-        ReferencedCodec(
-            referencedType: 'GenericCall', registry: resultingRegistry));
+    resultingRegistry.addCodec('Call', ProxyCodec('GenericCall'));
 
     // Iterate over the pallets
     //
@@ -160,10 +157,17 @@ class V14Parser {
     }
 
     //
-    // Register the Generics
-    resultingRegistry
-      ..addCodec('GenericCall', ComplexEnumCodec.sparse(callsCodec))
-      ..addCodec('GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
+    // Register the Generic Call
+    {
+      // replace the proxy of GenericCall with the real GenericCall
+      final proxyCodec = resultingRegistry.getCodec('Call')! as ProxyCodec;
+      proxyCodec.codec = ComplexEnumCodec.sparse(callsCodec);
+    }
+
+    //
+    // Register the Generic Event
+    resultingRegistry.addCodec(
+        'GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
 
     {
       //

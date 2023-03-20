@@ -1,12 +1,12 @@
 part of core;
 
-typedef ProxyLoader = Codec Function(String key);
+typedef ProxyLoader = Codec Function();
 
 class Registry {
   final Map<String, Codec> codecs = <String, Codec>{};
-  final Map<String, dynamic> _postVariantFieldsProcessor = <String, dynamic>{};
 
   final Map<String, ProxyLoader> _proxyLoaders = <String, ProxyLoader>{};
+  final Map<String, ProxyCodec> _proxies = <String, ProxyCodec>{};
 
   Registry();
 
@@ -14,25 +14,20 @@ class Registry {
     this.codecs.addAll(codecs);
   }
 
-  ProxyCodec createProxy(
-      Map<String, dynamic> metadata, String key, dynamic value) {
+  ProxyCodec _createProxy(Map<String, dynamic> metadata, String key,
+      dynamic value, bool allowSettingCodec) {
+    if (_proxies[key] != null) {
+      return _proxies[key]!;
+    }
+
     final proxyCodec = ProxyCodec(key);
 
-    if (_proxyLoaders[key] != null) {
-      //
-      // This should never happen because when the proxy is created, it is added to that type and also to the registry.
-      //
-      // So this function calling again is a bug in the code and needs to be investigated.
-      throw Exception('Proxy already exists for key: $key');
-    }
-    _proxyLoaders[key] = (String key) {
-      final codec = getCodec(key);
-      if (codec == null) {
-        throw Exception('Codec not found for key: $key');
-      }
-      proxyCodec.codec = codec;
-      return codec;
+    _proxyLoaders[key] = () {
+      proxyCodec.codec = _parseCodec(metadata, key, value, <String>{}, false);
+      return proxyCodec.codec;
     };
+
+    _proxies[key] = proxyCodec;
 
     return proxyCodec;
   }
@@ -48,7 +43,8 @@ class Registry {
   ///
   /// Add a codec to the registry
   void addCodec(String codecName, Codec codec) {
-    if (codecs[codecName] != null) {
+    if (codecs[codecName] != null &&
+        codec.hashCode != codecs[codecName].hashCode) {
       final alreadyStoredCodec = codecs[codecName];
       throw Exception(
           'Codec already exists for key: $codecName, new_codec: $codec ,already_stored_codec: $alreadyStoredCodec');
@@ -63,19 +59,19 @@ class Registry {
   }
 
   Codec parseSpecificCodec(Map<String, dynamic> metadata, String selectedKey) {
-    if (getCodec(selectedKey) != null) {
-      return getCodec(selectedKey)!;
+    late Codec? codec = getCodec(selectedKey);
+    if (codec != null) {
+      return codec;
     }
     final value = metadata[selectedKey];
-    late Codec codec;
-    if (value == null) {
-      // can be u8 or a Vec<u8> which don't need to have a definition
-      codec = _parseCodec(metadata, selectedKey, selectedKey, <String>{}, true);
-    } else {
-      codec = _parseCodec(metadata, selectedKey, value, <String>{}, true);
+
+    codec = _parseCodec(
+        metadata, selectedKey, value ?? selectedKey, <String>{}, true);
+
+    _callProxyLoaders();
+    if (getCodec(selectedKey) == null) {
+      addCodec(selectedKey, codec);
     }
-    _parsePostVariantFields(metadata);
-    addCodec(selectedKey, codec);
     return codec;
   }
 
@@ -95,22 +91,13 @@ class Registry {
         addCodec(key, codec);
       }
     }
-    _parsePostVariantFields(metadata);
+    _callProxyLoaders();
   }
 
-  void _parsePostVariantFields(Map<String, dynamic> metadata) {
-    for (final mapEntry in _postVariantFieldsProcessor.entries) {
-      final key = mapEntry.key;
-      final value = mapEntry.value;
-
-      if (getCodec(key) != null) {
-        continue;
-      }
-
-      final codec = _parseCodec(metadata, key, value, <String>{}, true);
-      if (getCodec(key) == null) {
-        addCodec(key, codec);
-      }
+  void _callProxyLoaders() {
+    for (final proxyKey in _proxyLoaders.keys.toList(growable: false)) {
+      _proxyLoaders[proxyKey]!();
+      _proxyLoaders.remove(proxyKey);
     }
   }
 
@@ -146,7 +133,9 @@ class Registry {
       if (codec != null) {
         //
         // Add the codec to the registry for the key and then return the codec
-        addCodec(key, codec);
+        if (allowSettingCodec) {
+          addCodec(key, codec);
+        }
         return codec;
       }
       //
@@ -159,50 +148,56 @@ class Registry {
         // Check documentation on utils/regexp.dart -> getArrowMatch(value);
         if (match != null && match.groupCount == 2) {
           final typeName = match[1].toString();
-          Codec? codec;
           switch (typeName) {
             case 'Compact':
-              codec = _parseCompact(metadata, match);
-              break;
+              return _parseCompact(
+                  metadata, key, match, visitedKeys, allowSettingCodec);
             case 'Option':
-              codec = _parseOption(metadata, match);
-              break;
+              return _parseOption(
+                  metadata, key, match, visitedKeys, allowSettingCodec);
             case 'BTreeSet':
             case 'Vec':
-              codec = _parseSequence(metadata, match);
-              break;
+              return _parseSequence(
+                  metadata, key, match, visitedKeys, allowSettingCodec);
             case 'HashMap':
             case 'BTreeMap':
-              return _parseBTreeMap(metadata, value);
+              return _parseBTreeMap(
+                  metadata, key, value, visitedKeys, allowSettingCodec);
             case 'Result':
-              return _parseResult(metadata, value);
+              return _parseResult(
+                  metadata, key, value, visitedKeys, allowSettingCodec);
             case 'BitVec':
-              return _parseBitSequence(metadata, value);
+              return _parseBitSequence(metadata, key, value, allowSettingCodec);
             case 'DoNotConstruct':
               return NullCodec.codec;
           }
-          if (codec != null) {
-            addCodec(value, codec);
-            return codec;
-          }
-          return _parseCodec(metadata, value, metadata[value]);
+
+          return _parseCodec(
+              metadata, value, metadata[value], visitedKeys, allowSettingCodec);
         }
       }
 
       //
       // Tuple
       if (value.startsWith('(') && value.endsWith(')')) {
-        return _parseTuple(metadata, value);
+        return _parseTuple(
+            metadata, key, value, visitedKeys, allowSettingCodec);
       }
 
       //
       // Fixed array
       if (value.startsWith('[') && value.endsWith(']')) {
-        return _parseArray(metadata, value);
+        return _parseArray(
+            metadata, key, value, visitedKeys, allowSettingCodec);
       }
 
       if (metadata[value] != null) {
-        return _parseCodec(metadata, value, metadata[value]);
+        final codec = _parseCodec(
+            metadata, value, metadata[value], visitedKeys, allowSettingCodec);
+        if (allowSettingCodec) {
+          addCodec(key, codec);
+        }
+        return codec;
       }
 
       throw Exception('Type not found for `$value`');
@@ -211,46 +206,81 @@ class Registry {
       // enum
       if (value['_enum'] != null) {
         return _parseEnum(
-            metadata, key, value.map((k, v) => MapEntry(k.toString(), v)));
+            metadata,
+            key,
+            value.map((k, v) => MapEntry(k.toString(), v)),
+            visitedKeys,
+            allowSettingCodec);
       }
       //
       // set
       if (value['_set'] != null) {
-        return _parseSet(key, value['_set'] as Map<String, int>);
+        return _parseSet(
+            key, value['_set'] as Map<String, int>, allowSettingCodec);
       }
       //
       // composite
       return _parseComposite(
-          metadata, key, value.map((k, v) => MapEntry(k.toString(), v)));
+        metadata,
+        key,
+        value.map((k, v) => MapEntry(k.toString(), v)),
+        visitedKeys,
+        allowSettingCodec,
+      );
     }
     if (value == null) {
       throw Exception('Type not found for `$value`');
     }
-    return _parseCodec(metadata, key, metadata[value]);
+    return _parseCodec(
+        metadata, key, metadata[value], visitedKeys, allowSettingCodec);
   }
 
-  TupleCodec _parseTuple(Map<String, dynamic> metadata, String value) {
+  ///
+  ///
+  /// Parses a Tuple and then returns the codec
+  ///
+  /// Tuple is a list of types
+  Codec _parseTuple(Map<String, dynamic> metadata, String key, String value,
+      Set<String> visitedKeys, bool allowSettingCodec) {
     // (U64, (U128, Str))
     // U64,
+
     final List<String> types = parseTupleRegExp(value);
 
-    final codecs = <Codec>[];
+    final codecs = <String, Codec>{};
 
-    for (var type in types) {
-      final Codec subType = _parseCodec(metadata, type, metadata[type] ?? type);
-      codecs.add(subType);
+    for (final type in types) {
+      if (codecs[type] != null) {
+        continue;
+      }
+      final Codec subType = getCodec(type) ??
+          _parseCodec(metadata, type, metadata[type] ?? type, visitedKeys,
+              allowSettingCodec);
+      codecs[type] = subType;
     }
 
-    final TupleCodec codec = TupleCodec(codecs);
-    addCodec(value, codec);
+    final TupleCodec codec = TupleCodec(
+        types.map((String type) => codecs[type]!).toList(growable: false));
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  Codec _parseCompact(Map<String, dynamic> metadata, RegExpMatch match) {
+  ///
+  ///
+  /// Parses a Compact and then returns the codec
+  ///
+  /// Compact's subType can be any of the following:
+  /// (U8, U16, U32, U64, U128, U256)
+  Codec _parseCompact(Map<String, dynamic> metadata, String key,
+      RegExpMatch match, Set<String> visitedKeys, bool allowSettingCodec) {
     final match2 = match[2].toString();
 
-    final Codec subType =
-        _parseCodec(metadata, match2, metadata[match2] ?? match2);
+    final Codec subType = getCodec(match2) ??
+        _parseCodec(metadata, match2, metadata[match2] ?? match2, visitedKeys,
+            allowSettingCodec);
+
     late Codec codec;
 
     if (subType is U8Codec || subType is U16Codec || subType is U32Codec) {
@@ -264,35 +294,46 @@ class Registry {
       throw Exception('Compact type not supported for $subType');
     }
 
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  NestedOptionCodec _parseOption(
-      Map<String, dynamic> metadata, RegExpMatch match) {
+  Codec _parseOption(Map<String, dynamic> metadata, String key,
+      RegExpMatch match, Set<String> visitedKeys, bool allowSettingCodec) {
     final match2 = match[2].toString();
 
-    final Codec subType =
-        _parseCodec(metadata, match2, metadata[match2] ?? match2);
+    final Codec subType = getCodec(match2) ??
+        _parseCodec(metadata, match2, metadata[match2] ?? match2, visitedKeys,
+            allowSettingCodec);
 
     final NestedOptionCodec codec = NestedOptionCodec(subType);
 
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  SequenceCodec _parseSequence(
-      Map<String, dynamic> metadata, RegExpMatch match) {
+  Codec _parseSequence(Map<String, dynamic> metadata, String key,
+      RegExpMatch match, Set<String> visitedKeys, bool allowSettingCodec) {
     final match2 = match[2].toString();
 
-    final Codec subType =
-        _parseCodec(metadata, match2, metadata[match2] ?? match2);
+    final Codec subType = getCodec(match2) ??
+        _parseCodec(metadata, match2, metadata[match2] ?? match2, visitedKeys,
+            allowSettingCodec);
 
     final SequenceCodec codec = SequenceCodec(subType);
 
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  BitSequenceCodec _parseBitSequence(
-      Map<String, dynamic> metadata, String value) {
+  BitSequenceCodec _parseBitSequence(Map<String, dynamic> metadata, String key,
+      String value, bool allowSettingCodec) {
     final match = getResultMatch(value);
 
     assertion(match != null && match.groupCount >= 3,
@@ -324,6 +365,8 @@ class Registry {
       order = BitOrder.LSB;
     } else if (orderType.startsWith('Msb')) {
       order = BitOrder.MSB;
+    } else {
+      throw Exception('BitVec order type not supported for order: $orderType.');
     }
 
     final BitSequenceCodec codec = BitSequenceCodec(
@@ -331,58 +374,74 @@ class Registry {
       order,
     );
 
-    addCodec(value, codec);
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  ComplexEnumCodec _parseResult(Map<String, dynamic> metadata, String value) {
+  Codec _parseResult(Map<String, dynamic> metadata, String key, String value,
+      Set<String> visitedKeys, bool allowSettingCodec) {
     final match = getResultMatch(value);
 
     assertion(match != null && match.groupCount >= 3,
         'Result type should have two types, Result<Ok, Error>. Like: Result<u8, bool>');
 
     final match2 = match![2]!.trim();
-    final match3 = match[3]!.trim();
 
     final okCodec = getCodec(match2) ??
-        _parseCodec(metadata, match2, metadata[match2] ?? match2);
+        _parseCodec(metadata, match2, metadata[match2] ?? match2, visitedKeys,
+            allowSettingCodec);
+
+    final match3 = match[3]!.trim();
 
     final errCodec = getCodec(match3) ??
-        _parseCodec(metadata, match3, metadata[match3] ?? match3);
+        _parseCodec(metadata, match3, metadata[match3] ?? match3, visitedKeys,
+            allowSettingCodec);
 
     final ComplexEnumCodec codec = ComplexEnumCodec.sparse({
       0: MapEntry('Ok', okCodec),
       1: MapEntry('Err', errCodec),
     });
 
-    addCodec(value, codec);
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  BTreeMapCodec _parseBTreeMap(Map<String, dynamic> metadata, String value) {
+  Codec _parseBTreeMap(Map<String, dynamic> metadata, String key, String value,
+      Set<String> visitedKeys, bool allowSettingCodec) {
     final match = getResultMatch(value);
 
     assertion(match != null && match.groupCount >= 3,
         'BTreeMap type should have two types, BTreeMap<KeyCodec, ValueCodec>. Like: BTreeMap<KeyCodec, ValueCodec>');
 
     final match2 = match![2]!.trim();
-    final match3 = match[3]!.trim();
 
     final keyCodec = getCodec(match2) ??
-        _parseCodec(metadata, match2, metadata[match2] ?? match2);
+        _parseCodec(metadata, match2, metadata[match2] ?? match2, visitedKeys,
+            allowSettingCodec);
+
+    final match3 = match[3]!.trim();
 
     final valueCodec = getCodec(match3) ??
-        _parseCodec(metadata, match3, metadata[match3] ?? match3);
+        _parseCodec(metadata, match3, metadata[match3] ?? match3, visitedKeys,
+            allowSettingCodec);
 
     final BTreeMapCodec codec = BTreeMapCodec(
       keyCodec: keyCodec,
       valueCodec: valueCodec,
     );
-    addCodec(value, codec);
+
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  SetCodec _parseSet(String key, Map<String, int> value) {
+  SetCodec _parseSet(
+      String key, Map<String, int> value, bool allowSettingCodec) {
     late int bitLength;
     if (value.containsKey('_bitLength')) {
       bitLength = value['_bitLength']!;
@@ -398,35 +457,54 @@ class Registry {
         .toList(growable: false);
 
     final codec = SetCodec(bitLength, values);
-    addCodec(key, codec);
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  CompositeCodec _parseComposite(
-      Map<String, dynamic> metadata, String key, Map<String, dynamic> value,
-      {bool allowedSettingCodec = true}) {
+  Codec _parseComposite(
+    Map<String, dynamic> metadata,
+    String key,
+    Map<String, dynamic> value,
+    Set<String> visitedKeys,
+    bool allowSettingCodec,
+  ) {
+    if (visitedKeys.contains(key)) {
+      return _createProxy(metadata, key, value, allowSettingCodec);
+    }
+
+    visitedKeys.add(key);
+
     final codecMap = <String, Codec>{};
+
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
       final val = mapEntry.value;
       late Codec subCodec;
       if (val is String) {
-        subCodec =
-            getCodec(val) ?? _parseCodec(metadata, val, metadata[val] ?? val);
+        subCodec = getCodec(val) ??
+            _parseCodec(metadata, val, metadata[val] ?? val, visitedKeys,
+                allowSettingCodec);
       } else {
-        subCodec = _parseCodec(metadata, key, val);
+        subCodec = getCodec(key) ??
+            _parseCodec(metadata, key, val, visitedKeys, allowSettingCodec);
       }
       codecMap[key] = subCodec;
     }
+
     final codec = CompositeCodec(codecMap);
-    if (allowedSettingCodec) {
+    visitedKeys.remove(key);
+
+    if (allowSettingCodec) {
       addCodec(key, codec);
     }
 
     return codec;
   }
 
-  ArrayCodec _parseArray(Map<String, dynamic> cusomJson, String value) {
+  Codec _parseArray(Map<String, dynamic> metadata, String key, String value,
+      Set<String> visitedKeys, bool allowSettingCodec) {
     final match = getArrayMatch(value);
 
     assertion(
@@ -436,12 +514,9 @@ class Registry {
 
     final match1 = match[1].toString();
 
-    // Get the subType
-    late Codec? subType;
-
-    subType = getCodec(match1);
-
-    subType ??= _parseCodec(cusomJson, match1, cusomJson[match1] ?? match1);
+    final subType = getCodec(match1) ??
+        _parseCodec(metadata, match1, metadata[match1] ?? match1, visitedKeys,
+            allowSettingCodec);
 
     //
     // Get the length of the fixed array
@@ -454,12 +529,15 @@ class Registry {
     //
     // Get the Codec based on the subType
     final ArrayCodec codec = ArrayCodec(subType, length);
-    addCodec(value, codec);
+
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
-  Codec _parseEnum(
-      Map<String, dynamic> metadata, String key, Map<String, dynamic> value) {
+  Codec _parseEnum(Map<String, dynamic> metadata, String key,
+      Map<String, dynamic> value, Set<String> visited, bool allowSettingCodec) {
     late Codec codec;
     if (value['_enum'] is Map<String, int>) {
       //
@@ -468,11 +546,13 @@ class Registry {
     } else if (value['_enum'] is Map<String, dynamic>) {
       //
       // Complex Enum
-      codec = _parseComplexEnum(metadata, key, value);
+      codec =
+          _parseComplexEnum(metadata, key, value, visited, allowSettingCodec);
     } else if (value['_enum'] is Map<int, MapEntry<String, dynamic>>) {
       //
       // Complex Enum
-      codec = _parseComplexEnum(metadata, key, value);
+      codec =
+          _parseComplexEnum(metadata, key, value, visited, allowSettingCodec);
     } else if (value['_enum'] is List<String?>) {
       //
       // Simplified Enum
@@ -481,12 +561,23 @@ class Registry {
       throw EnumException(
           'EnumException: Expected enum to be a map or a list, but found ${value['_enum'].runtimeType}');
     }
-    addCodec(key, codec);
+
+    if (allowSettingCodec) {
+      addCodec(key, codec);
+    }
     return codec;
   }
 
   Codec _parseComplexEnum(
-      Map<String, dynamic> metadata, String key, Map<String, dynamic> value) {
+      Map<String, dynamic> metadata,
+      String key,
+      Map<String, dynamic> value,
+      Set<String> visitedKeys,
+      bool allowSettingCodec) {
+    if (visitedKeys.contains(key)) {
+      return _createProxy(metadata, key, value, allowSettingCodec);
+    }
+    visitedKeys.add(key);
     final enumValue = value['_enum'];
 
     final Map<int, MapEntry<String, Codec>> codecMap =
@@ -509,19 +600,40 @@ class Registry {
       entries.addAll(enumValue);
     }
 
+    final cache = <String, Codec>{};
+
     for (final map in entries.entries) {
       final entry = map.value;
+      late Codec codec;
       if (entry.value is String) {
-        codecMap[map.key] = MapEntry(
-            entry.key, _parseCodec(metadata, entry.value, entry.value));
+        if (cache[entry.value] != null) {
+          codec = cache[entry.value]!;
+        } else {
+          //
+          // get the codec for this variant of the enum
+          codec = getCodec(entry.value) ??
+              _parseCodec(
+                  metadata, entry.value, entry.value, visitedKeys, false);
+          cache[entry.value] = codec;
+        }
       } else {
-        codecMap[map.key] = MapEntry(
-            entry.key,
-            _parseComposite(metadata, '', entry.value,
-                allowedSettingCodec: false));
+        final tempKey = '$key:${map.key}:${entry.key}';
+        final cacheKey = '$key:${entry.key}';
+        if (cache[cacheKey] != null) {
+          codec = cache[cacheKey]!;
+        } else {
+          codec = getCodec(tempKey) ??
+              _parseComposite(
+                  metadata, tempKey, entry.value, visitedKeys, false);
+          cache[cacheKey] = codec;
+        }
       }
+      //
+      // Assign the codec to the enum
+      codecMap[map.key] = MapEntry(entry.key, codec);
     }
     final codec = ComplexEnumCodec.sparse(codecMap);
+    visitedKeys.remove(key);
     return codec;
   }
 

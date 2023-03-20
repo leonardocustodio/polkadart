@@ -98,7 +98,7 @@ mixin Input {
   void assertEndOfDataReached([String message = '']) {
     if (hasBytes()) {
       throw Exception(
-          'End of data not reached. There are ${remainingLength} bytes left to be processed.$message');
+          'End of data not reached. There are $remainingLength bytes left to be processed.$message');
     }
   }
 }
