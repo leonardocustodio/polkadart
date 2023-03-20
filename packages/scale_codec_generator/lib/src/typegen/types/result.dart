@@ -1,25 +1,25 @@
 part of generators;
 
-class ResultGenerator extends Generator {
+class ResultDescriptor extends TypeDescriptor {
   final int _id;
-  late Generator ok;
-  late Generator err;
+  late TypeDescriptor ok;
+  late TypeDescriptor err;
 
-  ResultGenerator({
+  ResultDescriptor({
     required int id,
     required this.ok,
     required this.err,
   }) : _id = id;
 
-  ResultGenerator._lazy(this._id);
+  ResultDescriptor._lazy(this._id);
 
-  factory ResultGenerator.lazy(
+  factory ResultDescriptor.lazy(
       {required int id,
       required LazyLoader loader,
       required int ok,
       required int err}) {
-    final generator = ResultGenerator._lazy(id);
-    loader.addLoader((Map<int, Generator> register) {
+    final generator = ResultDescriptor._lazy(id);
+    loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.ok = register[ok]!;
       generator.err = register[err]!;
     });
@@ -57,7 +57,8 @@ class ResultGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     return refs.map(refs.string, refs.dynamic);
   }
 

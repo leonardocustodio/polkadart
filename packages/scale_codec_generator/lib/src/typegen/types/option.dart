@@ -1,17 +1,17 @@
 part of generators;
 
-class OptionGenerator extends Generator {
+class OptionDescriptor extends TypeDescriptor {
   final int _id;
-  late Generator inner;
+  late TypeDescriptor inner;
 
-  OptionGenerator(int id, this.inner) : _id = id;
+  OptionDescriptor(int id, this.inner) : _id = id;
 
-  OptionGenerator._lazy(int id) : _id = id;
+  OptionDescriptor._lazy(int id) : _id = id;
 
-  factory OptionGenerator.lazy(
+  factory OptionDescriptor.lazy(
       {required int id, required LazyLoader loader, required int codec}) {
-    final generator = OptionGenerator._lazy(id);
-    loader.addLoader((Map<int, Generator> register) {
+    final generator = OptionDescriptor._lazy(id);
+    loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.inner = register[codec]!;
     });
     return generator;
@@ -22,7 +22,7 @@ class OptionGenerator extends Generator {
 
   @override
   TypeReference primitive(BasePath from) {
-    if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
+    if (inner is OptionDescriptor || inner.primitive(from).isNullable == true) {
       return refs.option(inner.primitive(from));
     }
     return inner.primitive(from).asNullable();
@@ -30,7 +30,7 @@ class OptionGenerator extends Generator {
 
   @override
   TypeReference codec(BasePath from) {
-    if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
+    if (inner is OptionDescriptor || inner.primitive(from).isNullable == true) {
       return refs.nestedOptionCodec(inner.primitive(from));
     }
     return refs.optionCodec(inner.primitive(from));
@@ -43,7 +43,7 @@ class OptionGenerator extends Generator {
 
   @override
   Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
-    if (inner is OptionGenerator || inner.primitive(from).isNullable == true) {
+    if (inner is OptionDescriptor || inner.primitive(from).isNullable == true) {
       if (input.read() == 0) {
         return refs.option(inner.primitive(from)).newInstanceNamed('none', []);
       } else {
@@ -61,13 +61,14 @@ class OptionGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     if (visited.contains(this)) {
       return refs.dynamic.type as TypeReference;
     }
     visited.add(this);
-    final newType = Generator.cacheOrCreate(from, visited, () {
-      if (inner is OptionGenerator) {
+    final newType = TypeDescriptor.cacheOrCreate(from, visited, () {
+      if (inner is OptionDescriptor) {
         return refs.map(
           refs.string,
           inner.jsonType(from, visited).asNullable(),
@@ -81,7 +82,7 @@ class OptionGenerator extends Generator {
 
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    if (inner is OptionGenerator) {
+    if (inner is OptionDescriptor) {
       final valueInstance = obj.property('value');
       final innerInstance = inner.instanceToJson(from, valueInstance);
       return obj.property('isNone').conditional(

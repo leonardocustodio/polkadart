@@ -1,8 +1,8 @@
 part of generators;
 
-class EmptyGenerator extends Generator {
+class EmptyDescriptor extends TypeDescriptor {
   final int _id;
-  EmptyGenerator(int id) : _id = id;
+  EmptyDescriptor(int id) : _id = id;
 
   @override
   int id() => _id;
@@ -23,7 +23,8 @@ class EmptyGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     return refs.dynamic.type as TypeReference;
   }
 

@@ -1,45 +1,45 @@
 part of generators;
 
-class PrimitiveGenerator extends Generator {
+class PrimitiveDescriptor extends TypeDescriptor {
   final int _id;
   final metadata.Primitive primitiveType;
 
-  const PrimitiveGenerator._(int id, this.primitiveType) : _id = id;
+  const PrimitiveDescriptor._(int id, this.primitiveType) : _id = id;
 
-  PrimitiveGenerator({required int id, required metadata.Primitive primitive})
+  PrimitiveDescriptor({required int id, required metadata.Primitive primitive})
       : primitiveType = primitive,
         _id = id;
 
-  factory PrimitiveGenerator.str(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.Str);
-  factory PrimitiveGenerator.char(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.Char);
-  factory PrimitiveGenerator.bool(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.Bool);
-  factory PrimitiveGenerator.i8(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.I8);
-  factory PrimitiveGenerator.i16(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.I16);
-  factory PrimitiveGenerator.i32(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.I32);
-  factory PrimitiveGenerator.i64(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.I64);
-  factory PrimitiveGenerator.i128(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.I128);
-  factory PrimitiveGenerator.i256(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.I256);
-  factory PrimitiveGenerator.u8(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.U8);
-  factory PrimitiveGenerator.u16(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.U16);
-  factory PrimitiveGenerator.u32(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.U32);
-  factory PrimitiveGenerator.u64(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.U64);
-  factory PrimitiveGenerator.u128(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.U128);
-  factory PrimitiveGenerator.u256(int id) =>
-      PrimitiveGenerator._(id, metadata.Primitive.U256);
+  factory PrimitiveDescriptor.str(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.Str);
+  factory PrimitiveDescriptor.char(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.Char);
+  factory PrimitiveDescriptor.bool(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.Bool);
+  factory PrimitiveDescriptor.i8(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.I8);
+  factory PrimitiveDescriptor.i16(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.I16);
+  factory PrimitiveDescriptor.i32(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.I32);
+  factory PrimitiveDescriptor.i64(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.I64);
+  factory PrimitiveDescriptor.i128(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.I128);
+  factory PrimitiveDescriptor.i256(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.I256);
+  factory PrimitiveDescriptor.u8(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.U8);
+  factory PrimitiveDescriptor.u16(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.U16);
+  factory PrimitiveDescriptor.u32(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.U32);
+  factory PrimitiveDescriptor.u64(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.U64);
+  factory PrimitiveDescriptor.u128(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.U128);
+  factory PrimitiveDescriptor.u256(int id) =>
+      PrimitiveDescriptor._(id, metadata.Primitive.U256);
 
   @override
   int id() => _id;
@@ -146,7 +146,8 @@ class PrimitiveGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     switch (primitiveType) {
       case metadata.Primitive.Bool:
         return refs.bool.type as TypeReference;

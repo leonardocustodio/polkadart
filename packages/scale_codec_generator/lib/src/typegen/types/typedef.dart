@@ -1,21 +1,20 @@
 part of generators;
 
-class TypeDefGenerator extends Generator {
-  String filePath;
+class TypeDefBuilder extends TypeBuilder {
   String name;
-  late Generator generator;
+  late TypeDescriptor generator;
   List<String> docs;
 
-  TypeDefGenerator({
-    required this.filePath,
+  TypeDefBuilder({
+    required String filePath,
     required this.name,
     required this.generator,
     required this.docs,
-  });
+  }) : super(filePath);
 
-  TypeDefGenerator._lazy(this.filePath, this.name, this.docs);
+  TypeDefBuilder._lazy(String filePath, this.name, this.docs) : super(filePath);
 
-  factory TypeDefGenerator.lazy({
+  factory TypeDefBuilder.lazy({
     required int id,
     required LazyLoader loader,
     required int codec,
@@ -23,8 +22,8 @@ class TypeDefGenerator extends Generator {
     required String name,
     required List<String> docs,
   }) {
-    final generator = TypeDefGenerator._lazy(filePath, name, docs);
-    loader.addLoader((Map<int, Generator> register) {
+    final generator = TypeDefBuilder._lazy(filePath, name, docs);
+    loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.generator = register[codec]!;
     });
     return generator;
@@ -68,14 +67,8 @@ class TypeDefGenerator extends Generator {
   }
 
   @override
-  GeneratedOutput? generated() {
-    final typeDef = classbuilder.createTypeDef(
-        name: name, reference: generator.primitive(p.dirname(filePath)));
-    return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
-  }
-
-  @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     if (visited.contains(this)) {
       return refs.dynamic.type as TypeReference;
     }
@@ -88,5 +81,12 @@ class TypeDefGenerator extends Generator {
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
     return generator.instanceToJson(from, obj);
+  }
+
+  @override
+  GeneratedOutput build() {
+    final typeDef = classbuilder.createTypeDef(
+        name: name, reference: generator.primitive(p.dirname(filePath)));
+    return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
   }
 }

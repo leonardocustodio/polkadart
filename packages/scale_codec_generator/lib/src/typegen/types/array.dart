@@ -1,23 +1,23 @@
 part of generators;
 
-class ArrayGenerator extends Generator {
+class ArrayDescriptor extends TypeDescriptor {
   final int _id;
-  late Generator typeDef;
+  late TypeDescriptor typeDef;
   final int length;
 
-  ArrayGenerator(
-      {required int id, required Generator codec, required this.length})
+  ArrayDescriptor(
+      {required int id, required TypeDescriptor codec, required this.length})
       : typeDef = codec,
         _id = id;
-  ArrayGenerator._lazy(this._id, this.length);
+  ArrayDescriptor._lazy(this._id, this.length);
 
-  factory ArrayGenerator.lazy(
+  factory ArrayDescriptor.lazy(
       {required int id,
       required LazyLoader loader,
       required int codec,
       required int length}) {
-    final generator = ArrayGenerator._lazy(id, length);
-    loader.addLoader((Map<int, Generator> register) {
+    final generator = ArrayDescriptor._lazy(id, length);
+    loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.typeDef = register[codec]!;
     });
     return generator;
@@ -28,8 +28,8 @@ class ArrayGenerator extends Generator {
 
   @override
   TypeReference primitive(BasePath from) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
         case metadata.Primitive.U16:
         case metadata.Primitive.U32:
@@ -48,8 +48,8 @@ class ArrayGenerator extends Generator {
 
   @override
   TypeReference codec(BasePath from) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
           return refs.u8ArrayCodec.type as TypeReference;
         case metadata.Primitive.U16:
@@ -78,8 +78,8 @@ class ArrayGenerator extends Generator {
   Expression codecInstance(BasePath from) {
     final TypeReference codec = this.codec(from);
 
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
         case metadata.Primitive.U16:
         case metadata.Primitive.U32:
@@ -115,8 +115,8 @@ class ArrayGenerator extends Generator {
 
   @override
   Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
         case metadata.Primitive.Char:
           final list = U8ArrayCodec(length).decode(input);
@@ -159,9 +159,10 @@ class ArrayGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
         case metadata.Primitive.Char:
         case metadata.Primitive.U16:
@@ -189,7 +190,7 @@ class ArrayGenerator extends Generator {
       return refs.list(ref: refs.dynamic);
     }
     visited.add(this);
-    final type = Generator.cacheOrCreate(
+    final type = TypeDescriptor.cacheOrCreate(
         from, visited, () => refs.list(ref: typeDef.jsonType(from, visited)));
     visited.remove(this);
     return type;
@@ -197,8 +198,8 @@ class ArrayGenerator extends Generator {
 
   @override
   Expression instanceToJson(BasePath from, Expression obj) {
-    if (typeDef is PrimitiveGenerator) {
-      switch ((typeDef as PrimitiveGenerator).primitiveType) {
+    if (typeDef is PrimitiveDescriptor) {
+      switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.Str:
         case metadata.Primitive.U8:
         case metadata.Primitive.Char:

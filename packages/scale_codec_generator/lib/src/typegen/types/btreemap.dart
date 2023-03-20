@@ -1,25 +1,25 @@
 part of generators;
 
-class BTreeMapGenerator extends Generator {
+class BTreeMapDescriptor extends TypeDescriptor {
   final int _id;
-  late Generator key;
-  late Generator value;
+  late TypeDescriptor key;
+  late TypeDescriptor value;
 
-  BTreeMapGenerator({
+  BTreeMapDescriptor({
     required int id,
     required this.key,
     required this.value,
   }) : _id = id;
 
-  BTreeMapGenerator._lazy(int id) : _id = id;
+  BTreeMapDescriptor._lazy(int id) : _id = id;
 
-  factory BTreeMapGenerator.lazy(
+  factory BTreeMapDescriptor.lazy(
       {required int id,
       required LazyLoader loader,
       required int key,
       required int value}) {
-    final generator = BTreeMapGenerator._lazy(id);
-    loader.addLoader((Map<int, Generator> register) {
+    final generator = BTreeMapDescriptor._lazy(id);
+    loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.key = register[key]!;
       generator.value = register[value]!;
     });
@@ -63,12 +63,13 @@ class BTreeMapGenerator extends Generator {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Generator> visited = const {}]) {
+  TypeReference jsonType(BasePath from,
+      [Set<TypeDescriptor> visited = const {}]) {
     if (visited.contains(this)) {
       return refs.map(refs.dynamic, refs.dynamic);
     }
     visited.add(this);
-    final type = Generator.cacheOrCreate(
+    final type = TypeDescriptor.cacheOrCreate(
         from,
         visited,
         () => refs.map(

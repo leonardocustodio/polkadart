@@ -1,8 +1,8 @@
 import 'dart:typed_data';
-import 'package:ss58/src/exceptions.dart';
-import 'package:ss58/src/registry.dart';
-import 'package:ss58/util/ss58_registry_json.dart' as reg;
-import 'package:ss58_codec/ss58_codec.dart';
+import './exceptions.dart';
+import './registry.dart';
+import '../util/ss58_registry_json.dart' as reg;
+import './address.dart' show Address;
 
 /// Default class for encoding to/from SS58 substrate
 /// address.
@@ -34,8 +34,7 @@ class Codec {
 
   /// Encode the bytes
   String encode(List<int> bytes) {
-    return SS58Codec.encode(
-        Address(prefix: prefix, bytes: Uint8List.fromList(bytes)));
+    return Address(prefix: prefix, pubkey: Uint8List.fromList(bytes)).encode();
   }
 
   /// Decode the [encodedAddress] and return a list of bytes.
@@ -45,7 +44,7 @@ class Codec {
   /// throw InvalidAddressPrefixException: when (prefix != decodedAddress.prefix)
   /// ```
   Uint8List decode(String encodedAddress) {
-    final Address address = SS58Codec.decode(encodedAddress);
+    final Address address = Address.decode(encodedAddress);
     if (address.prefix != prefix) {
       throw InvalidAddressPrefixException(
         prefix: prefix,
@@ -53,6 +52,6 @@ class Codec {
         encodedAddress: encodedAddress,
       );
     }
-    return address.bytes;
+    return address.pubkey;
   }
 }
