@@ -22,15 +22,15 @@ class U8Codec with Codec<int> {
   }
 }
 
-class U8SequenceCodec with Codec<Uint8List> {
+class U8SequenceCodec with Codec<List<int>> {
   const U8SequenceCodec._();
 
   static const U8SequenceCodec codec = U8SequenceCodec._();
 
   @override
-  Uint8List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Uint8List(length);
+  Uint8Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Uint8Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = U8Codec.codec.decode(input);
     }
@@ -38,20 +38,20 @@ class U8SequenceCodec with Codec<Uint8List> {
   }
 
   @override
-  void encodeTo(Uint8List list, Output output) {
-    CompactCodec.codec.encodeTo(list.length, output);
-    for (int value in list) {
-      U8Codec.codec.encodeTo(value, output);
+  void encodeTo(List<int> value, Output output) {
+    CompactCodec.codec.encodeTo(value.length, output);
+    for (final val in value) {
+      U8Codec.codec.encodeTo(val, output);
     }
   }
 
   @override
-  int sizeHint(Uint8List list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  int sizeHint(List<int> value) {
+    return CompactCodec.codec.sizeHint(value.length) + value.length;
   }
 }
 
-class U8ArrayCodec with Codec<Uint8List> {
+class U8ArrayCodec with Codec<List<int>> {
   final int length;
   const U8ArrayCodec(this.length);
 
@@ -65,18 +65,18 @@ class U8ArrayCodec with Codec<Uint8List> {
   }
 
   @override
-  void encodeTo(Uint8List list, Output output) {
-    if (list.length != length) {
+  void encodeTo(List<int> value, Output output) {
+    if (value.length != length) {
       throw Exception(
-          'U8ArrayCodec: invalid length, expect $length found ${list.length}');
+          'U8ArrayCodec: invalid length, expect $length found ${value.length}');
     }
-    for (var i = 0; i < length; i++) {
-      U8Codec.codec.encodeTo(list[i], output);
+    for (final val in value) {
+      U8Codec.codec.encodeTo(val, output);
     }
   }
 
   @override
-  int sizeHint(Uint8List list) {
+  int sizeHint(List<int> value) {
     return length;
   }
 }

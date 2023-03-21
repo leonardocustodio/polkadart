@@ -109,7 +109,7 @@ class Chain {
       ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
           .encodeTo(extrinsic, output);
       return output.toString();
-    }).toList();
+    }).toList(growable: false);
 
     return RawBlockExtrinsics(
         blockNumber: blockNumber, extrinsics: encodedExtrinsicsHex);

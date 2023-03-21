@@ -24,15 +24,15 @@ class I32Codec with Codec<int> {
   }
 }
 
-class I32SequenceCodec with Codec<Int32List> {
+class I32SequenceCodec with Codec<List<int>> {
   const I32SequenceCodec._();
 
   static const I32SequenceCodec codec = I32SequenceCodec._();
 
   @override
-  Int32List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Int32List(length);
+  Int32Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Int32Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = I32Codec.codec.decode(input);
     }
@@ -40,16 +40,16 @@ class I32SequenceCodec with Codec<Int32List> {
   }
 
   @override
-  void encodeTo(Int32List list, Output output) {
-    CompactCodec.codec.encodeTo(list.length, output);
-    for (int value in list) {
-      I32Codec.codec.encodeTo(value, output);
+  void encodeTo(List<int> value, Output output) {
+    CompactCodec.codec.encodeTo(value.length, output);
+    for (final val in value) {
+      I32Codec.codec.encodeTo(val, output);
     }
   }
 
   @override
-  int sizeHint(Int32List list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  int sizeHint(List<int> value) {
+    return CompactCodec.codec.sizeHint(value.length) + value.length * 4;
   }
 }
 
@@ -67,18 +67,18 @@ class I32ArrayCodec with Codec<Int32List> {
   }
 
   @override
-  void encodeTo(Int32List list, Output output) {
-    if (list.length != length) {
+  void encodeTo(Int32List value, Output output) {
+    if (value.length != length) {
       throw Exception(
-          'I32ArrayCodec: invalid length, expect $length found ${list.length}');
+          'I32ArrayCodec: invalid length, expect $length found ${value.length}');
     }
-    for (var i = 0; i < length; i++) {
-      I32Codec.codec.encodeTo(list[i], output);
+    for (final val in value) {
+      I32Codec.codec.encodeTo(val, output);
     }
   }
 
   @override
-  int sizeHint(Int32List list) {
+  int sizeHint(Int32List value) {
     return length * 4;
   }
 }

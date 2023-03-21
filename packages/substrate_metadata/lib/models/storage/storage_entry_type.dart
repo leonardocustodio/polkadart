@@ -435,14 +435,14 @@ class StorageEntryTypeV13_NMap extends StorageEntryTypeV13 {
       StorageEntryTypeV13_NMap(
         hashers: (map['hashers'] as List)
             .map((value) => StorageHasherV11.fromKey(value))
-            .toList(),
+            .toList(growable: false),
         keyVec: (map['keyVec'] as List).cast<String>(),
         value: map['value'],
       );
 
   /// Creates Map Object from `Json`
   Map<String, dynamic> toJson() => {
-        'hashers': hashers.map((e) => e.toJson()).toList(),
+        'hashers': hashers.map((e) => e.toJson()).toList(growable: false),
         'keyVec': keyVec,
         'value': value,
       };

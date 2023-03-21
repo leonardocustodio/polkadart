@@ -1,39 +1,34 @@
 part of parsers;
 
 class LegacyParser {
-  static ChainInfo getChainInfo(
-      DecodedMetadata decodedMetadata, LegacyTypes legacyTypes) {
+  final DecodedMetadata decodedMetadata;
+  final LegacyTypes legacyTypes;
+
+  final _resultingRegistry = Registry();
+
+  LegacyParser(this.decodedMetadata, this.legacyTypes);
+
+  ChainInfo getChainInfo() {
     final rawMetadata = decodedMetadata.metadataJson;
+
+    _defineCalls();
 
     int callModuleIndex = -1;
     int eventModuleIndex = -1;
 
-    final resultingRegistry = Registry();
+    _resultingRegistry.addCodec('Call', ProxyCodec('GenericCall'));
 
-    final callsCodec = <int, MapEntry<String, Codec>>{};
-    final eventsCodec = <int, MapEntry<String, Codec>>{};
+    final genericCallsCodec = <int, MapEntry<String, Codec>>{};
+    final genericEventsCodec = <int, MapEntry<String, Codec>>{};
+
+    final typeNormalizer = TypeNormalizer(
+      types: legacyTypes.types,
+      typesAlias: legacyTypes.typesAlias ?? <String, Map<String, String>>{},
+    );
+
     for (final module in rawMetadata['modules']) {
       // Getting the module name and converting it to camelCase
-      String moduleName = module['name'];
-      moduleName = moduleName[0].toLowerCase() + moduleName.substring(1);
-
-      // Getting the aliases for this specific module
-      final Map<String, String>? moduleNameAlias =
-          substrateTypesAlias[moduleName];
-
-      final Map<String, dynamic> types =
-          Map<String, dynamic>.from(legacyTypes.types);
-
-      if (moduleNameAlias != null) {
-        // overriding the types with the aliases for this specific module
-        types.addAll(moduleNameAlias);
-      }
-
-      final callRegistry = Registry();
-      callRegistry.addCodec(
-          'Call',
-          ReferencedCodec(
-              referencedType: 'GenericCall', registry: resultingRegistry));
+      final String moduleName = module['name']!;
 
       if (module['calls'] != null) {
         callModuleIndex++;
@@ -47,16 +42,18 @@ class LegacyParser {
           final call = module['calls'][callIndex];
 
           final List<dynamic> args = call['args'];
-          Codec argsCodec = TupleCodec([]);
+          Codec argsCodec = NullCodec.codec;
 
           if (args.isNotEmpty) {
             if (args.first is String) {
               // List<String>
               final codecs = <Codec>[];
               for (final String arg in args) {
-                final String type = legacyTypeSimplifier(arg);
-                final Codec codec =
-                    callRegistry.parseSpecificCodec(types, type);
+                final String parsedType =
+                    typeNormalizer.normalize(arg, moduleName).toString();
+
+                final Codec codec = _resultingRegistry.parseSpecificCodec(
+                    legacyTypes.types, parsedType);
                 codecs.add(codec);
               }
               argsCodec = TupleCodec(codecs);
@@ -66,11 +63,13 @@ class LegacyParser {
 
               for (final arg in args) {
                 final String name = arg['name'];
+                final String argType = arg['type'];
 
-                final String type = legacyTypeSimplifier(arg['type']);
+                final String parsedType =
+                    typeNormalizer.normalize(argType, moduleName).toString();
 
-                final Codec codec =
-                    callRegistry.parseSpecificCodec(types, type);
+                final Codec codec = _resultingRegistry.parseSpecificCodec(
+                    legacyTypes.types, parsedType);
 
                 codecs[name] = codec;
               }
@@ -81,7 +80,7 @@ class LegacyParser {
           }
           callEnumCodec[callIndex] = MapEntry(call['name'], argsCodec);
         }
-        callsCodec[index] =
+        genericCallsCodec[index] =
             MapEntry(module['name'], ComplexEnumCodec.sparse(callEnumCodec));
       }
 
@@ -102,16 +101,18 @@ class LegacyParser {
 
           final List<dynamic> args = event['args'];
 
-          Codec argsCodec = TupleCodec([]);
+          Codec argsCodec = NullCodec.codec;
 
           if (args.isNotEmpty) {
             if (args.first is String) {
               // List<String>
               final codecs = <Codec>[];
               for (final String arg in args) {
-                final String type = legacyTypeSimplifier(arg);
-                final Codec codec =
-                    eventRegistry.parseSpecificCodec(types, type);
+                final String parsedType =
+                    typeNormalizer.normalize(arg, moduleName).toString();
+
+                final Codec codec = eventRegistry.parseSpecificCodec(
+                    legacyTypes.types, parsedType);
                 codecs.add(codec);
               }
               argsCodec = TupleCodec(codecs);
@@ -121,11 +122,13 @@ class LegacyParser {
 
               for (final arg in args) {
                 final String name = arg['name'];
+                final String argType = arg['type'];
 
-                final String type = legacyTypeSimplifier(arg['type']);
+                final String parsedType =
+                    typeNormalizer.normalize(argType, moduleName).toString();
 
-                final Codec codec =
-                    eventRegistry.parseSpecificCodec(types, type);
+                final Codec codec = eventRegistry.parseSpecificCodec(
+                    legacyTypes.types, parsedType);
 
                 codecs[name] = codec;
               }
@@ -136,65 +139,87 @@ class LegacyParser {
           }
           eventEnumCodec[eventIndex] = MapEntry(event['name'], argsCodec);
         }
-        eventsCodec[index] =
+        genericEventsCodec[index] =
             MapEntry(module['name'], ComplexEnumCodec.sparse(eventEnumCodec));
       }
     }
-    resultingRegistry
-      ..addCodec('GenericCall', ComplexEnumCodec.sparse(callsCodec))
-      ..addCodec('GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
+    //
+    // Register the Generic Call
+    {
+      // replace the proxy of GenericCall with the real GenericCall
+      final proxyCodec = _resultingRegistry.getCodec('Call')! as ProxyCodec;
+      proxyCodec.codec = ComplexEnumCodec.sparse(genericCallsCodec);
+    }
+
+    //
+    // Register the Generic Event
+    _resultingRegistry.addCodec(
+        'GenericEvent', ComplexEnumCodec.sparse(genericEventsCodec));
 
     {
       //
       // Configure the events codec
-      final eventCodec = resultingRegistry.parseSpecificCodec(
+      final eventCodec = _resultingRegistry.parseSpecificCodec(
           legacyTypes.types, 'EventRecord');
 
-      resultingRegistry
+      _resultingRegistry
         ..addCodec('EventRecord', eventCodec)
         ..addCodec('EventCodec', SequenceCodec(eventCodec));
     }
 
-    {
-      //
-      // Configure the Extrinsic Signature Codec
-      final eraCodec = EraExtrinsic.codec;
-      final nonceCodec = CompactBigIntCodec.codec;
-      Codec? tipCodec;
-
-      final extrinsic = rawMetadata['extrinsic'];
-      if (extrinsic != null &&
-          extrinsic['signedExtensions'] is List &&
-          extrinsic['signedExtensions'] != null &&
-          extrinsic['signedExtensions'].isNotEmpty) {
-        final signedExtensions =
-            (extrinsic['signedExtensions'] as List<dynamic>).cast<String>();
-        if (signedExtensions.contains('ChargeTransactionPayment')) {
-          tipCodec = CompactBigIntCodec.codec;
-        }
-      }
-
-      final addressCodec =
-          resultingRegistry.parseSpecificCodec(legacyTypes.types, 'Address');
-
-      final signatureCodec = resultingRegistry.parseSpecificCodec(
-          legacyTypes.types, 'ExtrinsicSignature');
-
-      final extrinsicCodec = CompositeCodec({
-        'address': addressCodec,
-        'signature': signatureCodec,
-        'signedExtensions': CompositeCodec({
-          'era': eraCodec,
-          'nonce': nonceCodec,
-          if (tipCodec != null) 'tip': tipCodec,
-        }),
-      });
-
-      resultingRegistry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
-    }
+    _createExtrinsicCodec();
 
     return ChainInfo(
-        scaleCodec: ScaleCodec(resultingRegistry),
+        scaleCodec: ScaleCodec(_resultingRegistry),
         version: decodedMetadata.version);
+  }
+
+  void _createExtrinsicCodec() {
+    //
+    // Configure the Extrinsic Signature Codec
+    final eraCodec = EraExtrinsic.codec;
+
+    final nonceCodec = _resultingRegistry.parseSpecificCodec(
+        legacyTypes.types, 'Compact<Index>');
+
+    final tipCodec = _resultingRegistry.parseSpecificCodec(
+        legacyTypes.types, 'Compact<Balance>');
+
+    final addressCodec =
+        _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'Address');
+
+    final signatureCodec = _resultingRegistry.parseSpecificCodec(
+        legacyTypes.types, 'ExtrinsicSignature');
+
+    final extrinsicCodec = CompositeCodec({
+      'address': addressCodec,
+      'signature': signatureCodec,
+      'signedExtensions': CompositeCodec({
+        'era': eraCodec,
+        'nonce': nonceCodec,
+        'tip': tipCodec,
+      }),
+    });
+
+    _resultingRegistry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
+  }
+
+  void _defineCalls() {
+    _defineGenericLookUpSource();
+  }
+
+  void _defineGenericLookUpSource() {
+    final enums = <int, MapEntry<String, Codec>>{};
+    for (var i = 0; i < 0xef; i++) {
+      enums[i] = MapEntry('Idx$i', NullCodec.codec);
+    }
+    enums[0xfc] = MapEntry('IdxU16', U16Codec.codec);
+    enums[0xfd] = MapEntry('IdxU32', U32Codec.codec);
+    enums[0xfe] = MapEntry('IdxU64', U64Codec.codec);
+    enums[0xff] = MapEntry('AccountId',
+        _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'AccountId'));
+
+    _resultingRegistry.addCodec(
+        'GenericLookupSource', ComplexEnumCodec.sparse(enums));
   }
 }

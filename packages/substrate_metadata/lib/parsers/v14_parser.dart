@@ -21,16 +21,12 @@ class V14Parser {
     // Temporariy referencing it to GenericCall until the real GenericCall is created below
     // and
     // then add it to the resultingRegistry
-    resultingRegistry.addCodec(
-        'Call',
-        ReferencedCodec(
-            referencedType: 'GenericCall', registry: resultingRegistry));
+    resultingRegistry.addCodec('Call', ProxyCodec('GenericCall'));
 
     // Iterate over the pallets
     //
     // Set the types names for the storage, calls, events, constants
-    for (var i = 0; i < rawMetadata['pallets'].length; i++) {
-      final pallet = rawMetadata['pallets'][i];
+    for (final pallet in rawMetadata['pallets']) {
       // pallet name
       final palletName = pallet['name'];
       // pallet index
@@ -160,10 +156,17 @@ class V14Parser {
     }
 
     //
-    // Register the Generics
-    resultingRegistry
-      ..addCodec('GenericCall', ComplexEnumCodec.sparse(callsCodec))
-      ..addCodec('GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
+    // Register the Generic Call
+    {
+      // replace the proxy of GenericCall with the real GenericCall
+      final proxyCodec = resultingRegistry.getCodec('Call')! as ProxyCodec;
+      proxyCodec.codec = ComplexEnumCodec.sparse(callsCodec);
+    }
+
+    //
+    // Register the Generic Event
+    resultingRegistry.addCodec(
+        'GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
 
     {
       //
@@ -211,8 +214,9 @@ class V14Parser {
             break;
           default:
             final siTypeName = siTypes[params['type']]!;
-            final codec = resultingRegistry.getCodec(siTypeName);
-            extrinsicSignature[name] = codec!;
+            final codec = resultingRegistry.parseSpecificCodec(
+                metadataExpander.customCodecRegister, siTypeName);
+            extrinsicSignature[name] = codec;
         }
       }
       final signedExtensionsCompositeCodec = <String, Codec>{};

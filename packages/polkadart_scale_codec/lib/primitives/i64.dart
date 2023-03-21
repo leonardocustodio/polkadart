@@ -25,15 +25,15 @@ class I64Codec with Codec<BigInt> {
   }
 }
 
-class I64SequenceCodec with Codec<Int64List> {
+class I64SequenceCodec with Codec<List<int>> {
   const I64SequenceCodec._();
 
   static const I64SequenceCodec codec = I64SequenceCodec._();
 
   @override
-  Int64List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Int64List(length);
+  Int64Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Int64Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = I64Codec.codec.decode(input).toInt();
     }
@@ -41,20 +41,20 @@ class I64SequenceCodec with Codec<Int64List> {
   }
 
   @override
-  void encodeTo(Int64List list, Output output) {
-    CompactCodec.codec.encodeTo(list.length, output);
-    for (int value in list) {
-      I64Codec.codec.encodeTo(BigInt.from(value), output);
+  void encodeTo(List<int> value, Output output) {
+    CompactCodec.codec.encodeTo(value.length, output);
+    for (final val in value) {
+      I64Codec.codec.encodeTo(BigInt.from(val), output);
     }
   }
 
   @override
-  int sizeHint(Int64List list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  int sizeHint(List<int> value) {
+    return CompactCodec.codec.sizeHint(value.length) + value.length * 8;
   }
 }
 
-class I64ArrayCodec with Codec<Int64List> {
+class I64ArrayCodec with Codec<List<int>> {
   final int length;
   const I64ArrayCodec(this.length);
 
@@ -68,18 +68,18 @@ class I64ArrayCodec with Codec<Int64List> {
   }
 
   @override
-  void encodeTo(Int64List list, Output output) {
-    if (list.length != length) {
+  void encodeTo(List<int> value, Output output) {
+    if (value.length != length) {
       throw Exception(
-          'I64ArrayCodec: invalid length, expect $length found ${list.length}');
+          'I64ArrayCodec: invalid length, expect $length found ${value.length}');
     }
-    for (var i = 0; i < length; i++) {
-      I64Codec.codec.encodeTo(BigInt.from(list[i]), output);
+    for (final val in value) {
+      I64Codec.codec.encodeTo(BigInt.from(val), output);
     }
   }
 
   @override
-  int sizeHint(Int64List list) {
+  int sizeHint(List<int> value) {
     return length * 8;
   }
 }

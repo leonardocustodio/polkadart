@@ -1,12 +1,34 @@
 library primitives;
 
-import 'dart:typed_data';
+import 'dart:typed_data'
+    show
+        ByteBuffer,
+        Uint8List,
+        Uint16List,
+        Uint32List,
+        Uint64List,
+        Int8List,
+        Int16List,
+        Int32List,
+        Int64List;
+import 'package:typed_data/typed_buffers.dart'
+    show
+        Uint8Buffer,
+        Uint16Buffer,
+        Uint32Buffer,
+        Uint64Buffer,
+        Int8Buffer,
+        Int16Buffer,
+        Int32Buffer,
+        Int64Buffer;
 import 'package:polkadart_scale_codec/core/core.dart';
 import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'dart:convert' show utf8;
 import 'dart:core';
+
+import 'package:quiver/collection.dart';
 
 part 'bool.dart';
 part 'array.dart';
@@ -33,5 +55,5 @@ part 'enum.dart';
 part 'bit_sequence.dart';
 part 'null_codec.dart';
 part 'set.dart';
-part 'referenced_codec.dart';
 part 'result.dart';
+part 'proxy.dart';

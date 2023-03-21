@@ -7,13 +7,13 @@ class ResultCodec<R, E> with Codec<Result<R, E>> {
   const ResultCodec(this.okCodec, this.errCodec);
 
   @override
-  void encodeTo(Result<R, E> value, Output dest) {
+  void encodeTo(Result<R, E> value, Output output) {
     if (value.isOk) {
-      dest.pushByte(0);
-      okCodec.encodeTo(value.okValue as R, dest);
+      output.pushByte(0);
+      okCodec.encodeTo(value.okValue as R, output);
     } else {
-      dest.pushByte(1);
-      errCodec.encodeTo(value.errValue as E, dest);
+      output.pushByte(1);
+      errCodec.encodeTo(value.errValue as E, output);
     }
   }
 
@@ -54,6 +54,13 @@ class Result<R, E> {
 
   bool get isOk => _isOk;
   bool get isErr => !_isOk;
+
+  Map<String, dynamic> toJson() {
+    if (_isOk) {
+      return {'Ok': okValue};
+    }
+    return {'Err': errValue};
+  }
 
   @override
   String toString() {

@@ -24,15 +24,15 @@ class I8Codec with Codec<int> {
   }
 }
 
-class I8SequenceCodec with Codec<Int8List> {
+class I8SequenceCodec with Codec<List<int>> {
   const I8SequenceCodec._();
 
   static const I8SequenceCodec codec = I8SequenceCodec._();
 
   @override
-  Int8List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Int8List(length);
+  Int8Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Int8Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = I8Codec.codec.decode(input);
     }
@@ -40,16 +40,16 @@ class I8SequenceCodec with Codec<Int8List> {
   }
 
   @override
-  void encodeTo(Int8List list, Output output) {
-    CompactCodec.codec.encodeTo(list.length, output);
-    for (int value in list) {
-      I8Codec.codec.encodeTo(value, output);
+  void encodeTo(List<int> value, Output output) {
+    CompactCodec.codec.encodeTo(value.length, output);
+    for (final val in value) {
+      I8Codec.codec.encodeTo(val, output);
     }
   }
 
   @override
-  int sizeHint(Int8List list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.lengthInBytes;
+  int sizeHint(List<int> value) {
+    return CompactCodec.codec.sizeHint(value.length) + value.length;
   }
 }
 
@@ -67,18 +67,18 @@ class I8ArrayCodec with Codec<Int8List> {
   }
 
   @override
-  void encodeTo(Int8List list, Output output) {
-    if (list.length != length) {
+  void encodeTo(Int8List value, Output output) {
+    if (value.length != length) {
       throw Exception(
-          'I8ArrayCodec: invalid length, expect $length found ${list.length}');
+          'I8ArrayCodec: invalid length, expect $length found ${value.length}');
     }
-    for (var i = 0; i < length; i++) {
-      I8Codec.codec.encodeTo(list[i], output);
+    for (final val in value) {
+      I8Codec.codec.encodeTo(val, output);
     }
   }
 
   @override
-  int sizeHint(Int8List list) {
+  int sizeHint(Int8List value) {
     return length;
   }
 }

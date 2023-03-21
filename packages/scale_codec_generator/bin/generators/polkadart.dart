@@ -1,6 +1,10 @@
 import './base.dart' show GeneratedOutput;
 import '../class_builder.dart'
-    show createPolkadartQueries, createPolkadartConstants, createPolkadartClass;
+    show
+        createPolkadartQueries,
+        createPolkadartConstants,
+        createPolkadartRpc,
+        createPolkadartClass;
 import './pallet.dart' show PalletGenerator;
 
 class PolkadartGenerator {
@@ -14,8 +18,9 @@ class PolkadartGenerator {
   GeneratedOutput generated() {
     final queries = createPolkadartQueries(this);
     final constants = createPolkadartConstants(this);
+    final rpc = createPolkadartRpc(this);
     final polkdart = createPolkadartClass(this);
     return GeneratedOutput(
-        classes: [queries, constants, polkdart], enums: [], typedefs: []);
+        classes: [queries, constants, rpc, polkdart], enums: [], typedefs: []);
   }
 }

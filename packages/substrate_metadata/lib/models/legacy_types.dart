@@ -29,7 +29,7 @@ class LegacyTypesWithSpecVersionRange extends LegacyTypes {
   static LegacyTypesWithSpecVersionRange fromJson(Map<String, dynamic> map) {
     return LegacyTypesWithSpecVersionRange(
         minmax: (map['minmax'] as List).cast<int?>(),
-        types: map['types'],
+        types: (map['types'] as Map).cast<String, dynamic>(),
         typesAlias: map['typesAlias'],
         signedExtensions: map['signedExtensions']);
   }
@@ -52,7 +52,7 @@ class LegacyTypesBundle extends LegacyTypes {
       signedExtensions: map['signedExtensions'],
       versions: (map['versions'] as List?)
           ?.map((value) => LegacyTypesWithSpecVersionRange.fromJson(value))
-          .toList(),
+          .toList(growable: false),
     );
   }
 }

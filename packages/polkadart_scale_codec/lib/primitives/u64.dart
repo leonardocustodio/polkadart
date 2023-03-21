@@ -25,15 +25,15 @@ class U64Codec with Codec<BigInt> {
   }
 }
 
-class U64SequenceCodec with Codec<Uint64List> {
+class U64SequenceCodec with Codec<List<int>> {
   const U64SequenceCodec._();
 
   static const U64SequenceCodec codec = U64SequenceCodec._();
 
   @override
-  Uint64List decode(Input input) {
-    final length = CompactCodec.codec.decode(input).toInt();
-    final list = Uint64List(length);
+  Uint64Buffer decode(Input input) {
+    final length = CompactCodec.codec.decode(input);
+    final list = Uint64Buffer(length);
     for (var i = 0; i < length; i++) {
       list[i] = U64Codec.codec.decode(input).toInt();
     }
@@ -41,20 +41,20 @@ class U64SequenceCodec with Codec<Uint64List> {
   }
 
   @override
-  void encodeTo(Uint64List value, Output output) {
+  void encodeTo(List<int> value, Output output) {
     CompactCodec.codec.encodeTo(value.length, output);
-    for (var i = 0; i < value.length; i++) {
-      U64Codec.codec.encodeTo(BigInt.from(value[i]), output);
+    for (final val in value) {
+      U64Codec.codec.encodeTo(BigInt.from(val), output);
     }
   }
 
   @override
-  int sizeHint(Uint64List value) {
-    return CompactCodec.codec.sizeHint(value.length) + value.lengthInBytes;
+  int sizeHint(List<int> value) {
+    return CompactCodec.codec.sizeHint(value.length) + value.length * 8;
   }
 }
 
-class U64ArrayCodec with Codec<Uint64List> {
+class U64ArrayCodec with Codec<List<int>> {
   final int length;
   const U64ArrayCodec(this.length);
 
@@ -68,18 +68,18 @@ class U64ArrayCodec with Codec<Uint64List> {
   }
 
   @override
-  void encodeTo(Uint64List value, Output output) {
+  void encodeTo(List<int> value, Output output) {
     if (value.length != length) {
       throw Exception(
           'U64ArrayCodec: invalid length, expect $length found ${value.length}');
     }
-    for (var i = 0; i < length; i++) {
-      U64Codec.codec.encodeTo(BigInt.from(value[i]), output);
+    for (final val in value) {
+      U64Codec.codec.encodeTo(BigInt.from(val), output);
     }
   }
 
   @override
-  int sizeHint(Uint64List list) {
+  int sizeHint(List<int> value) {
     return length * 8;
   }
 }

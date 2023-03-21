@@ -36,7 +36,7 @@ class ExtrinsicMetadataV14 {
           version: map['version'],
           signedExtensions: (map['signedExtensions'] as List)
               .map((value) => SignedExtensionMetadataV14.fromJson(value))
-              .toList());
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
@@ -44,6 +44,6 @@ class ExtrinsicMetadataV14 {
         'version': version,
         'signedExtensions': signedExtensions
             .map((SignedExtensionMetadataV14 value) => value.toJson())
-            .toList(),
+            .toList(growable: false),
       };
 }

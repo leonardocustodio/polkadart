@@ -24,5 +24,5 @@ class HexOutput with Output {
   }
 
   @override
-  List<int> get bytes => decodeHex(toString()).toList();
+  List<int> get bytes => decodeHex(toString()).toList(growable: false);
 }

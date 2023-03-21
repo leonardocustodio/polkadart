@@ -20,6 +20,10 @@ class StorageHasher<K> {
       : hasher = Hasher.blake2b128,
         concat = true;
 
+  const StorageHasher.blake2b256(this.codec)
+      : hasher = Hasher.blake2b256,
+        concat = false;
+
   const StorageHasher.twoxx64(this.codec)
       : hasher = Hasher.twoxx64,
         concat = false;

@@ -10,3 +10,4 @@ import '../models/models.dart';
 
 part 'to_json.dart';
 part 'spec_version_maker.dart';
+part 'functions.dart';

@@ -1,9 +1,11 @@
 import 'package:code_builder/code_builder.dart'
-    show Expression, literalString, literalNum;
+    show Expression, TypeReference, literalString, literalNum;
+import 'package:recase/recase.dart' show ReCase;
+import 'package:path/path.dart' as path;
 import './constants.dart' as constants;
 
 // reference: https://www.codesansar.com/dart/keywords.htm
-final Set<String> reservedWords = {
+const Set<String> reservedWords = {
   'assert',
   'break',
   'case',
@@ -36,11 +38,85 @@ final Set<String> reservedWords = {
   'var',
   'void',
   'while',
-  'with'
+  'with',
+
+  // Object methods
+  'toString',
+  'hashCode',
+  'noSuchMethod',
+  'runtimeType',
+
+  // Internal auto-generated methods
+  'codec',
+  'encode',
+  'decode',
+  'toJson'
 };
 
-String sanitize(String name) =>
-    reservedWords.contains(name) ? '${name}_' : name;
+// Classes from dart:core
+const Set<String> reservedClassnNames = {
+  'BigInt',
+  'Comparable',
+  'DateTime',
+  'Deprecated',
+  'Duration',
+  'Enum',
+  'Expando',
+  'Finalizer',
+  'Function',
+  'Future',
+  'Invocation',
+  'Iterable',
+  'Iterator',
+  'List',
+  'Map',
+  'MapEntry',
+  'Match',
+  'Null',
+  'Object',
+  'Pattern',
+  'Record',
+  'RegExp',
+  'RegExpMatch',
+  'RuneIterator',
+  'Runes',
+  'Set',
+  'Sink',
+  'StackTrace',
+  'Stopwatch',
+  'Stream',
+  'String',
+  'StringBuffer',
+  'StringSink',
+  'Symbol',
+  'Type',
+  'Uri',
+  'UriData',
+  'WeakReference',
+  'Error',
+};
+
+String sanitize(String name, {recase = true}) {
+  if (name.startsWith('r#')) {
+    name = name.substring(2);
+  }
+  name = ReCase(name).camelCase;
+  return reservedWords.contains(name) ? '${name}_' : name;
+}
+
+String sanitizeClassName(String name, {String suffix = '_', prefix = 'Class'}) {
+  if (name.startsWith('r#')) {
+    name = name.substring(2);
+  }
+  name = ReCase(name).pascalCase;
+  if (reservedClassnNames.contains(name)) {
+    return '$name$suffix';
+  }
+  if (RegExp(r'^\d').hasMatch(name)) {
+    return '$prefix$name';
+  }
+  return name;
+}
 
 Expression bigIntToExpression(BigInt value) {
   if (value == BigInt.zero) {
@@ -60,4 +136,78 @@ Expression bigIntToExpression(BigInt value) {
   // Otherwise, use string parser
   return constants.bigInt.property('parse').call(
       [literalString(value.toRadixString(10))], {'radix': literalNum(10)});
+}
+
+// Return a compatible type for two types.
+TypeReference _toCompatibleType(TypeReference a, TypeReference b) {
+  // If they are equal, return any
+  if (a == b) {
+    return a;
+  }
+
+  // If 'a' or 'b' is dynamic, return dynamic
+  if (a.symbol == constants.dynamic.symbol) {
+    return a;
+  }
+  if (b.symbol == constants.dynamic.symbol) {
+    return b;
+  }
+
+  // Check if the types are compatible
+  if (a.symbol != b.symbol ||
+      a.url != b.url ||
+      a.types.length != b.types.length ||
+      a.bound != b.bound) {
+    return constants.dynamic.type as TypeReference;
+  }
+
+  // Convert subtypes to compatible types
+  return TypeReference((builder) {
+    builder
+      ..symbol = a.symbol
+      ..url = a.url
+      ..bound = a.bound;
+
+    // Recusively convert subtypes
+    for (int i = 0; i < a.types.length; i++) {
+      final type = _toCompatibleType(
+          a.types[i].type as TypeReference, b.types[i].type as TypeReference);
+      builder.types.add(type);
+    }
+
+    // If any of the types are nullable, the final type is nullable
+    if (a.isNullable == true || b.isNullable == true) {
+      builder.isNullable = true;
+    }
+  });
+}
+
+/// Find a type which is common for all types in the list.
+TypeReference findCommonType(Iterable<TypeReference> types) {
+  if (types.isEmpty) {
+    return constants.dynamic.type as TypeReference;
+  }
+  if (types.length == 1) {
+    return types.first;
+  }
+  TypeReference baseType = types.first;
+  for (TypeReference type in types) {
+    baseType = _toCompatibleType(baseType, type);
+    if (baseType.symbol == constants.dynamic.symbol) {
+      return baseType;
+    }
+  }
+  return baseType;
+}
+
+/// Convert a list of strings to a file path.
+String listToFilePath(List<String> filePath, {String extension = '.dart'}) {
+  if (filePath.isEmpty) {
+    throw Exception('File path cannot be empty');
+  }
+  final fileName = '${ReCase(filePath.last).snakeCase}$extension';
+  if (filePath.length == 1) {
+    return fileName;
+  }
+  return path.joinAll([...filePath.sublist(0, filePath.length - 1), fileName]);
 }

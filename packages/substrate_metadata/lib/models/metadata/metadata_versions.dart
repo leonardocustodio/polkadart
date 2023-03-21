@@ -88,7 +88,7 @@ class MetadataV14 {
         lookup: PortableRegistryV14.fromJson(map['lookup']),
         pallets: (map['pallets'] as List)
             .map((value) => PalletMetadataV14.fromJson(value))
-            .toList(),
+            .toList(growable: false),
         extrinsic: ExtrinsicMetadataV14.fromJson(map['extrinsic']));
   }
 
@@ -96,7 +96,7 @@ class MetadataV14 {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'lookup': lookup.toJson(),
-      'pallets': pallets.map((value) => value.toJson()).toList(),
+      'pallets': pallets.map((value) => value.toJson()).toList(growable: false),
       'extrinsic': extrinsic.toJson(),
       'type': type,
     };
@@ -111,11 +111,12 @@ class MetadataV9 {
   static MetadataV9 fromJson(Map<String, dynamic> map) => MetadataV9(
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV9.fromJson(value))
-          .toList());
+          .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules': modules.map((value) => value.toJson()).toList(),
+        'modules':
+            modules.map((value) => value.toJson()).toList(growable: false),
       };
 }
 
@@ -127,11 +128,12 @@ class MetadataV10 {
   static MetadataV10 fromJson(Map<String, dynamic> map) => MetadataV10(
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV10.fromJson(value))
-          .toList());
+          .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules': modules.map((value) => value.toJson()).toList(),
+        'modules':
+            modules.map((value) => value.toJson()).toList(growable: false),
       };
 }
 
@@ -144,12 +146,13 @@ class MetadataV11 {
   static MetadataV11 fromJson(Map<String, dynamic> map) => MetadataV11(
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV11.fromJson(value))
-          .toList(),
+          .toList(growable: false),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules': modules.map((value) => value.toJson()).toList(),
+        'modules':
+            modules.map((value) => value.toJson()).toList(growable: false),
         'extrinsic': extrinsic.toJson(),
       };
 }
@@ -163,12 +166,13 @@ class MetadataV12 {
   static MetadataV12 fromJson(Map<String, dynamic> map) => MetadataV12(
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV12.fromJson(value))
-          .toList(),
+          .toList(growable: false),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules': modules.map((value) => value.toJson()).toList(),
+        'modules':
+            modules.map((value) => value.toJson()).toList(growable: false),
         'extrinsic': extrinsic.toJson(),
       };
 }
@@ -182,12 +186,13 @@ class MetadataV13 {
   static MetadataV13 fromJson(Map<String, dynamic> map) => MetadataV13(
       modules: (map['modules'] as List)
           .map((value) => ModuleMetadataV13.fromJson(value))
-          .toList(),
+          .toList(growable: false),
       extrinsic: ExtrinsicMetadataV11.fromJson(map['extrinsic']));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules': modules.map((value) => value.toJson()).toList(),
+        'modules':
+            modules.map((value) => value.toJson()).toList(growable: false),
         'extrinsic': extrinsic.toJson(),
       };
 }

@@ -1,44 +1,17 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:substrate_metadata/core/chain.dart';
 import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/test.dart';
 
-import '../parachain_definitions/polkadot.dart';
+import '../../parachain_definitions/kusama.dart';
 
 void main() {
-  // read lines
-  List<dynamic> readLines(String filePath) {
-    // check if the file exists
-    if (File(filePath).existsSync() == false) {
-      // return with empty list
-      return <dynamic>[];
-    }
-    // As File exists, now start reading line by line.
-    //
-    // mapping lines to jsonDecode so as to convert `stringified` lines to `List<HashMap>`.
-    final result = File(filePath)
-        .readAsLinesSync()
-        .map(jsonDecode)
-        .toList(growable: false);
-    return result;
-  }
-
-  // read the blocks of the polkadot chain
-  List<RawBlockEvents> getEvents(String filePath) {
-    return readLines(filePath)
-        .map((dynamic map) => RawBlockEvents.fromJson(map))
-        .toList(growable: false);
-  }
-
-  group('Polkadot Events Test', () {
+  group('Kusama Events Test', () {
     //
     // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
     final LegacyTypesBundle typesDefinitions =
-        LegacyTypesBundle.fromJson(polkadotTypesBundle);
+        LegacyTypesBundle.fromJson(kusamaTypesBundle);
 
     //
     // Initiate chain constructor with chain specific types-definition
@@ -46,10 +19,10 @@ void main() {
 
     //
     // Populating with the metadata for block-numbers available for this chain....
-    chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
+    chain.initSpecVersionFromFile('../../chain/kusama/versions.jsonl');
 
     final List<RawBlockEvents> rawBlocksList =
-        getEvents('../../chain/polkadot/events.jsonl');
+        RawBlockEvents.readEventsFromPath('../../chain/kusama/events.jsonl');
 
     //
     // Looping through every block
