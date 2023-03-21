@@ -103,7 +103,7 @@ class RegistryCreator {
 
   Registry _createRegistry(int version) {
     _registry[version - 9] ??= Registry()
-      ..registerCustomCodec(
+      ..parseSpecificCodec(
           metadata_definitions.metadataTypes.types, 'MetadataV$version');
 
     return _registry[version - 9]!;

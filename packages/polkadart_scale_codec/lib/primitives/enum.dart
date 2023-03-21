@@ -135,9 +135,6 @@ class DynamicEnumCodec<V> with Codec<MapEntry<String, V>> {
     }
 
     final codec = registry.getCodec(type);
-    if (codec == null) {
-      print('here');
-    }
 
     assertion(codec != null, 'Codec for type: $type not found.');
 

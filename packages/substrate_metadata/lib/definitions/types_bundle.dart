@@ -1,5 +1,3 @@
-import 'package:substrate_metadata/definitions/metadata/metadata.dart'
-    as metadata_definitions;
 import 'package:substrate_metadata/definitions/substrate/substrate_types_bundle.dart';
 import '../models/legacy_types.dart';
 
@@ -12,7 +10,6 @@ LegacyTypes getLegacyTypesFromBundle(
     LegacyTypesBundle bundle, int specVersion) {
   final types = LegacyTypes(
     types: <String, dynamic>{
-      ...metadata_definitions.metadataTypes.types,
       ...substrateTypesBundle.types,
       ...bundle.types,
     },

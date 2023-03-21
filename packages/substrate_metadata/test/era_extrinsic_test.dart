@@ -3,16 +3,27 @@ import 'package:substrate_metadata/types/metadata_types.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('EraExtrinsic Decode', () {
-    test('should work', () {
+  group('EraExtrinsic', () {
+    test('Decode Test', () {
       final input = Input.fromHex('0xd501');
-      final codec = EraExtrinsic.instance;
+      final codec = EraExtrinsic.codec;
       final result = codec.decode(input);
 
       expect(result, <String, int>{
         'period': 64,
         'phase': 29,
       });
+    });
+
+    test('Encode Test', () {
+      final output = HexOutput();
+      final codec = EraExtrinsic.codec;
+      codec.encodeTo(<String, int>{
+        'period': 64,
+        'phase': 29,
+      }, output);
+
+      expect(output.bytes, [213, 1]);
     });
   });
 }

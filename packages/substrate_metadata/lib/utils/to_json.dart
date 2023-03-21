@@ -44,6 +44,13 @@ Object? _encodeJson(Object? value) {
     };
     return v;
   }
+  if (value is Map && value.isNotEmpty && value.keys.first is int) {
+    final v = <String, dynamic>{};
+    value.forEach((key, value) {
+      v[key.toString()] = _encodeJson(value);
+    });
+    return v;
+  }
   return value;
 }
 

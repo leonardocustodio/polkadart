@@ -31,5 +31,6 @@ part 'version_description.dart';
 part 'chain_info.dart';
 part 'decoded_metadata.dart';
 part 'decoded_block/decoded_block_events.model.dart';
+part 'decoded_block/decoded_block_extrinsics.model.dart';
 part 'raw_block/raw_block.model.dart';
 part 'raw_block/raw_block_events.model.dart';

@@ -17,10 +17,28 @@ class Registry {
   /// Get the registry keys
   Iterable<String> get keys => codecs.keys;
 
+  final _callsCounter = <String, int>{}; // <type, calledCount>
+
+  void _increamentCount(String key) {
+    _callsCounter[key] = (_callsCounter[key] ?? 0) + 1;
+  }
+
+  void _clearCounter() {
+    _callsCounter.clear();
+  }
+
+  bool _isStackOverflowed(String key) {
+    return (_callsCounter[key] ?? 0) > 20;
+  }
+
   ///
   /// Add a codec to the registry
-  void addCodec(String codecName, Codec codec) {
-    codecs[codecName] = codec;
+  void addCodec(String codecName, Codec codec, [bool overwrite = false]) {
+    if (overwrite) {
+      codecs[codecName] = codec;
+      return;
+    }
+    codecs[codecName] ??= codec;
   }
 
   ///
@@ -31,29 +49,49 @@ class Registry {
 
   final Map<String, dynamic> _postVariantFieldsProcessor = <String, dynamic>{};
 
+  Codec parseSpecificCodec(
+      Map<String, dynamic> customJson, String selectedKey) {
+    _clearCounter();
+
+    if (getCodec(selectedKey) != null) {
+      return getCodec(selectedKey)!;
+    }
+    final value = customJson[selectedKey];
+    late Codec codec;
+    if (value == null) {
+      // can be u8 or a Vec<u8> which don't need to have a definition
+      codec = _parseCodec(customJson, selectedKey, selectedKey);
+    } else if (value is String) {
+      codec = _parseCodec(customJson, selectedKey, value);
+    } else {
+      codec = _parseCodec(customJson, selectedKey, value);
+    }
+    _parsePostVariantFields(customJson);
+    addCodec(selectedKey, codec);
+    return codec;
+  }
+
   ///
   /// Parses customJson and adds it to registry
-  void registerCustomCodec(Map<String, dynamic> customJson,
-      [String? selectedKey]) {
-    if (selectedKey != null) {
-      final codec =
-          _parseCodec(customJson, selectedKey, customJson[selectedKey]);
-      addCodec(selectedKey, codec);
-    } else {
-      for (final mapEntry in customJson.entries) {
-        final key = mapEntry.key;
-        final value = mapEntry.value;
+  void registerCustomCodec(Map<String, dynamic> customJson) {
+    _clearCounter();
+    for (final mapEntry in customJson.entries) {
+      final key = mapEntry.key;
+      final value = mapEntry.value;
 
-        if (getCodec(key) != null) {
-          continue;
-        }
+      if (getCodec(key) != null) {
+        continue;
+      }
 
-        final codec = _parseCodec(customJson, key, value);
-        if (getCodec(key) == null) {
-          addCodec(key, codec);
-        }
+      final codec = _parseCodec(customJson, key, value);
+      if (getCodec(key) == null) {
+        addCodec(key, codec);
       }
     }
+    _parsePostVariantFields(customJson);
+  }
+
+  void _parsePostVariantFields(Map<String, dynamic> customJson) {
     for (final mapEntry in _postVariantFieldsProcessor.entries) {
       final key = mapEntry.key;
       final value = mapEntry.value;
@@ -71,14 +109,18 @@ class Registry {
 
   Codec _parseCodec(
       Map<String, dynamic> customJson, String key, dynamic value) {
-    if (value == null) {
+    if (value == 'Null') {
       return NullCodec.codec;
     }
 
-    key = _renameType(key);
+    key = renameType(key);
     //
     // Check if the codec is already in the registry
-    final Codec? codec = getCodec(key);
+    Codec? codec = getCodec(key);
+
+    //
+    // If the codec is not in the registry then check for simple types
+    codec ??= getSimpleCodecs(key);
     if (codec != null) {
       return codec;
     }
@@ -86,7 +128,7 @@ class Registry {
     //
     //Check if the value is a string
     if (value is String) {
-      key = _renameType(key);
+      value = renameType(value);
       //
       // Check if the value is present in the registry
       Codec? codec = getCodec(value);
@@ -110,21 +152,31 @@ class Registry {
         // Check documentation on utils/regexp.dart -> getArrowMatch(value);
         if (match != null && match.groupCount == 2) {
           final typeName = match[1].toString();
+          Codec? codec;
           switch (typeName) {
             case 'Compact':
-              return _parseCompact(customJson, key, match);
+              codec = _parseCompact(customJson, match);
+              break;
             case 'Option':
-              return _parseOption(customJson, key, match);
+              codec = _parseOption(customJson, match);
+              break;
+            case 'BTreeSet':
             case 'Vec':
-              return _parseSequence(customJson, key, match);
+              codec = _parseSequence(customJson, match);
+              break;
+            case 'HashMap':
             case 'BTreeMap':
-              return _parseBTreeMap(customJson, key, value);
+              return _parseBTreeMap(customJson, value);
             case 'Result':
-              return _parseResult(customJson, key, value);
+              return _parseResult(customJson, value);
             case 'BitVec':
-              return _parseBitSequence(customJson, key, value);
+              return _parseBitSequence(customJson, value);
             case 'DoNotConstruct':
               return NullCodec.codec;
+          }
+          if (codec != null) {
+            addCodec(value, codec);
+            return codec;
           }
           return _parseCodec(customJson, value, customJson[value]);
         }
@@ -133,13 +185,13 @@ class Registry {
       //
       // Tuple
       if (value.startsWith('(') && value.endsWith(')')) {
-        return _parseTuple(customJson, key, value);
+        return _parseTuple(customJson, value);
       }
 
       //
       // Fixed array
       if (value.startsWith('[') && value.endsWith(']')) {
-        return _parseArray(customJson, key, value);
+        return _parseArray(customJson, value);
       }
 
       if (customJson[value] != null) {
@@ -147,11 +199,12 @@ class Registry {
       }
 
       throw Exception('Type not found for `$value`');
-    } else if (value is Map<String, dynamic>) {
+    } else if (value is Map) {
       //
       // enum
       if (value['_enum'] != null) {
-        return _parseEnum(customJson, key, value);
+        return _parseEnum(
+            customJson, key, value.map((k, v) => MapEntry(k.toString(), v)));
       }
       //
       // set
@@ -160,14 +213,16 @@ class Registry {
       }
       //
       // composite
-      return _parseComposite(customJson, key, value);
+      return _parseComposite(
+          customJson, key, value.map((k, v) => MapEntry(k.toString(), v)));
     }
-
+    if (value == null) {
+      throw Exception('Type not found for `$value`');
+    }
     return _parseCodec(customJson, key, customJson[value]);
   }
 
-  TupleCodec _parseTuple(
-      Map<String, dynamic> customJson, String key, String value) {
+  TupleCodec _parseTuple(Map<String, dynamic> customJson, String value) {
     // (U64, (U128, Str))
     // U64,
     final List<String> types = parseTupleRegExp(value);
@@ -181,13 +236,11 @@ class Registry {
     }
 
     final TupleCodec codec = TupleCodec(codecs);
-    addCodec(key, codec);
-
+    addCodec(value, codec);
     return codec;
   }
 
-  Codec _parseCompact(
-      Map<String, dynamic> customJson, String key, RegExpMatch match) {
+  Codec _parseCompact(Map<String, dynamic> customJson, RegExpMatch match) {
     final match2 = match[2].toString();
 
     final Codec subType =
@@ -205,13 +258,11 @@ class Registry {
       throw Exception('Compact type not supported for $subType');
     }
 
-    addCodec(key, codec);
-
     return codec;
   }
 
   NestedOptionCodec _parseOption(
-      Map<String, dynamic> customJson, String key, RegExpMatch match) {
+      Map<String, dynamic> customJson, RegExpMatch match) {
     final match2 = match[2].toString();
 
     final Codec subType =
@@ -219,13 +270,11 @@ class Registry {
 
     final NestedOptionCodec codec = NestedOptionCodec(subType);
 
-    addCodec(key, codec);
-
     return codec;
   }
 
   SequenceCodec _parseSequence(
-      Map<String, dynamic> customJson, String key, RegExpMatch match) {
+      Map<String, dynamic> customJson, RegExpMatch match) {
     final match2 = match[2].toString();
 
     final Codec subType =
@@ -233,13 +282,11 @@ class Registry {
 
     final SequenceCodec codec = SequenceCodec(subType);
 
-    addCodec(key, codec);
-
     return codec;
   }
 
   BitSequenceCodec _parseBitSequence(
-      Map<String, dynamic> customJson, String key, String value) {
+      Map<String, dynamic> customJson, String value) {
     final match = getResultMatch(value);
 
     assertion(match != null && match.groupCount >= 3,
@@ -277,12 +324,12 @@ class Registry {
       store,
       order,
     );
-    addCodec(key, codec);
+
+    addCodec(value, codec);
     return codec;
   }
 
-  ComplexEnumCodec _parseResult(
-      Map<String, dynamic> customJson, String key, String value) {
+  ComplexEnumCodec _parseResult(Map<String, dynamic> customJson, String value) {
     final match = getResultMatch(value);
 
     assertion(match != null && match.groupCount >= 3,
@@ -301,12 +348,12 @@ class Registry {
       0: MapEntry('Ok', okCodec),
       1: MapEntry('Err', errCodec),
     });
-    addCodec(key, codec);
+
+    addCodec(value, codec);
     return codec;
   }
 
-  BTreeMapCodec _parseBTreeMap(
-      Map<String, dynamic> customJson, String key, String value) {
+  BTreeMapCodec _parseBTreeMap(Map<String, dynamic> customJson, String value) {
     final match = getResultMatch(value);
 
     assertion(match != null && match.groupCount >= 3,
@@ -325,7 +372,7 @@ class Registry {
       keyCodec: keyCodec,
       valueCodec: valueCodec,
     );
-    addCodec(key, codec);
+    addCodec(value, codec);
     return codec;
   }
 
@@ -349,8 +396,9 @@ class Registry {
     return codec;
   }
 
-  CompositeCodec _parseComposite(Map<String, dynamic> customJson,
-      String mainKey, Map<String, dynamic> value) {
+  CompositeCodec _parseComposite(
+      Map<String, dynamic> customJson, String key, Map<String, dynamic> value,
+      {bool allowedSettingCodec = true}) {
     final codecMap = <String, Codec>{};
     for (final mapEntry in value.entries) {
       final key = mapEntry.key;
@@ -374,19 +422,19 @@ class Registry {
       }
       codecMap[key] = subCodec;
     }
-    final codec = CompositeCodec(LinkedHashMap.from(codecMap));
+    final codec = CompositeCodec(codecMap);
+    if (allowedSettingCodec) {
+      addCodec(key, codec);
+    }
 
-    addCodec(mainKey, codec);
     return codec;
   }
 
-  ArrayCodec _parseArray(
-      Map<String, dynamic> cusomJson, String key, String value) {
+  ArrayCodec _parseArray(Map<String, dynamic> cusomJson, String value) {
     final match = getArrayMatch(value);
 
     assertion(
         match != null, 'Expected fixed array: [Type; length] but got $value');
-
     assertion(match!.groupCount == 2,
         'Expected fixed array: [Type; length] but got $value');
 
@@ -404,46 +452,47 @@ class Registry {
     final int? length = int.tryParse(match[2].toString());
 
     assertion(length != null, 'Expected length to be an integer');
-
     assertion(length! >= 0, 'Expected length to be greater than or equal to 0');
-
     assertion(length <= 256, 'Expected length to be less than or equal to 256');
 
     //
     // Get the Codec based on the subType
     final ArrayCodec codec = ArrayCodec(subType, length);
-
-    addCodec(key, codec);
+    addCodec(value, codec);
     return codec;
   }
 
   Codec _parseEnum(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
+    _increamentCount(key);
+
+    late Codec codec;
     if (value['_enum'] is Map<String, int>) {
       //
       // Indexed Enum
-      return _parseIndexedEnum(key, value['_enum'] as Map<String, int>);
+      codec = _parseIndexedEnum(value['_enum'] as Map<String, int>);
     } else if (value['_enum'] is Map<String, dynamic>) {
       //
       // Complex Enum
-      return _parseComplexEnum(customJson, key, value);
+      codec = _parseComplexEnum(customJson, key, value);
     } else if (value['_enum'] is Map<int, MapEntry<String, dynamic>>) {
       //
       // Complex Enum
-      return _parseComplexEnum(customJson, key, value);
+      codec = _parseComplexEnum(customJson, key, value);
     } else if (value['_enum'] is List<String?>) {
       //
       // Simplified Enum
-      return _parseSimplifiedEnum(key, value['_enum'] as List<String?>);
+      codec = _parseSimplifiedEnum(value['_enum'] as List<String?>);
     } else {
       throw EnumException(
           'EnumException: Expected enum to be a map or a list, but found ${value['_enum'].runtimeType}');
     }
+    addCodec(key, codec);
+    return codec;
   }
 
   Codec _parseComplexEnum(
       Map<String, dynamic> customJson, String key, Map<String, dynamic> value) {
-    // enumValue
     final enumValue = value['_enum'];
 
     final Map<int, MapEntry<String, Codec>> codecMap =
@@ -465,28 +514,32 @@ class Registry {
       // convert enumValue to a list of MapEntry
       entries.addAll(enumValue);
     }
-    try {
-      for (final map in entries.entries) {
-        final entry = map.value;
-        if (entry.value is String) {
-          codecMap[map.key] = MapEntry(
-              entry.key, _parseCodec(customJson, entry.value, entry.value));
-        } else {
-          codecMap[map.key] = MapEntry(
-              entry.key, _parseComposite(customJson, entry.key, entry.value));
+    if (_isStackOverflowed(key) == false) {
+      try {
+        for (final map in entries.entries) {
+          final entry = map.value;
+          if (entry.value is String) {
+            codecMap[map.key] = MapEntry(
+                entry.key, _parseCodec(customJson, entry.value, entry.value));
+          } else {
+            codecMap[map.key] = MapEntry(
+                entry.key,
+                _parseComposite(customJson, 'kawal', entry.value,
+                    allowedSettingCodec: false));
+          }
+        }
+        final codec = ComplexEnumCodec.sparse(codecMap);
+        return codec;
+      } catch (e) {
+        // If the enum is too complex and is calling itself back again and again then,
+        // we fallback to a dynamic enum
+        if (e is! StackOverflowError) {
+          rethrow;
         }
       }
-      final codec = ComplexEnumCodec.sparse(codecMap);
-      addCodec(key, codec);
-      return codec;
-    } catch (e) {
-      // If the enum is too complex and is calling itself back again and again then,
-      // we fallback to a dynamic enum
-      if (e is! StackOverflowError) {
-        rethrow;
-      }
-      return _parseDynamicEnum(customJson, key, value);
     }
+    // enumValue
+    return _parseDynamicEnum(customJson, key, value);
   }
 
   DynamicEnumCodec _parseDynamicEnum(
@@ -520,20 +573,17 @@ class Registry {
     }
     final codec =
         DynamicEnumCodec.sparse(registry: this, map: referenceTypeMap);
-    addCodec(key, codec);
     return codec;
   }
 
-  SimpleEnumCodec _parseSimplifiedEnum(String key, List<String?> values) {
+  SimpleEnumCodec _parseSimplifiedEnum(List<String?> values) {
     final codec = SimpleEnumCodec.fromList(values);
-    addCodec(key, codec);
     return codec;
   }
 
-  SimpleEnumCodec _parseIndexedEnum(
-      String key, Map<String, int> indexedEnumValues) {
+  SimpleEnumCodec _parseIndexedEnum(Map<String, int> indexedEnumValues) {
     if (indexedEnumValues.isEmpty) {
-      return _parseSimplifiedEnum(key, <String>[]); // empty enum
+      return _parseSimplifiedEnum(<String>[]); // empty enum
     }
     final maxIndex = indexedEnumValues.values
         .toList(growable: false)
@@ -547,12 +597,12 @@ class Registry {
       enumValues[entry.value] = entry.key;
     }
 
-    return _parseSimplifiedEnum(key, enumValues);
+    return _parseSimplifiedEnum(enumValues);
   }
 
-  String _renameType(String type) {
+  String renameType(String type) {
     type = type.trim();
-    if (type == '()') {
+    if (type.isEmpty || type == '()') {
       return 'Null';
     }
     type = type.replaceAll('T::', '');
@@ -560,12 +610,10 @@ class Registry {
     type = type.replaceAll('<T>', '');
     type = type.replaceAll('<T, I>', '');
     type = type.replaceAll('&\'static[u8]', 'Bytes');
-    switch (type) {
-      case '<Lookup as StaticLookup>::Source':
-        return 'Address';
-    }
+    type = type.replaceAll('<Lookup as StaticLookup>::Source', 'Address');
+
     type = type.trim();
-    if (type == '') {
+    if (type.isEmpty) {
       return 'Null';
     }
     return type;

@@ -12,7 +12,8 @@ class ScaleCodec {
     if (codec == null) {
       throw Exception('Codec not found for type: $type');
     }
-    return codec.decode(input);
+    final value = codec.decode(input);
+    return value;
   }
 
   ///

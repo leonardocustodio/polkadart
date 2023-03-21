@@ -3,6 +3,8 @@
 /// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata_v1.1.0/substrate-metadata/src/old/definitions/substrate/types.ts
 
 const substrateTypes = {
+  'Type': 'Str',
+  'Bytes': 'Vec<U8>',
   'GenericAccountId': '[u8; 32]',
   'GenericAccountIndex': 'u32',
   'GenericLookupSource': 'DoNotConstruct',
@@ -231,7 +233,6 @@ const substrateTypes = {
     'amount': 'Balance',
     'reasons': 'Reasons'
   },
-  'Status': 'BalanceStatus',
   'BalanceStatus': {
     '_enum': ['Free', 'Reserved']
   },
@@ -1011,6 +1012,8 @@ const substrateTypes = {
       'EIP1559': 'EIP1559Transaction'
     }
   },
+  'EthereumAccountId': 'GenericEthereumAccountId',
+  'EthereumLookupSource': 'GenericEthereumLookupSource',
   'EthereumSignature': '[u8; 65]',
   'EthAccessListItem': {'address': 'EthAddress', 'slots': 'Vec<H256>'},
   'EthAccessList': 'Vec<EthAccessListItem>',
@@ -2010,6 +2013,7 @@ const substrateTypes = {
   'Permill': 'U32',
   'Perquintill': 'U64',
   'AccountId': 'AccountId32',
+  'AccountId20': 'GenericEthereumAccountId',
   'AccountId32': 'GenericAccountId',
   'AccountIdOf': 'AccountId',
   'AccountIndex': 'GenericAccountIndex',
@@ -2017,11 +2021,10 @@ const substrateTypes = {
   'AssetId': 'u32',
   'Balance': 'U128',
   'BalanceOf': 'Balance',
-  'Block': 'Hash',
+  'Block': 'GenericBlock',
   'BlockNumber': 'u32',
   'BlockNumberFor': 'BlockNumber',
   'BlockNumberOf': 'BlockNumber',
-  'Call': 'GenericCall',
   'CallHash': 'Hash',
   'CallHashOf': 'CallHash',
   'ChangesTrieConfiguration': {'digestInterval': 'u32', 'digestLevels': 'u32'},
@@ -2082,9 +2085,6 @@ const substrateTypes = {
   'OpaqueCall': 'Bytes',
   'Origin': 'DoNotConstruct<Origin>',
   'PalletId': 'LockIdentifier',
-  'OriginCaller': {
-    '_enum': {'System': 'SystemOrigin'}
-  },
   'PalletsOrigin': 'OriginCaller',
   'PalletVersion': {'major': 'u16', 'minor': 'u8', 'patch': 'u8'},
   'Pays': {
@@ -2679,6 +2679,7 @@ const substrateTypes = {
     'maxBlock': 'Weight',
     'perClass': 'PerDispatchClassWeightsPerClass'
   },
+  'ChainProperties': 'GenericChainProperties',
   'ChainType': {
     '_enum': {
       'Development': 'Null',
@@ -2721,8 +2722,10 @@ const substrateTypes = {
   'DispatchResult': 'Result<(), DispatchError>',
   'DispatchResultOf': 'DispatchResult',
   'DispatchResultTo198': 'Result<(), Text>',
+  'Event': 'GenericEvent',
   'EventId': '[u8; 2]',
   'EventIndex': 'u32',
+  'EventRecord': {'phase': 'Phase', 'event': 'Event', 'topics': 'Vec<Str>'},
   'Health': {'peers': 'u64', 'isSyncing': 'bool', 'shouldHavePeers': 'bool'},
   'InvalidTransaction': {
     '_enum': {
@@ -3579,10 +3582,5 @@ const substrateTypes = {
   'VersionedXcm': {
     '_enum': {'V0': 'XcmV0', 'V1': 'XcmV1', 'V2': 'XcmV2'}
   },
-  'XcmVersion': 'u32',
-  'TaskAddress<BlockNumber>': 'TaskAddress',
-  'sp_std::marker::PhantomData<(AccountId, Event)>': 'Null',
-  'Timepoint<BlockNumber>': 'Timepoint',
-  'NewBidder<AccountId>': 'NewBidder',
-  'Vec<IdentificationTuple>': 'Vec<IdentificationTuple>'
+  'XcmVersion': 'u32'
 };
