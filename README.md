@@ -72,17 +72,17 @@ You can run all tests from the library by running `docker compose up`.
 🟡 = Partially implemented and under active development.<br/>
 🔴 = Not supported yet but on-deck to be implemented soon.
 
-|                                                                                            | Status |
-| ------------------------------------------------------------------------------------------ | :----: |
-| [Scale Codec](./packages/polkadart_scale_codec/)                                           |   ✅    |
-| [SS58 Format](./packages/ss58/)                                                            |   ✅    |
-| [Parse Metadata v14](./packages/frame_metadata/lib/core/metadata_decoder.dart)             |   ✅    |
-| [Frame Metadata](./packages/frame_metadata/lib/definitions/metadata/metadata.dart)         |   ✅    |
-| [RPC](./packages/polkadart/lib/apis/apis.dart)                                             |   ✅    |
-| Constants                                                                                  |   ✅    |
-| [Websocket Provider](./packages/polkadart/lib/provider.dart)                               |   ✅    |
-| [Http Provider](./packages/polkadart/lib/provider.dart)                                    |   ✅    |
-| Signed Extrinsics                                                                          |   🔴    |
+|                                                                                    | Status |
+| ---------------------------------------------------------------------------------- | :----: |
+| [Scale Codec](./packages/polkadart_scale_codec/)                                   |   ✅    |
+| [SS58 Format](./packages/ss58/)                                                    |   ✅    |
+| [Parse Metadata v14](./packages/frame_metadata/lib/core/metadata_decoder.dart)     |   ✅    |
+| [Frame Metadata](./packages/frame_metadata/lib/definitions/metadata/metadata.dart) |   ✅    |
+| [RPC](./packages/polkadart/lib/apis/apis.dart)                                     |   ✅    |
+| Constants                                                                          |   ✅    |
+| [Websocket Provider](./packages/polkadart/lib/provider.dart)                       |   ✅    |
+| [Http Provider](./packages/polkadart/lib/provider.dart)                            |   ✅    |
+| Signed Extrinsics                                                                  |   🔴    |
 
 ## **License**
 
