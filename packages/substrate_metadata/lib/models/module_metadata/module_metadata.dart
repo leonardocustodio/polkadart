@@ -37,10 +37,10 @@ class ModuleMetadataV9 extends AnyLegacyModule {
       name: map['name'],
       constants: (map['constants'] as List)
           .map((val) => ModuleConstantMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
       errors: (map['errors'] as List)
           .map((val) => ErrorMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
     );
 
     if (map['storage'] != null &&
@@ -54,7 +54,7 @@ class ModuleMetadataV9 extends AnyLegacyModule {
         (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
 
     if (map['events'] != null &&
@@ -62,7 +62,7 @@ class ModuleMetadataV9 extends AnyLegacyModule {
         (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
     return obj;
   }
@@ -75,15 +75,15 @@ class ModuleMetadataV9 extends AnyLegacyModule {
     final localStorage = storage?.toJson();
     map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
-    final localCalls = calls?.map((e) => e.toJson()).toList();
+    final localCalls = calls?.map((e) => e.toJson()).toList(growable: false);
     map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
-    final localEvents = events?.map((e) => e.toJson()).toList();
+    final localEvents = events?.map((e) => e.toJson()).toList(growable: false);
     map['events'] = localEvents == null ? None : Option.some(localEvents);
 
-    map['constants'] = constants.map((e) => e.toJson()).toList();
+    map['constants'] = constants.map((e) => e.toJson()).toList(growable: false);
 
-    map['errors'] = errors.map((e) => e.toJson()).toList();
+    map['errors'] = errors.map((e) => e.toJson()).toList(growable: false);
     return map;
   }
 }
@@ -105,10 +105,10 @@ class ModuleMetadataV10 extends AnyLegacyModule {
       name: map['name'],
       constants: (map['constants'] as List)
           .map((val) => ModuleConstantMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
       errors: (map['errors'] as List)
           .map((val) => ErrorMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
     );
 
     if (map['storage'] != null &&
@@ -122,7 +122,7 @@ class ModuleMetadataV10 extends AnyLegacyModule {
         (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
 
     if (map['events'] != null &&
@@ -130,7 +130,7 @@ class ModuleMetadataV10 extends AnyLegacyModule {
         (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
     return obj;
   }
@@ -143,15 +143,15 @@ class ModuleMetadataV10 extends AnyLegacyModule {
     final localStorage = storage?.toJson();
     map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
-    final localCalls = calls?.map((e) => e.toJson()).toList();
+    final localCalls = calls?.map((e) => e.toJson()).toList(growable: false);
     map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
-    final localEvents = events?.map((e) => e.toJson()).toList();
+    final localEvents = events?.map((e) => e.toJson()).toList(growable: false);
     map['events'] = localEvents == null ? None : Option.some(localEvents);
 
-    map['constants'] = constants.map((e) => e.toJson()).toList();
+    map['constants'] = constants.map((e) => e.toJson()).toList(growable: false);
 
-    map['errors'] = errors.map((e) => e.toJson()).toList();
+    map['errors'] = errors.map((e) => e.toJson()).toList(growable: false);
     return map;
   }
 }
@@ -173,10 +173,10 @@ class ModuleMetadataV11 extends AnyLegacyModule {
       name: map['name'],
       constants: (map['constants'] as List)
           .map((val) => ModuleConstantMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
       errors: (map['errors'] as List)
           .map((val) => ErrorMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
     );
 
     if (map['storage'] != null &&
@@ -190,7 +190,7 @@ class ModuleMetadataV11 extends AnyLegacyModule {
         (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
 
     if (map['events'] != null &&
@@ -198,7 +198,7 @@ class ModuleMetadataV11 extends AnyLegacyModule {
         (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
     return obj;
   }
@@ -211,15 +211,15 @@ class ModuleMetadataV11 extends AnyLegacyModule {
     final localStorage = storage?.toJson();
     map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
-    final localCalls = calls?.map((e) => e.toJson()).toList();
+    final localCalls = calls?.map((e) => e.toJson()).toList(growable: false);
     map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
-    final localEvents = events?.map((e) => e.toJson()).toList();
+    final localEvents = events?.map((e) => e.toJson()).toList(growable: false);
     map['events'] = localEvents == null ? None : Option.some(localEvents);
 
-    map['constants'] = constants.map((e) => e.toJson()).toList();
+    map['constants'] = constants.map((e) => e.toJson()).toList(growable: false);
 
-    map['errors'] = errors.map((e) => e.toJson()).toList();
+    map['errors'] = errors.map((e) => e.toJson()).toList(growable: false);
     return map;
   }
 }
@@ -244,10 +244,10 @@ class ModuleMetadataV12 extends AnyLegacyModule {
       index: map['index'],
       constants: (map['constants'] as List)
           .map((val) => ModuleConstantMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
       errors: (map['errors'] as List)
           .map((val) => ErrorMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
     );
 
     if (map['storage'] != null &&
@@ -261,7 +261,7 @@ class ModuleMetadataV12 extends AnyLegacyModule {
         (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
 
     if (map['events'] != null &&
@@ -269,7 +269,7 @@ class ModuleMetadataV12 extends AnyLegacyModule {
         (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
     return obj;
   }
@@ -282,15 +282,15 @@ class ModuleMetadataV12 extends AnyLegacyModule {
     final localStorage = storage?.toJson();
     map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
-    final localCalls = calls?.map((e) => e.toJson()).toList();
+    final localCalls = calls?.map((e) => e.toJson()).toList(growable: false);
     map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
-    final localEvents = events?.map((e) => e.toJson()).toList();
+    final localEvents = events?.map((e) => e.toJson()).toList(growable: false);
     map['events'] = localEvents == null ? None : Option.some(localEvents);
 
-    map['constants'] = constants.map((e) => e.toJson()).toList();
+    map['constants'] = constants.map((e) => e.toJson()).toList(growable: false);
 
-    map['errors'] = errors.map((e) => e.toJson()).toList();
+    map['errors'] = errors.map((e) => e.toJson()).toList(growable: false);
 
     map['index'] = index;
     return map;
@@ -317,10 +317,10 @@ class ModuleMetadataV13 extends AnyLegacyModule {
       index: map['index'],
       constants: (map['constants'] as List)
           .map((val) => ModuleConstantMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
       errors: (map['errors'] as List)
           .map((val) => ErrorMetadataV9.fromJson(val))
-          .toList(),
+          .toList(growable: false),
     );
 
     if (map['storage'] != null &&
@@ -334,7 +334,7 @@ class ModuleMetadataV13 extends AnyLegacyModule {
         (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
 
     if (map['events'] != null &&
@@ -342,7 +342,7 @@ class ModuleMetadataV13 extends AnyLegacyModule {
         (map['events'] as Option).value != null) {
       obj.events = (map['events'].value as List)
           .map((val) => EventMetadataV9.fromJson(val))
-          .toList();
+          .toList(growable: false);
     }
     return obj;
   }
@@ -355,15 +355,15 @@ class ModuleMetadataV13 extends AnyLegacyModule {
     final localStorage = storage?.toJson();
     map['storage'] = localStorage == null ? None : Option.some(localStorage);
 
-    final localCalls = calls?.map((e) => e.toJson()).toList();
+    final localCalls = calls?.map((e) => e.toJson()).toList(growable: false);
     map['calls'] = localCalls == null ? None : Option.some(localCalls);
 
-    final localEvents = events?.map((e) => e.toJson()).toList();
+    final localEvents = events?.map((e) => e.toJson()).toList(growable: false);
     map['events'] = localEvents == null ? None : Option.some(localEvents);
 
-    map['constants'] = constants.map((e) => e.toJson()).toList();
+    map['constants'] = constants.map((e) => e.toJson()).toList(growable: false);
 
-    map['errors'] = errors.map((e) => e.toJson()).toList();
+    map['errors'] = errors.map((e) => e.toJson()).toList(growable: false);
 
     map['index'] = index;
     return map;
