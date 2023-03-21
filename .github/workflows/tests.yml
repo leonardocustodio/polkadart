@@ -57,19 +57,19 @@ jobs:
       codecov-flag: "substrate_metadata"
       working-directory: "./packages/substrate_metadata"
 
-  scale_codec_generator:
-    name: Test scale_codec_generator
+  polkadart_cli:
+    name: Test polkadart_cli
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
-      codecov-flag: "scale_codec_generator"
-      working-directory: "./packages/scale_codec_generator"
+      codecov-flag: "polkadart_cli"
+      working-directory: "./packages/polkadart_cli"
   
-  frame_primitives:
-    name: Test frame_primitives
+  polkadart:
+    name: Test polkadart
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
-      codecov-flag: "frame_primitives"
-      working-directory: "./packages/frame_primitives"
+      codecov-flag: "polkadart"
+      working-directory: "./packages/polkadart"
 
 #  polkadart:
 #    name: Test polkadart

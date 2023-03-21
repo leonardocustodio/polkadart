@@ -14,8 +14,6 @@ dependencies:
     path: ../../packages/polkadart_scale_codec
   ss58:
     path: ../../packages/ss58
-  ss58_codec:
-    path: ../../packages/ss58_codec
   substrate_metadata:
     path: ../../packages/substrate_metadata
 
