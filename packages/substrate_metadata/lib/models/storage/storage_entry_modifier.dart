@@ -81,13 +81,13 @@ class StorageEntryTypeV14_Map extends StorageEntryTypeV14 {
         key: map['key'],
         hashers: (map['hashers'] as List)
             .map((value) => StorageHasherV11.fromKey(value))
-            .toList(),
+            .toList(growable: false),
         value: map['value'],
       );
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toMap() => {
-        'hashers': hashers.map((e) => e.toJson()).toList(),
+        'hashers': hashers.map((e) => e.toJson()).toList(growable: false),
         'key': key,
         'value': value,
       };
