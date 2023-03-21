@@ -8,7 +8,7 @@ Provides a clean wrapper around all the methods exposed by a Polkadot/Substrate 
 import 'package:polkadart/polkadart.dart' show Provider, StateApi;
 
 void main() async {
-  final polkadot = Provider('wss://rpc.polkadot.io');
+  final polkadot = Provider(Uri.parse('wss://rpc.polkadot.io'));
   final api = StateApi(polkadot);
   final runtimeVersion = await api.getRuntimeVersion();
   print(runtimeVersion.toJson());
