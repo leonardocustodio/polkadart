@@ -14,7 +14,8 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         U8Codec,
         SequenceCodec,
         StrCodec;
-import 'package:substrate_metadata/substrate_metadata.dart' show MetadataDecoder;
+import 'package:substrate_metadata/substrate_metadata.dart'
+    show MetadataDecoder;
 import '../substrate/substrate.dart' show Hasher;
 
 part './api_version.dart';
