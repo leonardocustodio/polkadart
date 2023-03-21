@@ -1,7 +1,7 @@
 library io;
 
 import 'dart:typed_data'
-    show BytesBuilder, Uint8List, UnmodifiableUint8ListView;
+    show Uint8List, UnmodifiableUint8ListView;
 import 'package:typed_data/typed_buffers.dart';
 
 import '../utils/utils.dart' show encodeHex, decodeHex;
