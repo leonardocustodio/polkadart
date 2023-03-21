@@ -60,11 +60,11 @@ git lfs checkout
 You can run all tests from the library by running `docker compose up`.
 | Package | Path
 |----------|----------|
+| polkadart | [packages/polkadart](./packages/polkadart) |
+| polkadart_cli | [packages/polkadart_cli/](./packages/polkadart_cli/) |
 | polkadart_scale_codec | [packages/polkadart_scale_codec/](./packages/polkadart_scale_codec/) |
 | ss58 | [packages/ss58/](./packages/ss58/) |
 | substrate_metadata | [packages/substrate_metadata/](./packages/substrate_metadata/) |
-| frame_primitives | [packages/frame_primitives](./packages/frame_primitives) |
-| scale_codec_generator | [packages/scale_codec_generator/](./packages/scale_codec_generator/) |
 
 ## Road map and current state
 
@@ -78,10 +78,10 @@ You can run all tests from the library by running `docker compose up`.
 | [SS58 Format](./packages/ss58/)                                                            |   ✅    |
 | [Parse Metadata v14](./packages/substrate_metadata/lib/core/metadata_decoder.dart)         |   ✅    |
 | [Substrate Metadata](./packages/substrate_metadata/lib/definitions/metadata/metadata.dart) |   ✅    |
-| [RPC](./packages/frame_primitives/lib/apis/apis.dart)                                      |   ✅    |
+| [RPC](./packages/polkadart/lib/apis/apis.dart)                                             |   ✅    |
 | Constants                                                                                  |   ✅    |
-| [Websocket Provider](./packages/frame_primitives/lib/provider.dart)                        |   ✅    |
-| [Http Provider](./packages/frame_primitives/lib/provider.dart)                             |   ✅    |
+| [Websocket Provider](./packages/polkadart/lib/provider.dart)                               |   ✅    |
+| [Http Provider](./packages/polkadart/lib/provider.dart)                                    |   ✅    |
 | Signed Extrinsics                                                                          |   🔴    |
 
 ## **License**

@@ -48,12 +48,12 @@ class Address extends Equatable {
   /// throw InvalidCheckSumException:  when hashed data is invalid
   /// ```
   factory Address.decode(String address) {
-    var data = _base58.decode(address);
+    final data = _base58.decode(address);
     if (data.length < 3) {
       throw BadAddressLengthException(address);
     }
-    late int offset;
-    late int prefix;
+    final int offset;
+    final int prefix;
     if (data[0] < 64) {
       prefix = data[0];
       offset = 1;
@@ -112,7 +112,8 @@ class Address extends Equatable {
   /// throw InvalidPrefixException:    when (prefix < 0 || prefix >= 16384)
   /// throw BadAddressLengthException: when (address.bytes are of improper length)
   /// ```
-  String encode() {
+  String encode({int? prefix}) {
+    prefix ??= this.prefix;
     if (prefix < 0 || prefix > 16383) {
       throw InvalidPrefixException(prefix);
     }
@@ -159,6 +160,22 @@ class Address extends Equatable {
       data[offset + len + i] = hashedData[i];
     }
     return _base58.encode(data);
+  }
+
+  ///
+  /// Returns a Address with the same pubkey and given prefix.
+  ///
+  /// This function follows [Ss58Codec trait](https://github.com/paritytech/substrate/blob/ded44948e2d5a398abcb4e342b0513cb690961bb/primitives/core/src/crypto.rs#L245)
+  ///
+  /// ```
+  /// [Exceptions]
+  /// throw InvalidPrefixException: when (prefix < 0 || prefix > 16383)
+  /// ```
+  Address withPrefix(int prefix) {
+    if (prefix < 0 || prefix > 16383) {
+      throw InvalidPrefixException(prefix);
+    }
+    return Address(prefix: prefix, pubkey: Uint8List.fromList(pubkey));
   }
 
   @override

@@ -113,7 +113,7 @@ void main() {
     test(
         'When struct "OrderComposite" is decoded then it returns correct value',
         () {
-      final input = HexInput(
+      final input = Input.fromHex(
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
       final codec = ScaleCodec(registry);
 
@@ -128,11 +128,12 @@ void main() {
         },
         'Remarks': Option.some('Hey Food was good'),
       });
+      expect(input.remainingLength, 0);
     });
     test(
         'When struct "OrderCompositeList" is decoded then it returns correct value',
         () {
-      final input = HexInput(
+      final input = Input.fromHex(
           '0x080040546869732069732061206e6f74652030284b697769204a7569636501014448657920466f6f642077617320676f6f640840546869732069732061206e6f746520312042656574726f6f740200');
       final codec = ScaleCodec(registry);
       final result = codec.decode('OrderCompositeList', input);
@@ -156,10 +157,11 @@ void main() {
           'Remarks': None,
         },
       ]);
+      expect(input.remainingLength, 0);
     });
     test('When struct "JuiceName" is decoded then it returns correct value',
         () {
-      final input = HexInput('0x104b69776901');
+      final input = Input.fromHex('0x104b69776901');
       final codec = ScaleCodec(registry);
       final result = codec.decode('JuiceName', input);
       expect(
@@ -169,6 +171,7 @@ void main() {
           'ounces': 1,
         },
       );
+      expect(input.remainingLength, 0);
     });
   });
 }
