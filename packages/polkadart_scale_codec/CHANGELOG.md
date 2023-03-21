@@ -1,3 +1,9 @@
+## [1.1.0-pre.2] - 2023-03-21
+
+### Prerelease version 2
+- [#261](https://github.com/rankanizer/polkadart/pull/261) Support sparse enums
+- [#266](https://github.com/rankanizer/polkadart/pull/266) Implements Extrinsics Encode/Decode functionality.
+
 ## [1.1.0-pre.1] - 2023-03-21
 
 ### Prerelease version
