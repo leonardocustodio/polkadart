@@ -17,8 +17,7 @@ import 'package:code_builder/code_builder.dart'
         FieldModifier,
         MethodModifier;
 import 'package:path/path.dart' as p;
-import 'package:polkadart/scale_codec.dart'
-    as scale_codec;
+import 'package:polkadart/scale_codec.dart' as scale_codec;
 import 'package:recase/recase.dart' show ReCase;
 import '../typegen/typegen.dart'
     show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput;

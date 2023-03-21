@@ -111,86 +111,66 @@ TypeReference future([Reference? ref]) {
 ///////////////////////
 // Scale Codec types //
 ///////////////////////
-const input = Reference(
-    'Input', 'package:polkadart/scale_codec.dart');
-const output = Reference(
-    'Output', 'package:polkadart/scale_codec.dart');
-const byteOutput = Reference(
-    'ByteOutput', 'package:polkadart/scale_codec.dart');
-const emptyCodec = Reference(
-    'NullCodec', 'package:polkadart/scale_codec.dart');
-const bitArray = Reference(
-    'BitArray', 'package:polkadart/scale_codec.dart');
-const bitStore = Reference(
-    'BitStore', 'package:polkadart/scale_codec.dart');
-const bitOrder = Reference(
-    'BitOrder', 'package:polkadart/scale_codec.dart');
-const compactCodec = Reference(
-    'CompactCodec', 'package:polkadart/scale_codec.dart');
-const compactBigIntCodec = Reference('CompactBigIntCodec',
-    'package:polkadart/scale_codec.dart');
-const bitSequenceCodec = Reference('BitSequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const strCodec = Reference(
-    'StrCodec', 'package:polkadart/scale_codec.dart');
-const boolCodec = Reference(
-    'BoolCodec', 'package:polkadart/scale_codec.dart');
-const u8Codec = Reference(
-    'U8Codec', 'package:polkadart/scale_codec.dart');
-const u8ArrayCodec = Reference(
-    'U8ArrayCodec', 'package:polkadart/scale_codec.dart');
-const u8SequenceCodec = Reference('U8SequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const u16Codec = Reference(
-    'U16Codec', 'package:polkadart/scale_codec.dart');
-const u16ArrayCodec = Reference('U16ArrayCodec',
-    'package:polkadart/scale_codec.dart');
-const u16SequenceCodec = Reference('U16SequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const u32Codec = Reference(
-    'U32Codec', 'package:polkadart/scale_codec.dart');
-const u32ArrayCodec = Reference('U32ArrayCodec',
-    'package:polkadart/scale_codec.dart');
-const u32SequenceCodec = Reference('U32SequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const u64Codec = Reference(
-    'U64Codec', 'package:polkadart/scale_codec.dart');
-const u64ArrayCodec = Reference('U64ArrayCodec',
-    'package:polkadart/scale_codec.dart');
-const u64SequenceCodec = Reference('U64SequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const u128Codec = Reference(
-    'U128Codec', 'package:polkadart/scale_codec.dart');
-const u256Codec = Reference(
-    'U256Codec', 'package:polkadart/scale_codec.dart');
-const i8Codec = Reference(
-    'I8Codec', 'package:polkadart/scale_codec.dart');
-const i8ArrayCodec = Reference(
-    'I8ArrayCodec', 'package:polkadart/scale_codec.dart');
-const i8SequenceCodec = Reference('I8SequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const i16Codec = Reference(
-    'I16Codec', 'package:polkadart/scale_codec.dart');
-const i16ArrayCodec = Reference('I16ArrayCodec',
-    'package:polkadart/scale_codec.dart');
-const i16SequenceCodec = Reference('I16SequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const i32Codec = Reference(
-    'I32Codec', 'package:polkadart/scale_codec.dart');
-const i32ArrayCodec = Reference('I32ArrayCodec',
-    'package:polkadart/scale_codec.dart');
-const i32SequenceCodec = Reference('I32SequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const i64Codec = Reference(
-    'I64Codec', 'package:polkadart/scale_codec.dart');
-const i64ArrayCodec = Reference('I64ArrayCodec',
-    'package:polkadart/scale_codec.dart');
-const i64SequenceCodec = Reference('I64SequenceCodec',
-    'package:polkadart/scale_codec.dart');
-const i128Codec = Reference(
-    'I128Codec', 'package:polkadart/scale_codec.dart');
-const i256Codec = Reference(
-    'I256Codec', 'package:polkadart/scale_codec.dart');
+const input = Reference('Input', 'package:polkadart/scale_codec.dart');
+const output = Reference('Output', 'package:polkadart/scale_codec.dart');
+const byteOutput =
+    Reference('ByteOutput', 'package:polkadart/scale_codec.dart');
+const emptyCodec = Reference('NullCodec', 'package:polkadart/scale_codec.dart');
+const bitArray = Reference('BitArray', 'package:polkadart/scale_codec.dart');
+const bitStore = Reference('BitStore', 'package:polkadart/scale_codec.dart');
+const bitOrder = Reference('BitOrder', 'package:polkadart/scale_codec.dart');
+const compactCodec =
+    Reference('CompactCodec', 'package:polkadart/scale_codec.dart');
+const compactBigIntCodec =
+    Reference('CompactBigIntCodec', 'package:polkadart/scale_codec.dart');
+const bitSequenceCodec =
+    Reference('BitSequenceCodec', 'package:polkadart/scale_codec.dart');
+const strCodec = Reference('StrCodec', 'package:polkadart/scale_codec.dart');
+const boolCodec = Reference('BoolCodec', 'package:polkadart/scale_codec.dart');
+const u8Codec = Reference('U8Codec', 'package:polkadart/scale_codec.dart');
+const u8ArrayCodec =
+    Reference('U8ArrayCodec', 'package:polkadart/scale_codec.dart');
+const u8SequenceCodec =
+    Reference('U8SequenceCodec', 'package:polkadart/scale_codec.dart');
+const u16Codec = Reference('U16Codec', 'package:polkadart/scale_codec.dart');
+const u16ArrayCodec =
+    Reference('U16ArrayCodec', 'package:polkadart/scale_codec.dart');
+const u16SequenceCodec =
+    Reference('U16SequenceCodec', 'package:polkadart/scale_codec.dart');
+const u32Codec = Reference('U32Codec', 'package:polkadart/scale_codec.dart');
+const u32ArrayCodec =
+    Reference('U32ArrayCodec', 'package:polkadart/scale_codec.dart');
+const u32SequenceCodec =
+    Reference('U32SequenceCodec', 'package:polkadart/scale_codec.dart');
+const u64Codec = Reference('U64Codec', 'package:polkadart/scale_codec.dart');
+const u64ArrayCodec =
+    Reference('U64ArrayCodec', 'package:polkadart/scale_codec.dart');
+const u64SequenceCodec =
+    Reference('U64SequenceCodec', 'package:polkadart/scale_codec.dart');
+const u128Codec = Reference('U128Codec', 'package:polkadart/scale_codec.dart');
+const u256Codec = Reference('U256Codec', 'package:polkadart/scale_codec.dart');
+const i8Codec = Reference('I8Codec', 'package:polkadart/scale_codec.dart');
+const i8ArrayCodec =
+    Reference('I8ArrayCodec', 'package:polkadart/scale_codec.dart');
+const i8SequenceCodec =
+    Reference('I8SequenceCodec', 'package:polkadart/scale_codec.dart');
+const i16Codec = Reference('I16Codec', 'package:polkadart/scale_codec.dart');
+const i16ArrayCodec =
+    Reference('I16ArrayCodec', 'package:polkadart/scale_codec.dart');
+const i16SequenceCodec =
+    Reference('I16SequenceCodec', 'package:polkadart/scale_codec.dart');
+const i32Codec = Reference('I32Codec', 'package:polkadart/scale_codec.dart');
+const i32ArrayCodec =
+    Reference('I32ArrayCodec', 'package:polkadart/scale_codec.dart');
+const i32SequenceCodec =
+    Reference('I32SequenceCodec', 'package:polkadart/scale_codec.dart');
+const i64Codec = Reference('I64Codec', 'package:polkadart/scale_codec.dart');
+const i64ArrayCodec =
+    Reference('I64ArrayCodec', 'package:polkadart/scale_codec.dart');
+const i64SequenceCodec =
+    Reference('I64SequenceCodec', 'package:polkadart/scale_codec.dart');
+const i128Codec = Reference('I128Codec', 'package:polkadart/scale_codec.dart');
+const i256Codec = Reference('I256Codec', 'package:polkadart/scale_codec.dart');
 
 TypeReference codec({Reference? ref}) {
   return TypeReference((b) {
