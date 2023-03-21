@@ -62,8 +62,9 @@ class Chain {
     return vd;
   }
 
-  DecodedBlockEvents decodeEvents(RawBlockEvents rawBlockEvents) {
-    final blockNumber = rawBlockEvents.blockNumber;
+  DecodedBlockExtrinsics decodeExtrinsics(
+      RawBlockExtrinsics rawBlockExtrinsics) {
+    final blockNumber = rawBlockExtrinsics.blockNumber;
 
     final VersionDescription? versionDescription =
         getVersionDescription(blockNumber);
@@ -74,9 +75,71 @@ class Chain {
     }
     assertion(blockNumber >= versionDescription.blockNumber);
 
-    final events = EventCodec(chainInfo: versionDescription.chainInfo)
-        .decode(Input.fromHex(rawBlockEvents.events));
-    return DecodedBlockEvents(blockNumber: blockNumber, events: events);
+    final List<Map<String, dynamic>> extrinsics = <Map<String, dynamic>>[];
+
+    for (var extrinsic in rawBlockExtrinsics.extrinsics) {
+      final extrinsicInput = Input.fromHex(extrinsic);
+      final value = ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
+          .decode(extrinsicInput);
+
+      // Check if the extrinsic is fully consumed
+      extrinsicInput.assertEndOfDataReached(' At block: $blockNumber');
+      extrinsics.add(value);
+    }
+
+    return DecodedBlockExtrinsics(
+        blockNumber: blockNumber, extrinsics: extrinsics);
+  }
+
+  RawBlockExtrinsics encodeExtrinsics(
+      DecodedBlockExtrinsics decodedBlockExtrinsics) {
+    final blockNumber = decodedBlockExtrinsics.blockNumber;
+
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
+
+    // Check if this is not empty, throw Exception if it is.
+    if (versionDescription == null) {
+      throw BlockNotFoundException(blockNumber);
+    }
+
+    final List<String> encodedExtrinsicsHex =
+        decodedBlockExtrinsics.extrinsics.map((extrinsic) {
+      final output = HexOutput();
+      ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
+          .encodeTo(extrinsic, output);
+      return output.toString();
+    }).toList();
+
+    return RawBlockExtrinsics(
+        blockNumber: blockNumber, extrinsics: encodedExtrinsicsHex);
+  }
+
+  DecodedBlockEvents decodeEvents(RawBlockEvents rawBlockEvents) {
+    final blockNumber = rawBlockEvents.blockNumber;
+
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
+
+    // Check if this is not empty, throw Exception if it is.
+    if (versionDescription == null) {
+      throw BlockNotFoundException(blockNumber);
+    }
+
+    assertion(blockNumber >= versionDescription.blockNumber);
+
+    final input = Input.fromHex(rawBlockEvents.events);
+
+    final List<dynamic> events =
+        versionDescription.chainInfo.scaleCodec.decode('EventCodec', input);
+
+    // Check if the event is fully consumed
+    input.assertEndOfDataReached(' At block: $blockNumber');
+
+    return DecodedBlockEvents(
+      blockNumber: blockNumber,
+      events: events,
+    );
   }
 
   RawBlockEvents encodeEvents(DecodedBlockEvents decodedBlockEvents) {
@@ -92,8 +155,9 @@ class Chain {
 
     final output = HexOutput();
 
-    EventCodec(chainInfo: versionDescription.chainInfo)
-        .encodeTo(decodedBlockEvents.events, output);
+    versionDescription.chainInfo.scaleCodec
+        .encodeTo('EventCodec', decodedBlockEvents.events, output);
+
     return RawBlockEvents(blockNumber: blockNumber, events: output.toString());
   }
 
@@ -145,7 +209,7 @@ class Chain {
     }
 
     final ChainInfo description =
-        ChainInfo.fromMetadata(decodedMetadata, types)!;
+        ChainInfo.fromMetadata(decodedMetadata, types);
 
     return description;
   }

@@ -18,7 +18,7 @@ mixin Codec<E> {
 
   /// Convert self to an owned vector.
   Uint8List encode(E value) {
-    final bytes = ByteOutput(sizeHint(value));
+    final bytes = ByteOutput();
     encodeTo(value, bytes);
     return bytes.toBytes();
   }

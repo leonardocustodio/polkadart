@@ -13,7 +13,7 @@ class ByteOutput with Output {
   ///
   /// If [copy] set to false, the created builder assumes that lists added
   /// to it will not change.
-  ByteOutput(int initialLength) : _buffer = Uint8Buffer(initialLength);
+  ByteOutput([int initialLength = 1024]) : _buffer = Uint8Buffer(initialLength);
 
   Uint8List toBytes({copy = true}) {
     final bytes = _buffer.buffer.asUint8List(0, cursor);
@@ -30,12 +30,21 @@ class ByteOutput with Output {
 
   @override
   void write(List<int> bytes) {
-    _buffer.setRange(cursor, cursor + bytes.length, bytes);
+    if (_buffer.length - cursor < bytes.length) {
+      _buffer.replaceRange(cursor, cursor + bytes.length, bytes);
+    } else {
+      _buffer.setRange(cursor, cursor + bytes.length, bytes);
+    }
     cursor += bytes.length;
   }
 
   @override
   void pushByte(int byte) {
+    if (cursor >= _buffer.length) {
+      _buffer.add(byte);
+      cursor++;
+      return;
+    }
     _buffer[cursor++] = byte;
   }
 

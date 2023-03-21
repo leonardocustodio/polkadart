@@ -3,7 +3,7 @@ part of parsers;
 class MetadataV14Expander {
   final registeredSiType = <int, String>{};
 
-  final registeredTypeNames = <String>[];
+  final registeredTypeNames = <String>{};
 
   final customCodecRegister = <String, dynamic>{};
 
@@ -13,8 +13,9 @@ class MetadataV14Expander {
         .toList(growable: false);
 
     for (var item in id2Portable) {
-      if (item['type']?['def']?['Primitive'] != null) {
-        registeredSiType[item['id']] = item['type']['def']['Primitive'];
+      final primitive = item['type']?['def']?['Primitive'];
+      if (primitive != null) {
+        registeredSiType[item['id']] = primitive;
       }
     }
     for (var item in id2Portable) {
@@ -22,19 +23,18 @@ class MetadataV14Expander {
       final one = item['type'];
       if (item['type']?['def']?['Variant'] != null) {
         if (one['path'].length >= 2) {
-          if (['Call', 'Event'].contains(one['path'].last)) {
+          if (['Call'].contains(one['path'].last)) {
             registeredSiType[id] = 'Call';
             continue;
           }
-          /* if (one['path'].last == 'Call' &&
-              one['path'][one['path'].length - 2] == 'pallet') {
-            registeredSiType[id] = 'Call';
+          if ('Event' == one['path'].last) {
+            registeredSiType[id] = 'Event';
             continue;
-          } */
-          /* if (one['path'].last == 'Instruction') {
-            registeredSiType[id] = 'Call';
+          }
+          if (one['path'].last == 'Era') {
+            registeredSiType[id] = 'Era';
             continue;
-          } */
+          }
         }
       }
     }
@@ -88,21 +88,6 @@ class MetadataV14Expander {
         case 'Result':
           return _exploreResult(id, one, id2Portable);
       }
-      /* if (one['path'].length >= 2) {
-        if (['Call', 'Event'].contains(one['path'].last)) {
-          registeredSiType[id] = 'Call';
-          return registeredSiType[id]!;
-        }
-        if (one['path'].last == 'Call' &&
-            one['path'][one['path'].length - 2] == 'pallet') {
-          registeredSiType[id] = 'Call';
-          return registeredSiType[id]!;
-        }
-        if (one['path'].last == 'Instruction') {
-          registeredSiType[id] = 'Call';
-          return registeredSiType[id]!;
-        }
-      } */
       return _exploreEnum(id, one, id2Portable);
     }
     registeredSiType[id] = 'Null';
@@ -130,9 +115,15 @@ class MetadataV14Expander {
       }
     }
 
-    String genName = path.join(':');
+    String genName = path.isNotEmpty ? path.last : '';
+    if (registeredTypeNames.contains(genName)) {
+      genName = path.join(':');
+    }
     if (registeredTypeNames.contains(genName)) {
       genName = '$genName@$siTypeId';
+    }
+    if (registeredTypeNames.contains(genName)) {
+      throw Exception('Unexpected Exception: duplicate type name $genName');
     }
     if (genName == '' && one.isNotEmpty) {
       // can't return empty path names
@@ -163,6 +154,10 @@ class MetadataV14Expander {
 
   String _exploreComposite(
       int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+    final String typeString = _genPathName(one['path'], id, {}, []);
+    registeredTypeNames.add(typeString);
+    registeredSiType[id] = typeString;
+
     if (one['def']['Composite']['fields'].length == 0) {
       registeredSiType[id] = 'Null';
       return 'Null';
@@ -187,10 +182,7 @@ class MetadataV14Expander {
           field['typeName']?.toLowerCase() ??
           subTypeName.toLowerCase()] = subTypeName;
     }
-    final String typeString = _genPathName(one['path'], id, {}, []);
-    registeredTypeNames.add(typeString);
     customCodecRegister[typeString] = tempStruct;
-    registeredSiType[id] = typeString;
     return typeString;
   }
 
@@ -221,14 +213,15 @@ class MetadataV14Expander {
       registeredSiType[id] = 'Null';
       return 'Null';
     }
-    final int tuple1 = one['def']['Tuple'][0];
-    final int tuple2 = one['def']['Tuple'][1];
-    final String tuple1Type = registeredSiType[tuple1] ??
-        _fetchTypeName(tuple1, id2Portable[tuple1], id2Portable);
-    final String tuple2Type = registeredSiType[tuple2] ??
-        _fetchTypeName(tuple2, id2Portable[tuple2], id2Portable);
-    // combine (a,b) Tuple
-    registeredSiType[id] = '($tuple1Type, $tuple2Type)';
+    final List<String> tuplesList = <String>[];
+    for (final tuple in one['def']['Tuple']) {
+      final int siType = tuple as int;
+      final String tupleType = registeredSiType[siType] ??
+          _fetchTypeName(siType, id2Portable[siType], id2Portable);
+      tuplesList.add(tupleType);
+    }
+
+    registeredSiType[id] = '(${tuplesList.join(', ')})';
     return registeredSiType[id]!;
   }
 
@@ -276,6 +269,10 @@ class MetadataV14Expander {
     if (registeredSiType[id] != null) {
       return registeredSiType[id]!;
     }
+
+    final String typeString = _genPathName(one['path'], id, {}, []);
+    registeredTypeNames.add(typeString);
+    registeredSiType[id] = typeString;
 
     final List<dynamic> variants = one['def']['Variant']['variants'];
 
@@ -338,24 +335,18 @@ class MetadataV14Expander {
     // hence should throw error from the Enum Codec if the index is being tried to use.
     // This is done to avoid the need of having a separate codec for each enum.
 
-    if (variantNameMap.values.any((MapEntry<String, dynamic> e) =>
-        e.value is String && e.value != 'Null')) {
-      // enum one element is composite or parameterized
-      result = variantNameMap;
-    } else {
+    if (variantNameMap.values.every((MapEntry<String, dynamic> e) =>
+        e.value is String && e.value == 'Null')) {
       // enum all values are 'Null' Type or null and hence it is not a parameterized enum
       result = <String, int>{};
       variantNameMap.forEach((int index, MapEntry<String, dynamic> e) {
         result[e.key] = index;
       });
+    } else {
+      // enum one element is composite or parameterized
+      result = variantNameMap;
     }
-
-    final String typeString = _genPathName(one['path'], id, {}, []);
-
-    registeredTypeNames.add(typeString);
     customCodecRegister[typeString] = {'_enum': result};
-
-    registeredSiType[id] = typeString;
     return typeString;
   }
 }

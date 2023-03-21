@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:substrate_metadata/core/chain.dart';
 import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:substrate_metadata/models/models.dart';
+import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/test.dart';
 
-import '../parachain_definitions/polkadot.dart';
+import '../../parachain_definitions/polkadot.dart';
 
 void main() {
   // read lines
@@ -54,7 +55,7 @@ void main() {
     // Looping through every block
     for (var originalEvent in rawBlocksList) {
       test(
-          'When original event is decoded and encoded back then it matches the provided event value.',
+          'When original event is decoded and encoded back then it matches the original event value.',
           () {
         //
         // Decoding the `Raw Block Events`
@@ -72,8 +73,8 @@ void main() {
 
         //
         // Comparing the decoded event with the decodedFromEncoded event
-        expect(decodedBlockEvents.events.toString(),
-            againDecodedEvents.events.toString());
+        expect(decodedBlockEvents.events.toJson().toString(),
+            againDecodedEvents.events.toJson().toString());
       });
     }
   });
