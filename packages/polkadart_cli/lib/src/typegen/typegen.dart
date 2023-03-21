@@ -75,11 +75,11 @@ import '../utils/utils.dart'
         sanitize,
         sanitizeClassName;
 import './class_builder.dart' as classbuilder;
-import './frame_metadata.dart' as metadata;
+import './runtime_metadata_v14.dart' as metadata;
 import './references.dart' as refs;
 
 part './types/array.dart';
-part 'types/core.dart';
+part './types/core.dart';
 part './types/bit_sequence.dart';
 part './types/btreemap.dart';
 part './types/compact.dart';

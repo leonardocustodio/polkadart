@@ -22,7 +22,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
 import 'package:recase/recase.dart' show ReCase;
 import '../typegen/typegen.dart'
     show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput;
-import '../typegen/frame_metadata.dart' as metadata;
+import '../typegen/runtime_metadata_v14.dart' as metadata;
 import '../typegen/references.dart' as refs;
 import '../utils/utils.dart' show sanitize, sanitizeDocs;
 

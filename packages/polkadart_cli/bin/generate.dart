@@ -6,7 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_cli/polkadart_cli.dart'
     show ChainGenerator, PubspecConfig;
-import 'package:polkadart_cli/src/typegen/frame_metadata.dart'
+import 'package:polkadart_cli/src/typegen/runtime_metadata_v14.dart'
     show RuntimeMetadataV14;
 
 class ChainProperties {
