@@ -58,7 +58,7 @@ void main(List<String> args) async {
   final verbose = arguments['verbose'] as bool;
 
   if (verbose) {
-    print('output directory: "$basePath"');
+    print('output directory: "${basePath.path}"');
   }
 
   if (!basePath.existsSync()) {
