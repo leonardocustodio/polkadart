@@ -13,8 +13,7 @@ dependencies:
   http: ^0.13.5 # BSD-3-Clause
   pointycastle: ^3.6.2 # MIT
   web_socket_channel: ^2.3.0 # BSD-3-Clause
-  polkadart_scale_codec:
-    path: ../polkadart_scale_codec
+  polkadart_scale_codec: ^1.1.0-pre.2 # Apache 2.0
   substrate_metadata:
     path: ../substrate_metadata
 
