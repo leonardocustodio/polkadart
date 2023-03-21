@@ -61,7 +61,7 @@ void main() {
       final List<int> bytes = hex.decode(
           'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
 
-      final String expectedErrorMessage = 'Invalid prefix: -42.';
+      final String expectedErrorMessage = 'Invalid SS58 prefix: -42.';
 
       expect(
         () => Codec(prefix).encode(bytes),
@@ -79,7 +79,7 @@ void main() {
       final List<int> bytes = hex.decode(
           'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
 
-      final String expectedErrorMessage = 'Invalid prefix: 16384.';
+      final String expectedErrorMessage = 'Invalid SS58 prefix: 16384.';
 
       expect(
         () => Codec(prefix).encode(bytes),

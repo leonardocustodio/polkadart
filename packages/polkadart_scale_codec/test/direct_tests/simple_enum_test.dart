@@ -34,28 +34,29 @@ void main() {
 
   group('SimpleEnumCodec.fromList Decode', () {
     test('should encode and decode', () {
-      final input = HexInput('0x01');
+      final input = Input.fromHex('0x01');
       final codec = SimpleEnumCodec.fromList(['a', 'b', 'c']);
       expect(codec.decode(input), 'b');
     });
 
     test('should throw error when invalid index', () {
-      final input = HexInput('0x03');
+      final input = Input.fromHex('0x03');
       final codec = SimpleEnumCodec.fromList(['a', 'b', 'c']);
       expect(() => codec.decode(input), throwsA(isA<EnumException>()));
     });
   });
   group('SimpleEnumCodec.sparse Decode', () {
     test('should encode and decode', () {
-      final input = HexInput('0x01');
+      final input = Input.fromHex('0x01');
       final codec = SimpleEnumCodec.sparse({0: 'a', 1: 'b', 2: 'c'});
       expect(codec.decode(input), 'b');
     });
 
     test('should throw error when invalid index', () {
-      final input = HexInput('0x03');
+      final input = Input.fromHex('0x03');
       final codec = SimpleEnumCodec.sparse({0: 'a', 1: 'b', 4: 'c'});
       expect(() => codec.decode(input), throwsA(isA<EnumException>()));
+      expect(input.remainingLength, 0);
     });
   });
 }
