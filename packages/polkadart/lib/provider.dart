@@ -32,31 +32,14 @@ class SubscriptionMessage<R> {
 abstract class Provider {
   const Provider._();
 
-  factory Provider(String url) {
-    final uri = Uri.parse(url);
+  factory Provider(Uri uri) {
     if (uri.scheme == 'http' || uri.scheme == 'https') {
       return HttpProvider(uri);
     }
     if (uri.scheme == 'ws' || uri.scheme == 'wss') {
       return WsProvider(uri);
     }
-    throw Exception('Invalid url: $url');
-  }
-
-  static HttpProvider http(String url) {
-    final uri = Uri.parse(url);
-    if (uri.isScheme('http') && uri.isScheme('https') || uri.scheme.isEmpty) {
-      return HttpProvider(uri);
-    }
-    throw Exception('Invalid http url: $url');
-  }
-
-  static WsProvider websocket(String url) {
-    final uri = Uri.parse(url);
-    if (uri.scheme == 'ws' || uri.scheme == 'wss') {
-      return WsProvider(uri);
-    }
-    throw Exception('Invalid websocket url: $url');
+    throw Exception('Invalid url: $uri');
   }
 
   // Whether the node is connected or not (ws/sc has connection logic)

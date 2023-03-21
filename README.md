@@ -78,10 +78,10 @@ You can run all tests from the library by running `docker compose up`.
 | [SS58 Format](./packages/ss58/)                                                            |   ✅    |
 | [Parse Metadata v14](./packages/substrate_metadata/lib/core/metadata_decoder.dart)         |   ✅    |
 | [Substrate Metadata](./packages/substrate_metadata/lib/definitions/metadata/metadata.dart) |   ✅    |
-| [RPC](./packages/polkadart/lib/apis/apis.dart)                                      |   ✅    |
+| [RPC](./packages/polkadart/lib/apis/apis.dart)                                             |   ✅    |
 | Constants                                                                                  |   ✅    |
-| [Websocket Provider](./packages/polkadart/lib/provider.dart)                        |   ✅    |
-| [Http Provider](./packages/polkadart/lib/provider.dart)                             |   ✅    |
+| [Websocket Provider](./packages/polkadart/lib/provider.dart)                               |   ✅    |
+| [Http Provider](./packages/polkadart/lib/provider.dart)                                    |   ✅    |
 | Signed Extrinsics                                                                          |   🔴    |
 
 ## **License**

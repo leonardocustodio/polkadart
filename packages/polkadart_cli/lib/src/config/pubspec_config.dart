@@ -12,12 +12,12 @@ class PubspecConfig {
   final String _outputDir;
 
   /// Chain settings
-  final List<ChainSettings> _chains;
+  final Map<String, ChainSettings> _chains;
 
   PubspecConfig._({
     required bool enabled,
     required String outputDir,
-    required List<ChainSettings> chains,
+    required Map<String, ChainSettings> chains,
   })  : _enabled = enabled,
         _outputDir = outputDir,
         _chains = chains;
@@ -79,18 +79,19 @@ class PubspecConfig {
     return PubspecConfig._(
       enabled: polkadartConfig['enabled'] ?? false,
       outputDir: polkadartConfig['output_dir'] ?? './lib/generated',
-      chains: chains.entries
-          .map((entry) => ChainSettings.fromConfig(
-              'polkadart.chains.${entry.key}', entry.value))
-          .toList(),
+      chains: {
+        for (final entry in chains.entries)
+          entry.key: ChainSettings.fromConfig(
+              'polkadart.chains.${entry.key}', entry.value)
+      },
     );
   }
 
-  bool? get enabled => _enabled;
+  bool get enabled => _enabled;
 
-  String? get outputDir => _outputDir;
+  String get outputDir => _outputDir;
 
-  List<ChainSettings> get chains => _chains;
+  Map<String, ChainSettings> get chains => _chains;
 }
 
 const Set<String> _validUriSchemes = {'wss', 'ws', 'https', 'http', 'file'};
@@ -141,15 +142,15 @@ class ChainSettings {
     }
 
     // Parse class_name
-    final classname = chainSettings['class_name'];
-    if (classname != null && classname is! String) {
-      throw ConfigException.invalidField(
-          path: '$path.metadata_uri',
-          expect: 'string',
-          actual: classname.runtimeType);
-    }
+    // final classname = chainSettings['class_name'];
+    // if (classname != null && classname is! String) {
+    //   throw ConfigException.invalidField(
+    //       path: '$path.metadata_uri',
+    //       expect: 'string',
+    //       actual: classname.runtimeType);
+    // }
 
-    return ChainSettings(metadataUri, classname);
+    return ChainSettings(metadataUri, 'Polkadot');
   }
 
   Uri get metadataUri => _metadataUri;

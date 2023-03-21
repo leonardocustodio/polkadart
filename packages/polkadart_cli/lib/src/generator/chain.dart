@@ -27,19 +27,9 @@ class ChainGenerator {
   factory ChainGenerator.fromMetadata(
       {required Directory basePath,
       required chainName,
-      required RuntimeMetadataV14 metadata,
-      bool verbose = true}) {
-    if (!basePath.existsSync()) {
-      throw Exception(
-          '[ERROR] Provided directory doesn\'t exists: "${path.normalize(basePath.path)}"');
-    }
-
-    // Create pallets and types directory
+      required RuntimeMetadataV14 metadata}) {
     final typesPath = path.join(basePath.path, 'types');
     final palletsPath = path.join(basePath.path, 'pallets');
-    Directory(path.join(basePath.path)).createSync(recursive: false);
-    Directory(typesPath).createSync(recursive: false);
-    Directory(palletsPath).createSync(recursive: false);
 
     // Get type generators
     final Map<int, TypeDescriptor> typeGenerators =
@@ -102,7 +92,20 @@ class ChainGenerator {
   }
 
   /// Write the Generated Files
-  build({bool verbose = false}) {
+  Future build({bool verbose = false}) async {
+    if (!(await directory.exists())) {
+      throw Exception(
+          '[ERROR] Provided directory doesn\'t exists: "${path.normalize(directory.path)}"');
+    }
+
+    final typesPath = path.join(directory.path, 'types');
+    final palletsPath = path.join(directory.path, 'pallets');
+
+    // Create pallets and types directory
+    await Directory(path.join(directory.path)).create(recursive: false);
+    await Directory(typesPath).create(recursive: false);
+    await Directory(palletsPath).create(recursive: false);
+
     final builderPerFile = _groupTypeBuilderPerFile(types.values);
     for (final entry in builderPerFile.entries) {
       if (entry.value.isEmpty) {
@@ -115,15 +118,14 @@ class ChainGenerator {
           .fold(GeneratedOutput(classes: [], enums: [], typedefs: []),
               (previousValue, builder) => previousValue.merge(builder.build()))
           .build();
-      Directory(path.dirname(entry.key)).createSync(recursive: true);
-      File(entry.key).writeAsStringSync(code);
+      await Directory(path.dirname(entry.key)).create(recursive: true);
+      await File(entry.key).writeAsString(code);
     }
 
     // Write the Pallets Files
     for (final pallet in polkadart.pallets) {
       final String code = pallet.generated().build();
-      Directory(path.dirname(pallet.filePath)).createSync(recursive: true);
-      File(pallet.filePath).writeAsStringSync(code);
+      await File(pallet.filePath).writeAsString(code);
       if (verbose) {
         print(path.relative(pallet.filePath, from: directory.path));
       }
@@ -131,7 +133,7 @@ class ChainGenerator {
 
     // Write the Polkadart File
     final polkadartCode = polkadart.generate().build();
-    File(polkadart.filePath).writeAsStringSync(polkadartCode);
+    await File(polkadart.filePath).writeAsString(polkadartCode);
     if (verbose) {
       print(path.relative(polkadart.filePath, from: directory.path));
     }
