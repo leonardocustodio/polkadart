@@ -43,8 +43,8 @@ class U64SequenceCodec with Codec<List<int>> {
   @override
   void encodeTo(List<int> value, Output output) {
     CompactCodec.codec.encodeTo(value.length, output);
-    for (var i = 0; i < value.length; i++) {
-      U64Codec.codec.encodeTo(BigInt.from(value[i]), output);
+    for (final val in value) {
+      U64Codec.codec.encodeTo(BigInt.from(val), output);
     }
   }
 
@@ -73,13 +73,13 @@ class U64ArrayCodec with Codec<List<int>> {
       throw Exception(
           'U64ArrayCodec: invalid length, expect $length found ${value.length}');
     }
-    for (var i = 0; i < length; i++) {
-      U64Codec.codec.encodeTo(BigInt.from(value[i]), output);
+    for (final val in value) {
+      U64Codec.codec.encodeTo(BigInt.from(val), output);
     }
   }
 
   @override
-  int sizeHint(List<int> list) {
+  int sizeHint(List<int> value) {
     return length * 8;
   }
 }

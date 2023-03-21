@@ -45,16 +45,16 @@ class U32SequenceCodec with Codec<List<int>> {
   }
 
   @override
-  void encodeTo(List<int> list, Output output) {
-    CompactCodec.codec.encodeTo(list.length, output);
-    for (int value in list) {
-      U32Codec.codec.encodeTo(value, output);
+  void encodeTo(List<int> value, Output output) {
+    CompactCodec.codec.encodeTo(value.length, output);
+    for (final val in value) {
+      U32Codec.codec.encodeTo(val, output);
     }
   }
 
   @override
-  int sizeHint(List<int> list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.length * 4;
+  int sizeHint(List<int> value) {
+    return CompactCodec.codec.sizeHint(value.length) + value.length * 4;
   }
 }
 
@@ -72,18 +72,18 @@ class U32ArrayCodec with Codec<List<int>> {
   }
 
   @override
-  void encodeTo(List<int> list, Output output) {
-    if (list.length != length) {
+  void encodeTo(List<int> value, Output output) {
+    if (value.length != length) {
       throw Exception(
-          'U32ArrayCodec: invalid length, expect $length found ${list.length}');
+          'U32ArrayCodec: invalid length, expect $length found ${value.length}');
     }
-    for (var i = 0; i < length; i++) {
-      U32Codec.codec.encodeTo(list[i], output);
+    for (final val in value) {
+      U32Codec.codec.encodeTo(val, output);
     }
   }
 
   @override
-  int sizeHint(List<int> list) {
+  int sizeHint(List<int> value) {
     return length * 4;
   }
 }
