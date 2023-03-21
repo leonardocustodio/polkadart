@@ -59,7 +59,7 @@ void main() {
         () {
       const value = '0x0c01';
       const expectedResult = [3, true];
-      final input = HexInput(value);
+      final input = Input.fromHex(value);
       final result =
           TupleCodec([CompactCodec.codec, BoolCodec.codec]).decode(input);
       expect(result, expectedResult);
@@ -70,9 +70,10 @@ void main() {
         () {
       const value = '0x145475706c6585';
       const expectedResult = ['Tuple', 133];
-      final input = HexInput(value);
+      final input = Input.fromHex(value);
       final result = TupleCodec([StrCodec.codec, U8Codec.codec]).decode(input);
       expect(result, expectedResult);
+      expect(input.remainingLength, 0);
     });
 
     test('Given a hex of one Vec<String> it should be decoded to correct value',
@@ -82,11 +83,12 @@ void main() {
         ['tuple', 'test'],
         [100, 10]
       ];
-      final input = HexInput(value);
+      final input = Input.fromHex(value);
       final result = TupleCodec(
               [SequenceCodec(StrCodec.codec), SequenceCodec(U8Codec.codec)])
           .decode(input);
       expect(result, expectedResult);
+      expect(input.remainingLength, 0);
     });
 
     test(
@@ -97,12 +99,13 @@ void main() {
         ['tuple', 'test'],
         [100, 10]
       ];
-      final input = HexInput(value);
+      final input = Input.fromHex(value);
       final result = TupleCodec([
         TupleCodec([StrCodec.codec, StrCodec.codec]),
         TupleCodec([U8Codec.codec, U8Codec.codec]),
       ]).decode(input);
       expect(result, expectedResult);
+      expect(input.remainingLength, 0);
     });
   });
 }

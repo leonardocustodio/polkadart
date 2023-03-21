@@ -2,6 +2,8 @@ part of io;
 
 /// Allows writing of data.
 mixin Output {
+  static ByteOutput byteOutput() => ByteOutput(10);
+
   /// Write to the output.
   void write(List<int> bytes);
 
@@ -9,6 +11,4 @@ mixin Output {
   void pushByte(int byte) {
     write(Uint8List.fromList([byte]));
   }
-
-  List<int> get bytes;
 }

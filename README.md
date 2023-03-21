@@ -60,9 +60,10 @@ git lfs checkout
 You can run all tests from the library by running `docker compose up`.
 | Package | Path
 |----------|----------|
+| polkadart | [packages/polkadart](./packages/polkadart) |
+| polkadart_cli | [packages/polkadart_cli/](./packages/polkadart_cli/) |
 | polkadart_scale_codec | [packages/polkadart_scale_codec/](./packages/polkadart_scale_codec/) |
 | ss58 | [packages/ss58/](./packages/ss58/) |
-| ss58_codec | [packages/ss58_codec/](./packages/ss58_codec/) |
 | substrate_metadata | [packages/substrate_metadata/](./packages/substrate_metadata/) |
 
 ## Road map and current state
@@ -71,31 +72,17 @@ You can run all tests from the library by running `docker compose up`.
 🟡 = Partially implemented and under active development.<br/>
 🔴 = Not supported yet but on-deck to be implemented soon.
 
-|                     | Status |
-| ------------------- | :----: |
-| Scale Codec Encoder |   ✅    |
-| Scale Codec Decoder |   ✅    |
-| SS58 Format         |   ✅    |
-| Parse Metadata v14  |   ✅    |
-| Coverage and Tests  |   ✅    |
-| Substrate Metadata  |   🟡    |
-| RPC                 |   🔴    |
-| Websockets          |   🔴    |
-| Crypto              |   🔴    |
-
-### Substrate Metadata
-
-|                        | Status |
-| ---------------------- | :----: |
-| Parse Metadata v14     |   ✅    |
-| Parse Metadata pre-v14 |   ✅    |
-| JSON-RPC               |   🔴    |
-| Constants              |   🔴    |
-| Read Storage           |   🔴    |
-| Extrinsics             |   🔴    |
-| Events                 |   🔴    |
-| Errors                 |   🔴    |
-| SmartContracts         |   🔴    |
+|                                                                                            | Status |
+| ------------------------------------------------------------------------------------------ | :----: |
+| [Scale Codec](./packages/polkadart_scale_codec/)                                           |   ✅    |
+| [SS58 Format](./packages/ss58/)                                                            |   ✅    |
+| [Parse Metadata v14](./packages/substrate_metadata/lib/core/metadata_decoder.dart)         |   ✅    |
+| [Substrate Metadata](./packages/substrate_metadata/lib/definitions/metadata/metadata.dart) |   ✅    |
+| [RPC](./packages/polkadart/lib/apis/apis.dart)                                             |   ✅    |
+| Constants                                                                                  |   ✅    |
+| [Websocket Provider](./packages/polkadart/lib/provider.dart)                               |   ✅    |
+| [Http Provider](./packages/polkadart/lib/provider.dart)                                    |   ✅    |
+| Signed Extrinsics                                                                          |   🔴    |
 
 ## **License**
 

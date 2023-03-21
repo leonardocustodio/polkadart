@@ -11,10 +11,9 @@ void assertion(bool value, [String? msg]) {
 
 /// Decodes hex [value] and converts to Buffer of Uint8List
 Uint8List decodeHex(String value) {
-  if (value.contains('0x')) {
-    value = value.replaceFirst(RegExp(r'0x'), '');
+  if (value.startsWith('0x')) {
+    value = value.substring(2);
   }
-
   try {
     return Uint8List.fromList(hex.decode(value));
   } catch (_) {
