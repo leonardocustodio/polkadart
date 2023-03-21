@@ -64,18 +64,21 @@ void main(List<String> args) async {
     return;
   }
 
-  for (final chain in config.chains) {
+  for (final entry in config.chains.entries) {
+    final chainName = entry.key;
+    final chain = entry.value;
+
     // Get chain properties
     final ChainProperties properties = await chainProperties(chain.metadataUri);
 
     // Create chain directory
-    final chainDirectory = Directory(
-        path.join(basePath, ReCase(properties.version.implName).snakeCase));
+    final chainDirectory =
+        Directory(path.join(basePath, ReCase(chainName).snakeCase));
     await chainDirectory.create(recursive: false);
 
     // Extract metadata
     final generator = ChainGenerator.fromMetadata(
-        chainName: properties.version.implName,
+        chainName: chainName,
         basePath: chainDirectory,
         metadata: properties.metadata);
 

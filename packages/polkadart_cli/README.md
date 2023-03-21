@@ -12,7 +12,6 @@ Add package configuration to your `pubspec.yaml` file. Here is a full configurat
 
 <pre>
 polkadart:
-  <b>enabled: true</b> # Required. Must be set to true to activate the package. Default: false
   output_dir: lib/generated # Optional. Sets the directory of generated files. Provided value should be a valid path on your system. Default: lib/generated
   <b>chains:</b> # Dictionary of chains and endpoints
     - polkadot: wss://rpc.polkadot.io

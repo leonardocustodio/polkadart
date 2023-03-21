@@ -143,7 +143,7 @@ class PolkadartGenerator {
                 ..toThis = false
                 ..required = false
                 ..named = false
-                ..type = refs.string
+                ..type = refs.uri
                 ..name = 'url'))
               ..body = Block.of([
                 declareFinal('provider')

@@ -34,6 +34,7 @@ const dynamic = Reference('dynamic');
 const int = Reference('int', 'dart:core');
 const void_ = Reference('void', 'dart:core');
 const string = Reference('String', 'dart:core');
+const uri = Reference('Uri', 'dart:core');
 const bigInt = Reference('BigInt', 'dart:core');
 const uint8List = Reference('Uint8List', 'dart:typed_data');
 const uint8Buffer =
