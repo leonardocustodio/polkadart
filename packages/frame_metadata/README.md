@@ -1,6 +1,6 @@
-# substrate_metadata
+# frame_metadata
 
-[substrate_metadata](https://www.pub.dev/packages/substrate_metadata) is a flutter and dart library for encoding and decoding chain **metadata**, **constants**, **extrinsics** and **events** of blocks.
+[frame_metadata](https://www.pub.dev/packages/frame_metadata) is a flutter and dart library for encoding and decoding chain **metadata**, **constants**, **extrinsics** and **events** of blocks.
 
 # Lets Get Started
 

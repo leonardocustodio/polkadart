@@ -1,5 +1,5 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/core/metadata_decoder.dart';
+import 'package:frame_metadata/core/metadata_decoder.dart';
 
 import '../definitions/types_bundle.dart';
 import '../exceptions/exceptions.dart';

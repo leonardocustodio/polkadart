@@ -1,7 +1,7 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/definitions/metadata/metadata.dart'
+import 'package:frame_metadata/definitions/metadata/metadata.dart'
     as metadata_definitions;
-import 'package:substrate_metadata/models/models.dart';
+import 'package:frame_metadata/models/models.dart';
 
 class MetadataDecoder {
   ///

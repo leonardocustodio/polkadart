@@ -50,12 +50,12 @@ jobs:
       codecov-flag: "polkadart_scale_codec"
       working-directory: "./packages/polkadart_scale_codec"
 
-  substrate_metadata:
-    name: Test substrate_metadata
+  frame_metadata:
+    name: Test frame_metadata
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
-      codecov-flag: "substrate_metadata"
-      working-directory: "./packages/substrate_metadata"
+      codecov-flag: "frame_metadata"
+      working-directory: "./packages/frame_metadata"
 
   polkadart_cli:
     name: Test polkadart_cli

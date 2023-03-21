@@ -417,10 +417,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  substrate_metadata:
+  frame_metadata:
     dependency: "direct main"
     description:
-      path: "../../packages/substrate_metadata"
+      path: "../../packages/frame_metadata"
       relative: true
     source: path
     version: "1.0.0"

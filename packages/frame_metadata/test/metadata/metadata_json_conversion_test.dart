@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:substrate_metadata/models/models.dart';
-import 'package:substrate_metadata/substrate_metadata.dart';
+import 'package:frame_metadata/models/models.dart';
+import 'package:frame_metadata/frame_metadata.dart';
 import 'package:test/test.dart';
 
 const versions = [9, 10, 11, 12, 13, 14];
