@@ -75,7 +75,7 @@ class Chain {
     assertion(blockNumber >= versionDescription.blockNumber);
 
     final events = EventCodec(chainInfo: versionDescription.chainInfo)
-        .decode(HexInput(rawBlockEvents.events));
+        .decode(Input.fromHex(rawBlockEvents.events));
     return DecodedBlockEvents(blockNumber: blockNumber, events: events);
   }
 

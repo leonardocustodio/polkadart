@@ -15,7 +15,7 @@ class MetadataDecoder {
   DecodedMetadata decode(String metadataHex) {
     //
     // Create input from Hexa-deciaml String
-    final source = HexInput(metadataHex);
+    final source = Input.fromHex(metadataHex);
 
     //
     // Decode the magic number
@@ -46,7 +46,7 @@ class MetadataDecoder {
         rethrow;
       }
       try {
-        final clonnedSource = HexInput(metadataHex);
+        final clonnedSource = Input.fromHex(metadataHex);
 
         U32Codec.codec.decode(clonnedSource);
         U8Codec.codec.decode(clonnedSource);

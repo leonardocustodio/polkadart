@@ -39,7 +39,7 @@ mixin Input {
   ///
   /// Example:
   /// ```dart
-  /// final input = HexInput.fromHex('0x010203');
+  /// final input = Input.fromHex('0x010203');
   /// print(input.readBytes(3)); // [1, 2, 3]
   /// ```
   UnmodifiableUint8ListView readBytes(int length);
@@ -49,7 +49,7 @@ mixin Input {
   ///
   /// Example:
   /// ```dart
-  /// final input = HexInput.fromHex('0x010203');
+  /// final input = Input.fromHex('0x010203');
   ///
   /// print(input.hasBytes()); // true
   ///
