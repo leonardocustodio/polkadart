@@ -280,14 +280,9 @@ class MetadataV14Expander {
     final List<dynamic> variants = one['def']['Variant']['variants'];
 
     variants.sort((a, b) => a['index'] < b['index'] ? -1 : 1);
-    late int maxIndex = -1;
 
-    if (variants.isNotEmpty) {
-      maxIndex = variants.last['index'];
-    }
-
-    final List<MapEntry<String, dynamic>?> variantNameMap =
-        List<MapEntry<String, dynamic>?>.filled(maxIndex + 1, null);
+    final Map<int, MapEntry<String, dynamic>> variantNameMap =
+        <int, MapEntry<String, dynamic>>{};
 
     for (final Map<String, dynamic> variant in variants) {
       final int index = variant['index'];
@@ -343,15 +338,16 @@ class MetadataV14Expander {
     // hence should throw error from the Enum Codec if the index is being tried to use.
     // This is done to avoid the need of having a separate codec for each enum.
 
-    if (variantNameMap.any(
-        (MapEntry<String, dynamic>? e) => e != null && e.value != 'Null')) {
+    if (variantNameMap.values.any((MapEntry<String, dynamic> e) =>
+        e.value is String && e.value != 'Null')) {
       // enum one element is composite or parameterized
       result = variantNameMap;
     } else {
       // enum all values are 'Null' Type or null and hence it is not a parameterized enum
-      result = variantNameMap
-          .map((MapEntry<String, dynamic>? e) => e?.key)
-          .toList(growable: false);
+      result = <String, int>{};
+      variantNameMap.forEach((int index, MapEntry<String, dynamic> e) {
+        result[e.key] = index;
+      });
     }
 
     final String typeString = _genPathName(one['path'], id, {}, []);
