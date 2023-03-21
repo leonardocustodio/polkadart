@@ -330,7 +330,6 @@
           'note': 'Text',
           'Juice': 'OrderJuiceEnum',
           'Ounces': 'OuncesEnum'
-
       },
     },
   );

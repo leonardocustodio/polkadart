@@ -15,7 +15,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
 
     if (result['extrinsic_length'] != input.remainingLength) {
       result['extrinsic_length'] = 0;
-      input.offset = 0;
+      input.resetOffset();
     }
 
     final meta = input.read();
@@ -69,7 +69,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
 
     output
       ..pushByte(meta)
-      ..write(tempOutput.bytes);
+      ..write(tempOutput.toBytes());
   }
 
   static String computeHash(Uint8List extrinsicBytes) {

@@ -62,14 +62,14 @@ void main() {
       });
 
     test('When value 0x002a is decoded then it returns MapEntry("Ok", 42)', () {
-      final input = HexInput('0x002a');
+      final input = Input.fromHex('0x002a');
       final codec = ScaleCodec(registry);
       final result = codec.decode('A', input);
       expect(result.toString(), MapEntry('Ok', 42).toString());
     });
     test('When value 0x0100 is decoded then it returns MapEntry("Err", false)',
         () {
-      final input = HexInput('0x0100');
+      final input = Input.fromHex('0x0100');
       final codec = ScaleCodec(registry);
       final result = codec.decode('C', input);
       expect(result.toString(), MapEntry('Err', false).toString());
@@ -77,7 +77,7 @@ void main() {
     test(
         'When value 0x000100 is decoded then it returns MapEntry("Ok", MapEntry("Err", false))',
         () {
-      final input = HexInput('0x000100');
+      final input = Input.fromHex('0x000100');
       final codec = ScaleCodec(registry);
       final result = codec.decode('B', input);
       expect(
@@ -86,7 +86,7 @@ void main() {
     test(
         'When value 0x000101 is decoded then it returns MapEntry("Ok", MapEntry("Err", true))',
         () {
-      final input = HexInput('0x000101');
+      final input = Input.fromHex('0x000101');
       final codec = ScaleCodec(registry);
       final result = codec.decode('B', input);
       expect(
@@ -95,7 +95,7 @@ void main() {
     test(
         'When value 0x002a01 is decoded then it returns MapEntry("Ok", [42, true])',
         () {
-      final input = HexInput('0x002a01');
+      final input = Input.fromHex('0x002a01');
       final codec = ScaleCodec(registry);
       final result = codec.decode('D', input);
       expect(result.toString(), MapEntry('Ok', [42, true]).toString());
