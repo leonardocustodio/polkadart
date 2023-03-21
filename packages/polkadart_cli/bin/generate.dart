@@ -54,14 +54,15 @@ void main(List<String> args) async {
   parser.addFlag('verbose', abbr: 'v', defaultsTo: false);
   final arguments = parser.parse(args);
 
-  final basePath = path.normalize(path.absolute(config.outputDir));
-  print(basePath);
+  final basePath = Directory(path.normalize(path.absolute(config.outputDir)));
   final verbose = arguments['verbose'] as bool;
 
-  if (!Directory(basePath).existsSync()) {
-    print(
-        '[ERROR] Provided directory doesn\'t exists: "${path.normalize(arguments['output'])}"');
-    return;
+  if (verbose) {
+    print('output directory: "$basePath"');
+  }
+
+  if (!basePath.existsSync()) {
+    basePath.createSync(recursive: false);
   }
 
   for (final entry in config.chains.entries) {
@@ -73,7 +74,7 @@ void main(List<String> args) async {
 
     // Create chain directory
     final chainDirectory =
-        Directory(path.join(basePath, ReCase(chainName).snakeCase));
+        Directory(path.join(basePath.path, ReCase(chainName).snakeCase));
     await chainDirectory.create(recursive: false);
 
     // Extract metadata
