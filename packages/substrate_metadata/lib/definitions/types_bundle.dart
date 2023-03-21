@@ -1,4 +1,4 @@
-import 'package:frame_metadata/definitions/substrate/substrate_types_bundle.dart';
+import 'package:substrate_metadata/definitions/substrate/substrate_types_bundle.dart';
 import '../models/legacy_types.dart';
 
 ///

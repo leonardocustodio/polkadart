@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:frame_metadata/core/chain.dart';
-import 'package:frame_metadata/models/legacy_types.dart';
-import 'package:frame_metadata/models/models.dart';
-import 'package:frame_metadata/utils/utils.dart';
+import 'package:substrate_metadata/core/chain.dart';
+import 'package:substrate_metadata/models/legacy_types.dart';
+import 'package:substrate_metadata/models/models.dart';
+import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/test.dart';
 
 import '../../parachain_definitions/polkadot.dart';

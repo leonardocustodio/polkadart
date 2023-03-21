@@ -1,5 +1,5 @@
-import 'package:frame_metadata/core/chain.dart';
-import 'package:frame_metadata/models/legacy_types.dart';
+import 'package:substrate_metadata/core/chain.dart';
+import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 

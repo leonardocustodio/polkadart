@@ -3,9 +3,9 @@ library models;
 import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:frame_metadata/exceptions/exceptions.dart';
-import 'package:frame_metadata/parsers/parsers.dart';
-import 'package:frame_metadata/utils/utils.dart';
+import 'package:substrate_metadata/exceptions/exceptions.dart';
+import 'package:substrate_metadata/parsers/parsers.dart';
+import 'package:substrate_metadata/utils/utils.dart';
 
 import 'legacy_types.dart';
 

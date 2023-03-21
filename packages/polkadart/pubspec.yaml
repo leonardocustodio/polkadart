@@ -14,8 +14,8 @@ dependencies:
   pointycastle: ^3.6.2 # MIT
   web_socket_channel: ^2.3.0 # BSD-3-Clause
   polkadart_scale_codec: ^1.1.0-pre.2 # Apache 2.0
-  frame_metadata:
-    path: ../frame_metadata
+  substrate_metadata:
+    path: ../substrate_metadata
 
 dev_dependencies:
   lints: ^2.0.0

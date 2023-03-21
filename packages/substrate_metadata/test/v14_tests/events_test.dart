@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:frame_metadata/core/metadata_decoder.dart';
-import 'package:frame_metadata/models/models.dart';
-import 'package:frame_metadata/utils/utils.dart';
+import 'package:substrate_metadata/core/metadata_decoder.dart';
+import 'package:substrate_metadata/models/models.dart';
+import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 

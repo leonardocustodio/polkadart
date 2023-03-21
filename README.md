@@ -26,7 +26,7 @@ A Dart implementation of [SS58](https://docs.substrate.io/reference/address-form
 base58encode ( concat ( <address-type>, <address>, <checksum> ) )
 ```
 
-## [frame-metadata](./packages/frame_metadata/)
+## [substrate-metadata](./packages/substrate_metadata/)
 
 One of the most important things to understand about **polkadart** is that most interfaces are generated automatically when it connects to a running node. This is quite a departure from other APIs in projects where the interfaces are static. While sounding quite scary, it is a powerful concept that exists in both Polkadot and Substrate chains and allows the API to be used in environments where the chain is customized.
 
@@ -64,7 +64,7 @@ You can run all tests from the library by running `docker compose up`.
 | polkadart_cli | [packages/polkadart_cli/](./packages/polkadart_cli/) |
 | polkadart_scale_codec | [packages/polkadart_scale_codec/](./packages/polkadart_scale_codec/) |
 | ss58 | [packages/ss58/](./packages/ss58/) |
-| frame_metadata | [packages/frame_metadata/](./packages/frame_metadata/) |
+| substrate_metadata | [packages/substrate_metadata/](./packages/substrate_metadata/) |
 
 ## Road map and current state
 
@@ -72,17 +72,17 @@ You can run all tests from the library by running `docker compose up`.
 🟡 = Partially implemented and under active development.<br/>
 🔴 = Not supported yet but on-deck to be implemented soon.
 
-|                                                                                    | Status |
-| ---------------------------------------------------------------------------------- | :----: |
-| [Scale Codec](./packages/polkadart_scale_codec/)                                   |   ✅    |
-| [SS58 Format](./packages/ss58/)                                                    |   ✅    |
-| [Parse Metadata v14](./packages/frame_metadata/lib/core/metadata_decoder.dart)     |   ✅    |
-| [Frame Metadata](./packages/frame_metadata/lib/definitions/metadata/metadata.dart) |   ✅    |
-| [RPC](./packages/polkadart/lib/apis/apis.dart)                                     |   ✅    |
-| Constants                                                                          |   ✅    |
-| [Websocket Provider](./packages/polkadart/lib/provider.dart)                       |   ✅    |
-| [Http Provider](./packages/polkadart/lib/provider.dart)                            |   ✅    |
-| Signed Extrinsics                                                                  |   🔴    |
+|                                                                                            | Status |
+| ------------------------------------------------------------------------------------------ | :----: |
+| [Scale Codec](./packages/polkadart_scale_codec/)                                           |   ✅    |
+| [SS58 Format](./packages/ss58/)                                                            |   ✅    |
+| [Parse Metadata v14](./packages/substrate_metadata/lib/core/metadata_decoder.dart)         |   ✅    |
+| [Substrate Metadata](./packages/substrate_metadata/lib/definitions/metadata/metadata.dart) |   ✅    |
+| [RPC](./packages/polkadart/lib/apis/apis.dart)                                             |   ✅    |
+| Constants                                                                                  |   ✅    |
+| [Websocket Provider](./packages/polkadart/lib/provider.dart)                               |   ✅    |
+| [Http Provider](./packages/polkadart/lib/provider.dart)                                    |   ✅    |
+| Signed Extrinsics                                                                          |   🔴    |
 
 ## **License**
 
