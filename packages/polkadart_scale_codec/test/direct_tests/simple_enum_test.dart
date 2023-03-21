@@ -19,15 +19,17 @@ void main() {
 
   group('SimpleEnumCodec Decode', () {
     test('should encode and decode', () {
-      final input = HexInput('0x01');
+      final input = Input.fromHex('0x01');
       final codec = SimpleEnumCodec(['a', 'b', 'c']);
       expect(codec.decode(input), 'b');
+      expect(input.remainingLength, 0);
     });
 
     test('should throw error when invalid value', () {
-      final input = HexInput('0x03');
+      final input = Input.fromHex('0x03');
       final codec = SimpleEnumCodec(['a', 'b', 'c']);
       expect(() => codec.decode(input), throwsA(isA<EnumException>()));
+      expect(input.remainingLength, 0);
     });
   });
 }

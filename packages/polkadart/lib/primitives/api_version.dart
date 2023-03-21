@@ -39,7 +39,7 @@ class ApiVersion {
 
   factory ApiVersion.fromJson(List<dynamic> json) {
     return ApiVersion(
-      id: U64Codec.codec.decode(HexInput(json[0] as String)),
+      id: U64Codec.codec.decode(Input.fromHex(json[0] as String)),
       version: json[1] as int,
     );
   }

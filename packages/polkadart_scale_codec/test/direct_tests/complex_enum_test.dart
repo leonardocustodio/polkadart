@@ -28,7 +28,7 @@ void main() {
 
   group('Complex Enum Codec Decode Test', () {
     test('should decode and encode', () {
-      final input = HexInput('0x0102');
+      final input = Input.fromHex('0x0102');
       final codec = ComplexEnumCodec([
         MapEntry('a', SimpleEnumCodec(['a', 'b', 'c'])),
         MapEntry('b', SimpleEnumCodec(['d', 'e', 'f'])),
@@ -38,7 +38,7 @@ void main() {
     });
 
     test('should throw error when invalid index', () {
-      final input = HexInput('0x0302');
+      final input = Input.fromHex('0x0302');
       final codec = ComplexEnumCodec([
         MapEntry('a', SimpleEnumCodec(['a', 'b', 'c'])),
         MapEntry('b', SimpleEnumCodec(['d', 'e', 'f'])),
