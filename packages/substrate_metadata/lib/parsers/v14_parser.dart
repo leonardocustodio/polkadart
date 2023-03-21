@@ -211,8 +211,9 @@ class V14Parser {
             break;
           default:
             final siTypeName = siTypes[params['type']]!;
-            final codec = resultingRegistry.getCodec(siTypeName);
-            extrinsicSignature[name] = codec!;
+            final codec = resultingRegistry.parseSpecificCodec(
+                metadataExpander.customCodecRegister, siTypeName);
+            extrinsicSignature[name] = codec;
         }
       }
       final signedExtensionsCompositeCodec = <String, Codec>{};

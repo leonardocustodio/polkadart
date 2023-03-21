@@ -4,6 +4,8 @@ version: 1.1.0-pre.1
 homepage: https://github.com/rankanizer/polkadart/tree/main/packages/substrate_metadata
 repository: https://github.com/rankanizer/polkadart
 
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
 environment:
   sdk: ">=2.17.6 <3.0.0"
 
@@ -11,7 +13,8 @@ dependencies:
   equatable: ^2.0.5
   json_schema2: ^2.0.2+9 # MIT
   pointycastle: ^3.6.2 # BSD-3-Clause
-  polkadart_scale_codec: ^1.1.0-pre.2 # Apache 2.0
+  polkadart_scale_codec:
+    path: ../polkadart_scale_codec
   utility: ^1.0.3
 
 dev_dependencies:

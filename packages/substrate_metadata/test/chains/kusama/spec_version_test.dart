@@ -3,7 +3,7 @@ import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
-import 'parachain_definitions/polkadot.dart';
+import '../../parachain_definitions/kusama.dart';
 
 void main() {
   group('Spec Versions Test', () {
@@ -11,7 +11,7 @@ void main() {
       //
       // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
       final LegacyTypesBundle typesDefinitions =
-          LegacyTypesBundle.fromJson(polkadotTypesBundle);
+          LegacyTypesBundle.fromJson(kusamaTypesBundle);
 
       //
       // Initiate chain constructor with chain specific types-definition
@@ -19,9 +19,9 @@ void main() {
 
       //
       // Populating with the metadata for block-numbers available for this chain....
-      chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
+      chain.initSpecVersionFromFile('../../chain/kusama/versions.jsonl');
 
-      expect(chain.versioDescriptionList.length, 34);
+      expect(chain.versioDescriptionList.length, 74);
 
       //
       // check if the versionDescriptionList is sorted by blockNumber
