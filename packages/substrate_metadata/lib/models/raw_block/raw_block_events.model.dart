@@ -14,4 +14,11 @@ class RawBlockEvents extends Equatable {
 
   @override
   List<Object?> get props => [blockNumber, events];
+
+  // read the events from filePath
+  static List<RawBlockEvents> readEventsFromPath(String filePath) {
+    return readLines(filePath)
+        .map((dynamic map) => RawBlockEvents.fromJson(map))
+        .toList(growable: false);
+  }
 }

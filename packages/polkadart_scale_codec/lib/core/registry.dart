@@ -524,7 +524,7 @@ class Registry {
           } else {
             codecMap[map.key] = MapEntry(
                 entry.key,
-                _parseComposite(customJson, 'kawal', entry.value,
+                _parseComposite(customJson, '', entry.value,
                     allowedSettingCodec: false));
           }
         }
@@ -656,6 +656,7 @@ class Registry {
       case 'i256':
         return I256Codec.codec;
       case 'donotconstruct':
+        throw Exception('Type DoNotConstruct found.');
       case 'null':
         return NullCodec.codec;
       default:

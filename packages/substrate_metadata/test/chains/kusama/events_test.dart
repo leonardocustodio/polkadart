@@ -4,14 +4,14 @@ import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/test.dart';
 
-import '../../parachain_definitions/polkadot.dart';
+import '../../parachain_definitions/kusama.dart';
 
 void main() {
-  group('Polkadot Events Test', () {
+  group('Kusama Events Test', () {
     //
     // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
     final LegacyTypesBundle typesDefinitions =
-        LegacyTypesBundle.fromJson(polkadotTypesBundle);
+        LegacyTypesBundle.fromJson(kusamaTypesBundle);
 
     //
     // Initiate chain constructor with chain specific types-definition
@@ -19,10 +19,10 @@ void main() {
 
     //
     // Populating with the metadata for block-numbers available for this chain....
-    chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
+    chain.initSpecVersionFromFile('../../chain/kusama/versions.jsonl');
 
     final List<RawBlockEvents> rawBlocksList =
-        RawBlockEvents.readEventsFromPath('../../chain/polkadot/events.jsonl');
+        RawBlockEvents.readEventsFromPath('../../chain/kusama/events.jsonl');
 
     //
     // Looping through every block

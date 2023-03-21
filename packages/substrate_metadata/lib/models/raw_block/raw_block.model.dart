@@ -59,4 +59,11 @@ class RawBlockExtrinsics extends RpcBlock implements Equatable {
 
   @override
   bool? get stringify => true;
+
+  // read the blocks from filePath
+  static List<RawBlockExtrinsics> readBlocksFromPath(String filePath) {
+    return readLines(filePath)
+        .map((dynamic map) => RawBlockExtrinsics.fromJson(map))
+        .toList(growable: false);
+  }
 }
