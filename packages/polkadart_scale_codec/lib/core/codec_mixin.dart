@@ -20,6 +20,6 @@ mixin Codec<E> {
   Uint8List encode(E value) {
     final bytes = ByteOutput(sizeHint(value));
     encodeTo(value, bytes);
-    return bytes.buffer.toBytes();
+    return bytes.toBytes();
   }
 }

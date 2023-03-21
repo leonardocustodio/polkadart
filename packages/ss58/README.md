@@ -7,14 +7,10 @@ SS58 account examples can be finded in [ss58-Registry](https://github.com/parity
 
 # Lets Get Started
 
-### Registry Info by Network
+### Decoding a Polkadot Address Object
 
 ```dart
-// get registry info of given `network`
-
-final kusamaRegistry = Codec.registry.getByNetwork('kusama');
-
-print('kusama registry: $kusamaRegistry');
+final address = Address.decode('1zugcag7cJVBtVRnFxv5Qftn7xKAnR6YJ9x4x3XLgGgmNnS');
 ```
 
 ### Registry Info by Prefix

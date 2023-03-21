@@ -61,7 +61,7 @@ void main() {
   group('Composite Decode Test', () {
     test('When value 0x2a01 is decoded then it returns {"a": 42, "b": true}',
         () {
-      final input = HexInput('0x2a01');
+      final input = Input.fromHex('0x2a01');
       final decoded = CompositeCodec(
         LinkedHashMap.from({
           'a': U8Codec.codec,
@@ -72,12 +72,13 @@ void main() {
         'a': 42,
         'b': true,
       });
+      expect(input.remainingLength, 0);
     });
 
     test(
         'When Composite is decoded then it returns correct value {"index": 8, "note": "This is a note", "Juice": {"name": "Kiwi", "ounces": 1}, "Remarks": "Hey Food was good"}',
         () {
-      final input = HexInput(
+      final input = Input.fromHex(
           '0x0838546869732069732061206e6f7465104b69776901014448657920466f6f642077617320676f6f64');
       final decoded = CompositeCodec(
         LinkedHashMap.from({
@@ -103,6 +104,7 @@ void main() {
             },
             'Remarks': 'Hey Food was good',
           }.toString());
+      expect(input.remainingLength, 0);
     });
   });
 }
