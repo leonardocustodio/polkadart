@@ -1,4 +1,4 @@
-import 'package:ss58_codec/ss58_codec.dart';
+import './address.dart' show Address;
 
 /// Exception thrown in [Registry] constructor when `_items`
 /// already has an item with the [RegistryItem.prefix].
@@ -135,12 +135,41 @@ class InvalidAddressPrefixException implements Exception {
 /// ```
 ///
 class InvalidPrefixException implements Exception {
-  const InvalidPrefixException(this.prefix);
+  const InvalidPrefixException([this.prefix]);
 
-  final int prefix;
+  /// Prefix of Network
+  final int? prefix;
 
   @override
   String toString() {
-    return 'Invalid prefix: $prefix.';
+    if (prefix == null) {
+      return 'Could not parse SS58 prefix';
+    }
+    return 'Invalid SS58 prefix: $prefix.';
+  }
+}
+
+///
+/// Invalid Prefix Exception
+class InvalidCheckSumException implements Exception {
+  const InvalidCheckSumException();
+
+  @override
+  String toString() {
+    return 'Invalid checksum';
+  }
+}
+
+///
+/// Bad Length Exception
+class BadAddressLengthException implements Exception {
+  const BadAddressLengthException([this.address]);
+
+  /// Address which is of improper length;
+  final String? address;
+
+  @override
+  String toString() {
+    return 'Bad Length Address${address == null ? '' : ': $address'}.';
   }
 }

@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 void main() {
   group('EraExtrinsic', () {
     test('Decode Test', () {
-      final input = HexInput('0xd501');
+      final input = Input.fromHex('0xd501');
       final codec = EraExtrinsic.codec;
       final result = codec.decode(input);
 
@@ -16,7 +16,7 @@ void main() {
     });
 
     test('Encode Test', () {
-      final output = ByteOutput();
+      final output = HexOutput();
       final codec = EraExtrinsic.codec;
       codec.encodeTo(<String, int>{
         'period': 64,

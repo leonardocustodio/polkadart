@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:ss58/src/exceptions.dart';
-import 'package:ss58/src/registry_item.dart';
+import './exceptions.dart';
+import './registry_item.dart';
 
 /// Default class to handle `SS58 account types`.
 ///

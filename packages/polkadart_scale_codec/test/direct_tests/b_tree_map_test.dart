@@ -60,18 +60,19 @@ void main() {
 
   group('BTreeMap Decode Test:', () {
     test('Given a 0x042a01 it should be decoded to {42: true}', () {
-      final input = HexInput('0x042a01');
+      final input = Input.fromHex('0x042a01');
       final result = BTreeMapCodec(
         keyCodec: U8Codec.codec,
         valueCodec: BoolCodec.codec,
       ).decode(input);
       expect(result.toString(), {42: true}.toString());
+      expect(input.remainingLength, 0);
     });
 
     test(
         'When value 0x0404780200000001 is decoded then it returns {{632: false}: true}',
         () {
-      final input = HexInput('0x0404780200000001');
+      final input = Input.fromHex('0x0404780200000001');
       final result = BTreeMapCodec(
         keyCodec: BTreeMapCodec(
           keyCodec: U32Codec.codec,
@@ -84,12 +85,13 @@ void main() {
           {
             {632: false}: true
           }.toString());
+      expect(input.remainingLength, 0);
     });
 
     test(
         'When value 0x040410313239310100 is decoded then it returns {{"1291": true}: false}',
         () {
-      final input = HexInput('0x040410313239310100');
+      final input = Input.fromHex('0x040410313239310100');
       final result = BTreeMapCodec(
         keyCodec: BTreeMapCodec(
           keyCodec: StrCodec.codec,
@@ -102,11 +104,12 @@ void main() {
           {
             {'1291': true}: false
           }.toString());
+      expect(input.remainingLength, 0);
     });
 
     test('When value 0x042a0100 is decoded then it returns {[42, true]: false}',
         () {
-      final input = HexInput('0x042a0100');
+      final input = Input.fromHex('0x042a0100');
       final result = BTreeMapCodec(
         keyCodec: TupleCodec([U8Codec.codec, BoolCodec.codec]),
         valueCodec: BoolCodec.codec,
@@ -116,6 +119,7 @@ void main() {
           {
             [42, true]: false
           }.toString());
+      expect(input.remainingLength, 0);
     });
   });
 }
