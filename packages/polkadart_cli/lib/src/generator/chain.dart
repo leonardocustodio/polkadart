@@ -94,8 +94,7 @@ class ChainGenerator {
   /// Write the Generated Files
   Future build({bool verbose = false}) async {
     if (!(await directory.exists())) {
-      throw Exception(
-          '[ERROR] Provided directory doesn\'t exists: "${path.normalize(directory.path)}"');
+      directory.create(recursive: false);
     }
 
     final typesPath = path.join(directory.path, 'types');
