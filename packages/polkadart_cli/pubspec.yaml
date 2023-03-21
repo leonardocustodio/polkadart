@@ -15,8 +15,7 @@ dependencies:
   recase: ^4.1.0 # BSD-2-Clause
   path: ^1.8.3 # BSD-3-Clause
   yaml: ^3.1.1 # MIT
-  polkadart_scale_codec:
-    path: ../polkadart_scale_codec
+  polkadart_scale_codec: ^1.1.0-pre.2 # Apache 2.0
   polkadart:
     path: ../polkadart
 
