@@ -14,8 +14,8 @@ class Registry {
     this.codecs.addAll(codecs);
   }
 
-  ProxyCodec _createProxy(Map<String, dynamic> metadata, String key,
-      dynamic value, bool allowSettingCodec) {
+  ProxyCodec _createProxy(
+      Map<String, dynamic> metadata, String key, dynamic value) {
     if (_proxies[key] != null) {
       return _proxies[key]!;
     }
@@ -95,10 +95,10 @@ class Registry {
   }
 
   void _callProxyLoaders() {
-    for (final proxyKey in _proxyLoaders.keys.toList(growable: false)) {
-      _proxyLoaders[proxyKey]!();
-      _proxyLoaders.remove(proxyKey);
+    for (final proxy in _proxyLoaders.values) {
+      proxy();
     }
+    _proxyLoaders.clear();
   }
 
   Codec _parseCodec(Map<String, dynamic> metadata, String key, dynamic value,
@@ -262,6 +262,7 @@ class Registry {
     final TupleCodec codec = TupleCodec(
         types.map((String type) => codecs[type]!).toList(growable: false));
     if (allowSettingCodec) {
+      addCodec(value, codec);
       addCodec(key, codec);
     }
     return codec;
@@ -375,6 +376,7 @@ class Registry {
     );
 
     if (allowSettingCodec) {
+      addCodec(value, codec);
       addCodec(key, codec);
     }
     return codec;
@@ -405,6 +407,7 @@ class Registry {
     });
 
     if (allowSettingCodec) {
+      addCodec(value, codec);
       addCodec(key, codec);
     }
     return codec;
@@ -435,6 +438,7 @@ class Registry {
     );
 
     if (allowSettingCodec) {
+      addCodec(value, codec);
       addCodec(key, codec);
     }
     return codec;
@@ -471,7 +475,7 @@ class Registry {
     bool allowSettingCodec,
   ) {
     if (visitedKeys.contains(key)) {
-      return _createProxy(metadata, key, value, allowSettingCodec);
+      return _createProxy(metadata, key, value);
     }
 
     visitedKeys.add(key);
@@ -531,6 +535,7 @@ class Registry {
     final ArrayCodec codec = ArrayCodec(subType, length);
 
     if (allowSettingCodec) {
+      addCodec(value, codec);
       addCodec(key, codec);
     }
     return codec;
@@ -546,13 +551,11 @@ class Registry {
     } else if (value['_enum'] is Map<String, dynamic>) {
       //
       // Complex Enum
-      codec =
-          _parseComplexEnum(metadata, key, value, visited, allowSettingCodec);
+      codec = _parseComplexEnum(metadata, key, value, visited);
     } else if (value['_enum'] is Map<int, MapEntry<String, dynamic>>) {
       //
       // Complex Enum
-      codec =
-          _parseComplexEnum(metadata, key, value, visited, allowSettingCodec);
+      codec = _parseComplexEnum(metadata, key, value, visited);
     } else if (value['_enum'] is List<String?>) {
       //
       // Simplified Enum
@@ -568,14 +571,10 @@ class Registry {
     return codec;
   }
 
-  Codec _parseComplexEnum(
-      Map<String, dynamic> metadata,
-      String key,
-      Map<String, dynamic> value,
-      Set<String> visitedKeys,
-      bool allowSettingCodec) {
+  Codec _parseComplexEnum(Map<String, dynamic> metadata, String key,
+      Map<String, dynamic> value, Set<String> visitedKeys) {
     if (visitedKeys.contains(key)) {
-      return _createProxy(metadata, key, value, allowSettingCodec);
+      return _createProxy(metadata, key, value);
     }
     visitedKeys.add(key);
     final enumValue = value['_enum'];
@@ -617,15 +616,14 @@ class Registry {
           cache[entry.value] = codec;
         }
       } else {
-        final tempKey = '$key:${map.key}:${entry.key}';
-        final cacheKey = '$key:${entry.key}';
-        if (cache[cacheKey] != null) {
-          codec = cache[cacheKey]!;
+        final tempKey = '$key:${entry.key}';
+        if (cache[entry.key] != null) {
+          codec = cache[entry.key]!;
         } else {
           codec = getCodec(tempKey) ??
               _parseComposite(
                   metadata, tempKey, entry.value, visitedKeys, false);
-          cache[cacheKey] = codec;
+          cache[entry.key] = codec;
         }
       }
       //
