@@ -393,13 +393,6 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
-  ss58_codec:
-    dependency: "direct main"
-    description:
-      path: "../../packages/ss58_codec"
-      relative: true
-    source: path
-    version: "1.0.0"
   stack_trace:
     dependency: transitive
     description:
