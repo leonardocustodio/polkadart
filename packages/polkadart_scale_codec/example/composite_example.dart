@@ -8,7 +8,7 @@ void main() {
     },
   );
 
-  final input = HexInput('0x2a01');
+  final input = Input.fromHex('0x2a01');
   final decoded = codec.decode(input);
   print(decoded); // {a: 42, b: true}
 

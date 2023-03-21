@@ -38,7 +38,7 @@ void main() {
   }
 
   {
-    final input = HexInput('0x0404780200000001');
+    final input = Input.fromHex('0x0404780200000001');
     final result = BTreeMapCodec(
       keyCodec: BTreeMapCodec(
         keyCodec: U32Codec.codec,
@@ -50,7 +50,7 @@ void main() {
   }
 
   {
-    final input = HexInput('0x040410313239310100');
+    final input = Input.fromHex('0x040410313239310100');
     final result = BTreeMapCodec(
       keyCodec: BTreeMapCodec(
         keyCodec: StrCodec.codec,
@@ -62,7 +62,7 @@ void main() {
   }
 
   {
-    final input = HexInput('0x042a0100');
+    final input = Input.fromHex('0x042a0100');
     final result = BTreeMapCodec(
       keyCodec: TupleCodec([U8Codec.codec, BoolCodec.codec]),
       valueCodec: BoolCodec.codec,

@@ -47,7 +47,7 @@ void main() {
   }
 
   {
-    final input = HexInput('0x0001010002010300');
+    final input = Input.fromHex('0x0001010002010300');
     final result = ArrayCodec(
       TupleCodec([U8Codec.codec, BoolCodec.codec]),
       4,

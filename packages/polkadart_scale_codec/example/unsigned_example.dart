@@ -1,7 +1,7 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 
 void main() {
-  final input = HexInput(
+  final input = Input.fromHex(
       '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
   final decoded = U256Codec.codec.decode(input);
   print(

@@ -7,7 +7,7 @@ void main() {
   codec.encodeTo([3, true], output);
   print(output.toString()); // 0x0c01
 
-  final input = HexInput('0x0c01');
+  final input = Input.fromHex('0x0c01');
   final decoded = codec.decode(input);
   print(decoded); // [3, true]
 }

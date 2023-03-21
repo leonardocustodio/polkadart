@@ -1,7 +1,7 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 
 void main() {
-  final byteInput = HexInput('13ffffffffffffffff');
+  final byteInput = Input.fromHex('13ffffffffffffffff');
   final decoded = CompactBigIntCodec.codec.decode(byteInput);
   print(decoded); // 18446744073709551615
 
