@@ -78,7 +78,7 @@ class Chain {
     final List<Map<String, dynamic>> extrinsics = <Map<String, dynamic>>[];
 
     for (var extrinsic in rawBlockExtrinsics.extrinsics) {
-      final extrinsicInput = HexInput(extrinsic);
+      final extrinsicInput = Input.fromHex(extrinsic);
       final value = ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
           .decode(extrinsicInput);
 
@@ -128,7 +128,7 @@ class Chain {
 
     assertion(blockNumber >= versionDescription.blockNumber);
 
-    final input = HexInput(rawBlockEvents.events);
+    final input = Input.fromHex(rawBlockEvents.events);
 
     final List<dynamic> events =
         versionDescription.chainInfo.scaleCodec.decode('EventCodec', input);

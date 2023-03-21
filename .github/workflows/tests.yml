@@ -26,22 +26,15 @@ on:
 permissions: read-all
 
 jobs:
-  # lints:
-  #   name: Check code lints
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3.3.0
+  lints:
+    name: Check code lints
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3.4.0
 
-  #     - name: Check TOML Format
-  #       uses: dprint/check@v2.2
-
-  ss58_codec:
-    name: Test ss58_codec
-    uses: ./.github/workflows/reuseable_workflow.yml
-    with:
-      codecov-flag: "ss58_codec"
-      working-directory: "./packages/ss58_codec"
+      - name: Check TOML Format
+        uses: dprint/check@v2.2
 
   ss58:
     name: Test ss58
@@ -64,19 +57,19 @@ jobs:
       codecov-flag: "substrate_metadata"
       working-directory: "./packages/substrate_metadata"
 
-  scale_codec_generator:
-    name: Test scale_codec_generator
+  polkadart_cli:
+    name: Test polkadart_cli
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
-      codecov-flag: "scale_codec_generator"
-      working-directory: "./packages/scale_codec_generator"
+      codecov-flag: "polkadart_cli"
+      working-directory: "./packages/polkadart_cli"
   
-  frame_primitives:
-    name: Test frame_primitives
+  polkadart:
+    name: Test polkadart
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
-      codecov-flag: "frame_primitives"
-      working-directory: "./packages/frame_primitives"
+      codecov-flag: "polkadart"
+      working-directory: "./packages/polkadart"
 
 #  polkadart:
 #    name: Test polkadart

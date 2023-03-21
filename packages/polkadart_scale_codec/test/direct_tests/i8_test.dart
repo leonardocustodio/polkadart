@@ -4,14 +4,14 @@ import 'package:test/test.dart';
 void main() {
   group('I8 Decode Test:', () {
     test('Lowest value decoding', () {
-      final input = HexInput('0x80');
+      final input = Input.fromHex('0x80');
       final decoded = I8Codec.codec.decode(input);
       expect(decoded, -128);
       expect(input.remainingLength, 0);
     });
 
     test('Highest value decoding', () {
-      final input = HexInput('0x7f');
+      final input = Input.fromHex('0x7f');
       final decoded = I8Codec.codec.decode(input);
       expect(decoded, 127);
       expect(input.remainingLength, 0);

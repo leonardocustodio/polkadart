@@ -1,8 +1,21 @@
 // ignore_for_file: unused_local_variable
-
-import 'package:ss58/ss58.dart';
+import 'dart:typed_data' show Uint8List;
+import 'package:ss58/ss58.dart' show Address, Codec;
 
 void main() {
+  // Decoding a Polkadot Address Object
+  Address address =
+      Address.decode('1zugcag7cJVBtVRnFxv5Qftn7xKAnR6YJ9x4x3XLgGgmNnS');
+  print('Address: $address');
+
+  // Encoding previous Address object
+  print('Encoded address: ${address.encode()}');
+
+  // Encoding with a custom prefix
+  Address customAddress =
+      Address(prefix: 0, pubkey: Uint8List.fromList([1, 2, 3, 4]));
+  print('Custom address encoded: ${customAddress.encode()}');
+
   // get registry info of given `network`
   final kusamaRegistry = Codec.registry.getByNetwork('kusama');
 
