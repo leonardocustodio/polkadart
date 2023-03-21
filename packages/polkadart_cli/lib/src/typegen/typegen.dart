@@ -27,7 +27,7 @@ import 'package:code_builder/code_builder.dart'
         literalTrue,
         refer;
 import 'package:dart_style/dart_style.dart' show DartFormatter;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+import 'package:polkadart/scale_codec.dart'
     show
         BitOrder,
         BitSequenceCodec,

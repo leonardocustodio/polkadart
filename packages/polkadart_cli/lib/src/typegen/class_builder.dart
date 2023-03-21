@@ -175,7 +175,7 @@ Class createVariantBaseClass(
             Code.scope((a) =>
                 'final output = ${a(refs.byteOutput)}(codec.sizeHint(this));'),
             Code('codec.encodeTo(this, output);'),
-            Code('return output.buffer.toBytes();'),
+            Code('return output.toBytes();'),
           ])))
         ..methods.add(Method((b) => b
           ..name = 'sizeHint'
