@@ -20,7 +20,7 @@ class Registry {
       return _proxies[key]!;
     }
 
-    final proxyCodec = ProxyCodec(key);
+    final proxyCodec = ProxyCodec();
 
     _proxyLoaders[key] = () {
       proxyCodec.codec = _parseCodec(metadata, key, value, <String>{}, false);
@@ -95,8 +95,8 @@ class Registry {
   }
 
   void _callProxyLoaders() {
-    for (final proxy in _proxyLoaders.values) {
-      proxy();
+    for (final loader in _proxyLoaders.values) {
+      loader();
     }
     _proxyLoaders.clear();
   }
