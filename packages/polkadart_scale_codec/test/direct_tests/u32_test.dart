@@ -4,14 +4,14 @@ import 'package:test/test.dart';
 void main() {
   group('U32 Decode Test:', () {
     test('Lowest value decoding', () {
-      final input = HexInput('0x00000000');
+      final input = Input.fromHex('0x00000000');
       final decoded = U32Codec.codec.decode(input);
       expect(decoded, 0);
       expect(input.remainingLength, 0);
     });
 
     test('Highest value decoding', () {
-      final input = HexInput('0xffffffff');
+      final input = Input.fromHex('0xffffffff');
       final decoded = U32Codec.codec.decode(input);
       expect(decoded, 4294967295);
       expect(input.remainingLength, 0);

@@ -74,7 +74,7 @@ void main() {
       });
 
     test('Given a 0x010c01 it should be decoded to Option.some([3, true])', () {
-      final input = HexInput('0x010c01');
+      final input = Input.fromHex('0x010c01');
       final codec = ScaleCodec(registry);
       final result = codec.decode('A', input);
       expect(result.runtimeType, Option);
@@ -85,7 +85,7 @@ void main() {
     });
 
     test('Given a 0x00 it should be decoded to None', () {
-      final input = HexInput('0x00');
+      final input = Input.fromHex('0x00');
       final codec = ScaleCodec(registry);
       final result = codec.decode('A', input);
       expect(result, None);
@@ -94,7 +94,7 @@ void main() {
     });
 
     test('Given a 0x0101 it should be decoded to Option.some(true)', () {
-      final input = HexInput('0x0101');
+      final input = Input.fromHex('0x0101');
       final codec = ScaleCodec(registry);
       final result = codec.decode('B', input);
       expect(result.runtimeType, Option);
@@ -105,7 +105,7 @@ void main() {
     });
 
     test('Given a 0x0100 it should be decoded to Option.some(false)', () {
-      final input = HexInput('0x0100');
+      final input = Input.fromHex('0x0100');
       final codec = ScaleCodec(registry);
       final result = codec.decode('B', input);
       expect(result.runtimeType, Option);
@@ -116,7 +116,7 @@ void main() {
     });
 
     test('Given a 0x0100 it should be decoded to Option.some(None)', () {
-      final input = HexInput('0x0100');
+      final input = Input.fromHex('0x0100');
       final codec = ScaleCodec(registry);
       final result = codec.decode('C', input);
       expect(result.runtimeType, Option);
@@ -129,7 +129,7 @@ void main() {
     test(
         'Given a 0x010101 it should be decoded to Option.some(Option.some(true))',
         () {
-      final input = HexInput('0x010101');
+      final input = Input.fromHex('0x010101');
       final codec = ScaleCodec(registry);
       final result = codec.decode('C', input);
       expect(result.runtimeType, Option);
@@ -142,7 +142,7 @@ void main() {
     test(
         'Given a 0x010100 it should be decoded to Option.some(Option.some(false))',
         () {
-      final input = HexInput('0x010100');
+      final input = Input.fromHex('0x010100');
       final codec = ScaleCodec(registry);
       final result = codec.decode('C', input);
       expect(result.runtimeType, Option);

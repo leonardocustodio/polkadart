@@ -33,7 +33,7 @@ void main() {
 
       final ChainInfo chainInfo = ChainInfo.fromMetadata(metadata);
 
-      final input = HexInput(_encodedEventsHex);
+      final input = Input.fromHex(_encodedEventsHex);
 
       final List<dynamic> decodedEvents =
           chainInfo.scaleCodec.decode('EventCodec', input);

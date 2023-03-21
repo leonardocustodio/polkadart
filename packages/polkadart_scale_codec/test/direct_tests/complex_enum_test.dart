@@ -55,7 +55,7 @@ void main() {
 
   group('ComplexEnumCodec.sparse Decode Test', () {
     test('should decode and encode', () {
-      final input = HexInput('0x0102');
+      final input = Input.fromHex('0x0102');
       final codec = ComplexEnumCodec.sparse(
         {
           0: MapEntry('a', SimpleEnumCodec.fromList(['a', 'b', 'c'])),
@@ -67,7 +67,7 @@ void main() {
     });
 
     test('should throw error when invalid index', () {
-      final input = HexInput('0x0302');
+      final input = Input.fromHex('0x0302');
       final codec = ComplexEnumCodec.sparse(
         {
           0: MapEntry('a', SimpleEnumCodec.fromList(['a', 'b', 'c'])),
@@ -81,7 +81,7 @@ void main() {
 
   group('ComplexEnumCodec.fromList Decode Test', () {
     test('should decode and encode', () {
-      final input = HexInput('0x0102');
+      final input = Input.fromHex('0x0102');
       final codec = ComplexEnumCodec.fromList([
         MapEntry('a', SimpleEnumCodec.fromList(['a', 'b', 'c'])),
         MapEntry('b', SimpleEnumCodec.fromList(['d', 'e', 'f'])),
@@ -91,7 +91,7 @@ void main() {
     });
 
     test('should throw error when invalid index', () {
-      final input = HexInput('0x0302');
+      final input = Input.fromHex('0x0302');
       final codec = ComplexEnumCodec.fromList([
         MapEntry('a', SimpleEnumCodec.fromList(['a', 'b', 'c'])),
         MapEntry('b', SimpleEnumCodec.fromList(['d', 'e', 'f'])),
