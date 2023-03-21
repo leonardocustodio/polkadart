@@ -22,7 +22,7 @@ polkadart:
 
 To generate boilerplate code for substrate node, run the `generate` program inside directory where your `pubspec.yaml` file is located:
 
-    dart pub run polkadart_cli:generate
+    dart pub run polkadart_cli:generate -v
 
 This will produce files inside `lib/generated` directory.
 You can also change the output folder from `lib/generated` to a custom directory by adding the `output_dir` line in your `pubspec.yaml` file.
