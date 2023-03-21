@@ -34,7 +34,7 @@ void main() {
 
       final ChainInfo chainInfo = ChainInfo.fromMetadata(metadata);
 
-      final input = HexInput(_encodedExtrinsicHex);
+      final input = Input.fromHex(_encodedExtrinsicHex);
 
       final dynamic decoded =
           ExtrinsicsCodec(chainInfo: chainInfo).decode(input);

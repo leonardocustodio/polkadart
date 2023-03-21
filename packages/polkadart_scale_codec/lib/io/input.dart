@@ -68,8 +68,12 @@ mixin Input {
 
   /// Get the hex string of the buffer
   String toHex() {
-    return encodeHex(_buffer);
+    return encodeHex(buffer);
   }
+
+  Uint8List get buffer;
+
+  void resetOffset();
 
   ///
   /// Asserts if the end of data is reached or not
@@ -78,7 +82,7 @@ mixin Input {
   void assertEndOfDataReached([String message = '']) {
     if (hasBytes()) {
       throw Exception(
-          'End of data not reached. There are ${remainingLength} bytes left to be processed.$message');
+          'End of data not reached. There are $remainingLength bytes left to be processed.$message');
     }
   }
 }
@@ -126,10 +130,16 @@ class ByteInput with Input {
   }
 
   @override
+  void resetOffset() => offset = 0;
+
+  @override
   Uint8List peekBytes(int start, int length) {
     return _buffer.sublist(start, start + length);
   }
 
   @override
   int? get remainingLength => _buffer.lengthInBytes - offset;
+
+  @override
+  Uint8List get buffer => _buffer.buffer.asUint8List(0);
 }
