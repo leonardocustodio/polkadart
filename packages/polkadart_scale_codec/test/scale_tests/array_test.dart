@@ -67,7 +67,7 @@ void main() {
     test(
         'When value 0x0001010002010300 is decoded then it returns [[0, true], [1, false], [2, true], [3, false]]',
         () {
-      final input = HexInput('0x0001010002010300');
+      final input = Input.fromHex('0x0001010002010300');
       final codec = ScaleCodec(registry);
       final decoded = codec.decode('A', input);
       expect(decoded, [
@@ -78,14 +78,14 @@ void main() {
       ]);
     });
     test('When value 0x01020304 is decoded then it returns [1, 2, 3, 4]', () {
-      final input = HexInput('0x01020304');
+      final input = Input.fromHex('0x01020304');
       final codec = ScaleCodec(registry);
       final decoded = codec.decode('B', input);
       expect(decoded, [1, 2, 3, 4]);
     });
     test('When value 0x01020304 is decoded then it returns [[1, 2], [3, 4]]',
         () {
-      final input = HexInput('0x01020304');
+      final input = Input.fromHex('0x01020304');
       final codec = ScaleCodec(registry);
       final decoded = codec.decode('D', input);
       expect(decoded, [
@@ -94,7 +94,7 @@ void main() {
       ]);
     });
     test('When value 0x05060708 is decoded then it returns [5, 6, 7, 8]', () {
-      final input = HexInput('0x05060708');
+      final input = Input.fromHex('0x05060708');
       final codec = ScaleCodec(registry);
       final decoded = codec.decode('B', input);
       expect(decoded, [5, 6, 7, 8]);

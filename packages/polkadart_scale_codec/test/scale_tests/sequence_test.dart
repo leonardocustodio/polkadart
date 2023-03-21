@@ -64,31 +64,35 @@ void main() {
       });
 
     test('Decode 2DVector', () {
-      final input = HexInput('0x0c0c0102030c0405060c070809');
+      final input = Input.fromHex('0x0c0c0102030c0405060c070809');
       final codec = ScaleCodec(registry);
       expect(codec.decode('2DVector', input), [
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9]
       ]);
+      expect(input.remainingLength, 0);
     });
 
     test('Decode 1DVector', () {
-      final input = HexInput('0x0c010203');
+      final input = Input.fromHex('0x0c010203');
       final codec = ScaleCodec(registry);
       expect(codec.decode('1DVector', input), [1, 2, 3]);
+      expect(input.remainingLength, 0);
     });
 
     test('Decode B which is C and which further resolves to u8.', () {
-      final input = HexInput('0x01');
+      final input = Input.fromHex('0x01');
       final codec = ScaleCodec(registry);
       expect(codec.decode('B', input), 1);
+      expect(input.remainingLength, 0);
     });
 
     test('Decode C which is u8', () {
-      final input = HexInput('0x01');
+      final input = Input.fromHex('0x01');
       final codec = ScaleCodec(registry);
       expect(codec.decode('C', input), 1);
+      expect(input.remainingLength, 0);
     });
   });
 }
