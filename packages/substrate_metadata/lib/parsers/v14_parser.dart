@@ -26,8 +26,7 @@ class V14Parser {
     // Iterate over the pallets
     //
     // Set the types names for the storage, calls, events, constants
-    for (var i = 0; i < rawMetadata['pallets'].length; i++) {
-      final pallet = rawMetadata['pallets'][i];
+    for (final pallet in rawMetadata['pallets']) {
       // pallet name
       final palletName = pallet['name'];
       // pallet index
