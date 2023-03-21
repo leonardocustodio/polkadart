@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('U256 Decode Test:', () {
     test('Lowest value decoding', () {
-      final input = HexInput(
+      final input = Input.fromHex(
           '0x0000000000000000000000000000000000000000000000000000000000000000');
       final decoded = U256Codec.codec.decode(input);
       expect(decoded, BigInt.zero);
@@ -12,7 +12,7 @@ void main() {
     });
 
     test('Highest value decoding', () {
-      final input = HexInput(
+      final input = Input.fromHex(
           '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
       final decoded = U256Codec.codec.decode(input);
       expect(
