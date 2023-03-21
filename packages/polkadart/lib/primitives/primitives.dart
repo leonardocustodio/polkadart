@@ -19,7 +19,7 @@ import 'package:substrate_metadata/substrate_metadata.dart'
     show MetadataDecoder;
 import '../substrate/substrate.dart' show Hasher;
 
-part 'api_version.dart';
-part 'runtime_metadata.dart';
-part 'runtime_version.dart';
-part 'storage.dart';
+part './api_version.dart';
+part './runtime_metadata.dart';
+part './runtime_version.dart';
+part './storage.dart';

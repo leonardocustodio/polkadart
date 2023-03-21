@@ -1,5 +1,4 @@
-import 'package:frame_primitives/frame_primitives.dart'
-    show Blake2bHasher, TwoxxHasher;
+import 'package:polkadart/polkadart.dart' show Blake2bHasher, TwoxxHasher;
 import 'dart:typed_data' show Uint8List;
 import 'dart:convert' show utf8;
 import 'package:convert/convert.dart' show hex;

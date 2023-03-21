@@ -64,12 +64,12 @@ jobs:
       codecov-flag: "scale_codec_generator"
       working-directory: "./packages/scale_codec_generator"
   
-  frame_primitives:
-    name: Test frame_primitives
+  polkadart:
+    name: Test polkadart
     uses: ./.github/workflows/reuseable_workflow.yml
     with:
-      codecov-flag: "frame_primitives"
-      working-directory: "./packages/frame_primitives"
+      codecov-flag: "polkadart"
+      working-directory: "./packages/polkadart"
 
 #  polkadart:
 #    name: Test polkadart

@@ -1,4 +1,4 @@
-import 'package:frame_primitives/frame_primitives.dart' show Provider, StateApi;
+import 'package:polkadart/polkadart.dart' show Provider, StateApi;
 
 void main() async {
   final polkadart = Provider('wss://kusama-rpc.polkadot.io');

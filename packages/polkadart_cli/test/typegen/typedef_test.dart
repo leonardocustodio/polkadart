@@ -1,4 +1,4 @@
-import 'package:scale_codec_generator/scale_codec_generator.dart'
+import 'package:polkadart_cli/polkadart_cli.dart'
     show
         TypeDefBuilder,
         PrimitiveDescriptor,

@@ -1,5 +1,5 @@
-name: frame_primitives
-description: A starting point for Dart libraries or applications.
+name: polkadart
+description: Interfaces for interacting with Polkadot JsonRPC interface
 version: 1.0.0
 repository: https://github.com/rankanizer/polkadart
 

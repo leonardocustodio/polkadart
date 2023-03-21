@@ -1,12 +1,11 @@
 import 'dart:io' show Directory;
-import 'package:frame_primitives/frame_primitives.dart'
+import 'package:polkadart/polkadart.dart'
     show Provider, StateApi, RuntimeVersion;
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart' show ReCase;
-import 'package:scale_codec_generator/scale_codec_generator.dart'
-    show ChainGenerator;
-import 'package:scale_codec_generator/src/typegen/frame_metadata.dart'
+import 'package:polkadart_cli/polkadart_cli.dart' show ChainGenerator;
+import 'package:polkadart_cli/src/typegen/frame_metadata.dart'
     show RuntimeMetadataV14;
 
 class ChainProperties {

@@ -1,5 +1,5 @@
-name: scale_codec_generator
-description: A starting point for Dart libraries or applications.
+name: polkadart_cli
+description: polkadart_cli is a dart library that generates Dart type code from frame metadata. Generated code relies on Polkadart library.
 version: 1.0.0
 publish_to: none
 
@@ -15,8 +15,8 @@ dependencies:
   recase: ^4.1.0 # BSD-2-Clause
   path: ^1.8.3 # BSD-3-Clause
   yaml: ^3.1.1 # MIT
-  frame_primitives:
-    path: ../frame_primitives
+  polkadart:
+    path: ../polkadart
   polkadart_scale_codec:
     path: ../polkadart_scale_codec
 
