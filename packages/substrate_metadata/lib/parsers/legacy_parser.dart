@@ -16,7 +16,7 @@ class LegacyParser {
     int callModuleIndex = -1;
     int eventModuleIndex = -1;
 
-    _resultingRegistry.addCodec('Call', ProxyCodec('GenericCall'));
+    _resultingRegistry.addCodec('Call', ProxyCodec());
 
     final genericCallsCodec = <int, MapEntry<String, Codec>>{};
     final genericEventsCodec = <int, MapEntry<String, Codec>>{};

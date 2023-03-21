@@ -21,7 +21,7 @@ class V14Parser {
     // Temporariy referencing it to GenericCall until the real GenericCall is created below
     // and
     // then add it to the resultingRegistry
-    resultingRegistry.addCodec('Call', ProxyCodec('GenericCall'));
+    resultingRegistry.addCodec('Call', ProxyCodec());
 
     // Iterate over the pallets
     //
