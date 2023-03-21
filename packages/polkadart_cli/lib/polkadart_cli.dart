@@ -1,4 +1,4 @@
-library scale_codec_generator;
+library polkadart_cli;
 
 export 'src/generator/chain.dart';
 export 'src/typegen/typegen.dart';

@@ -61,10 +61,10 @@ You can run all tests from the library by running `docker compose up`.
 | Package | Path
 |----------|----------|
 | polkadart | [packages/polkadart](./packages/polkadart) |
+| polkadart_cli | [packages/polkadart_cli/](./packages/polkadart_cli/) |
 | polkadart_scale_codec | [packages/polkadart_scale_codec/](./packages/polkadart_scale_codec/) |
 | ss58 | [packages/ss58/](./packages/ss58/) |
 | substrate_metadata | [packages/substrate_metadata/](./packages/substrate_metadata/) |
-| scale_codec_generator | [packages/scale_codec_generator/](./packages/scale_codec_generator/) |
 
 ## Road map and current state
 
