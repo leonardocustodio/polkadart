@@ -22,7 +22,7 @@ import 'package:code_builder/code_builder.dart'
 import './typegen.dart' as generators
     show CompositeBuilder, Field, PrimitiveDescriptor, Variant, VariantBuilder;
 import './references.dart' as refs;
-import './utils/utils.dart' show sanitizeDocs;
+import '../utils/utils.dart' show sanitizeDocs;
 
 String classToCodecName(String className) {
   return '\$${className}Codec';

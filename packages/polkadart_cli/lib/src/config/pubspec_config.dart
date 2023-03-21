@@ -1,7 +1,7 @@
 import 'dart:io' show File;
 import 'package:yaml/yaml.dart' as yaml;
 
-import '../typegen/utils/file_utils.dart';
+import '../utils/file_utils.dart';
 import 'config_exception.dart';
 
 class PubspecConfig {

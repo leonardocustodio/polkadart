@@ -24,7 +24,7 @@ import '../typegen/typegen.dart'
     show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput;
 import '../typegen/frame_metadata.dart' as metadata;
 import '../typegen/references.dart' as refs;
-import '../typegen/utils/utils.dart' show sanitize, sanitizeDocs;
+import '../utils/utils.dart' show sanitize, sanitizeDocs;
 
 enum StorageHasherType {
   /// Identity hashing (no hashing).

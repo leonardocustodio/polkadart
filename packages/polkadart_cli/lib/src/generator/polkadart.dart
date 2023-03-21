@@ -15,7 +15,7 @@ import 'package:path/path.dart' as p;
 import './pallet.dart' show PalletGenerator;
 import '../typegen/references.dart' as refs;
 import '../typegen/typegen.dart' show GeneratedOutput;
-import '../typegen/utils/utils.dart' show sanitize;
+import '../utils/utils.dart' show sanitize;
 
 class PolkadartGenerator {
   String filePath;

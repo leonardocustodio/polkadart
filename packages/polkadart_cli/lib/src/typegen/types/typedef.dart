@@ -1,4 +1,4 @@
-part of generators;
+part of descriptors;
 
 class TypeDefBuilder extends TypeBuilder {
   String name;

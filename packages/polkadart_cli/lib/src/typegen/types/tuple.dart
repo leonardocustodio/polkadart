@@ -1,4 +1,4 @@
-part of generators;
+part of descriptors;
 
 class TupleBuilder extends TypeBuilder {
   final int _id;

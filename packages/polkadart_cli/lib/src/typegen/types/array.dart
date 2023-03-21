@@ -1,4 +1,4 @@
-part of generators;
+part of descriptors;
 
 class ArrayDescriptor extends TypeDescriptor {
   final int _id;

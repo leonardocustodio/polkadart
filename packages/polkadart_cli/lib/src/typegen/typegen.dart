@@ -1,4 +1,4 @@
-library generators;
+library descriptors;
 
 import 'package:code_builder/code_builder.dart'
     show
@@ -67,7 +67,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         U8SequenceCodec;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as p;
-import './utils/utils.dart'
+import '../utils/utils.dart'
     show
         bigIntToExpression,
         findCommonType,
@@ -79,7 +79,7 @@ import './frame_metadata.dart' as metadata;
 import './references.dart' as refs;
 
 part './types/array.dart';
-part './types/base.dart';
+part 'types/core.dart';
 part './types/bit_sequence.dart';
 part './types/btreemap.dart';
 part './types/compact.dart';

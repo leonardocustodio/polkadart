@@ -1,4 +1,4 @@
-part of generators;
+part of descriptors;
 
 /// Transform a list of [TypeMetadata] into a [Map] of [TypeDescriptor]
 Map<int, TypeDescriptor> parseTypes(

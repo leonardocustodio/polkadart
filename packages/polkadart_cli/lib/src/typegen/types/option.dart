@@ -1,4 +1,4 @@
-part of generators;
+part of descriptors;
 
 class OptionDescriptor extends TypeDescriptor {
   final int _id;
