@@ -68,7 +68,7 @@ void main() {
           generator.build().build(),
           [
             '// ignore_for_file: no_leading_underscores_for_library_prefixes\n',
-            'import \'package:polkadart_scale_codec/polkadart_scale_codec.dart\' as _i1;\n',
+            'import \'package:polkadart/scale_codec.dart\' as _i1;\n',
             'import \'dart:typed_data\' as _i2;\n',
             '\n',
             'class Point {\n',
