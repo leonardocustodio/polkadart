@@ -31,7 +31,7 @@ class StorageEntryMetadataV9 {
         'name': name,
         'modifier': modifier.kind,
         'type': StorageEntryTypeV9.toJson(type),
-        'fallback': fallback.toList(),
+        'fallback': fallback.toList(growable: false),
         'docs': docs,
       };
 }
@@ -67,7 +67,7 @@ class StorageEntryMetadataV10 {
         'name': name,
         'modifier': modifier.kind,
         'type': StorageEntryTypeV10.toJson(type),
-        'fallback': fallback.toList(),
+        'fallback': fallback.toList(growable: false),
         'docs': docs,
       };
 }
@@ -102,7 +102,7 @@ class StorageEntryMetadataV11 {
         'name': name,
         'modifier': modifier.kind,
         'type': StorageEntryTypeV11.toJson(type),
-        'fallback': fallback.toList(),
+        'fallback': fallback.toList(growable: false),
         'docs': docs,
       };
 }
@@ -137,7 +137,7 @@ class StorageEntryMetadataV13 {
         'name': name,
         'modifier': modifier.kind,
         'type': StorageEntryTypeV13.toJson(type),
-        'fallback': fallback.toList(),
+        'fallback': fallback.toList(growable: false),
         'docs': docs,
       };
 }
@@ -171,7 +171,7 @@ class StorageEntryMetadataV14 {
         'name': name,
         'modifier': modifier.kind,
         'type': type.toJson(),
-        'fallback': fallback.toList(),
+        'fallback': fallback.toList(growable: false),
         'docs': docs,
       };
 }

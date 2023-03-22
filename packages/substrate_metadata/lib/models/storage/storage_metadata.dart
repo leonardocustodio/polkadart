@@ -12,12 +12,12 @@ class StorageMetadataV9 {
           prefix: map['prefix'],
           items: (map['items'] as List)
               .map((val) => StorageEntryMetadataV9.fromJson(val))
-              .toList());
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'prefix': prefix,
-        'items': items.map((e) => e.toJson()).toList(),
+        'items': items.map((e) => e.toJson()).toList(growable: false),
       };
 }
 
@@ -32,12 +32,12 @@ class StorageMetadataV10 {
           prefix: map['prefix'],
           items: (map['items'] as List)
               .map((val) => StorageEntryMetadataV10.fromJson(val))
-              .toList());
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'prefix': prefix,
-        'items': items.map((e) => e.toJson()).toList(),
+        'items': items.map((e) => e.toJson()).toList(growable: false),
       };
 }
 
@@ -52,12 +52,12 @@ class StorageMetadataV11 {
           prefix: map['prefix'],
           items: (map['items'] as List)
               .map((val) => StorageEntryMetadataV11.fromJson(val))
-              .toList());
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'prefix': prefix,
-        'items': items.map((e) => e.toJson()).toList(),
+        'items': items.map((e) => e.toJson()).toList(growable: false),
       };
 }
 
@@ -73,11 +73,11 @@ class StorageMetadataV13 {
           prefix: map['prefix'],
           items: (map['items'] as List)
               .map((val) => StorageEntryMetadataV13.fromJson(val))
-              .toList());
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'prefix': prefix,
-        'items': items.map((e) => e.toJson()).toList(),
+        'items': items.map((e) => e.toJson()).toList(growable: false),
       };
 }

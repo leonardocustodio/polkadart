@@ -13,7 +13,4 @@ class SizeTracker with Output {
   void pushByte(int byte) {
     size++;
   }
-
-  @override
-  List<int> get bytes => throw UnimplementedError();
 }

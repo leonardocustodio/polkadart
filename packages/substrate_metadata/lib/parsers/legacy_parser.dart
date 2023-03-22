@@ -16,10 +16,7 @@ class LegacyParser {
     int callModuleIndex = -1;
     int eventModuleIndex = -1;
 
-    _resultingRegistry.addCodec(
-        'Call',
-        ReferencedCodec(
-            referencedType: 'GenericCall', registry: _resultingRegistry));
+    _resultingRegistry.addCodec('Call', ProxyCodec());
 
     final genericCallsCodec = <int, MapEntry<String, Codec>>{};
     final genericEventsCodec = <int, MapEntry<String, Codec>>{};
@@ -146,10 +143,18 @@ class LegacyParser {
             MapEntry(module['name'], ComplexEnumCodec.sparse(eventEnumCodec));
       }
     }
+    //
+    // Register the Generic Call
+    {
+      // replace the proxy of GenericCall with the real GenericCall
+      final proxyCodec = _resultingRegistry.getCodec('Call')! as ProxyCodec;
+      proxyCodec.codec = ComplexEnumCodec.sparse(genericCallsCodec);
+    }
 
-    _resultingRegistry
-      ..addCodec('GenericCall', ComplexEnumCodec.sparse(genericCallsCodec))
-      ..addCodec('GenericEvent', ComplexEnumCodec.sparse(genericEventsCodec));
+    //
+    // Register the Generic Event
+    _resultingRegistry.addCodec(
+        'GenericEvent', ComplexEnumCodec.sparse(genericEventsCodec));
 
     {
       //

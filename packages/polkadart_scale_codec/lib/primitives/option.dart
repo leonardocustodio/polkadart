@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, hash_and_equals
 part of primitives;
 
 // Only necessary when Option<Option<T>>
@@ -8,12 +8,12 @@ class NestedOptionCodec<E> with Codec<Option<E>> {
   const NestedOptionCodec(this.subtypeCodec);
 
   @override
-  void encodeTo(Option<E> option, Output output) {
-    if (option.isNone) {
+  void encodeTo(Option<E> value, Output output) {
+    if (value.isNone) {
       output.pushByte(0);
     } else {
       output.pushByte(1);
-      subtypeCodec.encodeTo(option.value as E, output);
+      subtypeCodec.encodeTo(value.value as E, output);
     }
   }
 
@@ -26,11 +26,11 @@ class NestedOptionCodec<E> with Codec<Option<E>> {
   }
 
   @override
-  int sizeHint(Option<E> option) {
-    if (option.isNone) {
+  int sizeHint(Option<E> value) {
+    if (value.isNone) {
       return 1;
     }
-    return 1 + subtypeCodec.sizeHint(option.value as E);
+    return 1 + subtypeCodec.sizeHint(value.value as E);
   }
 }
 
@@ -40,12 +40,12 @@ class OptionCodec<E> with Codec<E?> {
   const OptionCodec(this.subtypeCodec);
 
   @override
-  void encodeTo(E? maybeValue, Output output) {
-    if (maybeValue == null) {
+  void encodeTo(E? value, Output output) {
+    if (value == null) {
       output.pushByte(0);
     } else {
       output.pushByte(1);
-      subtypeCodec.encodeTo(maybeValue, output);
+      subtypeCodec.encodeTo(value, output);
     }
   }
 
@@ -58,11 +58,11 @@ class OptionCodec<E> with Codec<E?> {
   }
 
   @override
-  int sizeHint(E? maybeValue) {
-    if (maybeValue == null) {
+  int sizeHint(E? value) {
+    if (value == null) {
       return 1;
     }
-    return 1 + subtypeCodec.sizeHint(maybeValue);
+    return 1 + subtypeCodec.sizeHint(value);
   }
 }
 

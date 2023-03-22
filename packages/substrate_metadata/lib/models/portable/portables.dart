@@ -9,11 +9,13 @@ class PortableRegistryV14 {
       PortableRegistryV14(
           types: (map['types'] as List)
               .map((value) => PortableTypeV14.fromJson(value))
-              .toList());
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
-        'types': types.map((PortableTypeV14 value) => value.toJson()).toList(),
+        'types': types
+            .map((PortableTypeV14 value) => value.toJson())
+            .toList(growable: false),
       };
 }
 

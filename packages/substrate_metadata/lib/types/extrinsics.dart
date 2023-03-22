@@ -37,7 +37,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
           chainInfo.scaleCodec.decode('ExtrinsicSignatureCodec', input);
     }
 
-    result['calls'] = chainInfo.scaleCodec.decode('GenericCall', input);
+    result['calls'] = chainInfo.scaleCodec.decode('Call', input);
 
     return result;
   }
@@ -63,7 +63,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
           .encodeTo('ExtrinsicSignatureCodec', value['signature'], tempOutput);
     }
 
-    chainInfo.scaleCodec.encodeTo('GenericCall', value['calls'], tempOutput);
+    chainInfo.scaleCodec.encodeTo('Call', value['calls'], tempOutput);
 
     CompactCodec.codec.encodeTo(tempOutput.length + 1, output);
 

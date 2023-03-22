@@ -19,7 +19,7 @@ class Si1Type {
         path: (map['path'] as List).cast<String>(),
         params: (map['params'] as List)
             .map((value) => Si1TypeParameter.fromJson(value))
-            .toList(),
+            .toList(growable: false),
         def: Si1TypeDef.fromJson(map['def']),
         docs: (map['docs'] as List).cast<String>(),
       );
@@ -27,8 +27,9 @@ class Si1Type {
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'path': path,
-        'params':
-            params.map((Si1TypeParameter value) => value.toJson()).toList(),
+        'params': params
+            .map((Si1TypeParameter value) => value.toJson())
+            .toList(growable: false),
         'def': Si1TypeDef.toJson(def),
         'docs': docs,
       };
@@ -226,12 +227,12 @@ class Si1TypeDefComposite {
       Si1TypeDefComposite(
         fields: (map['fields'] as List)
             .map((value) => Si1Field.fromJson(value))
-            .toList(),
+            .toList(growable: false),
       );
 
   /// Creates Map from Class Object
   Map<String, dynamic> toJson() => {
-        'fields': fields.map((value) => value.toJson()).toList(),
+        'fields': fields.map((value) => value.toJson()).toList(growable: false),
       };
 }
 
@@ -244,12 +245,13 @@ class Si1TypeDefVariant {
       Si1TypeDefVariant(
         variants: (map['variants'] as List)
             .map((value) => Si1Variant.fromJson(value))
-            .toList(),
+            .toList(growable: false),
       );
 
   /// Creates Map from Class Object
   Map<String, dynamic> toJson() => {
-        'variants': variants.map((value) => value.toJson()).toList(),
+        'variants':
+            variants.map((value) => value.toJson()).toList(growable: false),
       };
 }
 
@@ -361,14 +363,14 @@ class Si1Variant {
       name: map['name'],
       fields: (map['fields'] as List)
           .map((value) => Si1Field.fromJson(value))
-          .toList(),
+          .toList(growable: false),
       index: map['index'],
       docs: (map['docs'] as List).cast<String>());
 
   /// Creates Map from Class Object
   Map<String, dynamic> toJson() => {
         'name': name,
-        'fields': fields.map((e) => e.toJson()).toList(),
+        'fields': fields.map((e) => e.toJson()).toList(growable: false),
         'index': index,
         'docs': docs,
       };

@@ -78,7 +78,7 @@ class EraExtrinsic with Codec<Map<String, int>> {
     final gmp = BigInt.parse(flippedBits, radix: 2)
         .toRadixString(16)
         .padLeft(length * 2, '0');
-    return decodeHex(gmp).toList();
+    return decodeHex(gmp).toList(growable: false);
   }
 
   ///
