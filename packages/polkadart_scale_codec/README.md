@@ -10,10 +10,8 @@
 | ------------ | ------------------------------- |
 | Unsigned Int | `u8, u16, u32, u64, u128, u256` |
 | Signed Int   | `i8, i16, i32, i64, i128, i256` |
-| String       | `Text`                          |
+| String       | `Str`                           |
 | Boolean      | `bool`                          |
-| Address      | `Address`                       |
-| Bytes        | `Bytes`                         |
 | Compact      | `Compact<T>`                    |
 | Enum         | `_enum`                         |
 | Composite    | `{}`                            |
@@ -28,344 +26,282 @@
 ### Unsigned Integers ( u8 | u16 | u32 )
 
 ```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry();
+//
+// Encode
+var output = HexOutput();
 
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('u8');
+final value = 69;
 
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
+U8Codec.codec.encodeTo(value, output);
 
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
+// 0x45
+var encodedHex = output.toString();
 
-  final value = 69;
+//
+// Decode
+var input = Input.fromHex(encodedHex);
 
-  // 0x45
-  var encoded = codec.encode(registryIndex, value);
-
-  // 69
-  var decoded = codec.decode(registryIndex, encoded);
+// 69
+var decoded = U8Codec.codec.decode(input);
 ```
 
 ### Unsigned Integers ( u64 | u128 | u256 )
 
 ```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry();
+//
+// Encode
+var output = HexOutput();
 
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('u256');
+final value = BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935');
 
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
+U256Codec.codec.encodeTo(value, output);
 
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
+// 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+var encodedHex = output.toString();
 
-  final value = BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935');
+//
+// Decode
+var input = Input.fromHex(encodedHex);
 
-  // 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-  var encoded = codec.encode(registryIndex, value);
-
-  // _BigIntImpl (115792089237316195423570985008687907853269984665640564039457584007913129639935)
-  var decoded = codec.decode(registryIndex, encoded);
+// BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935');
+var decoded = U256Codec.codec.decode(input);
 ```
 
 ### Signed Integers ( i8 | i16 | i32 )
 
 ```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry();
+//
+// Encode
+var output = HexOutput();
 
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('i8');
+final value = -128;
 
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
+I8Codec.codec.encodeTo(value, output);
 
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
+// 0x80
+var encodedHex = output.toString();
 
-  final value = -128;
+//
+// Decode
+var input = Input.fromHex(encodedHex);
 
-  // 0x80
-  var encoded = codec.encode(registryIndex, value);
-
-  // -128
-  var decoded = codec.decode(registryIndex, encoded);
+// -128
+var decoded = I8Codec.codec.decode(input);
 ```
 
 ### Signed Integers ( i64 | i128 | i256 )
 
 ```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry();
+//
+// Encode
+var output = HexOutput();
 
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('i64');
+final value = BigInt.parse('-9223372036854775808');
 
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
+I64Codec.codec.encodeTo(value, output);
 
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
+// 0x0000000000000080
+var encodedHex = output.toString();
 
-  final value = BigInt.parse('-9223372036854775808');
+//
+// Decode
+var input = Input.fromHex(encodedHex);
 
-  // 0x0000000000000080
-  var encoded = codec.encode(registryIndex, value);
+// BigInt.parse('-9223372036854775808')
+var decoded = I64Codec.codec.decode(input);
+```
 
-  // _BigIntImpl (-9223372036854775808)
-  var decoded = codec.decode(registryIndex, encoded);
+### Compact
+
+```dart
+//
+// Encode
+var output = HexOutput();
+
+final value = 69;
+
+CompactCodec.codec.encodeTo(value, output);
+
+// 0x1501
+var encodedHex = output.toString();
+
+//
+// Decode
+var input = Input.fromHex(encodedHex);
+
+// 69
+var decoded = CompactCodec.codec.decode(input);
+```
+
+### Option
+
+```dart
+  final value = Option.some(true);
+
+  final output = HexOutput();
+  
+  OptionCodec(BoolCodec.codec).encodeTo(value, output);
+
+  // 0x0101
+  var encodedHex = output.toString();
+
+  final input = Input.fromHex(encodedHex);
+
+  // Option.some(true)
+  var decoded = OptionCodec(BoolCodec.codec).decode(input);
+
+  // or
+  // None
+  final value = Option.none();
+
+
+  final output = HexOutput();
+  
+  OptionCodec(BoolCodec.codec).encodeTo(value, output);
+
+  // 0x00
+  var encodedHex = output.toString();
+
+  final input = Input.fromHex(encodedHex);
+
+  // Option.none()
+  var decoded = OptionCodec(BoolCodec.codec).decode(input);
+```
+
+### BitVec
+
+```dart
+  // Initializing Codec object
+  final codec = BitSequenceCodec(BitStore.U8, BitOrder.LSB);
+
+  final value = '11111';
+
+  final bitArray = BitArray.parseBinary(value);
+
+  final output = HexOutput();
+
+  codec.encodeTo(value, output);
+
+  // 0x1f
+  final encodedHex = output.toString();
+
+  final input = Input.fromHex(encodedHex);
+
+  // BitArray.parseBinary('11111')
+  var decoded = codec.decode(input);
+```
+
+### Enum
+
+```dart
+  // ignore: unnecessary_cast
+  final extraDataCodec = CompositeCodec({
+    'index': U8Codec.codec,
+    'name': StrCodec.codec,
+    'customTuple': TupleCodec([
+      SimpleEnumCodec.fromList(['Red', 'Orange']),
+      BoolCodec.codec,
+    ]),
+  }) as Codec;
+
+  final codec = ComplexEnumCodec.sparse(
+    {
+      0: MapEntry('Plain', StrCodec.codec),
+      1: MapEntry('ExtraData', extraDataCodec),
+    },
+  );
+
+  final value = MapEntry('ExtraData', );
+  final output = HexOutput();
+
+  codec.encodeTo(value, output);
+
+  // 0x010124706f6c6b61646172740001
+  final encodedHex = output.toString();
+
+  final input = Input.fromHex(encodedHex);
+
+  // MapEntry('ExtraData', {
+  //       'index': 1,
+  //       'name': 'polkadart',
+  //       'customTuple': ['Red', true],
+  //     })
+  var decoded = codec.decode(input);
+```
+
+### Composite
+
+```dart
+  // Composite Codec
+  final codec = CompositeCodec({
+    'index': U8Codec.codec,
+    'name': StrCodec.codec,
+    'customTuple': TupleCodec([
+      SimpleEnumCodec.fromList(['Red', 'Orange']),
+      BoolCodec.codec,
+    ]),
+  }) as Codec;
+
+  final value = {
+        'index': 1,
+        'name': 'polkadart',
+        'customTuple': ['Red', true],
+      };
+
+  final output = HexOutput();
+
+  codec.encodeTo(value, output);
+
+  // 0x0124706f6c6b61646172740001
+  final encodedHex = output.toString();
+
+  final input = Input.fromHex(encodedHex);
+
+  // {
+  //  'index': 1,
+  //  'name': 'polkadart',
+  //  'customTuple': ['Red', true],
+  // }
+  var decoded = codec.decode(input);
 ```
 
 ### Result<Ok, Err>
 
 ```dart
   // Creates the registry for parsing the types
-  final registry = TypeRegistry();
+  final registry = Registry();
 
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('Result<u8, bool>');
+  // register the customCodec of your choice
+  registry.registerCustomCodec(<String, dynamic>{'A':'Result<u8, bool>'});
+  
+  // Initialize the scale codec
+  final codec = ScaleCodec(registry);
 
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
-
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
-
-  final value = {'Ok': 42};
-
+  final output = HexOutput();
+  
+  codec.encodeTo('A', MapEntry('Ok', 42), output);
+  
   // 0x002a
-  var encoded = codec.encode(registryIndex, value);
+  final encodedHex = output.toString();
+  
+  final input = Input.fromHex(encodedHex);
 
-  // {'Ok': 42}
-  var decoded = codec.decode(registryIndex, encoded);
+  // MapEntry('Ok', 42)
+  var decoded = codec.decode('A', input);
 
 
   // or
   //
   // For Err field
   //
-  final value = {'Err': false};
+  final value = MapEntry('Err', false);
 
+  codec.encodeTo('A', value, output);
   // 0x0100
-  var encoded = codec.encode(registryIndex, value);
+  final encodedHex = output.toString();
 
-  // {'Err': false}
-  var decoded = codec.decode(registryIndex, encoded);
-```
-
-### Compact
-
-```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry();
-
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('Compact<u8>');
-
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
-
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
-
-  final value = 69;
-
-  // 0x1501
-  var encoded = codec.encode(registryIndex, value);
-
-  // 69
-  var decoded = codec.decode(registryIndex, encoded);
-```
-
-### Option
-
-```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry();
-
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('Option<bool>');
-
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
-
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
-
-  final value = Option.some(true);
-
-  // 0x0101
-  var encoded = codec.encode(registryIndex, value);
-
-  // Option.some(true)
-  var decoded = codec.decode(registryIndex, encoded);
-
-  // or
-  // None
-  final value = None;
-
-  // 0x00
-  var encoded = codec.encode(registryIndex, value);
-
-  // None
-  var decoded = codec.decode(registryIndex, encoded);
-```
-
-### Bytes
-
-```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry();
-
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('Bytes');
-
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
-
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
-
-  final value = [255, 255];
-
-  // 0x08ffff
-  var encoded = codec.encode(registryIndex, value);
-
-  // [255, 255]
-  var decoded = codec.decode(registryIndex, encoded);
-```
-
-### BitVec
-
-```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry();
-
-  // specifying which type to use.
-  final registryIndex = registry.getIndex('BitVec');
-
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
-
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
-
-  final value = [255, 255];
-
-  // 0x40ffff
-  var encoded = codec.encode(registryIndex, value);
-
-  // [255, 255]
-  var decoded = codec.decode(registryIndex, encoded);
-```
-
-### Enum
-
-```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry(
-    types: {
-      'FavouriteColorEnum': {
-        '_enum': ['Red', 'Orange']
-      },
-      'CustomComplexEnum': {
-        '_enum': {
-          'Plain': 'Text',
-          'ExtraData': {
-            'index': 'u8',
-            'name': 'Text',
-            'customTuple': '(FavouriteColorEnum, bool)'
-          }
-        }
-      },
-    },
-  );
-  // specifying which type to use.
-  var typeIndex = registry.getIndex('CustomComplexEnum');
-
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
-
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
-
-  final extraDataComplex = {
-    'ExtraData': {
-      'index': 1,
-      'name': 'polkadart',
-      'customTuple': ['Red', true]
-    },
-  };
-  // 0x01
-  var encoded = codec.encode(typeIndex, value);
-
-  // 'ExtraData': {
-  //   'index': 1,
-  //   'name': 'polkadart',
-  //   'customTuple': ['Red', true]
-  // },
-  var decoded = codec.decode(typeIndex, encoded);
-```
-
-### Composite
-
-```dart
-  // Creates the registry for parsing the types
-  final registry = TypeRegistry(
-    types: {
-      'OrderJuiceEnum': {
-        '_enum': ['Orange', 'Apple', 'Kiwi']
-      },
-      'OuncesEnum': {
-        'ounces': 'u8',
-        'Remarks': 'Option<Text>',
-      },
-      'OrderComposite': {
-          'index': 'u8',
-          'note': 'Text',
-          'Juice': 'OrderJuiceEnum',
-          'Ounces': 'OuncesEnum'
-      },
-    },
-  );
-
-  final typeIndex = registry.getIndex('OrderComposite');
-
-  // fetching the parsed types from `Json` to `Type`
-  final types = registry.getTypes();
-
-  // Initializing Scale-Codec object
-  final codec = Codec(types);
-
-  final order = {
-    'index': 8,
-    'note': 'This is a note',
-    'Juice': 'Kiwi',
-    'Ounces': {
-      'ounces': 1,
-      'Remarks': Option.some('This is the first order.'),
-    }
-  };
-
-  final encoded = codec.encode(typeIndex, order);
-
-  // {
-  //   'index': 8,
-  //   'note': 'This is a note',
-  //   'Juice': 'Kiwi',
-  //   'Ounces': {
-  //     'ounces': 1,
-  //     'Remarks': Option.some('This is the first order.'),
-  //   }
-  // }
-  final decoded = codec.decode(typeIndex, encoded);
-
-  print(decoded);
+  // MapEntry('Err', false)
+  var decoded = codec.decode('A', input);
 ```
 
 ## Resources
