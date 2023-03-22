@@ -15,14 +15,14 @@ class FunctionMetadataV9 {
           docs: (map['docs'] as List).cast<String>(),
           args: (map['args'] as List)
               .map((value) => FunctionArgumentMetadataV9.fromJson(value))
-              .toList());
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'name': name,
         'args': args
             .map((FunctionArgumentMetadataV9 value) => value.toJson())
-            .toList(),
+            .toList(growable: false),
         'docs': docs,
       };
 }

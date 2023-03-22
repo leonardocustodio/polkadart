@@ -41,16 +41,16 @@ class I64SequenceCodec with Codec<List<int>> {
   }
 
   @override
-  void encodeTo(List<int> list, Output output) {
-    CompactCodec.codec.encodeTo(list.length, output);
-    for (int value in list) {
-      I64Codec.codec.encodeTo(BigInt.from(value), output);
+  void encodeTo(List<int> value, Output output) {
+    CompactCodec.codec.encodeTo(value.length, output);
+    for (final val in value) {
+      I64Codec.codec.encodeTo(BigInt.from(val), output);
     }
   }
 
   @override
-  int sizeHint(List<int> list) {
-    return CompactCodec.codec.sizeHint(list.length) + list.length * 8;
+  int sizeHint(List<int> value) {
+    return CompactCodec.codec.sizeHint(value.length) + value.length * 8;
   }
 }
 
@@ -68,18 +68,18 @@ class I64ArrayCodec with Codec<List<int>> {
   }
 
   @override
-  void encodeTo(List<int> list, Output output) {
-    if (list.length != length) {
+  void encodeTo(List<int> value, Output output) {
+    if (value.length != length) {
       throw Exception(
-          'I64ArrayCodec: invalid length, expect $length found ${list.length}');
+          'I64ArrayCodec: invalid length, expect $length found ${value.length}');
     }
-    for (var i = 0; i < length; i++) {
-      I64Codec.codec.encodeTo(BigInt.from(list[i]), output);
+    for (final val in value) {
+      I64Codec.codec.encodeTo(BigInt.from(val), output);
     }
   }
 
   @override
-  int sizeHint(List<int> list) {
+  int sizeHint(List<int> value) {
     return length * 8;
   }
 }

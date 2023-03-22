@@ -16,14 +16,14 @@ void main() {
     });
 
     test('Encode Test', () {
-      final output = HexOutput();
+      final output = ByteOutput();
       final codec = EraExtrinsic.codec;
       codec.encodeTo(<String, int>{
         'period': 64,
         'phase': 29,
       }, output);
 
-      expect(output.bytes, [213, 1]);
+      expect(output.toBytes(), [213, 1]);
     });
   });
 }

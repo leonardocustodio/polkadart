@@ -6,10 +6,10 @@ class StrCodec with Codec<String> {
   static const StrCodec codec = StrCodec._();
 
   @override
-  void encodeTo(String str, Output dest) {
-    final utf8str = Uint8List.fromList(utf8.encode(str));
-    CompactCodec.codec.encodeTo(utf8str.length, dest);
-    dest.write(utf8str);
+  void encodeTo(String value, Output output) {
+    final utf8str = Uint8List.fromList(utf8.encode(value));
+    CompactCodec.codec.encodeTo(utf8str.length, output);
+    output.write(utf8str);
   }
 
   @override
@@ -20,8 +20,8 @@ class StrCodec with Codec<String> {
   }
 
   @override
-  int sizeHint(String str) {
-    final bytes = utf8.encode(str);
+  int sizeHint(String value) {
+    final bytes = utf8.encode(value);
     var size = CompactCodec.codec.sizeHint(bytes.length);
     size += bytes.length;
     return size;

@@ -61,7 +61,7 @@ class TypeNormalizer {
         return RegistryTupleType(
           params: (type as RegistryTupleType).params.map((item) {
             return _normalizeType(item, pallet);
-          }).toList(),
+          }).toList(growable: false),
         );
       default:
         return _normalizeNamedType(type as RegistryNamedType, pallet);
@@ -176,7 +176,7 @@ class TypeNormalizer {
             name: type.name,
             params: type.params
                 .map((p) => p is int ? p : _normalizeType(p, pallet))
-                .toList());
+                .toList(growable: false));
     }
   }
 

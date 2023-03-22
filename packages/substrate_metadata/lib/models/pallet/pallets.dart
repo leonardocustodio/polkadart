@@ -25,7 +25,7 @@ class PalletMetadataV14 {
         index: map['index'],
         constants: (map['constants'] as List)
             .map((value) => PalletConstantMetadataV14.fromJson(value))
-            .toList());
+            .toList(growable: false));
 
     if (map['storage'] != null &&
         map['storage'] is Option &&
@@ -70,7 +70,7 @@ class PalletMetadataV14 {
 
     data['constants'] = constants
         .map((PalletConstantMetadataV14 value) => value.toJson())
-        .toList();
+        .toList(growable: false);
 
     final localErrors = errors?.toJson();
     data['errors'] = localErrors != null ? Option.some(localErrors) : None;
@@ -92,14 +92,14 @@ class PalletStorageMetadataV14 {
           prefix: map['prefix'],
           items: (map['items'] as List)
               .map((value) => StorageEntryMetadataV14.fromJson(value))
-              .toList());
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'prefix': prefix,
         'items': items
             .map((StorageEntryMetadataV14 value) => value.toJson())
-            .toList(),
+            .toList(growable: false),
       };
 }
 
@@ -155,7 +155,7 @@ class PalletConstantMetadataV14 {
   Map<String, dynamic> toJson() => {
         'name': name,
         'type': type,
-        'value': value.toList(),
+        'value': value.toList(growable: false),
         'docs': docs,
       };
 }

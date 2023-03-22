@@ -52,7 +52,7 @@ class LegacyTypesBundle extends LegacyTypes {
       signedExtensions: map['signedExtensions'],
       versions: (map['versions'] as List?)
           ?.map((value) => LegacyTypesWithSpecVersionRange.fromJson(value))
-          .toList(),
+          .toList(growable: false),
     );
   }
 }

@@ -1,6 +1,5 @@
 library core;
 
-import 'dart:collection';
 import 'dart:typed_data';
 
 import 'package:polkadart_scale_codec/io/io.dart';
