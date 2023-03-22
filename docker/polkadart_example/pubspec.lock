@@ -286,13 +286,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.2"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: ae73e842cdd27a3467a71d70cefd9b198538aab4fc7dde1d0e8c78c96225abf0
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.1"
   polkadart_scale_codec:
     dependency: "direct main"
     description:
       path: "../../packages/polkadart_scale_codec"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0-pre.3"
   pool:
     dependency: transitive
     description:
@@ -392,7 +400,7 @@ packages:
       path: "../../packages/ss58"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0-pre.1"
   stack_trace:
     dependency: transitive
     description:
@@ -423,7 +431,7 @@ packages:
       path: "../../packages/substrate_metadata"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0-pre.1"
   term_glyph:
     dependency: transitive
     description:
@@ -472,6 +480,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  utility:
+    dependency: transitive
+    description:
+      name: utility
+      sha256: "200d264c3804e87da7ea36aa81bd73fb845d2cb7b2e820f3f357a0a2bd4e37f5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   uuid:
     dependency: transitive
     description:
