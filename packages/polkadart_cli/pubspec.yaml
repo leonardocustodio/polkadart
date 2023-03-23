@@ -16,7 +16,7 @@ dependencies:
   recase: ^4.1.0 # BSD-2-Clause
   path: ^1.8.3 # BSD-3-Clause
   yaml: ^3.1.1 # MIT
-  polkadart: ^0.1.0-pre.2 # Apache 2.0
+  polkadart: ^0.1.0-pre.3 # Apache 2.0
 
 dev_dependencies:
   lints: ^2.0.0
