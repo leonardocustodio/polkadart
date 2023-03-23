@@ -10,8 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  polkadart_scale_codec:
-    path: ../../packages/polkadart_scale_codec
   ss58:
     path: ../../packages/ss58
   substrate_metadata:
