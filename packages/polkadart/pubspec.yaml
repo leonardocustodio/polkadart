@@ -1,6 +1,6 @@
 name: polkadart
 description: Interfaces for interacting with Polkadot JsonRPC interface
-version: 0.1.0-pre.2
+version: 0.1.0-pre.3
 homepage: https://github.com/rankanizer/polkadart/tree/main/packages/polkadart
 repository: https://github.com/rankanizer/polkadart
 
