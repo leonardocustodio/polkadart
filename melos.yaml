@@ -18,7 +18,7 @@ scripts:
        - Note: you can also rely on your IDEs Dart Analysis / Issues window.
 
   test:
-    run: git lfs fetch && git lfs checkout && melos run test:dart --no-select
+    run: melos run test:dart --no-select
     description: Run all Dart tests in this project.
 
   test:dart:
