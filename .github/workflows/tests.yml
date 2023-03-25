@@ -40,12 +40,16 @@ jobs:
       - uses: subosito/flutter-action@v2.7.1
         with:
           channel: ${{ matrix.channel }}
+
       - name: Add pub cache bin to PATH
         run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+
       - name: Add pub cache to PATH
         run: echo "PUB_CACHE="$HOME/.pub-cache"" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: dart pub get
+
       - name: Check format
         run: dart format --set-exit-if-changed .
 
