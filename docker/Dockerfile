@@ -10,13 +10,16 @@ ENV PATH="/usr/local/flutter/bin:/usr/local/flutter/bin/cache/dart-sdk/bin:${PAT
 RUN flutter doctor
 RUN flutter channel stable
 RUN flutter upgrade
+RUN dart pub global activate melos
 
 RUN mkdir /app/
 COPY .. /app/
 
 WORKDIR /app/
+
 RUN git lfs fetch
 RUN git lfs checkout
 
-WORKDIR /app/docker/polkadart_example
-CMD ["dart", "test"]
+WORKDIR /app
+
+CMD ["melos", "test"]
