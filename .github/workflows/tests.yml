@@ -1,80 +1,69 @@
-name: Tests
+name: Build and Test
+
 on:
   pull_request:
-    branches:
-      - master
-      - main
-      - develop
-      - re-design
-      - release-v*
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
     paths-ignore:
       - "**.md"
   push:
     branches:
-      - master
       - main
-      - re-design
     paths-ignore:
       - "**.md"
 
-# Declare default permissions as read only.
-permissions: read-all
-
 jobs:
-  lints:
-    name: Check code lints
+  build:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.package_path }}
+
+    strategy:
+      matrix:
+        channel:
+          - stable
+        package_path:
+          - packages/polkadart
+          - packages/polkadart_cli
+          - packages/polkadart_scale_codec
+          - packages/ss58
+          - packages/substrate_metadata
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3.4.0
+      - uses: actions/checkout@v3.1.0
+        with:
+          fetch-depth: 2
+      - uses: subosito/flutter-action@v2.7.1
+        with:
+          channel: ${{ matrix.channel }}
+      - name: Add pub cache bin to PATH
+        run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+      - name: Add pub cache to PATH
+        run: echo "PUB_CACHE="$HOME/.pub-cache"" >> $GITHUB_ENV
+      - name: Install dependencies
+        run: flutter pub get
+#      - name: Install dependencies (integration/buid.yaml)
+#        run: |
+#          if test -d "integration/build_yaml"; then
+#            flutter pub get integration/build_yaml
+#          fi
+      - name: Check format
+        run: dart format --set-exit-if-changed .
 
-      - name: Check TOML Format
-        uses: dprint/check@v2.2
+      - name: Analyze
+        run: flutter analyze
 
-  ss58:
-    name: Test ss58
-    uses: ./.github/workflows/reuseable_workflow.yml
-    with:
-      codecov-flag: "ss58"
-      working-directory: "./packages/ss58"
-
-  polkadart_scale_codec:
-    name: Test polkadart_scale_codec
-    uses: ./.github/workflows/reuseable_workflow.yml
-    with:
-      codecov-flag: "polkadart_scale_codec"
-      working-directory: "./packages/polkadart_scale_codec"
-
-  substrate_metadata:
-    name: Test substrate_metadata
-    uses: ./.github/workflows/reuseable_workflow.yml
-    with:
-      codecov-flag: "substrate_metadata"
-      working-directory: "./packages/substrate_metadata"
-
-  polkadart_cli:
-    name: Test polkadart_cli
-    uses: ./.github/workflows/reuseable_workflow.yml
-    with:
-      codecov-flag: "polkadart_cli"
-      working-directory: "./packages/polkadart_cli"
-  
-  polkadart:
-    name: Test polkadart
-    uses: ./.github/workflows/reuseable_workflow.yml
-    with:
-      codecov-flag: "polkadart"
-      working-directory: "./packages/polkadart"
-
-#  polkadart:
-#    name: Test polkadart
-#    needs: [lints, markdown-link-check]
-#    uses: ./.github/workflows/reuseable_workflow.yml
-#    with:
-#      codecov-flag: "polkadart"
-#      working-directory: "./polkadart"
+      - name: Run tests
+        run: |
+          if test -d "test"; then
+            if grep -q flutter "pubspec.yaml"; then
+              flutter test --coverage
+            else
+              ${{github.workspace}}/scripts/coverage.sh
+            fi
+          fi
+      - name: Upload coverage to codecov
+        run: |
+          if test -d "test"; then
+            curl -s https://codecov.io/bash | bash
+          fi
