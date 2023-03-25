@@ -41,23 +41,18 @@ jobs:
       - name: Add pub cache to PATH
         run: echo "PUB_CACHE="$HOME/.pub-cache"" >> $GITHUB_ENV
       - name: Install dependencies
-        run: flutter pub get
-#      - name: Install dependencies (integration/buid.yaml)
-#        run: |
-#          if test -d "integration/build_yaml"; then
-#            flutter pub get integration/build_yaml
-#          fi
+        run: dart pub get
       - name: Check format
         run: dart format --set-exit-if-changed .
 
       - name: Analyze
-        run: flutter analyze
+        run: dart analyze
 
       - name: Run tests
         run: |
           if test -d "test"; then
             if grep -q flutter "pubspec.yaml"; then
-              flutter test --coverage
+              dart test --coverage="coverage"
             else
               ${{github.workspace}}/scripts/coverage.sh
             fi
