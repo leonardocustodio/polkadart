@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides
+dependency_overrides:
+  polkadart:
+    path: ../polkadart
