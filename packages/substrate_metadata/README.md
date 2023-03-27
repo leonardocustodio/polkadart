@@ -7,176 +7,102 @@
 ### Decode Metadata
 
 ```dart
-  // create MetadataDecoder instance
-  final decoderInstance = MetadataDecoder.instance;
-
-  // decode metadata
-  final Metadata decodedMetadata = decoderInstance.decodeAsMetadata('0x6d657.....790b807d0b');
+  // decoded metadata
+  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
 
   //
-  // or
   // get raw Map<String, dynamic>
-  final Map<String, dynamic> metadataMap = decoderInstance.decode('0x6d657.....790b807d0b');
+  final rawMetadata = decodedMetadata.metadataJson;
+  
+  //
+  // get Metadata Object
+  final metadataObject = decodedMetadata.metadataObject;
 ```
 
-### Create ChainDescription from Metadata
+### Create ChainInfo from Metadata
 
 ```dart
-  // create MetadataDecoder instance
-  final MetadataDecoder decoderInstance = MetadataDecoder.instance;
+  // decoded metadata
+  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
 
-  // decode metadata
-  final Metadata decodedMetadata = decoderInstance.decodeAsMetadata('0x6d657.....790b807d0b');
-
-  // create ChainDescription from metadata
-  final ChainDescription chainDescription = ChainDescription.fromMetadata(decodedMetadata);
+  // create ChainInfo from metadata
+  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
 ```
 
 ### Decode Extrinsic
 
 ```dart
-  // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
-
-  final String metadataV14 = '0x6d657.....790b807d0b';
-
   // decode metadata
-  final Metadata metadata = metadataDecoder.decodeAsMetadata(metadataV14);
+  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
 
-  // create ChainDescription from metadata
-  final ChainDescription chainDescription = ChainDescription.fromMetadata(metadata);
+  // create ChainInfo from metadata
+  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
 
-  final String extrinsic = '0x990403......a2f9e184';
+  final String extrinsicHex = '0x990403......a2f9e184';
+  
+  // Create extrinsics input
+  final input = Input.fromHex(extrinsicHex);
 
   // decode extrinsic
-  final dynamic decodedExtrinsics = Extrinsic.decodeExtrinsic(extrinsic, chainDescription);
+  final dynamic decoded = ExtrinsicsCodec(chainInfo: chainInfo).decode(input);
 ```
 
 ### Encode Extrinsic
 
 ```dart
-  // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
-
-  final String metadataV14 = '0x6d657.....790b807d0b';
-
   // decode metadata
-  final Metadata metadata = metadataDecoder.decodeAsMetadata(metadataV14);
+  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
 
-  // create ChainDescription from metadata
-  final ChainDescription chainDescription = ChainDescription.fromMetadata(metadata);
+  // create ChainInfo from metadata
+  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
+  
+  // Create Output
+  final output = HexOutput();
 
   final Map<String, dynamic> extrinsicsMap = {'version': 4, 'signature': ....... };
 
   // encode extrinsic
-  final dynamic encodedExtrinsics = Extrinsic.encodeExtrinsics(extrinsicsMap, chainDescription);
+  ExtrinsicsCodec(chainInfo: chainInfo).encodeTo(extrinsicsMap, output);
+  
+  // encoded extrinsics Hex
+  final extrinsicsHex = output.toString();
 ```
 
 ### Decode Events
 
 ```dart
-  // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
-
-  final String metadataV14 = '0x6d657.....790b807d0b';
-
   // decode metadata
-  final Metadata metadata = metadataDecoder.decodeAsMetadata(metadataV14);
+  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
 
-  // create ChainDescription from metadata
-  final ChainDescription chainDescription = ChainDescription.fromMetadata(metadata);
+  // create ChainInfo from metadata
+  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
 
   final String encodedEventsHex = '0x38000dd14c4572......................5ec6e6fcd6184d952d000000';
+  
+  final input = Input.fromHex(encodedEventsHex);
 
-  final Codec codec = Codec(chainDescription.types);
-
-  // codec.encode(type_index, value_to_decode);
-  final dynamic decodedEvents = codec.decode(chainDescription.eventRecordList, encodedEventsHex);
+  // list of decoded events
+  final List<dynamic> decodedEvents = chainInfo.scaleCodec.decode('EventCodec', input);
 ```
 
 ### Encode Events
 
 ```dart
-  // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
-
-  final String metadataV14 = '0x6d657.....790b807d0b';
-
   // decode metadata
-  final Metadata metadata = metadataDecoder.decodeAsMetadata(metadataV14);
+  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
 
-  // create ChainDescription from metadata
-  final ChainDescription chainDescription = ChainDescription.fromMetadata(metadata);
+  // create ChainInfo from metadata
+  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
 
   final Map<String, dynamic> events = [{ 'phase': {'ApplyExtrinsic': 0}, 'event': {....} }];
 
-  final Codec codec = Codec(chainDescription.types);
-
-  // codec.encode(type_index, value_to_encode);
-  final String eventsHex = codec.encode(chainDescription.eventRecordList, events);
-```
-
-### Decode Constants
-
-```dart
-  // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
-
-  final String metadataV14 = '0x6d657.....790b807d0b';
-
-  // decode metadata
-  final Metadata metadata = metadataDecoder.decodeAsMetadata(metadataV14);
-
-  // create ChainDescription from metadata
-  final ChainDescription chainDescription = ChainDescription.fromMetadata(metadata);
-
-  //
-  // Look on constants of chain description
-  for (String palletName in chainDescription.constants.keys) {
-    final pallet = chainDescription.constants[palletName]!;
-
-    //
-    // Loop throught all the constants in this given pallet
-    for (Constant originalConstant in pallet.values) {
-      //
-      // Original constant value
-      final Uint8List originalConstantValue = originalConstant.value;
-
-      final Codec codec = Codec(chainDescription.types);
-      //
-      // Decoded Constant value
-      final dynamic decodedConstant = codec.decode(originalConstant.type, originalConstantValue);
-    }
-  }
-```
-
-### Encode Constants
-
-```dart
-  // create MetadataDecoder instance
-  final MetadataDecoder metadataDecoder = MetadataDecoder.instance;
-
-  final String metadataV14 = '0x6d657.....790b807d0b';
-
-  // decode metadata
-  final Metadata metadata = metadataDecoder.decodeAsMetadata(metadataV14);
-
-  // create ChainDescription from metadata
-  final ChainDescription chainDescription = ChainDescription.fromMetadata(metadata);
-
-  //
-  // encoded constant value
-  final bytesSink = ByteEncoder();
-
-  final Codec codec = Codec(chainDescription.types);
-
-  final constantValue = [1, 42, 55, ......];
-
-  //
-  // Use the codec to encode the constant
-  codec.encodeWithEncoder(type_from_decoded_constant, constantValue, bytesSink);
+  final output = HexOutput();
   
-  final encodedConstant = bytesSink.toBytes();
+  // encode the events
+  chainInfo.scaleCodec.encodeTo('EventCodec', events, output);
+  
+  // events hex
+  final eventsHex = output.toString();
 ```
 
 ### Add SpecVersion
