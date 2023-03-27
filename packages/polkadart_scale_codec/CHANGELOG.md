@@ -1,8 +1,3 @@
-## [1.1.0-pre.4] - 2023-03-23
-
-### Prerelease version 4
-- [#295](https://github.com/rankanizer/polkadart/pull/295) Update Readme
-
 ## [1.1.0-pre.3] - 2023-03-22
 
 ### Prerelease version 3

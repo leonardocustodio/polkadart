@@ -1,6 +1,6 @@
 name: polkadart_scale_codec
 description: Implementation of the SCALE codec in Dart
-version: 1.1.0-pre.4
+version: 1.1.0-pre.3
 homepage: https://github.com/rankanizer/polkadart/tree/main/packages/polkadart_scale_codec
 repository: https://github.com/rankanizer/polkadart
 
