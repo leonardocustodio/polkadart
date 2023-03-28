@@ -34,3 +34,4 @@ part 'decoded_block/decoded_block_events.model.dart';
 part 'decoded_block/decoded_block_extrinsics.model.dart';
 part 'raw_block/raw_block.model.dart';
 part 'raw_block/raw_block_events.model.dart';
+part 'constant.dart';

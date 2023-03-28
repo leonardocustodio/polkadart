@@ -1,27 +1,34 @@
 part of parsers;
 
 class V14Parser {
-  static ChainInfo getChainInfo(DecodedMetadata metadata) {
-    final rawMetadata = metadata.metadataJson;
+  late final DecodedMetadata decodedMetadata;
+  late final MetadataV14 _metadataV14;
+  late final MetadataV14Expander _metadataExpander;
+  final Registry _resultingRegistry = Registry();
+
+  V14Parser(this.decodedMetadata) {
+    _metadataV14 = (decodedMetadata.metadataObject.value as MetadataV14);
 
     //
-    // Expand the V14 compressed types and then mapp the siTypes id to the type names.
-    final metadataExpander =
-        MetadataV14Expander(rawMetadata['lookup']['types']);
+    // Expand the V14 compressed types and then map the siTypes id to the type names.
+    _metadataExpander =
+        MetadataV14Expander(decodedMetadata.metadataJson['lookup']['types']);
+  }
+
+  ChainInfo getChainInfo() {
+    final rawMetadata = decodedMetadata.metadataJson;
 
     //
     // copy of the siTypes map
-    final siTypes = Map<int, String>.from(metadataExpander.registeredSiType);
+    final siTypes = Map<int, String>.from(_metadataExpander.registeredSiType);
 
     final callsCodec = <int, MapEntry<String, Codec>>{};
     final eventsCodec = <int, MapEntry<String, Codec>>{};
-
-    final Registry resultingRegistry = Registry();
     //
     // Temporariy referencing it to GenericCall until the real GenericCall is created below
     // and
-    // then add it to the resultingRegistry
-    resultingRegistry.addCodec('Call', ProxyCodec());
+    // then add it to the _resultingRegistry
+    _resultingRegistry.addCodec('Call', ProxyCodec());
 
     // Iterate over the pallets
     //
@@ -102,8 +109,8 @@ class V14Parser {
             final argName = arg['name'];
             final typeName = arg['type'];
 
-            final codec = resultingRegistry.parseSpecificCodec(
-                metadataExpander.customCodecRegister, typeName);
+            final codec = _resultingRegistry.parseSpecificCodec(
+                _metadataExpander.customCodecRegister, typeName);
             codecList.add(codec);
             codecs[argName] = codec;
           }
@@ -137,8 +144,8 @@ class V14Parser {
             final argName = arg['name'];
             final typeName = arg['type'];
 
-            final codec = resultingRegistry.parseSpecificCodec(
-                metadataExpander.customCodecRegister, typeName);
+            final codec = _resultingRegistry.parseSpecificCodec(
+                _metadataExpander.customCodecRegister, typeName);
             codecsList.add(codec);
             codecs[argName] = codec;
           }
@@ -159,13 +166,13 @@ class V14Parser {
     // Register the Generic Call
     {
       // replace the proxy of GenericCall with the real GenericCall
-      final proxyCodec = resultingRegistry.getCodec('Call')! as ProxyCodec;
+      final proxyCodec = _resultingRegistry.getCodec('Call')! as ProxyCodec;
       proxyCodec.codec = ComplexEnumCodec.sparse(callsCodec);
     }
 
     //
     // Register the Generic Event
-    resultingRegistry.addCodec(
+    _resultingRegistry.addCodec(
         'GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
 
     {
@@ -191,14 +198,14 @@ class V14Parser {
       };
 
       // Parses the EventCodec from the above eventTye
-      resultingRegistry.parseSpecificCodec(eventType, 'EventCodec');
+      _resultingRegistry.parseSpecificCodec(eventType, 'EventCodec');
     }
 
     {
       //
       // Configure the Extrinsics Signature Codec.
 
-      resultingRegistry.addCodec('Era', EraExtrinsic.codec);
+      _resultingRegistry.addCodec('Era', EraExtrinsic.codec);
 
       // integrating Code for ExtrinsicSignature
       final extrinsicTypeId = rawMetadata['extrinsic']['type'];
@@ -214,8 +221,8 @@ class V14Parser {
             break;
           default:
             final siTypeName = siTypes[params['type']]!;
-            final codec = resultingRegistry.parseSpecificCodec(
-                metadataExpander.customCodecRegister, siTypeName);
+            final codec = _resultingRegistry.parseSpecificCodec(
+                _metadataExpander.customCodecRegister, siTypeName);
             extrinsicSignature[name] = codec;
         }
       }
@@ -228,8 +235,8 @@ class V14Parser {
         if (type == null || type.toLowerCase() == 'null') {
           continue;
         }
-        final typeCodec = resultingRegistry.parseSpecificCodec(
-            metadataExpander.customCodecRegister, type);
+        final typeCodec = _resultingRegistry.parseSpecificCodec(
+            _metadataExpander.customCodecRegister, type);
 
         final identifier =
             signedExtensions['identifier'].toString().replaceAll('Check', '');
@@ -237,8 +244,8 @@ class V14Parser {
         switch (identifier) {
           case 'Mortality':
             signedExtensionsCompositeCodec['era'] =
-                resultingRegistry.parseSpecificCodec(
-                    metadataExpander.customCodecRegister, 'Era');
+                _resultingRegistry.parseSpecificCodec(
+                    _metadataExpander.customCodecRegister, 'Era');
             continue;
           case 'ChargeTransactionPayment':
             newIdentifier = 'tip';
@@ -255,10 +262,36 @@ class V14Parser {
         },
       );
 
-      resultingRegistry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
+      _resultingRegistry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
     }
 
     return ChainInfo(
-        scaleCodec: ScaleCodec(resultingRegistry), version: metadata.version);
+      scaleCodec: ScaleCodec(_resultingRegistry),
+      version: decodedMetadata.version,
+      constants: _constants(),
+    );
+  }
+
+  Map<String, Map<String, Constant>> _constants() {
+    final constants = <String, Map<String, Constant>>{};
+    for (var pallet in _metadataV14.pallets) {
+      for (var c in pallet.constants) {
+        constants[pallet.name] ??= <String, Constant>{};
+
+        final String type = _metadataExpander.registeredSiType[c.type]!;
+
+        constants[pallet.name]![c.name] =
+            Constant(type: type, value: c.value, docs: c.docs);
+
+        // parse the codec for the constant and register it
+        _getCodecFromType(type);
+      }
+    }
+    return constants;
+  }
+
+  Codec _getCodecFromType(String type) {
+    return _resultingRegistry.parseSpecificCodec(
+        _metadataExpander.customCodecRegister, type);
   }
 }

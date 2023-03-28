@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/core/metadata_decoder.dart';
 
@@ -60,6 +62,19 @@ class Chain {
       vd = _versionDescriptionMap[resultBlockNumber];
     }
     return vd;
+  }
+
+  dynamic decodeFromConstant(Constant constant, ChainInfo chainInfo) {
+    return chainInfo.scaleCodec
+        .decode(constant.type, Input.fromBytes(constant.value));
+  }
+
+  Uint8List encodeConstantsValue(
+      String type, dynamic value, ChainInfo chainInfo) {
+    final output = ByteOutput();
+    chainInfo.scaleCodec.encodeTo(type, value, output);
+
+    return output.toBytes();
   }
 
   DecodedBlockExtrinsics decodeExtrinsics(

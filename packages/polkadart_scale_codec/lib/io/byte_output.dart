@@ -31,6 +31,9 @@ class ByteOutput with Output {
   @override
   void write(List<int> bytes) {
     if (_buffer.length - cursor < bytes.length) {
+      // Grow the buffer with the desired size.
+      _buffer.addAll(
+          List.generate((bytes.length - (_buffer.length - cursor)), (_) => 0));
       _buffer.replaceRange(cursor, cursor + bytes.length, bytes);
     } else {
       _buffer.setRange(cursor, cursor + bytes.length, bytes);
