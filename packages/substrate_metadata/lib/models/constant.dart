@@ -1,18 +1,18 @@
 part of models;
 
 ///
-/// A constant object model
+/// Metadata represeting one pallet constant.
 class Constant {
   ///
   /// The constant type codec suitable for decoding the constant bytes
   final Codec type;
 
   ///
-  /// The constant bytes
+  /// Value stored in the constant (SCALE encoded).
   final Uint8List bytes;
 
   ///
-  /// The constant documentation
+  /// Documentation of the constant.
   final List<String> docs;
 
   ///
