@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/core/chain.dart';
 import 'package:substrate_metadata/models/legacy_types.dart';
 import 'package:substrate_metadata/models/models.dart';
@@ -40,16 +39,16 @@ void main() {
 
             //
             // Decoded Constant value
-            final decoded = chain.decodeFromConstant(
-                originalConstant, versionDescription.chainInfo);
+            final decoded = originalConstant.value;
+
+            final output = ByteOutput(originalConstant.bytes.length);
 
             //
             // encoded constant value
-            final Uint8List encoded = chain.encodeConstantsValue(
-                originalConstant.type, decoded, versionDescription.chainInfo);
+            originalConstant.type.encodeTo(decoded, output);
 
             // Matching the `Uint8List` of both the objects.
-            expect(encoded, originalConstant.value);
+            expect(output.toBytes(), originalConstant.bytes);
           }
         });
       }

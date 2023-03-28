@@ -200,14 +200,10 @@ class LegacyParser {
       for (final constant in module.constants) {
         constants[module.name] ??= <String, Constant>{};
 
-        final String parsedType =
-            _typeNormalizer.normalize(constant.type, module.name).toString();
-
         constants[module.name]![constant.name] = Constant(
-            type: parsedType, value: constant.value, docs: constant.docs);
-
-        // parse the constant type and add it to the registry
-        _resultingRegistry.parseSpecificCodec(legacyTypes.types, parsedType);
+            type: _getCodecFromType(constant.type, module.name),
+            bytes: constant.value,
+            docs: constant.docs);
       }
     });
     return constants;

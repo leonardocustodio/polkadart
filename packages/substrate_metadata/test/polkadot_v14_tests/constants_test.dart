@@ -30,21 +30,18 @@ void main() {
         for (var constantEntry in palletEntry.value.entries) {
           final Constant originalConstant = constantEntry.value;
 
-          final input = Input.fromBytes(originalConstant.value);
-
           //
           // Decoded Constant value
-          final decoded =
-              chainInfo.scaleCodec.decode(originalConstant.type, input);
+          final decoded = originalConstant.value;
 
-          final output = ByteOutput();
+          final output = ByteOutput(originalConstant.bytes.length);
 
           //
           // encoded constant value
-          chainInfo.scaleCodec.encodeTo(originalConstant.type, decoded, output);
+          originalConstant.type.encodeTo(decoded, output);
 
           // Matching the `Uint8List` of both the objects.
-          expect(output.toBytes(), originalConstant.value);
+          expect(output.toBytes(), originalConstant.bytes);
         }
       });
     }

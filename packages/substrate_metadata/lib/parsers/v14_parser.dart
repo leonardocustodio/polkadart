@@ -280,11 +280,12 @@ class V14Parser {
 
         final String type = _metadataExpander.registeredSiType[constant.type]!;
 
-        constants[pallet.name]![constant.name] =
-            Constant(type: type, value: constant.value, docs: constant.docs);
+        constants[pallet.name]![constant.name] = Constant(
+            type: _getCodecFromType(type),
+            bytes: constant.value,
+            docs: constant.docs);
 
         // parse the codec for the constant and register it
-        _getCodecFromType(type);
       }
     }
     return constants;
