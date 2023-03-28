@@ -2,10 +2,10 @@ part of models;
 
 ///
 /// Metadata represeting one pallet constant.
-class Constant {
+class Constant<T> {
   ///
   /// The constant type codec suitable for decoding the constant bytes
-  final Codec type;
+  final Codec<T> type;
 
   ///
   /// Value stored in the constant (SCALE encoded).
@@ -21,7 +21,7 @@ class Constant {
 
   ///
   /// Decoded constant value from the bytes using the type codec
-  dynamic get value {
+  T get value {
     return type.decode(Input.fromBytes(bytes));
   }
 }
