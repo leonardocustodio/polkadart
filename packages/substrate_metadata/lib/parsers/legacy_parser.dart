@@ -196,15 +196,15 @@ class LegacyParser {
 
   Map<String, Map<String, Constant>> _constants() {
     final constants = <String, Map<String, Constant>>{};
-    _forEachPallet(pallet: (mod, _) {
-      for (var c in mod.constants) {
-        constants[mod.name] ??= <String, Constant>{};
+    _forEachPallet(pallet: (module, _) {
+      for (final constant in module.constants) {
+        constants[module.name] ??= <String, Constant>{};
 
         final String parsedType =
-            _typeNormalizer.normalize(c.type, mod.name).toString();
+            _typeNormalizer.normalize(constant.type, module.name).toString();
 
-        constants[mod.name]![c.name] =
-            Constant(type: parsedType, value: c.value, docs: c.docs);
+        constants[module.name]![constant.name] = Constant(
+            type: parsedType, value: constant.value, docs: constant.docs);
 
         // parse the constant type and add it to the registry
         _resultingRegistry.parseSpecificCodec(legacyTypes.types, parsedType);
@@ -242,22 +242,22 @@ class LegacyParser {
       case 10:
       case 11:
         var index = 0;
-        for (var mod in metadata.value.modules) {
-          if (filter != null && filter(mod) == null) {
+        for (final module in metadata.value.modules) {
+          if (filter != null && filter(module) == null) {
             continue;
           }
-          pallet(mod, index);
+          pallet(module, index);
           index += 1;
         }
         return;
 
       case 12:
       case 13:
-        for (var mod in metadata.value.modules) {
-          if (filter != null && filter(mod) == null) {
+        for (final module in metadata.value.modules) {
+          if (filter != null && filter(module) == null) {
             continue;
           }
-          pallet(mod, mod.index);
+          pallet(module, module.index);
         }
         return;
     }

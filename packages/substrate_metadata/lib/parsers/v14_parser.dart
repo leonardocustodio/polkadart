@@ -274,14 +274,14 @@ class V14Parser {
 
   Map<String, Map<String, Constant>> _constants() {
     final constants = <String, Map<String, Constant>>{};
-    for (var pallet in _metadataV14.pallets) {
-      for (var c in pallet.constants) {
+    for (final pallet in _metadataV14.pallets) {
+      for (final constant in pallet.constants) {
         constants[pallet.name] ??= <String, Constant>{};
 
-        final String type = _metadataExpander.registeredSiType[c.type]!;
+        final String type = _metadataExpander.registeredSiType[constant.type]!;
 
-        constants[pallet.name]![c.name] =
-            Constant(type: type, value: c.value, docs: c.docs);
+        constants[pallet.name]![constant.name] =
+            Constant(type: type, value: constant.value, docs: constant.docs);
 
         // parse the codec for the constant and register it
         _getCodecFromType(type);
