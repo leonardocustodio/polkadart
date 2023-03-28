@@ -1,12 +1,25 @@
 part of parsers;
 
+/// FilterTypedef helps to filter the modules that are not needed
+typedef FilterTypedef = dynamic Function(AnyLegacyModule mod);
+
+/// PalletTypedef helps to call the function for each module and passes the module and the index
+typedef PalletTypedef = void Function(AnyLegacyModule mod, int index);
+
 class LegacyParser {
   final DecodedMetadata decodedMetadata;
   final LegacyTypes legacyTypes;
 
   final _resultingRegistry = Registry();
 
-  LegacyParser(this.decodedMetadata, this.legacyTypes);
+  late final TypeNormalizer _typeNormalizer;
+
+  LegacyParser(this.decodedMetadata, this.legacyTypes) {
+    _typeNormalizer = TypeNormalizer(
+      types: legacyTypes.types,
+      typesAlias: legacyTypes.typesAlias ?? <String, Map<String, String>>{},
+    );
+  }
 
   ChainInfo getChainInfo() {
     final rawMetadata = decodedMetadata.metadataJson;
@@ -20,11 +33,6 @@ class LegacyParser {
 
     final genericCallsCodec = <int, MapEntry<String, Codec>>{};
     final genericEventsCodec = <int, MapEntry<String, Codec>>{};
-
-    final typeNormalizer = TypeNormalizer(
-      types: legacyTypes.types,
-      typesAlias: legacyTypes.typesAlias ?? <String, Map<String, String>>{},
-    );
 
     for (final module in rawMetadata['modules']) {
       // Getting the module name and converting it to camelCase
@@ -49,11 +57,7 @@ class LegacyParser {
               // List<String>
               final codecs = <Codec>[];
               for (final String arg in args) {
-                final String parsedType =
-                    typeNormalizer.normalize(arg, moduleName).toString();
-
-                final Codec codec = _resultingRegistry.parseSpecificCodec(
-                    legacyTypes.types, parsedType);
+                final codec = _getCodecFromType(arg, moduleName);
                 codecs.add(codec);
               }
               argsCodec = TupleCodec(codecs);
@@ -65,13 +69,7 @@ class LegacyParser {
                 final String name = arg['name'];
                 final String argType = arg['type'];
 
-                final String parsedType =
-                    typeNormalizer.normalize(argType, moduleName).toString();
-
-                final Codec codec = _resultingRegistry.parseSpecificCodec(
-                    legacyTypes.types, parsedType);
-
-                codecs[name] = codec;
+                codecs[name] = _getCodecFromType(argType, moduleName);
               }
               argsCodec = CompositeCodec(codecs);
             } else {
@@ -83,10 +81,6 @@ class LegacyParser {
         genericCallsCodec[index] =
             MapEntry(module['name'], ComplexEnumCodec.sparse(callEnumCodec));
       }
-
-      //
-      // Events Parsing
-      final eventRegistry = Registry();
 
       if (module['events'] != null) {
         eventModuleIndex++;
@@ -108,11 +102,7 @@ class LegacyParser {
               // List<String>
               final codecs = <Codec>[];
               for (final String arg in args) {
-                final String parsedType =
-                    typeNormalizer.normalize(arg, moduleName).toString();
-
-                final Codec codec = eventRegistry.parseSpecificCodec(
-                    legacyTypes.types, parsedType);
+                final codec = _getCodecFromType(arg, moduleName);
                 codecs.add(codec);
               }
               argsCodec = TupleCodec(codecs);
@@ -124,13 +114,7 @@ class LegacyParser {
                 final String name = arg['name'];
                 final String argType = arg['type'];
 
-                final String parsedType =
-                    typeNormalizer.normalize(argType, moduleName).toString();
-
-                final Codec codec = eventRegistry.parseSpecificCodec(
-                    legacyTypes.types, parsedType);
-
-                codecs[name] = codec;
+                codecs[name] = _getCodecFromType(argType, moduleName);
               }
               argsCodec = CompositeCodec(codecs);
             } else {
@@ -170,8 +154,17 @@ class LegacyParser {
     _createExtrinsicCodec();
 
     return ChainInfo(
-        scaleCodec: ScaleCodec(_resultingRegistry),
-        version: decodedMetadata.version);
+      scaleCodec: ScaleCodec(_resultingRegistry),
+      version: decodedMetadata.version,
+      constants: _constants(),
+    );
+  }
+
+  Codec _getCodecFromType(String type, String? moduleName) {
+    final String parsedType =
+        _typeNormalizer.normalize(type, moduleName).toString();
+
+    return _resultingRegistry.parseSpecificCodec(legacyTypes.types, parsedType);
   }
 
   void _createExtrinsicCodec() {
@@ -204,6 +197,21 @@ class LegacyParser {
     _resultingRegistry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
   }
 
+  Map<String, Map<String, Constant>> _constants() {
+    final constants = <String, Map<String, Constant>>{};
+    _forEachPallet(pallet: (module, _) {
+      for (final constant in module.constants) {
+        constants[module.name] ??= <String, Constant>{};
+
+        constants[module.name]![constant.name] = Constant(
+            type: _getCodecFromType(constant.type, module.name),
+            bytes: constant.value,
+            docs: constant.docs);
+      }
+    });
+    return constants;
+  }
+
   void _defineCalls() {
     _defineGenericLookUpSource();
   }
@@ -221,5 +229,36 @@ class LegacyParser {
 
     _resultingRegistry.addCodec(
         'GenericLookupSource', ComplexEnumCodec.sparse(enums));
+  }
+
+  void _forEachPallet({
+    required PalletTypedef pallet,
+    FilterTypedef? filter,
+  }) {
+    final metadata = decodedMetadata.metadataObject;
+    switch (metadata.version) {
+      case 9:
+      case 10:
+      case 11:
+        var index = 0;
+        for (final module in metadata.value.modules) {
+          if (filter != null && filter(module) == null) {
+            continue;
+          }
+          pallet(module, index);
+          index += 1;
+        }
+        return;
+
+      case 12:
+      case 13:
+        for (final module in metadata.value.modules) {
+          if (filter != null && filter(module) == null) {
+            continue;
+          }
+          pallet(module, module.index);
+        }
+        return;
+    }
   }
 }
