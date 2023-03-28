@@ -1,6 +1,9 @@
 part of parsers;
 
+/// FilterTypedef helps to filter the modules that are not needed
 typedef FilterTypedef = dynamic Function(AnyLegacyModule mod);
+
+/// PalletTypedef helps to call the function for each module and passes the module and the index
 typedef PalletTypedef = void Function(AnyLegacyModule mod, int index);
 
 class LegacyParser {
