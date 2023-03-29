@@ -105,6 +105,53 @@
   final eventsHex = output.toString();
 ```
 
+### Decode Constants
+
+```dart
+  // decode metadata
+  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
+
+  // create ChainInfo from metadata
+  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
+
+  //
+  // Look on constants of chain description
+  for (final palletMapEntry in chainInfo.constants.entries) {
+
+    //
+    // Loop throught all the constants in this given pallet
+    for (final constantMapEntry in palletMapEntry.value.entries) {
+      final Constant originalConstant = constantMapEntry.value;
+      
+      //
+      // Encoded Constant bytes
+      final encodedBytes = originalConstant.bytes;
+      
+      //
+      // Decoded Constant value
+      final decoded = originalConstant.value;
+    }
+  }
+```
+
+### Encode Constants
+
+```dart
+  // decode metadata
+  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
+
+  // create ChainInfo from metadata
+  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
+
+  final output = ByteOutput();
+
+  final decodedConstantValue = /** Some constant value from originalConstant **/;
+
+  originalConstant.type.encodeTo(decodedConstantValue, output);
+  
+  final encodedConstant = output.toBytes();
+```
+
 ### Add SpecVersion
 
 ```dart
@@ -116,7 +163,7 @@
   chainObject.addSpecVersion(specVersion);
 ```
 
-### Create Chain Description from SpecVersion
+### Create ChainInfo from SpecVersion
 
 ```dart
   // when using preV14 metadata
@@ -132,28 +179,7 @@
 
   final SpecVersion specVersion = SpecVersion.fromJson(specJson);
 
-  final ChainDescription chainDescription = chain.getChainDescriptionFromSpecVersion(specVersion);
-```
-
-### Decode Constants (With Chain)
-
-```dart
-  // when using preV14 metadata
-  final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
-  final Chain chain = Chain(chainDefinitions);
-
-  // or
-
-  // when using V14 metadata, you don't need to provide chainDefinitions
-  final Chain chain = Chain();
-
-  // Preferred to provide all the available Spec-Version information.
-  chain.initSpecVersionFromFile('../chain/versions.json');
-
-  final ChainDescription chainDescription = chain.getChainDescriptionFromSpecVersion()
-
-  // Map<String, Map<String, dynamic>> containing mapped pallets and names
-  final constants = chain.decodeConstants(chainDescription);
+  final ChainInfo chainInfo = chain.getChainInfoFromSpecVersion(specVersion);
 ```
 
 ### Decode Extrinsic (With Chain)
