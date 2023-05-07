@@ -14,10 +14,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        shell: bash -l {0}
-
     strategy:
       matrix:
         package:
@@ -35,13 +31,21 @@ jobs:
       - name: Check out code (LFS)
         uses: nschloe/action-cached-lfs-checkout@v1.2.1
 
-      - name: Install HomeBrew and Make
+      - name: Install HomeBrew
         run: |
           export NONINTERACTIVE=1
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/runner/.bash_profile
-          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/runner/.bash_profile
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      
+      - name: Set up Homebrew PATH
+        if: runner.os != 'windows'
+        run: |
+          if [[ "${{ runner.os }}" = "macOS" ]]
+          then
+            echo "/usr/local/bin:/usr/bin:/bin" >> "${GITHUB_PATH}"
+          else
+            echo "/home/linuxbrew/.linuxbrew/bin:/usr/bin:/bin" >> "${GITHUB_PATH}"
+          fi
+          brew config
       
       - name: Export FVM settings as environment variables
         uses: kuhnroyal/flutter-fvm-config-action@v1
