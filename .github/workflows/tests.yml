@@ -47,6 +47,7 @@ jobs:
       - name: Install FVM
         run: |
           dart pub global activate fvm
+          fvm use --force
           fvm config
 
       - name: Install dependencies
