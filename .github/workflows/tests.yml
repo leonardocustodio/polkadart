@@ -45,13 +45,13 @@ jobs:
           else
             echo "/home/linuxbrew/.linuxbrew/bin:/usr/bin:/bin" >> "${GITHUB_PATH}"
           fi
-          brew config
       
       - name: Export FVM settings as environment variables
         uses: kuhnroyal/flutter-fvm-config-action@v1
       
       - name: Install FVM
         run: |
+          brew config
           brew tap leoafarias/fvm
           brew install fvm
           fvm install -s
