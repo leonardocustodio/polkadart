@@ -36,7 +36,6 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: ${{ env.FLUTTER_CHANNEL }}
-      - uses: bluefireteam/melos-action@v1
 
       - name: Add pub cache bin to PATH
         run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
@@ -51,7 +50,9 @@ jobs:
           fvm config
 
       - name: Install dependencies
-        run: fvm dart run melos bootstrap
+        run: |
+          fvm flutter pub get
+          fvm dart run melos bootstrap
 
       - name: Check format
         run: SCOPE="${{ matrix.package }}" fvm dart run melos format:ci
