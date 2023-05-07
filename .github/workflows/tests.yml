@@ -32,7 +32,6 @@ jobs:
         uses: nschloe/action-cached-lfs-checkout@v1.2.1
 
       - name: Install HomeBrew and Make
-        shell: bash -l {0}
         run: |
           export NONINTERACTIVE=1
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -44,7 +43,6 @@ jobs:
         uses: kuhnroyal/flutter-fvm-config-action@v1
       
       - name: Install FVM
-        shell: bash -l {0}
         run: |
           brew tap leoafarias/fvm
           brew install fvm
