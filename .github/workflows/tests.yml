@@ -14,18 +14,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ${{ matrix.package_path }}
-
     strategy:
       matrix:
-        package_path:
-          - packages/polkadart
-          - packages/polkadart_cli
-          - packages/polkadart_scale_codec
-          - packages/ss58
-          - packages/substrate_metadata
+        package:
+          - polkadart
+          - polkadart_cli
+          - polkadart_scale_codec
+          - ss58
+          - substrate_metadata
 
     steps:
       - uses: actions/checkout@v3.5.0
@@ -40,6 +36,7 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: ${{ env.FLUTTER_CHANNEL }}
+      - uses: bluefireteam/melos-action@v1
 
       - name: Add pub cache bin to PATH
         run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
@@ -47,17 +44,22 @@ jobs:
       - name: Add pub cache to PATH
         run: echo "PUB_CACHE="$HOME/.pub-cache"" >> $GITHUB_ENV
 
+      - name: Install FVM
+        run: |
+          dart pub global activate fvm
+          fvm config
+
       - name: Install dependencies
-        run: dart pub get
+        run: fvm dart run melos bootstrap
 
       - name: Check format
-        run: dart format --set-exit-if-changed .
+        run: SCOPE="${{ matrix.package }}" fvm dart run melos format:ci
 
       - name: Analyze
-        run: dart analyze
+        run: SCOPE="${{ matrix.package }}" fvm dart run melos analyze:ci
 
       - name: Run tests
-        run: dart test --coverage="coverage"
+        run: SCOPE="${{ matrix.package }}" fvm dart run melos test:ci
 
       - name: Upload coverage to codecov
         run: curl -s https://codecov.io/bash | bash

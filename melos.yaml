@@ -29,3 +29,13 @@ scripts:
     select-package:
       flutter: false
       dir-exists: test
+  
+  # CI commands
+  test:ci:
+    run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart test --coverage="coverage"'
+  
+  format:ci:
+    run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart format --set-exit-if-changed .'
+  
+  analyze:ci:
+    run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart analyze .'
