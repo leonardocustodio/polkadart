@@ -31,21 +31,26 @@ jobs:
       - name: Check out code (LFS)
         uses: nschloe/action-cached-lfs-checkout@v1.2.1
 
-      - uses: kuhnroyal/flutter-fvm-config-action@v1
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: ${{ env.FLUTTER_CHANNEL }}
-
-      - name: Add pub cache bin to PATH
-        run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: Add pub cache to PATH
-        run: echo "PUB_CACHE="$HOME/.pub-cache"" >> $GITHUB_ENV
-
-      - name: Install FVM
+      - name: Install HomeBrew and Make
+        shell: bash -l {0}
         run: |
-          dart pub global activate fvm
+          export NONINTERACTIVE=1
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/runner/.bash_profile
+          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/runner/.bash_profile
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      
+      - name: Export FVM settings as environment variables
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+      
+      - name: Install FVM
+        shell: bash -l {0}
+        run: |
+          brew tap leoafarias/fvm
+          brew install fvm
+          fvm install -s
+          fvm flutter config --no-enable-windows-desktop --no-enable-linux-desktop --no-enable-macos-desktop
+          fvm flutter doctor -v
           fvm use --force
           fvm config
 
