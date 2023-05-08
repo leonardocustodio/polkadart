@@ -31,39 +31,19 @@ jobs:
       - name: Check out code (LFS)
         uses: nschloe/action-cached-lfs-checkout@v1.2.1
 
-      - name: Install HomeBrew
-        run: |
-          export NONINTERACTIVE=1
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      
-      - name: Set up Homebrew PATH
-        if: runner.os != 'windows'
-        run: |
-          if [[ "${{ runner.os }}" = "macOS" ]]
-          then
-            echo "/usr/local/bin:/usr/bin:/bin" >> "${GITHUB_PATH}"
-          else
-            echo "/home/linuxbrew/.linuxbrew/bin:/usr/bin:/bin" >> "${GITHUB_PATH}"
-          fi
-      
       - name: Export FVM settings as environment variables
         uses: kuhnroyal/flutter-fvm-config-action@v1
       
-      - name: Install FVM
-        run: |
-          brew config
-          brew tap leoafarias/fvm
-          brew install fvm
-          fvm install -s
-          fvm flutter config --no-enable-windows-desktop --no-enable-linux-desktop --no-enable-macos-desktop
-          fvm flutter doctor -v
-          fvm use --force
-          fvm config
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
 
       - name: Install dependencies
         run: |
-          fvm flutter pub get
-          fvm dart run melos bootstrap
+          echo "MELOS_SDK_PATH=$FLUTTER_ROOT" >> "${GITHUB_ENV}"
+          dart pub get
+          MELOS_SDK_PATH=$FLUTTER_ROOT dart run melos bootstrap
 
       - name: Check format
         run: SCOPE="${{ matrix.package }}" fvm dart run melos format:ci
