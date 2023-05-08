@@ -246,6 +246,7 @@ const storageHasher =
     Reference('StorageHasher', 'package:polkadart/polkadart.dart');
 const provider = Reference('Provider', 'package:polkadart/polkadart.dart');
 const stateApi = Reference('StateApi', 'package:polkadart/polkadart.dart');
+const systemApi = Reference('SystemApi', 'package:polkadart/polkadart.dart');
 const blockHash = Reference('BlockHash', 'package:polkadart/polkadart.dart');
 
 TypeReference storageValue(Reference value) {

@@ -15,7 +15,7 @@ scripts:
     run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart test --coverage="coverage"'
   
   format:
-    run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart format --set-exit-if-changed .'
+    run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart format .'
   
   analyze:
     run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart analyze .'
