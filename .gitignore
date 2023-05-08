@@ -53,3 +53,8 @@ lib/generated_plugin_registrant.dart
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 .vscode/settings.json
+
+# Ignore flutter SDK folder, references: 
+# - https://fvm.app/docs/getting_started/configuration/
+# - https://seanconnolly.dev/flutter-version-management
+.fvm/flutter_sdk
