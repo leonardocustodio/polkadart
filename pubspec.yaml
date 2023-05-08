@@ -5,4 +5,5 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dev_dependencies:
+  coverage: ^1.6.3
   melos: ^3.0.0

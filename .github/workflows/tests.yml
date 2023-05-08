@@ -14,20 +14,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ${{ matrix.package_path }}
-
     strategy:
       matrix:
-        channel:
-          - stable
-        package_path:
-          - packages/polkadart
-          - packages/polkadart_cli
-          - packages/polkadart_scale_codec
-          - packages/ss58
-          - packages/substrate_metadata
+        package:
+          - polkadart
+          - polkadart_cli
+          - polkadart_scale_codec
+          - ss58
+          - substrate_metadata
 
     steps:
       - uses: actions/checkout@v3.5.0
@@ -37,27 +31,30 @@ jobs:
       - name: Check out code (LFS)
         uses: nschloe/action-cached-lfs-checkout@v1.2.1
 
-      - uses: subosito/flutter-action@v2.7.1
+      - name: Export FVM settings as environment variables
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+      
+      - uses: subosito/flutter-action@v2
         with:
-          channel: ${{ matrix.channel }}
-
-      - name: Add pub cache bin to PATH
-        run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: Add pub cache to PATH
-        run: echo "PUB_CACHE="$HOME/.pub-cache"" >> $GITHUB_ENV
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
 
       - name: Install dependencies
-        run: dart pub get
+        run: |
+          echo "MELOS_SDK_PATH=$MELOS_SDK_PATH" >> "${GITHUB_ENV}"
+          dart pub get
+          dart run melos bootstrap
+        env:
+          MELOS_SDK_PATH: ${{ env.FLUTTER_ROOT }}
 
       - name: Check format
-        run: dart format --set-exit-if-changed .
+        run: SCOPE="${{ matrix.package }}" dart run melos format:ci
 
       - name: Analyze
-        run: dart analyze
+        run: SCOPE="${{ matrix.package }}" dart run melos analyze:ci
 
       - name: Run tests
-        run: dart test --coverage="coverage"
+        run: SCOPE="${{ matrix.package }}" dart run melos test:ci
 
       - name: Upload coverage to codecov
         run: curl -s https://codecov.io/bash | bash
