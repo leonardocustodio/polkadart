@@ -41,18 +41,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          echo "MELOS_SDK_PATH=$FLUTTER_ROOT" >> "${GITHUB_ENV}"
+          echo "MELOS_SDK_PATH=$MELOS_SDK_PATH" >> "${GITHUB_ENV}"
           dart pub get
-          MELOS_SDK_PATH=$FLUTTER_ROOT dart run melos bootstrap
+        env:
+          MELOS_SDK_PATH: ${{ env.FLUTTER_ROOT }}
 
       - name: Check format
-        run: SCOPE="${{ matrix.package }}" fvm dart run melos format:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos format:ci
 
       - name: Analyze
-        run: SCOPE="${{ matrix.package }}" fvm dart run melos analyze:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos analyze:ci
 
       - name: Run tests
-        run: SCOPE="${{ matrix.package }}" fvm dart run melos test:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos test:ci
 
       - name: Upload coverage to codecov
         run: curl -s https://codecov.io/bash | bash
