@@ -11,10 +11,8 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         Codec,
         Input,
         Output,
-        U128Codec,
         U32Codec,
         U64Codec,
-        U8ArrayCodec,
         U8Codec,
         SequenceCodec,
         StrCodec;

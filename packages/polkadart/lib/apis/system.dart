@@ -61,7 +61,7 @@ class SystemApi<P extends Provider, H, N> {
   /// The addresses include a trailing `/p2p/` with the local PeerId, and are thus suitable to
   /// be passed to `addReservedPeer` or as a bootnode address for example.
   Future<List<String>> localListenAddresses() async {
-    final response = await _provider.send('system_localPeerId', []);
+    final response = await _provider.send('system_localListenAddresses', []);
     return (response.result as List).cast<String>().toList();
   }
 

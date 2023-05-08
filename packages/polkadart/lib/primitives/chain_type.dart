@@ -52,7 +52,7 @@ abstract class ChainType {
   Map<String, String?> toJson();
 }
 
-/// ChainType Codec
+/// ChainType enum values
 class $ChainType {
   const $ChainType();
 
@@ -73,6 +73,7 @@ class $ChainType {
   }
 }
 
+/// ChainType Scale Codec
 class $ChainTypeCodec with Codec<ChainType> {
   const $ChainTypeCodec();
 

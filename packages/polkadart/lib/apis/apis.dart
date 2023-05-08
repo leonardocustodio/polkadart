@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'dart:typed_data' show Uint8List;
 import 'dart:async' show Future, StreamSubscription;
 import 'package:convert/convert.dart' show hex;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    show ByteInput;
 import '../primitives/primitives.dart'
     show
         BlockHash,

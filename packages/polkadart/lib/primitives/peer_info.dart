@@ -31,7 +31,7 @@ class PeerInfo<H, N> {
   final N bestNumber;
 }
 
-/// PeerInfo Codec
+/// PeerInfo Scale Codec
 class PeerInfoCodec<H, N> with Codec<PeerInfo<H, N>> {
   final Codec<H> hashCodec;
   final Codec<N> numberCodec;
