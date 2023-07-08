@@ -36,10 +36,10 @@ class SystemApi<P extends Provider, H, N> {
   }
 
   /// Return health status of the node.
-	///
-	/// Node is considered healthy if it is:
-	/// - connected to some peers (unless running in dev mode)
-	/// - not performing a major sync
+  ///
+  /// Node is considered healthy if it is:
+  /// - connected to some peers (unless running in dev mode)
+  /// - not performing a major sync
   Future<Health> health() async {
     final response = await _provider.send('system_health', []);
     final value = response.result as String;
@@ -77,10 +77,10 @@ class SystemApi<P extends Provider, H, N> {
   }
 
   /// Returns the next valid index (aka nonce) for given account.
-	///
-	/// This method takes into consideration all pending transactions
-	/// currently in the pool and if no transactions are found in the pool
-	/// it fallbacks to query the index from the runtime (aka. state nonce).
+  ///
+  /// This method takes into consideration all pending transactions
+  /// currently in the pool and if no transactions are found in the pool
+  /// it fallbacks to query the index from the runtime (aka. state nonce).
   Future<int> accountNextIndex() async {
     final response = await _provider.send('system_accountNextIndex', []);
     return response.result as int;
@@ -110,11 +110,11 @@ class SystemApi<P extends Provider, H, N> {
   }
 
   /// Adds a reserved peer. Returns the empty string or an error. The string
-	/// parameter should encode a `p2p` multiaddr.
-	///
-	/// `/ip4/198.51.100.19/tcp/30333/p2p/QmSk5HQbn6LhUwDiNMseVUjuRYhEtYj4aUZ6WfWoGURpdV`
-	/// is an example of a valid, passing multiaddr with PeerId attached.
-  /// 
+  /// parameter should encode a `p2p` multiaddr.
+  ///
+  /// `/ip4/198.51.100.19/tcp/30333/p2p/QmSk5HQbn6LhUwDiNMseVUjuRYhEtYj4aUZ6WfWoGURpdV`
+  /// is an example of a valid, passing multiaddr with PeerId attached.
+  ///
   /// unsafe: This method is only active with appropriate flags
   Future<String?> addReservedPeer(String peer) async {
     final response = await _provider.send('system_addReservedPeer', [peer]);
@@ -122,11 +122,12 @@ class SystemApi<P extends Provider, H, N> {
   }
 
   /// Remove a reserved peer. Returns the empty string or an error. The string
-	/// should encode only the PeerId e.g. `QmSk5HQbn6LhUwDiNMseVUjuRYhEtYj4aUZ6WfWoGURpdV`.
-  /// 
+  /// should encode only the PeerId e.g. `QmSk5HQbn6LhUwDiNMseVUjuRYhEtYj4aUZ6WfWoGURpdV`.
+  ///
   /// unsafe: This method is only active with appropriate flags
   Future<String?> removeReservedPeer(String peerId) async {
-    final response = await _provider.send('system_removeReservedPeer', [peerId]);
+    final response =
+        await _provider.send('system_removeReservedPeer', [peerId]);
     return response.result as String?;
   }
 
@@ -137,15 +138,15 @@ class SystemApi<P extends Provider, H, N> {
   }
 
   /// Adds the supplied directives to the current log filter
-	///
-	/// unsafe: This method is only active with appropriate flags
+  ///
+  /// unsafe: This method is only active with appropriate flags
   Future<dynamic> addLogFilter(String directives) async {
     final response = await _provider.send('system_addLogFilter', [directives]);
     return response.result;
   }
 
   /// Resets the log filter to Substrate defaults
-  /// 
+  ///
   /// unsafe: This method is only active with appropriate flags
   Future<dynamic> resetLogFilter() async {
     final response = await _provider.send('system_resetLogFilter', []);
@@ -153,7 +154,7 @@ class SystemApi<P extends Provider, H, N> {
   }
 
   /// Returns the state of the syncing of the node: starting block, current best block, highest
-	/// known block.
+  /// known block.
   Future<SyncState> syncState() async {
     final response = await _provider.send('system_syncState', []);
     final data = response.result as Map<String, dynamic>;

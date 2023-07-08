@@ -36,7 +36,7 @@ class SyncState {
 class SyncStateCodec with Codec<SyncState> {
   final Codec<int> numberCodec;
 
-  const SyncStateCodec({required this.numberCodec });
+  const SyncStateCodec({required this.numberCodec});
 
   @override
   void encodeTo(
