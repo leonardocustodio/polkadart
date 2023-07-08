@@ -5,10 +5,14 @@ import 'dart:async' show Future, StreamSubscription;
 import 'package:convert/convert.dart' show hex;
 import '../primitives/primitives.dart'
     show
+        BlockHash,
+        ChainType,
+        Health,
+        KeyValue,
         RuntimeVersion,
         RuntimeMetadata,
-        BlockHash,
-        KeyValue,
+        PeerInfo,
+        SyncState,
         StorageKey,
         StorageData,
         StorageChangeSet,
@@ -16,3 +20,4 @@ import '../primitives/primitives.dart'
 import '../../provider.dart' show Provider;
 
 part './state.dart';
+part './system.dart';

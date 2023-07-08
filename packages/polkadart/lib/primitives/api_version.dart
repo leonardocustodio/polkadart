@@ -52,6 +52,16 @@ class ApiVersion {
         '0x${id.toRadixString(16)}',
         version,
       ];
+
+  @override
+  bool operator ==(Object other) =>
+      other is ApiVersion &&
+      other.runtimeType == runtimeType &&
+      other.id == id &&
+      other.version == version;
+
+  @override
+  int get hashCode => Object.hash(id, version);
 }
 
 class $ApiVersionCodec with Codec<ApiVersion> {

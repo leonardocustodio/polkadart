@@ -16,7 +16,7 @@ class ChainProperties {
   ChainProperties(this.metadata, this.version);
 
   static Future<ChainProperties> fromURL(Uri uri) async {
-    final provider = Provider(uri);
+    final provider = Provider.fromUri(uri);
     final api = StateApi(provider);
     final decodedMetadata = await api.getMetadata();
     if (decodedMetadata.version != 14) {
@@ -33,7 +33,7 @@ class ChainProperties {
 }
 
 Future<ChainProperties> chainProperties(Uri url) async {
-  final provider = Provider(url);
+  final provider = Provider.fromUri(url);
   final api = StateApi(provider);
   final decodedMetadata = await api.getMetadata();
   if (decodedMetadata.version != 14) {

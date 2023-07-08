@@ -78,16 +78,27 @@ class PolkadartGenerator {
           ..name = 'Rpc'
           ..constructors.add(Constructor((b) => b
             ..constant = true
-            ..optionalParameters.add(Parameter((b) => b
-              ..toThis = true
-              ..required = true
-              ..named = true
-              ..name = 'state'))))
+            ..optionalParameters.addAll([
+              Parameter((b) => b
+                ..toThis = true
+                ..required = true
+                ..named = true
+                ..name = 'state'),
+              Parameter((b) => b
+                ..toThis = true
+                ..required = true
+                ..named = true
+                ..name = 'system')
+            ])))
           ..fields.addAll([
             Field((b) => b
               ..name = 'state'
               ..type = refs.stateApi
-              ..modifier = FieldModifier.final$)
+              ..modifier = FieldModifier.final$),
+            Field((b) => b
+              ..name = 'system'
+              ..type = refs.systemApi
+              ..modifier = FieldModifier.final$),
           ]);
       });
 
@@ -127,7 +138,8 @@ class PolkadartGenerator {
               ..body = Block.of([
                 declareFinal('rpc')
                     .assign(refer('Rpc').newInstance([], {
-                      'state': refs.stateApi.newInstance([refer('provider')])
+                      'state': refs.stateApi.newInstance([refer('provider')]),
+                      'system': refs.systemApi.newInstance([refer('provider')]),
                     }))
                     .statement,
                 refer(name)

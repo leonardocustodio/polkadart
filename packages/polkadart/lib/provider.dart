@@ -30,9 +30,9 @@ class SubscriptionMessage<R> {
 
 // Generic transport providers to handle the transport of method calls to and from Polkadot clients from applications interacting with it.
 abstract class Provider {
-  const Provider._();
+  const Provider();
 
-  factory Provider(Uri uri) {
+  factory Provider.fromUri(Uri uri) {
     if (uri.scheme == 'http' || uri.scheme == 'https') {
       return HttpProvider(uri);
     }
@@ -63,7 +63,7 @@ abstract class Provider {
 /// It does not support subscriptions so you won't be able to listen to events such as new blocks or balance changes.
 /// It is usually preferable using the [[WsProvider]]
 class HttpProvider extends Provider {
-  HttpProvider(this.url) : super._();
+  HttpProvider(this.url) : super();
 
   //  uri to connect to
   final Uri url;
@@ -113,7 +113,7 @@ class HttpProvider extends Provider {
 /// it does support subscriptions and allows listening to events such as new blocks or balance changes.
 class WsProvider extends Provider {
   /// Creates a new websocket connection, connects automatically by default
-  WsProvider(this.url, {bool autoConnect = true}) : super._() {
+  WsProvider(this.url, {bool autoConnect = true}) : super() {
     if (autoConnect) {
       connect();
     }
@@ -122,7 +122,7 @@ class WsProvider extends Provider {
   /// The endpoint url
   final Uri url;
 
-  /// Maps de query id to the completer that will resolve the query
+  /// Maps the query id to the completer that will resolve the query
   final Map<int, Completer<RpcResponse>> queries = {};
 
   /// Maps the subscription id to the stream controller that will emit the subscription data
