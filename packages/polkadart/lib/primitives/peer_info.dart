@@ -36,6 +36,17 @@ class PeerInfo<H, N> {
         'bestHash': bestHash,
         'bestNumber': bestNumber,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is PeerInfo &&
+      other.peerId == peerId &&
+      other.roles == roles &&
+      other.bestHash == bestHash &&
+      other.bestNumber == bestNumber;
+
+  @override
+  int get hashCode => Object.hash(peerId, roles, bestHash, bestNumber);
 }
 
 /// PeerInfo Scale Codec

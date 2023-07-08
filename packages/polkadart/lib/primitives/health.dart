@@ -36,6 +36,17 @@ class Health {
   Uint8List encode() {
     return codec.encode(this);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Health &&
+      other.runtimeType == runtimeType &&
+      other.peers == peers &&
+      other.isSyncing == isSyncing &&
+      other.shouldHavePeers == shouldHavePeers;
+
+  @override
+  int get hashCode => Object.hash(peers, isSyncing, shouldHavePeers);
 }
 
 class $HealthCodec with Codec<Health> {

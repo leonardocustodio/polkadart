@@ -204,4 +204,13 @@ class Custom extends ChainType {
       output,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Custom &&
+      other.runtimeType == runtimeType &&
+      other.value == value;
+
+  @override
+  int get hashCode => value.hashCode;
 }

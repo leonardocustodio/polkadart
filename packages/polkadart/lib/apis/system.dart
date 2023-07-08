@@ -27,12 +27,7 @@ class SystemApi<P extends Provider, H, N> {
   /// Get the chain's type.
   Future<ChainType> chainType() async {
     final response = await _provider.send('system_chainType', []);
-    final value = response.result as String;
-    if (value.startsWith('0x')) {
-      final bytes = Uint8List.fromList(hex.decode(value.substring(2)));
-      return ChainType.decode(ByteInput(bytes));
-    }
-    return ChainType.fromJson(jsonDecode(value));
+    return ChainType.fromJson(response.result);
   }
 
   /// Return health status of the node.
@@ -42,12 +37,7 @@ class SystemApi<P extends Provider, H, N> {
   /// - not performing a major sync
   Future<Health> health() async {
     final response = await _provider.send('system_health', []);
-    final value = response.result as String;
-    if (value.startsWith('0x')) {
-      final bytes = Uint8List.fromList(hex.decode(value.substring(2)));
-      return Health.decode(ByteInput(bytes));
-    }
-    return Health.fromJson(jsonDecode(value));
+    return Health.fromJson(response.result as Map<String, dynamic>);
   }
 
   /// Returns the base58-encoded PeerId of the node.
@@ -81,8 +71,8 @@ class SystemApi<P extends Provider, H, N> {
   /// This method takes into consideration all pending transactions
   /// currently in the pool and if no transactions are found in the pool
   /// it fallbacks to query the index from the runtime (aka. state nonce).
-  Future<int> accountNextIndex() async {
-    final response = await _provider.send('system_accountNextIndex', []);
+  Future<int> accountNextIndex(String account) async {
+    final response = await _provider.send('system_accountNextIndex', [account]);
     return response.result as int;
   }
 

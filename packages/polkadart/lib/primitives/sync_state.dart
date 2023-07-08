@@ -30,6 +30,17 @@ class SyncState {
         'currentBlock': currentBlock,
         'highestBlock': highestBlock,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is SyncState &&
+      other.runtimeType == runtimeType &&
+      other.startingBlock == startingBlock &&
+      other.currentBlock == currentBlock &&
+      other.highestBlock == highestBlock;
+
+  @override
+  int get hashCode => Object.hash(startingBlock, currentBlock, highestBlock);
 }
 
 /// SyncState Scale Codec
