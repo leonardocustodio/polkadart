@@ -27,3 +27,4 @@ part './peer_info.dart';
 part './runtime_metadata.dart';
 part './runtime_version.dart';
 part './storage.dart';
+part './sync_state.dart';

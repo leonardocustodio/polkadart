@@ -29,6 +29,13 @@ class PeerInfo<H, N> {
 
   /// Peer best block number
   final N bestNumber;
+
+  Map<String, dynamic> toJson() => {
+        'peerId': peerId,
+        'roles': roles,
+        'bestHash': bestHash,
+        'bestNumber': bestNumber,
+      };
 }
 
 /// PeerInfo Scale Codec
@@ -74,10 +81,10 @@ class PeerInfoCodec<H, N> with Codec<PeerInfo<H, N>> {
   @override
   int sizeHint(PeerInfo<H, N> value) {
     int size = 0;
-    size = StrCodec.codec.sizeHint(value.peerId);
-    size = StrCodec.codec.sizeHint(value.roles);
-    size = hashCodec.sizeHint(value.bestHash);
-    size = numberCodec.sizeHint(value.bestNumber);
+    size += StrCodec.codec.sizeHint(value.peerId);
+    size += StrCodec.codec.sizeHint(value.roles);
+    size += hashCodec.sizeHint(value.bestHash);
+    size += numberCodec.sizeHint(value.bestNumber);
     return size;
   }
 }

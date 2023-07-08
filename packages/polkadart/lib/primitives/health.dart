@@ -72,9 +72,9 @@ class $HealthCodec with Codec<Health> {
   @override
   int sizeHint(Health value) {
     int size = 0;
-    size = U32Codec.codec.sizeHint(value.peers);
-    size = BoolCodec.codec.sizeHint(value.isSyncing);
-    size = BoolCodec.codec.sizeHint(value.shouldHavePeers);
+    size += U32Codec.codec.sizeHint(value.peers);
+    size += BoolCodec.codec.sizeHint(value.isSyncing);
+    size += BoolCodec.codec.sizeHint(value.shouldHavePeers);
     return size;
   }
 }

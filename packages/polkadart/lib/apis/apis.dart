@@ -15,6 +15,7 @@ import '../primitives/primitives.dart'
         RuntimeVersion,
         RuntimeMetadata,
         PeerInfo,
+        SyncState,
         StorageKey,
         StorageData,
         StorageChangeSet,
