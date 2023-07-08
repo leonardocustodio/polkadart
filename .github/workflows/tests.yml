@@ -33,7 +33,7 @@ jobs:
 
       - name: Export FVM settings as environment variables
         uses: kuhnroyal/flutter-fvm-config-action@v1
-      
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}

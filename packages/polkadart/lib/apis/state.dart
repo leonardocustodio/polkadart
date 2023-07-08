@@ -13,8 +13,8 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final result = await _provider.send('state_call', params);
-    final data = result.result as String;
+    final response = await _provider.send('state_call', params);
+    final data = response.result as String;
     return Uint8List.fromList(hex.decode(data.substring(2)));
   }
 
@@ -63,8 +63,8 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final result = await _provider.send('state_getStorage', params);
-    final data = result.result as String?;
+    final response = await _provider.send('state_getStorage', params);
+    final data = response.result as String?;
     return data == null
         ? null
         : Uint8List.fromList(hex.decode(data.substring(2)));
@@ -76,8 +76,8 @@ class StateApi<P extends Provider> {
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
-    final result = await _provider.send('state_getStorageHash', params);
-    final data = result.result as String?;
+    final response = await _provider.send('state_getStorageHash', params);
+    final data = response.result as String?;
     return data == null
         ? null
         : Uint8List.fromList(hex.decode(data.substring(2)));

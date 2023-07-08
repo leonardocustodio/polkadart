@@ -105,6 +105,24 @@ class RuntimeVersion {
         'transactionVersion': transactionVersion,
         'stateVersion': stateVersion,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      other is RuntimeVersion &&
+      other.runtimeType == runtimeType &&
+      other.specName == specName &&
+      other.implName == implName &&
+      other.authoringVersion == authoringVersion &&
+      other.specVersion == specVersion &&
+      other.implName == implName &&
+      other.apis.length == apis.length &&
+      other.apis == apis &&
+      other.transactionVersion == transactionVersion &&
+      other.stateVersion == stateVersion;
+
+  @override
+  int get hashCode => Object.hash(specName, implName, authoringVersion,
+      specVersion, implName, apis, transactionVersion, stateVersion);
 }
 
 class $RuntimeVersionCodec with Codec<RuntimeVersion> {
