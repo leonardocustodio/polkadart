@@ -67,23 +67,18 @@ class TupleBuilder extends TypeBuilder {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     if (generators.isEmpty) {
       return refs.dynamic.type as TypeReference;
     }
 
-    if (visited.contains(this)) {
+    if (isCircular) {
       return refs.list(ref: refs.dynamic);
     }
-    visited.add(this);
-
     // Check if all fields are of the same type, otherwise use dynamic
     final type = findCommonType(
-        generators.map((generator) => generator.jsonType(from, visited)));
-    final newType = refs.list(ref: type);
-    visited.remove(this);
-    return newType;
+        generators.map((generator) => context.jsonTypeFrom(generator)));
+    return refs.list(ref: type);
   }
 
   @override

@@ -57,8 +57,7 @@ class ResultDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     return refs.map(refs.string, refs.dynamic);
   }
 

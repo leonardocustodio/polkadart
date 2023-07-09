@@ -63,19 +63,12 @@ class BTreeMapDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
-    if (visited.contains(this)) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
+    if (isCircular) {
       return refs.map(refs.dynamic, refs.dynamic);
     }
-    visited.add(this);
-    final type = TypeDescriptor.cacheOrCreate(
-        from,
-        visited,
-        () => refs.map(
-            key.jsonType(from, visited), value.jsonType(from, visited)));
-    visited.remove(this);
-    return type;
+
+    return refs.map(context.jsonTypeFrom(key), context.jsonTypeFrom(value));
   }
 
   @override

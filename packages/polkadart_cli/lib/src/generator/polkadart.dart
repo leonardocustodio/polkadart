@@ -159,7 +159,8 @@ class PolkadartGenerator {
                 ..name = 'url'))
               ..body = Block.of([
                 declareFinal('provider')
-                    .assign(refs.provider.newInstance([refer('url')]))
+                    .assign(refs.provider
+                        .newInstanceNamed('fromUri', [refer('url')]))
                     .statement,
                 refer(name).newInstance([refer('provider')]).returned.statement,
               ])),

@@ -5,41 +5,6 @@ typedef BasePath = String;
 abstract class TypeDescriptor {
   const TypeDescriptor();
 
-  static int _idSequence = 1;
-  static Map<TypeDescriptor, int> generatorToId = {};
-  static Map<String, TypeReference> jsonTypeCache = {};
-
-  static String _cachedKey(BasePath from, Set<TypeDescriptor> visited) {
-    bool created = false;
-    final ids = <int>[];
-    for (final generator in visited) {
-      int? id = generatorToId[generator];
-      if (id == null) {
-        id = _idSequence++;
-        generatorToId[generator] = id;
-        created = true;
-      }
-      ids.add(id);
-    }
-    ids.sort();
-    final key = '$from | ${ids.join('.')}';
-    if (created && jsonTypeCache.containsKey(key)) {
-      throw Exception('Error, cached key collision: "$key"');
-    }
-    return key;
-  }
-
-  static TypeReference cacheOrCreate(BasePath from, Set<TypeDescriptor> visited,
-      TypeReference Function() callback) {
-    final String hash = _cachedKey(from, visited);
-    TypeReference? type = jsonTypeCache[hash];
-    if (type == null) {
-      type = callback();
-      jsonTypeCache[hash] = type;
-    }
-    return type;
-  }
-
   static Map<int, TypeDescriptor> fromTypes(
       List<metadata.TypeMetadata> registry, String typesPath) {
     return parseTypes(registry, typesPath);
@@ -68,14 +33,9 @@ abstract class TypeDescriptor {
 
   Expression valueFrom(BasePath from, Input input, {bool constant = false});
 
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]);
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context);
 
   Expression instanceToJson(BasePath from, Expression obj);
-
-  // GeneratedOutput? generated() {
-  //   return null;
-  // }
 }
 
 abstract class TypeBuilder extends TypeDescriptor {
@@ -170,5 +130,44 @@ class Field {
 
   static String toFieldName(String name) {
     return sanitize(ReCase(name).camelCase);
+  }
+}
+
+class TypeBuilderContext {
+  final BasePath from;
+  final HashMap<int, TypeReference> _jsonTypeCache = HashMap();
+  final Set<TypeDescriptor> _visited = {};
+  bool _isCircular = false;
+
+  TypeBuilderContext({required this.from});
+
+  TypeReference jsonTypeFrom(TypeDescriptor descriptor) {
+    if (_isCircular) {
+      throw Exception(
+          'Circular reference detected, cannot call TypeBuilderContext.jsonTypeFrom');
+    }
+
+    _isCircular = _visited.contains(descriptor);
+    if (!_isCircular) {
+      _visited.add(descriptor);
+    }
+
+    // Check if the type is cached
+    final cacheKey = descriptor.id();
+
+    final TypeReference jsonType;
+    if (_jsonTypeCache.containsKey(cacheKey)) {
+      jsonType = _jsonTypeCache[cacheKey]!;
+    } else {
+      jsonType = descriptor.jsonType(_isCircular, this);
+    }
+
+    if (!_isCircular) {
+      _jsonTypeCache[cacheKey] = jsonType;
+      _visited.remove(descriptor);
+    } else {
+      _isCircular = false;
+    }
+    return jsonType;
   }
 }

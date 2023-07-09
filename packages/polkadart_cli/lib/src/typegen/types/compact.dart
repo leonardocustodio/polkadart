@@ -24,7 +24,7 @@ class CompactDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Object> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     return refs.bigInt.type as TypeReference;
   }
 
