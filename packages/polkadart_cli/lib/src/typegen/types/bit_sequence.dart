@@ -78,7 +78,7 @@ class BitSequenceDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from, [Set<Object> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     return refs.list(ref: refs.int);
   }
 

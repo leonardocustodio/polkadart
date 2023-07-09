@@ -61,23 +61,18 @@ class OptionDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
-    if (visited.contains(this)) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
+    if (isCircular) {
       return refs.dynamic.type as TypeReference;
     }
-    visited.add(this);
-    final newType = TypeDescriptor.cacheOrCreate(from, visited, () {
-      if (inner is OptionDescriptor) {
-        return refs.map(
-          refs.string,
-          inner.jsonType(from, visited).asNullable(),
-        );
-      }
-      return inner.jsonType(from, visited).asNullable();
-    });
-    visited.remove(this);
-    return newType;
+    final innerJsonType = context.jsonTypeFrom(inner).asNullable();
+    if (inner is OptionDescriptor) {
+      return refs.map(
+        refs.string,
+        innerJsonType,
+      );
+    }
+    return innerJsonType;
   }
 
   @override

@@ -23,8 +23,7 @@ class EmptyDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     return refs.dynamic.type as TypeReference;
   }
 

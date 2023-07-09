@@ -146,8 +146,7 @@ class PrimitiveDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     switch (primitiveType) {
       case metadata.Primitive.Bool:
         return refs.bool.type as TypeReference;

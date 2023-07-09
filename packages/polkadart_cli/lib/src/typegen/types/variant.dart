@@ -23,40 +23,38 @@ class Variant extends TypeDescriptor {
   }
 
   @override
-  int id() => -1;
+  int id() => generator.id() | ((index + 1) << 24);
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     if (fields.isEmpty) {
       return refs.map(refs.string, refs.dynamic);
     }
 
-    if (visited.contains(this)) {
-      if (fields.length == 1 && fields.first.originalName == null) {
+    if (isCircular) {
+      if (fields.length == 1) {
         return refs.map(refs.string, refs.dynamic);
+      } else if (fields.every((field) => field.originalName == null)) {
+        return refs.map(refs.string, refs.list(ref: refs.dynamic));
       }
+      return refs.map(refs.string, refs.map(refs.string, refs.dynamic));
     }
-    visited.add(this);
 
-    final TypeReference newType;
     if (fields.length == 1 && fields.first.originalName == null) {
-      newType =
-          refs.map(refs.string, fields.first.codec.jsonType(from, visited));
-    } else {
-      // Check if all fields are of the same type, otherwise use dynamic
-      final type = findCommonType(
-          fields.map((field) => field.codec.jsonType(from, visited)));
-
-      if (fields.every((field) => field.originalName == null)) {
-        newType = refs.map(refs.string, refs.list(ref: type));
-      } else {
-        newType = refs.map(refs.string, refs.map(refs.string, type));
-      }
+      return refs.map(refs.string, context.jsonTypeFrom(fields.first.codec));
     }
-    visited.remove(this);
 
-    return newType;
+    // Check if all fields are of the same type, otherwise use dynamic
+    final type = findCommonType(
+        fields.map((field) => context.jsonTypeFrom(field.codec)));
+
+    // If all fields are unnamed, returns Map<String, List<T>>
+    if (fields.every((field) => field.originalName == null)) {
+      return refs.map(refs.string, refs.list(ref: type));
+    }
+
+    // If fields are named, returns Map<String, Map<String, T>>
+    return refs.map(refs.string, refs.map(refs.string, type));
   }
 
   Expression toJson(BasePath from) {
@@ -167,31 +165,24 @@ class VariantBuilder extends TypeBuilder {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     // For Simple Variants json type is String
     if (variants.isNotEmpty &&
         variants.every((variant) => variant.fields.isEmpty)) {
       return refs.string.type as TypeReference;
     }
 
-    if (visited.contains(this)) {
+    if (isCircular) {
       return refs.map(refs.string, refs.dynamic);
     }
 
-    visited.add(this);
-    final type = TypeDescriptor.cacheOrCreate(from, visited, () {
-      // Check if all variants are of the same type, otherwise use Map<String, dynamic>
-      final complexJsonType = findCommonType(
-          variants.map((variant) => variant.jsonType(from, visited)));
-      if (complexJsonType.symbol != 'Map') {
-        throw Exception(
-            '$name: Invalid complex variant type: $complexJsonType');
-      }
-      return complexJsonType;
-    });
-    visited.remove(this);
-    return type;
+    // Check if all variants are of the same type, otherwise use Map<String, dynamic>
+    final complexJsonType = findCommonType(
+        variants.map((variant) => context.jsonTypeFrom(variant)));
+    if (complexJsonType.symbol != 'Map') {
+      throw Exception('$name: Invalid complex variant type: $complexJsonType');
+    }
+    return complexJsonType;
   }
 
   @override
@@ -212,8 +203,10 @@ class VariantBuilder extends TypeBuilder {
 
     // Complex Variants
     final dirname = p.dirname(filePath);
-    final variantsJsonType =
-        variants.map((variant) => variant.jsonType(dirname, {this})).toList();
+    final builderContext = TypeBuilderContext(from: dirname);
+    final variantsJsonType = variants
+        .map((variant) => builderContext.jsonTypeFrom(variant))
+        .toList();
     final baseClassJsonType = findCommonType(variantsJsonType);
     final baseClass =
         classbuilder.createVariantBaseClass(this, baseClassJsonType);

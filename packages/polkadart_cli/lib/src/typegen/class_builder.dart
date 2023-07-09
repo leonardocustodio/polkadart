@@ -20,7 +20,13 @@ import 'package:code_builder/code_builder.dart'
         literalString,
         refer;
 import './typegen.dart' as generators
-    show CompositeBuilder, Field, PrimitiveDescriptor, Variant, VariantBuilder;
+    show
+        CompositeBuilder,
+        Field,
+        PrimitiveDescriptor,
+        Variant,
+        VariantBuilder,
+        TypeBuilderContext;
 import './references.dart' as refs;
 import '../utils/utils.dart' show sanitizeDocs;
 
@@ -34,6 +40,7 @@ Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
       final classType =
           TypeReference((b) => b..symbol = compositeGenerator.name);
       final codecType = refer(classToCodecName(compositeGenerator.name));
+      final builderContext = generators.TypeBuilderContext(from: dirname);
 
       classBuilder
         ..name = classType.symbol
@@ -59,7 +66,7 @@ Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
           ..body = Code('return codec.encode(this);')))
         ..methods.add(Method((b) => b
           ..name = 'toJson'
-          ..returns = compositeGenerator.jsonType(dirname, {})
+          ..returns = builderContext.jsonTypeFrom(compositeGenerator)
           ..body = compositeGenerator.toJson(dirname).code))
         ..fields.addAll(compositeGenerator.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
@@ -386,6 +393,7 @@ Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
       final dirname = p.dirname(variant.filePath);
       final Reference typeRef = refer(variant.name);
       final Reference codecRef = refer(classToCodecName(variant.name));
+      final builderContext = generators.TypeBuilderContext(from: dirname);
 
       enumBuilder
         ..name = typeRef.symbol
@@ -408,7 +416,7 @@ Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
           ..body = Code('return codec.decode(input);')))
         ..methods.add(Method((b) => b
           ..name = 'toJson'
-          ..returns = variant.jsonType(dirname, {})
+          ..returns = builderContext.jsonTypeFrom(variant)
           ..body = refer('variantName').code))
         ..fields.addAll([
           Field((b) => b
