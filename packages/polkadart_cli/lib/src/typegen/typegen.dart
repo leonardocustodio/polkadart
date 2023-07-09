@@ -1,5 +1,6 @@
 library descriptors;
 
+import 'dart:collection' show HashMap;
 import 'package:code_builder/code_builder.dart'
     show
         Block,

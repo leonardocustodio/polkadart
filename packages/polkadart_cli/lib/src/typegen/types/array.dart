@@ -159,8 +159,7 @@ class ArrayDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     if (typeDef is PrimitiveDescriptor) {
       switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
@@ -186,14 +185,10 @@ class ArrayDescriptor extends TypeDescriptor {
           break;
       }
     }
-    if (visited.contains(this)) {
+    if (isCircular) {
       return refs.list(ref: refs.dynamic);
     }
-    visited.add(this);
-    final type = TypeDescriptor.cacheOrCreate(
-        from, visited, () => refs.list(ref: typeDef.jsonType(from, visited)));
-    visited.remove(this);
-    return type;
+    return refs.list(ref: context.jsonTypeFrom(typeDef));
   }
 
   @override

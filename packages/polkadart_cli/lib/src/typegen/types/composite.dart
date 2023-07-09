@@ -63,42 +63,36 @@ class CompositeBuilder extends TypeBuilder {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     if (fields.isEmpty) {
       return refs.dynamic.type as TypeReference;
     }
 
-    if (visited.contains(this)) {
+    if (isCircular) {
       if (fields.length == 1 && fields.first.originalName == null) {
         return refs.dynamic.type as TypeReference;
       } else if (fields.every((field) => field.originalName == null)) {
         return refs.list(ref: refs.dynamic);
-      } else {
-        return refs.map(refs.string, refs.dynamic);
       }
+      return refs.map(refs.string, refs.dynamic);
     }
 
-    visited.add(this);
-    final type = TypeDescriptor.cacheOrCreate(from, visited, () {
-      if (fields.length == 1 && fields.first.originalName == null) {
-        return fields.first.codec.jsonType(from, visited);
-      }
+    if (fields.length == 1 && fields.first.originalName == null) {
+      return context.jsonTypeFrom(fields.first.codec);
+    }
 
-      // Check if all fields are of the same type, otherwise use dynamic
-      final type = findCommonType(
-          fields.map((field) => field.codec.jsonType(from, visited)));
+    // Check if all fields are of the same type, otherwise use dynamic
+    final type = findCommonType(
+        fields.map((field) => context.jsonTypeFrom(field.codec)));
 
-      // If all field are unnamed, return a list
-      if (fields.every((field) => field.originalName == null)) {
-        return refs.list(ref: type);
-      }
+    // If all field are unnamed, return a list
+    if (fields.every((field) => field.originalName == null)) {
+      return refs.list(ref: type);
+    }
 
-      // Otherwise return a map
-      return refs.map(refs.string, type);
-    });
-    visited.remove(this);
-    return type;
+    // Otherwise return a map
+    return refs.map(refs.string, type);
+    // return refs.map(refs.string, refs.dynamic);
   }
 
   Expression toJson(BasePath from) {

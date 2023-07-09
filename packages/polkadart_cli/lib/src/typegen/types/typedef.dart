@@ -67,15 +67,8 @@ class TypeDefBuilder extends TypeBuilder {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
-    if (visited.contains(this)) {
-      return refs.dynamic.type as TypeReference;
-    }
-    visited.add(this);
-    final newType = generator.jsonType(from, visited);
-    visited.remove(this);
-    return newType;
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
+    return generator.jsonType(isCircular, context);
   }
 
   @override

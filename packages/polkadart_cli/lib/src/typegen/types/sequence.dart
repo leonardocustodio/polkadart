@@ -154,8 +154,7 @@ class SequenceDescriptor extends TypeDescriptor {
   }
 
   @override
-  TypeReference jsonType(BasePath from,
-      [Set<TypeDescriptor> visited = const {}]) {
+  TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     if (typeDef is PrimitiveDescriptor) {
       switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
@@ -181,13 +180,10 @@ class SequenceDescriptor extends TypeDescriptor {
           break;
       }
     }
-    if (visited.contains(this)) {
+    if (isCircular) {
       return refs.list(ref: refs.dynamic);
     }
-    visited.add(this);
-    final newType = refs.list(ref: typeDef.jsonType(from, visited));
-    visited.remove(this);
-    return newType;
+    return refs.list(ref: context.jsonTypeFrom(typeDef));
   }
 
   @override
