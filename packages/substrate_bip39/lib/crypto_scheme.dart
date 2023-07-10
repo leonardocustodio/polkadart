@@ -5,7 +5,7 @@ import 'package:convert/convert.dart' show hex;
 import 'package:cryptography/cryptography.dart' show Pbkdf2, Hmac, SecretKey;
 import './secret_uri.dart' show SecretUri, DeriveJunction;
 import './schemes/ed25519.dart' show Ed25519;
-import './exceptions.dart' show SecretStringException;
+import './exceptions.dart' show SubstrateBip39Exception;
 
 export './schemes/ed25519.dart' show Ed25519;
 
@@ -31,7 +31,7 @@ abstract class CryptoScheme {
     };
     final entropy = wordsToEntropy[words];
     if (entropy == null) {
-      throw SecretStringException.invalidEntropy(
+      throw SubstrateBip39Exception.invalidEntropy(
           'Invalid number of words given for phrase, must be 12/15/18/21/24');
     }
     return Mnemonic.generate(Language.english, entropyLength: entropy);
@@ -60,7 +60,7 @@ abstract class CryptoScheme {
   static Future<List<int>> seedFromEntropy(List<int> entropy,
       {String? password}) async {
     if (entropy.length < 16 || entropy.length > 32 || entropy.length % 4 != 0) {
-      throw SecretStringException.invalidEntropy(
+      throw SubstrateBip39Exception.invalidEntropy(
           'InvalidEntropy: byte length must be between 16 and 32 and multiple of 4');
     }
 
@@ -100,7 +100,7 @@ abstract class CryptoScheme {
       try {
         return hex.decode(secretUri.phrase.substring(2));
       } catch (e) {
-        throw SecretStringException.invalidSeed();
+        throw SubstrateBip39Exception.invalidSeed();
       }
     }
 
@@ -110,7 +110,7 @@ abstract class CryptoScheme {
       entropy =
           Mnemonic.fromSentence(secretUri.phrase, Language.english).entropy;
     } on Exception catch (e) {
-      throw SecretStringException.fromException(e);
+      throw SubstrateBip39Exception.fromException(e);
     }
 
     List<int> seed =

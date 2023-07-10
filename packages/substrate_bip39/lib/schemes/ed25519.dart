@@ -2,7 +2,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:pointycastle/digests/blake2b.dart' show Blake2bDigest;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show ByteOutput, StrCodec, U8ArrayCodec;
-import '../exceptions.dart' show SecretStringException;
+import '../exceptions.dart' show SubstrateBip39Exception;
 import '../crypto_scheme.dart' show CryptoScheme;
 import '../secret_uri.dart' show DeriveJunction;
 
@@ -18,7 +18,7 @@ class Ed25519 extends CryptoScheme {
     output ??= Uint8List.fromList(seed);
     for (final junction in path) {
       if (junction.isSoft) {
-        throw SecretStringException.invalidPath(
+        throw SubstrateBip39Exception.invalidPath(
             'Soft key derivation is not supported for ED25519');
       }
       deriveHardJunction(output, junction.junctionId, output: output);

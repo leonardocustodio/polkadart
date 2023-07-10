@@ -30,37 +30,37 @@ enum SecretStringError {
   final String description;
 }
 
-class SecretStringException implements Exception {
+class SubstrateBip39Exception implements Exception {
   final SecretStringError cause;
   final String? description;
 
-  factory SecretStringException.invalidFormat([String? description]) =>
-      SecretStringException(SecretStringError.invalidFormat, description);
-  factory SecretStringException.invalidPhrase([String? description]) =>
-      SecretStringException(SecretStringError.invalidPhrase, description);
-  factory SecretStringException.invalidPassword([String? description]) =>
-      SecretStringException(SecretStringError.invalidPassword, description);
-  factory SecretStringException.invalidSeed([String? description]) =>
-      SecretStringException(SecretStringError.invalidSeed, description);
-  factory SecretStringException.invalidSeedLength([String? description]) =>
-      SecretStringException(SecretStringError.invalidSeedLength, description);
-  factory SecretStringException.invalidPath([String? description]) =>
-      SecretStringException(SecretStringError.invalidPath, description);
-  factory SecretStringException.invalidEntropy([String? description]) =>
-      SecretStringException(SecretStringError.invalidEntropy, description);
+  factory SubstrateBip39Exception.invalidFormat([String? description]) =>
+      SubstrateBip39Exception(SecretStringError.invalidFormat, description);
+  factory SubstrateBip39Exception.invalidPhrase([String? description]) =>
+      SubstrateBip39Exception(SecretStringError.invalidPhrase, description);
+  factory SubstrateBip39Exception.invalidPassword([String? description]) =>
+      SubstrateBip39Exception(SecretStringError.invalidPassword, description);
+  factory SubstrateBip39Exception.invalidSeed([String? description]) =>
+      SubstrateBip39Exception(SecretStringError.invalidSeed, description);
+  factory SubstrateBip39Exception.invalidSeedLength([String? description]) =>
+      SubstrateBip39Exception(SecretStringError.invalidSeedLength, description);
+  factory SubstrateBip39Exception.invalidPath([String? description]) =>
+      SubstrateBip39Exception(SecretStringError.invalidPath, description);
+  factory SubstrateBip39Exception.invalidEntropy([String? description]) =>
+      SubstrateBip39Exception(SecretStringError.invalidEntropy, description);
 
-  const SecretStringException(this.cause, [this.description]);
+  const SubstrateBip39Exception(this.cause, [this.description]);
 
-  factory SecretStringException.fromException(Exception e) {
+  factory SubstrateBip39Exception.fromException(Exception e) {
     final message = e.toString();
     if (message.contains('mnemonic: unexpected sentence length')) {
-      return SecretStringException.invalidSeedLength();
+      return SubstrateBip39Exception.invalidSeedLength();
     } else if (message.contains('does not exist in english')) {
-      return SecretStringException.invalidPhrase();
+      return SubstrateBip39Exception.invalidPhrase();
     } else if (message.contains('mnemonic: invalid checksum')) {
-      return SecretStringException.invalidSeed();
+      return SubstrateBip39Exception.invalidSeed();
     }
-    return SecretStringException.invalidFormat(message);
+    return SubstrateBip39Exception.invalidFormat(message);
   }
 
   @override

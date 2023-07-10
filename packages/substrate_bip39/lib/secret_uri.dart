@@ -4,7 +4,7 @@ import 'package:collection/collection.dart'
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show U64Codec, StrCodec;
 import 'package:pointycastle/digests/blake2b.dart' show Blake2bDigest;
-import './exceptions.dart' show SecretStringException;
+import './exceptions.dart' show SubstrateBip39Exception;
 
 Function eq = const ListEquality().equals;
 Function deepEq = const DeepCollectionEquality().equals;
@@ -131,7 +131,7 @@ class SecretUri {
   factory SecretUri.fromStr(String str) {
     final matches = _secretPhraseRegex.allMatches(str);
     if (matches.length != 1) {
-      throw SecretStringException.invalidFormat();
+      throw SubstrateBip39Exception.invalidFormat();
     }
     final match = matches.first;
 
