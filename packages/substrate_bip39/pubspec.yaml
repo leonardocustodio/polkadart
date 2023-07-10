@@ -1,0 +1,19 @@
+name: substrate_bip39
+description: Converting BIP39 entropy to valid Substrate (sr25519) SecretKeys.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies:
+  bip39_mnemonic: ^3.0.6
+  convert: ^3.1.1
+  collection: ^1.17.2
+  cryptography: ^2.5.0
+  pointycastle: ^3.6.2
+  polkadart_scale_codec: ^1.1.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
