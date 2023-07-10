@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data' show Uint8List;
 
 T? parseOption<T>(dynamic obj) {
@@ -601,48 +602,46 @@ class StorageEntryMetadata {
   }
 }
 
-/// Metadata about one storage entry.
-class CallEntryMetadata {
-  /// Variable name of the storage entry.
-  final String name;
+class PalletCallMetadata {
+  final int type;
+  final List<CallEntryMetadata> entries;
 
-  /// Storage entry documentation.
-  final int index;
+  const PalletCallMetadata({
+    required this.type,
+    required this.entries,
+  });
 
-  const CallEntryMetadata(
-      {required this.name,
-      required this.index});
+  factory PalletCallMetadata.fromJson(Map<String, dynamic> json,  List<TypeMetadata> registry) {
+    final typeDef = registry.firstWhere((e) => e.id == json['type']).typeDef as TypeDefVariant;
+    final calls = typeDef.variants.map((e) => CallEntryMetadata.fromVariant(e)).toList();
 
-  factory CallEntryMetadata.fromJson(Map<String, dynamic> json) {
-    return CallEntryMetadata(
-      name: (json['name'] as String),
-      index: (json['index'] as int),
+    return PalletCallMetadata(
+      type: json['type'] as int,
+      entries: calls,
     );
   }
 }
 
-
 /// All metadata of the pallet's extrinsics.
-class PalletCallMetadata {
+class CallEntryMetadata {
   /// Type of the pallet call.
     final String name;
 
-    final List fields;
+    final List<Field> fields;
 
     final int index;
 
-    final List docs;
+    final List<String> docs;
 
-    const PalletCallMetadata({
+    const CallEntryMetadata({
       required this.name,
       required this.fields,
       required this.index,
       required this.docs,
     });
 
-    factory PalletCallMetadata.fromVariant(Variant variant) {
-
-      return PalletCallMetadata(
+    factory CallEntryMetadata.fromVariant(Variant variant) {
+      return CallEntryMetadata(
         name: variant.name,
         fields: variant.fields,
         index: variant.index,
@@ -719,7 +718,7 @@ class PalletMetadata {
   final List<PalletConstantMetadata> constants;
 
   /// Pallet extrinsics metadata.
-  final List<PalletCallMetadata> calls;
+  final PalletCallMetadata? call;
 
   /// Define the index of the pallet, this index will be used for the encoding of pallet event,
   /// call and origin variants.
@@ -729,7 +728,7 @@ class PalletMetadata {
       {required this.name,
       required this.storage,
       required this.constants,
-      required this.calls,
+      required this.call,
       required this.index});
 
   factory PalletMetadata.fromJson(Map<String, dynamic> json, List<TypeMetadata> registry) {
@@ -737,11 +736,8 @@ class PalletMetadata {
         ? PalletStorageMetadata.fromJson(json['storage'])
         : null;
 
-    final calls = json['calls'] != null
-        ? (registry.firstWhere((e) => e.id == json['calls']['type']).typeDef as TypeDefVariant)
-          .variants
-          .map((e) => PalletCallMetadata.fromVariant(e))
-          .toList()
+    final call = json['calls'] != null
+        ? PalletCallMetadata.fromJson(json['calls'], registry)
         : null;
 
     final constants = (json['constants'] as List)
@@ -753,7 +749,7 @@ class PalletMetadata {
       name: json['name'],
       storage: storage,
       constants: constants,
-      calls: calls ?? [],
+      call: call,
       index: json['index'],
     );
   }
