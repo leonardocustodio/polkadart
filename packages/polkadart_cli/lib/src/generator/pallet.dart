@@ -1,25 +1,27 @@
 import 'dart:typed_data' show Uint8List;
 import 'package:code_builder/code_builder.dart'
     show
-        refer,
         Block,
-        TypeReference,
-        Reference,
-        Expression,
-        literalString,
-        declareFinal,
-        Code,
         Class,
+        Code,
+        CodeExpression,
         Constructor,
-        Parameter,
-        Method,
+        Expression,
         Field,
         FieldModifier,
-        MethodModifier;
+        Method,
+        MethodModifier,
+        Parameter,
+        Reference,
+        TypeReference,
+        declareFinal,
+        literalString,
+        refer;
 import 'package:path/path.dart' as p;
 import 'package:polkadart/scale_codec.dart' as scale_codec;
 import 'package:recase/recase.dart' show ReCase;
-import '../typegen/typegen.dart' as typegen show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput, Field;
+import '../typegen/typegen.dart' as typegen
+    show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput, Field;
 import '../typegen/runtime_metadata_v14.dart' as metadata;
 import '../typegen/references.dart' as refs;
 import '../utils/utils.dart' show sanitize, sanitizeDocs;
@@ -251,23 +253,27 @@ class Tx {
   final List<String> docs;
 
   const Tx(
-      {required this.name, required this.fields, required this.index, required this.docs, required this.codec});
+      {required this.name,
+      required this.fields,
+      required this.index,
+      required this.docs,
+      required this.codec});
 
-  factory Tx.fromMetadata(
-      metadata.CallEntryMetadata callMetadata,
-      int type,
+  factory Tx.fromMetadata(metadata.CallEntryMetadata callMetadata, int type,
       Map<int, typegen.TypeDescriptor> registry) {
     final typeDescriptor = registry[type]!;
 
     return Tx(
         name: callMetadata.name,
         fields: callMetadata.fields
-            .map((field) => typegen.Field(originalName: field.name, codec: registry[field.type]!, docs: field.docs))
+            .map((field) => typegen.Field(
+                originalName: field.name,
+                codec: registry[field.type]!,
+                docs: field.docs))
             .toList(),
         index: callMetadata.index,
         codec: typeDescriptor,
-        docs: callMetadata.docs
-    );
+        docs: callMetadata.docs);
   }
 }
 
@@ -322,7 +328,8 @@ class PalletGenerator {
 
     // Load extrinsics
     final List<Tx>? txs = palletMetadata.call?.entries
-        .map((callMetadata) => Tx.fromMetadata(callMetadata, palletMetadata.call!.type, registry))
+        .map((callMetadata) =>
+            Tx.fromMetadata(callMetadata, palletMetadata.call!.type, registry))
         .toList();
 
     // Load constants
@@ -452,8 +459,8 @@ Class createPalletQueries(
     });
 
 Class createPalletTxs(
-    PalletGenerator generator,
-    ) =>
+  PalletGenerator generator,
+) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
       classBuilder
@@ -469,38 +476,29 @@ Class createPalletTxs(
           ..name = '__api'
           ..type = refs.stateApi
           ..modifier = FieldModifier.final$))
-        // ..fields.addAll(generator.txs.map((tx) => Field((b) => b
-        //   ..name = '_${ReCase(tx.name).camelCase}'
-        //   ..type = storage.type(dirname)
-        //   ..modifier = FieldModifier.final$
-        //   ..assignment = storage.instance(dirname, generator.name).code)))
         ..methods.addAll(generator.txs.map((tx) => Method((builder) {
-          final txName = ReCase(tx.name).camelCase;
-          final Reference primitive = tx.codec.primitive(dirname);
-          builder
-            ..name = sanitize(txName, recase: false)
-            ..docs.addAll(sanitizeDocs(tx.docs))
-            ..returns = refs.future(primitive)
-            ..modifier = MethodModifier.async
-            ..requiredParameters
-            .addAll(tx.fields.map((field) => Parameter((b) => b
-            ..type = field.codec.primitive(dirname)
-            ..named = true
-            ..name = field.sanitizedName)))
-             ..body = Block((b) => b
-               // ..statements.add(declareFinal('call')
-               //     .assign(refer('_$primitive')
-                   // .property(storage.hashers.isEmpty
-                   // ? 'hashedKey'
-                   // : 'hashedKeyFor')
-                   // .call(storage.hashers.map((hasher) => refer(
-                   // 'key${storage.hashers.indexOf(hasher) + 1}'))))
-                   // .statement)
-               // ..statements.add(Code.scope((scope) => "final call = ${scope(primitive)}.values.${txName}();"))
-                 // ..statements.add(Code("final extrinsic = RuntimeCall.values.balances(value0: balancesCall);"))
-                 // ..statements.add(Code("return EncodedCall(extrinsic, RuntimeCall.codec);"))
-             );
-        })));
+              final txName = ReCase(tx.name).camelCase;
+              final Reference primitive = tx.codec.primitive(dirname);
+              builder
+                ..name = sanitize(txName, recase: false)
+                ..docs.addAll(sanitizeDocs(tx.docs))
+                ..returns = primitive
+                ..requiredParameters
+                    .addAll(tx.fields.map((field) => Parameter((b) => b
+                      ..type = field.codec.primitive(dirname)
+                      ..named = true
+                      ..name = field.sanitizedName)))
+                ..body = Block((b) => b
+                  ..statements.add(declareFinal('_call')
+                      .assign(primitive)
+                      .property('values')
+                      .property(sanitize(txName, recase: false))
+                      .call([], {
+                    for (final field in tx.fields)
+                      field.sanitizedName:
+                          CodeExpression(Code(field.sanitizedName))
+                  }).statement));
+            })));
     });
 
 Class createPalletConstants(
