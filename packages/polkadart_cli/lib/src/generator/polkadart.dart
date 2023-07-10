@@ -29,6 +29,7 @@ class PolkadartGenerator {
     final queries = createPolkadartQueries();
     final constants = createPolkadartConstants();
     final rpc = createPolkadartRpc();
+    // final tx = createPolkadartTx();
     final polkdart = createPolkadartClass();
     return GeneratedOutput(
         classes: [queries, constants, rpc, polkdart], enums: [], typedefs: []);
@@ -101,6 +102,19 @@ class PolkadartGenerator {
               ..modifier = FieldModifier.final$),
           ]);
       });
+
+  // Class createPolkadartTx() => Class((classBuilder) {
+  //   final dirname = p.dirname(filePath);
+  //   classBuilder
+  //     ..name = 'Tx'
+  //     ..constructors.add(Constructor((b) => b..constant = false))
+  //     ..fields.addAll(pallets
+  //         .where((pallet) => pallet.storages.isNotEmpty)
+  //         .map((pallet) => Field((b) => b
+  //       ..name = sanitize(pallet.name)
+  //       ..type = pallet.extrinsics(dirname)
+  //       ..modifier = FieldModifier.final$)));
+  // });
 
   Class createPolkadartClass() => Class((classBuilder) {
         classBuilder

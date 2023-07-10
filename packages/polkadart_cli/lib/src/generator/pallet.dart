@@ -244,6 +244,31 @@ class Storage {
   }
 }
 
+class Tx {
+  final String name;
+
+  final List fields;
+
+  final int index;
+
+  final List docs;
+
+  const Tx(
+      {required this.name, required this.fields, required this.index, required this.docs});
+
+  factory Tx.fromMetadata(
+      metadata.PalletCallMetadata callMetadata,
+      Map<int, TypeDescriptor> registry) {
+    // Build pallet
+    return Tx(
+        name: callMetadata.name,
+        fields: callMetadata.fields,
+        index: callMetadata.index,
+        docs: callMetadata.docs
+    );
+  }
+}
+
 class Constant {
   final String name;
   final List<int> value;
@@ -272,12 +297,15 @@ class PalletGenerator {
   String filePath;
   String name;
   List<Storage> storages;
+  // List<Call> calls;
+  List<Tx> txs;
   List<Constant> constants;
 
   PalletGenerator({
     required this.filePath,
     required this.name,
     required this.storages,
+    required this.txs,
     required this.constants,
   });
 
@@ -291,6 +319,11 @@ class PalletGenerator {
             Storage.fromMetadata(storageMetadata, registry))
         .toList();
 
+    // Load extrinsics
+    final List<Tx> txs = palletMetadata.calls
+        .map((callMetadata) => Tx.fromMetadata(callMetadata, registry))
+        .toList();
+
     // Load constants
     final List<Constant> constants = palletMetadata.constants
         .map((constantMetadata) =>
@@ -302,6 +335,7 @@ class PalletGenerator {
         filePath: filePath,
         name: palletMetadata.name,
         storages: storages ?? [],
+        txs: txs,
         constants: constants);
   }
 
@@ -310,6 +344,12 @@ class PalletGenerator {
       ..symbol = 'Queries'
       ..url = p.relative(filePath, from: from));
   }
+
+  // TypeReference txs(BasePath from) {
+  //   return TypeReference((b) => b
+  //     ..symbol = 'Txs'
+  //     ..url = p.relative(filePath, from: from));
+  // }
 
   TypeReference constantsType(BasePath from) {
     return TypeReference((b) => b
@@ -321,6 +361,9 @@ class PalletGenerator {
     final List<Class> classes = [];
     if (storages.isNotEmpty) {
       classes.add(createPalletQueries(this));
+    }
+    if (txs.isNotEmpty) {
+      classes.add(createPalletTxs(this));
     }
     if (constants.isNotEmpty) {
       classes.add(createPalletConstants(this));
@@ -405,6 +448,44 @@ Class createPalletQueries(
                   ..statements.add(
                       storage.isNullable ? Code('') : Code('/* Default */')));
             })));
+    });
+
+Class createPalletTxs(
+    PalletGenerator generator,
+    ) =>
+    Class((classBuilder) {
+      final dirname = p.dirname(generator.filePath);
+      classBuilder
+        ..name = 'Txs'
+        ..constructors.add(Constructor((b) => b
+          ..constant = true
+          ..requiredParameters.add(Parameter((b) => b
+            ..toThis = true
+            ..required = false
+            ..named = false
+            ..name = '__api'))))
+        ..fields.add(Field((b) => b
+          ..name = '__api'
+          ..type = refs.stateApi
+          ..modifier = FieldModifier.final$))
+        // ..fields.addAll(generator.txs.map((tx) => Field((b) => b
+        //   ..name = '_${ReCase(tx.name).camelCase}'
+        //   ..type = storage.type(dirname)
+        //   ..modifier = FieldModifier.final$
+        //   ..assignment = storage.instance(dirname, generator.name).code)))
+        ..methods.addAll(generator.txs.map((tx) => Method((builder) {
+          final txName = ReCase(tx.name).camelCase;
+          // final Reference primitive = tx.fields(dirname);
+          builder
+            ..name = sanitize(txName, recase: false)
+             ..body = Block((b) => b
+               ..statements.add(declareFinal('call')
+                   .assign(refer('_$txName')
+                   .property('.values.')
+                   .call('abc'))
+                   .statement)
+             )
+        })));
     });
 
 Class createPalletConstants(

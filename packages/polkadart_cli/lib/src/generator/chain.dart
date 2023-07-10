@@ -40,7 +40,7 @@ class ChainGenerator {
         // Remove Empty Pallets
         // TODO: remove this field once we support extrinsics
         .where(
-            (pallet) => pallet.storage != null || pallet.constants.isNotEmpty)
+            (pallet) => pallet.calls != null || pallet.storage != null || pallet.constants.isNotEmpty)
         .map((pallet) => PalletGenerator.fromMetadata(
               filePath: path.join(
                   palletsPath, '${ReCase(pallet.name).snakeCase}.dart'),
