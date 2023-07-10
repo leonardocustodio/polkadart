@@ -1,7 +1,6 @@
 import 'package:convert/convert.dart' show hex;
 import 'package:substrate_bip39/substrate_bip39.dart'
-    show SubstrateBip39, CryptoScheme;
-import 'package:bip39_mnemonic/bip39_mnemonic.dart' show Mnemonic, Language;
+    show SubstrateBip39, Mnemonic, Language;
 import 'package:test/test.dart';
 
 void main() {
@@ -141,8 +140,8 @@ void main() {
       final entropy = Mnemonic.fromSentence(phrase, Language.english).entropy;
       final seed =
           await SubstrateBip39.seedFromEntropy(entropy, password: 'Substrate');
-      final seedFromPhrase = await SubstrateBip39.seedFromUri(
-          phrase, CryptoScheme.ed25519,
+      final seedFromPhrase = await SubstrateBip39.ed25519.seedFromUri(
+          phrase,
           password: 'Substrate');
       final secret = await SubstrateBip39.miniSecretFromEntropy(entropy,
           password: 'Substrate');
@@ -188,6 +187,34 @@ void main() {
         'bottom drive obey lake curtain smoke basket hold race lonely fit walk//1//2//3',
         'b4b62b076ae5e9b63dc6a976924fa7a83bf0e7d2d627bd4374344f78c871e248',
       ],
+      [
+        'bottom drive obey lake curtain smoke basket hold race lonely fit walk//18446744073709551616',
+        'e95232125504305f665b8e8c891e1e1e87fcbb0b4eff38a9e100862207d2ce97',
+      ],
+      [
+        'bottom drive obey lake curtain smoke basket hold race lonely fit walk//18446744073709551615',
+        '62f06c42dd25e780d5be1610c571e5eaa30fc3d510d946f92fb88f17e94449a7',
+      ],
+      [
+        'bottom drive obey lake curtain smoke basket hold race lonely fit walk//0',
+        'f8dfdb0f1103d9fb2905204ac32529d5f148761c4321b2865b0a40e15be75f57',
+      ],
+      [
+        'bottom drive obey lake curtain smoke basket hold race lonely fit walk//-1',
+        '42fa53169f3fcff0bb2992abb50f40324779794e6833e788e7d18947feb0790b',
+      ],
+      [
+        'bottom drive obey lake curtain smoke basket hold race lonely fit walk//75f57',
+        '23b0d4c3892481d67fac285e2f3b5d2f6c8c55482506fe25f2fe6197f42432ab',
+      ],
+      [
+        'bottom drive obey lake curtain smoke basket hold race lonely fit walk//0xFF',
+        'ae2383139b3aa529c5997ed82f62def14243fbf92bc9ef7badf72e0ff289ea82',
+      ],
+      [
+        'bottom drive obey lake curtain smoke basket hold race lonely fit walk//00011111',
+        'ebbc952247ed4c148e0d7ec2a60d8ee12d656240ea4f64065412a6feafadfb63',
+      ],
     ];
 
     for (final vector in testVectors) {
@@ -195,8 +222,20 @@ void main() {
       final expectedSeed = hex.decode(vector[1]);
 
       final seed =
-          await SubstrateBip39.seedFromUri(phrase, CryptoScheme.ed25519);
+          await SubstrateBip39.ed25519.seedFromUri(phrase);
       expect(seed, expectedSeed);
     }
+  });
+
+  test('seedFromUri', () async {
+    final entropy = hex.decode('59d1d7b63fbc9a343360a7dabc035f66d7504c549696d2b0b1ae56862911a821');
+    final seed = await SubstrateBip39.seedFromEntropy(entropy);
+    expect(hex.encode(seed), '38b35a8cfbad9e9ca3ed4260be142b8237494aea83dee55d24f6228d4014b5736f40f51ebb8ddab08c31da0da394a0e0f68cb0e06402497e31908e942bf79d78');
+  });
+
+  test('miniSecretFromEntropy', () async {
+    final entropy = hex.decode('59d1d7b63fbc9a343360a7dabc035f66d7504c549696d2b0b1ae56862911a821');
+    final seed = await SubstrateBip39.miniSecretFromEntropy(entropy);
+    expect(hex.encode(seed), '38b35a8cfbad9e9ca3ed4260be142b8237494aea83dee55d24f6228d4014b573');
   });
 }
