@@ -4,6 +4,7 @@ import 'package:collection/collection.dart'
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     show U64Codec, StrCodec;
 import 'package:pointycastle/digests/blake2b.dart' show Blake2bDigest;
+import './exceptions.dart' show SubstrateBip39Exception;
 
 Function eq = const ListEquality().equals;
 Function deepEq = const DeepCollectionEquality().equals;
@@ -26,6 +27,7 @@ class DeriveJunction {
   const DeriveJunction(this.hardenedDerivation, this.junctionId)
       : assert(junctionId.length == junctionIdLength);
 
+  /// Create a new DeriveJunction from a given byte encoded value.
   factory DeriveJunction.fromBytes(bool hard, Uint8List junctionId) {
     final bytes = Uint8List(junctionIdLength);
     if (junctionId.length > junctionIdLength) {
@@ -49,9 +51,11 @@ class DeriveJunction {
       code = str;
     }
 
-    final n = BigInt.tryParse(code);
-    final List<int> bytes;
-    if (n != null) {
+    final n = BigInt.tryParse(code, radix: 10);
+    final Uint8List bytes;
+    if (n != null &&
+        n >= BigInt.zero &&
+        n < BigInt.parse('18446744073709551616')) {
       // number
       bytes = U64Codec.codec.encode(n);
     } else {
@@ -59,10 +63,13 @@ class DeriveJunction {
       bytes = StrCodec.codec.encode(code);
     }
 
-    return DeriveJunction.fromBytes(hard, Uint8List.fromList(bytes));
+    return DeriveJunction.fromBytes(hard, bytes);
   }
 
+  /// Return `true` if the junction is soft.
   bool get isSoft => !hardenedDerivation;
+
+  /// Return `true` if the junction is hard.
   bool get isHard => hardenedDerivation;
 
   @override
@@ -75,29 +82,61 @@ class DeriveJunction {
   int get hashCode => Object.hash(hardenedDerivation, junctionId);
 }
 
+/// A secret uri (`SURI`) that can be used to generate a key pair.
+///
+/// The `SURI` can be parsed from a string. The string is interpreted in the following way:
+///
+/// - If `string` is a possibly `0x` prefixed 64-digit hex string, then it will be interpreted
+/// directly as a `MiniSecretKey` (aka "seed" in `subkey`).
+/// - If `string` is a valid BIP-39 key phrase of 12, 15, 18, 21 or 24 words, then the key will
+/// be derived from it. In this case:
+///   - the phrase may be followed by one or more items delimited by `/` characters.
+///   - the path may be followed by `///`, in which case everything after the `///` is treated
+/// as a password.
+/// - If `string` begins with a `/` character it is prefixed with the Substrate public `DEV_PHRASE`
+///   and interpreted as above.
+///
+/// In this case they are interpreted as HDKD junctions; purely numeric items are interpreted as
+/// integers, non-numeric items as strings. Junctions prefixed with `/` are interpreted as soft
+/// junctions, and with `//` as hard junctions.
+///
+/// There is no correspondence mapping between `SURI` strings and the keys they represent.
+/// Two different non-identical strings can actually lead to the same secret being derived.
+/// Notably, integer junction indices may be legally prefixed with arbitrary number of zeros.
+/// Similarly an empty password (ending the `SURI` with `///`) is perfectly valid and will
+/// generally be equivalent to no password at all.
+///
 class SecretUri {
+  /// The phrase to derive the private key.
+  ///
+  /// This can either be a 64-bit hex string or a BIP-39 key phrase.
   final String phrase;
+
+  /// Optional password as given as part of the uri.
   final String? password;
+
+  /// The junctions as part of the uri.
   final List<DeriveJunction> junctions;
 
   /// The root phrase for our publicly known keys.
   static const devPhrase =
       'bottom drive obey lake curtain smoke basket hold race lonely fit walk';
 
-  static RegExp secretPhraseRegex = RegExp(
+  static final RegExp _secretPhraseRegex = RegExp(
       r'^(?<phrase>[\d\w ]+)?(?<path>(//?[^/]+)*)(///(?<password>.*))?$');
-  static RegExp junctionRegex = RegExp(r'/(/?[^/]+)');
+  static final RegExp _junctionRegex = RegExp(r'/(/?[^/]+)');
 
   SecretUri(this.phrase, this.password, this.junctions);
 
   factory SecretUri.fromStr(String str) {
-    final match = secretPhraseRegex.firstMatch(str);
-    if (match == null) {
-      throw Exception('Invalid format'); // TODO: Create custom exception
+    final matches = _secretPhraseRegex.allMatches(str);
+    if (matches.length != 1) {
+      throw SubstrateBip39Exception.invalidFormat();
     }
+    final match = matches.first;
 
     final junctions =
-        junctionRegex.allMatches(match.namedGroup('path')!).map((junction) {
+        _junctionRegex.allMatches(match.namedGroup('path')!).map((junction) {
       return DeriveJunction.fromStr(junction.group(1)!);
     }).toList();
 
