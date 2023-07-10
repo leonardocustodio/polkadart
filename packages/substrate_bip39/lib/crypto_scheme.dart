@@ -80,9 +80,31 @@ abstract class CryptoScheme {
   Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path,
       {Uint8List? output});
 
-  /// Returns the 32 bytes seed from the English BIP39 seed `phrase`
+  /// Parses secret uri (`URI`) into a 32 bytes that can be used to generate a key pair.
   ///
-  /// Reference
+  /// The `URI` is parsed from a string. The string is interpreted in the following way:
+  ///
+  /// - If `string` is a possibly `0x` prefixed 64-digit hex string, then it will be interpreted
+  /// directly as a `MiniSecretKey` (aka "seed" in `subkey`).
+  /// - If `string` is a valid BIP-39 key phrase of 12, 15, 18, 21 or 24 words, then the key will
+  /// be derived from it. In this case:
+  ///   - the phrase may be followed by one or more items delimited by `/` characters.
+  ///   - the path may be followed by `///`, in which case everything after the `///` is treated
+  /// as a password.
+  /// - If `string` begins with a `/` character it is prefixed with the Substrate public `DEV_PHRASE`
+  ///   and interpreted as above.
+  ///
+  /// In this case they are interpreted as HDKD junctions; purely numeric items are interpreted as
+  /// integers, non-numeric items as strings. Junctions prefixed with `/` are interpreted as soft
+  /// junctions, and with `//` as hard junctions.
+  ///
+  /// There is no correspondence mapping between `SURI` strings and the keys they represent.
+  /// Two different non-identical strings can actually lead to the same secret being derived.
+  /// Notably, integer junction indices may be legally prefixed with arbitrary number of zeros.
+  /// Similarly an empty password (ending the `SURI` with `///`) is perfectly valid and will
+  /// generally be equivalent to no password at all.
+  ///
+  /// Reference:
   /// https://github.com/paritytech/substrate/blob/polkadot-v0.9.43/client/cli/src/commands/utils.rs#L57-L154
   Future<List<int>> seedFromUri(String uri, {String? password}) async {
     try {
