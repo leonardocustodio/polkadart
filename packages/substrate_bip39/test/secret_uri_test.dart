@@ -1,4 +1,5 @@
-import 'package:substrate_bip39/substrate_bip39.dart' show SecretUri, DeriveJunction;
+import 'package:substrate_bip39/substrate_bip39.dart'
+    show SecretUri, DeriveJunction;
 import 'package:test/test.dart';
 
 void main() {

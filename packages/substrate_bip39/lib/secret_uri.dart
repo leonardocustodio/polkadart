@@ -53,7 +53,9 @@ class DeriveJunction {
 
     final n = BigInt.tryParse(code, radix: 10);
     final Uint8List bytes;
-    if (n != null && n >= BigInt.zero && n < BigInt.parse('18446744073709551616')) {
+    if (n != null &&
+        n >= BigInt.zero &&
+        n < BigInt.parse('18446744073709551616')) {
       // number
       bytes = U64Codec.codec.encode(n);
     } else {
@@ -103,11 +105,11 @@ class DeriveJunction {
 /// Notably, integer junction indices may be legally prefixed with arbitrary number of zeros.
 /// Similarly an empty password (ending the `SURI` with `///`) is perfectly valid and will
 /// generally be equivalent to no password at all.
-/// 
+///
 class SecretUri {
   /// The phrase to derive the private key.
-	///
-	/// This can either be a 64-bit hex string or a BIP-39 key phrase.
+  ///
+  /// This can either be a 64-bit hex string or a BIP-39 key phrase.
   final String phrase;
 
   /// Optional password as given as part of the uri.

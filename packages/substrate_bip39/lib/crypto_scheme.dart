@@ -31,7 +31,8 @@ abstract class CryptoScheme {
     };
     final entropy = wordsToEntropy[words];
     if (entropy == null) {
-      throw SecretStringException.invalidEntropy('Invalid number of words given for phrase, must be 12/15/18/21/24');
+      throw SecretStringException.invalidEntropy(
+          'Invalid number of words given for phrase, must be 12/15/18/21/24');
     }
     return Mnemonic.generate(Language.english, entropyLength: entropy);
   }
@@ -76,7 +77,8 @@ abstract class CryptoScheme {
   }
 
   /// Derive a child key from a series of given junctions.
-  Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path, {Uint8List? output});
+  Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path,
+      {Uint8List? output});
 
   /// Returns the 32 bytes seed from the English BIP39 seed `phrase`
   ///
@@ -85,12 +87,13 @@ abstract class CryptoScheme {
   Future<List<int>> seedFromUri(String uri, {String? password}) async {
     try {
       final entropy = Mnemonic.fromSentence(uri, Language.english).entropy;
-      final seed = await CryptoScheme.seedFromEntropy(entropy, password: password);
+      final seed =
+          await CryptoScheme.seedFromEntropy(entropy, password: password);
       return seed.sublist(0, 32);
       // ignore: empty_catches
     } catch (e) {}
 
-    SecretUri secretUri = SecretUri.fromStr(uri);
+    final secretUri = SecretUri.fromStr(uri);
 
     // The phrase is hex encoded secret seed
     if (secretUri.phrase.startsWith('0x')) {
@@ -101,15 +104,17 @@ abstract class CryptoScheme {
       }
     }
 
-    String? passwordOverride = password ?? secretUri.password;
-    final entropy;
+    final passwordOverride = password ?? secretUri.password;
+    final List<int> entropy;
     try {
-      entropy = Mnemonic.fromSentence(secretUri.phrase, Language.english).entropy;
-    } on Exception catch(e) {
+      entropy =
+          Mnemonic.fromSentence(secretUri.phrase, Language.english).entropy;
+    } on Exception catch (e) {
       throw SecretStringException.fromException(e);
     }
-        
-    List<int> seed = await CryptoScheme.seedFromEntropy(entropy, password: passwordOverride);
+
+    List<int> seed =
+        await CryptoScheme.seedFromEntropy(entropy, password: passwordOverride);
     seed = seed.sublist(0, 32);
 
     return await derive(seed, secretUri.junctions);

@@ -7,9 +7,8 @@ import '../crypto_scheme.dart' show CryptoScheme;
 import '../secret_uri.dart' show DeriveJunction;
 
 class Ed25519 extends CryptoScheme {
+  const Ed25519() : super(32);
 
-  const Ed25519(): super(32);
-  
   /// Derive a child key from a series of given junctions.
   ///
   /// Reference: https://github.com/paritytech/substrate/blob/polkadot-v0.9.43/primitives/core/src/ed25519.rs#L385-L399
@@ -19,7 +18,8 @@ class Ed25519 extends CryptoScheme {
     output ??= Uint8List.fromList(seed);
     for (final junction in path) {
       if (junction.isSoft) {
-        throw SecretStringException.invalidPath('Soft key derivation is not supported for ED25519');
+        throw SecretStringException.invalidPath(
+            'Soft key derivation is not supported for ED25519');
       }
       deriveHardJunction(output, junction.junctionId, output: output);
     }
@@ -41,4 +41,3 @@ class Ed25519 extends CryptoScheme {
     return output;
   }
 }
-
