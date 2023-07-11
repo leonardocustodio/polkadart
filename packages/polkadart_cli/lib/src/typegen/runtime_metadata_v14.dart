@@ -611,9 +611,12 @@ class PalletCallMetadata {
     required this.entries,
   });
 
-  factory PalletCallMetadata.fromJson(Map<String, dynamic> json,  List<TypeMetadata> registry) {
-    final typeDef = registry.firstWhere((e) => e.id == json['type']).typeDef as TypeDefVariant;
-    final calls = typeDef.variants.map((e) => CallEntryMetadata.fromVariant(e)).toList();
+  factory PalletCallMetadata.fromJson(
+      Map<String, dynamic> json, List<TypeMetadata> registry) {
+    final typeDef = registry.firstWhere((e) => e.id == json['type']).typeDef
+        as TypeDefVariant;
+    final calls =
+        typeDef.variants.map((e) => CallEntryMetadata.fromVariant(e)).toList();
 
     return PalletCallMetadata(
       type: json['type'] as int,
@@ -625,31 +628,30 @@ class PalletCallMetadata {
 /// All metadata of the pallet's extrinsics.
 class CallEntryMetadata {
   /// Type of the pallet call.
-    final String name;
+  final String name;
 
-    final List<Field> fields;
+  final List<Field> fields;
 
-    final int index;
+  final int index;
 
-    final List<String> docs;
+  final List<String> docs;
 
-    const CallEntryMetadata({
-      required this.name,
-      required this.fields,
-      required this.index,
-      required this.docs,
-    });
+  const CallEntryMetadata({
+    required this.name,
+    required this.fields,
+    required this.index,
+    required this.docs,
+  });
 
-    factory CallEntryMetadata.fromVariant(Variant variant) {
-      return CallEntryMetadata(
-        name: variant.name,
-        fields: variant.fields,
-        index: variant.index,
-        docs: variant.docs,
-      );
-    }
+  factory CallEntryMetadata.fromVariant(Variant variant) {
+    return CallEntryMetadata(
+      name: variant.name,
+      fields: variant.fields,
+      index: variant.index,
+      docs: variant.docs,
+    );
+  }
 }
-
 
 /// All metadata of the pallet's storage.
 class PalletStorageMetadata {
@@ -724,20 +726,26 @@ class PalletMetadata {
   /// call and origin variants.
   final int index;
 
-  PalletMetadata(
-      {required this.name,
-      required this.storage,
-      required this.constants,
-      required this.call,
-      required this.index});
+  /// Save the runtimeCall type
+  final int runtimeCallType;
 
-  factory PalletMetadata.fromJson(Map<String, dynamic> json, List<TypeMetadata> registry) {
+  PalletMetadata({
+    required this.name,
+    required this.storage,
+    required this.constants,
+    required this.call,
+    required this.index,
+    required this.runtimeCallType,
+  });
+
+  factory PalletMetadata.fromJson(Map<String, dynamic> json,
+      List<TypeMetadata> lookupTypes, int extrinsicType) {
     final storage = json['storage'] != null
         ? PalletStorageMetadata.fromJson(json['storage'])
         : null;
 
     final call = json['calls'] != null
-        ? PalletCallMetadata.fromJson(json['calls'], registry)
+        ? PalletCallMetadata.fromJson(json['calls'], lookupTypes)
         : null;
 
     final constants = (json['constants'] as List)
@@ -751,6 +759,7 @@ class PalletMetadata {
       constants: constants,
       call: call,
       index: json['index'],
+      runtimeCallType: lookupTypes[extrinsicType].params[1].type!,
     );
   }
 }
@@ -831,6 +840,8 @@ class RuntimeMetadataV14 {
       required this.runtimeTypeId});
 
   factory RuntimeMetadataV14.fromJson(Map<String, dynamic> json) {
+    final extrinsicMetadata = ExtrinsicMetadata.fromJson(json['extrinsic']);
+
     final types = (json['lookup']['types'] as List)
         .cast<Map<String, dynamic>>()
         .map((json) => TypeMetadata.fromJson(json))
@@ -838,13 +849,14 @@ class RuntimeMetadataV14 {
 
     final pallets = (json['pallets'] as List)
         .cast<Map<String, dynamic>>()
-        .map((json) => PalletMetadata.fromJson(json, types))
+        .map((json) =>
+            PalletMetadata.fromJson(json, types, extrinsicMetadata.type))
         .toList();
 
     return RuntimeMetadataV14(
       registry: types,
       pallets: pallets,
-      extrinsic: ExtrinsicMetadata.fromJson(json['extrinsic']),
+      extrinsic: extrinsicMetadata,
       runtimeTypeId: json['type'],
     );
   }

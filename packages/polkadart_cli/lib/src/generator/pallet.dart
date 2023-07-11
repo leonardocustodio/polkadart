@@ -307,6 +307,7 @@ class PalletGenerator {
   List<Storage> storages;
   List<Tx> txs;
   List<Constant> constants;
+  typegen.TypeDescriptor runtimeCall;
 
   PalletGenerator({
     required this.filePath,
@@ -314,6 +315,7 @@ class PalletGenerator {
     required this.storages,
     required this.txs,
     required this.constants,
+    required this.runtimeCall,
   });
 
   factory PalletGenerator.fromMetadata(
@@ -340,11 +342,13 @@ class PalletGenerator {
 
     // Build pallet
     return PalletGenerator(
-        filePath: filePath,
-        name: palletMetadata.name,
-        storages: storages ?? [],
-        txs: txs ?? [],
-        constants: constants);
+      filePath: filePath,
+      name: palletMetadata.name,
+      storages: storages ?? [],
+      txs: txs ?? [],
+      constants: constants,
+      runtimeCall: registry[palletMetadata.runtimeCallType]!,
+    );
   }
 
   TypeReference queries(typegen.BasePath from) {
@@ -479,10 +483,13 @@ Class createPalletTxs(
         ..methods.addAll(generator.txs.map((tx) => Method((builder) {
               final txName = ReCase(tx.name).camelCase;
               final Reference primitive = tx.codec.primitive(dirname);
+              final Reference runtimePrimitive =
+                  generator.runtimeCall.primitive(dirname);
+
               builder
                 ..name = sanitize(txName, recase: false)
                 ..docs.addAll(sanitizeDocs(tx.docs))
-                ..returns = primitive
+                ..returns = runtimePrimitive
                 ..requiredParameters
                     .addAll(tx.fields.map((field) => Parameter((b) => b
                       ..type = field.codec.primitive(dirname)
@@ -497,9 +504,16 @@ Class createPalletTxs(
                     for (final field in tx.fields)
                       field.sanitizedName:
                           CodeExpression(Code(field.sanitizedName))
-                  }).statement));
+                  }).statement)
+                  ..statements.add(runtimePrimitive
+                      .property('values')
+                      .property(ReCase(generator.name).camelCase)
+                      .call([], {'value0': CodeExpression(Code('_call'))})
+                      .returned
+                      .statement));
             })));
     });
+//final extrinsic = RuntimeCall.values.balances(value0: balancesCall);
 
 Class createPalletConstants(
   PalletGenerator generator,
