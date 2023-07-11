@@ -490,9 +490,10 @@ Class createPalletTxs(
                 ..name = sanitize(txName, recase: false)
                 ..docs.addAll(sanitizeDocs(tx.docs))
                 ..returns = runtimePrimitive
-                ..requiredParameters
+                ..optionalParameters
                     .addAll(tx.fields.map((field) => Parameter((b) => b
-                      ..type = field.codec.primitive(dirname)
+                      ..required =
+                          field.codec.primitive(dirname).isNullable != true
                       ..named = true
                       ..name = field.sanitizedName)))
                 ..body = Block((b) => b
