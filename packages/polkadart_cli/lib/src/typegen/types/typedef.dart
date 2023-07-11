@@ -41,7 +41,9 @@ class TypeDefBuilder extends TypeBuilder {
 
   @override
   TypeReference codec(BasePath from) {
-    return generator.codec(from);
+    return TypeReference((b) => b
+      ..symbol = '${name}Codec'
+      ..url = p.relative(filePath, from: from));
   }
 
   @override
@@ -80,6 +82,9 @@ class TypeDefBuilder extends TypeBuilder {
   GeneratedOutput build() {
     final typeDef = classbuilder.createTypeDef(
         name: name, reference: generator.primitive(p.dirname(filePath)));
-    return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
+    final typeDefCodec = classbuilder.createTypeDef(
+        name: '${name}Codec', reference: generator.codec(p.dirname(filePath)));
+    return GeneratedOutput(
+        classes: [], enums: [], typedefs: [typeDef, typeDefCodec]);
   }
 }

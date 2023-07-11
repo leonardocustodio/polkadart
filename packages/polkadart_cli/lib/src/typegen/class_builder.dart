@@ -8,30 +8,106 @@ import 'package:code_builder/code_builder.dart'
         Constructor,
         Enum,
         EnumValue,
+        Expression,
         Field,
         FieldModifier,
         Method,
+        MethodType,
         Parameter,
         Reference,
         TypeDef,
         TypeReference,
         declareFinal,
         literalNum,
+        literalList,
         literalString,
         refer;
 import './typegen.dart' as generators
     show
         CompositeBuilder,
+        SequenceDescriptor,
+        ArrayDescriptor,
         Field,
         PrimitiveDescriptor,
         Variant,
         VariantBuilder,
-        TypeBuilderContext;
+        TypeBuilderContext,
+        TypeDefBuilder;
 import './references.dart' as refs;
 import '../utils/utils.dart' show sanitizeDocs;
 
 String classToCodecName(String className) {
   return '\$${className}Codec';
+}
+
+Method overrideEqualsMethod(
+    Reference classType, List<generators.Field> fields) {
+  Expression body = refer('other').isA(classType);
+
+  for (final field in fields) {
+    final fieldname = field.sanitizedName;
+    final codec = field.codec is generators.TypeDefBuilder
+        ? (field.codec as generators.TypeDefBuilder).generator
+        : field.codec;
+
+    // Compare two lists using quiver
+    if (codec is generators.SequenceDescriptor ||
+        codec is generators.ArrayDescriptor) {
+      body = body.and(refs.quiverListsEqual.call([
+        refer('other').property(fieldname),
+        refer(fieldname == 'other' ? 'this.other' : fieldname),
+      ]));
+      continue;
+    }
+
+    // Simple variable comparison
+    body = body.and(refer('other')
+        .property(fieldname)
+        .equalTo(refer(fieldname == 'other' ? 'this.other' : fieldname)));
+  }
+
+  if (fields.isNotEmpty) {
+    body = refs.identical.call([refer('this'), refer('other')]).or(body);
+  }
+
+  return Method((b) => b
+    ..name = 'operator =='
+    ..annotations.add(refer('override'))
+    ..returns = refs.bool
+    ..requiredParameters.add(Parameter((b) => b
+      ..type = refs.object
+      ..name = 'other'))
+    ..body = body.code);
+}
+
+Method overrideHashCodeMethod(List<generators.Field> fields) {
+  return Method((b) {
+    final builder = b
+      ..name = 'hashCode'
+      ..type = MethodType.getter
+      ..annotations.add(refer('override'))
+      ..returns = refs.int;
+
+    if (fields.isEmpty) {
+      // If the object doesn't have properties, the hashCode is the same as the runtimeType
+      builder.body = refer('runtimeType.hashCode').code;
+    } else if (fields.length == 1) {
+      // Object.hash expect at least 2 arguments
+      builder.body =
+          refer(fields.first.sanitizedName).property('hashCode').code;
+    } else if (fields.length <= 20) {
+      // Object.hash function only supports up to 20 arguments
+      builder.body = refs.object
+          .property('hash')
+          .call(fields.map((field) => refer(field.sanitizedName)))
+          .code;
+    } else {
+      // if the object has more than 20 properties, use Object.hashAll instead
+      builder.body = refs.object.property('hashAll').call([
+        literalList(fields.map((field) => refer(field.sanitizedName)))
+      ]).code;
+    }
+  });
 }
 
 Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
@@ -76,6 +152,9 @@ Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
           ..name = 'toJson'
           ..returns = builderContext.jsonTypeFrom(compositeGenerator)
           ..body = compositeGenerator.toJson(dirname).code))
+        ..methods
+            .add(overrideEqualsMethod(classType, compositeGenerator.fields))
+        ..methods.add(overrideHashCodeMethod(compositeGenerator.fields))
         ..fields.addAll(compositeGenerator.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
           ..type = field.codec.primitive(dirname)
@@ -357,6 +436,8 @@ Class createVariantClass(
           ..annotations.add(refer('override'))
           ..returns = jsonType
           ..body = variant.toJson(dirname).code))
+        ..methods.add(overrideEqualsMethod(refer(variant.name), variant.fields))
+        ..methods.add(overrideHashCodeMethod(variant.fields))
         ..fields.addAll(variant.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
           ..type = field.codec.primitive(dirname)
