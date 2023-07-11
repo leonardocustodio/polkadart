@@ -44,22 +44,23 @@ class CompositeBuilder extends TypeBuilder {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (fields.isEmpty) {
-      return literalNull;
+      return literalNull.asLiteralConstant();
     }
 
-    final Map<String, Expression> map = {
-      for (final field in fields)
-        field.sanitizedName:
-            field.codec.valueFrom(from, input, constant: constant),
-    };
+    final args = CallArguments.fromFields(fields,
+        (field) => field.codec.valueFrom(from, input, constant: constant));
 
-    if (constant && map.values.every((value) => value.isConst)) {
-      return primitive(from).constInstance([], map);
+    if (constant && args.every((value) => value.isConstant)) {
+      return primitive(from)
+          .constInstance(args.positional, args.named)
+          .asLiteralConstant();
     }
 
-    return primitive(from).newInstance([], map);
+    return primitive(from)
+        .newInstance(args.positional, args.named)
+        .asLiteralValue();
   }
 
   @override

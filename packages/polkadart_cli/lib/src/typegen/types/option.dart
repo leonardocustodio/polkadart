@@ -42,19 +42,26 @@ class OptionDescriptor extends TypeDescriptor {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (inner is OptionDescriptor || inner.primitive(from).isNullable == true) {
       if (input.read() == 0) {
-        return refs.option(inner.primitive(from)).newInstanceNamed('none', []);
+        return refs
+            .option(inner.primitive(from))
+            .newInstanceNamed('none', []).asLiteralConstant();
       } else {
-        return refs.option(inner.primitive(from)).newInstanceNamed('some', [
-          inner.valueFrom(from, input),
+        final innerValue = inner.valueFrom(from, input);
+        final expression =
+            refs.option(inner.primitive(from)).newInstanceNamed('some', [
+          innerValue,
         ]);
+        return constant && innerValue.isConstant
+            ? expression.asLiteralConstant()
+            : expression.asLiteralValue();
       }
     }
 
     if (input.read() == 0) {
-      return literalNull;
+      return literalNull.asLiteralConstant();
     } else {
       return inner.valueFrom(from, input);
     }

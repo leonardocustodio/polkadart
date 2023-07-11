@@ -100,21 +100,21 @@ class ArrayDescriptor extends TypeDescriptor {
     ]);
   }
 
-  Expression listToExpression(List<int> values, bool constant) {
+  LiteralValue listToExpression(List<int> values, bool constant) {
     final TypeReference listType = refs.list(ref: refs.int);
     if (!constant && values.every((value) => value == 0)) {
       return listType.newInstanceNamed(
           'filled',
           [literalNum(values.length), literalNum(0)],
-          {'growable': literalFalse});
+          {'growable': literalFalse}).asLiteralValue();
     } else if (constant) {
-      return literalConstList(values, refs.int);
+      return literalConstList(values, refs.int).asLiteralConstant();
     }
-    return literalList(values, refs.int);
+    return literalList(values, refs.int).asLiteralValue();
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (typeDef is PrimitiveDescriptor) {
       switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
@@ -147,15 +147,16 @@ class ArrayDescriptor extends TypeDescriptor {
       }
     }
 
-    final values = <Expression>[
+    final values = <LiteralValue>[
       for (int i = 0; i < length; i++)
         typeDef.valueFrom(from, input, constant: constant)
     ];
 
-    if (values.every((value) => value.isConst)) {
-      return literalConstList(values);
+    if (values.every((value) => value.isConstant)) {
+      return literalConstList(values.map((v) => v.expression).toList())
+          .asLiteralConstant();
     }
-    return literalList(values);
+    return literalList(values).asLiteralValue();
   }
 
   @override

@@ -50,7 +50,7 @@ class TypeDefBuilder extends TypeBuilder {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     return generator.valueFrom(from, input, constant: constant);
   }
 

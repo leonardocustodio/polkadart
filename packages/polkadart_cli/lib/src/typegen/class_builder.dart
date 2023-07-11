@@ -47,8 +47,16 @@ Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
         ..docs.addAll(sanitizeDocs(compositeGenerator.docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
-          ..optionalParameters.addAll(
-              compositeGenerator.fields.map((field) => Parameter((b) => b
+          ..requiredParameters.addAll(compositeGenerator.fields
+              .where((field) => field.originalName == null)
+              .map((field) => Parameter((b) => b
+                ..toThis = true
+                ..required = false
+                ..named = false
+                ..name = field.sanitizedName)))
+          ..optionalParameters.addAll(compositeGenerator.fields
+              .where((field) => field.originalName != null)
+              .map((field) => Parameter((b) => b
                 ..toThis = true
                 ..required = field.codec.primitive(dirname).isNullable != true
                 ..named = true
@@ -112,10 +120,15 @@ Class createCompositeCodec(generators.CompositeBuilder compositeGenerator) {
           ..name = 'input'))
         ..body = Block((b) => b
           ..statements.add(classType
-              .newInstance([], {
-                for (var field in compositeGenerator.fields)
-                  field.sanitizedName: field.codec.decode(dirname)
-              })
+              .newInstance(
+                  compositeGenerator.fields
+                      .where((field) => field.originalName == null)
+                      .map((field) => field.codec.decode(dirname)),
+                  {
+                    for (var field in compositeGenerator.fields
+                        .where((field) => field.originalName != null))
+                      field.sanitizedName: field.codec.decode(dirname)
+                  })
               .returned
               .statement))))
       ..methods.add(Method((b) => b
@@ -206,16 +219,28 @@ Class createVariantValuesClass(
             (b) => b
               ..returns = refer(variant.name)
               ..name = generators.Field.toFieldName(variant.name)
-              ..body = variant.fields.isEmpty
-                  ? Code('return const ${variant.name}();')
-                  : Block.of([
-                      Code('return ${variant.name}('),
-                      Block.of(variant.fields.map((field) => Code(
-                          '${field.sanitizedName}: ${field.sanitizedName},'))),
-                      Code(');'),
-                    ])
-              ..optionalParameters
-                  .addAll(variant.fields.map((field) => Parameter((b) => b
+              ..body = refer(variant.name)
+                  .call(
+                      variant.fields
+                          .where((field) => field.originalName == null)
+                          .map((field) => refer(field.sanitizedName)),
+                      {
+                        for (final field in variant.fields
+                            .where((field) => field.originalName != null))
+                          field.sanitizedName: refer(field.sanitizedName)
+                      })
+                  .returned
+                  .statement
+              ..requiredParameters.addAll(variant.fields
+                  .where((field) => field.originalName == null)
+                  .map((field) => Parameter((b) => b
+                    ..required = false
+                    ..named = false
+                    ..type = field.codec.primitive(dirname)
+                    ..name = field.sanitizedName)))
+              ..optionalParameters.addAll(variant.fields
+                  .where((field) => field.originalName != null)
+                  .map((field) => Parameter((b) => b
                     ..required =
                         field.codec.primitive(dirname).isNullable != true
                     ..named = true
@@ -313,8 +338,16 @@ Class createVariantClass(
         ..docs.addAll(sanitizeDocs(variant.docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
-          ..optionalParameters
-              .addAll(variant.fields.map((field) => Parameter((b) => b
+          ..requiredParameters.addAll(variant.fields
+              .where((field) => field.originalName == null)
+              .map((field) => Parameter((b) => b
+                ..toThis = true
+                ..required = false
+                ..named = false
+                ..name = field.sanitizedName)))
+          ..optionalParameters.addAll(variant.fields
+              .where((field) => field.originalName != null)
+              .map((field) => Parameter((b) => b
                 ..toThis = true
                 ..required = field.codec.primitive(dirname).isNullable != true
                 ..named = true
@@ -339,15 +372,18 @@ Class createVariantClass(
             ..requiredParameters.add(Parameter((b) => b
               ..type = refs.input
               ..name = 'input'))
-            ..body = Block.of([
-              Code('return ${variant.name}('),
-              Block.of(variant.fields.map((field) => Block.of([
-                    Code('${field.sanitizedName}: '),
-                    field.codec.decode(dirname).code,
-                    Code(', '),
-                  ]))),
-              Code(');'),
-            ])))
+            ..body = refer(variant.name)
+                .call(
+                    variant.fields
+                        .where((field) => field.originalName == null)
+                        .map((field) => field.codec.decode(dirname)),
+                    {
+                      for (final field in variant.fields
+                          .where((field) => field.originalName != null))
+                        field.sanitizedName: field.codec.decode(dirname)
+                    })
+                .returned
+                .statement))
           ..methods.add(Method((b) => b
             ..name = '_sizeHint'
             ..returns = refs.int
@@ -437,7 +473,7 @@ Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
         ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
           ..name = generators.Field.toFieldName(variant.name)
           ..arguments.addAll([
-            literalString(variant.orignalName),
+            literalString(variant.originalName),
             literalNum(variant.index)
           ]))))
         ..methods.add(Method((b) => b

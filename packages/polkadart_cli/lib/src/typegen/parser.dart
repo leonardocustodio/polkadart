@@ -286,7 +286,7 @@ Map<int, TypeDescriptor> parseTypes(
           id: type.id,
           filePath: listToFilePath([typesPath, ...type.path]),
           name: enumName,
-          orginalName: type.path.last,
+          originalName: type.path.last,
           docs: type.docs,
           variants: variant.variants.map((variant) {
             String variantName = sanitizeClassName(variant.name,
@@ -296,7 +296,7 @@ Map<int, TypeDescriptor> parseTypes(
             }
             return Variant(
                 name: variantName,
-                orignalName: variant.name,
+                originalName: variant.name,
                 index: variant.index,
                 docs: variant.docs,
                 fields: variant.fields
