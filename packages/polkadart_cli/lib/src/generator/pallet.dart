@@ -357,11 +357,11 @@ class PalletGenerator {
       ..url = p.relative(filePath, from: from));
   }
 
-  // TypeReference txs(BasePath from) {
-  //   return TypeReference((b) => b
-  //     ..symbol = 'Txs'
-  //     ..url = p.relative(filePath, from: from));
-  // }
+  TypeReference exts(typegen.BasePath from) {
+    return TypeReference((b) => b
+      ..symbol = 'Txs'
+      ..url = p.relative(filePath, from: from));
+  }
 
   TypeReference constantsType(typegen.BasePath from) {
     return TypeReference((b) => b
@@ -469,17 +469,7 @@ Class createPalletTxs(
       final dirname = p.dirname(generator.filePath);
       classBuilder
         ..name = 'Txs'
-        ..constructors.add(Constructor((b) => b
-          ..constant = true
-          ..requiredParameters.add(Parameter((b) => b
-            ..toThis = true
-            ..required = false
-            ..named = false
-            ..name = '__api'))))
-        ..fields.add(Field((b) => b
-          ..name = '__api'
-          ..type = refs.stateApi
-          ..modifier = FieldModifier.final$))
+        ..constructors.add(Constructor((b) => b..constant = true))
         ..methods.addAll(generator.txs.map((tx) => Method((builder) {
               final txName = ReCase(tx.name).camelCase;
               final Reference primitive = tx.codec.primitive(dirname);

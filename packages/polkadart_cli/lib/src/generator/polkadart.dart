@@ -29,10 +29,12 @@ class PolkadartGenerator {
     final queries = createPolkadartQueries();
     final constants = createPolkadartConstants();
     final rpc = createPolkadartRpc();
-    // final tx = createPolkadartTx();
+    final tx = createPolkadartTx();
     final polkdart = createPolkadartClass();
     return GeneratedOutput(
-        classes: [queries, constants, rpc, polkdart], enums: [], typedefs: []);
+        classes: [queries, tx, constants, rpc, polkdart],
+        enums: [],
+        typedefs: []);
   }
 
   Class createPolkadartQueries() => Class((classBuilder) {
@@ -103,18 +105,19 @@ class PolkadartGenerator {
           ]);
       });
 
-  // Class createPolkadartTx() => Class((classBuilder) {
-  //   final dirname = p.dirname(filePath);
-  //   classBuilder
-  //     ..name = 'Tx'
-  //     ..constructors.add(Constructor((b) => b..constant = false))
-  //     ..fields.addAll(pallets
-  //         .where((pallet) => pallet.storages.isNotEmpty)
-  //         .map((pallet) => Field((b) => b
-  //       ..name = sanitize(pallet.name)
-  //       ..type = pallet.extrinsics(dirname)
-  //       ..modifier = FieldModifier.final$)));
-  // });
+  Class createPolkadartTx() => Class((classBuilder) {
+        final dirname = p.dirname(filePath);
+        classBuilder
+          ..name = 'Extrinsics'
+          ..constructors.add(Constructor((b) => b..constant = false))
+          ..fields.addAll(pallets
+              .where((pallet) => pallet.txs.isNotEmpty)
+              .map((pallet) => Field((b) => b
+                ..name = sanitize(pallet.name)
+                ..type = pallet.exts(dirname)
+                ..modifier = FieldModifier.final$
+                ..assignment = pallet.exts(dirname).newInstance([]).code)));
+      });
 
   Class createPolkadartClass() => Class((classBuilder) {
         classBuilder
@@ -138,6 +141,7 @@ class PolkadartGenerator {
               ..initializers.addAll([
                 Code.scope((a) => 'query = Queries(rpc.state)'),
                 Code('constant = Constants()'),
+                Code('tx = Extrinsics()'),
               ])),
             Constructor((b) => b
               ..factory = true
@@ -195,6 +199,10 @@ class PolkadartGenerator {
             Field((b) => b
               ..name = 'rpc'
               ..type = refer('Rpc')
+              ..modifier = FieldModifier.final$),
+            Field((b) => b
+              ..name = 'tx'
+              ..type = refer('Extrinsics')
               ..modifier = FieldModifier.final$),
           ])
           ..methods.addAll([
