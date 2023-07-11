@@ -504,7 +504,6 @@ Class createPalletTxs(
                       .statement));
             })));
     });
-//final extrinsic = RuntimeCall.values.balances(value0: balancesCall);
 
 Class createPalletConstants(
   PalletGenerator generator,
