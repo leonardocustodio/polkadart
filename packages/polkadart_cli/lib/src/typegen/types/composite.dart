@@ -46,7 +46,7 @@ class CompositeBuilder extends TypeBuilder {
   @override
   LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (fields.isEmpty) {
-      return literalNull.asLiteralConstant();
+      return literalNull.asLiteralValue(isConstant: true);
     }
 
     final args = CallArguments.fromFields(fields,
@@ -55,7 +55,7 @@ class CompositeBuilder extends TypeBuilder {
     if (constant && args.every((value) => value.isConstant)) {
       return primitive(from)
           .constInstance(args.positional, args.named)
-          .asLiteralConstant();
+          .asLiteralValue(isConstant: true);
     }
 
     return primitive(from)

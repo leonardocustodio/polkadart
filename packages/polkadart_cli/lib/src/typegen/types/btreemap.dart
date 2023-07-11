@@ -59,7 +59,7 @@ class BTreeMapDescriptor extends TypeDescriptor {
         map.values.every((value) => value.isConstant) &&
         map.keys.every((key) => key.isConstant)) {
       return literalConstMap(map, key.primitive(from), value.primitive(from))
-          .asLiteralConstant();
+          .asLiteralValue(isConstant: true);
     }
     return literalMap(map, key.primitive(from), value.primitive(from))
         .asLiteralValue();

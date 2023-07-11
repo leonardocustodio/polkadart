@@ -108,7 +108,8 @@ class ArrayDescriptor extends TypeDescriptor {
           [literalNum(values.length), literalNum(0)],
           {'growable': literalFalse}).asLiteralValue();
     } else if (constant) {
-      return literalConstList(values, refs.int).asLiteralConstant();
+      return literalConstList(values, refs.int)
+          .asLiteralValue(isConstant: true);
     }
     return literalList(values, refs.int).asLiteralValue();
   }
@@ -152,9 +153,8 @@ class ArrayDescriptor extends TypeDescriptor {
         typeDef.valueFrom(from, input, constant: constant)
     ];
 
-    if (values.every((value) => value.isConstant)) {
-      return literalConstList(values.map((v) => v.expression).toList())
-          .asLiteralConstant();
+    if (constant && values.every((value) => value.isConstant)) {
+      return literalConstList(values).asLiteralValue(isConstant: true);
     }
     return literalList(values).asLiteralValue();
   }

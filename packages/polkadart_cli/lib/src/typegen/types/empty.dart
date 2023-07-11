@@ -19,7 +19,7 @@ class EmptyDescriptor extends TypeDescriptor {
 
   @override
   LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
-    return literalNull.asLiteralConstant();
+    return literalNull.asLiteralValue(isConstant: true);
   }
 
   @override

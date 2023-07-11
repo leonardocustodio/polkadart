@@ -47,21 +47,17 @@ class OptionDescriptor extends TypeDescriptor {
       if (input.read() == 0) {
         return refs
             .option(inner.primitive(from))
-            .newInstanceNamed('none', []).asLiteralConstant();
+            .newInstanceNamed('none', []).asLiteralValue(isConstant: true);
       } else {
         final innerValue = inner.valueFrom(from, input);
-        final expression =
-            refs.option(inner.primitive(from)).newInstanceNamed('some', [
+        return refs.option(inner.primitive(from)).newInstanceNamed('some', [
           innerValue,
-        ]);
-        return constant && innerValue.isConstant
-            ? expression.asLiteralConstant()
-            : expression.asLiteralValue();
+        ]).asLiteralValue(isConstant: constant && innerValue.isConstant);
       }
     }
 
     if (input.read() == 0) {
-      return literalNull.asLiteralConstant();
+      return literalNull.asLiteralValue(isConstant: true);
     } else {
       return inner.valueFrom(from, input);
     }
