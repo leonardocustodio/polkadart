@@ -602,7 +602,10 @@ class StorageEntryMetadata {
 }
 
 class PalletCallMetadata {
+  /// The call type for the pallet
   final int type;
+
+  /// The calls from the pallet
   final List<CallEntryMetadata> entries;
 
   const PalletCallMetadata({
@@ -725,7 +728,7 @@ class PalletMetadata {
   /// call and origin variants.
   final int index;
 
-  /// Save the runtimeCall type
+  /// The RuntimeCall type.
   final int runtimeCallType;
 
   PalletMetadata({
@@ -758,12 +761,14 @@ class PalletMetadata {
       constants: constants,
       call: call,
       index: json['index'],
+
+      /// This type is fixed at `params[1].type`
       runtimeCallType: lookupTypes[extrinsicType].params[1].type!,
     );
   }
 }
 
-/// Metadata of an extrinsic's signed extension.
+/// Metadata of an extrinsic signed extension.
 class SignedExtensionMetadata {
   /// The unique signed extension identifier, which may be different from the type name.
   final String identifier;
@@ -774,10 +779,11 @@ class SignedExtensionMetadata {
   /// The type of the additional signed data, with the data to be included in the signed payload
   final int additionalSigned;
 
-  SignedExtensionMetadata(
-      {required this.identifier,
-      required this.type,
-      required this.additionalSigned});
+  SignedExtensionMetadata({
+    required this.identifier,
+    required this.type,
+    required this.additionalSigned,
+  });
 
   factory SignedExtensionMetadata.fromJson(Map<String, dynamic> json) {
     return SignedExtensionMetadata(
@@ -799,10 +805,11 @@ class ExtrinsicMetadata {
   /// The signed extensions in the order they appear in the extrinsic.
   final List<SignedExtensionMetadata> signedExtensions;
 
-  ExtrinsicMetadata(
-      {required this.type,
-      required this.version,
-      required this.signedExtensions});
+  ExtrinsicMetadata({
+    required this.type,
+    required this.version,
+    required this.signedExtensions,
+  });
 
   factory ExtrinsicMetadata.fromJson(Map<String, dynamic> json) {
     final signedExtensions = (json['signedExtensions'] as List)
@@ -826,17 +833,18 @@ class RuntimeMetadataV14 {
   /// Metadata of all the pallets.
   final List<PalletMetadata> pallets;
 
-  // Metadata of the extrinsic.
+  /// Metadata of the extrinsic.
   final ExtrinsicMetadata extrinsic;
 
-  // The type of the `Runtime`.
+  /// The type of the `Runtime`.
   final int runtimeTypeId;
 
-  RuntimeMetadataV14(
-      {required this.registry,
-      required this.pallets,
-      required this.extrinsic,
-      required this.runtimeTypeId});
+  RuntimeMetadataV14({
+    required this.registry,
+    required this.pallets,
+    required this.extrinsic,
+    required this.runtimeTypeId,
+  });
 
   factory RuntimeMetadataV14.fromJson(Map<String, dynamic> json) {
     final extrinsicMetadata = ExtrinsicMetadata.fromJson(json['extrinsic']);

@@ -252,28 +252,36 @@ class Tx {
   final int index;
   final List<String> docs;
 
-  const Tx(
-      {required this.name,
-      required this.fields,
-      required this.index,
-      required this.docs,
-      required this.codec});
+  const Tx({
+    required this.name,
+    required this.fields,
+    required this.index,
+    required this.docs,
+    required this.codec,
+  });
 
-  factory Tx.fromMetadata(metadata.CallEntryMetadata callMetadata, int type,
-      Map<int, typegen.TypeDescriptor> registry) {
+  factory Tx.fromMetadata(
+    metadata.CallEntryMetadata callMetadata,
+    int type,
+    Map<int, typegen.TypeDescriptor> registry,
+  ) {
     final typeDescriptor = registry[type]!;
 
     return Tx(
-        name: callMetadata.name,
-        fields: callMetadata.fields
-            .map((field) => typegen.Field(
-                originalName: field.name,
-                codec: registry[field.type]!,
-                docs: field.docs))
-            .toList(),
-        index: callMetadata.index,
-        codec: typeDescriptor,
-        docs: callMetadata.docs);
+      name: callMetadata.name,
+      fields: callMetadata.fields
+          .map(
+            (field) => typegen.Field(
+              originalName: field.name,
+              codec: registry[field.type]!,
+              docs: field.docs,
+            ),
+          )
+          .toList(),
+      index: callMetadata.index,
+      codec: typeDescriptor,
+      docs: callMetadata.docs,
+    );
   }
 }
 
@@ -283,21 +291,24 @@ class Constant {
   final typegen.TypeDescriptor codec;
   final List<String> docs;
 
-  const Constant(
-      {required this.name,
-      required this.value,
-      required this.codec,
-      required this.docs});
+  const Constant({
+    required this.name,
+    required this.value,
+    required this.codec,
+    required this.docs,
+  });
 
   factory Constant.fromMetadata(
-      metadata.PalletConstantMetadata constantMetadata,
-      Map<int, typegen.TypeDescriptor> registry) {
+    metadata.PalletConstantMetadata constantMetadata,
+    Map<int, typegen.TypeDescriptor> registry,
+  ) {
     // Build pallet
     return Constant(
-        name: constantMetadata.name,
-        value: constantMetadata.value,
-        codec: registry[constantMetadata.type]!,
-        docs: constantMetadata.docs);
+      name: constantMetadata.name,
+      value: constantMetadata.value,
+      codec: registry[constantMetadata.type]!,
+      docs: constantMetadata.docs,
+    );
   }
 }
 
@@ -318,17 +329,18 @@ class PalletGenerator {
     required this.runtimeCall,
   });
 
-  factory PalletGenerator.fromMetadata(
-      {required String filePath,
-      required metadata.PalletMetadata palletMetadata,
-      required Map<int, typegen.TypeDescriptor> registry}) {
+  factory PalletGenerator.fromMetadata({
+    required String filePath,
+    required metadata.PalletMetadata palletMetadata,
+    required Map<int, typegen.TypeDescriptor> registry,
+  }) {
     // Load storages
     final List<Storage>? storages = palletMetadata.storage?.entries
         .map((storageMetadata) =>
             Storage.fromMetadata(storageMetadata, registry))
         .toList();
 
-    // Load extrinsics
+    // Load calls
     final List<Tx>? txs = palletMetadata.call?.entries
         .map((callMetadata) =>
             Tx.fromMetadata(callMetadata, palletMetadata.call!.type, registry))
