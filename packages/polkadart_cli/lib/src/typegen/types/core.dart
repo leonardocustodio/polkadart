@@ -63,7 +63,7 @@ class GeneratedOutput {
       ..body.addAll(classes));
 
     final code = library3
-        .accept(DartEmitter.scoped(useNullSafetySyntax: true))
+        .accept(DartEmitter.scoped(useNullSafetySyntax: true, orderDirectives: true))
         .toString();
     try {
       return _dartfmt.format(code);
