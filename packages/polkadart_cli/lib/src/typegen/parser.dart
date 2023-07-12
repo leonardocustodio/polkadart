@@ -222,7 +222,8 @@ Map<int, TypeDescriptor> parseTypes(
                   loader: lazyLoader,
                   codec: field.type,
                   docs: field.docs,
-                  name: field.name))
+                  name: field.name,
+                  rustTypeName: field.typeName))
               .toList());
       continue;
     }
@@ -305,6 +306,7 @@ Map<int, TypeDescriptor> parseTypes(
                           codec: field.type,
                           name: field.name,
                           docs: field.docs,
+                          rustTypeName: field.typeName,
                         ))
                     .toList());
           }).toList());

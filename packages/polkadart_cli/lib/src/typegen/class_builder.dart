@@ -15,7 +15,6 @@ import 'package:code_builder/code_builder.dart'
         MethodType,
         Parameter,
         Reference,
-        TypeDef,
         TypeReference,
         declareFinal,
         literalNum,
@@ -158,6 +157,9 @@ Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
         ..fields.addAll(compositeGenerator.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
           ..type = field.codec.primitive(dirname)
+          ..docs.addAll(field.rustTypeName != null
+              ? sanitizeDocs([field.rustTypeName!])
+              : [])
           ..docs.addAll(sanitizeDocs(field.docs))
           ..modifier = FieldModifier.final$)))
         ..fields.add(Field((b) => b
@@ -436,11 +438,12 @@ Class createVariantClass(
           ..annotations.add(refer('override'))
           ..returns = jsonType
           ..body = variant.toJson(dirname).code))
-        ..methods.add(overrideEqualsMethod(refer(variant.name), variant.fields))
-        ..methods.add(overrideHashCodeMethod(variant.fields))
         ..fields.addAll(variant.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
           ..type = field.codec.primitive(dirname)
+          ..docs.addAll(field.rustTypeName != null
+              ? sanitizeDocs([field.rustTypeName!])
+              : [])
           ..docs.addAll(sanitizeDocs(field.docs))
           ..modifier = FieldModifier.final$)));
 
@@ -503,6 +506,11 @@ Class createVariantClass(
                         : refer(field.sanitizedName))
                 .statement)),
         )));
+
+      classBuilder.methods.addAll([
+        overrideEqualsMethod(refer(variant.name), variant.fields),
+        overrideHashCodeMethod(variant.fields),
+      ]);
     });
 
 Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
@@ -514,6 +522,7 @@ Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
 
       enumBuilder
         ..name = typeRef.symbol
+        ..docs.addAll(sanitizeDocs(variant.docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
           ..requiredParameters.addAll([
@@ -553,6 +562,7 @@ Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
         ])
         ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
           ..name = generators.Field.toFieldName(variant.name)
+          ..docs.addAll(sanitizeDocs(variant.docs))
           ..arguments.addAll([
             literalString(variant.originalName),
             literalNum(variant.index)
@@ -611,10 +621,53 @@ Class createSimpleVariantCodec(
               .statement));
     });
 
-TypeDef createTypeDef({required String name, required Reference reference}) =>
-    TypeDef((b) => b
-      ..name = name
-      ..definition = reference);
+Class createTypeDefCodec(
+  generators.TypeDefBuilder typeDef,
+) =>
+    Class((classBuilder) {
+      final className = refer(typeDef.name);
+      final dirname = p.dirname(typeDef.filePath);
+
+      classBuilder
+        ..name = '${typeDef.name}Codec'
+        ..constructors.add(Constructor((b) => b..constant = true))
+        ..mixins.add(refs.codec(ref: className))
+        ..methods.add(Method((b) => b
+          ..name = 'decode'
+          ..returns = className
+          ..annotations.add(refer('override'))
+          ..requiredParameters.add(Parameter((b) => b
+            ..type = refs.input
+            ..name = 'input'))
+          ..body = typeDef.generator.decode(dirname).returned.statement))
+        ..methods.add(Method.returnsVoid((b) => b
+          ..name = 'encodeTo'
+          ..annotations.add(refer('override'))
+          ..requiredParameters.addAll([
+            Parameter((b) => b
+              ..type = className
+              ..name = 'value'),
+            Parameter((b) => b
+              ..type = refs.output
+              ..name = 'output'),
+          ])
+          ..body = typeDef.generator.encode(dirname, refer('value')).statement))
+        ..methods.add(Method((b) => b
+          ..name = 'sizeHint'
+          ..returns = refs.int
+          ..annotations.add(refer('override'))
+          ..requiredParameters.add(
+            Parameter((b) => b
+              ..type = className
+              ..name = 'value'),
+          )
+          ..body = typeDef.generator
+              .codecInstance(dirname)
+              .property('sizeHint')
+              .call([refer('value')])
+              .returned
+              .statement));
+    });
 
 Class createTupleClass(
   int size,

@@ -75,7 +75,8 @@ import '../utils/utils.dart'
         findCommonType,
         listToFilePath,
         sanitize,
-        sanitizeClassName;
+        sanitizeClassName,
+        sanitizeDocs;
 import './class_builder.dart' as classbuilder;
 import './runtime_metadata_v14.dart' as metadata;
 import './references.dart' as refs;

@@ -48,7 +48,7 @@ class TypeDefBuilder extends TypeBuilder {
 
   @override
   Expression codecInstance(BasePath from) {
-    return generator.codecInstance(from);
+    return codec(from).constInstance([]);
   }
 
   @override
@@ -80,11 +80,14 @@ class TypeDefBuilder extends TypeBuilder {
 
   @override
   GeneratedOutput build() {
-    final typeDef = classbuilder.createTypeDef(
-        name: name, reference: generator.primitive(p.dirname(filePath)));
-    final typeDefCodec = classbuilder.createTypeDef(
-        name: '${name}Codec', reference: generator.codec(p.dirname(filePath)));
+    final typeDef = createTypeDef();
+    final typeDefCodec = classbuilder.createTypeDefCodec(this);
     return GeneratedOutput(
-        classes: [], enums: [], typedefs: [typeDef, typeDefCodec]);
+        classes: [typeDefCodec], enums: [], typedefs: [typeDef]);
   }
+
+  TypeDef createTypeDef() => TypeDef((b) => b
+    ..name = name
+    ..definition = generator.primitive(p.dirname(filePath))
+    ..docs.addAll(sanitizeDocs(docs)));
 }

@@ -91,12 +91,26 @@ class LazyLoader {
 }
 
 class Field {
+  /// The name of the field. None for unnamed fields.
   late String? originalName;
+
+  /// Dart sanitized name of the field, default to `value${index}` for unnamed fields.
   late String sanitizedName;
+
+  /// The type of the field.
   late TypeDescriptor codec;
+
+  /// Documentation
   late List<String> docs;
 
-  Field({required this.originalName, required this.codec, required this.docs}) {
+  /// The name of the type of the field as it appears in the source code.
+  late String? rustTypeName;
+
+  Field(
+      {required this.originalName,
+      required this.codec,
+      required this.docs,
+      this.rustTypeName}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
     if (originalName != null) {
@@ -104,7 +118,7 @@ class Field {
     }
   }
 
-  Field._lazy({required String? name, required this.docs}) {
+  Field._lazy({required String? name, required this.docs, this.rustTypeName}) {
     originalName = name;
     if (originalName != null) {
       sanitizedName = toFieldName(originalName!);
@@ -116,8 +130,10 @@ class Field {
     required int codec,
     required String? name,
     List<String> docs = const [],
+    String? rustTypeName,
   }) {
-    final field = Field._lazy(name: name, docs: docs);
+    final field =
+        Field._lazy(name: name, docs: docs, rustTypeName: rustTypeName);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       field.codec = register[codec]!;
     });
