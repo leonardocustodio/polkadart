@@ -621,54 +621,6 @@ Class createSimpleVariantCodec(
               .statement));
     });
 
-Class createTypeDefCodec(
-  generators.TypeDefBuilder typeDef,
-) =>
-    Class((classBuilder) {
-      final className = refer(typeDef.name);
-      final dirname = p.dirname(typeDef.filePath);
-
-      classBuilder
-        ..name = '${typeDef.name}Codec'
-        ..constructors.add(Constructor((b) => b..constant = true))
-        ..mixins.add(refs.codec(ref: className))
-        ..methods.add(Method((b) => b
-          ..name = 'decode'
-          ..returns = className
-          ..annotations.add(refer('override'))
-          ..requiredParameters.add(Parameter((b) => b
-            ..type = refs.input
-            ..name = 'input'))
-          ..body = typeDef.generator.decode(dirname).returned.statement))
-        ..methods.add(Method.returnsVoid((b) => b
-          ..name = 'encodeTo'
-          ..annotations.add(refer('override'))
-          ..requiredParameters.addAll([
-            Parameter((b) => b
-              ..type = className
-              ..name = 'value'),
-            Parameter((b) => b
-              ..type = refs.output
-              ..name = 'output'),
-          ])
-          ..body = typeDef.generator.encode(dirname, refer('value')).statement))
-        ..methods.add(Method((b) => b
-          ..name = 'sizeHint'
-          ..returns = refs.int
-          ..annotations.add(refer('override'))
-          ..requiredParameters.add(
-            Parameter((b) => b
-              ..type = className
-              ..name = 'value'),
-          )
-          ..body = typeDef.generator
-              .codecInstance(dirname)
-              .property('sizeHint')
-              .call([refer('value')])
-              .returned
-              .statement));
-    });
-
 Class createTupleClass(
   int size,
 ) =>

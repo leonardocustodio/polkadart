@@ -7,6 +7,7 @@ import 'package:code_builder/code_builder.dart'
         Class,
         Code,
         CodeExpression,
+        Constructor,
         DartEmitter,
         Enum,
         Expression,
