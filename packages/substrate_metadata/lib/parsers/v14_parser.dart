@@ -78,7 +78,7 @@ class V14Parser {
           // iterate over fields of each variant
           for (final v in variant['fields']) {
             args.add({
-              'name': v['typeName'],
+              'name': v['name'],
               'type': siTypes[v['type']],
             });
           }
