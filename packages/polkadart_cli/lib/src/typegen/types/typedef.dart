@@ -91,8 +91,7 @@ class TypeDefBuilder extends TypeBuilder {
     ..definition = generator.primitive(p.dirname(filePath))
     ..docs.addAll(sanitizeDocs(docs)));
 
-  Class createTypeDefCodec() =>
-      Class((classBuilder) {
+  Class createTypeDefCodec() => Class((classBuilder) {
         final className = refer(name);
         final dirname = p.dirname(filePath);
 
