@@ -94,21 +94,22 @@ class SequenceDescriptor extends TypeDescriptor {
     return codec.constInstance([typeDef.codecInstance(from)]);
   }
 
-  Expression listToExpression(List<int> values, bool constant) {
+  LiteralValue listToExpression(List<int> values, bool constant) {
     final TypeReference listType = refs.list(ref: refs.int);
     if (!constant && values.every((value) => value == 0)) {
       return listType.newInstanceNamed(
           'filled',
           [literalNum(values.length), literalNum(0)],
-          {'growable': literalTrue});
+          {'growable': literalTrue}).asLiteralValue();
     } else if (constant) {
-      return literalConstList(values, refs.int);
+      return literalConstList(values, refs.int)
+          .asLiteralValue(isConstant: true);
     }
-    return literalList(values, refs.int);
+    return literalList(values, refs.int).asLiteralValue();
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (typeDef is PrimitiveDescriptor) {
       switch ((typeDef as PrimitiveDescriptor).primitiveType) {
         case metadata.Primitive.U8:
@@ -142,15 +143,15 @@ class SequenceDescriptor extends TypeDescriptor {
     }
 
     final length = CompactCodec.codec.decode(input);
-    final values = <Expression>[
+    final values = <LiteralValue>[
       for (int i = 0; i < length; i++)
         typeDef.valueFrom(from, input, constant: constant)
     ];
 
-    if (values.every((value) => value.isConst)) {
-      return literalConstList(values);
+    if (constant && values.every((value) => value.isConstant)) {
+      return literalConstList(values).asLiteralValue(isConstant: true);
     }
-    return literalList(values);
+    return literalList(values).asLiteralValue();
   }
 
   @override

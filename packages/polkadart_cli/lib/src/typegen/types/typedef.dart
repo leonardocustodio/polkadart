@@ -41,16 +41,18 @@ class TypeDefBuilder extends TypeBuilder {
 
   @override
   TypeReference codec(BasePath from) {
-    return generator.codec(from);
+    return TypeReference((b) => b
+      ..symbol = '${name}Codec'
+      ..url = p.relative(filePath, from: from));
   }
 
   @override
   Expression codecInstance(BasePath from) {
-    return generator.codecInstance(from);
+    return codec(from).constInstance([]);
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     return generator.valueFrom(from, input, constant: constant);
   }
 
@@ -78,8 +80,59 @@ class TypeDefBuilder extends TypeBuilder {
 
   @override
   GeneratedOutput build() {
-    final typeDef = classbuilder.createTypeDef(
-        name: name, reference: generator.primitive(p.dirname(filePath)));
-    return GeneratedOutput(classes: [], enums: [], typedefs: [typeDef]);
+    final typeDef = createTypeDef();
+    final typeDefCodec = createTypeDefCodec();
+    return GeneratedOutput(
+        classes: [typeDefCodec], enums: [], typedefs: [typeDef]);
   }
+
+  TypeDef createTypeDef() => TypeDef((b) => b
+    ..name = name
+    ..definition = generator.primitive(p.dirname(filePath))
+    ..docs.addAll(sanitizeDocs(docs)));
+
+  Class createTypeDefCodec() => Class((classBuilder) {
+        final className = refer(name);
+        final dirname = p.dirname(filePath);
+
+        classBuilder
+          ..name = '${name}Codec'
+          ..constructors.add(Constructor((b) => b..constant = true))
+          ..mixins.add(refs.codec(ref: className))
+          ..methods.add(Method((b) => b
+            ..name = 'decode'
+            ..returns = className
+            ..annotations.add(refer('override'))
+            ..requiredParameters.add(Parameter((b) => b
+              ..type = refs.input
+              ..name = 'input'))
+            ..body = generator.decode(dirname).returned.statement))
+          ..methods.add(Method.returnsVoid((b) => b
+            ..name = 'encodeTo'
+            ..annotations.add(refer('override'))
+            ..requiredParameters.addAll([
+              Parameter((b) => b
+                ..type = className
+                ..name = 'value'),
+              Parameter((b) => b
+                ..type = refs.output
+                ..name = 'output'),
+            ])
+            ..body = generator.encode(dirname, refer('value')).statement))
+          ..methods.add(Method((b) => b
+            ..name = 'sizeHint'
+            ..returns = refs.int
+            ..annotations.add(refer('override'))
+            ..requiredParameters.add(
+              Parameter((b) => b
+                ..type = className
+                ..name = 'value'),
+            )
+            ..body = generator
+                .codecInstance(dirname)
+                .property('sizeHint')
+                .call([refer('value')])
+                .returned
+                .statement));
+      });
 }

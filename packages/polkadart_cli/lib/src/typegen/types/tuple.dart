@@ -54,16 +54,18 @@ class TupleBuilder extends TypeBuilder {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
-    final values = <Expression>[
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
+    final values = <LiteralValue>[
       for (final generator in generators)
         generator.valueFrom(from, input, constant: constant)
     ];
 
-    if (values.every((value) => value.isConst)) {
-      return primitive(from).constInstance(values);
+    if (constant && values.every((value) => value.isConstant)) {
+      return primitive(from)
+          .constInstance(values)
+          .asLiteralValue(isConstant: true);
     }
-    return primitive(from).newInstance(values);
+    return primitive(from).newInstance(values).asLiteralValue();
   }
 
   @override

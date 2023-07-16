@@ -8,30 +8,115 @@ import 'package:code_builder/code_builder.dart'
         Constructor,
         Enum,
         EnumValue,
+        Expression,
         Field,
         FieldModifier,
         Method,
+        MethodType,
         Parameter,
         Reference,
-        TypeDef,
         TypeReference,
         declareFinal,
         literalNum,
+        literalList,
         literalString,
         refer;
 import './typegen.dart' as generators
     show
+        BTreeMapDescriptor,
         CompositeBuilder,
+        SequenceDescriptor,
+        ArrayDescriptor,
         Field,
         PrimitiveDescriptor,
         Variant,
         VariantBuilder,
-        TypeBuilderContext;
+        TypeBuilderContext,
+        TypeDefBuilder;
 import './references.dart' as refs;
 import '../utils/utils.dart' show sanitizeDocs;
 
 String classToCodecName(String className) {
   return '\$${className}Codec';
+}
+
+Method overrideEqualsMethod(
+    Reference classType, List<generators.Field> fields) {
+  Expression body = refer('other').isA(classType);
+
+  for (final field in fields) {
+    final fieldname = field.sanitizedName;
+    final codec = field.codec is generators.TypeDefBuilder
+        ? (field.codec as generators.TypeDefBuilder).generator
+        : field.codec;
+
+    // Compare two lists using quiver
+    if (codec is generators.SequenceDescriptor ||
+        codec is generators.ArrayDescriptor) {
+      body = body.and(refs.quiverListsEqual.call([
+        refer('other').property(fieldname),
+        refer(fieldname == 'other' ? 'this.other' : fieldname),
+      ]));
+      continue;
+    }
+
+    // Compare two maps using quiver
+    if (codec is generators.BTreeMapDescriptor) {
+      body = body.and(refs.quiverMapsEqual.call([
+        refer('other').property(fieldname),
+        refer(fieldname == 'other' ? 'this.other' : fieldname),
+      ]));
+      continue;
+    }
+
+    // Simple variable comparison
+    body = body.and(refer('other')
+        .property(fieldname)
+        .equalTo(refer(fieldname == 'other' ? 'this.other' : fieldname)));
+  }
+
+  if (fields.isNotEmpty) {
+    body = refs.identical.call([refer('this'), refer('other')]).or(body);
+  }
+
+  return Method((b) => b
+    ..name = 'operator =='
+    ..annotations.add(refer('override'))
+    ..returns = refs.bool
+    ..requiredParameters.add(Parameter((b) => b
+      ..type = refs.object
+      ..name = 'other'))
+    ..body = body.code);
+}
+
+Method overrideHashCodeMethod(List<generators.Field> fields) {
+  return Method((b) {
+    final builder = b
+      ..name = 'hashCode'
+      ..type = MethodType.getter
+      ..annotations.add(refer('override'))
+      ..returns = refs.int;
+
+    if (fields.isEmpty) {
+      // If the object doesn't have properties, the hashCode is the same as the runtimeType
+      builder.body = refer('runtimeType.hashCode').code;
+    } else if (fields.length == 1) {
+      // Object.hash expect at least 2 arguments
+      builder.body =
+          refer(fields.first.sanitizedName).property('hashCode').code;
+    } else if (fields.length <= 20) {
+      // Object.hash function only supports up to 20 arguments
+      builder.body = refs.object
+          .property('hash')
+          .call(fields.map((field) => refer(field.sanitizedName)))
+          .code;
+    } else {
+      // if the object has more than 20 properties, use Object.hashAll instead
+      builder.body = refs.object.property('hashAll').call([
+        literalList(fields.map((field) => refer(field.sanitizedName)))
+      ]).code;
+    }
+  });
 }
 
 Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
@@ -47,8 +132,16 @@ Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
         ..docs.addAll(sanitizeDocs(compositeGenerator.docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
-          ..optionalParameters.addAll(
-              compositeGenerator.fields.map((field) => Parameter((b) => b
+          ..requiredParameters.addAll(compositeGenerator.fields
+              .where((field) => field.originalName == null)
+              .map((field) => Parameter((b) => b
+                ..toThis = true
+                ..required = false
+                ..named = false
+                ..name = field.sanitizedName)))
+          ..optionalParameters.addAll(compositeGenerator.fields
+              .where((field) => field.originalName != null)
+              .map((field) => Parameter((b) => b
                 ..toThis = true
                 ..required = field.codec.primitive(dirname).isNullable != true
                 ..named = true
@@ -68,9 +161,15 @@ Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
           ..name = 'toJson'
           ..returns = builderContext.jsonTypeFrom(compositeGenerator)
           ..body = compositeGenerator.toJson(dirname).code))
+        ..methods
+            .add(overrideEqualsMethod(classType, compositeGenerator.fields))
+        ..methods.add(overrideHashCodeMethod(compositeGenerator.fields))
         ..fields.addAll(compositeGenerator.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
           ..type = field.codec.primitive(dirname)
+          ..docs.addAll(field.rustTypeName != null
+              ? sanitizeDocs([field.rustTypeName!])
+              : [])
           ..docs.addAll(sanitizeDocs(field.docs))
           ..modifier = FieldModifier.final$)))
         ..fields.add(Field((b) => b
@@ -112,10 +211,15 @@ Class createCompositeCodec(generators.CompositeBuilder compositeGenerator) {
           ..name = 'input'))
         ..body = Block((b) => b
           ..statements.add(classType
-              .newInstance([], {
-                for (var field in compositeGenerator.fields)
-                  field.sanitizedName: field.codec.decode(dirname)
-              })
+              .newInstance(
+                  compositeGenerator.fields
+                      .where((field) => field.originalName == null)
+                      .map((field) => field.codec.decode(dirname)),
+                  {
+                    for (var field in compositeGenerator.fields
+                        .where((field) => field.originalName != null))
+                      field.sanitizedName: field.codec.decode(dirname)
+                  })
               .returned
               .statement))))
       ..methods.add(Method((b) => b
@@ -206,16 +310,28 @@ Class createVariantValuesClass(
             (b) => b
               ..returns = refer(variant.name)
               ..name = generators.Field.toFieldName(variant.name)
-              ..body = variant.fields.isEmpty
-                  ? Code('return const ${variant.name}();')
-                  : Block.of([
-                      Code('return ${variant.name}('),
-                      Block.of(variant.fields.map((field) => Code(
-                          '${field.sanitizedName}: ${field.sanitizedName},'))),
-                      Code(');'),
-                    ])
-              ..optionalParameters
-                  .addAll(variant.fields.map((field) => Parameter((b) => b
+              ..body = refer(variant.name)
+                  .call(
+                      variant.fields
+                          .where((field) => field.originalName == null)
+                          .map((field) => refer(field.sanitizedName)),
+                      {
+                        for (final field in variant.fields
+                            .where((field) => field.originalName != null))
+                          field.sanitizedName: refer(field.sanitizedName)
+                      })
+                  .returned
+                  .statement
+              ..requiredParameters.addAll(variant.fields
+                  .where((field) => field.originalName == null)
+                  .map((field) => Parameter((b) => b
+                    ..required = false
+                    ..named = false
+                    ..type = field.codec.primitive(dirname)
+                    ..name = field.sanitizedName)))
+              ..optionalParameters.addAll(variant.fields
+                  .where((field) => field.originalName != null)
+                  .map((field) => Parameter((b) => b
                     ..required =
                         field.codec.primitive(dirname).isNullable != true
                     ..named = true
@@ -313,8 +429,16 @@ Class createVariantClass(
         ..docs.addAll(sanitizeDocs(variant.docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
-          ..optionalParameters
-              .addAll(variant.fields.map((field) => Parameter((b) => b
+          ..requiredParameters.addAll(variant.fields
+              .where((field) => field.originalName == null)
+              .map((field) => Parameter((b) => b
+                ..toThis = true
+                ..required = false
+                ..named = false
+                ..name = field.sanitizedName)))
+          ..optionalParameters.addAll(variant.fields
+              .where((field) => field.originalName != null)
+              .map((field) => Parameter((b) => b
                 ..toThis = true
                 ..required = field.codec.primitive(dirname).isNullable != true
                 ..named = true
@@ -327,6 +451,9 @@ Class createVariantClass(
         ..fields.addAll(variant.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
           ..type = field.codec.primitive(dirname)
+          ..docs.addAll(field.rustTypeName != null
+              ? sanitizeDocs([field.rustTypeName!])
+              : [])
           ..docs.addAll(sanitizeDocs(field.docs))
           ..modifier = FieldModifier.final$)));
 
@@ -339,15 +466,18 @@ Class createVariantClass(
             ..requiredParameters.add(Parameter((b) => b
               ..type = refs.input
               ..name = 'input'))
-            ..body = Block.of([
-              Code('return ${variant.name}('),
-              Block.of(variant.fields.map((field) => Block.of([
-                    Code('${field.sanitizedName}: '),
-                    field.codec.decode(dirname).code,
-                    Code(', '),
-                  ]))),
-              Code(');'),
-            ])))
+            ..body = refer(variant.name)
+                .call(
+                    variant.fields
+                        .where((field) => field.originalName == null)
+                        .map((field) => field.codec.decode(dirname)),
+                    {
+                      for (final field in variant.fields
+                          .where((field) => field.originalName != null))
+                        field.sanitizedName: field.codec.decode(dirname)
+                    })
+                .returned
+                .statement))
           ..methods.add(Method((b) => b
             ..name = '_sizeHint'
             ..returns = refs.int
@@ -386,6 +516,11 @@ Class createVariantClass(
                         : refer(field.sanitizedName))
                 .statement)),
         )));
+
+      classBuilder.methods.addAll([
+        overrideEqualsMethod(refer(variant.name), variant.fields),
+        overrideHashCodeMethod(variant.fields),
+      ]);
     });
 
 Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
@@ -397,6 +532,7 @@ Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
 
       enumBuilder
         ..name = typeRef.symbol
+        ..docs.addAll(sanitizeDocs(variant.docs))
         ..constructors.add(Constructor((b) => b
           ..constant = true
           ..requiredParameters.addAll([
@@ -436,8 +572,9 @@ Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
         ])
         ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
           ..name = generators.Field.toFieldName(variant.name)
+          ..docs.addAll(sanitizeDocs(variant.docs))
           ..arguments.addAll([
-            literalString(variant.orignalName),
+            literalString(variant.originalName),
             literalNum(variant.index)
           ]))))
         ..methods.add(Method((b) => b
@@ -493,11 +630,6 @@ Class createSimpleVariantCodec(
               .encode(dirname, refer('value').property('codecIndex'))
               .statement));
     });
-
-TypeDef createTypeDef({required String name, required Reference reference}) =>
-    TypeDef((b) => b
-      ..name = name
-      ..definition = reference);
 
 Class createTupleClass(
   int size,

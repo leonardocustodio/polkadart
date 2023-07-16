@@ -18,9 +18,9 @@ class CompactDescriptor extends TypeDescriptor {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     final value = CompactBigIntCodec.codec.decode(input);
-    return bigIntToExpression(value);
+    return bigIntToExpression(value).asLiteralValue();
   }
 
   @override
