@@ -23,6 +23,7 @@ import 'package:code_builder/code_builder.dart'
         refer;
 import './typegen.dart' as generators
     show
+        BTreeMapDescriptor,
         CompositeBuilder,
         SequenceDescriptor,
         ArrayDescriptor,
@@ -53,6 +54,15 @@ Method overrideEqualsMethod(
     if (codec is generators.SequenceDescriptor ||
         codec is generators.ArrayDescriptor) {
       body = body.and(refs.quiverListsEqual.call([
+        refer('other').property(fieldname),
+        refer(fieldname == 'other' ? 'this.other' : fieldname),
+      ]));
+      continue;
+    }
+
+    // Compare two maps using quiver
+    if (codec is generators.BTreeMapDescriptor) {
+      body = body.and(refs.quiverMapsEqual.call([
         refer('other').property(fieldname),
         refer(fieldname == 'other' ? 'this.other' : fieldname),
       ]));

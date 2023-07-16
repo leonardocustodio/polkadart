@@ -330,3 +330,6 @@ TypeReference storageSextupleMap(
 ////////////
 const quiverListsEqual =
     Reference('listsEqual', 'package:quiver/collection.dart');
+
+const quiverMapsEqual =
+    Reference('mapsEqual', 'package:quiver/collection.dart');
