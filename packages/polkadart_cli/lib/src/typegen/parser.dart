@@ -222,7 +222,8 @@ Map<int, TypeDescriptor> parseTypes(
                   loader: lazyLoader,
                   codec: field.type,
                   docs: field.docs,
-                  name: field.name))
+                  name: field.name,
+                  rustTypeName: field.typeName))
               .toList());
       continue;
     }
@@ -286,7 +287,7 @@ Map<int, TypeDescriptor> parseTypes(
           id: type.id,
           filePath: listToFilePath([typesPath, ...type.path]),
           name: enumName,
-          orginalName: type.path.last,
+          originalName: type.path.last,
           docs: type.docs,
           variants: variant.variants.map((variant) {
             String variantName = sanitizeClassName(variant.name,
@@ -296,7 +297,7 @@ Map<int, TypeDescriptor> parseTypes(
             }
             return Variant(
                 name: variantName,
-                orignalName: variant.name,
+                originalName: variant.name,
                 index: variant.index,
                 docs: variant.docs,
                 fields: variant.fields
@@ -305,6 +306,7 @@ Map<int, TypeDescriptor> parseTypes(
                           codec: field.type,
                           name: field.name,
                           docs: field.docs,
+                          rustTypeName: field.typeName,
                         ))
                     .toList());
           }).toList());

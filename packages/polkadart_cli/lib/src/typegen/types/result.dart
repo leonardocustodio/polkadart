@@ -40,14 +40,17 @@ class ResultDescriptor extends TypeDescriptor {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {constant = false}) {
-    if (input.read() == 0) {
-      return primitive(from)
-          .newInstanceNamed('ok', [ok.valueFrom(from, input)]);
+  LiteralValue valueFrom(BasePath from, Input input, {constant = false}) {
+    final bool isOk = input.read() == 0;
+    LiteralValue value;
+    if (isOk) {
+      value = ok.valueFrom(from, input);
     } else {
-      return primitive(from)
-          .newInstanceNamed('err', [err.valueFrom(from, input)]);
+      value = err.valueFrom(from, input);
     }
+    return primitive(from)
+        .newInstanceNamed(isOk ? 'ok' : 'err', [value]).asLiteralValue(
+            isConstant: constant && value.isConstant);
   }
 
   @override

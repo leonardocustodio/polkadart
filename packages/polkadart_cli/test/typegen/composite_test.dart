@@ -68,8 +68,9 @@ void main() {
           generator.build().build(),
           [
             '// ignore_for_file: no_leading_underscores_for_library_prefixes\n',
-            'import \'package:polkadart/scale_codec.dart\' as _i1;\n',
             'import \'dart:typed_data\' as _i2;\n',
+            '\n',
+            'import \'package:polkadart/scale_codec.dart\' as _i1;\n',
             '\n',
             'class Point {\n',
             '  const Point({\n',
@@ -95,6 +96,18 @@ void main() {
             '        \'x\': x,\n',
             '        \'y\': y,\n',
             '      };\n',
+            '  @override\n',
+            '  bool operator ==(Object other) =>\n',
+            '      identical(\n',
+            '        this,\n',
+            '        other,\n',
+            '      ) ||\n',
+            '      other is Point && other.x == x && other.y == y;\n',
+            '  @override\n',
+            '  int get hashCode => Object.hash(\n',
+            '        x,\n',
+            '        y,\n',
+            '      );\n',
             '}\n',
             '\n',
             'class \$PointCodec with _i1.Codec<Point> {\n',
@@ -131,7 +144,7 @@ void main() {
             '    return size;\n',
             '  }\n',
             '}\n',
-            '',
+            ''
           ].join());
     });
   });

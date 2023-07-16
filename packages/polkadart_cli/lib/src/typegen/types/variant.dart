@@ -1,17 +1,17 @@
 part of descriptors;
 
 class Variant extends TypeDescriptor {
-  int index;
+  final int index;
   String name;
-  String orignalName;
-  List<Field> fields;
-  List<String> docs;
+  final String originalName;
+  final List<Field> fields;
+  final List<String> docs;
   late VariantBuilder generator;
 
   Variant({
     required this.index,
     required this.name,
-    required this.orignalName,
+    required this.originalName,
     required this.fields,
     required this.docs,
   }) {
@@ -59,22 +59,22 @@ class Variant extends TypeDescriptor {
 
   Expression toJson(BasePath from) {
     if (fields.isEmpty) {
-      return literalMap({orignalName: literalNull});
+      return literalMap({originalName: literalNull});
     }
     if (fields.length == 1 && fields.first.originalName == null) {
       return literalMap({
-        orignalName: fields.first.codec
+        originalName: fields.first.codec
             .instanceToJson(from, refer(fields.first.sanitizedName))
       });
     }
     if (fields.every((field) => field.originalName == null)) {
       return literalMap({
-        orignalName: literalList(fields.map((field) =>
+        originalName: literalList(fields.map((field) =>
             field.codec.instanceToJson(from, refer(field.sanitizedName))))
       });
     }
     return literalMap({
-      orignalName: literalMap({
+      originalName: literalMap({
         for (final field in fields)
           ReCase(field.originalOrSanitizedName()).camelCase:
               field.codec.instanceToJson(from, refer(field.sanitizedName))
@@ -100,7 +100,7 @@ class Variant extends TypeDescriptor {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     throw UnimplementedError();
   }
 }
@@ -108,7 +108,7 @@ class Variant extends TypeDescriptor {
 class VariantBuilder extends TypeBuilder {
   final int _id;
   String name;
-  String orginalName;
+  String originalName;
   List<Variant> variants;
   List<String> docs;
 
@@ -116,7 +116,7 @@ class VariantBuilder extends TypeBuilder {
       {required int id,
       required String filePath,
       required this.name,
-      required this.orginalName,
+      required this.originalName,
       required this.variants,
       required this.docs})
       : _id = id,
@@ -144,24 +144,28 @@ class VariantBuilder extends TypeBuilder {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {bool constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     final index = input.read();
     final variant = variants.firstWhere((variant) => variant.index == index);
+    final isSimple = variants.every((variant) => variant.fields.isEmpty);
 
-    if (variants.isNotEmpty &&
-        variants.every((variant) => variant.fields.isEmpty)) {
-      return primitive(from).property(ReCase(variant.name).camelCase);
+    if (isSimple) {
+      return primitive(from)
+          .property(Field.toFieldName(variant.name))
+          .asLiteralValue(isConstant: true);
     }
 
     final variantType = variant.primitive(from);
-    final values = <String, Expression>{
-      for (final field in variant.fields)
-        field.sanitizedName: field.codec.valueFrom(from, input)
-    };
-    if (values.values.every((value) => value.isConst)) {
-      return variantType.constInstance([], values);
+    final args = CallArguments.fromFields(variant.fields,
+        (field) => field.codec.valueFrom(from, input, constant: constant));
+    if (constant && args.every((value) => value.isConstant)) {
+      return variantType
+          .constInstance(args.positional, args.named)
+          .asLiteralValue(isConstant: true);
     }
-    return variantType.newInstance([], values);
+    return variantType
+        .newInstance(args.positional, args.named)
+        .asLiteralValue();
   }
 
   @override
