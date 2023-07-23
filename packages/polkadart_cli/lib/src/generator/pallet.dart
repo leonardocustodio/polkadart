@@ -511,7 +511,7 @@ Class createPalletTxs(
                   ..statements.add(runtimePrimitive
                       .property('values')
                       .property(ReCase(generator.name).camelCase)
-                      .call([], {'value0': CodeExpression(Code('_call'))})
+                      .call([CodeExpression(Code('_call'))])
                       .returned
                       .statement));
             })));
