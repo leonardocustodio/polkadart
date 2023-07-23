@@ -14,8 +14,8 @@ Add package configuration to your `pubspec.yaml` file. Here is a full configurat
 polkadart:
   output_dir: lib/generated # Optional. Sets the directory of generated files. Provided value should be a valid path on your system. Default: lib/generated
   <b>chains:</b> # Dictionary of chains and endpoints
-    - polkadot: wss://rpc.polkadot.io
-    - kusama: wss://kusama-rpc.polkadot.io
+      polkadot: wss://rpc.polkadot.io
+      kusama: wss://kusama-rpc.polkadot.io
 </pre>
 
 ### Run command
