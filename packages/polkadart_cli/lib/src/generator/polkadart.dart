@@ -89,6 +89,13 @@ class PolkadartGenerator {
             ..constructors.add(
               Constructor((b) => b..constant = false),
             )
+            ..fields.addAll([
+              Field((b) => b
+                ..name = 'extrinsicVersion'
+                ..type = refs.int
+                ..modifier = FieldModifier.final$
+                ..assignment = Code('${metadata.extrinsic.version}')),
+            ])
             ..methods.addAll(
               [
                 Method(

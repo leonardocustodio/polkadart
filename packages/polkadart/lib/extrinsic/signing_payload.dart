@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:convert/convert.dart';
+import 'package:polkadart/extrinsic/signed_extensions/substrate.dart';
 
 class SigningPayload {
   final String method; // Call
@@ -22,27 +23,21 @@ class SigningPayload {
     required this.tip,
   });
 
-  static Uint8List createSigningPayload(SigningPayload signing, registry) {
-    return signing.encode(registry);
+  toMap() {
+    return {
+      'method': method,
+      'specVersion': specVersion,
+      'transactionVersion': transactionVersion,
+      'genesisHash': genesisHash,
+      'blockHash': blockHash,
+      'era': era,
+      'nonce': nonce,
+      'tip': tip,
+    };
   }
 
-  String signedExtensionPayload(String extension) {
-    switch (extension) {
-      case 'CheckSpecVersion':
-        return specVersion;
-      case 'CheckTxVersion':
-        return transactionVersion;
-      case 'CheckGenesis':
-        return genesisHash;
-      case 'CheckMortality':
-        return era;
-      case 'CheckNonce':
-        return nonce;
-      case 'ChargeTransactionPayment':
-        return tip;
-      default:
-        return '';
-    }
+  static Uint8List createSigningPayload(SigningPayload signing, registry) {
+    return signing.encode(registry);
   }
 
   Uint8List encode(dynamic registry) {
@@ -50,14 +45,16 @@ class SigningPayload {
     final List additionalExtras = [];
 
     registry.getSignedExtensionTypes().forEach((extension) {
-      final payload = signedExtensionPayload(extension);
+      final payload =
+          SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
       if (payload.isNotEmpty) {
         extras.add(payload);
       }
     });
 
     registry.getSignedExtensionExtra().forEach((extension) {
-      final payload = signedExtensionPayload(extension);
+      final payload =
+          SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
       if (payload.isNotEmpty) {
         extras.add(payload);
       }
