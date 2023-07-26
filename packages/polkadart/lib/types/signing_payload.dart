@@ -22,6 +22,10 @@ class SigningPayload {
     required this.tip,
   });
 
+  static Uint8List createSigningPayload(SigningPayload signing, registry) {
+    return signing.encode(registry);
+  }
+
   Uint8List encode(dynamic registry) {
     final List extras = [];
     final List additionalExtras = [];
@@ -67,9 +71,6 @@ class SigningPayload {
         additionalExtras.add(tip);
       }
     });
-
-    print(extras);
-    print(additionalExtras);
 
     final extra = extras.join();
     final addExtra = additionalExtras.join();
