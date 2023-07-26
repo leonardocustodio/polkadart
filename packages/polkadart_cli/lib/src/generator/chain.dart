@@ -88,6 +88,7 @@ class ChainGenerator {
             path.join(basePath.path, ReCase(chainName).snakeCase), '.dart'),
         name: ReCase(chainName).pascalCase,
         pallets: palletGenerators,
+        metadata: metadata,
       ),
       types: typeGenerators,
     );

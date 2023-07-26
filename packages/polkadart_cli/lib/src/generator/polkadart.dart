@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:js_interop';
+
 import 'package:code_builder/code_builder.dart'
     show
         refer,
@@ -12,6 +15,7 @@ import 'package:code_builder/code_builder.dart'
         FieldModifier,
         MethodModifier;
 import 'package:path/path.dart' as p;
+import '../typegen/runtime_metadata_v14.dart' as m;
 import './pallet.dart' show PalletGenerator;
 import '../typegen/references.dart' as refs;
 import '../typegen/typegen.dart' show GeneratedOutput;
@@ -21,11 +25,13 @@ class PolkadartGenerator {
   String filePath;
   String name;
   List<PalletGenerator> pallets;
+  m.RuntimeMetadataV14 metadata;
 
   PolkadartGenerator({
     required this.filePath,
     required this.name,
     required this.pallets,
+    required this.metadata,
   });
 
   GeneratedOutput generate() {
@@ -33,14 +39,81 @@ class PolkadartGenerator {
     final constants = createPolkadartConstants();
     final rpc = createPolkadartRpc();
     final tx = createPolkadartTx();
-    final polkdart = createPolkadartClass();
+    final registry = createPolkadartRegistry();
+    final polkadart = createPolkadartClass();
 
     return GeneratedOutput(
-      classes: [queries, tx, constants, rpc, polkdart],
+      classes: [queries, tx, constants, rpc, registry, polkadart],
       enums: [],
       typedefs: [],
     );
   }
+
+  Class createPolkadartRegistry() => Class(
+        (classBuilder) {
+          final dirname = p.dirname(filePath);
+
+          final String signedExtensionTypes =
+              metadata.extrinsic.signedExtensions
+                  .where((extension) {
+                    final type = extension.type;
+                    final typeDef = metadata.registry[type].typeDef;
+                    return (typeDef is m.TypeDefTuple &&
+                            typeDef.types.isNotEmpty) ||
+                        (typeDef is m.TypeDefComposite &&
+                            typeDef.fields.isNotEmpty) ||
+                        (typeDef is! m.TypeDefComposite &&
+                            typeDef is! m.TypeDefTuple);
+                  })
+                  .toList()
+                  .map((extension) => "'${extension.identifier}'")
+                  .toList()
+                  .join(', ');
+
+          final String signedExtensionExtra =
+              metadata.extrinsic.signedExtensions
+                  .where((extension) {
+                    final type = extension.additionalSigned;
+                    final typeDef = metadata.registry[type].typeDef;
+                    return (typeDef is m.TypeDefTuple &&
+                            typeDef.types.isNotEmpty) ||
+                        (typeDef is m.TypeDefComposite &&
+                            typeDef.fields.isNotEmpty) ||
+                        (typeDef is! m.TypeDefComposite &&
+                            typeDef is! m.TypeDefTuple);
+                  })
+                  .toList()
+                  .map((extension) => "'${extension.identifier}'")
+                  .toList()
+                  .join(', ');
+
+          // specVersion + transactionVersion + genesisHash + blockHash;
+
+          classBuilder
+            ..name = 'Registry'
+            ..constructors.add(
+              Constructor((b) => b..constant = false),
+            )
+            ..methods.addAll(
+              [
+                Method(
+                  (b) => b
+                    ..name = 'getSignedExtensionTypes'
+                    ..returns = refs.list()
+                    ..body = Block.of(
+                        [refer('[$signedExtensionTypes]').returned.statement]),
+                ),
+                Method(
+                  (b) => b
+                    ..name = 'getSignedExtensionExtra'
+                    ..returns = refs.list()
+                    ..body = Block.of(
+                        [refer('[$signedExtensionExtra]').returned.statement]),
+                )
+              ],
+            );
+        },
+      );
 
   Class createPolkadartQueries() => Class(
         (classBuilder) {
@@ -198,6 +271,7 @@ class PolkadartGenerator {
                         Code.scope((a) => 'query = Queries(rpc.state)'),
                         Code('constant = Constants()'),
                         Code('tx = Extrinsics()'),
+                        Code('registry = Registry()'),
                       ],
                     ),
                 ),
@@ -286,6 +360,10 @@ class PolkadartGenerator {
                 Field((b) => b
                   ..name = 'tx'
                   ..type = refer('Extrinsics')
+                  ..modifier = FieldModifier.final$),
+                Field((b) => b
+                  ..name = 'registry'
+                  ..type = refer('Registry')
                   ..modifier = FieldModifier.final$),
               ],
             )
