@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:js_interop';
-
 import 'package:code_builder/code_builder.dart'
     show
         refer,
@@ -51,8 +48,6 @@ class PolkadartGenerator {
 
   Class createPolkadartRegistry() => Class(
         (classBuilder) {
-          final dirname = p.dirname(filePath);
-
           final String signedExtensionTypes =
               metadata.extrinsic.signedExtensions
                   .where((extension) {
