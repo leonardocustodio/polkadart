@@ -26,49 +26,40 @@ class SigningPayload {
     return signing.encode(registry);
   }
 
+  String signedExtensionPayload(String extension) {
+    switch (extension) {
+      case 'CheckSpecVersion':
+        return specVersion;
+      case 'CheckTxVersion':
+        return transactionVersion;
+      case 'CheckGenesis':
+        return genesisHash;
+      case 'CheckMortality':
+        return era;
+      case 'CheckNonce':
+        return nonce;
+      case 'ChargeTransactionPayment':
+        return tip;
+      default:
+        return '';
+    }
+  }
+
   Uint8List encode(dynamic registry) {
     final List extras = [];
     final List additionalExtras = [];
 
     registry.getSignedExtensionTypes().forEach((extension) {
-      if (extension == 'CheckSpecVersion') {
-        extras.add(specVersion);
-      }
-      if (extension == 'CheckTxVersion') {
-        extras.add(transactionVersion);
-      }
-      if (extension == 'CheckGenesis') {
-        extras.add(genesisHash);
-      }
-      if (extension == 'CheckMortality') {
-        extras.add(era);
-      }
-      if (extension == 'CheckNonce') {
-        extras.add(nonce);
-      }
-      if (extension == 'ChargeTransactionPayment') {
-        extras.add(tip);
+      final payload = signedExtensionPayload(extension);
+      if (payload.isNotEmpty) {
+        extras.add(payload);
       }
     });
 
     registry.getSignedExtensionExtra().forEach((extension) {
-      if (extension == 'CheckSpecVersion') {
-        additionalExtras.add(specVersion);
-      }
-      if (extension == 'CheckTxVersion') {
-        additionalExtras.add(transactionVersion);
-      }
-      if (extension == 'CheckGenesis') {
-        additionalExtras.add(genesisHash);
-      }
-      if (extension == 'CheckMortality') {
-        additionalExtras.add(blockHash);
-      }
-      if (extension == 'CheckNonce') {
-        additionalExtras.add(nonce);
-      }
-      if (extension == 'ChargeTransactionPayment') {
-        additionalExtras.add(tip);
+      final payload = signedExtensionPayload(extension);
+      if (payload.isNotEmpty) {
+        extras.add(payload);
       }
     });
 
