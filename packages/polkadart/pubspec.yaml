@@ -5,7 +5,7 @@ homepage: https://github.com/rankanizer/polkadart/tree/main/packages/polkadart
 repository: https://github.com/rankanizer/polkadart
 
 environment:
-  sdk: '>=2.18.5 <3.0.0'
+  sdk: ">=3.0.1 <4.0.0"
 
 dependencies:
   convert: ^3.1.1 # BSD-3-Clause
