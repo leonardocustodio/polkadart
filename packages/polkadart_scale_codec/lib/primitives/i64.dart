@@ -7,8 +7,8 @@ class I64Codec with Codec<BigInt> {
 
   @override
   void encodeTo(BigInt value, Output output) {
-    if (value < BigInt.from(-9223372036854775808) ||
-        value > BigInt.from(9223372036854775807)) {
+    if (value < BigInt.parse('-9223372036854775808') ||
+        value > BigInt.parse('9223372036854775807')) {
       throw OutOfBoundsException();
     }
     U64Codec.codec.encodeTo(value.toUnsigned(64), output);

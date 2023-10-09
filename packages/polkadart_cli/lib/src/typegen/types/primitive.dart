@@ -109,37 +109,51 @@ class PrimitiveDescriptor extends TypeDescriptor {
   }
 
   @override
-  Expression valueFrom(BasePath from, Input input, {constant = false}) {
+  LiteralValue valueFrom(BasePath from, Input input, {constant = false}) {
     switch (primitiveType) {
       case metadata.Primitive.Bool:
-        return literalBool(BoolCodec.codec.decode(input));
+        return literalBool(BoolCodec.codec.decode(input))
+            .asLiteralValue(isConstant: true);
       case metadata.Primitive.Str:
-        return literalString(StrCodec.codec.decode(input));
+        return literalString(StrCodec.codec.decode(input))
+            .asLiteralValue(isConstant: true);
       case metadata.Primitive.Char:
       case metadata.Primitive.U8:
-        return literalNum(U8Codec.codec.decode(input));
+        return literalNum(U8Codec.codec.decode(input))
+            .asLiteralValue(isConstant: true);
       case metadata.Primitive.U16:
-        return literalNum(U16Codec.codec.decode(input));
+        return literalNum(U16Codec.codec.decode(input))
+            .asLiteralValue(isConstant: true);
       case metadata.Primitive.U32:
-        return literalNum(U32Codec.codec.decode(input));
+        return literalNum(U32Codec.codec.decode(input))
+            .asLiteralValue(isConstant: true);
       case metadata.Primitive.U64:
-        return bigIntToExpression(U64Codec.codec.decode(input));
+        return bigIntToExpression(U64Codec.codec.decode(input))
+            .asLiteralValue();
       case metadata.Primitive.U128:
-        return bigIntToExpression(U128Codec.codec.decode(input));
+        return bigIntToExpression(U128Codec.codec.decode(input))
+            .asLiteralValue();
       case metadata.Primitive.U256:
-        return bigIntToExpression(U256Codec.codec.decode(input));
+        return bigIntToExpression(U256Codec.codec.decode(input))
+            .asLiteralValue();
       case metadata.Primitive.I8:
-        return literalNum(I8Codec.codec.decode(input));
+        return literalNum(I8Codec.codec.decode(input))
+            .asLiteralValue(isConstant: true);
       case metadata.Primitive.I16:
-        return literalNum(I16Codec.codec.decode(input));
+        return literalNum(I16Codec.codec.decode(input))
+            .asLiteralValue(isConstant: true);
       case metadata.Primitive.I32:
-        return literalNum(I32Codec.codec.decode(input));
+        return literalNum(I32Codec.codec.decode(input))
+            .asLiteralValue(isConstant: true);
       case metadata.Primitive.I64:
-        return bigIntToExpression(I64Codec.codec.decode(input));
+        return bigIntToExpression(I64Codec.codec.decode(input))
+            .asLiteralValue();
       case metadata.Primitive.I128:
-        return bigIntToExpression(I128Codec.codec.decode(input));
+        return bigIntToExpression(I128Codec.codec.decode(input))
+            .asLiteralValue();
       case metadata.Primitive.I256:
-        return bigIntToExpression(I256Codec.codec.decode(input));
+        return bigIntToExpression(I256Codec.codec.decode(input))
+            .asLiteralValue();
       default:
         throw Exception('Unsupported primitive $primitive');
     }

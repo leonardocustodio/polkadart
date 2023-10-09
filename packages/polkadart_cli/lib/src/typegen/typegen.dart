@@ -7,9 +7,11 @@ import 'package:code_builder/code_builder.dart'
         Class,
         Code,
         CodeExpression,
+        Constructor,
         DartEmitter,
         Enum,
         Expression,
+        ExpressionVisitor,
         Library,
         Method,
         Parameter,
@@ -74,7 +76,8 @@ import '../utils/utils.dart'
         findCommonType,
         listToFilePath,
         sanitize,
-        sanitizeClassName;
+        sanitizeClassName,
+        sanitizeDocs;
 import './class_builder.dart' as classbuilder;
 import './runtime_metadata_v14.dart' as metadata;
 import './references.dart' as refs;

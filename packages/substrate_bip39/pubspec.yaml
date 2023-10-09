@@ -1,11 +1,11 @@
 name: substrate_bip39
 description: Converting BIP39 entropy to valid Substrate SecretKeys.
-version: 0.1.0
-homepage: https://github.com/rankanizer/polkadart/tree/main/packages/substrate_bip39
-repository: https://github.com/rankanizer/polkadart
+version: 0.1.1
+homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/substrate_bip39
+repository: https://github.com/leonardocustodio/polkadart
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: ">=3.0.1 <4.0.0"
 
 dependencies:
   bip39_mnemonic: ^3.0.6

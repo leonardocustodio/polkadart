@@ -19,5 +19,6 @@ import '../primitives/primitives.dart'
         ReadProof;
 import '../../provider.dart' show Provider;
 
+part './author.dart';
 part './state.dart';
 part './system.dart';

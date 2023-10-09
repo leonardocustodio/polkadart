@@ -33,6 +33,8 @@ const bool = Reference('bool', 'dart:core');
 const dynamic = Reference('dynamic');
 const int = Reference('int', 'dart:core');
 const void_ = Reference('void', 'dart:core');
+const object = Reference('Object', 'dart:core');
+const identical = Reference('identical', 'dart:core');
 const string = Reference('String', 'dart:core');
 const uri = Reference('Uri', 'dart:core');
 const bigInt = Reference('BigInt', 'dart:core');
@@ -322,3 +324,12 @@ TypeReference storageSextupleMap(
     ..url = 'package:polkadart/polkadart.dart'
     ..types.addAll([key1, key2, key3, key4, key5, key6, value]));
 }
+
+////////////
+// Quiver //
+////////////
+const quiverListsEqual =
+    Reference('listsEqual', 'package:quiver/collection.dart');
+
+const quiverMapsEqual =
+    Reference('mapsEqual', 'package:quiver/collection.dart');
