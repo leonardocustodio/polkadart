@@ -1,7 +1,7 @@
-# **PolkaDart**
+# **Polkadart**
 
-[![Star on Github](https://img.shields.io/github/stars/rankanizer/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/rankanizer/polkadart)
-[![Test Coverage](https://codecov.io/gh/rrousselgit/riverpod/branch/master/graph/badge.svg)](https://codecov.io/gh/rankanizer/polkadart)
+[![Star on Github](https://img.shields.io/github/stars/leonardocustodio/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/leonardocustodio/polkadart)
+[![Test Coverage](https://codecov.io/gh/leonardocustodio/polkadart/graph/badge.svg?token=HG3K4LW5UN)](https://codecov.io/gh/leonardocustodio/polkadart)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-purple.svg)](https://www.apache.org/licenses/LICENSE-2.0) <!-- markdown-link-check-disable-line -->
 
 <img align="right" width="400" src="https://raw.githubusercontent.com/w3f/Grants-Program/00855ef70bc503433dc9fccc057c2f66a426a82b/static/img/badge_black.svg" />
@@ -84,4 +84,4 @@ You can run all tests from the library by running `docker compose up`.
 
 ## **License**
 
-This repository is licensed under [Apache 2.0 license](https://github.com/rankanizer/polkadart/blob/main/LICENSE)
+This repository is licensed under [Apache 2.0 license](https://github.com/leonardocustodio/polkadart/blob/main/LICENSE)
