@@ -82,6 +82,13 @@ You can run all tests from the library by running `docker compose up`.
 | [Http Provider](./packages/polkadart/lib/provider.dart)                                    |   ✅    |
 | Signed Extrinsics                                                                          |   🔴    |
 
+
+## Contributors
+
+<a href="https://github.com/leonardocustodio/polkadart/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=leonardocustodio/polkadart" />
+</a>
+
 ## **License**
 
 This repository is licensed under [Apache 2.0 license](https://github.com/leonardocustodio/polkadart/blob/main/LICENSE)
