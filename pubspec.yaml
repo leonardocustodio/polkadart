@@ -1,5 +1,4 @@
 name: polkadart_workspace
-publish_to: none
 
 environment:
   sdk: ">=3.0.1 <4.0.0"
