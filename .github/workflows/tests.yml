@@ -56,3 +56,7 @@ jobs:
       - name: Run tests
         run: SCOPE="${{ matrix.package }}" dart run melos test:ci
 
+      - name: Upload coverage to codecov
+        run: curl -s https://codecov.io/bash | bash
+
+
