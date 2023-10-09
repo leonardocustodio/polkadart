@@ -22,6 +22,7 @@ jobs:
           - polkadart_scale_codec
           - ss58
           - substrate_metadata
+          - substrate_bip39
 
     steps:
       - uses: actions/checkout@v3.5.0
@@ -45,13 +46,13 @@ jobs:
           MELOS_SDK_PATH: ${{ env.FLUTTER_ROOT }}
 
       - name: Check format
-        run: SCOPE="${{ matrix.package }}" dart run melos format:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos format
 
       - name: Analyze
-        run: SCOPE="${{ matrix.package }}" dart run melos analyze:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos analyze
 
       - name: Run tests
-        run: SCOPE="${{ matrix.package }}" dart run melos test:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos test
 
       - name: Upload coverage to codecov
         run: curl -s https://codecov.io/bash | bash
