@@ -17,6 +17,7 @@ jobs:
           - polkadart_scale_codec
           - ss58
           - substrate_metadata
+          - substrate_bip39
 
     steps:
       - uses: actions/checkout@v3
