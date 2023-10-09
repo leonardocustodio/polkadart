@@ -1,8 +1,6 @@
 name: polkadart
 repository: https://github.com/leonardocustodio/polkadart
 
-sdkPath: .fvm/flutter_sdk
-
 command:
   bootstrap:
     usePubspecOverrides: true
@@ -12,21 +10,10 @@ packages:
 
 scripts:
   test:
-    run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart test --coverage="coverage"'
-  
-  format:
-    run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart format .'
-  
-  analyze:
-    run: fvm dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'fvm dart analyze --fatal-infos .'
-  
-  # CI commands
-  # OBS: CI we do not use FVM
-  test:ci:
     run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart test --coverage="coverage"'
   
-  format:ci:
-    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart format --set-exit-if-changed .'
+  format:
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart format .'
   
-  analyze:ci:
+  analyze:
     run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart analyze --fatal-infos .'
