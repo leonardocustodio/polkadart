@@ -1,3 +1,7 @@
+## 1.1.1
+
+ - Publishing packages under polkadart.dev publisher
+
 ## 1.1.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

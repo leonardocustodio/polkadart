@@ -1,5 +1,5 @@
 name: polkadart
-repository: https://github.com/rankanizer/polkadart
+repository: https://github.com/leonardocustodio/polkadart
 
 sdkPath: .fvm/flutter_sdk
 
