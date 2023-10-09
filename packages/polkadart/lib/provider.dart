@@ -5,11 +5,12 @@ import 'package:web_socket_channel/web_socket_channel.dart'
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:http/http.dart' as http;
 
-class RpcResponse<R> {
+class RpcResponse<R, T> {
   final int id;
-  final R result;
+  final R? result;
+  final T? error;
 
-  RpcResponse({required this.id, required this.result});
+  RpcResponse({required this.id, this.result, this.error});
 }
 
 class SubscriptionReponse<R> {
@@ -178,7 +179,8 @@ class WsProvider extends Provider {
     jsonStream.where((message) => message.containsKey('id')).map((message) {
       final id = message['id'] as int;
       final result = message.containsKey('result') ? message['result'] : null;
-      return RpcResponse(id: id, result: result);
+      final error = message.containsKey('error') ? message['error'] : null;
+      return RpcResponse(id: id, result: result, error: error);
     }).listen((message) {
       queries.remove(message.id)!.complete(message);
     });
