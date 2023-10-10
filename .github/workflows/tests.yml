@@ -66,6 +66,5 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.package }}
           directory: ./packages/${{ matrix.package }}
-          verbose: true
 
 
