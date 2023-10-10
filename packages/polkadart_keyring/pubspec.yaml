@@ -1,11 +1,11 @@
 name: polkadart_keyring
 description: Substrate Keyring.
 version: 0.1.0
-homepage: https://github.com/rankanizer/polkadart/tree/main/packages/polkadart_keyring
-repository: https://github.com/rankanizer/polkadart
+homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/polkadart_keyring
+repository: https://github.com/leonardocustodio/polkadart
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: ">=3.0.1 <4.0.0"
 
 # Add regular dependencies here.
 dependencies:
