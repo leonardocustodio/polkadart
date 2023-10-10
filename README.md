@@ -25,6 +25,17 @@ This repo is a monorepo for `polkadart` and related packages.
 | [substrate_metadata](./packages/substrate_metadata)       | [![pub package](https://img.shields.io/pub/v/substrate_metadata.svg)](https://pub.dev/packages/substrate_metadata)             |
 
 
+
+| Pub                                                                                | Package                                                                 | Description |
+|------------------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------|
+| [![version][package:polkadart:version]][package:polkadart]                         | [`package:polkadart`][package:polkadart:source]                         |             |
+| [![version][package:polkadart_cli:version]][package:polkadart_cli]                 | [`package:polkadart_cli`][package:polkadart_cli:source]                 |             |
+| [![version][package:polkadart_keyring:version]][package:polkadart_keyring]         | [`package:polkadart_keyring`][package:polkadart_keyring:source]         |             |
+| [![version][package:polkadart_scale_codec:version]][package:polkadart_scale_codec] | [`package:polkadart_scale_codec`][package:polkadart_scale_codec:source] |             |
+| [![version][package:ss58:version]][package:ss58]                                   | [`package:ss58`][package:ss58:source]                                   |             |
+| [![version][package:substrate_bip39:version]][package:substrate_bip39]             | [`package:substrate_bip39`][package:substrate_bip39:source]             |             |
+| [![version][package:substrate_metadata:version]][package:substrate_metadata]       | [`package:substrate_metadata`][package:substrate_metadata:source]       |             |
+
 ## Requirements
 
 You can run all tests from the library by running `docker compose up`;
@@ -83,3 +94,26 @@ Or you can run directly in your machine using melos `dart run melos test`
 ## **License**
 
 This repository is licensed under [Apache 2.0 license](https://github.com/leonardocustodio/polkadart/blob/main/LICENSE)
+
+
+[package:polkadart:source]: ./packages/polkadart
+[package:polkadart]: https://pub.dartlang.org/packages/polkadart
+[package:polkadart:version]: https://img.shields.io/pub/v/polkadart.svg
+[package:polkadart_cli:source]: ./packages/polkadart_cli
+[package:polkadart_cli]: https://pub.dartlang.org/packages/polkadart_cli
+[package:polkadart_cli:version]: https://img.shields.io/pub/v/polkadart_cli.svg
+[package:polkadart_keyring:source]: ./packages/polkadart_keyring
+[package:polkadart_keyring]: https://pub.dartlang.org/packages/polkadart_keyring
+[package:polkadart_keyring:version]: https://img.shields.io/pub/v/polkadart_keyring.svg
+[package:polkadart_scale_codec:source]: ./packages/polkadart_scale_codec
+[package:polkadart_scale_codec]: https://pub.dartlang.org/packages/polkadart_scale_codec
+[package:polkadart_scale_codec:version]: https://img.shields.io/pub/v/polkadart_scale_codec.svg
+[package:ss58:source]: ./packages/ss58
+[package:ss58]: https://pub.dartlang.org/packages/ss58
+[package:ss58:version]: https://img.shields.io/pub/v/ss58.svg
+[package:substrate_bip39:source]: ./packages/substrate_bip39
+[package:substrate_bip39]: https://pub.dartlang.org/packages/substrate_bip39
+[package:substrate_bip39:version]: https://img.shields.io/pub/v/substrate_bip39.svg
+[package:substrate_metadata:source]: ./packages/substrate_metadata
+[package:substrate_metadata]: https://pub.dartlang.org/packages/substrate_metadata
+[package:substrate_metadata:version]: https://img.shields.io/pub/v/substrate_metadata.svg
