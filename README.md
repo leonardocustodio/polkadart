@@ -10,31 +10,7 @@ This library provides a clean wrapper around all the methods exposed by a Polkad
 
 This library is funded by [Web3 Foundation](https://web3.foundation) via their [Open Grants Program](https://github.com/w3f/Open-Grants-Program)
 
-## [polkadart-scale-codec](./packages/polkadart_scale_codec)
-
-A Dart implementation of [SCALE](https://docs.substrate.io/reference/scale-codec), Substrate uses a lightweight and efficient encoding and decoding program to optimize how data is sent and received over the network. The program used to serialize and deserialize data is called the SCALE codec, with SCALE being an acronym for simple concatenated aggregate little-endian.
-
-## [ss58](./packages/ss58)
-
-A Dart implementation of [SS58](https://docs.substrate.io/reference/address-formats). The SS58 is the default Substrate address format, this encoded address format is based on the Bitcoin Base-58-check format, but with a few modifications specifically designed to suit Substrate-based chains. You can use other address formats for Substrate-based chains. However, the SS58 address format provides a base-58 encoded value that can identify a specific account on any Substrate chain. Because different chains can have different ways of identifying accounts, the SS58 address is designed to be extensible.
-
-### Basic format
-
-```
-base58encode ( concat ( <address-type>, <address>, <checksum> ) )
-```
-
-## [substrate-metadata](./packages/substrate_metadata)
-
-One of the most important things to understand about **polkadart** is that most interfaces are generated automatically when it connects to a running node. This is quite a departure from other APIs in projects where the interfaces are static. While sounding quite scary, it is a powerful concept that exists in both Polkadot and Substrate chains and allows the API to be used in environments where the chain is customized.
-
-## Documentation and Tests
-
-You can run all tests from the library by running `docker compose up`;
-Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started) installed globally you can run `melos test`. 
-
-
-| Package | Path
+| Package | Pub |
 |----------|----------|
 | [polkadart](./packages/polkadart)                        | [![pub package](https://img.shields.io/pub/v/polkadart.svg)](https://pub.dev/packages/polkadart)                               |
 | [polkadart_cli](./packages/polkadart_cli)               | [![pub package](https://img.shields.io/pub/v/polkadart_cli.svg)](https://pub.dev/packages/polkadart_cli)                     |
@@ -43,6 +19,37 @@ Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started
 | [ss58](./packages/ss58)         | [![pub package](https://img.shields.io/pub/v/ss58.svg)](https://pub.dev/packages/ss58)               |
 | [substrate_bip39](./packages/substrate_bip39)         | [![pub package](https://img.shields.io/pub/v/substrate_bip39.svg)](https://pub.dev/packages/substrate_bip39)               |
 | [substrate_metadata](./packages/substrate_metadata)       | [![pub package](https://img.shields.io/pub/v/substrate_metadata.svg)](https://pub.dev/packages/substrate_metadata)             |
+
+
+## Requirements
+
+You can run all tests from the library by running `docker compose up`;
+Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started) installed globally you can run `melos test`. 
+
+
+```bash
+brew install git-lfs
+```
+
+On Ubuntu:
+
+```bash
+sudo apt-get install git-lfs
+```
+
+## Fetching files
+
+To ensure the `git-lfs files` are fetched inside the cloned git repository. Run these commands from the root of `polkadart repo`.
+
+```bash
+git lfs fetch
+git lfs checkout
+```
+
+## Documentation and Tests
+
+You can run all tests from the library by running `docker compose up`.
+Or you can run directly in your machine using melos `dart run melos test`
 
 ## Road map and current state
 
