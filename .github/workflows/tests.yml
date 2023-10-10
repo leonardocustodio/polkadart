@@ -58,11 +58,14 @@ jobs:
       - name: Run tests
         run: SCOPE="${{ matrix.package }}" dart run melos test
 
+      - name: Run format coverage
+        run: SCOPE="${{ matrix.package }}" dart run melos coverage
+
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.package }}
-          directory: ./packages/${{ matrix.package }}/coverage
+          directory: ./packages/${{ matrix.package }}
           verbose: true
 
 
