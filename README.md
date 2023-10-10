@@ -10,6 +10,10 @@ This library provides a clean wrapper around all the methods exposed by a Polkad
 
 This library is funded by [Web3 Foundation](https://web3.foundation) via their [Open Grants Program](https://github.com/w3f/Open-Grants-Program)
 
+## Packages
+
+This repo is a monorepo for `polkadart` and related packages.
+
 | Package | Pub |
 |----------|----------|
 | [polkadart](./packages/polkadart)                        | [![pub package](https://img.shields.io/pub/v/polkadart.svg)](https://pub.dev/packages/polkadart)                               |
