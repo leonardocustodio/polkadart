@@ -6,16 +6,16 @@ import 'package:polkadart/polkadart.dart' show Provider, StateApi;
 import 'package:substrate_metadata/utils/utils.dart';
 
 void main() async {
-  final polkadart = Provider.fromUri(Uri.parse('wss://kusama-rpc.polkadot.io'));
+  final polkadart =
+      Provider.fromUri(Uri.parse('wss://rpc.matrix.canary.enjin.io'));
   final state = StateApi(polkadart);
   final runtimeVersion = await state.getRuntimeVersion();
   print(runtimeVersion.toJson());
 
   final author = AuthorApi(polkadart);
   final extrinsic = hex.decode(
-      '410284000419dda7ddda7bd4fe6bd4058305359cf42bf9dac4e0d5ddec7bb5ae6753c053012000ed4b286c114ee5e73e62a98815bcf5927f79063bd1b89719edfd32bf2d25034d06b98b4929cfa981ce63bd098b31c4b2381151d6cb6bf31182295821fa88d5020000040700b63ff0add4c15b95c6feedc900305b1f125c907c89149b5fd92f5eb4e5ea7c12070010a5d4e8');
-  final submit = await author.submitExtrinsic(extrinsic as Uint8List);
-  print('Extrinsic hash: ${submit.toJson}');
+      '4d0284003a158a287b46acd830ee9a83d304a63569f8669968a20ea80720e338a565dd0901eaf91ade00a638bc8e9ac5a35bae3e5f3fabed1f1759e4db52bcc3ee463e1e79725f8da13dddc27d249e844c740c5ae51999799dd2c5a75b356712d47342488af5003c000a03003a158a287b46acd830ee9a83d304a63569f8669968a20ea80720e338a565dd0913000064a7b3b6e00d');
 
-  await polkadart.disconnect();
+  final submit = await author.submitAndWatchExtrinsic(
+      extrinsic as Uint8List, (data) => print('From here: $data'));
 }
