@@ -22,6 +22,11 @@ jobs:
           - polkadart_scale_codec
           - ss58
           - substrate_metadata
+          - substrate_bip39
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.package }}
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v3.5.0
@@ -30,9 +35,6 @@ jobs:
 
       - name: Check out code (LFS)
         uses: nschloe/action-cached-lfs-checkout@v1.2.1
-
-      - name: Export FVM settings as environment variables
-        uses: kuhnroyal/flutter-fvm-config-action@v1
 
       - uses: subosito/flutter-action@v2
         with:
@@ -48,15 +50,21 @@ jobs:
           MELOS_SDK_PATH: ${{ env.FLUTTER_ROOT }}
 
       - name: Check format
-        run: SCOPE="${{ matrix.package }}" dart run melos format:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos format
 
       - name: Analyze
-        run: SCOPE="${{ matrix.package }}" dart run melos analyze:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos analyze
 
       - name: Run tests
-        run: SCOPE="${{ matrix.package }}" dart run melos test:ci
+        run: SCOPE="${{ matrix.package }}" dart run melos test
 
-      - name: Upload coverage to codecov
-        run: curl -s https://codecov.io/bash | bash
+      - name: Run format coverage
+        run: SCOPE="${{ matrix.package }}" dart run melos coverage
+
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ matrix.package }}
+          directory: ./packages/${{ matrix.package }}/coverage
 
 
