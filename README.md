@@ -14,18 +14,6 @@ This library is funded by [Web3 Foundation](https://web3.foundation) via their [
 
 This repo is a monorepo for `polkadart` and related packages.
 
-| Package | Pub |
-|----------|----------|
-| [polkadart](./packages/polkadart)                        | [![pub package](https://img.shields.io/pub/v/polkadart.svg)](https://pub.dev/packages/polkadart)                               |
-| [polkadart_cli](./packages/polkadart_cli)               | [![pub package](https://img.shields.io/pub/v/polkadart_cli.svg)](https://pub.dev/packages/polkadart_cli)                     |
-| [polkadart_keyring](./packages/polkadart_keyring)               | [![pub package](https://img.shields.io/pub/v/polkadart_keyring.svg)](https://pub.dev/packages/polkadart_keyring)                     |
-| [polkadart_scale_codec](./packages/polkadart_scale_codec) | [![pub package](https://img.shields.io/pub/v/polkadart_scale_codec.svg)](https://pub.dev/packages/polkadart_scale_codec)       |
-| [ss58](./packages/ss58)         | [![pub package](https://img.shields.io/pub/v/ss58.svg)](https://pub.dev/packages/ss58)               |
-| [substrate_bip39](./packages/substrate_bip39)         | [![pub package](https://img.shields.io/pub/v/substrate_bip39.svg)](https://pub.dev/packages/substrate_bip39)               |
-| [substrate_metadata](./packages/substrate_metadata)       | [![pub package](https://img.shields.io/pub/v/substrate_metadata.svg)](https://pub.dev/packages/substrate_metadata)             |
-
-
-
 | Pub                                                                                | Package                                                                 | Description |
 |------------------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------|
 | [![version][package:polkadart:version]][package:polkadart]                         | [`package:polkadart`][package:polkadart:source]                         |             |
