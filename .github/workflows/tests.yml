@@ -2,11 +2,13 @@ name: Build and Test
 
 on:
   pull_request:
+    branches:
+      - with-lfs
     paths-ignore:
       - "**.md"
   push:
     branches:
-      - main
+      - with-lfs
     paths-ignore:
       - "**.md"
 
