@@ -252,6 +252,11 @@ class WsProvider extends Provider {
   Future<SubscriptionReponse> subscribe(String method, List<dynamic> params,
       {FutureOr<void> Function(String subscription)? onCancel}) async {
     final result = await send(method, params);
+
+    if (result.error != null) {
+      throw Exception(result.error.toString());
+    }
+
     final subscription = result.result as String;
     final controller = getOrCreateSubscriptionController(method, subscription);
     return SubscriptionReponse(
