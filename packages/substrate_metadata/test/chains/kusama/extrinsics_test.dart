@@ -21,61 +21,61 @@ void main() {
     // Populating with the metadata for block-numbers available for this chain....
     chain.initSpecVersionFromFile('../../chain/kusama/versions.jsonl');
 
-    final List<RawBlockExtrinsics> rawBlockList = List.empty(growable: true);
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part1.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part2.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part3.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part4.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part5.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part6.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part7.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part8.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part9.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part10.jsonl'));
-    rawBlockList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/kusama/blocks.part11.jsonl'));
+    void parseBlockList(List<RawBlockExtrinsics> rawBlockList) {
+      for (var originalExtrinsics in rawBlockList) {
+        test('When original extrinsics is decode it should return normally ',
+            () {
+          //
+          // Decoding the `Raw Block Extrinsics`
+          final decodedBlockExtrinsics =
+              chain.decodeExtrinsics(originalExtrinsics);
 
-    //
-    // Looping through every block
-    for (var originalExtrinsics in rawBlockList) {
-      test('When original extrinsics is decode it should return normally ', () {
-        //
-        // Decoding the `Raw Block Extrinsics`
-        final decodedBlockExtrinsics =
-            chain.decodeExtrinsics(originalExtrinsics);
+          //
+          // Encoding the `Decoded Block Extrinsics`
+          final encodedBlockExtrinsics =
+              chain.encodeExtrinsics(decodedBlockExtrinsics);
 
-        //
-        // Encoding the `Decoded Block Extrinsics`
-        final encodedBlockExtrinsics =
-            chain.encodeExtrinsics(decodedBlockExtrinsics);
+          expect(encodedBlockExtrinsics.extrinsics.toString(),
+              originalExtrinsics.extrinsics.toString());
 
-        expect(encodedBlockExtrinsics.extrinsics.toString(),
-            originalExtrinsics.extrinsics.toString());
+          /// Match the hashes of the extrinsics
+          for (var i = 0; i < originalExtrinsics.extrinsics.length; i++) {
+            expect(
+              decodedBlockExtrinsics.extrinsics[i]['hash'],
+              ExtrinsicsCodec.computeHashFromString(
+                  encodedBlockExtrinsics.extrinsics[i]),
+            );
+          }
 
-        /// Match the hashes of the extrinsics
-        for (var i = 0; i < originalExtrinsics.extrinsics.length; i++) {
+          //
+          // Comparing the original extrinsics with the encoded extrinsics
           expect(
-            decodedBlockExtrinsics.extrinsics[i]['hash'],
-            ExtrinsicsCodec.computeHashFromString(
-                encodedBlockExtrinsics.extrinsics[i]),
-          );
-        }
-
-        //
-        // Comparing the original extrinsics with the encoded extrinsics
-        expect(
-            originalExtrinsics.extrinsics, encodedBlockExtrinsics.extrinsics);
-      });
+              originalExtrinsics.extrinsics, encodedBlockExtrinsics.extrinsics);
+        });
+      }
     }
+
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part1.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part2.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part3.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part4.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part5.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part6.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part7.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part8.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part9.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part10.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/kusama/blocks.part11.jsonl'));
   });
 }

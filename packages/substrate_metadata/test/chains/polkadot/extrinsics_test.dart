@@ -21,49 +21,49 @@ void main() {
     // Populating with the metadata for block-numbers available for this chain....
     chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
 
-    final List<RawBlockExtrinsics> rawBlocksList = List.empty(growable: true);
-    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/polkadot/blocks.part1.jsonl'));
-    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/polkadot/blocks.part2.jsonl'));
-    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/polkadot/blocks.part3.jsonl'));
-    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/polkadot/blocks.part4.jsonl'));
-    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
-        '../../chain/polkadot/blocks.part5.jsonl'));
+    void parseBlockList(List<RawBlockExtrinsics> rawBlocksList) {
+      for (var originalExtrinsics in rawBlocksList) {
+        test('When original extrinsics is decode it should return normally ',
+            () {
+          //
+          // Decoding the `Raw Block Extrinsics`
+          final decodedBlockExtrinsics =
+              chain.decodeExtrinsics(originalExtrinsics);
 
-    //
-    // Looping through every block
-    for (var originalExtrinsics in rawBlocksList) {
-      test('When original extrinsics is decode it should return normally ', () {
-        //
-        // Decoding the `Raw Block Extrinsics`
-        final decodedBlockExtrinsics =
-            chain.decodeExtrinsics(originalExtrinsics);
+          //
+          // Encoding the `Decoded Block Extrinsics`
+          final encodedBlockExtrinsics =
+              chain.encodeExtrinsics(decodedBlockExtrinsics);
 
-        //
-        // Encoding the `Decoded Block Extrinsics`
-        final encodedBlockExtrinsics =
-            chain.encodeExtrinsics(decodedBlockExtrinsics);
+          expect(encodedBlockExtrinsics.extrinsics.toString(),
+              originalExtrinsics.extrinsics.toString());
 
-        expect(encodedBlockExtrinsics.extrinsics.toString(),
-            originalExtrinsics.extrinsics.toString());
+          /// Match the hashes of the extrinsics
+          for (var i = 0; i < originalExtrinsics.extrinsics.length; i++) {
+            expect(
+              decodedBlockExtrinsics.extrinsics[i]['hash'],
+              ExtrinsicsCodec.computeHashFromString(
+                  encodedBlockExtrinsics.extrinsics[i]),
+            );
+          }
 
-        /// Match the hashes of the extrinsics
-        for (var i = 0; i < originalExtrinsics.extrinsics.length; i++) {
+          //
+          // Comparing the original extrinsics with the encoded extrinsics
           expect(
-            decodedBlockExtrinsics.extrinsics[i]['hash'],
-            ExtrinsicsCodec.computeHashFromString(
-                encodedBlockExtrinsics.extrinsics[i]),
-          );
-        }
-
-        //
-        // Comparing the original extrinsics with the encoded extrinsics
-        expect(
-            originalExtrinsics.extrinsics, encodedBlockExtrinsics.extrinsics);
-      });
+              originalExtrinsics.extrinsics, encodedBlockExtrinsics.extrinsics);
+        });
+      }
     }
+
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part1.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part2.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part3.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part4.jsonl'));
+    parseBlockList(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part5.jsonl'));
   });
 }
