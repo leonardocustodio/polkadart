@@ -197,7 +197,7 @@ class WsProvider extends Provider {
       final method = message['method'] as String;
       final params = message['params'] as Map<String, dynamic>;
       final subscription = params['subscription'] as String;
-      final result = params.containsKey('result') ? message['result'] : null;
+      final result = params.containsKey('result') ? params['result'] : null;
       return SubscriptionMessage(
           method: method, subscription: subscription, result: result);
     }).listen((message) {
