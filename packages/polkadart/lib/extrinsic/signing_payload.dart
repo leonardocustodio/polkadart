@@ -66,7 +66,7 @@ class SigningPayload {
 
     final extra = extras.join();
     final addExtra = additionalExtras.join();
-    final payload = 'b0' + method + extra + addExtra;
+    final payload = method + extra + addExtra;
     final withoutLastMortality = payload.substring(0, payload.length - 2);
     final withLastBlock = withoutLastMortality + blockHash;
 
