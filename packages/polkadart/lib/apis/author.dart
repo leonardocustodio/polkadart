@@ -13,9 +13,9 @@ class AuthorApi<P extends Provider> {
 
     final response = await _provider.send('author_submitExtrinsic', params);
 
-    if (response.error != null) {
-      throw Exception(response.error.toString());
-    }
+    // if (response.error != null) {
+    //   throw Exception(response.error.toString());
+    // }
 
     final data = response.result as String;
     return Uint8List.fromList(hex.decode(data.substring(2)));
@@ -37,6 +37,6 @@ class AuthorApi<P extends Provider> {
 
     return subscription.stream
         .map((response) => ExtrinsicStatus.fromJson(response.result))
-        .listen(onData);
+        .listen((d) => print('From d: $d'));
   }
 }

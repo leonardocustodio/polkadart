@@ -37,8 +37,13 @@ class Extrinsic {
 
   Uint8List encode(dynamic registry) {
     final extrinsicVersion = registry.extrinsicVersion;
+    print('Extrinsic version: $extrinsicVersion');
     // Unsigned transaction
     // final byte = extrinsicVersion & 0b0111_1111
+    final preByte = extrinsicVersion & 127;
+    final inHex = preByte.toRadixString(16);
+    print('Byte: $preByte');
+    print('In Hex: $inHex');
     // Signed transaction
     final extraByte = extrinsicVersion | 128;
     final hexByte = extraByte.toRadixString(16);

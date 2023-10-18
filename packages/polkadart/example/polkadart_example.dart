@@ -9,13 +9,17 @@ void main() async {
   final polkadart =
       Provider.fromUri(Uri.parse('wss://rpc.matrix.canary.enjin.io'));
   final state = StateApi(polkadart);
-  final runtimeVersion = await state.getRuntimeVersion();
-  print(runtimeVersion.toJson());
+  // final runtimeVersion = await state.getRuntimeVersion();
+  // print(runtimeVersion.toJson());
 
-  final author = AuthorApi(polkadart);
-  final extrinsic = hex.decode(
-      '4d0284003a158a287b46acd830ee9a83d304a63569f8669968a20ea80720e338a565dd0901eaf91ade00a638bc8e9ac5a35bae3e5f3fabed1f1759e4db52bcc3ee463e1e79725f8da13dddc27d249e844c740c5ae51999799dd2c5a75b356712d47342488af5003c000a03003a158a287b46acd830ee9a83d304a63569f8669968a20ea80720e338a565dd0913000064a7b3b6e00d');
+  // final author = AuthorApi(polkadart);
+  // final extrinsic = hex.decode(
+  //     '4d0284003a158a287b46acd830ee9a83d304a63569f8669968a20ea80720e338a565dd0901c8dc2161c8a844c6f783f674271f67f71591d980425fca3a90ac016ccf1a5712ad868fc45014d418aa6feeb655b4e40e04354ac1b985c7b172a283dfdfa66484750344000a03003a158a287b46acd830ee9a83d304a63569f8669968a20ea80720e338a565dd0913000064a7b3b6e00d');
 
-  final submit = await author.submitAndWatchExtrinsic(
-      extrinsic as Uint8List, (data) => print('From here: $data'));
+  final test =
+      await state.subscribeRuntimeVersion((p0) => print('From P0: $p0'));
+
+  // final submit = await author.submitAndWatchExtrinsic(
+  //     extrinsic as Uint8List, (data) => print('From here: $data'));
+  //
 }

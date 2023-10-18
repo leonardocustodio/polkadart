@@ -48,6 +48,8 @@ class SigningPayload {
       final payload =
           SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
       if (payload.isNotEmpty) {
+        print(extension);
+        print(payload);
         extras.add(payload);
       }
     });
@@ -56,14 +58,18 @@ class SigningPayload {
       final payload =
           SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
       if (payload.isNotEmpty) {
-        extras.add(payload);
+        print(extension);
+        print(payload);
+        additionalExtras.add(payload);
       }
     });
 
     final extra = extras.join();
     final addExtra = additionalExtras.join();
-    final payload = method + extra + addExtra;
+    final payload = 'b0' + method + extra + addExtra;
+    final withoutLastMortality = payload.substring(0, payload.length - 2);
+    final withLastBlock = withoutLastMortality + blockHash;
 
-    return Uint8List.fromList(hex.decode(payload));
+    return Uint8List.fromList(hex.decode(withLastBlock));
   }
 }

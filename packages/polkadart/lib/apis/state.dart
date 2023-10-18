@@ -165,6 +165,7 @@ class StateApi<P extends Provider> {
             onCancel: (subscription) async {
       await _provider.send('state_unsubscribeRuntimeVersion', [subscription]);
     });
+
     return subscription.stream
         .map((response) => RuntimeVersion.fromJson(response.result))
         .listen(onData);
