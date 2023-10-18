@@ -21,12 +21,15 @@ void main() {
     // Populating with the metadata for block-numbers available for this chain....
     chain.initSpecVersionFromFile('../../chain/kusama/versions.jsonl');
 
-    final List<RawBlockEvents> rawBlocksList =
-        RawBlockEvents.readEventsFromPath('../../chain/kusama/events.jsonl');
+    final List<RawBlockEvents> rawEventList = List.empty(growable: true);
+    rawEventList.addAll(RawBlockEvents.readEventsFromPath(
+        '../../chain/kusama/events.part1.jsonl'));
+    rawEventList.addAll(RawBlockEvents.readEventsFromPath(
+        '../../chain/kusama/events.part2.jsonl'));
 
     //
     // Looping through every block
-    for (var originalEvent in rawBlocksList) {
+    for (var originalEvent in rawEventList) {
       test(
           'When original event is decoded and encoded back then it matches the original event value.',
           () {

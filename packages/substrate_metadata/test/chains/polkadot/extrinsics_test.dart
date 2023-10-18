@@ -21,9 +21,18 @@ void main() {
     // Populating with the metadata for block-numbers available for this chain....
     chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
 
-    final List<RawBlockExtrinsics> rawBlocksList =
-        RawBlockExtrinsics.readBlocksFromPath(
-            '../../chain/polkadot/blocks.jsonl');
+    final List<RawBlockExtrinsics> rawBlocksList = List.empty(growable: true);
+    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part1.jsonl'));
+    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part2.jsonl'));
+    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part3.jsonl'));
+    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part4.jsonl'));
+    rawBlocksList.addAll(RawBlockExtrinsics.readBlocksFromPath(
+        '../../chain/polkadot/blocks.part5.jsonl'));
+
     //
     // Looping through every block
     for (var originalExtrinsics in rawBlocksList) {
