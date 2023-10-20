@@ -126,11 +126,8 @@ class WsProvider extends Provider {
   /// Maps the query id to the completer that will resolve the query
   final Map<int, Completer<RpcResponse>> queries = {};
 
-  /// Maps the subscription method to the respective subscription id.
-  final Map<String, String> subscriptions = {};
-
   /// Maps the subscription id to the stream controller that will emit the subscription data
-  final Map<String, StreamController<SubscriptionMessage>> streamControllers = {};
+  final Map<String, StreamController<SubscriptionMessage>> subscriptions = {};
 
   /// WebSocket connection
   WebSocketChannel? channel;
@@ -216,10 +213,9 @@ class WsProvider extends Provider {
     if (channel == null) {
       throw Exception('Channel is already close');
     }
-    for (final controller in streamControllers.values) {
+    for (final controller in subscriptions.values) {
         await controller.close();
     }
-    streamControllers.clear();
     subscriptions.clear();
     await channel!.sink.close(status.goingAway);
     channel = null;
@@ -258,7 +254,7 @@ class WsProvider extends Provider {
     }
 
     final subscription = result.result as String;
-    final controller = getOrCreateSubscriptionController(method, subscription);
+    final controller = getOrCreateSubscriptionController(subscription);
     return SubscriptionReponse(
       id: subscription,
       stream: controller.stream,
@@ -266,8 +262,8 @@ class WsProvider extends Provider {
   }
 
   StreamController<SubscriptionMessage>? getSubscriptionController(String subscriptionId) {
-    if (streamControllers.containsKey(subscriptionId)) {
-      return streamControllers[subscriptionId]!;
+    if (subscriptions.containsKey(subscriptionId)) {
+      return subscriptions[subscriptionId]!;
     } else {
        print('Can\'t find subscription controller for: $subscriptionId');
        return null;
@@ -276,29 +272,23 @@ class WsProvider extends Provider {
 
   // Returns an existing StreamController, or create a new one if it doesn't exist
   StreamController<SubscriptionMessage> getOrCreateSubscriptionController(
-      String method, String subscription,
+      String subscription,
       [FutureOr<void> Function(String subscription)? onCancel]) {
     // print('Getting controller for method: $method, and subscription: $subscription');
-    if (subscriptions.containsKey(method)) {
-      final subscriptionId = subscriptions[method]!;
+    if (subscriptions.containsKey(subscription)) {
       // print('Using previous method subscription: $subscriptionId');
-      return streamControllers[subscriptionId]!;
+      return subscriptions[subscription]!;
     } else {
       // print('No existing method subscription found');
       final controller = StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
         if (onCancel != null) {
           await onCancel(subscription);
         }
-        if (subscriptions.containsKey(method)) {
-          subscriptions.remove(method);
-        }
-
-        if (streamControllers.containsKey(subscription)) {
-          streamControllers.remove(subscription);
+        if (subscriptions.containsKey(subscription)) {
+          subscriptions.remove(subscription);
         }
       });
-      subscriptions[method] = subscription;
-      streamControllers[subscription] = controller;
+      subscriptions[subscription] = controller;
       return controller;
     }
   }
