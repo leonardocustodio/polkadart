@@ -13,11 +13,11 @@ class RpcResponse<R, T> {
   RpcResponse({required this.id, this.result, this.error});
 }
 
-class SubscriptionReponse<R> {
+class SubscriptionResponse<R> {
   final String id;
   final Stream<SubscriptionMessage<R>> stream;
 
-  SubscriptionReponse({required this.id, required this.stream});
+  SubscriptionResponse({required this.id, required this.stream});
 }
 
 class SubscriptionMessage<R> {
@@ -56,7 +56,7 @@ abstract class Provider {
   Future<RpcResponse> send(String method, List<dynamic> params);
 
   /// Send subscribe message to RPC node
-  Future<SubscriptionReponse> subscribe(String method, List<dynamic> params,
+  Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
       {FutureOr<void> Function(String subscription)? onCancel});
 }
 
@@ -89,7 +89,7 @@ class HttpProvider extends Provider {
   }
 
   @override
-  Future<SubscriptionReponse> subscribe(String method, List params,
+  Future<SubscriptionResponse> subscribe(String method, List params,
       {FutureOr<void> Function(String subscription)? onCancel}) {
     throw Exception('HttpProvider does not support subscriptions');
   }
@@ -127,8 +127,7 @@ class WsProvider extends Provider {
   final Map<int, Completer<RpcResponse>> queries = {};
 
   /// Maps the subscription id to the stream controller that will emit the subscription data
-  final Map<String, Map<String, StreamController<SubscriptionMessage>>>
-      subscriptions = {};
+  final Map<String, StreamController<SubscriptionMessage>> subscriptions = {};
 
   /// WebSocket connection
   WebSocketChannel? channel;
@@ -186,23 +185,22 @@ class WsProvider extends Provider {
     });
 
     // Subscriptions
-    jsonStream
-        .where((message) =>
-            !message.containsKey('id') &&
-            message.containsKey('params') &&
-            (message['params'] as Map<String, dynamic>)
-                .containsKey('subscription'))
-        .map((message) {
+    jsonStream.where((message) {
+      // print('Received stream msg: $message');
+      final valid =
+          !message.containsKey('id') && message.containsKey('params') && (message['params'] as Map<String, dynamic>).containsKey('subscription');
+      return valid;
+    }).map((message) {
       final method = message['method'] as String;
       final params = message['params'] as Map<String, dynamic>;
       final subscription = params['subscription'] as String;
-      final result = params.containsKey('result') ? message['result'] : null;
+      final result = params.containsKey('result') ? params['result'] : null;
       return SubscriptionMessage(
           method: method, subscription: subscription, result: result);
     }).listen((message) {
-      final StreamController controller = getOrCreateSubscriptionController(
-          message.method, message.subscription);
-      controller.add(message);
+      // print('getting controller: ${message.method}, ${message.subscription}');
+      final StreamController? controller = getSubscriptionController(message.subscription);
+      controller?.add(message);
     });
 
     this.channel = channel;
@@ -215,11 +213,8 @@ class WsProvider extends Provider {
     if (channel == null) {
       throw Exception('Channel is already close');
     }
-    for (final methodSubscriptions in subscriptions.values) {
-      for (final controller in methodSubscriptions.values) {
+    for (final controller in subscriptions.values) {
         await controller.close();
-      }
-      methodSubscriptions.clear();
     }
     subscriptions.clear();
     await channel!.sink.close(status.goingAway);
@@ -249,46 +244,53 @@ class WsProvider extends Provider {
 
   /// Send arbitrary message to RPC node
   @override
-  Future<SubscriptionReponse> subscribe(String method, List<dynamic> params,
+  Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
       {FutureOr<void> Function(String subscription)? onCancel}) async {
+    // print('Subscribing to method: $method');
     final result = await send(method, params);
+
+    if (result.error != null) {
+      throw Exception(result.error.toString());
+    }
+
     final subscription = result.result as String;
-    final controller = getOrCreateSubscriptionController(method, subscription);
-    return SubscriptionReponse(
+    final controller = getOrCreateSubscriptionController(subscription);
+    return SubscriptionResponse(
       id: subscription,
       stream: controller.stream,
     );
   }
 
+  StreamController<SubscriptionMessage>? getSubscriptionController(String subscriptionId) {
+    if (subscriptions.containsKey(subscriptionId)) {
+      return subscriptions[subscriptionId]!;
+    } else {
+       print('Can\'t find subscription controller for: $subscriptionId');
+       return null;
+    }
+  }
+
   // Returns an existing StreamController, or create a new one if it doesn't exist
   StreamController<SubscriptionMessage> getOrCreateSubscriptionController(
-      String method, String subscription,
+      String subscription,
       [FutureOr<void> Function(String subscription)? onCancel]) {
-    final Map<String, StreamController<SubscriptionMessage>>
-        methodSubscriptions;
-    if (subscriptions.containsKey(method)) {
-      methodSubscriptions = subscriptions[method]!;
+    // print('Getting controller for method: $method, and subscription: $subscription');
+    if (subscriptions.containsKey(subscription)) {
+      // print('Using previous method subscription: $subscriptionId');
+      return subscriptions[subscription]!;
     } else {
-      methodSubscriptions = {};
-      subscriptions[method] = methodSubscriptions;
-    }
-
-    final StreamController<SubscriptionMessage> controller;
-    if (methodSubscriptions.containsKey(subscription)) {
-      controller = methodSubscriptions[subscription]!;
-    } else {
-      controller =
-          StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
+      // print('No existing method subscription found');
+      final controller = StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
         if (onCancel != null) {
           await onCancel(subscription);
         }
-        if (methodSubscriptions.containsKey(subscription)) {
-          methodSubscriptions.remove(subscription);
+        if (subscriptions.containsKey(subscription)) {
+          subscriptions.remove(subscription);
         }
       });
-      methodSubscriptions[subscription] = controller;
+      subscriptions[subscription] = controller;
+      return controller;
     }
-    return controller;
   }
 
   @override
