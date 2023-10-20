@@ -1,6 +1,6 @@
 import 'dart:async' show Future, FutureOr;
 import 'package:polkadart/polkadart.dart'
-    show Provider, RpcResponse, SubscriptionReponse;
+    show Provider, RpcResponse, SubscriptionResponse;
 
 /// The Mock Provider allows mock requests.
 class MockProvider<S> extends Provider {
@@ -35,7 +35,7 @@ class MockProvider<S> extends Provider {
   }
 
   @override
-  Future<SubscriptionReponse> subscribe(String method, List params,
+  Future<SubscriptionResponse> subscribe(String method, List params,
       {FutureOr<void> Function(String subscription)? onCancel}) {
     throw Exception('MockProvider does not support subscriptions');
   }

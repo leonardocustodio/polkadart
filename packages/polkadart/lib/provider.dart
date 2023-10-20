@@ -13,11 +13,11 @@ class RpcResponse<R, T> {
   RpcResponse({required this.id, this.result, this.error});
 }
 
-class SubscriptionReponse<R> {
+class SubscriptionResponse<R> {
   final String id;
   final Stream<SubscriptionMessage<R>> stream;
 
-  SubscriptionReponse({required this.id, required this.stream});
+  SubscriptionResponse({required this.id, required this.stream});
 }
 
 class SubscriptionMessage<R> {
@@ -56,7 +56,7 @@ abstract class Provider {
   Future<RpcResponse> send(String method, List<dynamic> params);
 
   /// Send subscribe message to RPC node
-  Future<SubscriptionReponse> subscribe(String method, List<dynamic> params,
+  Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
       {FutureOr<void> Function(String subscription)? onCancel});
 }
 
@@ -89,7 +89,7 @@ class HttpProvider extends Provider {
   }
 
   @override
-  Future<SubscriptionReponse> subscribe(String method, List params,
+  Future<SubscriptionResponse> subscribe(String method, List params,
       {FutureOr<void> Function(String subscription)? onCancel}) {
     throw Exception('HttpProvider does not support subscriptions');
   }
@@ -244,7 +244,7 @@ class WsProvider extends Provider {
 
   /// Send arbitrary message to RPC node
   @override
-  Future<SubscriptionReponse> subscribe(String method, List<dynamic> params,
+  Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
       {FutureOr<void> Function(String subscription)? onCancel}) async {
     // print('Subscribing to method: $method');
     final result = await send(method, params);
@@ -255,7 +255,7 @@ class WsProvider extends Provider {
 
     final subscription = result.result as String;
     final controller = getOrCreateSubscriptionController(subscription);
-    return SubscriptionReponse(
+    return SubscriptionResponse(
       id: subscription,
       stream: controller.stream,
     );
