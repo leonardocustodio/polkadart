@@ -7,14 +7,10 @@ import 'package:http/http.dart' as http;
 
 class RpcResponse<R, T> {
   final int id;
-  final R result;
-  // final T? error;
+  final R? result;
+  final T? error;
 
-  RpcResponse({
-    required this.id,
-    required this.result,
-    // this.error,
-  });
+  RpcResponse({required this.id, this.result, this.error});
 }
 
 class SubscriptionResponse<R> {
@@ -182,42 +178,34 @@ class WsProvider extends Provider {
     jsonStream.where((message) => message.containsKey('id')).map((message) {
       final id = message['id'] as int;
       final result = message.containsKey('result') ? message['result'] : null;
-      // final error = message.containsKey('error') ? message['error'] : null;
-      return RpcResponse(
-        id: id,
-        result: result,
-        // error: error,
-      );
+      final error = message.containsKey('error') ? message['error'] : null;
+      return RpcResponse(id: id, result: result, error: error);
     }).listen((message) {
       queries.remove(message.id)!.complete(message);
     });
 
     // Subscriptions
-    jsonStream.where((message) {
-      // print('Received stream msg: $message');
-      final valid =
-          !message.containsKey('id') && message.containsKey('params') && (message['params'] as Map<String, dynamic>).containsKey('subscription');
-      return valid;
-    }).map((message) {
+    jsonStream
+        .where((message) =>
+            !message.containsKey('id') &&
+            message.containsKey('params') &&
+            (message['params'] as Map<String, dynamic>)
+                .containsKey('subscription'))
+        .map((message) {
+      print('Received stream msg: $message');
       final method = message['method'] as String;
       final params = message['params'] as Map<String, dynamic>;
       final subscription = params['subscription'] as String;
       final result = params.containsKey('result') ? params['result'] : null;
+
       return SubscriptionMessage(
           method: method, subscription: subscription, result: result);
     }).listen((message) {
-<<<<<<< main
-      // print('getting controller: ${message.method}, ${message.subscription}');
-      final StreamController? controller = getSubscriptionController(message.subscription);
+      print('getting controller: ${message.method}, ${message.subscription}');
+      final StreamController? controller =
+          getSubscriptionController(message.subscription);
+      print(message);
       controller?.add(message);
-=======
-      print('Before get');
-      final StreamController controller =
-          getOrCreateSubscriptionController(message.subscription);
-      print('Subs ${message.subscription}');
-      print('Msg $message');
-      controller.add(message);
->>>>>>> change
     });
 
     this.channel = channel;
@@ -230,13 +218,8 @@ class WsProvider extends Provider {
     if (channel == null) {
       throw Exception('Channel is already close');
     }
-<<<<<<< main
     for (final controller in subscriptions.values) {
-        await controller.close();
-=======
-    for (final subscription in subscriptions.values) {
-      await subscription.close();
->>>>>>> change
+      await controller.close();
     }
     subscriptions.clear();
     await channel!.sink.close(status.goingAway);
@@ -268,91 +251,54 @@ class WsProvider extends Provider {
   @override
   Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
       {FutureOr<void> Function(String subscription)? onCancel}) async {
-    // print('Subscribing to method: $method');
+    print('Subscribing to method: $method');
     final result = await send(method, params);
-    // print(result.result);
 
-<<<<<<< main
     if (result.error != null) {
       throw Exception(result.error.toString());
     }
 
     final subscription = result.result as String;
     final controller = getOrCreateSubscriptionController(subscription);
-=======
-    // if (result.error != null) {
-    //   throw Exception(result.error);
-    // }
-
-    final subscription = result.result as String;
-    final controller = getOrCreateSubscriptionController(subscription);
-    print('Sub id here: $subscription');
-
->>>>>>> change
     return SubscriptionResponse(
       id: subscription,
       stream: controller.stream,
     );
   }
 
-<<<<<<< main
-  StreamController<SubscriptionMessage>? getSubscriptionController(String subscriptionId) {
+  StreamController<SubscriptionMessage>? getSubscriptionController(
+      String subscriptionId) {
     if (subscriptions.containsKey(subscriptionId)) {
+      print('Got subscription ${subscriptionId}');
       return subscriptions[subscriptionId]!;
     } else {
-       print('Can\'t find subscription controller for: $subscriptionId');
-       return null;
+      print('Can\'t find subscription controller for: $subscriptionId');
+      return null;
     }
   }
 
-=======
->>>>>>> change
   // Returns an existing StreamController, or create a new one if it doesn't exist
   StreamController<SubscriptionMessage> getOrCreateSubscriptionController(
       String subscription,
       [FutureOr<void> Function(String subscription)? onCancel]) {
-<<<<<<< main
-    // print('Getting controller for method: $method, and subscription: $subscription');
+    print('Getting controller for subscription: $subscription');
     if (subscriptions.containsKey(subscription)) {
-      // print('Using previous method subscription: $subscriptionId');
+      print('Using previous method subscription: $subscription');
       return subscriptions[subscription]!;
     } else {
-      // print('No existing method subscription found');
-      final controller = StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
-=======
-    final StreamController<SubscriptionMessage> controller;
-
-    if (subscriptions.containsKey(subscription)) {
-      print('here 3');
-      controller = subscriptions[subscription]!;
-    } else {
-      print('here 4');
-      controller =
+      print('No existing method subscription found');
+      final controller =
           StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
->>>>>>> change
         if (onCancel != null) {
-          print('here 5');
           await onCancel(subscription);
         }
         if (subscriptions.containsKey(subscription)) {
-<<<<<<< main
           subscriptions.remove(subscription);
         }
       });
       subscriptions[subscription] = controller;
       return controller;
     }
-=======
-          print('here 6');
-          subscriptions.remove(subscription);
-        }
-      });
-      print('here 7');
-      subscriptions[subscription] = controller;
-    }
-    print('here 8');
-    return controller;
->>>>>>> change
   }
 
   @override

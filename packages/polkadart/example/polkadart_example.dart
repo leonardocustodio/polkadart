@@ -12,14 +12,10 @@ void main() async {
   // final runtimeVersion = await state.getRuntimeVersion();
   // print(runtimeVersion.toJson());
 
-  // final author = AuthorApi(polkadart);
-  // final extrinsic = hex.decode(
-  //     '4d0284003a158a287b46acd830ee9a83d304a63569f8669968a20ea80720e338a565dd0901c8dc2161c8a844c6f783f674271f67f71591d980425fca3a90ac016ccf1a5712ad868fc45014d418aa6feeb655b4e40e04354ac1b985c7b172a283dfdfa66484750344000a03003a158a287b46acd830ee9a83d304a63569f8669968a20ea80720e338a565dd0913000064a7b3b6e00d');
+  final author = AuthorApi(polkadart);
+  final extrinsic = hex.decode(
+      '350284004ea987928399dfe5b94bf7d37995850a21067bfa4549fa83b40250ee635fc06400036990f9642741b00d3484d2e5bd7cba6fa2eea682f6b6c612e47c204f09b0838c171ba42feae5bea1c48a48213cba42a5d590e1c07d1213d263a258f23f5102001c000a07004ea987928399dfe5b94bf7d37995850a21067bfa4549fa83b40250ee635fc064025a6202');
 
-  final test =
-      await state.subscribeRuntimeVersion((p0) => print('From P0: $p0'));
-
-  // final submit = await author.submitAndWatchExtrinsic(
-  //     extrinsic as Uint8List, (data) => print('From here: $data'));
-  //
+  final submit = await author.submitAndWatchExtrinsic(extrinsic as Uint8List,
+      (data) => print('From here: ${data.type} - ${data.value}'));
 }
