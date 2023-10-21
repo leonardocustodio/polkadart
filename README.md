@@ -65,7 +65,7 @@ This repository is licensed under [Apache 2.0 license](https://github.com/leonar
 [package:polkadart_cli]: https://pub.dartlang.org/packages/polkadart_cli
 [package:polkadart_cli:version]: https://img.shields.io/pub/v/polkadart_cli.svg
 [package:polkadart_keyring:source]: ./packages/polkadart_keyring
-[package:polkadart_keyring]: https://pub.dartlang.org/packages/polkadart_keyring
+[package:polkadart_keyring]: https://pub.dartlang.org/packages/polkadart_keyring  <!-- markdown-link-check-disable-line -->
 [package:polkadart_keyring:version]: https://img.shields.io/pub/v/polkadart_keyring.svg
 [package:polkadart_scale_codec:source]: ./packages/polkadart_scale_codec
 [package:polkadart_scale_codec]: https://pub.dartlang.org/packages/polkadart_scale_codec
