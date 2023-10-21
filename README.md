@@ -24,35 +24,10 @@ This repo is a monorepo for `polkadart` and related packages.
 | [![version][package:substrate_bip39:version]][package:substrate_bip39]             | [`package:substrate_bip39`][package:substrate_bip39:source]             |             |
 | [![version][package:substrate_metadata:version]][package:substrate_metadata]       | [`package:substrate_metadata`][package:substrate_metadata:source]       |             |
 
-## Requirements
-
-You can run all tests from the library by running `docker compose up`;
-Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started) installed globally you can run `melos test`. 
-
-
-```bash
-brew install git-lfs
-```
-
-On Ubuntu:
-
-```bash
-sudo apt-get install git-lfs
-```
-
-## Fetching files
-
-To ensure the `git-lfs files` are fetched inside the cloned git repository. Run these commands from the root of `polkadart repo`.
-
-```bash
-git lfs fetch
-git lfs checkout
-```
-
 ## Documentation and Tests
 
-You can run all tests from the library by running `docker compose up`.
-Or you can run directly in your machine using melos `dart run melos test`
+You can run all tests from the library by running `docker compose up`;
+Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started) installed globally you can run `melos test`.
 
 ## Road map and current state
 
@@ -82,7 +57,6 @@ Or you can run directly in your machine using melos `dart run melos test`
 ## **License**
 
 This repository is licensed under [Apache 2.0 license](https://github.com/leonardocustodio/polkadart/blob/main/LICENSE)
-
 
 [package:polkadart:source]: ./packages/polkadart
 [package:polkadart]: https://pub.dartlang.org/packages/polkadart
