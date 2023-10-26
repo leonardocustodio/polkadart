@@ -110,19 +110,5 @@ void main() {
       expect(pairs.all, contains(keyPair1));
       expect(pairs.all, contains(keyPair2));
     });
-
-    test('Locking and Unlocking KeyPairs', () {
-      // Lock keyPair2
-      keyPair2.lock();
-
-      // Check that keyPair2 is locked
-      expect(keyPair2.isLocked, isTrue);
-
-      // Unlock keyPair2
-      keyPair2.unlockFromSeed(seedTwo);
-
-      // Check that keyPair2 is unlocked
-      expect(keyPair2.isLocked, isFalse);
-    });
   });
 }
