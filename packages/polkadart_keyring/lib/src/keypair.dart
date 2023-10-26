@@ -133,11 +133,13 @@ class KeyPair {
   /// ```
   Future<void> unlockFromMemonic(String mnemonic) async {
     final seed = await SubstrateBip39.ed25519.seedFromUri(mnemonic);
-    _privateKey = ed.newKeyFromSeed(Uint8List.fromList(seed));
-    final tempPublicKey = ed.public(_privateKey);
+    final tempPrivateKey = ed.newKeyFromSeed(Uint8List.fromList(seed));
+    final tempPublicKey = ed.public(tempPrivateKey);
     if (tempPublicKey.bytes != publicKey.bytes) {
       throw Exception('Invalid seed for given KeyPair.');
     }
+    _privateKey = tempPrivateKey;
+    _locked = false;
   }
 
   /// Unlock a `KeyPair` from a given [seed].
@@ -154,10 +156,12 @@ class KeyPair {
   /// keyPair.sign(message); // Works
   /// ```
   void unlockFromSeed(Uint8List seed) {
-    _privateKey = ed.PrivateKey(seed);
-    final tempPublicKey = ed.public(_privateKey);
+    final tempPrivateKey = ed.PrivateKey(seed);
+    final tempPublicKey = ed.public(tempPrivateKey);
     if (tempPublicKey.bytes != publicKey.bytes) {
       throw Exception('Invalid seed for given KeyPair.');
     }
+    _privateKey = tempPrivateKey;
+    _locked = false;
   }
 }
