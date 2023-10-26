@@ -1,6 +1,4 @@
-import 'dart:typed_data';
-import 'package:ss58/ss58.dart';
-import '../polkadart_keyring.dart';
+part of polkadart_keyring;
 
 /// A collection of key pairs for managing ed25519-based cryptographic operations.
 ///
@@ -16,7 +14,7 @@ class Pairs {
   ///
   /// - [pair]: The key pair to add to the collection.
   void add(KeyPair pair) {
-    _pairs[pair.address] = pair;
+    _pairs[Address.decode(pair.address).pubkey.toList().toString()] = pair;
   }
 
   /// Get a [KeyPair] from the collection by its address.
@@ -25,10 +23,7 @@ class Pairs {
   ///
   /// Throws an exception if the key pair associated with the provided [address] is not found.
   KeyPair getByAddress(String address) {
-    if (_pairs[address] == null) {
-      throw Exception('KeyPair associated with address $address not found.');
-    }
-    return _pairs[address]!;
+    return getByPublicKey(Address.decode(address).pubkey.toList());
   }
 
   /// Get a [KeyPair] from the collection by its public key.
@@ -41,9 +36,10 @@ class Pairs {
   /// final keyPair = pairs.getByPublicKey(publicKey);
   /// ```
   KeyPair getByPublicKey(List<int> publicKey) {
-    final address =
-        Address(prefix: 42, pubkey: Uint8List.fromList(publicKey)).encode();
-    return getByAddress(address);
+    if (_pairs[publicKey.toString()] == null) {
+      throw Exception('KeyPair not found.');
+    }
+    return _pairs[publicKey.toString()]!;
   }
 
   /// Remove a [KeyPair] from the collection by its address.
@@ -52,11 +48,11 @@ class Pairs {
   ///
   /// If the key pair exists, it will be removed.
   void remove(String address) {
-    _pairs.remove(address);
+    removeByPublicKey(Address.decode(address).pubkey);
   }
 
   /// Remove all [KeyPair]s from the collection.
-  void removeAll() {
+  void clear() {
     _pairs.clear();
   }
 
@@ -64,9 +60,7 @@ class Pairs {
   ///
   /// - [publicKey]: The public key (as a list of integers) of the key pair to remove.
   void removeByPublicKey(List<int> publicKey) {
-    final address =
-        Address(prefix: 42, pubkey: Uint8List.fromList(publicKey)).encode();
-    remove(address);
+    _pairs.remove(publicKey.toString());
   }
 
   /// Get all [KeyPair]s in the collection.

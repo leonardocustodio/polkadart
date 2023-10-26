@@ -1,6 +1,4 @@
-import 'package:polkadart_keyring/src/pairs.dart';
-
-import '../polkadart_keyring.dart';
+part of polkadart_keyring;
 
 /// A manager for ed25519-based key pairs in the keyring.
 ///
@@ -12,6 +10,10 @@ import '../polkadart_keyring.dart';
 class Keyring {
   final Pairs pairs;
 
+  // The default SS58 address format used by the keyring.
+  int _ss58Format = 42;
+
+  /// Create a new `Keyring` instance.
   Keyring() : pairs = Pairs();
 
   /// Create a new [KeyPair] from a BIP39 mnemonic and optionally add it to the keyring.
@@ -102,6 +104,69 @@ class Keyring {
   /// ```
   void remove(String address) {
     pairs.remove(address);
+  }
+
+  ///
+  /// Encode a public key to an SS58 address.
+  /// The default SS58 address format used by the keyring is 42.
+  ///
+  /// - [key]: The public key to be encoded.
+  /// - [ss58Format]: The SS58 address format to be used by the keyring.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyring = Keyring();
+  /// final publicKey = [1, 2, 3]; // Replace with an actual public key
+  /// final address = keyring.encodeAddress(publicKey);
+  /// ```
+  String encodeAddress(List<int> key, [int ss58Format = 42]) {
+    return Address(prefix: ss58Format, pubkey: Uint8List.fromList(key))
+        .encode();
+  }
+
+  ///
+  /// Decode an SS58 address to its public key.
+  /// The default SS58 address format used by the keyring is 42.
+  ///
+  /// - [address]: The SS58 address to be decoded.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyring = Keyring();
+  /// final address = "your_address";
+  /// final publicKey = keyring.decodeAddress(address);
+  /// ```
+  Uint8List decodeAddress(String address) {
+    return Uint8List.fromList(Address.decode(address).pubkey.toList());
+  }
+
+  /// Set the SS58 address format used by the keyring.
+  /// The default value is 42.
+  ///
+  /// - [ss58Format]: The SS58 address format to be used by the keyring.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyring = Keyring();
+  /// keyring.ss58Format = 42;
+  /// ```
+  set setSS58Format(int ss58Format) {
+    if (ss58Format < 0 || ss58Format > 16383) {
+      throw Exception('Invalid SS58 format.');
+    }
+    _ss58Format = ss58Format;
+  }
+
+  /// Get the SS58 address format used by the keyring.
+  /// The default value is 42.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyring = Keyring();
+  /// final ss58Format = keyring.ss58Format;
+  /// ```
+  int get ss58Format {
+    return _ss58Format;
   }
 
   /// Get all public keys in the keyring.

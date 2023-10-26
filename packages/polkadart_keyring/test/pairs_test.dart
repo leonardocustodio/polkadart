@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:polkadart_keyring/src/pairs.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -39,7 +38,7 @@ void main() {
 
       // Check that an exception is thrown when retrieving a non-existing key pair
       expect(() => pairs.getByAddress('non_existent_address'),
-          throwsA(isA<Exception>()));
+          throwsArgumentError);
     });
 
     test('Retrieving KeyPairs by PublicKey', () {
@@ -82,7 +81,7 @@ void main() {
       pairs.add(keyPair2);
 
       // Remove all key pairs
-      pairs.removeAll();
+      pairs.clear();
 
       // Check that the pairs collection is empty
       expect(pairs.all, isEmpty);
@@ -100,6 +99,34 @@ void main() {
       // Check that addresses are retrieved correctly
       expect(pairs.addresses, contains(keyPair1.address));
       expect(pairs.addresses, contains(keyPair2.address));
+    });
+
+    test('Getting All KeyPairs', () {
+      // Add keyPair1 and keyPair2 to pairs
+      pairs.add(keyPair1);
+      pairs.add(keyPair2);
+
+      // Check that all key pairs are retrieved correctly
+      expect(pairs.all, contains(keyPair1));
+      expect(pairs.all, contains(keyPair2));
+    });
+
+    test('Locking and Unlocking KeyPairs', () {
+      // Add keyPair1 and keyPair2 to pairs
+      pairs.add(keyPair1);
+      pairs.add(keyPair2);
+
+      // Lock keyPair1
+      keyPair1.lock();
+
+      // Check that keyPair1 is locked
+      expect(keyPair1.isLocked, isTrue);
+
+      // Unlock keyPair1
+      keyPair1.unlockFromSeed(seedOne);
+
+      // Check that keyPair1 is unlocked
+      expect(keyPair1.isLocked, isFalse);
     });
   });
 }

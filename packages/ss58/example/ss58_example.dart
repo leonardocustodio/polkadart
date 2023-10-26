@@ -5,7 +5,7 @@ import 'package:ss58/ss58.dart' show Address, Codec;
 void main() {
   // Decoding a Polkadot Address Object
   Address address =
-      Address.decode('1zugcag7cJVBtVRnFxv5Qftn7xKAnR6YJ9x4x3XLgGgmNnS');
+      Address.decode('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
   print('Address: $address');
 
   // Encoding previous Address object

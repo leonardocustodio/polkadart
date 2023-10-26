@@ -1,7 +1,4 @@
-import 'dart:typed_data';
-import 'package:substrate_bip39/substrate_bip39.dart';
-import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
-import 'package:ss58/ss58.dart';
+part of polkadart_keyring;
 
 /// Represents a cryptographic key pair for signing and verifying data.
 ///
@@ -133,13 +130,7 @@ class KeyPair {
   /// ```
   Future<void> unlockFromMemonic(String mnemonic) async {
     final seed = await SubstrateBip39.ed25519.seedFromUri(mnemonic);
-    final tempPrivateKey = ed.newKeyFromSeed(Uint8List.fromList(seed));
-    final tempPublicKey = ed.public(tempPrivateKey);
-    if (tempPublicKey.bytes != publicKey.bytes) {
-      throw Exception('Invalid seed for given KeyPair.');
-    }
-    _privateKey = tempPrivateKey;
-    _locked = false;
+    _unlock(ed.newKeyFromSeed(Uint8List.fromList(seed)));
   }
 
   /// Unlock a `KeyPair` from a given [seed].
@@ -156,12 +147,14 @@ class KeyPair {
   /// keyPair.sign(message); // Works
   /// ```
   void unlockFromSeed(Uint8List seed) {
-    final tempPrivateKey = ed.PrivateKey(seed);
-    final tempPublicKey = ed.public(tempPrivateKey);
-    if (tempPublicKey.bytes != publicKey.bytes) {
-      throw Exception('Invalid seed for given KeyPair.');
+    _unlock(ed.PrivateKey(seed));
+  }
+
+  void _unlock(ed.PrivateKey privateKey) {
+    if (ed.public(privateKey).bytes != publicKey.bytes) {
+      throw Exception('Public_Key_Mismatch: Invalid seed for given KeyPair.');
     }
-    _privateKey = tempPrivateKey;
+    _privateKey = privateKey;
     _locked = false;
   }
 
