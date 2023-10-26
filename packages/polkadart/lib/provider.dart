@@ -269,7 +269,7 @@ class WsProvider extends Provider {
   StreamController<SubscriptionMessage>? getSubscriptionController(
       String subscriptionId) {
     if (subscriptions.containsKey(subscriptionId)) {
-      print('Got subscription ${subscriptionId}');
+      print('Got subscription $subscriptionId');
       return subscriptions[subscriptionId]!;
     } else {
       print('Can\'t find subscription controller for: $subscriptionId');

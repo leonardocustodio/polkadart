@@ -2,15 +2,14 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:polkadart/apis/apis.dart';
-import 'package:polkadart/polkadart.dart' show Provider, StateApi;
-import 'package:substrate_metadata/utils/utils.dart';
+import 'package:polkadart/polkadart.dart' show Provider;
 
 void main() async {
   final polkadart =
       Provider.fromUri(Uri.parse('wss://rpc.matrix.canary.enjin.io'));
   final state = StateApi(polkadart);
-  // final runtimeVersion = await state.getRuntimeVersion();
-  // print(runtimeVersion.toJson());
+  final runtimeVersion = await state.getRuntimeVersion();
+  print(runtimeVersion.toJson());
 
   final author = AuthorApi(polkadart);
   final extrinsic = hex.decode(
@@ -18,4 +17,5 @@ void main() async {
 
   final submit = await author.submitAndWatchExtrinsic(extrinsic as Uint8List,
       (data) => print('From here: ${data.type} - ${data.value}'));
+  print(submit);
 }
