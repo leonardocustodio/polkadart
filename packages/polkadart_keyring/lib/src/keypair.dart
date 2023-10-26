@@ -8,8 +8,8 @@ part of polkadart_keyring;
 ///
 /// Example usages are provided for each function below.
 class KeyPair {
-  late final ed.PublicKey publicKey;
-  late final ed.PrivateKey _privateKey;
+  late ed.PublicKey publicKey;
+  late ed.PrivateKey _privateKey;
   bool _locked = false;
 
   /// Create a new `KeyPair` from a given seed.
@@ -111,7 +111,7 @@ class KeyPair {
   /// keyPair.lock();
   /// ```
   void lock() {
-    _privateKey = ed.PrivateKey(Uint8List(0));
+    _privateKey = ed.PrivateKey(Uint8List(32));
     _locked = true;
   }
 
@@ -147,11 +147,11 @@ class KeyPair {
   /// keyPair.sign(message); // Works
   /// ```
   void unlockFromSeed(Uint8List seed) {
-    _unlock(ed.PrivateKey(seed));
+    _unlock(ed.newKeyFromSeed(seed));
   }
 
   void _unlock(ed.PrivateKey privateKey) {
-    if (ed.public(privateKey).bytes != publicKey.bytes) {
+    if (ed.public(privateKey).bytes.toString() != publicKey.bytes.toString()) {
       throw Exception('Public_Key_Mismatch: Invalid seed for given KeyPair.');
     }
     _privateKey = privateKey;

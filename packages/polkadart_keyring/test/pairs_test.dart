@@ -112,21 +112,17 @@ void main() {
     });
 
     test('Locking and Unlocking KeyPairs', () {
-      // Add keyPair1 and keyPair2 to pairs
-      pairs.add(keyPair1);
-      pairs.add(keyPair2);
+      // Lock keyPair2
+      keyPair2.lock();
 
-      // Lock keyPair1
-      keyPair1.lock();
+      // Check that keyPair2 is locked
+      expect(keyPair2.isLocked, isTrue);
 
-      // Check that keyPair1 is locked
-      expect(keyPair1.isLocked, isTrue);
+      // Unlock keyPair2
+      keyPair2.unlockFromSeed(seedTwo);
 
-      // Unlock keyPair1
-      keyPair1.unlockFromSeed(seedOne);
-
-      // Check that keyPair1 is unlocked
-      expect(keyPair1.isLocked, isFalse);
+      // Check that keyPair2 is unlocked
+      expect(keyPair2.isLocked, isFalse);
     });
   });
 }
