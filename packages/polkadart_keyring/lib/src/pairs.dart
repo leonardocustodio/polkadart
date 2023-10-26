@@ -19,8 +19,8 @@ class Pairs {
   }
 
   KeyPair getByPublicKey(List<int> publicKey) {
-    final address = Address(prefix: 42, pubkey: Uint8List.fromList(publicKey))
-        .encode();
+    final address =
+        Address(prefix: 42, pubkey: Uint8List.fromList(publicKey)).encode();
     return getByAddress(address);
   }
 
@@ -37,8 +37,8 @@ class Pairs {
   }
 
   void removeByPublicKey(List<int> publicKey) {
-    final address = Address(prefix: 42, pubkey: Uint8List.fromList(publicKey))
-        .encode();
+    final address =
+        Address(prefix: 42, pubkey: Uint8List.fromList(publicKey)).encode();
     remove(address);
   }
 
@@ -53,5 +53,4 @@ class Pairs {
   List<String> get addresses {
     return all.map((pair) => pair.address).toList();
   }
-
 }
