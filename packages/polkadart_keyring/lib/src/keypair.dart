@@ -164,4 +164,19 @@ class KeyPair {
     _privateKey = tempPrivateKey;
     _locked = false;
   }
+
+  ///
+  /// Returns `true` if the `KeyPair` matches with the other object.
+  @override
+  bool operator ==(Object other) {
+    if (other is KeyPair) {
+      return publicKey.bytes == other.publicKey.bytes;
+    }
+    return false;
+  }
+
+  ///
+  /// Returns the hash code of the `KeyPair`.
+  @override
+  int get hashCode => publicKey.bytes.hashCode;
 }
