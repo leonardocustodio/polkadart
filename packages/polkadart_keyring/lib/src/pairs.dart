@@ -37,7 +37,7 @@ class Pairs {
   /// ```
   KeyPair getByPublicKey(List<int> publicKey) {
     if (_pairs[publicKey.toString()] == null) {
-      throw Exception('KeyPair not found.');
+      throw ArgumentError('KeyPair with provided key, not found.');
     }
     return _pairs[publicKey.toString()]!;
   }

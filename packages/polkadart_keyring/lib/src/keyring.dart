@@ -150,7 +150,7 @@ class Keyring {
   /// final keyring = Keyring();
   /// keyring.ss58Format = 42;
   /// ```
-  set setSS58Format(int ss58Format) {
+  set ss58Format(int ss58Format) {
     if (ss58Format < 0 || ss58Format > 16383) {
       throw Exception('Invalid SS58 format.');
     }
@@ -191,5 +191,16 @@ class Keyring {
   /// ```
   List<String> get addresses {
     return pairs.all.map((pair) => pair.address).toList();
+  }
+
+  /// Remove all key pairs from the keyring.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyring = Keyring();
+  /// keyring.clear();
+  /// ```
+  void clear() {
+    pairs.clear();
   }
 }
