@@ -62,8 +62,7 @@ void main() {
       expect(keyring.getByPublicKey(publicKey1), equals(keyPair1));
 
       // Check that getByPublicKey handles a non-existing key pair
-      expect(
-          () => keyring.getByPublicKey([1, 2, 3]), throwsA(isA<Exception>()));
+      expect(() => keyring.getByPublicKey([1, 2, 3]), throwsArgumentError);
     });
 
     test('Removing KeyPairs', () {
@@ -106,11 +105,19 @@ void main() {
     });
 
     test('Getting All Public Keys', () {
-      final publicKeys = keyring.publicKeys;
+      expect(keyring.publicKeys, isEmpty);
+
+      keyring
+        ..add(keyPair1)
+        ..add(keyPair2);
 
       // Check that the public keys are correct
-      expect(publicKeys,
-          equals([keyPair1.publicKey.bytes, keyPair2.publicKey.bytes]));
+      expect(
+          keyring.publicKeys,
+          equals([
+            keyPair1.publicKey.bytes.toList(),
+            keyPair2.publicKey.bytes.toList()
+          ]));
     });
 
     test('Getting All Addresses', () {

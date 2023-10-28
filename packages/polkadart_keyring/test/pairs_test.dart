@@ -51,7 +51,7 @@ void main() {
       expect(pairs.getByPublicKey(publicKey1), equals(keyPair1));
 
       // Check that getByPublicKey handles a non-existing key pair
-      expect(() => pairs.getByPublicKey([1, 2, 3]), throwsA(isA<Exception>()));
+      expect(() => pairs.getByPublicKey([1, 2, 3]), throwsArgumentError);
     });
 
     test('Removing KeyPairs', () {
@@ -65,14 +65,14 @@ void main() {
       pairs.remove(address1);
 
       // Check that keyPair1 is removed
-      expect(() => pairs.getByAddress(address1), throwsA(isA<Exception>()));
+      expect(() => pairs.getByAddress(address1), throwsArgumentError);
 
       // Remove keyPair2 by public key
       pairs.removeByPublicKey(keyPair2.publicKey.bytes);
 
       // Check that keyPair2 is removed
       expect(() => pairs.getByPublicKey(keyPair2.publicKey.bytes),
-          throwsA(isA<Exception>()));
+          throwsArgumentError);
     });
 
     test('Removing All KeyPairs', () {
