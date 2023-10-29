@@ -1,6 +1,7 @@
 name: polkadart_examples
 description: A set of examples showing how to use Polkadart.
 version: 1.0.0
+publish_to: 'none'
 
 environment:
   sdk: ">=3.0.1 <4.0.0"
