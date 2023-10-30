@@ -29,7 +29,7 @@ class ExtrinsicStatus {
   // }
 
   factory ExtrinsicStatus.fromJson(dynamic json) {
-    print('Json: $json');
+    // print('Json: $json');
     String type;
     dynamic value;
 
