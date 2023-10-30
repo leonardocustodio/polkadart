@@ -45,7 +45,7 @@ Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started
 | Constants                                                                                  |   ✅    |
 | [Websocket Provider](./packages/polkadart/lib/provider.dart)                               |   ✅    |
 | [Http Provider](./packages/polkadart/lib/provider.dart)                                    |   ✅    |
-| Signed Extrinsics                                                                          |   🔴    |
+| Signed Extrinsics                                                                          |   ✅    |
 
 
 ## Contributors
