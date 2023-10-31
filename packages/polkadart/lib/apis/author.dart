@@ -36,7 +36,6 @@ class AuthorApi<P extends Provider> {
     });
 
     return subscription.stream.map((response) {
-      // print('From response before status: ${response.result}');
       return ExtrinsicStatus.fromJson(response.result);
     }).listen(onData);
   }

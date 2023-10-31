@@ -193,7 +193,6 @@ class WsProvider extends Provider {
             (message['params'] as Map<String, dynamic>)
                 .containsKey('subscription'))
         .map((message) {
-      // print('Received stream msg: $message');
       final method = message['method'] as String;
       final params = message['params'] as Map<String, dynamic>;
       final subscription = params['subscription'] as String;
@@ -202,10 +201,8 @@ class WsProvider extends Provider {
       return SubscriptionMessage(
           method: method, subscription: subscription, result: result);
     }).listen((message) {
-      // print('getting controller: ${message.method}, ${message.subscription}');
       final StreamController? controller =
           getSubscriptionController(message.subscription);
-      // print(message);
       controller?.add(message);
     });
 
@@ -252,7 +249,6 @@ class WsProvider extends Provider {
   @override
   Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
       {FutureOr<void> Function(String subscription)? onCancel}) async {
-    // print('Subscribing to method: $method');
     final result = await send(method, params);
 
     if (result.error != null) {
@@ -270,10 +266,8 @@ class WsProvider extends Provider {
   StreamController<SubscriptionMessage>? getSubscriptionController(
       String subscriptionId) {
     if (subscriptions.containsKey(subscriptionId)) {
-      // print('Got subscription $subscriptionId');
       return subscriptions[subscriptionId]!;
     } else {
-      // print('Can\'t find subscription controller for: $subscriptionId');
       return null;
     }
   }
@@ -282,12 +276,9 @@ class WsProvider extends Provider {
   StreamController<SubscriptionMessage> getOrCreateSubscriptionController(
       String subscription,
       [FutureOr<void> Function(String subscription)? onCancel]) {
-    // print('Getting controller for subscription: $subscription');
     if (subscriptions.containsKey(subscription)) {
-      // print('Using previous method subscription: $subscription');
       return subscriptions[subscription]!;
     } else {
-      // print('No existing method subscription found');
       final controller =
           StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
         if (onCancel != null) {
