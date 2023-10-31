@@ -2,10 +2,6 @@ name: Publish to Pub.dev
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-      - master
 
 jobs:
   publish:
