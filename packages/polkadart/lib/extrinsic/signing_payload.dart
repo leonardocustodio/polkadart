@@ -44,6 +44,8 @@ class SigningPayload {
     final List extras = [];
     final List additionalExtras = [];
 
+    print(registry.getSignedExtensionTypes());
+
     registry.getSignedExtensionTypes().forEach((extension) {
       final payload =
           SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
@@ -53,6 +55,8 @@ class SigningPayload {
         extras.add(payload);
       }
     });
+
+    print(registry.getSignedExtensionExtra());
 
     registry.getSignedExtensionExtra().forEach((extension) {
       final payload =

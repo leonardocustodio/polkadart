@@ -1,7 +1,9 @@
-# melos_managed_dependency_overrides: polkadart_scale_codec
+# melos_managed_dependency_overrides: polkadart_scale_codec,ss58
 # melos_managed_dependency_overrides
 dependency_overrides:
   polkadart_scale_codec:
     path: ../polkadart_scale_codec
+  ss58:
+    path: ../ss58
   substrate_bip39:
     path: ../substrate_bip39
