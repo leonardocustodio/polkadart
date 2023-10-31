@@ -13,9 +13,9 @@ class AuthorApi<P extends Provider> {
 
     final response = await _provider.send('author_submitExtrinsic', params);
 
-    // if (response.error != null) {
-    //   throw Exception(response.error.toString());
-    // }
+    if (response.error != null) {
+      throw Exception(response.error.toString());
+    }
 
     final data = response.result as String;
     return Uint8List.fromList(hex.decode(data.substring(2)));
