@@ -21,7 +21,13 @@ import 'package:path/path.dart' as p;
 import 'package:polkadart/scale_codec.dart' as scale_codec;
 import 'package:recase/recase.dart' show ReCase;
 import '../typegen/typegen.dart' as typegen
-    show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput, Field;
+    show
+        TypeDescriptor,
+        BasePath,
+        TupleBuilder,
+        GeneratedOutput,
+        Field,
+        VariantBuilder;
 import '../typegen/runtime_metadata_v14.dart' as metadata;
 import '../typegen/references.dart' as refs;
 import '../utils/utils.dart' show sanitize, sanitizeDocs;
@@ -487,6 +493,10 @@ Class createPalletTxs(
               final Reference primitive = tx.codec.primitive(dirname);
               final Reference runtimePrimitive =
                   generator.runtimeCall.primitive(dirname);
+              final isEnumClass = tx.codec is typegen.VariantBuilder &&
+                  (tx.codec as typegen.VariantBuilder)
+                      .variants
+                      .every((variant) => variant.fields.isEmpty);
 
               builder
                 ..name = sanitize(txName, recase: false)
@@ -498,22 +508,36 @@ Class createPalletTxs(
                           field.codec.primitive(dirname).isNullable != true
                       ..named = true
                       ..name = field.sanitizedName)))
-                ..body = Block((b) => b
-                  ..statements.add(declareFinal('_call')
-                      .assign(primitive)
-                      .property('values')
-                      .property(sanitize(txName, recase: false))
-                      .call([], {
-                    for (final field in tx.fields)
-                      field.sanitizedName:
-                          CodeExpression(Code(field.sanitizedName))
-                  }).statement)
-                  ..statements.add(runtimePrimitive
-                      .property('values')
-                      .property(ReCase(generator.name).camelCase)
-                      .call([CodeExpression(Code('_call'))])
-                      .returned
-                      .statement));
+                ..body = Block((b) {
+                  Expression expression =
+                      declareFinal('_call').assign(primitive);
+
+                  if (isEnumClass == false) {
+                    // not an simple enum class, contains parametrized fields.
+                    expression = expression
+                        .property('values')
+                        .property(sanitize(txName, recase: false))
+                        .call([], {
+                      for (final field in tx.fields)
+                        field.sanitizedName:
+                            CodeExpression(Code(field.sanitizedName))
+                    });
+                  } else {
+                    // simple enum class no need to call () contructor
+                    // instead leaving it as a property.
+                    expression =
+                        expression.property(sanitize(txName, recase: false));
+                  }
+
+                  b
+                    ..statements.add(expression.statement)
+                    ..statements.add(runtimePrimitive
+                        .property('values')
+                        .property(ReCase(generator.name).camelCase)
+                        .call([CodeExpression(Code('_call'))])
+                        .returned
+                        .statement);
+                });
             })));
     });
 
