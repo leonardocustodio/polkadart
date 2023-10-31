@@ -1,10 +1,14 @@
+## 0.2.1
+
+- Added AssetHub signed extensions.
+
 ## 0.2.0
 
 - Added support for creating extrinsics and query RPC api and listen to events.
 
 ## 0.1.1
 
-- Publishing packages under polkadart.dev publisher
+- Publishing packages under polkadart.dev publisher.
 
 ## 0.1.0
 
