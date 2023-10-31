@@ -62,8 +62,6 @@ class SigningPayload {
           : SubstrateSignedExtensions.signedExtension(
               extension, toEncodedMap());
 
-      print('Extension ${extension}: ${payload}');
-
       if (payload.isNotEmpty) {
         extras.add(payload);
       }
@@ -75,8 +73,6 @@ class SigningPayload {
               extension, toEncodedMap())
           : SubstrateSignedExtensions.additionalSignedExtension(
               extension, toEncodedMap());
-
-      print('Extension ${extension}: ${payload}');
 
       if (payload.isNotEmpty) {
         additionalExtras.add(payload);
