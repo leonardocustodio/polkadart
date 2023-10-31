@@ -1,3 +1,7 @@
+## 0.2.1
+
+- Fixes polkadart dependency version
+
 ## 0.2.0
 
 - Adds generator for system calls and extrinsics calls.
