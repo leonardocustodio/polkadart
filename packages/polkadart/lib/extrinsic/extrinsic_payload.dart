@@ -3,32 +3,39 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:polkadart/extrinsic/signed_extensions/substrate.dart';
 import 'package:polkadart_scale_codec/primitives/primitives.dart';
+import 'package:polkadart_scale_codec/utils/utils.dart';
+
+import '../substrate/era.dart';
 
 class Extrinsic {
   final String signer;
   final String method;
   final String signature;
-  final String era;
-  final String nonce;
-  final String tip;
+  final int eraPeriod;
+  final int blockNumber;
+  final int nonce;
+  final dynamic tip;
 
   const Extrinsic({
     required this.signer,
     required this.method,
     required this.signature,
-    required this.era,
+    required this.eraPeriod,
+    required this.blockNumber,
     required this.nonce,
     required this.tip,
   });
 
-  toMap() {
+  toEncodedMap() {
     return {
       'signer': signer,
       'method': method,
       'signature': signature,
-      'era': era,
-      'nonce': nonce,
-      'tip': tip,
+      'era': Era.codec.encodeMortal(blockNumber, eraPeriod),
+      'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
+      'tip': tip is int
+          ? encodeHex(CompactCodec.codec.encode(tip))
+          : encodeHex(CompactBigIntCodec.codec.encode(tip)),
     };
   }
 
@@ -61,7 +68,7 @@ class Extrinsic {
 
     registry.getSignedExtensionTypes().forEach((extension) {
       final payload =
-          SubstrateSignedExtensions.signedExtension(extension, toMap());
+          SubstrateSignedExtensions.signedExtension(extension, toEncodedMap());
       if (payload.isNotEmpty) {
         extras.add(payload);
       }

@@ -71,4 +71,13 @@ class Era {
 
     return hex.encode(_littleIntToUint8List(encoded, 2));
   }
+
+  encodeMortal(int current, int period) {
+    final calPeriod = pow(2, (log(period) / log(2)).ceil());
+    final phase = current % min(max(calPeriod, 4), 1 << 16);
+    final quantizeFactor = max(1, period >> 12);
+    final quantizedPhase = phase / quantizeFactor * quantizeFactor;
+
+    return encode(quantizedPhase.toInt(), period);
+  }
 }

@@ -2,16 +2,19 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:polkadart/extrinsic/signed_extensions/substrate.dart';
+import 'package:polkadart/scale_codec.dart';
+import 'package:polkadart/substrate/era.dart';
 
 class SigningPayload {
   final String method; // Call
-  final String specVersion; // CheckSpecVersion
-  final String transactionVersion; // CheckTxVersion
+  final int specVersion; // CheckSpecVersion
+  final int transactionVersion; // CheckTxVersion
   final String genesisHash; // CheckGenesis
   final String blockHash; // CheckMortality
-  final String era; // CheckMortality
-  final String nonce; // CheckNonce
-  final String tip; // ChargeTransactionPayment
+  final int blockNumber;
+  final int eraPeriod; // CheckMortality
+  final int nonce; // CheckNonce
+  final dynamic tip; // ChargeTransactionPayment
 
   const SigningPayload({
     required this.method,
@@ -19,21 +22,25 @@ class SigningPayload {
     required this.transactionVersion,
     required this.genesisHash,
     required this.blockHash,
-    required this.era,
+    required this.blockNumber,
+    required this.eraPeriod,
     required this.nonce,
     required this.tip,
   });
 
-  toMap() {
+  toEncodedMap() {
     return {
       'method': method,
-      'specVersion': specVersion,
-      'transactionVersion': transactionVersion,
+      'specVersion': encodeHex(U32Codec.codec.encode(specVersion)),
+      'transactionVersion':
+          encodeHex(U32Codec.codec.encode(transactionVersion)),
       'genesisHash': genesisHash,
       'blockHash': blockHash,
-      'era': era,
-      'nonce': nonce,
-      'tip': tip,
+      'era': Era.codec.encodeMortal(blockNumber, eraPeriod),
+      'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
+      'tip': tip is int
+          ? encodeHex(CompactCodec.codec.encode(tip))
+          : encodeHex(CompactBigIntCodec.codec.encode(tip)),
     };
   }
 
@@ -47,7 +54,7 @@ class SigningPayload {
 
     registry.getSignedExtensionTypes().forEach((extension) {
       final payload =
-          SubstrateSignedExtensions.signedExtension(extension, toMap());
+          SubstrateSignedExtensions.signedExtension(extension, toEncodedMap());
       if (payload.isNotEmpty) {
         extras.add(payload);
       }
@@ -55,7 +62,7 @@ class SigningPayload {
 
     registry.getSignedExtensionExtra().forEach((extension) {
       final payload = SubstrateSignedExtensions.additionalSignedExtension(
-          extension, toMap());
+          extension, toEncodedMap());
       if (payload.isNotEmpty) {
         additionalExtras.add(payload);
       }
