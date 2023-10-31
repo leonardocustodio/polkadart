@@ -1,9 +1,10 @@
 import 'dart:async' show Future, Completer, StreamController, FutureOr;
 import 'dart:convert' show jsonEncode, jsonDecode;
+
+import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart'
     show WebSocketChannel;
-import 'package:web_socket_channel/status.dart' as status;
-import 'package:http/http.dart' as http;
 
 class RpcResponse<R, T> {
   final int id;
@@ -185,21 +186,23 @@ class WsProvider extends Provider {
     });
 
     // Subscriptions
-    jsonStream.where((message) {
-      // print('Received stream msg: $message');
-      final valid =
-          !message.containsKey('id') && message.containsKey('params') && (message['params'] as Map<String, dynamic>).containsKey('subscription');
-      return valid;
-    }).map((message) {
+    jsonStream
+        .where((message) =>
+            !message.containsKey('id') &&
+            message.containsKey('params') &&
+            (message['params'] as Map<String, dynamic>)
+                .containsKey('subscription'))
+        .map((message) {
       final method = message['method'] as String;
       final params = message['params'] as Map<String, dynamic>;
       final subscription = params['subscription'] as String;
       final result = params.containsKey('result') ? params['result'] : null;
+
       return SubscriptionMessage(
           method: method, subscription: subscription, result: result);
     }).listen((message) {
-      // print('getting controller: ${message.method}, ${message.subscription}');
-      final StreamController? controller = getSubscriptionController(message.subscription);
+      final StreamController? controller =
+          getSubscriptionController(message.subscription);
       controller?.add(message);
     });
 
@@ -214,7 +217,7 @@ class WsProvider extends Provider {
       throw Exception('Channel is already close');
     }
     for (final controller in subscriptions.values) {
-        await controller.close();
+      await controller.close();
     }
     subscriptions.clear();
     await channel!.sink.close(status.goingAway);
@@ -246,7 +249,6 @@ class WsProvider extends Provider {
   @override
   Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
       {FutureOr<void> Function(String subscription)? onCancel}) async {
-    // print('Subscribing to method: $method');
     final result = await send(method, params);
 
     if (result.error != null) {
@@ -261,12 +263,12 @@ class WsProvider extends Provider {
     );
   }
 
-  StreamController<SubscriptionMessage>? getSubscriptionController(String subscriptionId) {
+  StreamController<SubscriptionMessage>? getSubscriptionController(
+      String subscriptionId) {
     if (subscriptions.containsKey(subscriptionId)) {
       return subscriptions[subscriptionId]!;
     } else {
-       print('Can\'t find subscription controller for: $subscriptionId');
-       return null;
+      return null;
     }
   }
 
@@ -274,13 +276,11 @@ class WsProvider extends Provider {
   StreamController<SubscriptionMessage> getOrCreateSubscriptionController(
       String subscription,
       [FutureOr<void> Function(String subscription)? onCancel]) {
-    // print('Getting controller for method: $method, and subscription: $subscription');
     if (subscriptions.containsKey(subscription)) {
-      // print('Using previous method subscription: $subscriptionId');
       return subscriptions[subscription]!;
     } else {
-      // print('No existing method subscription found');
-      final controller = StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
+      final controller =
+          StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
         if (onCancel != null) {
           await onCancel(subscription);
         }

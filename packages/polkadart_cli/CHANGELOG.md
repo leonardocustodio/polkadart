@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Adds generator for system calls and extrinsics calls.
+
 ## 0.1.1
 
 - Publishing packages under polkadart.dev publisher

@@ -3,21 +3,7 @@ library apis;
 import 'dart:typed_data' show Uint8List;
 import 'dart:async' show Future, StreamSubscription;
 import 'package:convert/convert.dart' show hex;
-import '../primitives/primitives.dart'
-    show
-        BlockHash,
-        ChainType,
-        Health,
-        KeyValue,
-        RuntimeVersion,
-        RuntimeMetadata,
-        PeerInfo,
-        SyncState,
-        StorageKey,
-        StorageData,
-        StorageChangeSet,
-        ReadProof;
-import '../../provider.dart' show Provider;
+import 'package:polkadart/polkadart.dart';
 
 part './author.dart';
 part './state.dart';
