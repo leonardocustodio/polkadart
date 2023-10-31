@@ -1,6 +1,7 @@
 name: Publish to Pub.dev
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -15,6 +16,7 @@ jobs:
         package:
           - polkadart
           - polkadart_cli
+          - polkadart_keyring
           - polkadart_scale_codec
           - ss58
           - substrate_metadata
