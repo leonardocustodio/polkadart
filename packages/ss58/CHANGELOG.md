@@ -1,3 +1,7 @@
+## 1.1.2
+
+- License update
+
 ## 1.1.1
 
 - Publishing packages under polkadart.dev publisher

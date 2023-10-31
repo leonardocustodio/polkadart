@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Added support for creating extrinsics and query RPC api and listen to events.
+
 ## 0.1.1
 
 - Publishing packages under polkadart.dev publisher
