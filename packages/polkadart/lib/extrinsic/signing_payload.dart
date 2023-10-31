@@ -45,26 +45,18 @@ class SigningPayload {
     final List extras = [];
     final List additionalExtras = [];
 
-    print(registry.getSignedExtensionTypes());
-
     registry.getSignedExtensionTypes().forEach((extension) {
       final payload =
-          SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
+          SubstrateSignedExtensions.signedExtension(extension, toMap());
       if (payload.isNotEmpty) {
-        // print(extension);
-        // print(payload);
         extras.add(payload);
       }
     });
 
-    print(registry.getSignedExtensionExtra());
-
     registry.getSignedExtensionExtra().forEach((extension) {
-      final payload =
-          SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
+      final payload = SubstrateSignedExtensions.additionalSignedExtension(
+          extension, toMap());
       if (payload.isNotEmpty) {
-        // print(extension);
-        // print(payload);
         additionalExtras.add(payload);
       }
     });
@@ -72,9 +64,7 @@ class SigningPayload {
     final extra = extras.join();
     final addExtra = additionalExtras.join();
     final payload = method + extra + addExtra;
-    final withoutLastMortality = payload.substring(0, payload.length - 2);
-    final withLastBlock = withoutLastMortality + blockHash;
 
-    return Uint8List.fromList(hex.decode(withLastBlock));
+    return Uint8List.fromList(hex.decode(payload));
   }
 }

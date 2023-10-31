@@ -50,17 +50,18 @@ class Extrinsic {
     final extraByte = extrinsicVersion | 128;
     final hexByte = extraByte.toRadixString(16);
 
+    // 00 = MultiAddress::Id
+    final signerType = '00';
+
     // 00 = ed25519
     // 01 = sr25519
     final signatureType = '00'; // We only support ed25519 for now
-    // 00 = MultiAddress?
-    final signerType = '00';
 
     final List extras = [];
 
     registry.getSignedExtensionTypes().forEach((extension) {
       final payload =
-          SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
+          SubstrateSignedExtensions.signedExtension(extension, toMap());
       if (payload.isNotEmpty) {
         extras.add(payload);
       }
