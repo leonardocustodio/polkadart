@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Fixes issue with enum type generation
+
 ## 0.2.1
 
 - Fixes polkadart dependency version
