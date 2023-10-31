@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
+import 'package:polkadart/extrinsic/signed_extensions/asset_hub.dart';
 import 'package:polkadart/extrinsic/signed_extensions/substrate.dart';
 import 'package:polkadart_scale_codec/primitives/primitives.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';
@@ -15,6 +16,7 @@ class Extrinsic {
   final int blockNumber;
   final int nonce;
   final dynamic tip;
+  final int? assetId;
 
   const Extrinsic({
     required this.signer,
@@ -24,6 +26,7 @@ class Extrinsic {
     required this.blockNumber,
     required this.nonce,
     required this.tip,
+    this.assetId,
   });
 
   toEncodedMap() {
@@ -33,6 +36,7 @@ class Extrinsic {
       'signature': signature,
       'era': Era.codec.encodeMortal(blockNumber, eraPeriod),
       'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
+      'assetId': assetId != null ? assetId!.toRadixString(16) : '',
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
@@ -65,8 +69,11 @@ class Extrinsic {
     final List extras = [];
 
     registry.getSignedExtensionTypes().forEach((extension) {
-      final payload =
-          SubstrateSignedExtensions.signedExtension(extension, toEncodedMap());
+      final payload = assetId != null
+          ? AssetHubSignedExtensions.signedExtension(extension, toEncodedMap())
+          : SubstrateSignedExtensions.signedExtension(
+              extension, toEncodedMap());
+
       if (payload.isNotEmpty) {
         extras.add(payload);
       }
