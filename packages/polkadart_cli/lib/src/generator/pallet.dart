@@ -1,26 +1,27 @@
 import 'dart:typed_data' show Uint8List;
 import 'package:code_builder/code_builder.dart'
     show
-        refer,
         Block,
-        TypeReference,
-        Reference,
-        Expression,
-        literalString,
-        declareFinal,
-        Code,
         Class,
+        Code,
+        CodeExpression,
         Constructor,
-        Parameter,
-        Method,
+        Expression,
         Field,
         FieldModifier,
-        MethodModifier;
+        Method,
+        MethodModifier,
+        Parameter,
+        Reference,
+        TypeReference,
+        declareFinal,
+        literalString,
+        refer;
 import 'package:path/path.dart' as p;
 import 'package:polkadart/scale_codec.dart' as scale_codec;
 import 'package:recase/recase.dart' show ReCase;
-import '../typegen/typegen.dart'
-    show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput;
+import '../typegen/typegen.dart' as typegen
+    show TypeDescriptor, BasePath, TupleBuilder, GeneratedOutput, Field;
 import '../typegen/runtime_metadata_v14.dart' as metadata;
 import '../typegen/references.dart' as refs;
 import '../utils/utils.dart' show sanitize, sanitizeDocs;
@@ -39,16 +40,16 @@ enum StorageHasherType {
 
   const StorageHasherType();
 
-  TypeReference type(BasePath from) {
+  TypeReference type(typegen.BasePath from) {
     return refs.storageHasher.type as TypeReference;
   }
 
-  Expression instance(Expression codecInstance, BasePath from) {
+  Expression instance(Expression codecInstance, typegen.BasePath from) {
     return type(from).property(name).call([codecInstance]);
   }
 }
 
-class StorageHasher<G extends TypeDescriptor> {
+class StorageHasher<G extends typegen.TypeDescriptor> {
   final StorageHasherType hasher;
   final G codec;
 
@@ -72,7 +73,7 @@ class StorageHasher<G extends TypeDescriptor> {
   const StorageHasher.twoxx256({required this.codec})
       : hasher = StorageHasherType.twoxx256;
 
-  Expression instance(BasePath from) {
+  Expression instance(typegen.BasePath from) {
     return hasher.instance(codec.codecInstance(from), from);
   }
 
@@ -109,7 +110,7 @@ class Storage {
   final List<StorageHasher> hashers;
 
   /// Type of the value stored
-  final TypeDescriptor valueCodec;
+  final typegen.TypeDescriptor valueCodec;
 
   /// Default value (SCALE encoded)
   final List<int> defaultValue;
@@ -130,10 +131,10 @@ class Storage {
   });
 
   factory Storage.fromMetadata(metadata.StorageEntryMetadata storageMetadata,
-      Map<int, TypeDescriptor> registry) {
+      Map<int, typegen.TypeDescriptor> registry) {
     final type = storageMetadata.type;
     final valueCodec = registry[type.value]!;
-    final List<TypeDescriptor> keysCodec;
+    final List<typegen.TypeDescriptor> keysCodec;
 
     // Load key hashers
     if (type.key != null) {
@@ -144,7 +145,7 @@ class Storage {
       } else if (type.hashers.length == 1) {
         keysCodec = [registry[keyId]!];
       } else {
-        final tupleCodec = registry[keyId]! as TupleBuilder;
+        final tupleCodec = registry[keyId]! as typegen.TupleBuilder;
         keysCodec = tupleCodec.generators;
       }
     } else {
@@ -225,7 +226,7 @@ class Storage {
     }
   }
 
-  Expression instance(BasePath from, String palletName) {
+  Expression instance(typegen.BasePath from, String palletName) {
     final Map<String, Expression> arguments = {
       'prefix': literalString(palletName),
       'storage': literalString(name),
@@ -244,27 +245,70 @@ class Storage {
   }
 }
 
+class Tx {
+  final String name;
+  final List<typegen.Field> fields;
+  final typegen.TypeDescriptor codec;
+  final int index;
+  final List<String> docs;
+
+  const Tx({
+    required this.name,
+    required this.fields,
+    required this.index,
+    required this.docs,
+    required this.codec,
+  });
+
+  factory Tx.fromMetadata(
+    metadata.CallEntryMetadata callMetadata,
+    int type,
+    Map<int, typegen.TypeDescriptor> registry,
+  ) {
+    final typeDescriptor = registry[type]!;
+
+    return Tx(
+      name: callMetadata.name,
+      fields: callMetadata.fields
+          .map(
+            (field) => typegen.Field(
+              originalName: field.name,
+              codec: registry[field.type]!,
+              docs: field.docs,
+            ),
+          )
+          .toList(),
+      index: callMetadata.index,
+      codec: typeDescriptor,
+      docs: callMetadata.docs,
+    );
+  }
+}
+
 class Constant {
   final String name;
   final List<int> value;
-  final TypeDescriptor codec;
+  final typegen.TypeDescriptor codec;
   final List<String> docs;
 
-  const Constant(
-      {required this.name,
-      required this.value,
-      required this.codec,
-      required this.docs});
+  const Constant({
+    required this.name,
+    required this.value,
+    required this.codec,
+    required this.docs,
+  });
 
   factory Constant.fromMetadata(
-      metadata.PalletConstantMetadata constantMetadata,
-      Map<int, TypeDescriptor> registry) {
+    metadata.PalletConstantMetadata constantMetadata,
+    Map<int, typegen.TypeDescriptor> registry,
+  ) {
     // Build pallet
     return Constant(
-        name: constantMetadata.name,
-        value: constantMetadata.value,
-        codec: registry[constantMetadata.type]!,
-        docs: constantMetadata.docs);
+      name: constantMetadata.name,
+      value: constantMetadata.value,
+      codec: registry[constantMetadata.type]!,
+      docs: constantMetadata.docs,
+    );
   }
 }
 
@@ -272,23 +316,34 @@ class PalletGenerator {
   String filePath;
   String name;
   List<Storage> storages;
+  List<Tx> txs;
   List<Constant> constants;
+  typegen.TypeDescriptor runtimeCall;
 
   PalletGenerator({
     required this.filePath,
     required this.name,
     required this.storages,
+    required this.txs,
     required this.constants,
+    required this.runtimeCall,
   });
 
-  factory PalletGenerator.fromMetadata(
-      {required String filePath,
-      required metadata.PalletMetadata palletMetadata,
-      required Map<int, TypeDescriptor> registry}) {
+  factory PalletGenerator.fromMetadata({
+    required String filePath,
+    required metadata.PalletMetadata palletMetadata,
+    required Map<int, typegen.TypeDescriptor> registry,
+  }) {
     // Load storages
     final List<Storage>? storages = palletMetadata.storage?.entries
         .map((storageMetadata) =>
             Storage.fromMetadata(storageMetadata, registry))
+        .toList();
+
+    // Load calls
+    final List<Tx>? txs = palletMetadata.call?.entries
+        .map((callMetadata) =>
+            Tx.fromMetadata(callMetadata, palletMetadata.call!.type, registry))
         .toList();
 
     // Load constants
@@ -299,33 +354,45 @@ class PalletGenerator {
 
     // Build pallet
     return PalletGenerator(
-        filePath: filePath,
-        name: palletMetadata.name,
-        storages: storages ?? [],
-        constants: constants);
+      filePath: filePath,
+      name: palletMetadata.name,
+      storages: storages ?? [],
+      txs: txs ?? [],
+      constants: constants,
+      runtimeCall: registry[palletMetadata.runtimeCallType]!,
+    );
   }
 
-  TypeReference queries(BasePath from) {
+  TypeReference queries(typegen.BasePath from) {
     return TypeReference((b) => b
       ..symbol = 'Queries'
       ..url = p.relative(filePath, from: from));
   }
 
-  TypeReference constantsType(BasePath from) {
+  TypeReference exts(typegen.BasePath from) {
+    return TypeReference((b) => b
+      ..symbol = 'Txs'
+      ..url = p.relative(filePath, from: from));
+  }
+
+  TypeReference constantsType(typegen.BasePath from) {
     return TypeReference((b) => b
       ..symbol = 'Constants'
       ..url = p.relative(filePath, from: from));
   }
 
-  GeneratedOutput generated() {
+  typegen.GeneratedOutput generated() {
     final List<Class> classes = [];
     if (storages.isNotEmpty) {
       classes.add(createPalletQueries(this));
     }
+    if (txs.isNotEmpty) {
+      classes.add(createPalletTxs(this));
+    }
     if (constants.isNotEmpty) {
       classes.add(createPalletConstants(this));
     }
-    return GeneratedOutput(classes: classes, enums: [], typedefs: []);
+    return typegen.GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }
 }
 
@@ -404,6 +471,49 @@ Class createPalletQueries(
                           .statement)
                   ..statements.add(
                       storage.isNullable ? Code('') : Code('/* Default */')));
+            })));
+    });
+
+Class createPalletTxs(
+  PalletGenerator generator,
+) =>
+    Class((classBuilder) {
+      final dirname = p.dirname(generator.filePath);
+      classBuilder
+        ..name = 'Txs'
+        ..constructors.add(Constructor((b) => b..constant = true))
+        ..methods.addAll(generator.txs.map((tx) => Method((builder) {
+              final txName = ReCase(tx.name).camelCase;
+              final Reference primitive = tx.codec.primitive(dirname);
+              final Reference runtimePrimitive =
+                  generator.runtimeCall.primitive(dirname);
+
+              builder
+                ..name = sanitize(txName, recase: false)
+                ..docs.addAll(sanitizeDocs(tx.docs))
+                ..returns = runtimePrimitive
+                ..optionalParameters
+                    .addAll(tx.fields.map((field) => Parameter((b) => b
+                      ..required =
+                          field.codec.primitive(dirname).isNullable != true
+                      ..named = true
+                      ..name = field.sanitizedName)))
+                ..body = Block((b) => b
+                  ..statements.add(declareFinal('_call')
+                      .assign(primitive)
+                      .property('values')
+                      .property(sanitize(txName, recase: false))
+                      .call([], {
+                    for (final field in tx.fields)
+                      field.sanitizedName:
+                          CodeExpression(Code(field.sanitizedName))
+                  }).statement)
+                  ..statements.add(runtimePrimitive
+                      .property('values')
+                      .property(ReCase(generator.name).camelCase)
+                      .call([CodeExpression(Code('_call'))])
+                      .returned
+                      .statement));
             })));
     });
 

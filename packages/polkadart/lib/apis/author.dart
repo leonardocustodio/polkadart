@@ -20,4 +20,23 @@ class AuthorApi<P extends Provider> {
     final data = response.result as String;
     return Uint8List.fromList(hex.decode(data.substring(2)));
   }
+
+  /// Submits and subscribe to watch an extrinsic until unsubscribed.
+  Future<StreamSubscription<ExtrinsicStatus>> submitAndWatchExtrinsic(
+      Uint8List extrinsic, Function(ExtrinsicStatus) onData) async {
+    final List<dynamic> params = ['0x${hex.encode(extrinsic)}'];
+
+    final subscription = await _provider
+        .subscribe('author_submitAndWatchExtrinsic', params,
+            onCancel: (subscription) async {
+      await _provider.send(
+        'author_unwatchExtrinsic',
+        [subscription],
+      );
+    });
+
+    return subscription.stream.map((response) {
+      return ExtrinsicStatus.fromJson(response.result);
+    }).listen(onData);
+  }
 }
