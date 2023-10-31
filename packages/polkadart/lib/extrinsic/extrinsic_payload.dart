@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:convert/convert.dart';
 import 'package:polkadart/extrinsic/signed_extensions/substrate.dart';
 import 'package:polkadart_scale_codec/primitives/primitives.dart';
@@ -37,13 +38,14 @@ class Extrinsic {
 
   Uint8List encode(dynamic registry) {
     final extrinsicVersion = registry.extrinsicVersion;
-    print('Extrinsic version: $extrinsicVersion');
+    // print('Extrinsic version: $extrinsicVersion');
     // Unsigned transaction
     // final byte = extrinsicVersion & 0b0111_1111
     final preByte = extrinsicVersion & 127;
+    // ignore: unused_local_variable
     final inHex = preByte.toRadixString(16);
-    print('Byte: $preByte');
-    print('In Hex: $inHex');
+    // print('Byte: $preByte');
+    // print('In Hex: $inHex');
     // Signed transaction
     final extraByte = extrinsicVersion | 128;
     final hexByte = extraByte.toRadixString(16);

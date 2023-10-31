@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:convert/convert.dart';
 import 'package:polkadart/extrinsic/signed_extensions/substrate.dart';
 
@@ -50,8 +51,8 @@ class SigningPayload {
       final payload =
           SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
       if (payload.isNotEmpty) {
-        print(extension);
-        print(payload);
+        // print(extension);
+        // print(payload);
         extras.add(payload);
       }
     });
@@ -62,8 +63,8 @@ class SigningPayload {
       final payload =
           SubstrateSignedExtensions.signedExtensionPayload(extension, toMap());
       if (payload.isNotEmpty) {
-        print(extension);
-        print(payload);
+        // print(extension);
+        // print(payload);
         additionalExtras.add(payload);
       }
     });

@@ -4,7 +4,9 @@ part of apis;
 class StateApi<P extends Provider> {
   final P _provider;
 
-  const StateApi(this._provider);
+  StateApi(this._provider);
+
+  late RuntimeMetadata latestRuntimeMetadata;
 
   /// Call a contract at a block's state.
   Future<Uint8List> call(String method, Uint8List bytes,
@@ -171,13 +173,27 @@ class StateApi<P extends Provider> {
         .listen(onData);
   }
 
+  Future<StreamSubscription<Events>> subscribeEvents(
+      BlockHash at, Function(Events) onData) async {
+    latestRuntimeMetadata = await getMetadata();
+
+    final subscription = await _provider.subscribe('state_subscribeStorage', [
+      ['0x${hex.encode(at)}']
+    ], onCancel: (subscription) async {
+      await _provider.send('state_unsubscribeStorage', [subscription]);
+    });
+
+    return subscription.stream.map((response) {
+      return Events.fromJson(response.result, latestRuntimeMetadata.chainInfo);
+    }).listen(onData);
+  }
+
   /// Subscribes to storage changes for the provided keys
   Future<StreamSubscription<StorageChangeSet>> subscribeStorage(
       Function(StorageChangeSet) onData) async {
-    final subscription = await _provider
-        .subscribe('state_subscribeRuntimeVersion', const [],
-            onCancel: (subscription) async {
-      await _provider.send('state_unsubscribeRuntimeVersion', [subscription]);
+    final subscription = await _provider.subscribe(
+        'state_subscribeStorage', const [], onCancel: (subscription) async {
+      await _provider.send('state_unsubscribeStorage', [subscription]);
     });
 
     return subscription.stream
