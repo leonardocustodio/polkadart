@@ -3,7 +3,7 @@ import 'package:sr25519/src/bip39.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Test Substrate Bip39', () {
+  test('Test Substrate Bip39', () async {
     final testVectors = <(String, String, String)>[
       (
         "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
@@ -126,7 +126,7 @@ void main() {
         "938ba18c3f521f19bd4a399c8425b02c716844325b1a65106b9d1593fbafe5e0b85448f523f91c48e331995ff24ae406757cff47d11f240847352b348ff436ed",
       ),
     ];
-    for (final value in testVectors) {
+    await Future.forEach(testVectors, (value) async {
       final mnemonic = value.$1;
       final hexEntropy = value.$2;
       final hexSeed = value.$3;
@@ -135,13 +135,13 @@ void main() {
           () => entropy = Bip39.mnemonicToEntropy(mnemonic), returnsNormally);
       expect(hexEntropy, hex.encode(entropy));
 
-      Bip39.seedFromMnemonic(mnemonic, 'Substrate').then((seed) {
-        expect(hex.encode(seed), hexSeed);
-      });
+      final seed = await Bip39.seedFromMnemonic(mnemonic, 'Substrate');
+      expect(hex.encode(seed), hexSeed);
 
-      Bip39.miniSecretKeyFromMnemonic(mnemonic, "Substrate").then((miniSecret) {
-        expect(hex.encode(miniSecret.sublist(0, 64)), hexSeed);
-      });
-    }
+      final miniSecret =
+          await Bip39.miniSecretKeyFromMnemonic(mnemonic, "Substrate");
+
+      expect(hex.encode(miniSecret), hexSeed.substring(0, 64));
+    });
   });
 }

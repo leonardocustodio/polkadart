@@ -30,7 +30,7 @@ class Bip39 {
     final pbkdf2 = DartPbkdf2(
       macAlgorithm: Hmac(Sha512()),
       iterations: 2048,
-      bits: 64,
+      bits: 512,
     ).toSync();
     final entropy = mnemonicToEntropy(mnemonic);
     final seed = await pbkdf2.toSync().deriveKey(
