@@ -1,0 +1,14 @@
+name: schnorrkel
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/schnorrkel
+repository: https://github.com/leonardocustodio/schnorrkel
+
+environment:
+  sdk: ^3.1.5
+
+dependencies:
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
