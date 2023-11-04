@@ -1,5 +1,5 @@
 import 'package:convert/convert.dart';
-import 'package:schnorrkel/src/bip39.dart';
+import '../lib/src/bip39.dart';
 import 'package:test/test.dart';
 
 void main() {
