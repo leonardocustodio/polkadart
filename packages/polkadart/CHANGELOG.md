@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Fixes issue to encode immortal transactions (eraPeriod = 0)
+
 ## 0.2.1
 
 - Added AssetHub signed extensions.

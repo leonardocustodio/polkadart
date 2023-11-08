@@ -34,7 +34,9 @@ class Extrinsic {
       'signer': signer,
       'method': method,
       'signature': signature,
-      'era': Era.codec.encodeMortal(blockNumber, eraPeriod),
+      'era': eraPeriod == 0
+          ? '00'
+          : Era.codec.encodeMortal(blockNumber, eraPeriod),
       'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
       'assetId': assetId != null ? assetId!.toRadixString(16) : '',
       'tip': tip is int
