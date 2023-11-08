@@ -39,7 +39,9 @@ class SigningPayload {
           encodeHex(U32Codec.codec.encode(transactionVersion)),
       'genesisHash': genesisHash.replaceAll('0x', ''),
       'blockHash': blockHash.replaceAll('0x', ''),
-      'era': Era.codec.encodeMortal(blockNumber, eraPeriod),
+      'era': eraPeriod == 0
+          ? '00'
+          : Era.codec.encodeMortal(blockNumber, eraPeriod),
       'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
       'assetId': assetId != null ? assetId!.toRadixString(16) : '',
       'tip': tip is int
