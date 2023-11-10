@@ -25,7 +25,6 @@ coverage/
 .history
 .svn/
 coverage.lcov
-demo
 
 # IntelliJ related
 *.iml
@@ -59,4 +58,4 @@ lib/generated_plugin_registrant.dart
 # - https://fvm.app/docs/getting_started/configuration/
 # - https://seanconnolly.dev/flutter-version-management
 .fvm/flutter_sdk
-packages/demo
+packages/demo_old
