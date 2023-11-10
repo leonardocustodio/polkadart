@@ -1,0 +1,17 @@
+Here you can find a example project running Polkadart in a Flutter app.
+
+First you need to generate the types to the network you want to work with.
+You can see in pubspec.yaml those lines:
+```
+polkadart:
+  output_dir: lib/generated
+  chains:
+    polkadot: wss://rpc.polkadot.io
+```
+
+Feel free to change to whatever network you want. After that you can generate the classes by running:
+`dart run polkadart_cli:generate -v`
+
+Finally to run this example you can do:
+`dart run bin/demo.dart`
+
