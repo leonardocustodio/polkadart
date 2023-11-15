@@ -1,3 +1,8 @@
+---
+title: Polkadart
+category: 6554f399f9c12600114b8cb8
+---
+
 # Polkadart
 
 Provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node.
