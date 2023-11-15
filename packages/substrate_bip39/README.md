@@ -1,3 +1,8 @@
+---
+title: Substrate BIP39
+category: 6554f399f9c12600114b8cb8
+---
+
 # substrate_bip39
 
 This is a package for deriving secret keys from BIP39 phrases using [substrate-bip39](https://github.com/paritytech/substrate-bip39) standard.
