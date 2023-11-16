@@ -1,7 +1,9 @@
+<!--
 ---
 title: Polkadart Scale Codec
 category: 6554f399f9c12600114b8cb8
 ---
+-->
 
 # polkadart_scale_codec
 
