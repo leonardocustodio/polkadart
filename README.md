@@ -3,7 +3,7 @@
 title: Getting started
 category: 6554f399f9c12600114b8cb8
 ---
-!-->
+-->
 
 # **Polkadart**
 
