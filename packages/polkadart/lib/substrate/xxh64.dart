@@ -93,7 +93,9 @@ class XXH64 {
     final size = array.length - index;
 
     for (int i = 0; i < size; i++) {
-      block |= BigInt.from(array[index + i] << (i * 8)).toUnsigned(64);
+      // block |= BigInt.from(array[index + i] << (i * 8)).toUnsigned(64);
+      final item = BigInt.from(array[index + i]);
+      block |= (item << (i * 8)).toUnsigned(64);
     }
     if (endian == Endian.little) {
       return block;
