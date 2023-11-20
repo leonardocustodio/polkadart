@@ -1,3 +1,10 @@
+<!--
+---
+title: Polkadart Keyring
+category: 6554f399f9c12600114b8cb8
+---
+-->
+
 # Polkadart Keyring
 
 Polkadart Keyring is a manager for ed25519-based key pairs in the keyring. It provides a convenient interface to manage ed25519-based key pairs, allowing you to create key pairs from BIP39 mnemonics, add them to the keyring, retrieve key pairs by address or public key, and perform various operations on them.

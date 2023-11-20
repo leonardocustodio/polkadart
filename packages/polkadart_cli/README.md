@@ -1,3 +1,10 @@
+<!--
+---
+title: Polkadart CLI
+category: 6554f399f9c12600114b8cb8
+---
+-->
+
 ## Polkadart CLI
 
 Dart package that generates Dart types and definitions from the chain metadata.

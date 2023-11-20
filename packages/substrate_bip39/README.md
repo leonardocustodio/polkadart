@@ -1,3 +1,10 @@
+<!--
+---
+title: Substrate BIP39
+category: 6554f399f9c12600114b8cb8
+---
+-->
+
 # substrate_bip39
 
 This is a package for deriving secret keys from BIP39 phrases using [substrate-bip39](https://github.com/paritytech/substrate-bip39) standard.
@@ -22,10 +29,6 @@ final phrase = 'vessel ladder alter error federal sibling chat ability sun glass
 // Ed25519
 final seed = await SubstrateBip39.ed25519.seedFromUri(phrase);
 assert(hex.encode(seed) == 'd77ca3404e232ff317509d5da871495f9f5bade1821a84216d7070fc92c9bedb');
-
-// Sr25519
-final seed = await SubstrateBip39.sr25519.seedFromUri(phrase);
-assert(hex.encode(seed) == '3b9000f94911f54e32eed6b49a1c1e244efaad4e330ab2d91a112b31286f5f72');
 
 // Ecdsa
 final seed = await SubstrateBip39.ecdsa.seedFromUri(phrase);
