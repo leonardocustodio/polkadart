@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:cryptography/cryptography.dart';
-import 'package:cryptography/dart.dart';
-import 'package:substrate_bip39/substrate_bip39.dart';
+part of sr25519;
 
 class Bip39 {
   /// WARNING:  Non-standard BIP39 Implementation

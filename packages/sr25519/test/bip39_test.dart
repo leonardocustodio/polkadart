@@ -1,5 +1,5 @@
 import 'package:convert/convert.dart';
-import 'package:sr25519/src/bip39.dart';
+import 'package:sr25519/sr25519.dart';
 import 'package:test/test.dart';
 
 void main() {

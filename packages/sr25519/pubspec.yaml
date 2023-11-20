@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   cryptography: ^2.7.0
+  merlin: ^1.0.2
   substrate_bip39: ^0.2.0
 
 dev_dependencies:
