@@ -295,9 +295,6 @@ class WsProvider extends Provider {
 
   @override
   bool isConnected() {
-    if (channel != null) {
-      return channel!.closeCode != null;
-    }
-    return false;
+    return channel != null && channel!.closeCode == null;
   }
 }
