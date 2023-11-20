@@ -1,3 +1,7 @@
+## 0.2.3
+
+- Fix isConnected check for websocket provider
+
 ## 0.2.2
 
 - Fixes issue to encode immortal transactions (eraPeriod = 0)
