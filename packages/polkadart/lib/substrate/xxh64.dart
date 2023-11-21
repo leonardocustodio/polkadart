@@ -1,5 +1,8 @@
 // Copyright (c) 2023, Sudipto Chandra
 // All rights reserved. Check LICENSE file for details.
+// This code is part of hashlib 1.12.0
+// https://pub.dev/packages/hashlib
+
 part of substrate_core;
 
 /// An instance of [XXHash64] with seed = 0

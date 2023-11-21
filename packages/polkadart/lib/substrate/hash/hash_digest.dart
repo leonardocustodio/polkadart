@@ -1,5 +1,7 @@
 // Copyright (c) 2023, Sudipto Chandra
 // All rights reserved. Check LICENSE file for details.
+// This code is part of hashlib 1.12.0
+// https://pub.dev/packages/hashlib
 
 import 'dart:convert' as cvt;
 import 'dart:typed_data';
