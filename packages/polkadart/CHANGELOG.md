@@ -1,3 +1,7 @@
+## 0.2.4
+
+- Fixes issue with xxh64 hash function
+
 ## 0.2.3
 
 - Fix isConnected check for websocket provider
