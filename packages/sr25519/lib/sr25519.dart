@@ -22,3 +22,4 @@ part 'src/utilities.dart';
 part 'src/sr25519.dart';
 part 'src/keypair.dart';
 part 'src/mini_secret_key.dart';
+part 'src/batch.dart';
