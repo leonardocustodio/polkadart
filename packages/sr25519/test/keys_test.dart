@@ -27,4 +27,17 @@ void main() {
 
     expect(const ListEquality().equals(actualBytes, expectedBytes), true);
   });
+  
+  test('Test Generate Keypair From SecretKey', () {
+    final keyPair = KeyPair.generateKeypair();
+
+    final (priv, pub) = (keyPair.secretKey, keyPair.publicKey);
+
+    final kp = priv.keypair();
+    final expectedBytes = pub.encode();
+
+    final actualBytes = kp.publicKey.encode();
+
+    expect(const ListEquality().equals(actualBytes, expectedBytes), true);
+  });
 }
