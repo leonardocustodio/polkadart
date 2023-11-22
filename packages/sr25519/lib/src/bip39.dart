@@ -30,7 +30,7 @@ class Bip39 {
     ).toSync();
     final entropy = mnemonicToEntropy(mnemonic);
     final seed = await pbkdf2.toSync().deriveKey(
-          secretKey: SecretKey(entropy),
+          secretKey: cryptography.SecretKey(entropy),
           nonce: utf8.encode('mnemonic$password'),
         );
     return seed.extractBytes();
