@@ -71,6 +71,22 @@ void main() {
 
     vector.deriveHardSoft();
   });
+
+  test('Test Derive Hard', () {
+    // test vectors from https://github.com/Warchant/sr25519-crust/blob/4b167a8db2c4114561e5380e3493375df426b124/test/derive.cpp#L13
+
+    final vector = TestingVector(
+      keyPair:
+          "4c1250e05afcd79e74f6c035aee10248841090e009b6fd7ba6a98d5dc743250cafa4b32c608e3ee2ba624850b3f14c75841af84b16798bf1ee4a3875aa37a2cee661e416406384fe1ca091980958576d2bff7c461636e9f22c895f444905ea1f",
+      chainCode:
+          "14416c6963650000000000000000000000000000000000000000000000000000",
+      public:
+          "d8db757f04521a940f0237c8a1e44dfbe0b3e39af929eb2e9e257ba61b9a0a1a",
+      hard: true,
+    );
+
+    vector.deriveHardSoft();
+  });
 }
 
 /// commonVectors is a struct to set the vectors used for deriving soft or hard
