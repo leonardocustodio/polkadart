@@ -127,4 +127,23 @@ void main() {
     expect(() => (verified, _) = pub.verify(sig, transcript), returnsNormally);
     expect(verified, true);
   });
+
+  test('Test verify public key at infinity', () {
+    final merlin.Transcript transcript = merlin.Transcript('hello');
+    final SecretKey private = SecretKey();
+    final PublicKey publicKey = private.public();
+
+    expect(publicKey.key.equal(publicKeyAtInfinity), 1);
+
+    late Signature signature;
+    expect(() => signature = private.sign(transcript), returnsNormally);
+
+    final merlin.Transcript transcript2 = merlin.Transcript('hello');
+
+    final (verified, exception) = publicKey.verify(signature, transcript2);
+    expect(exception, isNotNull);
+    expect(verified, false);
+    expect(
+        exception.toString(), 'Exception: public key is the point at infinity');
+  });
 }
