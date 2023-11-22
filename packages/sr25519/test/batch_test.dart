@@ -51,4 +51,36 @@ void main() {
     final verified = batchVerifier.verify();
     expect(verified, true, reason: 'failed to batch verify signatures');
   });
+
+
+  test('Test Batch Verified Failing cases.', () {
+    final int num = 16;
+    final List<merlin.Transcript> transcripts = <merlin.Transcript>[];
+    final List<Signature> sigs = <Signature>[];
+    final List<PublicKey> pubkeys = <PublicKey>[];
+
+    for (int i = 0; i < num; i++) {
+      final transcript = merlin.Transcript('hello_$i');
+      final keypair = KeyPair.generateKeypair();
+      final priv = keypair.secretKey;
+      final pub = keypair.publicKey;
+
+      expect(() => sigs.add(priv.sign(transcript)), returnsNormally);
+
+      expect(() => transcripts.add(merlin.Transcript('hello_$i')),
+          returnsNormally);
+
+      expect(() => pubkeys.add(pub), returnsNormally);
+    }
+
+    expect(transcripts.length, num);
+    expect(sigs.length, num);
+    expect(pubkeys.length, num);
+
+    transcripts[6] = merlin.Transcript('hello_999');
+    final verified = verifyBatch(transcripts, sigs, pubkeys);
+    expect(verified, false,
+        reason:
+            'should have failed to batch verify signatures, as we altered 1 transcript.');
+  });
 }
