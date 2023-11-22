@@ -7,13 +7,13 @@ class MiniSecretKey implements DerivableKey {
     this.key.setRange(0, 32, key);
   }
 
-  // newMiniSecretKey derives a mini secret key from a seed
+  /// newMiniSecretKey derives a mini secret key from a seed
   factory MiniSecretKey.fromSeed(List<int> seed) {
     final s = r255.Scalar()..fromUniformBytes(seed);
     return MiniSecretKey.fromRawKey(s.encode());
   }
 
-  // MiniSecretKey.fromHex returns a new MiniSecretKey from the given hex-encoded string
+  /// MiniSecretKey.fromHex returns a new MiniSecretKey from the given hex-encoded string
   factory MiniSecretKey.fromHex(String s) {
     final bytes = hex.decode(s);
     if (bytes.length < 32) {
@@ -24,14 +24,14 @@ class MiniSecretKey implements DerivableKey {
     return MiniSecretKey.fromRawKey(key);
   }
 
-  // GenerateMiniSecretKey generates a mini secret key from random
+  /// GenerateMiniSecretKey generates a mini secret key from random
   factory MiniSecretKey.generateMiniSecretKey() {
     final s = List<int>.generate(32, (i) => Random.secure().nextInt(256));
 
     return MiniSecretKey.fromRawKey(s);
   }
 
-  // decodes and creates a MiniSecretKey from the given input
+  /// decodes and creates a MiniSecretKey from the given input
   @override
   void decode(List<int> b) {
     final msc = MiniSecretKey.fromRawKey(b);
@@ -39,13 +39,13 @@ class MiniSecretKey implements DerivableKey {
     key.setAll(0, msc.key);
   }
 
-  // Encode returns the MiniSecretKey's underlying bytes
+  /// Encode returns the MiniSecretKey's underlying bytes
   @override
   List<int> encode() {
     return List<int>.from(key);
   }
 
-  // ExpandUniform expands a MiniSecretKey into a SecretKey
+  /// ExpandUniform expands a MiniSecretKey into a SecretKey
   SecretKey expandUniform() {
     final t = merlin.Transcript('ExpandSecretKeys');
     t.appendMessage(utf8.encode('mini'), key);
@@ -62,8 +62,8 @@ class MiniSecretKey implements DerivableKey {
     return SecretKey.from(key32, nonce32);
   }
 
-  // expandEd25519 expands a MiniSecretKey into a SecretKey using ed25519-style bit clamping
-  // https://github.com/w3f/schnorrkel/blob/43f7fc00724edd1ef53d5ae13d82d240ed6202d5/src/keys.rs#L196
+  /// expandEd25519 expands a MiniSecretKey into a SecretKey using ed25519-style bit clamping
+  /// https://github.com/w3f/schnorrkel/blob/43f7fc00724edd1ef53d5ae13d82d240ed6202d5/src/keys.rs#L196
   SecretKey expandEd25519() {
     final h = const DartSha512().hashSync(key).bytes;
     final sk = SecretKey();
@@ -81,7 +81,7 @@ class MiniSecretKey implements DerivableKey {
     return sk;
   }
 
-  // Public returns the PublicKey expanded from this MiniSecretKey using ExpandEd25519
+  /// Public returns the PublicKey expanded from this MiniSecretKey using ExpandEd25519
   PublicKey public() {
     final e = r255.Element.newElement();
     final sk = expandEd25519();
@@ -89,14 +89,14 @@ class MiniSecretKey implements DerivableKey {
     return PublicKey()..key.set(e..scalarBaseMult(skey));
   }
 
-  // HardDeriveMiniSecretKey implements BIP-32 like 'hard' derivation of a mini
-  // secret from a mini secret key
+  /// HardDeriveMiniSecretKey implements BIP-32 like 'hard' derivation of a mini
+  /// secret from a mini secret key
   (MiniSecretKey, List<int>) hardDeriveMiniSecretKey(
       List<int> i, List<int> cc) {
     return expandEd25519().hardDeriveMiniSecretKey(i, cc);
   }
 
-  // DeriveKey derives an Extended Key from the Mini Secret Key
+  /// DeriveKey derives an Extended Key from the Mini Secret Key
   @override
   ExtendedKey deriveKey(merlin.Transcript t, List<int> cc) {
     return expandEd25519().deriveKey(t, cc);

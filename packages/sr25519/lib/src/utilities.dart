@@ -5,7 +5,7 @@ final List<int> zeroList = List<int>.filled(32, 0);
 final publicKeyAtInfinity = r255.Element.newElement()
   ..scalarBaseMult(r255.Scalar());
 
-// NewRandomScalar returns a random ristretto scalar
+/// NewRandomScalar returns a random ristretto scalar
 r255.Scalar newRandomScalar() {
   final List<int> s =
       List<int>.generate(64, (_) => Random.secure().nextInt(256));
