@@ -20,4 +20,22 @@ void main() {
         returnsNormally);
     expect(verified, true);
   });
+
+  test('Test Sign and Verify Keypair', () {
+    final merlin.Transcript transcript = merlin.Transcript('hello');
+    final KeyPair keypair = KeyPair.generateKeypair();
+    final (private, public) = (keypair.secretKey, keypair.publicKey);
+
+    final KeyPair kp = KeyPair.from(public, private);
+
+    late Signature signature;
+    expect(() => signature = kp.sign(transcript), returnsNormally);
+
+    final merlin.Transcript transcript2 = merlin.Transcript('hello');
+
+    late bool verified;
+    expect(() => (verified, _) = public.verify(signature, transcript2),
+        returnsNormally);
+    expect(verified, true);
+  });
 }
