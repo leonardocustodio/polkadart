@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:convert/convert.dart';
 import 'package:sr25519/sr25519.dart';
 import 'package:test/test.dart';
@@ -13,5 +14,17 @@ void main() {
         '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d';
     final actualHex = '0x${hex.encode(publicBytes)}';
     expect(actualHex, expectexHex);
+  });
+
+  test('Test Generate Keypair', () {
+    final keyPair = KeyPair.generateKeypair();
+
+    final (priv, pub) = (keyPair.secretKey, keyPair.publicKey);
+    final pub2 = priv.public();
+
+    final expectedBytes = pub2.encode();
+    final actualBytes = pub.encode();
+
+    expect(const ListEquality().equals(actualBytes, expectedBytes), true);
   });
 }
