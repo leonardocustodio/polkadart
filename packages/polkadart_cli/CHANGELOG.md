@@ -1,3 +1,7 @@
+## 0.2.3
+
+- Bump code_builder min version to 4.8.0 to stop using deprecated APIs
+
 ## 0.2.2
 
 - Fixes issue with enum type generation
