@@ -31,7 +31,6 @@ void main() {
     expect(verified, true, reason: 'failed to batch verify signatures');
   });
 
-
   test('Use BatchVerifier() to verify batch', () {
     final num = 16;
     final batchVerifier = BatchVerifier();
@@ -51,7 +50,6 @@ void main() {
     final verified = batchVerifier.verify();
     expect(verified, true, reason: 'failed to batch verify signatures');
   });
-
 
   test('Test Batch Verified Failing cases.', () {
     final int num = 16;
