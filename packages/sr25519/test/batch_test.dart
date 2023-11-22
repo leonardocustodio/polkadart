@@ -30,4 +30,25 @@ void main() {
     final verified = verifyBatch(transcripts, sigs, pubkeys);
     expect(verified, true, reason: 'failed to batch verify signatures');
   });
+
+
+  test('Use BatchVerifier() to verify batch', () {
+    final num = 16;
+    final batchVerifier = BatchVerifier();
+
+    for (int i = 0; i < num; i++) {
+      merlin.Transcript transcript = merlin.Transcript('hello_$i');
+      final keyPair = KeyPair.generateKeypair();
+      final (priv, pub) = (keyPair.secretKey, keyPair.publicKey);
+
+      late Signature sig;
+      expect(() => sig = priv.sign(transcript), returnsNormally);
+
+      expect(() => transcript = merlin.Transcript('hello_$i'), returnsNormally);
+      expect(() => batchVerifier.add(transcript, sig, pub), returnsNormally);
+    }
+
+    final verified = batchVerifier.verify();
+    expect(verified, true, reason: 'failed to batch verify signatures');
+  });
 }
