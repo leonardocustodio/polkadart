@@ -72,44 +72,44 @@ abstract class HashBase implements StreamTransformer<List<int>, HashDigest> {
   ///   returned stream closes with an error event.
   @override
   Stream<HashDigest> bind(Stream<List<int>> stream) {
-    bool _paused = false;
-    bool _cancelled = false;
+    bool paused = false;
+    bool cancelled = false;
     StreamSubscription<List<int>>? subscription;
-    var controller = StreamController<HashDigest>(sync: false);
+    final controller = StreamController<HashDigest>(sync: false);
     controller.onCancel = () async {
-      _cancelled = true;
+      cancelled = true;
       await subscription?.cancel();
     };
     controller.onPause = () {
-      _paused = true;
+      paused = true;
       subscription?.pause();
     };
     controller.onResume = () {
-      _paused = false;
+      paused = false;
       subscription?.resume();
     };
     controller.onListen = () {
-      if (_cancelled) return;
-      bool _hasError = false;
-      var sink = createSink();
+      if (cancelled) return;
+      bool hasError = false;
+      final sink = createSink();
       subscription = stream.listen(
         (List<int> event) {
           try {
             sink.add(event);
           } catch (err, stack) {
-            _hasError = true;
+            hasError = true;
             subscription?.cancel();
             controller.addError(err, stack);
           }
         },
         cancelOnError: true,
         onError: (Object err, [StackTrace? stack]) {
-          _hasError = true;
+          hasError = true;
           controller.addError(err, stack);
         },
         onDone: () {
           try {
-            if (!_hasError) {
+            if (!hasError) {
               controller.add(sink.digest());
             }
           } catch (err, stack) {
@@ -119,7 +119,7 @@ abstract class HashBase implements StreamTransformer<List<int>, HashDigest> {
           }
         },
       );
-      if (_paused) {
+      if (paused) {
         subscription?.pause();
       }
     };
@@ -133,7 +133,7 @@ abstract class HashBase implements StreamTransformer<List<int>, HashDigest> {
   /// Process the byte array [input] and returns a [HashDigest].
   @pragma('vm:prefer-inline')
   HashDigest convert(List<int> input) {
-    var sink = createSink();
+    final sink = createSink();
     sink.add(input);
     return sink.digest();
   }
@@ -142,9 +142,9 @@ abstract class HashBase implements StreamTransformer<List<int>, HashDigest> {
   ///
   /// If the [encoding] is not specified, `codeUnits` are used as input bytes.
   HashDigest string(String input, [Encoding? encoding]) {
-    var sink = createSink();
+    final sink = createSink();
     if (encoding != null) {
-      var data = encoding.encode(input);
+      final data = encoding.encode(input);
       sink.add(data);
     } else {
       sink.add(input.codeUnits);
@@ -197,11 +197,11 @@ abstract class HashBase implements StreamTransformer<List<int>, HashDigest> {
     int? end,
     int bufferSize = 2048,
   }) {
-    var raf = input.openSync();
+    final raf = input.openSync();
     try {
-      var sink = createSink();
-      var buffer = Uint8List(bufferSize);
-      int length = end ?? raf.lengthSync();
+      final sink = createSink();
+      final buffer = Uint8List(bufferSize);
+      final int length = end ?? raf.lengthSync();
       for (int i = start, l; i < length; i += l) {
         l = raf.readIntoSync(buffer);
         sink.add(buffer, 0, l);

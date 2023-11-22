@@ -79,61 +79,61 @@ class XXHash64Sink extends BlockHashSink {
   @override
   Uint8List $finalize() {
     int i, t;
-    int _hash;
+    int hash;
 
     if (messageLength < 32) {
-      _hash = seed + prime64_5;
+      hash = seed + prime64_5;
     } else {
       // accumulate
-      _hash = _rotl(_acc1, 1);
-      _hash += _rotl(_acc2, 7);
-      _hash += _rotl(_acc3, 12);
-      _hash += _rotl(_acc4, 18);
+      hash = _rotl(_acc1, 1);
+      hash += _rotl(_acc2, 7);
+      hash += _rotl(_acc3, 12);
+      hash += _rotl(_acc4, 18);
 
       // merge round
-      _hash = _merge(_hash, _acc1);
-      _hash = _merge(_hash, _acc2);
-      _hash = _merge(_hash, _acc3);
-      _hash = _merge(_hash, _acc4);
+      hash = _merge(hash, _acc1);
+      hash = _merge(hash, _acc2);
+      hash = _merge(hash, _acc3);
+      hash = _merge(hash, _acc4);
     }
 
-    _hash += messageLength;
+    hash += messageLength;
 
     // process the remaining data
     for (i = t = 0; t + 8 <= pos; ++i, t += 8) {
-      _hash ^= _accumulate(0, qbuffer[i]);
-      _hash = _rotl(_hash, 27);
-      _hash *= prime64_1;
-      _hash += prime64_4;
+      hash ^= _accumulate(0, qbuffer[i]);
+      hash = _rotl(hash, 27);
+      hash *= prime64_1;
+      hash += prime64_4;
     }
     for (i <<= 1; t + 4 <= pos; ++i, t += 4) {
-      _hash ^= sbuffer[i] * prime64_1;
-      _hash = _rotl(_hash, 23);
-      _hash *= prime64_2;
-      _hash += prime64_3;
+      hash ^= sbuffer[i] * prime64_1;
+      hash = _rotl(hash, 23);
+      hash *= prime64_2;
+      hash += prime64_3;
     }
     for (; t < pos; t++) {
-      _hash ^= buffer[t] * prime64_5;
-      _hash = _rotl(_hash, 11);
-      _hash *= prime64_1;
+      hash ^= buffer[t] * prime64_5;
+      hash = _rotl(hash, 11);
+      hash *= prime64_1;
     }
 
     // avalanche
-    _hash ^= _hash >>> 33;
-    _hash *= prime64_2;
-    _hash ^= _hash >>> 29;
-    _hash *= prime64_3;
-    _hash ^= _hash >>> 32;
+    hash ^= hash >>> 33;
+    hash *= prime64_2;
+    hash ^= hash >>> 29;
+    hash *= prime64_3;
+    hash ^= hash >>> 32;
 
     return Uint8List.fromList([
-      _hash >>> 56,
-      _hash >>> 48,
-      _hash >>> 40,
-      _hash >>> 32,
-      _hash >>> 24,
-      _hash >>> 16,
-      _hash >>> 8,
-      _hash,
+      hash >>> 56,
+      hash >>> 48,
+      hash >>> 40,
+      hash >>> 32,
+      hash >>> 24,
+      hash >>> 16,
+      hash >>> 8,
+      hash,
     ]);
   }
 }
