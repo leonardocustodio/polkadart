@@ -583,7 +583,7 @@ Class createPalletConstants(
               .code)));
     });
 
-/// Name of the generated method returning the key of a stroage.
+/// Name of the generated method returning the key of a storage.
 String storageKeyMethodName(Storage storage) {
   return '${storage.name}Key';
 }
