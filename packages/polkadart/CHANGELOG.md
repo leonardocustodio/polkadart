@@ -1,3 +1,7 @@
+## 0.2.5
+
+- Fixes issue with hex signed 2's complement in xxh64 algorithm
+
 ## 0.2.4
 
 - Fixes issue with xxh64 hash function
