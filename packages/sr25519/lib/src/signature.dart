@@ -63,14 +63,14 @@ class Signature {
     return out;
   }
 
-  /// DecodeNotDistinguishedFromEd25519 sets a signature from bytes, not checking if the signature
+  /// decodeNotDistinguishedFromEd25519 sets a signature from bytes, not checking if the signature
   /// is explicitly marked as a schnorrkel signature
-  void decodeNotDistinguishedFromEd25519(List<int> bytes) {
+  factory Signature.decodeNotDistinguishedFromEd25519(List<int> bytes) {
     if (bytes.length != 64) {
       throw Exception('invalid bytes length');
     }
     final cp = List<int>.from(bytes, growable: false);
     cp[63] |= 128;
-    return decode(cp);
+    return Signature._()..decode(cp);
   }
 }

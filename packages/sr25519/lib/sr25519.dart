@@ -23,3 +23,6 @@ part 'src/sr25519.dart';
 part 'src/keypair.dart';
 part 'src/mini_secret_key.dart';
 part 'src/batch.dart';
+part 'src/vrf_in_out.dart';
+part 'src/vrf_output.dart';
+part 'src/vrf_proof.dart';

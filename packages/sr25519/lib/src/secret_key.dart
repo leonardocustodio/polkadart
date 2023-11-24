@@ -1,8 +1,14 @@
+// ignore_for_file: constant_identifier_names
+
 part of sr25519;
+
+const VRFLabel = 'VRF';
 
 class SecretKey implements DerivableKey {
   final List<int> key = List<int>.filled(32, 0, growable: false);
   final List<int> nonce = List<int>.filled(32, 0, growable: false);
+
+  bool kusamaVRF = true;
 
   SecretKey();
 
@@ -155,5 +161,70 @@ class SecretKey implements DerivableKey {
       ..add(x, r);
 
     return Signature.from(R, s);
+  }
+
+  /// VrfSign returns a vrf output and proof given a secret key and transcript.
+  (VrfInOut, VrfProof) vrfSign(merlin.Transcript t) {
+    final VrfInOut p = vrfCreateHash(t);
+
+    final merlin.Transcript extra = merlin.Transcript(VRFLabel);
+    final VrfProof proof = dleqProve(extra, p);
+    return (p, proof);
+  }
+
+  /// dleqProve creates a VRF proof for the transcript and input with this secret key.
+  /// see: https://github.com/w3f/schnorrkel/blob/798ab3e0813aa478b520c5cf6dc6e02fd4e07f0a/src/vrf.rs#L604
+  VrfProof dleqProve(merlin.Transcript t, VrfInOut p) {
+    final PublicKey pub = public();
+
+    final List<int> pubenc = pub.encode();
+
+    t
+      ..appendMessage(utf8.encode("proto-name"), utf8.encode("DLEQProof"))
+      ..appendMessage(utf8.encode("vrf:h"), p.input.encode());
+    if (kusamaVRF == false) {
+      t.appendMessage(utf8.encode("vrf:pk"), pubenc);
+    }
+
+    // create random element R = g^r
+    // TODO: update toe use witness scalar
+    // https://github.com/w3f/schnorrkel/blob/master/src/vrf.rs#L620
+    final r255.Scalar r = newRandomScalar();
+
+    final r255.Element R = r255.Element.newElement();
+    R.scalarBaseMult(r);
+    t.appendMessage(utf8.encode("vrf:R=g^r"), R.encode());
+
+    // create hr := HashToElement(input)
+    final List<int> hr =
+        (r255.Element.newElement()..scalarMult(r, p.input)).encode();
+    t.appendMessage(utf8.encode("vrf:h^r"), hr);
+
+    if (kusamaVRF) {
+      t.appendMessage(utf8.encode("vrf:pk"), pubenc);
+    }
+    t.appendMessage(utf8.encode("vrf:h^sk"), p.output.encode());
+
+    final r255.Scalar c = challengeScalar(t, utf8.encode("prove"));
+    final r255.Scalar s = r255.Scalar();
+    final r255.Scalar sc = scalarFromBytes(key);
+
+    s.subtract(r, r255.Scalar()..multiply(c, sc));
+
+    return VrfProof(c, s);
+  }
+
+  /// vrfCreateHash creates a VRF input/output pair on the given transcript.
+  VrfInOut vrfCreateHash(merlin.Transcript t) {
+    final PublicKey pub = public();
+
+    final input = pub.vrfHash(t);
+
+    final r255.Element output = r255.Element.newElement();
+    final r255.Scalar sc = r255.Scalar();
+    sc.decode(key);
+    output.scalarMult(sc, input);
+
+    return VrfInOut(input, output);
   }
 }

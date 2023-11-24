@@ -39,4 +39,14 @@ class KeyPair {
   (bool, Exception?) verify(Signature s, merlin.Transcript t) {
     return publicKey.verify(s, t);
   }
+
+  /// VrfSign returns a vrf output and proof given a secret key and transcript.
+  (VrfInOut, VrfProof) vrfSign(merlin.Transcript t) {
+    return secretKey.vrfSign(t);
+  }
+
+  /// VrfVerify verifies that the proof and output created are valid given the public key and transcript.
+  bool vrfVerify(merlin.Transcript t, VrfOutput out, VrfProof proof) {
+    return publicKey.vrfVerify(t, out, proof);
+  }
 }

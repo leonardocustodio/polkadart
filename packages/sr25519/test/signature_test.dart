@@ -146,4 +146,25 @@ void main() {
     expect(
         exception.toString(), 'Exception: public key is the point at infinity');
   });
+
+  test('Test verify rust preaudit deprecated', () {
+    final List<int> publicBytes = hex.decode(
+        'b4bfa1f7a5166695eb75299fd1c4c03ea212871c342f2c5dfea0902b2c246918');
+
+    final PublicKey pub = PublicKey();
+    pub.decode(publicBytes);
+
+    final List<int> message = utf8.encode(
+        'Verifying that I am the owner of 5G9hQLdsKQswNPgB499DeA5PkFBbgkLPJWkkS6FAM6xGQ8xD. Hash: 221455a3\n');
+
+    final List<int> sig = hex.decode(
+        '5a9755f069939f45d96aaf125cf5ce7ba1db998686f87f2fb3cbdea922078741a73891ba265f70c31436e18a9acd14d189d73c12317ab6c313285cd938453202');
+
+    late bool verified;
+    expect(
+        () => verified =
+            pub.verifySimplePreAuditDeprecated('substrate', message, sig),
+        returnsNormally);
+    expect(verified, true);
+  });
 }

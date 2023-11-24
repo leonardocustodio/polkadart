@@ -24,7 +24,7 @@ r255.Scalar challengeScalar(merlin.Transcript t, List<int> msg) {
   return sc;
 }
 
-// https://github.com/w3f/schnorrkel/blob/718678e51006d84c7d8e4b6cde758906172e74f8/src/scalars.rs#L18
+/// https://github.com/w3f/schnorrkel/blob/718678e51006d84c7d8e4b6cde758906172e74f8/src/scalars.rs#L18
 List<int> divideScalarByCofactor(List<int> s) {
   final l = s.length - 1;
   int low = 0;
@@ -38,7 +38,7 @@ List<int> divideScalarByCofactor(List<int> s) {
   return s;
 }
 
-// NewRandomElement returns a random ristretto element
+/// NewRandomElement returns a random ristretto element
 r255.Element newRandomElement() {
   //s := [64]byte{}
   final s = List.generate(64, (_) => Random.secure().nextInt(256));
@@ -46,11 +46,20 @@ r255.Element newRandomElement() {
   return e;
 }
 
-// ScalarFromBytes returns a ristretto scalar from the input bytes
-// performs input mod l where l is the group order
+/// ScalarFromBytes returns a ristretto scalar from the input bytes
+/// performs input mod l where l is the group order
 r255.Scalar scalarFromBytes(List<int> b) {
   assert(b.length == 32, 'Assertion failed: b.length == 32');
   final s = r255.Scalar();
   s.decode(b);
   return s;
+}
+
+/// TranscriptWithMalleabilityAddressed returns the input transcript with the public key commited to it,
+/// addressing VRF output malleability.
+merlin.Transcript transcriptWithMalleabilityAddressed(
+    merlin.Transcript t, PublicKey pk) {
+  final List<int> enc = pk.encode();
+  t.appendMessage(utf8.encode("vrf-nm-pk"), enc);
+  return t;
 }

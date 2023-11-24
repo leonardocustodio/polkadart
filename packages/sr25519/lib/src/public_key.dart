@@ -6,6 +6,8 @@ class PublicKey implements DerivableKey {
 
   PublicKey();
 
+  bool kusamaVRF = true;
+
   factory PublicKey.from(PublicKey pk) {
     final result = PublicKey();
     result
@@ -115,5 +117,90 @@ class PublicKey implements DerivableKey {
           k, r255.Element.newElement()..negate(key), s.s);
 
     return (rp.equal(s.r) == 1, null);
+  }
+
+  bool verifySimplePreAuditDeprecated(
+      String context, List<int> msg, List<int> sigature) {
+    merlin.Transcript t = Sr25519.newSigningContext(utf8.encode(context), msg);
+
+    late final Signature signature;
+
+    try {
+      signature = Signature.fromBytes(sigature);
+      return verify(signature, t).$1;
+    } catch (_) {
+      signature = Signature.decodeNotDistinguishedFromEd25519(sigature);
+    }
+
+    t = merlin.Transcript(context);
+    t.appendMessage(utf8.encode('sign-bytes'), msg);
+    t.appendMessage(utf8.encode('proto-name'), utf8.encode('Schnorr-sig'));
+    final pubc = encode();
+    t
+      ..appendMessage(utf8.encode('pk'), pubc)
+      ..appendMessage(utf8.encode('no'), signature.r.encode());
+
+    final List<int> kb = t.extractBytes(utf8.encode(''), 64);
+    final r255.Scalar k = r255.Scalar();
+    k.fromUniformBytes(kb);
+
+    final rp = r255.Element.newElement()
+      ..varTimeDoubleScalarBaseMult(
+          k, r255.Element.newElement()..negate(key), signature.s);
+
+    return (rp.equal(signature.r) == 1);
+  }
+
+  /// VrfVerify verifies that the proof and output created are valid given the public key and transcript.
+  bool vrfVerify(merlin.Transcript t, VrfOutput out, VrfProof proof) {
+    if (key.equal(publicKeyAtInfinity) == 1) {
+      return false;
+    }
+
+    final VrfInOut inout = out.attachInput(this, t);
+
+    final merlin.Transcript t0 = merlin.Transcript(VRFLabel);
+    return dleqVerify(t0, inout, proof);
+  }
+
+  /// dleqVerify verifies the corresponding dleq proof.
+  bool dleqVerify(merlin.Transcript t, VrfInOut p, VrfProof proof) {
+    t
+      ..appendMessage(utf8.encode("proto-name"), utf8.encode("DLEQProof"))
+      ..appendMessage(utf8.encode("vrf:h"), p.input.encode());
+    if (kusamaVRF == false) {
+      t.appendMessage(utf8.encode("vrf:pk"), key.encode());
+    }
+
+    // R = proof.c*pk + proof.s*g
+    final r255.Element R = r255.Element.newElement();
+    R.varTimeDoubleScalarBaseMult(proof.c, key, proof.s);
+    t.appendMessage(utf8.encode("vrf:R=g^r"), R.encode());
+
+    // hr = proof.c * p.output + proof.s * p.input
+    final hr = r255.Element.newElement()
+      ..varTimeMultiScalarMult(
+          <r255.Scalar>[proof.c, proof.s], <r255.Element>[p.output, p.input]);
+    t.appendMessage(utf8.encode("vrf:h^r"), hr.encode());
+    if (kusamaVRF) {
+      t.appendMessage(utf8.encode("vrf:pk"), key.encode());
+    }
+    t.appendMessage(utf8.encode("vrf:h^sk"), p.output.encode());
+
+    final r255.Scalar cexpected = challengeScalar(t, utf8.encode("prove"));
+    if (cexpected.equal(proof.c) == 1) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /// vrfHash hashes the transcript to a point.
+  r255.Element vrfHash(merlin.Transcript t) {
+    final merlin.Transcript mt = transcriptWithMalleabilityAddressed(t, this);
+    final Uint8List hash = mt.extractBytes(utf8.encode("VRFHash"), 64);
+    final r255.Element point = r255.Element.newElement();
+    point.fromUniformBytes(hash);
+    return point;
   }
 }
