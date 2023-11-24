@@ -52,15 +52,10 @@ class TwoxxHasher extends Hasher {
   @override
   void hashTo({required Uint8List data, required Uint8List output}) {
     for (int seed = 0; seed < blocks; seed++) {
-      final hash = XXHash64(seed)
-          .convert(data)
-          .bigInt(endian: Endian.little)
-          .toRadixString(16);
-
-      final hexedHash = fromHex(hash);
+      final hashedBytes = XXHash64(seed).convert(data).bytes.reversed.toList();
 
       for (var i = 0; i < 8; i++) {
-        output[(seed * 8) + i] = hexedHash[i];
+        output[(seed * 8) + i] = hashedBytes[i];
       }
     }
   }
