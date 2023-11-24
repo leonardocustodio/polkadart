@@ -1,6 +1,6 @@
 library substrate_core;
 
-import 'dart:typed_data' show Endian, Uint8List;
+import 'dart:typed_data' show Uint8List;
 import 'package:pointycastle/digests/blake2b.dart' show Blake2bDigest;
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
