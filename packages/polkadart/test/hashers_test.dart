@@ -34,5 +34,21 @@ void main() {
         expect(hex.encode(hash), hex.encode(entry.value));
       }
     });
+
+    test('TwoxxHasher works', () {
+      final testCases = {
+        '': hex.decode('99e9d85137db46ef4bbea33613baafd5'),
+        'System': hex.decode('26aa394eea5630e07c48ae0c9558cef7'),
+        'CurrentPhase': hex.decode('d9764401941df7f707a47ba7db64a6ea'),
+        'EndorsementTicketsPerBootstrapper':
+            hex.decode('5c03954ec993845da1c7ff36c91390da'),
+      };
+
+      for (final entry in testCases.entries) {
+        final hasher = TwoxxHasher(2);
+        final hash = hasher.hash(Uint8List.fromList(utf8.encode(entry.key)));
+        expect(hex.encode(hash), hex.encode(entry.value));
+      }
+    });
   });
 }

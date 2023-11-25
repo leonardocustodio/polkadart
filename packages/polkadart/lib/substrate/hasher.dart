@@ -52,11 +52,10 @@ class TwoxxHasher extends Hasher {
   @override
   void hashTo({required Uint8List data, required Uint8List output}) {
     for (int seed = 0; seed < blocks; seed++) {
-      BigInt hash = XXH64.digest(
-          data: data, seed: BigInt.from(seed), endian: Endian.little);
+      final hashedBytes = XXHash64(seed).convert(data).bytes.reversed.toList();
+
       for (var i = 0; i < 8; i++) {
-        output[(seed * 8) + i] = hash.toUnsigned(8).toInt();
-        hash >>= 8;
+        output[(seed * 8) + i] = hashedBytes[i];
       }
     }
   }

@@ -308,8 +308,8 @@ class LiteralValue<E extends Expression> extends Expression {
   Expression operatorAdd(Expression other) => _expression.operatorAdd(other);
 
   @override
-  Expression operatorSubstract(Expression other) =>
-      _expression.operatorSubstract(other);
+  Expression operatorSubtract(Expression other) =>
+      _expression.operatorSubtract(other);
 
   @override
   Expression operatorDivide(Expression other) =>
