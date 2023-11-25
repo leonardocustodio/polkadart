@@ -1,10 +1,16 @@
 part of sr25519;
 
 class VrfProof {
-  r255.Scalar c;
-  r255.Scalar s;
+  late r255.Scalar c;
+  late r255.Scalar s;
 
   VrfProof(this.c, this.s);
+
+  VrfProof._();
+
+  factory VrfProof.fromUint8List(Uint8List list) {
+    return VrfProof._()..decode(list);
+  }
 
   /// Encode returns a 64-byte encoded VrfProof
   Uint8List encode() {

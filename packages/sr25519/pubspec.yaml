@@ -11,10 +11,10 @@ dependencies:
   collection: ^1.18.0
   convert: ^3.1.1
   cryptography: ^2.7.0
-  merlin: ^1.0.2
-  ristretto255: ^1.0.1
+  merlin: ^1.0.3
+  ristretto255: ^1.0.2
   substrate_bip39: ^0.2.0
 
 dev_dependencies:
-  lints: ^2.0.0
+  lints: ^3.0.0
   test: ^1.21.0

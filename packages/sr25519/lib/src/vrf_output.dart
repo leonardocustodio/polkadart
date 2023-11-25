@@ -1,15 +1,15 @@
 part of sr25519;
 
 class VrfOutput {
-  r255.Element output;
+  late r255.Element output;
 
   VrfOutput(this.output);
 
+  VrfOutput._();
+
   /// NewOutput creates a new VRF output from a 64-byte element
-  factory VrfOutput.newOutput(Uint8List list) {
-    final newOutput = r255.Element.newElement();
-    newOutput.decode(list);
-    return VrfOutput(newOutput);
+  factory VrfOutput.fromUint8List(Uint8List list) {
+    return VrfOutput._()..decode(list);
   }
 
   /// AttachInput returns a VrfInOut pair from an output

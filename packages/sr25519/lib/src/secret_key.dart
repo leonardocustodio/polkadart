@@ -187,7 +187,7 @@ class SecretKey implements DerivableKey {
     }
 
     // create random element R = g^r
-    // TODO: update toe use witness scalar
+    // todo: update toe use witness scalar
     // https://github.com/w3f/schnorrkel/blob/master/src/vrf.rs#L620
     final r255.Scalar r = newRandomScalar();
 

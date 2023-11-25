@@ -5,6 +5,7 @@ import 'package:test/test.dart';
 void main() {
   test('Test Substrate Bip39', () async {
     final testVectors = <(String, String, String)>[
+      // (mnemonic, entropy, seed)
       (
         'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
         '00000000000000000000000000000000',
