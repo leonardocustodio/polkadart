@@ -180,10 +180,10 @@ class SecretKey implements DerivableKey {
     final List<int> pubenc = pub.encode();
 
     t
-      ..appendMessage(utf8.encode("proto-name"), utf8.encode("DLEQProof"))
-      ..appendMessage(utf8.encode("vrf:h"), p.input.encode());
+      ..appendMessage(utf8.encode('proto-name'), utf8.encode('DLEQProof'))
+      ..appendMessage(utf8.encode('vrf:h'), p.input.encode());
     if (kusamaVRF == false) {
-      t.appendMessage(utf8.encode("vrf:pk"), pubenc);
+      t.appendMessage(utf8.encode('vrf:pk'), pubenc);
     }
 
     // create random element R = g^r
@@ -193,19 +193,19 @@ class SecretKey implements DerivableKey {
 
     final r255.Element R = r255.Element.newElement();
     R.scalarBaseMult(r);
-    t.appendMessage(utf8.encode("vrf:R=g^r"), R.encode());
+    t.appendMessage(utf8.encode('vrf:R=g^r'), R.encode());
 
     // create hr := HashToElement(input)
     final List<int> hr =
         (r255.Element.newElement()..scalarMult(r, p.input)).encode();
-    t.appendMessage(utf8.encode("vrf:h^r"), hr);
+    t.appendMessage(utf8.encode('vrf:h^r'), hr);
 
     if (kusamaVRF) {
-      t.appendMessage(utf8.encode("vrf:pk"), pubenc);
+      t.appendMessage(utf8.encode('vrf:pk'), pubenc);
     }
-    t.appendMessage(utf8.encode("vrf:h^sk"), p.output.encode());
+    t.appendMessage(utf8.encode('vrf:h^sk'), p.output.encode());
 
-    final r255.Scalar c = challengeScalar(t, utf8.encode("prove"));
+    final r255.Scalar c = challengeScalar(t, utf8.encode('prove'));
     final r255.Scalar s = r255.Scalar();
     final r255.Scalar sc = scalarFromBytes(key);
 

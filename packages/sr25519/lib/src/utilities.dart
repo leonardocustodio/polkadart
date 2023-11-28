@@ -60,6 +60,6 @@ r255.Scalar scalarFromBytes(List<int> b) {
 merlin.Transcript transcriptWithMalleabilityAddressed(
     merlin.Transcript t, PublicKey pk) {
   final List<int> enc = pk.encode();
-  t.appendMessage(utf8.encode("vrf-nm-pk"), enc);
+  t.appendMessage(utf8.encode('vrf-nm-pk'), enc);
   return t;
 }

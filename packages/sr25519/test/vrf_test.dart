@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:collection/collection.dart';
-import 'package:sr25519/sr25519.dart';
-import 'package:test/test.dart';
 import 'package:merlin/merlin.dart' as merlin;
 import 'package:ristretto255/ristretto255.dart' as r255;
+import 'package:sr25519/sr25519.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('Test Keypair Input and Output', () {
@@ -499,7 +500,7 @@ void main() {
 
   test('Test VrfVerify NotKusama', () {
     final merlin.Transcript transcript =
-        Sr25519.newSigningContext(utf8.encode("yo!"), utf8.encode("meow"));
+        Sr25519.newSigningContext(utf8.encode('yo!'), utf8.encode('meow'));
     final Uint8List pub = Uint8List.fromList([
       178,
       10,
@@ -698,18 +699,18 @@ void main() {
     final VrfProof p = VrfProof.fromUint8List(proof);
 
     final merlin.Transcript verifyTranscript =
-        Sr25519.newSigningContext(utf8.encode("yo!"), utf8.encode("meow"));
+        Sr25519.newSigningContext(utf8.encode('yo!'), utf8.encode('meow'));
     final bool ok = pubkey.vrfVerify(verifyTranscript, out, p);
     expect(ok, true);
 
     final List<int> bytes =
-        inout.makeBytes(16, utf8.encode("substrate-babe-vrf"));
+        inout.makeBytes(16, utf8.encode('substrate-babe-vrf'));
     expect(const ListEquality().equals(makeBytes16Expected, bytes), true);
   });
 
   test('Test VRFVerify Public Key at Infinity', () {
-    final merlin.Transcript signTranscript = merlin.Transcript("vrf-test");
-    final merlin.Transcript verifyTranscript = merlin.Transcript("vrf-test");
+    final merlin.Transcript signTranscript = merlin.Transcript('vrf-test');
+    final merlin.Transcript verifyTranscript = merlin.Transcript('vrf-test');
 
     final SecretKey priv = SecretKey();
     final PublicKey pub = priv.public();

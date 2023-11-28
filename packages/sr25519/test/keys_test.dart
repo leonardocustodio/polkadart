@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   test('Test MiniSecretKey fromHex', () {
     final MiniSecretKey priv = MiniSecretKey.fromHex(
-        "e5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a");
+        'e5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a');
 
     final PublicKey pub = priv.public();
     final List<int> publicBytes = pub.encode();
@@ -216,7 +216,7 @@ void main() {
     late List<int> pubBytes;
     expect(
         () => pubBytes = hex.decode(
-            "46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a"),
+            '46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a'),
         returnsNormally);
 
     final List<int> bytes = List<int>.filled(32, 0);
@@ -228,7 +228,7 @@ void main() {
     late List<int> privBytes;
     expect(
         () => privBytes = hex.decode(
-            "05d65584630d16cd4af6d0bec10f34bb504a5dcb62dba2122d49f5a663763d0a"),
+            '05d65584630d16cd4af6d0bec10f34bb504a5dcb62dba2122d49f5a663763d0a'),
         returnsNormally);
     bytes.setRange(0, 32, privBytes);
 
@@ -291,13 +291,13 @@ void main() {
     // test vectors from https://github.com/w3f/schnorrkel/blob/ab3e3d609cd8b9eefbe0333066f698c40fd09582/src/keys.rs#L504-L507
     final List<int> b = List<int>.filled(64, 0);
     final List<int> byteshex = hex.decode(
-        "28b0ae221c6bb06856b287f60d7ea0d98552ea5a16db16956849aa371db3eb51fd190cce74df356432b410bd64682309d6dedb27c76845daf388557cbac3ca34");
+        '28b0ae221c6bb06856b287f60d7ea0d98552ea5a16db16956849aa371db3eb51fd190cce74df356432b410bd64682309d6dedb27c76845daf388557cbac3ca34');
 
     b.setRange(0, 64, byteshex);
 
     final List<int> pub = List<int>.filled(32, 0);
     final List<int> pubHex = hex.decode(
-        "46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a");
+        '46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a');
 
     pub.setRange(0, 32, pubHex);
 

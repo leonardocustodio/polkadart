@@ -166,28 +166,28 @@ class PublicKey implements DerivableKey {
   /// dleqVerify verifies the corresponding dleq proof.
   bool dleqVerify(merlin.Transcript t, VrfInOut p, VrfProof proof) {
     t
-      ..appendMessage(utf8.encode("proto-name"), utf8.encode("DLEQProof"))
-      ..appendMessage(utf8.encode("vrf:h"), p.input.encode());
+      ..appendMessage(utf8.encode('proto-name'), utf8.encode('DLEQProof'))
+      ..appendMessage(utf8.encode('vrf:h'), p.input.encode());
     if (kusamaVRF == false) {
-      t.appendMessage(utf8.encode("vrf:pk"), key.encode());
+      t.appendMessage(utf8.encode('vrf:pk'), key.encode());
     }
 
     // R = proof.c*pk + proof.s*g
     final r255.Element R = r255.Element.newElement();
     R.varTimeDoubleScalarBaseMult(proof.c, key, proof.s);
-    t.appendMessage(utf8.encode("vrf:R=g^r"), R.encode());
+    t.appendMessage(utf8.encode('vrf:R=g^r'), R.encode());
 
     // hr = proof.c * p.output + proof.s * p.input
     final hr = r255.Element.newElement()
       ..varTimeMultiScalarMult(
           <r255.Scalar>[proof.c, proof.s], <r255.Element>[p.output, p.input]);
-    t.appendMessage(utf8.encode("vrf:h^r"), hr.encode());
+    t.appendMessage(utf8.encode('vrf:h^r'), hr.encode());
     if (kusamaVRF) {
-      t.appendMessage(utf8.encode("vrf:pk"), key.encode());
+      t.appendMessage(utf8.encode('vrf:pk'), key.encode());
     }
-    t.appendMessage(utf8.encode("vrf:h^sk"), p.output.encode());
+    t.appendMessage(utf8.encode('vrf:h^sk'), p.output.encode());
 
-    final r255.Scalar cexpected = challengeScalar(t, utf8.encode("prove"));
+    final r255.Scalar cexpected = challengeScalar(t, utf8.encode('prove'));
     if (cexpected.equal(proof.c) == 1) {
       return true;
     }
@@ -198,7 +198,7 @@ class PublicKey implements DerivableKey {
   /// vrfHash hashes the transcript to a point.
   r255.Element vrfHash(merlin.Transcript t) {
     final merlin.Transcript mt = transcriptWithMalleabilityAddressed(t, this);
-    final Uint8List hash = mt.extractBytes(utf8.encode("VRFHash"), 64);
+    final Uint8List hash = mt.extractBytes(utf8.encode('VRFHash'), 64);
     final r255.Element point = r255.Element.newElement();
     point.fromUniformBytes(hash);
     return point;

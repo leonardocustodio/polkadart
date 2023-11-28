@@ -38,7 +38,7 @@ class VrfInOut {
 
   void commit(merlin.Transcript t) {
     t
-      ..appendMessage(utf8.encode("vrf-in"), input.encode())
-      ..appendMessage(utf8.encode("vrf-out"), output.encode());
+      ..appendMessage(utf8.encode('vrf-in'), input.encode())
+      ..appendMessage(utf8.encode('vrf-out'), output.encode());
   }
 }
