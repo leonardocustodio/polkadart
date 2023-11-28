@@ -1,10 +1,3 @@
-<!--
----
-title: Getting started
-category: 6554f399f9c12600114b8cb8
----
--->
-
 # **Polkadart**
 
 [![Star on Github](https://img.shields.io/github/stars/leonardocustodio/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/leonardocustodio/polkadart)
