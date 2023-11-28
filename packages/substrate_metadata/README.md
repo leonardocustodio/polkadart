@@ -1,10 +1,3 @@
-<!--
----
-title: Substrate Metadata
-category: 6554f399f9c12600114b8cb8
----
--->
-
 # substrate_metadata
 
 [substrate_metadata](https://www.pub.dev/packages/substrate_metadata) is a flutter and dart library for encoding and decoding chain **metadata**, **constants**, **extrinsics** and **events** of blocks.

@@ -1,3 +1,7 @@
+## 0.2.6
+
+- Fixes issue with subscribeStorage
+
 ## 0.2.5
 
 - Fixes issue with hex signed 2's complement in xxh64 algorithm
