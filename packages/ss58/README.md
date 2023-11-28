@@ -1,10 +1,3 @@
-<!--
----
-title: SS58
-category: 6554f399f9c12600114b8cb8
----
--->
-
 ## SS58
 
 Provides encoding and decoding methods for parsing [substrate](https://docs.substrate.io/fundamentals/accounts-addresses-keys/)
