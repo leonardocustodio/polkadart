@@ -1,3 +1,7 @@
+## 0.2.4
+
+- Added method for getting a storage key
+
 ## 0.2.3
 
 - Bump code_builder min version to 4.8.0 to stop using deprecated APIs
