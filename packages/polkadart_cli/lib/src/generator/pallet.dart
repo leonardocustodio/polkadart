@@ -622,7 +622,7 @@ extension AssignHashedKeyExtension on Expression {
   Expression assignMapPrefix(String storageName, Storage storage) {
     if (storage.hashers.isEmpty) {
       throw Exception(
-        'Bad code generation path; can\'t create keyPrefix method for without hashers.',
+        'Bad code generation path; can\'t create keyPrefix method without hashers.',
       );
     }
 
