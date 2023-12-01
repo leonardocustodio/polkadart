@@ -491,6 +491,27 @@ Class createPalletQueries(
                   .statement)
               ..statements
                   .add(Code('  return hashedKey;')));
+        })))
+        ..methods.addAll(generator.storages
+            // We don't support maps with depth > 2 yet.
+            .where((storage) => storage.hashers.isNotEmpty && storage.hashers.length < 3)
+            .map((storage) => Method((builder) {
+          final storageName = ReCase(storage.name).camelCase;
+          builder
+            ..name = sanitize(storageKeyPrefixMethodName(storage), recase: false)
+            ..docs.addAll(sanitizeDocs(['Returns the storage map key prefix for `$storageName`.']))
+            ..returns = refs.uint8List
+            ..requiredParameters
+                .addAll(storage.hashers.getRange(0, storage.hashers.length - 1).map((hasher) => Parameter((b) => b
+              ..type = hasher.codec.primitive(dirname)
+              ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
+            ..body = Block((b) => b
+              ..statements
+                  .add(declareFinal('hashedKey')
+                  .assignHashedKeyPrefix(storageName, storage)
+                  .statement)
+              ..statements
+                  .add(Code('  return hashedKey;')));
         })));
     });
 
@@ -580,6 +601,11 @@ String storageKeyMethodName(Storage storage) {
   return '${storage.name}Key';
 }
 
+/// Name of the generated method returning the key prefix of a storage.
+String storageKeyPrefixMethodName(Storage storage) {
+  return '${storage.name}KeyPrefix';
+}
+
 extension AssignHashedKeyExtension on Expression {
   Expression assignHashedKey(String storageName, Storage storage) {
     return assign(refer('_$storageName')
@@ -587,6 +613,27 @@ extension AssignHashedKeyExtension on Expression {
         ? 'hashedKey'
         : 'hashedKeyFor')
         .call(storage.hashers.map((hasher) => refer(
+        'key${storage.hashers.indexOf(hasher) + 1}'))));
+  }
+  Expression assignHashedKeyPrefix(String storageName, Storage storage) {
+    if (storage.hashers.isEmpty) {
+      throw Exception(
+        'Bad code generation path; can\'t create keyPrefix method for without hashers.',
+      );
+    }
+
+    if (storage.hashers.length > 2) {
+      throw Exception(
+        'Bad code generation path; keyPrefix method for maps with depth > 2 are not supported yet.',
+      );
+    }
+
+    return assign(refer('_$storageName')
+        .property('mapPrefix')
+        .call(storage.hashers
+        // Checked above that hasher is not empty.
+        .getRange(0, storage.hashers.length - 1)
+        .map((hasher) => refer(
         'key${storage.hashers.indexOf(hasher) + 1}'))));
   }
 }

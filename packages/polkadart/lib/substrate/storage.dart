@@ -115,15 +115,25 @@ class StorageMap<K, V> {
 
   Uint8List hashedKeyFor(K key) {
     final Uint8List hash = Uint8List(32 + hasher.size(key));
-    Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(prefix)),
-        output: hash.buffer.asUint8List(hash.offsetInBytes, 16));
-    Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(storage)),
-        output: hash.buffer.asUint8List(hash.offsetInBytes + 16, 16));
+    _hashPrefixTo(output: hash);
     hasher.hashTo(
         key: key, output: hash.buffer.asUint8List(hash.offsetInBytes + 32));
     return hash;
+  }
+
+  Uint8List mapPrefix() {
+    final Uint8List hash = Uint8List(32);
+    _hashPrefixTo(output: hash);
+    return hash;
+  }
+
+  void _hashPrefixTo({required Uint8List output}) {
+    Hasher.twoxx128.hashTo(
+        data: Uint8List.fromList(utf8.encode(prefix)),
+        output: output.buffer.asUint8List(output.offsetInBytes, 16));
+    Hasher.twoxx128.hashTo(
+        data: Uint8List.fromList(utf8.encode(storage)),
+        output: output.buffer.asUint8List(output.offsetInBytes + 16, 16));
   }
 
   V decodeValue(Uint8List buffer) {
@@ -147,21 +157,30 @@ class StorageDoubleMap<K1, K2, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2) {
-    final Uint8List hash =
-        Uint8List(32 + hasher1.size(key1) + hasher2.size(key2));
-    Hasher.twoxx128.hashTo(
-      data: Uint8List.fromList(utf8.encode(prefix)),
-      output: hash.buffer.asUint8List(hash.offsetInBytes, 16),
-    );
-    Hasher.twoxx128.hashTo(
-      data: Uint8List.fromList(utf8.encode(storage)),
-      output: hash.buffer.asUint8List(hash.offsetInBytes + 16, 16),
-    );
-    int cursor = hash.offsetInBytes + 32;
-    hasher1.hashTo(key: key1, output: hash.buffer.asUint8List(cursor));
-    cursor += hasher1.size(key1);
+    final Uint8List hash = Uint8List(32 + hasher1.size(key1) + hasher2.size(key2));
+    _hashPrefixTo(key1, output: hash);
+
+    final cursor = hash.offsetInBytes + hasher1.size(key1);
     hasher2.hashTo(key: key2, output: hash.buffer.asUint8List(cursor));
     return hash;
+  }
+
+  Uint8List mapPrefix(K1 key1) {
+    final Uint8List hash = Uint8List(32 + hasher1.size(key1));
+    _hashPrefixTo(key1, output: hash);
+    return hash;
+  }
+
+  void _hashPrefixTo(K1 key1, {required Uint8List output}) {
+    Hasher.twoxx128.hashTo(
+        data: Uint8List.fromList(utf8.encode(prefix)),
+        output: output.buffer.asUint8List(output.offsetInBytes, 16));
+    Hasher.twoxx128.hashTo(
+        data: Uint8List.fromList(utf8.encode(storage)),
+        output: output.buffer.asUint8List(output.offsetInBytes + 16, 16));
+
+    final int cursor = output.offsetInBytes + 32;
+    hasher1.hashTo(key: key1, output: output.buffer.asUint8List(cursor));
   }
 
   V decodeValue(Uint8List buffer) {
