@@ -477,7 +477,7 @@ Class createPalletQueries(
         ..methods.addAll(generator.storages.map((storage) => Method((builder) {
           final storageName = ReCase(storage.name).camelCase;
           builder
-            ..name = sanitize(storageKeyMethodName(storage), recase: false)
+            ..name = sanitize(storage.keyMethodName(), recase: false)
             ..docs.addAll(sanitizeDocs(['Returns the storage key for `$storageName`.']))
             ..returns = refs.uint8List
             ..requiredParameters
@@ -498,7 +498,7 @@ Class createPalletQueries(
             .map((storage) => Method((builder) {
           final storageName = ReCase(storage.name).camelCase;
           builder
-            ..name = sanitize(storageKeyPrefixMethodName(storage), recase: false)
+            ..name = sanitize(storage.mapPrefixMethodName(), recase: false)
             ..docs.addAll(sanitizeDocs(['Returns the storage map key prefix for `$storageName`.']))
             ..returns = refs.uint8List
             ..requiredParameters
@@ -508,7 +508,7 @@ Class createPalletQueries(
             ..body = Block((b) => b
               ..statements
                   .add(declareFinal('hashedKey')
-                  .assignHashedKeyPrefix(storageName, storage)
+                  .assignHashedMapPrefix(storageName, storage)
                   .statement)
               ..statements
                   .add(Code('  return hashedKey;')));
@@ -596,14 +596,17 @@ Class createPalletConstants(
               .code)));
     });
 
-/// Name of the generated method returning the key of a storage.
-String storageKeyMethodName(Storage storage) {
-  return '${storage.name}Key';
-}
+extension MethodNameExtension on Storage {
 
-/// Name of the generated method returning the key prefix of a storage.
-String storageKeyPrefixMethodName(Storage storage) {
-  return '${storage.name}KeyPrefix';
+  /// Name of the generated method returning the key of a storage.
+  String keyMethodName() {
+    return '${name}Key';
+  }
+
+  /// Name of the generated method returning the key prefix of a storage.
+  String mapPrefixMethodName() {
+    return '${name}MapPrefix';
+  }
 }
 
 extension AssignHashedKeyExtension on Expression {
@@ -615,7 +618,8 @@ extension AssignHashedKeyExtension on Expression {
         .call(storage.hashers.map((hasher) => refer(
         'key${storage.hashers.indexOf(hasher) + 1}'))));
   }
-  Expression assignHashedKeyPrefix(String storageName, Storage storage) {
+
+  Expression assignHashedMapPrefix(String storageName, Storage storage) {
     if (storage.hashers.isEmpty) {
       throw Exception(
         'Bad code generation path; can\'t create keyPrefix method for without hashers.',
@@ -629,7 +633,7 @@ extension AssignHashedKeyExtension on Expression {
     }
 
     return assign(refer('_$storageName')
-        .property('mapPrefix')
+        .property('hashedMapPrefix')
         .call(storage.hashers
         // Checked above that hasher is not empty.
         .getRange(0, storage.hashers.length - 1)
