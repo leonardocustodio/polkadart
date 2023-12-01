@@ -160,7 +160,7 @@ class StorageDoubleMap<K1, K2, V> {
     final Uint8List hash = Uint8List(32 + hasher1.size(key1) + hasher2.size(key2));
     _hashPrefixTo(key1, output: hash);
 
-    final cursor = hash.offsetInBytes + hasher1.size(key1);
+    final cursor = hash.offsetInBytes + 32 + hasher1.size(key1);
     hasher2.hashTo(key: key2, output: hash.buffer.asUint8List(cursor));
     return hash;
   }
