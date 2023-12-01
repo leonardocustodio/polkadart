@@ -448,13 +448,9 @@ Class createPalletQueries(
                       ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
                 ..body = Block((b) => b
                   // final hashedKey = _storageName.hashedKeyFor(key1);
-                  ..statements.add(declareFinal('hashedKey')
-                      .assign(refer('_$storageName')
-                          .property(storage.hashers.isEmpty
-                              ? 'hashedKey'
-                              : 'hashedKeyFor')
-                          .call(storage.hashers.map((hasher) => refer(
-                              'key${storage.hashers.indexOf(hasher) + 1}'))))
+                  ..statements
+                      .add(declareFinal('hashedKey')
+                      .assignHashedKey(storageName, storage)
                       .statement)
                   // final bytes = await api.queryStorage([hashedKey]);
                   ..statements.add(declareFinal('bytes')
@@ -489,13 +485,9 @@ Class createPalletQueries(
               ..type = hasher.codec.primitive(dirname)
               ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
             ..body = Block((b) => b
-              ..statements.add(declareFinal('hashedKey')
-                  .assign(refer('_$storageName')
-                  .property(storage.hashers.isEmpty
-                  ? 'hashedKey'
-                  : 'hashedKeyFor')
-                  .call(storage.hashers.map((hasher) => refer(
-                  'key${storage.hashers.indexOf(hasher) + 1}'))))
+              ..statements
+                  .add(declareFinal('hashedKey')
+                  .assignHashedKey(storageName, storage)
                   .statement)
               ..statements
                   .add(Code('  return hashedKey;')));
@@ -587,3 +579,16 @@ Class createPalletConstants(
 String storageKeyMethodName(Storage storage) {
   return '${storage.name}Key';
 }
+
+extension AssignHashedKeyExtension on Expression {
+  Expression assignHashedKey(String storageName, Storage storage) {
+    return assign(refer('_$storageName')
+        .property(storage.hashers.isEmpty
+        ? 'hashedKey'
+        : 'hashedKeyFor')
+        .call(storage.hashers.map((hasher) => refer(
+        'key${storage.hashers.indexOf(hasher) + 1}'))));
+  }
+}
+
+
