@@ -508,7 +508,7 @@ Class createPalletQueries(
             ..body = Block((b) => b
               ..statements
                   .add(declareFinal('hashedKey')
-                  .assignHashedMapPrefix(storageName, storage)
+                  .assignMapPrefix(storageName, storage)
                   .statement)
               ..statements
                   .add(Code('  return hashedKey;')));
@@ -619,7 +619,7 @@ extension AssignHashedKeyExtension on Expression {
         'key${storage.hashers.indexOf(hasher) + 1}'))));
   }
 
-  Expression assignHashedMapPrefix(String storageName, Storage storage) {
+  Expression assignMapPrefix(String storageName, Storage storage) {
     if (storage.hashers.isEmpty) {
       throw Exception(
         'Bad code generation path; can\'t create keyPrefix method for without hashers.',
@@ -633,7 +633,7 @@ extension AssignHashedKeyExtension on Expression {
     }
 
     return assign(refer('_$storageName')
-        .property('hashedMapPrefix')
+        .property('mapPrefix')
         .call(storage.hashers
         // Checked above that hasher is not empty.
         .getRange(0, storage.hashers.length - 1)

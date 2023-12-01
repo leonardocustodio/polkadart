@@ -165,7 +165,7 @@ class StorageDoubleMap<K1, K2, V> {
     return hash;
   }
 
-  Uint8List hashedMapPrefix(K1 key1) {
+  Uint8List mapPrefix(K1 key1) {
     final Uint8List hash = Uint8List(32 + hasher1.size(key1));
     _hashPrefixTo(key1, output: hash);
     return hash;
