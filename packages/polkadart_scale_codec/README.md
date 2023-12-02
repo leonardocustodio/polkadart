@@ -1,10 +1,3 @@
-<!--
----
-title: Polkadart Scale Codec
-category: 6554f399f9c12600114b8cb8
----
--->
-
 # polkadart_scale_codec
 
 [polkadart_scale_codec](https://www.pub.dev/packages/polkadart_scale_codec) is a flutter and dart library for encoding and decoding types supported by **polkadot**.
