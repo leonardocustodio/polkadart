@@ -4,7 +4,7 @@ part of sr25519;
 /// as well as chain code
 class ExtendedKey {
   late final DerivableKey key;
-  final List<int> chaincode = List<int>.filled(32, 0);
+  final List<int> chaincode = List<int>.filled(32, 0, growable: false);
 
   ExtendedKey(DerivableKey k, List<int> cc) {
     key = k;

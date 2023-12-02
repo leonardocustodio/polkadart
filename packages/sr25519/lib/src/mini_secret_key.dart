@@ -1,10 +1,14 @@
 part of sr25519;
 
 class MiniSecretKey implements DerivableKey {
-  final List<int> key = List<int>.filled(32, 0);
+  final List<int> key = List<int>.filled(32, 0, growable: false);
 
-  MiniSecretKey.fromRawKey(List<int> key) {
-    this.key.setRange(0, 32, key);
+  MiniSecretKey();
+
+  MiniSecretKey.fromRawKey([List<int>? key]) {
+    if (key != null) {
+      this.key.setRange(0, 32, key);
+    }
   }
 
   /// newMiniSecretKey derives a mini secret key from a seed
@@ -54,9 +58,9 @@ class MiniSecretKey implements DerivableKey {
     scalar.fromUniformBytes(scalarBytes);
     final nonce = t.extractBytes(utf8.encode('no'), 32);
 
-    final List<int> key32 = List<int>.filled(32, 0);
+    final List<int> key32 = List<int>.filled(32, 0, growable: false);
     key32.setAll(0, scalar.encode());
-    final List<int> nonce32 = List<int>.filled(32, 0);
+    final List<int> nonce32 = List<int>.filled(32, 0, growable: false);
     nonce32.setAll(0, nonce);
 
     return SecretKey.from(key32, nonce32);

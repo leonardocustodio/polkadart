@@ -1,6 +1,6 @@
 part of sr25519;
 
-final List<int> zeroList = List<int>.filled(32, 0);
+final List<int> zeroList = List<int>.filled(32, 0, growable: false);
 
 final publicKeyAtInfinity = r255.Element.newElement()
   ..scalarBaseMult(r255.Scalar());

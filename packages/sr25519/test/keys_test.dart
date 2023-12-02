@@ -43,7 +43,7 @@ void main() {
 
   // test cases from: https://github.com/Warchant/sr25519-crust/blob/master/test/keypair_from_seed.cpp
   test('Test MiniSecret Key_ExpandEd25519', () {
-    final msc = MiniSecretKey.fromRawKey(List<int>.filled(32, 0));
+    final msc = MiniSecretKey();
 
     final SecretKey sc = msc.expandEd25519();
 
@@ -219,7 +219,7 @@ void main() {
             '46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a'),
         returnsNormally);
 
-    final List<int> bytes = List<int>.filled(32, 0);
+    final List<int> bytes = List<int>.filled(32, 0, growable: false);
     bytes.setRange(0, 32, pubBytes);
 
     final PublicKey pub = PublicKey();
@@ -289,13 +289,13 @@ void main() {
 
   test('Test New Secret Key From Ed25519Bytes', () {
     // test vectors from https://github.com/w3f/schnorrkel/blob/ab3e3d609cd8b9eefbe0333066f698c40fd09582/src/keys.rs#L504-L507
-    final List<int> b = List<int>.filled(64, 0);
+    final List<int> b = List<int>.filled(64, 0, growable: false);
     final List<int> byteshex = hex.decode(
         '28b0ae221c6bb06856b287f60d7ea0d98552ea5a16db16956849aa371db3eb51fd190cce74df356432b410bd64682309d6dedb27c76845daf388557cbac3ca34');
 
     b.setRange(0, 64, byteshex);
 
-    final List<int> pub = List<int>.filled(32, 0);
+    final List<int> pub = List<int>.filled(32, 0, growable: false);
     final List<int> pubHex = hex.decode(
         '46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a');
 

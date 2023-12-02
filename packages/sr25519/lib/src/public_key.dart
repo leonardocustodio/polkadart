@@ -2,7 +2,7 @@ part of sr25519;
 
 class PublicKey implements DerivableKey {
   final r255.Element key = r255.Element.newElement();
-  final List<int> compressedKey = List<int>.filled(32, 0);
+  final List<int> compressedKey = List<int>.filled(32, 0, growable: false);
 
   PublicKey();
 
@@ -54,7 +54,7 @@ class PublicKey implements DerivableKey {
       return List<int>.from(compressedKey);
     }
     final b = key.encode();
-    final enc = List<int>.filled(32, 0);
+    final enc = List<int>.filled(32, 0, growable: false);
     enc.setAll(0, b);
     compressedKey.setAll(0, enc);
     return enc;

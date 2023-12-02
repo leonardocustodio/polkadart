@@ -15,7 +15,7 @@ class Sr25519 {
   ///
   /// Example:
   /// ```dart
-  /// final keyPair = // your keypair
+  /// final keyPair = Sr25519.generateKeyPair();
   /// final secretKey = keyPair.secretKey;
   /// final msg = utf8.encode('hello');
   /// final transcript = Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot'));
@@ -30,7 +30,7 @@ class Sr25519 {
   ///
   /// Example:
   /// ```dart
-  /// final keyPair = // your keypair
+  /// final keyPair = Sr25519.generateKeyPair();
   /// final publicKey = keyPair.publicKey;
   ///
   /// final signature = // your signature from signing / signer
@@ -46,5 +46,15 @@ class Sr25519 {
   static (bool, Exception?) verify(
       PublicKey publicKey, merlin.Transcript transcript, Signature sig) {
     return publicKey.verify(sig, transcript);
+  }
+
+  /// generateKeyPair returns a new random keypair
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyPair = Sr25519.generateKeyPair();
+  /// ```
+  static KeyPair generateKeyPair() {
+    return KeyPair.generateKeypair();
   }
 }
