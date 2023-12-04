@@ -18,12 +18,12 @@ void main() {
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
-      keyPairMemonic = await KeyPair.fromMnemonic(mnemonic);
-      keyPair = KeyPair.fromSeed(seed);
+      keyPairMemonic = await KeyPair.ed25519.fromMnemonic(mnemonic);
+      keyPair = KeyPair.ed25519.fromSeed(seed);
     });
 
     test('fromSeed', () {
-      final bytes = keyPair.publicKey.bytes;
+      final bytes = keyPair.bytes;
       final expectedBytes = [
         215,
         90,

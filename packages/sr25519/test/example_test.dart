@@ -24,4 +24,18 @@ void main() {
 
     expect(ok, true);
   });
+
+  test('Example Test2', () {
+    final msg = utf8.encode('hello friends');
+
+    final keypair = Sr25519.generateKeyPair();
+
+    final (priv, pub) = (keypair.secretKey, keypair.publicKey);
+
+    final Signature sig = Sr25519.sign(priv, msg);
+
+    final (ok, _) = Sr25519.verify(pub, sig, msg);
+
+    expect(ok, true);
+  });
 }

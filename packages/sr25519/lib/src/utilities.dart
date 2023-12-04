@@ -6,9 +6,9 @@ final publicKeyAtInfinity = r255.Element.newElement()
   ..scalarBaseMult(r255.Scalar());
 
 /// NewRandomScalar returns a random ristretto scalar
-r255.Scalar newRandomScalar() {
+r255.Scalar newRandomScalar([Random? random]) {
   final List<int> s =
-      List<int>.generate(64, (_) => Random.secure().nextInt(256));
+      List<int>.generate(64, (_) => (random ?? Random.secure()).nextInt(256));
 
   final ss = r255.Scalar();
   ss.fromUniformBytes(s);
@@ -39,9 +39,9 @@ List<int> divideScalarByCofactor(List<int> s) {
 }
 
 /// NewRandomElement returns a random ristretto element
-r255.Element newRandomElement() {
+r255.Element newRandomElement([Random? random]) {
   //s := [64]byte{}
-  final s = List.generate(64, (_) => Random.secure().nextInt(256));
+  final s = List.generate(64, (_) => (random ?? Random.secure()).nextInt(256));
   final e = r255.Element.newElement()..fromUniformBytes(Uint8List.fromList(s));
   return e;
 }

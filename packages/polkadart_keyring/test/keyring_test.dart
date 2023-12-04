@@ -21,13 +21,14 @@ void main() {
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
-      keyPairMemonic = await KeyPair.fromMnemonic(mnemonic);
-      keyPair1 = KeyPair.fromSeed(seedOne);
-      keyPair2 = KeyPair.fromSeed(seedTwo);
+      keyPairMemonic = await KeyPair.ed25519.fromMnemonic(mnemonic);
+      keyPair1 = KeyPair.ed25519.fromSeed(seedOne);
+      keyPair2 = KeyPair.ed25519.fromSeed(seedTwo);
     });
 
     test('Creating KeyPairs from Mnemonic', () async {
-      final keyPair = await keyring.createKeyPairFromMnemonic(mnemonic);
+      final keyPair = await keyring.createKeyPairFromMnemonic(
+          mnemonic, KeyPairType.ed25519);
       expect(keyPair.address, equals(keyPairMemonic.address));
     });
 
@@ -53,7 +54,7 @@ void main() {
     });
 
     test('Retrieving KeyPairs by PublicKey', () {
-      final publicKey1 = keyPair1.publicKey.bytes;
+      final publicKey1 = keyPair1.bytes;
 
       // Add keyPair1 to key
       keyring.add(keyPair1);
@@ -81,7 +82,7 @@ void main() {
 
     test('Encoding and Decoding Addresses', () {
       final address = keyPair1.address;
-      final publicKey = keyPair1.publicKey.bytes;
+      final publicKey = keyPair1.bytes;
 
       // Encode the public key to an address
       final encodedAddress = keyring.encodeAddress(publicKey);
@@ -112,12 +113,8 @@ void main() {
         ..add(keyPair2);
 
       // Check that the public keys are correct
-      expect(
-          keyring.publicKeys,
-          equals([
-            keyPair1.publicKey.bytes.toList(),
-            keyPair2.publicKey.bytes.toList()
-          ]));
+      expect(keyring.publicKeys,
+          equals([keyPair1.bytes.toList(), keyPair2.bytes.toList()]));
     });
 
     test('Getting All Addresses', () {
@@ -157,7 +154,7 @@ void main() {
     test('Signing and Verifying', () {
       keyring.add(keyPair2);
 
-      final kp = keyring.getByPublicKey(keyPair2.publicKey.bytes);
+      final kp = keyring.getByPublicKey(keyPair2.bytes);
 
       final signature = kp.sign(message);
 

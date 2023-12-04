@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:convert/convert.dart';
@@ -93,7 +94,7 @@ void main() {
     late Signature signature;
     expect(() => signature = private.sign(transcript), returnsNormally);
 
-    final List<int> encoded = signature.encode();
+    final Uint8List encoded = signature.encode();
 
     late Signature result;
     expect(() => result = Signature.fromBytes(encoded), returnsNormally);
@@ -162,8 +163,8 @@ void main() {
 
     late bool verified;
     expect(
-        () => verified =
-            pub.verifySimplePreAuditDeprecated('substrate', message, sig),
+        () => verified = pub.verifySimplePreAuditDeprecated(
+            'substrate', message, Uint8List.fromList(sig)),
         returnsNormally);
     expect(verified, true);
   });

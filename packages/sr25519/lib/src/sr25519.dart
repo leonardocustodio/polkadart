@@ -21,8 +21,8 @@ class Sr25519 {
   /// final transcript = Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot'));
   /// final sig = Sr25519.sign(secretKey, transcript, msg);
   /// ```
-  static Signature sign(
-      SecretKey secretKey, merlin.Transcript transcript, List<int> msg) {
+  static Signature sign(SecretKey secretKey, List<int> msg) {
+    final transcript = newSigningContext(utf8.encode('substrate'), msg);
     return secretKey.sign(transcript);
   }
 
@@ -44,7 +44,8 @@ class Sr25519 {
   ///
   /// ```
   static (bool, Exception?) verify(
-      PublicKey publicKey, merlin.Transcript transcript, Signature sig) {
+      PublicKey publicKey, Signature sig, Uint8List msg) {
+    final transcript = newSigningContext(utf8.encode('substrate'), msg);
     return publicKey.verify(sig, transcript);
   }
 
@@ -54,7 +55,7 @@ class Sr25519 {
   /// ```dart
   /// final keyPair = Sr25519.generateKeyPair();
   /// ```
-  static KeyPair generateKeyPair() {
+  static KeyPair generateKeyPair([Random? random]) {
     return KeyPair.generateKeypair();
   }
 }

@@ -7,9 +7,9 @@ class KeyPair {
   const KeyPair._(this.publicKey, this.secretKey);
 
   /// GenerateKeypair generates a new schnorrkel secret key and public key
-  factory KeyPair.generateKeypair() {
+  factory KeyPair.generateKeypair([Random? random]) {
     // decodes priv bytes as little-endian
-    final msc = MiniSecretKey.generateMiniSecretKey();
+    final msc = MiniSecretKey.generateMiniSecretKey(random);
     return KeyPair._(msc.public(), msc.expandEd25519());
   }
 

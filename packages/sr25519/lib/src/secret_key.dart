@@ -65,7 +65,7 @@ class SecretKey implements DerivableKey {
 
   /// deriveKey derives a new secret key and chain code from an existing secret key and chain code
   @override
-  ExtendedKey deriveKey(merlin.Transcript t, List<int> cc) {
+  ExtendedKey deriveKey(merlin.Transcript t, List<int> cc, [Random? random]) {
     final pub = public();
 
     final (sc, dcc) = pub.deriveScalarAndChaincode(t, cc);
@@ -73,7 +73,7 @@ class SecretKey implements DerivableKey {
     // todo: need transcript RNG to match rust-schnorrkel
     // see: https://github.com/w3f/schnorrkel/blob/798ab3e0813aa478b520c5cf6dc6e02fd4e07f0a/src/derive.rs#L186
     final List<int> nonce =
-        List<int>.generate(32, (_) => Random.secure().nextInt(256));
+        List<int>.generate(32, (_) => (random ?? Random.secure()).nextInt(256));
 
     final dsk = scalarFromBytes(key);
 

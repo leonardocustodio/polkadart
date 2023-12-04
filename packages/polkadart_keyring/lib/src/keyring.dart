@@ -29,9 +29,15 @@ class Keyring {
   /// final mnemonic = "your mnemonic phrase";
   /// final keyPair = await keyring.createKeyPairFromMnemonic(mnemonic, addToPairs: true);
   /// ```
-  Future<KeyPair> createKeyPairFromMnemonic(String mnemonic,
+  Future<KeyPair> createKeyPairFromMnemonic(String mnemonic, KeyPairType type,
       {bool addToPairs = false}) async {
-    final pair = await KeyPair.fromMnemonic(mnemonic);
+    late KeyPair pair;
+
+    if (type == KeyPairType.ed25519) {
+      pair = await KeyPair.ed25519.fromMnemonic(mnemonic);
+    } else {
+      pair = await KeyPair.sr25519.fromMnemonic(mnemonic);
+    }
     if (addToPairs) {
       pairs.add(pair);
     }
@@ -177,9 +183,7 @@ class Keyring {
   /// final publicKeys = keyring.publicKeys;
   /// ```
   List<List<int>> get publicKeys {
-    return pairs.all
-        .map((pair) => List<int>.from(pair.publicKey.bytes))
-        .toList();
+    return pairs.all.map((pair) => List<int>.from(pair.bytes)).toList();
   }
 
   /// Get all addresses in the keyring.

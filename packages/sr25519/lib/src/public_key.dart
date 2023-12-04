@@ -120,7 +120,7 @@ class PublicKey implements DerivableKey {
   }
 
   bool verifySimplePreAuditDeprecated(
-      String context, List<int> msg, List<int> sigature) {
+      String context, List<int> msg, Uint8List sigature) {
     merlin.Transcript t = Sr25519.newSigningContext(utf8.encode(context), msg);
 
     late final Signature signature;

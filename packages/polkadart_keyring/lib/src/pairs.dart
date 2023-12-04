@@ -70,7 +70,7 @@ class Pairs {
 
   /// Get a list of all public keys from the collection.
   List<List<int>> get publicKeys {
-    return all.map((pair) => pair.publicKey.bytes).toList();
+    return all.map((pair) => pair.bytes).toList();
   }
 
   /// Get a list of all addresses from the collection.

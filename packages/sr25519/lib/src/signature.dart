@@ -9,7 +9,7 @@ class Signature {
   Signature._();
 
   /// Signature.fromBytes returns a new Signature from the given bytes List<int>
-  factory Signature.fromBytes(List<int> bytes) {
+  factory Signature.fromBytes(Uint8List bytes) {
     if (bytes.length != 64) {
       throw Exception(
           'Invalid bytes. Expected bytes of length 64, got ${bytes.length}');
@@ -29,13 +29,13 @@ class Signature {
     }
 
     final sig = Signature._();
-    sig.decode(sigHex);
+    sig.decode(Uint8List.fromList(sigHex));
     return sig;
   }
 
   /// Decode sets a Signature from bytes
   /// see: https://github.com/w3f/schnorrkel/blob/db61369a6e77f8074eb3247f9040ccde55697f20/src/sign.rs#L100
-  void decode(List<int> bytes) {
+  void decode(Uint8List bytes) {
     if (bytes.length != 64) {
       throw Exception('invalid bytes length');
     }
@@ -43,19 +43,19 @@ class Signature {
       throw Exception('signature is not marked as a schnorrkel signature');
     }
 
-    final cp = List<int>.from(bytes, growable: false);
+    final cp = Uint8List.fromList(bytes.toList());
 
     r = r255.Element.newElement();
     r.decode(Uint8List.fromList(cp.sublist(0, 32)));
     cp[63] &= 127;
     s = r255.Scalar();
-    return s.decode(cp.sublist(32, 64));
+    s.decode(cp.sublist(32, 64).toList());
   }
 
   /// Encode turns a signature into a byte array
   /// see: https://github.com/w3f/schnorrkel/blob/db61369a6e77f8074eb3247f9040ccde55697f20/src/sign.rs#L77
-  List<int> encode() {
-    final List<int> out = List<int>.filled(64, 0, growable: false);
+  Uint8List encode() {
+    final Uint8List out = Uint8List(64);
     out
       ..setRange(0, 32, r.encode())
       ..setRange(32, 64, s.encode());
@@ -65,11 +65,11 @@ class Signature {
 
   /// decodeNotDistinguishedFromEd25519 sets a signature from bytes, not checking if the signature
   /// is explicitly marked as a schnorrkel signature
-  factory Signature.decodeNotDistinguishedFromEd25519(List<int> bytes) {
+  factory Signature.decodeNotDistinguishedFromEd25519(Uint8List bytes) {
     if (bytes.length != 64) {
       throw Exception('invalid bytes length');
     }
-    final cp = List<int>.from(bytes, growable: false);
+    final cp = Uint8List.fromList(bytes);
     cp[63] |= 128;
     return Signature._()..decode(cp);
   }

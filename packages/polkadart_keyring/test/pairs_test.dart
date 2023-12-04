@@ -16,8 +16,8 @@ void main() {
       seedTwo = Uint8List.fromList(hex.decode(
           '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
-      keyPair1 = KeyPair.fromSeed(seedOne);
-      keyPair2 = KeyPair.fromSeed(seedTwo);
+      keyPair1 = KeyPair.ed25519.fromSeed(seedOne);
+      keyPair2 = KeyPair.ed25519.fromSeed(seedTwo);
     });
 
     test('Adding and Retrieving KeyPairs', () {
@@ -42,7 +42,7 @@ void main() {
     });
 
     test('Retrieving KeyPairs by PublicKey', () {
-      final publicKey1 = keyPair1.publicKey.bytes;
+      final publicKey1 = keyPair1.bytes;
 
       // Add keyPair1 to pairs
       pairs.add(keyPair1);
@@ -68,11 +68,10 @@ void main() {
       expect(() => pairs.getByAddress(address1), throwsArgumentError);
 
       // Remove keyPair2 by public key
-      pairs.removeByPublicKey(keyPair2.publicKey.bytes);
+      pairs.removeByPublicKey(keyPair2.bytes);
 
       // Check that keyPair2 is removed
-      expect(() => pairs.getByPublicKey(keyPair2.publicKey.bytes),
-          throwsArgumentError);
+      expect(() => pairs.getByPublicKey(keyPair2.bytes), throwsArgumentError);
     });
 
     test('Removing All KeyPairs', () {
@@ -93,8 +92,8 @@ void main() {
       pairs.add(keyPair2);
 
       // Check that public keys are retrieved correctly
-      expect(pairs.publicKeys, contains(keyPair1.publicKey.bytes));
-      expect(pairs.publicKeys, contains(keyPair2.publicKey.bytes));
+      expect(pairs.publicKeys, contains(keyPair1.bytes));
+      expect(pairs.publicKeys, contains(keyPair2.bytes));
 
       // Check that addresses are retrieved correctly
       expect(pairs.addresses, contains(keyPair1.address));

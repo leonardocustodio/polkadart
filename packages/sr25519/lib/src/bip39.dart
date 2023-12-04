@@ -21,8 +21,8 @@ class Bip39 {
   }
 
   /// SeedFromMnemonic returns seed for func MiniSecretKeyFromMnemonic
-  static Future<List<int>> seedFromMnemonic(
-      String mnemonic, String password) async {
+  static Future<List<int>> seedFromMnemonic(String mnemonic,
+      [String? password]) async {
     final pbkdf2 = DartPbkdf2(
       macAlgorithm: Hmac(Sha512()),
       iterations: 2048,
@@ -31,14 +31,14 @@ class Bip39 {
     final entropy = mnemonicToEntropy(mnemonic);
     final seed = await pbkdf2.toSync().deriveKey(
           secretKey: cryptography.SecretKey(entropy),
-          nonce: utf8.encode('mnemonic$password'),
+          nonce: utf8.encode('mnemonic${password ?? ''}'),
         );
     return seed.extractBytes();
   }
 
   /// MiniSecretKeyFromMnemonic returns a go-schnorrkel MiniSecretKey from a bip39 mnemonic
-  static Future<List<int>> miniSecretKeyFromMnemonic(
-      String mnemonic, String password) async {
+  static Future<List<int>> miniSecretKeyFromMnemonic(String mnemonic,
+      [String? password]) async {
     final seed = await seedFromMnemonic(mnemonic, password);
     return seed.sublist(0, 32);
   }
