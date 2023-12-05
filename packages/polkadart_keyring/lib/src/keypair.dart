@@ -8,11 +8,11 @@ part of polkadart_keyring;
 ///
 /// Example usages are provided for each function below.
 abstract class KeyPair {
-  static final ed25519 = Ed25519KeyPair();
-  static final sr25519 = Sr25519KeyPair();
+  static Ed25519KeyPair get ed25519 => Ed25519KeyPair();
+  static Sr25519KeyPair get sr25519 => Sr25519KeyPair();
 
   final KeyPairType keyPairType;
-  late bool _isLocked;
+  bool _isLocked = false;
 
   /// constructor
   KeyPair(this.keyPairType);
@@ -26,7 +26,7 @@ abstract class KeyPair {
   /// Example:
   /// ```dart
   /// final seed = Uint8List(32); // Replace with your actual seed
-  /// final keyPair = KeyPair.fromSeed(seed);
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed);
   /// ```
   KeyPair fromSeed(Uint8List seed);
 
@@ -38,7 +38,7 @@ abstract class KeyPair {
   /// Example:
   /// ```dart
   /// final mnemonic = "your mnemonic phrase"; // Replace with your actual mnemonic
-  /// final keyPair = await KeyPair.fromMnemonic(mnemonic);
+  /// final keyPair = await KeyPair.sr25519.fromMnemonic(mnemonic);
   /// ```
   Future<KeyPair> fromMnemonic(String mnemonic, [String? password]);
 
@@ -48,7 +48,7 @@ abstract class KeyPair {
   ///
   /// Example:
   /// ```dart
-  /// final keyPair = KeyPair.fromSeed(seed); // Replace with your actual seed
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed); // Replace with your actual seed
   /// final message = Uint8List.fromList([1, 2, 3, 4, 5]);
   /// final signature = keyPair.sign(message);
   /// ```
@@ -61,7 +61,7 @@ abstract class KeyPair {
   ///
   /// Example:
   /// ```dart
-  /// final keyPair = KeyPair.fromSeed(seed); // Replace with your actual seed
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed); // Replace with your actual seed
   /// final message = Uint8List.fromList([1, 2, 3, 4, 5]);
   /// final signature = keyPair.sign(message);
   /// final isVerified = keyPair.verify(message, signature);
@@ -76,7 +76,7 @@ abstract class KeyPair {
   /// Example:
   /// ```dart
   /// final seed = Uint8List(32); // Replace with your actual seed
-  /// final keyPair = KeyPair.fromSeed(seed);
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed);
   /// keyPair.lock();
   /// keyPair.sign(message); // Throws an error
   /// keyPair.unlockFromSeed(seed);
@@ -91,7 +91,7 @@ abstract class KeyPair {
   /// Example:
   /// ```dart
   /// final mnemonic = "your mnemonic phrase"; // Replace with your actual mnemonic
-  /// final keyPair = await KeyPair.fromMnemonic(mnemonic);
+  /// final keyPair = await KeyPair.sr25519.fromMnemonic(mnemonic);
   /// keyPair.lock();
   /// keyPair.sign(message); // Throws an error
   /// keyPair.unlockFromMemonic(mnemonic);
@@ -106,7 +106,7 @@ abstract class KeyPair {
   ///
   /// Example:
   /// ```dart
-  /// final keyPair = KeyPair.fromSeed(seed); // Replace with your actual seed
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed); // Replace with your actual seed
   /// print('Substrate Address: ${keyPair.address}');
   /// ```
   String get address;
@@ -117,7 +117,7 @@ abstract class KeyPair {
   ///
   /// Example:
   /// ```dart
-  /// final keyPair = KeyPair.fromSeed(seed);
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed);
   /// keyPair.lock();
   /// ```
   void lock();
@@ -127,9 +127,27 @@ abstract class KeyPair {
   ///
   /// Example:
   /// ```dart
-  /// final keyPair = KeyPair.fromSeed(seed); // Replace with your actual seed
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed); // Replace with your actual seed
   /// keyPair.lock();
   /// print('Is locked: ${keyPair.isLocked}');
   /// ```
   bool get isLocked => _isLocked;
+
+  @override
+  String toString() {
+    return bytes.toString();
+  }
+
+  ///
+  /// Returns `true` if the `KeyPair` matches with the other object.
+  @override
+  bool operator ==(Object other) {
+    return const ListEquality().equals(bytes.toList(growable: false),
+        (other as KeyPair).bytes.toList(growable: false));
+  }
+
+  ///
+  /// Returns the hash code of the `KeyPair`.
+  @override
+  int get hashCode => bytes.hashCode;
 }

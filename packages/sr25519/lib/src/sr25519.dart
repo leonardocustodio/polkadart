@@ -18,8 +18,7 @@ class Sr25519 {
   /// final keyPair = Sr25519.generateKeyPair();
   /// final secretKey = keyPair.secretKey;
   /// final msg = utf8.encode('hello');
-  /// final transcript = Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot'));
-  /// final sig = Sr25519.sign(secretKey, transcript, msg);
+  /// final sig = Sr25519.sign(secretKey, msg);
   /// ```
   static Signature sign(SecretKey secretKey, List<int> msg) {
     final transcript = newSigningContext(utf8.encode('substrate'), msg);
@@ -32,11 +31,10 @@ class Sr25519 {
   /// ```dart
   /// final keyPair = Sr25519.generateKeyPair();
   /// final publicKey = keyPair.publicKey;
-  ///
+  /// final Uint8List message = // your message in Uint8List
   /// final signature = // your signature from signing / signer
-  /// final transcript = Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot'));
   ///
-  /// final (verified, exception) = Sr25519.verify(publicKey, transcript, signature);
+  /// final (verified, exception) = Sr25519.verify(publicKey, signature, message);
   ///
   /// or
   ///

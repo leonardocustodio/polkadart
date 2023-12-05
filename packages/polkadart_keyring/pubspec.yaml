@@ -20,6 +20,7 @@ dependencies:
   sr25519:
     path: ../sr25519
   merlin: ^1.0.3
+  collection: ^1.18.0
 
 dev_dependencies:
   lints: ^2.0.0

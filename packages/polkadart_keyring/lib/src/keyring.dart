@@ -51,7 +51,7 @@ class Keyring {
   /// Example:
   /// ```dart
   /// final keyring = Keyring();
-  /// final keyPair = KeyPair(); // Create or obtain a KeyPair
+  /// final keyPair = KeyPair(); // Create or obtain a KeyPair by KeyPair.ed25519 or KeyPair.sr25519
   /// keyring.add(keyPair);
   /// ```
   void add(KeyPair pair) {
@@ -143,7 +143,7 @@ class Keyring {
   /// final publicKey = keyring.decodeAddress(address);
   /// ```
   Uint8List decodeAddress(String address) {
-    return Uint8List.fromList(Address.decode(address).pubkey.toList());
+    return Uint8List.fromList(Address.decode(address).pubkey.toList(growable: false));
   }
 
   /// Set the SS58 address format used by the keyring.
@@ -183,7 +183,7 @@ class Keyring {
   /// final publicKeys = keyring.publicKeys;
   /// ```
   List<List<int>> get publicKeys {
-    return pairs.all.map((pair) => List<int>.from(pair.bytes)).toList();
+    return pairs.all.map((pair) => pair.bytes.toList(growable: false)).toList(growable: false);
   }
 
   /// Get all addresses in the keyring.
@@ -194,7 +194,7 @@ class Keyring {
   /// final addresses = keyring.addresses;
   /// ```
   List<String> get addresses {
-    return pairs.all.map((pair) => pair.address).toList();
+    return pairs.all.map((pair) => pair.address).toList(growable: false);
   }
 
   /// Remove all key pairs from the keyring.

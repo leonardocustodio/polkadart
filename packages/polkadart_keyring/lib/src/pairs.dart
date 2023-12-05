@@ -14,7 +14,7 @@ class Pairs {
   ///
   /// - [pair]: The key pair to add to the collection.
   void add(KeyPair pair) {
-    _pairs[Address.decode(pair.address).pubkey.toList().toString()] = pair;
+    _pairs[Address.decode(pair.address).pubkey.toList(growable: false).toString()] = pair;
   }
 
   /// Get a [KeyPair] from the collection by its address.
@@ -23,7 +23,7 @@ class Pairs {
   ///
   /// Throws an exception if the key pair associated with the provided [address] is not found.
   KeyPair getByAddress(String address) {
-    return getByPublicKey(Address.decode(address).pubkey.toList());
+    return getByPublicKey(Address.decode(address).pubkey.toList(growable: false));
   }
 
   /// Get a [KeyPair] from the collection by its public key.
@@ -65,16 +65,16 @@ class Pairs {
 
   /// Get all [KeyPair]s in the collection.
   List<KeyPair> get all {
-    return List<KeyPair>.from(_pairs.values.toList());
+    return List<KeyPair>.from(_pairs.values.toList(growable: false));
   }
 
   /// Get a list of all public keys from the collection.
   List<List<int>> get publicKeys {
-    return all.map((pair) => pair.bytes).toList();
+    return all.map((pair) => pair.bytes.toList(growable: false)).toList(growable: false);
   }
 
   /// Get a list of all addresses from the collection.
   List<String> get addresses {
-    return all.map((pair) => pair.address).toList();
+    return all.map((pair) => pair.address).toList(growable: false);
   }
 }

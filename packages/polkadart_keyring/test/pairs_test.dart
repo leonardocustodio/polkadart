@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:collection/collection.dart';
 import 'package:convert/convert.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:test/test.dart';
@@ -91,10 +92,17 @@ void main() {
       pairs.add(keyPair1);
       pairs.add(keyPair2);
 
-      // Check that public keys are retrieved correctly
-      expect(pairs.publicKeys, contains(keyPair1.bytes));
-      expect(pairs.publicKeys, contains(keyPair2.bytes));
+      expect(pairs.publicKeys.length, 2);
 
+      expect(
+          const ListEquality().equals(
+              pairs.publicKeys[0], keyPair1.bytes.toList(growable: false)),
+          true);
+
+      expect(
+          const ListEquality().equals(
+              pairs.publicKeys[1], keyPair2.bytes.toList(growable: false)),
+          true);
       // Check that addresses are retrieved correctly
       expect(pairs.addresses, contains(keyPair1.address));
       expect(pairs.addresses, contains(keyPair2.address));

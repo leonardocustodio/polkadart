@@ -5,7 +5,6 @@ final context = merlin.Transcript('susbtrate');
 class Sr25519KeyPair extends KeyPair {
   late sr25519.PublicKey _publicKey;
   late sr25519.SecretKey _privateKey;
-  bool _locked = false;
 
   Sr25519KeyPair() : super(KeyPairType.sr25519);
 
@@ -19,12 +18,12 @@ class Sr25519KeyPair extends KeyPair {
   @override
   Future<KeyPair> fromMnemonic(String mnemonic, [String? password]) async {
     final seed = await sr25519.Bip39.seedFromMnemonic(mnemonic, password);
-    return KeyPair.sr25519.fromSeed(Uint8List.fromList(seed));
+    return fromSeed(Uint8List.fromList(seed));
   }
 
   @override
   Uint8List sign(Uint8List message) {
-    if (_locked) {
+    if (_isLocked) {
       throw Exception('KeyPair is locked. Unlock it before signing.');
     }
     return sr25519.Sr25519.sign(_privateKey, message).encode();
@@ -61,7 +60,7 @@ class Sr25519KeyPair extends KeyPair {
       throw Exception('Public_Key_Mismatch: Invalid seed for given KeyPair.');
     }
     _privateKey = privateKey;
-    _locked = false;
+    _isLocked = false;
   }
 
   @override
@@ -77,14 +76,11 @@ class Sr25519KeyPair extends KeyPair {
   /// Returns `true` if the `KeyPair` matches with the other object.
   @override
   bool operator ==(Object other) {
-    if (other is KeyPair) {
-      return bytes == other.bytes;
-    }
-    return false;
+    return super == (other);
   }
 
   ///
   /// Returns the hash code of the `KeyPair`.
   @override
-  int get hashCode => bytes.hashCode;
+  int get hashCode => super.hashCode;
 }

@@ -114,7 +114,7 @@ void main() {
 
       // Check that the public keys are correct
       expect(keyring.publicKeys,
-          equals([keyPair1.bytes.toList(), keyPair2.bytes.toList()]));
+          equals([keyPair1.bytes.toList(growable: false), keyPair2.bytes.toList(growable: false)]));
     });
 
     test('Getting All Addresses', () {

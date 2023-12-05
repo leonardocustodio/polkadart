@@ -3,7 +3,6 @@ part of polkadart_keyring;
 class Ed25519KeyPair extends KeyPair {
   late ed.PublicKey _publicKey;
   late ed.PrivateKey _privateKey;
-  bool _locked = false;
 
   Ed25519KeyPair() : super(KeyPairType.ed25519);
 
@@ -18,12 +17,12 @@ class Ed25519KeyPair extends KeyPair {
   Future<KeyPair> fromMnemonic(String mnemonic, [String? password]) async {
     final seed =
         await SubstrateBip39.ed25519.seedFromUri(mnemonic, password: password);
-    return KeyPair.ed25519.fromSeed(Uint8List.fromList(seed));
+    return fromSeed(Uint8List.fromList(seed));
   }
 
   @override
   Uint8List sign(Uint8List message) {
-    if (_locked) {
+    if (_isLocked) {
       throw Exception('KeyPair is locked. Unlock it before signing.');
     }
     return ed.sign(_privateKey, message);
@@ -56,7 +55,7 @@ class Ed25519KeyPair extends KeyPair {
       throw Exception('Public_Key_Mismatch: Invalid seed for given KeyPair.');
     }
     _privateKey = privateKey;
-    _locked = false;
+    _isLocked = false;
   }
 
   @override
@@ -72,14 +71,11 @@ class Ed25519KeyPair extends KeyPair {
   /// Returns `true` if the `KeyPair` matches with the other object.
   @override
   bool operator ==(Object other) {
-    if (other is KeyPair) {
-      return bytes == other.bytes;
-    }
-    return false;
+    return super == (other);
   }
 
   ///
   /// Returns the hash code of the `KeyPair`.
   @override
-  int get hashCode => bytes.hashCode;
+  int get hashCode => super.hashCode;
 }
