@@ -5,7 +5,7 @@ import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Keyring Class: ', () {
+  group('Keyring Class:', () {
     late Keyring keyring;
     late KeyPair keyPair1, keyPair2, keyPairMemonic;
     late Uint8List seedOne, seedTwo, message;
@@ -21,14 +21,14 @@ void main() {
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
-      keyPairMemonic = await KeyPair.ed25519.fromMnemonic(mnemonic);
+      keyPairMemonic = await KeyPair.ed25519.fromUri(mnemonic);
       keyPair1 = KeyPair.ed25519.fromSeed(seedOne);
       keyPair2 = KeyPair.ed25519.fromSeed(seedTwo);
     });
 
     test('Creating KeyPairs from Mnemonic', () async {
-      final keyPair = await keyring.createKeyPairFromMnemonic(
-          mnemonic, KeyPairType.ed25519);
+      final keyPair = await keyring.fromMnemonic(mnemonic,
+          keyPairType: KeyPairType.ed25519);
       expect(keyPair.address, equals(keyPairMemonic.address));
     });
 
@@ -97,14 +97,6 @@ void main() {
       expect(decodedPublicKey, equals(publicKey));
     });
 
-    test('Setting and Getting SS58 Address Format', () {
-      // Set the SS58 address format
-      keyring.ss58Format = 42;
-
-      // Check that the SS58 address format is correct
-      expect(keyring.ss58Format, equals(42));
-    });
-
     test('Getting All Public Keys', () {
       expect(keyring.publicKeys, isEmpty);
 
@@ -113,8 +105,12 @@ void main() {
         ..add(keyPair2);
 
       // Check that the public keys are correct
-      expect(keyring.publicKeys,
-          equals([keyPair1.bytes.toList(growable: false), keyPair2.bytes.toList(growable: false)]));
+      expect(
+          keyring.publicKeys,
+          equals([
+            keyPair1.bytes.toList(growable: false),
+            keyPair2.bytes.toList(growable: false)
+          ]));
     });
 
     test('Getting All Addresses', () {

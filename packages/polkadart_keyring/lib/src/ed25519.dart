@@ -4,6 +4,9 @@ class Ed25519KeyPair extends KeyPair {
   late ed.PublicKey _publicKey;
   late ed.PrivateKey _privateKey;
 
+  @override
+  int ss58Format = 42;
+
   Ed25519KeyPair() : super(KeyPairType.ed25519);
 
   @override
@@ -14,10 +17,15 @@ class Ed25519KeyPair extends KeyPair {
   }
 
   @override
-  Future<KeyPair> fromMnemonic(String mnemonic, [String? password]) async {
+  Future<KeyPair> fromUri(String uri, [String? password]) async {
     final seed =
-        await SubstrateBip39.ed25519.seedFromUri(mnemonic, password: password);
+        await SubstrateBip39.ed25519.seedFromUri(uri, password: password);
     return fromSeed(Uint8List.fromList(seed));
+  }
+
+  @override
+  Future<KeyPair> fromMnemonic(String uri, [String? password]) {
+    return fromUri(uri, password);
   }
 
   @override
@@ -35,7 +43,7 @@ class Ed25519KeyPair extends KeyPair {
 
   @override
   String get address {
-    return Address(prefix: 42, pubkey: bytes).encode();
+    return Address(prefix: ss58Format, pubkey: bytes).encode();
   }
 
   @override
@@ -43,6 +51,11 @@ class Ed25519KeyPair extends KeyPair {
     final seed =
         await SubstrateBip39.ed25519.seedFromUri(mnemonic, password: password);
     _unlock(ed.newKeyFromSeed(Uint8List.fromList(seed)));
+  }
+
+  @override
+  Future<void> unlockFromUri(String uri, [String? password]) async {
+    await unlockFromMemonic(uri, password);
   }
 
   @override
@@ -57,6 +70,9 @@ class Ed25519KeyPair extends KeyPair {
     _privateKey = privateKey;
     _isLocked = false;
   }
+
+  @override
+  ed.PublicKey get publicKey => _publicKey;
 
   @override
   void lock() {

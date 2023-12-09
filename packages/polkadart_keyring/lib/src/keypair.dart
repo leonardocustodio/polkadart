@@ -10,7 +10,7 @@ part of polkadart_keyring;
 abstract class KeyPair {
   static Ed25519KeyPair get ed25519 => Ed25519KeyPair();
   static Sr25519KeyPair get sr25519 => Sr25519KeyPair();
-
+  late int ss58Format;
   final KeyPairType keyPairType;
   bool _isLocked = false;
 
@@ -19,6 +19,7 @@ abstract class KeyPair {
 
   Uint8List get bytes;
 
+  ///
   /// Create a new `KeyPair` from a given seed.
   ///
   /// The [seed] is used to generate both the private and public keys.
@@ -28,8 +29,27 @@ abstract class KeyPair {
   /// final seed = Uint8List(32); // Replace with your actual seed
   /// final keyPair = KeyPair.sr25519.fromSeed(seed);
   /// ```
+  ///
   KeyPair fromSeed(Uint8List seed);
 
+  ///
+  ///
+  /// Generate a `KeyPair` from a uri.
+  ///
+  /// The [uri] is used to derive the seed, which in turn is used to generate
+  /// the private and public keys.
+  ///
+  /// Example:
+  /// ```dart
+  /// final uri = "//Alice"; // Replace with your actual uri
+  /// final keyPair = await KeyPair.sr25519.fromUri(uri);
+  /// ```
+  ///
+  ///
+  Future<KeyPair> fromUri(String uri, [String? password]);
+
+  ///
+  ///
   /// Generate a `KeyPair` from a BIP39 mnemonic.
   ///
   /// The [mnemonic] is used to derive the seed, which in turn is used to generate
@@ -40,8 +60,12 @@ abstract class KeyPair {
   /// final mnemonic = "your mnemonic phrase"; // Replace with your actual mnemonic
   /// final keyPair = await KeyPair.sr25519.fromMnemonic(mnemonic);
   /// ```
-  Future<KeyPair> fromMnemonic(String mnemonic, [String? password]);
+  ///
+  ///
+  Future<KeyPair> fromMnemonic(String uri, [String? password]);
 
+  ///
+  ///
   /// Sign a given message with the private key.
   ///
   /// The [message] is a Uint8List representing the data to be signed.
@@ -52,8 +76,12 @@ abstract class KeyPair {
   /// final message = Uint8List.fromList([1, 2, 3, 4, 5]);
   /// final signature = keyPair.sign(message);
   /// ```
+  ///
+  ///
   Uint8List sign(Uint8List message);
 
+  ///
+  ///
   /// Verify a message's signature using the public key.
   ///
   /// The [message] is the original message data, and the [signature] is the
@@ -67,8 +95,31 @@ abstract class KeyPair {
   /// final isVerified = keyPair.verify(message, signature);
   /// print('Signature Verification: $isVerified');
   /// ```
+  ///
+  ///
   bool verify(Uint8List message, Uint8List signature);
 
+  ///
+  ///
+  /// Unlock a `KeyPair` from a given uri.
+  ///
+  /// This method unlocks the `KeyPair` by adding the private key.
+  ///
+  /// Example:
+  /// ```dart
+  /// final uri = "//Alice"; // Replace with your actual uri
+  /// final keyPair = await KeyPair.sr25519.fromUri(uri);
+  /// keyPair.lock();
+  /// keyPair.sign(message); // Throws an error
+  /// keyPair.unlockFromUri(uri);
+  /// keyPair.sign(message); // Works
+  /// ```
+  ///
+  ///
+  Future<void> unlockFromUri(String uri, [String? password]);
+
+  ///
+  ///
   /// Unlock a `KeyPair` from a given [seed].
   ///
   /// This method unlocks the `KeyPair` by adding the private key.
@@ -82,8 +133,12 @@ abstract class KeyPair {
   /// keyPair.unlockFromSeed(seed);
   /// keyPair.sign(message); // Works
   /// ```
+  ///
+  ///
   void unlockFromSeed(Uint8List seed);
 
+  ///
+  ///
   /// Unlock a `KeyPair` from a given BIP39 mnemonic.
   ///
   /// This method unlocks the `KeyPair` by adding the private key.
@@ -97,8 +152,12 @@ abstract class KeyPair {
   /// keyPair.unlockFromMemonic(mnemonic);
   /// keyPair.sign(message); // Works
   /// ```
+  ///
+  ///
   Future<void> unlockFromMemonic(String mnemonic, [String? password]);
 
+  ///
+  ///
   /// Get the Substrate address encoded in SS58 format.
   ///
   /// This method uses the SS58 package to encode the public key with a default
@@ -109,8 +168,21 @@ abstract class KeyPair {
   /// final keyPair = KeyPair.sr25519.fromSeed(seed); // Replace with your actual seed
   /// print('Substrate Address: ${keyPair.address}');
   /// ```
+  ///
+  ///
   String get address;
 
+  /// Get the public key.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed); // Replace with your actual seed
+  /// print('Public Key: ${keyPair.publicKey}');
+  /// ```
+  dynamic get publicKey;
+
+  ///
+  ///
   /// Add lock functionality to a `KeyPair`.
   ///
   /// This method locks the `KeyPair` by removing the private key.
@@ -120,8 +192,11 @@ abstract class KeyPair {
   /// final keyPair = KeyPair.sr25519.fromSeed(seed);
   /// keyPair.lock();
   /// ```
+  ///
+  ///
   void lock();
 
+  ///
   ///
   /// Returns `true` if the `KeyPair` is locked.
   ///
@@ -131,12 +206,11 @@ abstract class KeyPair {
   /// keyPair.lock();
   /// print('Is locked: ${keyPair.isLocked}');
   /// ```
+  ///
+  ///
   bool get isLocked => _isLocked;
 
-  @override
-  String toString() {
-    return bytes.toString();
-  }
+  String get hexr => hex.encode(bytes);
 
   ///
   /// Returns `true` if the `KeyPair` matches with the other object.

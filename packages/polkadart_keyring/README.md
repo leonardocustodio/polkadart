@@ -21,7 +21,7 @@ You can create a new [KeyPair] from a BIP39 mnemonic and optionally add it to th
 final keyring = Keyring();
 final mnemonic =
     'moral movie very draw assault whisper awful rebuild speed purity repeat card';
-final keyPair = await keyring.createKeyPairFromMnemonic(mnemonic);
+final keyPair = await keyring.fromMnemonic(mnemonic);
 ```
 
 ### Adding and Retrieving KeyPairs

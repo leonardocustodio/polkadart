@@ -9,34 +9,100 @@ part of polkadart_keyring;
 /// Example usages for each function are provided below.
 class Keyring {
   final Pairs pairs;
+  final KeyPairType keyPairType;
 
-  // The default SS58 address format used by the keyring.
-  int _ss58Format = 42;
+  Keyring()
+      : pairs = Pairs(),
+        keyPairType = KeyPairType.ed25519;
 
-  /// Create a new `Keyring` instance.
-  Keyring() : pairs = Pairs();
+  /// private constructor for internal use
+  Keyring._(this.keyPairType) : pairs = Pairs();
+
+  ///
+  /// Create a new `Keyring` instance for ed25519.
+  static get ed25519 => Keyring._(KeyPairType.ed25519);
+
+  ///
+  /// Create a new `Keyring` instance for sr25519.
+  static get sr25519 => Keyring._(KeyPairType.sr25519);
+
+  /// Create a new [KeyPair] from a BIP39 mnemonic and optionally add it to the keyring.
+  ///
+  /// This method generates a key pair from the provided [uri].
+  ///
+  /// - [uri]: The BIP39 mnemonic phrase used to derive the key pair.
+  /// - [addToPairs]: If set to `true`, the key pair will be added to the keyring, defaults to `false`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyring = Keyring();
+  /// // final uri = '//Alice';
+  /// final keyPair = await keyring.fromUri(uri);
+  /// ```
+  Future<KeyPair> fromUri(String uri,
+      {String? password,
+      bool addToPairs = false,
+      KeyPairType? keyPairType}) async {
+    late KeyPair pair;
+
+    switch (keyPairType ?? this.keyPairType) {
+      case KeyPairType.ed25519:
+        pair = await KeyPair.ed25519.fromUri(uri, password);
+        break;
+      default:
+        pair = await KeyPair.sr25519.fromUri(uri, password);
+    }
+
+    if (addToPairs) {
+      pairs.add(pair);
+    }
+    return pair;
+  }
 
   /// Create a new [KeyPair] from a BIP39 mnemonic and optionally add it to the keyring.
   ///
   /// This method generates a key pair from the provided [mnemonic].
   ///
   /// - [mnemonic]: The BIP39 mnemonic phrase used to derive the key pair.
-  /// - [addToPairs]: If set to `true`, the key pair will be added to the keyring.
+  /// - [addToPairs]: If set to `true`, the key pair will be added to the keyring, defaults to `false`.
   ///
   /// Example:
   /// ```dart
   /// final keyring = Keyring();
   /// final mnemonic = "your mnemonic phrase";
-  /// final keyPair = await keyring.createKeyPairFromMnemonic(mnemonic, addToPairs: true);
+  /// final keyPair = await keyring.fromMnemonic(mnemonic);
   /// ```
-  Future<KeyPair> createKeyPairFromMnemonic(String mnemonic, KeyPairType type,
-      {bool addToPairs = false}) async {
+  Future<KeyPair> fromMnemonic(String mnemonic,
+      {String? password,
+      bool addToPairs = false,
+      KeyPairType? keyPairType}) async {
+    return await fromUri(mnemonic,
+        addToPairs: addToPairs, password: password, keyPairType: keyPairType);
+  }
+
+  /// Create a new [KeyPair] from a Uint8List seed and optionally add it to the keyring.
+  ///
+  /// This method generates a key pair from the provided [seed].
+  ///
+  /// - [seed]: Uint8List seed used to derive the key pair.
+  /// - [addToPairs]: If set to `true`, the key pair will be added to the keyring, defaults to `false`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyring = Keyring();
+  /// final seed = your Uint8List seed;
+  /// final keyPair = await keyring.fromSeed(seed);
+  /// ```
+  Future<KeyPair> fromSeed(Uint8List seed,
+      {bool addToPairs = false, KeyPairType? keyPairType}) async {
     late KeyPair pair;
 
-    if (type == KeyPairType.ed25519) {
-      pair = await KeyPair.ed25519.fromMnemonic(mnemonic);
-    } else {
-      pair = await KeyPair.sr25519.fromMnemonic(mnemonic);
+    switch (keyPairType ?? this.keyPairType) {
+      case KeyPairType.ed25519:
+        pair = KeyPair.ed25519.fromSeed(seed);
+        break;
+      default:
+        pair = KeyPair.sr25519.fromSeed(seed);
     }
     if (addToPairs) {
       pairs.add(pair);
@@ -143,36 +209,8 @@ class Keyring {
   /// final publicKey = keyring.decodeAddress(address);
   /// ```
   Uint8List decodeAddress(String address) {
-    return Uint8List.fromList(Address.decode(address).pubkey.toList(growable: false));
-  }
-
-  /// Set the SS58 address format used by the keyring.
-  /// The default value is 42.
-  ///
-  /// - [ss58Format]: The SS58 address format to be used by the keyring.
-  ///
-  /// Example:
-  /// ```dart
-  /// final keyring = Keyring();
-  /// keyring.ss58Format = 42;
-  /// ```
-  set ss58Format(int ss58Format) {
-    if (ss58Format < 0 || ss58Format > 16383) {
-      throw Exception('Invalid SS58 format.');
-    }
-    _ss58Format = ss58Format;
-  }
-
-  /// Get the SS58 address format used by the keyring.
-  /// The default value is 42.
-  ///
-  /// Example:
-  /// ```dart
-  /// final keyring = Keyring();
-  /// final ss58Format = keyring.ss58Format;
-  /// ```
-  int get ss58Format {
-    return _ss58Format;
+    return Uint8List.fromList(
+        Address.decode(address).pubkey.toList(growable: false));
   }
 
   /// Get all public keys in the keyring.
@@ -183,7 +221,9 @@ class Keyring {
   /// final publicKeys = keyring.publicKeys;
   /// ```
   List<List<int>> get publicKeys {
-    return pairs.all.map((pair) => pair.bytes.toList(growable: false)).toList(growable: false);
+    return pairs.all
+        .map((pair) => pair.bytes.toList(growable: false))
+        .toList(growable: false);
   }
 
   /// Get all addresses in the keyring.

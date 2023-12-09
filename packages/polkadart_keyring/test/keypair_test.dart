@@ -1,11 +1,10 @@
 import 'dart:typed_data';
-
 import 'package:convert/convert.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('KeyPair Class', () {
+  group('Ed25519', () {
     late KeyPair keyPair, keyPairMemonic;
     late Uint8List seed;
     late String mnemonic;
@@ -18,7 +17,7 @@ void main() {
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
-      keyPairMemonic = await KeyPair.ed25519.fromMnemonic(mnemonic);
+      keyPairMemonic = await KeyPair.ed25519.fromUri(mnemonic);
       keyPair = KeyPair.ed25519.fromSeed(seed);
     });
 

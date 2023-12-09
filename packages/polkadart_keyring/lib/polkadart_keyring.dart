@@ -2,6 +2,7 @@ library polkadart_keyring;
 
 import 'dart:typed_data';
 import 'package:collection/collection.dart';
+import 'package:convert/convert.dart';
 import 'package:substrate_bip39/substrate_bip39.dart';
 import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 import 'package:ss58/ss58.dart';
@@ -14,3 +15,4 @@ part 'src/pairs.dart';
 part 'src/extensions.dart';
 part 'src/ed25519.dart';
 part 'src/sr25519.dart';
+part 'src/constants.dart';

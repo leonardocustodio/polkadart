@@ -5,10 +5,8 @@ class MiniSecretKey implements DerivableKey {
 
   MiniSecretKey();
 
-  MiniSecretKey.fromRawKey([List<int>? key]) {
-    if (key != null) {
-      this.key.setRange(0, 32, key);
-    }
+  MiniSecretKey.fromRawKey(List<int> key) {
+    this.key.setRange(0, 32, key);
   }
 
   /// newMiniSecretKey derives a mini secret key from a seed
@@ -82,7 +80,7 @@ class MiniSecretKey implements DerivableKey {
     final t = divideScalarByCofactor(sk.key);
 
     sk.key.setAll(0, t);
-    sk.nonce.setAll(0, h.sublist(32));
+    sk.nonce.setAll(0, h.sublist(32, 64));
     return sk;
   }
 

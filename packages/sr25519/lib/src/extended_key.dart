@@ -1,7 +1,7 @@
 part of sr25519;
 
-/// ExtendedKey consists of a DerivableKey which can be a schnorrkel public or private key
-/// as well as chain code
+///
+/// ExtendedKey consists of a DerivableKey which can be a schnorrkel public or private key as well as chain code
 class ExtendedKey {
   late final DerivableKey key;
   final List<int> chaincode = List<int>.filled(32, 0, growable: false);
@@ -11,8 +11,8 @@ class ExtendedKey {
     chaincode.setAll(0, cc);
   }
 
-  /// secret returns the SecretKey underlying the ExtendedKey
-  /// if it's not a secret key, it returns an error
+  ///
+  /// secret returns the SecretKey underlying the ExtendedKey if it's not a secret key, it returns an error
   SecretKey secret() {
     try {
       return key as SecretKey;
@@ -21,6 +21,7 @@ class ExtendedKey {
     }
   }
 
+  ///
   /// public returns the PublicKey underlying the ExtendedKey
   PublicKey public() {
     try {
@@ -34,13 +35,14 @@ class ExtendedKey {
     }
   }
 
+  ///
   /// deriveKey derives an extended key from an extended key
   ExtendedKey deriveKey(merlin.Transcript t) {
     return key.deriveKey(t, chaincode);
   }
 
-  /// hardDeriveMiniSecretKey implements BIP-32 like 'hard' derivation of a mini
-  /// secret from an extended key's secret key
+  ///
+  /// hardDeriveMiniSecretKey implements BIP-32 like 'hard' derivation of a mini secret from an extended key's secret key
   ExtendedKey hardDeriveMiniSecretKey(List<int> i) {
     final sk = secret();
 
@@ -48,8 +50,8 @@ class ExtendedKey {
     return ExtendedKey(msk, chainCode);
   }
 
-  /// deriveKeyHard derives a Hard subkey identified by the byte array i and chain
-  /// code
+  ///
+  /// deriveKeyHard derives a Hard subkey identified by the byte array i and chain code
   factory ExtendedKey.deriveKeyHard(
       DerivableKey key, List<int> i, List<int> cc) {
     if (key is SecretKey) {
@@ -60,13 +62,14 @@ class ExtendedKey {
         'cannot derive hard key type, DerivableKey must be of type SecretKey');
   }
 
-  /// derviveKeySoft is an alias for DervieKeySimple() used to derive a Soft subkey
-  /// identified by the byte array i and chain code
+  ///
+  /// derviveKeySoft is an alias for DervieKeySimple() used to derive a Soft subkey identified by the byte array i and chain code
   factory ExtendedKey.deriveKeySoft(
       DerivableKey key, List<int> i, List<int> cc) {
     return ExtendedKey.deriveKeySimple(key, i, cc);
   }
 
+  ///
   /// deriveKeySimple derives a Soft subkey identified by byte array i and chain code.
   factory ExtendedKey.deriveKeySimple(
       DerivableKey key, List<int> i, List<int> cc) {
