@@ -479,27 +479,27 @@ Class createPalletQueries(
                       storage.isNullable ? Code('') : Code('/* Default */')));
             })))
         ..methods.addAll(generator.storages.map((storage) => Method((builder) {
-          final storageName = ReCase(storage.name).camelCase;
-          builder
-            ..name = sanitize(storageKeyMethodName(storage), recase: false)
-            ..docs.addAll(sanitizeDocs(['Returns the storage key for `$storageName`.']))
-            ..returns = refs.uint8List
-            ..requiredParameters
-                .addAll(storage.hashers.map((hasher) => Parameter((b) => b
-              ..type = hasher.codec.primitive(dirname)
-              ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
-            ..body = Block((b) => b
-              ..statements.add(declareFinal('hashedKey')
-                  .assign(refer('_$storageName')
-                  .property(storage.hashers.isEmpty
-                  ? 'hashedKey'
-                  : 'hashedKeyFor')
-                  .call(storage.hashers.map((hasher) => refer(
-                  'key${storage.hashers.indexOf(hasher) + 1}'))))
-                  .statement)
-              ..statements
-                  .add(Code('  return hashedKey;')));
-        })));
+              final storageName = ReCase(storage.name).camelCase;
+              builder
+                ..name = sanitize(storageKeyMethodName(storage), recase: false)
+                ..docs.addAll(sanitizeDocs(
+                    ['Returns the storage key for `$storageName`.']))
+                ..returns = refs.uint8List
+                ..requiredParameters
+                    .addAll(storage.hashers.map((hasher) => Parameter((b) => b
+                      ..type = hasher.codec.primitive(dirname)
+                      ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
+                ..body = Block((b) => b
+                  ..statements.add(declareFinal('hashedKey')
+                      .assign(refer('_$storageName')
+                          .property(storage.hashers.isEmpty
+                              ? 'hashedKey'
+                              : 'hashedKeyFor')
+                          .call(storage.hashers.map((hasher) => refer(
+                              'key${storage.hashers.indexOf(hasher) + 1}'))))
+                      .statement)
+                  ..statements.add(Code('  return hashedKey;')));
+            })));
     });
 
 Class createPalletTxs(

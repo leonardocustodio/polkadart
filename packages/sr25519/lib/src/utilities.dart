@@ -39,14 +39,14 @@ List<int> divideScalarByCofactor(List<int> scalar) {
 }
 
 List<int> multiplyScalarBytesByCofactor(List<int> scalar) {
-    int high = 0;
-    for (int i = 0; i < scalar.length; i++) {
-        int r = scalar[i] & 224; // carry bits
-        scalar[i] <<= 3; // multiply by 8
-        scalar[i] += high;
-        high = r >> 5;
-    }
-    return scalar;
+  int high = 0;
+  for (int i = 0; i < scalar.length; i++) {
+    int r = scalar[i] & 224; // carry bits
+    scalar[i] <<= 3; // multiply by 8
+    scalar[i] += high;
+    high = r >> 5;
+  }
+  return scalar;
 }
 
 /// NewRandomElement returns a random ristretto element

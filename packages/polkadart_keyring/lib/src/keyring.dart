@@ -1,8 +1,8 @@
 part of polkadart_keyring;
 
-/// A manager for ed25519-based key pairs in the keyring.
+/// A manager for sr25519-based key pairs in the keyring.
 ///
-/// The `Keyring` class provides a convenient interface to manage ed25519-based key pairs.
+/// The `Keyring` class provides a convenient interface to manage sr25519-based key pairs.
 /// It allows you to create key pairs from BIP39 mnemonics, add them to the keyring,
 /// retrieve key pairs by address or public key, and perform various operations on them.
 ///
@@ -13,7 +13,7 @@ class Keyring {
 
   Keyring()
       : pairs = Pairs(),
-        keyPairType = KeyPairType.ed25519;
+        keyPairType = KeyPairType.sr25519;
 
   /// private constructor for internal use
   Keyring._(this.keyPairType) : pairs = Pairs();
