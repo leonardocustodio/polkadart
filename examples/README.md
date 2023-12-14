@@ -12,6 +12,7 @@ polkadart:
 Feel free to change to whatever network you want. After that you can generate the classes by running:
 `dart run polkadart_cli:generate -v`
 
-Finally to run this example you can do:
-`dart run bin/demo.dart`
+Finally to run an example you can do:
+* `dart run bin/extrinsic_demo.dart`
+* `dart run bin/get_account_infos_demo.dart`
 
