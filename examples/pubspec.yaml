@@ -17,6 +17,9 @@ dependencies:
   substrate_bip39: ^0.2.0
   substrate_metadata: ^1.1.0
 
+  # Generated files depend on quiver
+  quiver: ^3.2.1
+
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.0
