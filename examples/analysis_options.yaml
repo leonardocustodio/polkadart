@@ -13,18 +13,8 @@
 
 include: package:lints/recommended.yaml
 
-# Uncomment the following section to specify additional rules.
-
-# linter:
-#   rules:
-#     - camel_case_types
-
-# analyzer:
-#   exclude:
-#     - path/to/excluded/files/**
-
-# For more information about the core and recommended set of lints, see
-# https://dart.dev/go/core-lints
-
-# For additional information about configuring this file, see
-# https://dart.dev/guides/language/analysis-options
+linter:
+  rules:
+    # Generated files don't satisfy this.
+    avoid_renaming_method_parameters: false
+    no_leading_underscores_for_local_identifiers: false
