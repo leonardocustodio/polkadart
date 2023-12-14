@@ -179,7 +179,7 @@ abstract class KeyPair {
   /// final keyPair = KeyPair.sr25519.fromSeed(seed); // Replace with your actual seed
   /// print('Public Key: ${keyPair.publicKey}');
   /// ```
-  dynamic get publicKey;
+  PublicKey get publicKey;
 
   ///
   ///

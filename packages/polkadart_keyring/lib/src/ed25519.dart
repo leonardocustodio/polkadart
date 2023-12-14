@@ -72,7 +72,7 @@ class Ed25519KeyPair extends KeyPair {
   }
 
   @override
-  ed.PublicKey get publicKey => _publicKey;
+  PublicKey get publicKey => PublicKey(_publicKey.bytes);
 
   @override
   void lock() {

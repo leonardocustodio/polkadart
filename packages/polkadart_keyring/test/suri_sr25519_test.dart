@@ -63,7 +63,7 @@ void main() {
       for (final (seed, address, uri) in testVectors) {
         final keypair = await KeyPair.sr25519.fromUri(uri);
         expect(keypair.address, address);
-        expect('0x${hex.encode(keypair.publicKey.encode())}', seed);
+        expect('0x${hex.encode(keypair.publicKey.bytes)}', seed);
       }
     });
   });

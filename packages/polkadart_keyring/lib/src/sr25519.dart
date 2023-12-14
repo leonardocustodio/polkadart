@@ -97,7 +97,7 @@ class Sr25519KeyPair extends KeyPair {
   }
 
   @override
-  sr25519.PublicKey get publicKey => _publicKey;
+  PublicKey get publicKey => PublicKey(_publicKey.encode());
 
   @override
   Uint8List sign(Uint8List message) {

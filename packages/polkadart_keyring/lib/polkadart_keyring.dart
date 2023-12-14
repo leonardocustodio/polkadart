@@ -16,3 +16,4 @@ part 'src/extensions.dart';
 part 'src/ed25519.dart';
 part 'src/sr25519.dart';
 part 'src/constants.dart';
+part 'src/public_key.dart';
