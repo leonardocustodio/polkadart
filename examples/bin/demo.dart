@@ -1,9 +1,10 @@
 import 'package:convert/convert.dart';
-import '../lib/generated/polkadot/polkadot.dart';
-import '../lib/generated/polkadot/types/sp_runtime/multiaddress/multi_address.dart';
 import 'package:polkadart/polkadart.dart'
     show AuthorApi, Extrinsic, Provider, SigningPayload, StateApi;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
+
+import 'package:polkadart_example/generated/polkadot/polkadot.dart';
+import 'package:polkadart_example/generated/polkadot/types/sp_runtime/multiaddress/multi_address.dart';
 
 Future<void> main(List<String> arguments) async {
   final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));

@@ -1,8 +1,9 @@
 import 'package:convert/convert.dart';
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart_example/generated/polkadot/types/sp_core/crypto/account_id32.dart';
-import '../lib/generated/polkadot/polkadot.dart';
 import 'package:polkadart/polkadart.dart' show Provider;
+
+import 'package:polkadart_example/generated/polkadot/polkadot.dart';
 
 Future<void> main(List<String> arguments) async {
   final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
