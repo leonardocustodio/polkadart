@@ -19,7 +19,7 @@ Future<void> main(List<String> arguments) async {
   final accountIds = keys.map((key) => const AccountId32Codec().decode(ByteInput(key.sublist(32))));
   print("First 10 account pubKeys: ${accountIds.map((account) => '0x${hex.encode(account)}')}");
 
-  // Get account data of those keys
+  // Get `AccountInfo`s of those keys
   final accountInfos = await Future.wait(accountIds.map((account) => polkadot.query.system.account(account)));
 
   for (final accountInfo in accountInfos) {
