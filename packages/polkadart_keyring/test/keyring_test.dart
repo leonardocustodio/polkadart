@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 void main() {
   group('Keyring Class:', () {
     late Keyring keyring;
-    late KeyPair keyPair1, keyPair2, keyPairMemonic;
+    late KeyPair keyPair1, keyPair2, keyPairMnemonic;
     late Uint8List seedOne, seedTwo, message;
     late String mnemonic;
 
@@ -21,7 +21,7 @@ void main() {
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
-      keyPairMemonic = await KeyPair.ed25519.fromUri(mnemonic);
+      keyPairMnemonic = await KeyPair.ed25519.fromUri(mnemonic);
       keyPair1 = KeyPair.ed25519.fromSeed(seedOne);
       keyPair2 = KeyPair.ed25519.fromSeed(seedTwo);
     });
@@ -29,7 +29,7 @@ void main() {
     test('Creating KeyPairs from Mnemonic', () async {
       final keyPair = await keyring.fromMnemonic(mnemonic,
           keyPairType: KeyPairType.ed25519);
-      expect(keyPair.address, equals(keyPairMemonic.address));
+      expect(keyPair.address, equals(keyPairMnemonic.address));
     });
 
     test('Adding and Retrieving KeyPairs', () {

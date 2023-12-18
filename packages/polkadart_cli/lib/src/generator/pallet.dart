@@ -448,8 +448,7 @@ Class createPalletQueries(
                       ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
                 ..body = Block((b) => b
                   // final hashedKey = _storageName.hashedKeyFor(key1);
-                  ..statements
-                      .add(declareFinal('hashedKey')
+                  ..statements.add(declareFinal('hashedKey')
                       .assignHashedKey(storageName, storage)
                       .statement)
                   // final bytes = await api.queryStorage([hashedKey]);
@@ -475,44 +474,47 @@ Class createPalletQueries(
                       storage.isNullable ? Code('') : Code('/* Default */')));
             })))
         ..methods.addAll(generator.storages.map((storage) => Method((builder) {
-          final storageName = ReCase(storage.name).camelCase;
-          builder
-            ..name = sanitize(storage.keyMethodName(), recase: false)
-            ..docs.addAll(sanitizeDocs(['Returns the storage key for `$storageName`.']))
-            ..returns = refs.uint8List
-            ..requiredParameters
-                .addAll(storage.hashers.map((hasher) => Parameter((b) => b
-              ..type = hasher.codec.primitive(dirname)
-              ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
-            ..body = Block((b) => b
-              ..statements
-                  .add(declareFinal('hashedKey')
-                  .assignHashedKey(storageName, storage)
-                  .statement)
-              ..statements
-                  .add(Code('  return hashedKey;')));
-        })))
+              final storageName = ReCase(storage.name).camelCase;
+              builder
+                ..name = sanitize(storage.keyMethodName(), recase: false)
+                ..docs.addAll(sanitizeDocs(
+                    ['Returns the storage key for `$storageName`.']))
+                ..returns = refs.uint8List
+                ..requiredParameters
+                    .addAll(storage.hashers.map((hasher) => Parameter((b) => b
+                      ..type = hasher.codec.primitive(dirname)
+                      ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
+                ..body = Block((b) => b
+                  ..statements.add(declareFinal('hashedKey')
+                      .assignHashedKey(storageName, storage)
+                      .statement)
+                  ..statements.add(Code('  return hashedKey;')));
+            })))
         ..methods.addAll(generator.storages
             // We don't support maps with depth > 2 yet.
-            .where((storage) => storage.hashers.isNotEmpty && storage.hashers.length < 3)
+            .where((storage) =>
+                storage.hashers.isNotEmpty && storage.hashers.length < 3)
             .map((storage) => Method((builder) {
-          final storageName = ReCase(storage.name).camelCase;
-          builder
-            ..name = sanitize(storage.mapPrefixMethodName(), recase: false)
-            ..docs.addAll(sanitizeDocs(['Returns the storage map key prefix for `$storageName`.']))
-            ..returns = refs.uint8List
-            ..requiredParameters
-                .addAll(storage.hashers.getRange(0, storage.hashers.length - 1).map((hasher) => Parameter((b) => b
-              ..type = hasher.codec.primitive(dirname)
-              ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
-            ..body = Block((b) => b
-              ..statements
-                  .add(declareFinal('hashedKey')
-                  .assignMapPrefix(storageName, storage)
-                  .statement)
-              ..statements
-                  .add(Code('  return hashedKey;')));
-        })));
+                  final storageName = ReCase(storage.name).camelCase;
+                  builder
+                    ..name =
+                        sanitize(storage.mapPrefixMethodName(), recase: false)
+                    ..docs.addAll(sanitizeDocs([
+                      'Returns the storage map key prefix for `$storageName`.'
+                    ]))
+                    ..returns = refs.uint8List
+                    ..requiredParameters.addAll(storage.hashers
+                        .getRange(0, storage.hashers.length - 1)
+                        .map((hasher) => Parameter((b) => b
+                          ..type = hasher.codec.primitive(dirname)
+                          ..name =
+                              'key${storage.hashers.indexOf(hasher) + 1}')))
+                    ..body = Block((b) => b
+                      ..statements.add(declareFinal('hashedKey')
+                          .assignMapPrefix(storageName, storage)
+                          .statement)
+                      ..statements.add(Code('  return hashedKey;')));
+                })));
     });
 
 Class createPalletTxs(
@@ -597,7 +599,6 @@ Class createPalletConstants(
     });
 
 extension MethodNameExtension on Storage {
-
   /// Name of the generated method returning the key of a storage.
   String keyMethodName() {
     return '${name}Key';
@@ -612,11 +613,9 @@ extension MethodNameExtension on Storage {
 extension AssignHashedKeyExtension on Expression {
   Expression assignHashedKey(String storageName, Storage storage) {
     return assign(refer('_$storageName')
-        .property(storage.hashers.isEmpty
-        ? 'hashedKey'
-        : 'hashedKeyFor')
-        .call(storage.hashers.map((hasher) => refer(
-        'key${storage.hashers.indexOf(hasher) + 1}'))));
+        .property(storage.hashers.isEmpty ? 'hashedKey' : 'hashedKeyFor')
+        .call(storage.hashers.map(
+            (hasher) => refer('key${storage.hashers.indexOf(hasher) + 1}'))));
   }
 
   Expression assignMapPrefix(String storageName, Storage storage) {
@@ -632,14 +631,10 @@ extension AssignHashedKeyExtension on Expression {
       );
     }
 
-    return assign(refer('_$storageName')
-        .property('mapPrefix')
-        .call(storage.hashers
+    return assign(refer('_$storageName').property('mapPrefix').call(storage
+        .hashers
         // Checked above that hasher is not empty.
         .getRange(0, storage.hashers.length - 1)
-        .map((hasher) => refer(
-        'key${storage.hashers.indexOf(hasher) + 1}'))));
+        .map((hasher) => refer('key${storage.hashers.indexOf(hasher) + 1}'))));
   }
 }
-
-

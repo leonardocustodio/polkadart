@@ -149,12 +149,12 @@ abstract class KeyPair {
   /// final keyPair = await KeyPair.sr25519.fromMnemonic(mnemonic);
   /// keyPair.lock();
   /// keyPair.sign(message); // Throws an error
-  /// keyPair.unlockFromMemonic(mnemonic);
+  /// keyPair.unlockFromMnemonic(mnemonic);
   /// keyPair.sign(message); // Works
   /// ```
   ///
   ///
-  Future<void> unlockFromMemonic(String mnemonic, [String? password]);
+  Future<void> unlockFromMnemonic(String mnemonic, [String? password]);
 
   ///
   ///

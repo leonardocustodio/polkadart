@@ -123,14 +123,14 @@ class Sr25519KeyPair extends KeyPair {
   }
 
   @override
-  Future<void> unlockFromMemonic(String mnemonic, [String? password]) async {
+  Future<void> unlockFromMnemonic(String mnemonic, [String? password]) async {
     final seed = await SubstrateBip39.ed25519.seedFromUri(mnemonic);
     _unlock(sr25519.SecretKey.fromEd25519Bytes(seed));
   }
 
   @override
   Future<void> unlockFromUri(String uri, [String? password]) {
-    return unlockFromMemonic(uri, password);
+    return unlockFromMnemonic(uri, password);
   }
 
   @override
