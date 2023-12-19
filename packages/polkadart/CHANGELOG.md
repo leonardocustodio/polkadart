@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Generate storage key prefix methods
+
 ## 0.2.6
 
 - Fixes issue with subscribeStorage
