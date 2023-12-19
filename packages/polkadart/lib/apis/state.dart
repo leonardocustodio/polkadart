@@ -190,8 +190,7 @@ class StateApi<P extends Provider> {
 
   /// Subscribes to storage changes for the provided keys
   Future<StreamSubscription<StorageChangeSet>> subscribeStorage(
-      List<Uint8List> storageKeys,
-      Function(StorageChangeSet) onData) async {
+      List<Uint8List> storageKeys, Function(StorageChangeSet) onData) async {
     final hexKeys = storageKeys.map((key) => '0x${hex.encode(key)}').toList();
     final subscription = await _provider.subscribe(
         'state_subscribeStorage', [hexKeys], onCancel: (subscription) async {
