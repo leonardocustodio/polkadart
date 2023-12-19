@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Generate storage key prefix methods
+
 ## 0.2.4
 
 - Added method for getting a storage key
