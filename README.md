@@ -27,6 +27,7 @@ This repo is a monorepo for `polkadart` and related packages.
 ## Documentation and Tests
 
 You can run all tests from the library by running `docker compose up`;
+<!-- markdown-link-check-disable-next-line -->
 Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started) installed globally you can run `melos test`.
 
 ## Contributors
