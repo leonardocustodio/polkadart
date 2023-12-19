@@ -19,6 +19,7 @@ jobs:
         package:
           - polkadart
           - polkadart_cli
+          - polkadart_example
           - polkadart_keyring
           - polkadart_scale_codec
           - ss58
@@ -49,6 +50,10 @@ jobs:
           dart run melos bootstrap
         env:
           MELOS_SDK_PATH: ${{ env.FLUTTER_ROOT }}
+
+      - name: Generate Files for polkadart_example
+        if: ${{ matrix.package == 'polkadart_example' }}
+        run: cd examples && dart run polkadart_cli:generate -v
 
       - name: Check format
         run: SCOPE="${{ matrix.package }}" dart run melos format

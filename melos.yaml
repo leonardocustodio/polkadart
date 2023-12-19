@@ -17,7 +17,7 @@ scripts:
     run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart run coverage:format_coverage --lcov --in=coverage --out=coverage/coverage.lcov --packages=.dart_tool/package_config.json --report-on=lib'
   
   format:
-    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart format .'
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart format . --set-exit-if-changed'
   
   analyze:
     run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart analyze --fatal-infos .'
