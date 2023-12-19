@@ -55,7 +55,7 @@ jobs:
         if: ${{ matrix.package == 'polkadart_example' }}
         # Format the generated files so that they don't make the CI fail afterwards.
         run: |
-          dart run polkadart_cli:generate -v
+          cd examples && dart run polkadart_cli:generate -v
           dart format examples/lib/generated
 
       - name: Check format
