@@ -53,10 +53,7 @@ jobs:
 
       - name: Generate Files for polkadart_example
         if: ${{ matrix.package == 'polkadart_example' }}
-        # Format the generated files so that they don't make the CI fail afterwards.
-        run: |
-          cd examples && dart run polkadart_cli:generate -v
-          dart format examples/lib/generated
+        run: cd examples && dart run polkadart_cli:generate -v
 
       - name: Check format
         run: SCOPE="${{ matrix.package }}" dart run melos format
