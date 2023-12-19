@@ -19,6 +19,7 @@ jobs:
         package:
           - polkadart
           - polkadart_cli
+          - polkadart_example
           - polkadart_keyring
           - polkadart_scale_codec
           - ss58
