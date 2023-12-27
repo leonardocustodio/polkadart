@@ -1,8 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
-import 'package:polkadart/extrinsic/signed_extensions/asset_hub.dart';
-import 'package:polkadart/extrinsic/signed_extensions/substrate.dart';
+import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart/substrate/era.dart';
 
@@ -55,14 +54,19 @@ class SigningPayload {
   }
 
   Uint8List encode(dynamic registry) {
-    final List extras = [];
-    final List additionalExtras = [];
+    final List<String> extras = <String>[];
+    final List<String> additionalExtras = <String>[];
+
+    late final SignedExtensions signedExtensions;
+    if (assetId != null) {
+      signedExtensions = SignedExtensions.assetHubSignedExtensions;
+    } else {
+      signedExtensions = SignedExtensions.substrateSignedExtensions;
+    }
 
     registry.getSignedExtensionTypes().forEach((extension) {
-      final payload = assetId != null
-          ? AssetHubSignedExtensions.signedExtension(extension, toEncodedMap())
-          : SubstrateSignedExtensions.signedExtension(
-              extension, toEncodedMap());
+      final payload =
+          signedExtensions.signedExtension(extension, toEncodedMap());
 
       if (payload.isNotEmpty) {
         extras.add(payload);
@@ -70,20 +74,17 @@ class SigningPayload {
     });
 
     registry.getSignedExtensionExtra().forEach((extension) {
-      final payload = assetId != null
-          ? AssetHubSignedExtensions.additionalSignedExtension(
-              extension, toEncodedMap())
-          : SubstrateSignedExtensions.additionalSignedExtension(
-              extension, toEncodedMap());
+      final payload =
+          signedExtensions.additionalSignedExtension(extension, toEncodedMap());
 
       if (payload.isNotEmpty) {
         additionalExtras.add(payload);
       }
     });
 
-    final extra = extras.join();
-    final addExtra = additionalExtras.join();
-    final payload = method + extra + addExtra;
+    final String extra = extras.join();
+    final String addExtra = additionalExtras.join();
+    final String payload = method + extra + addExtra;
 
     return Uint8List.fromList(hex.decode(payload));
   }
