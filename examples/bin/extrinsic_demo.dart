@@ -30,7 +30,7 @@ Future<void> main(List<String> arguments) async {
       .result
       .replaceAll('0x', '');
 
-  final keyring = await KeyPair.fromMnemonic(
+  final keyring = await KeyPair.sr25519.fromMnemonic(
       "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//0"); // This is a random key
 
   final publicKey = hex.encode(keyring.publicKey.bytes);
