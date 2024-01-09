@@ -78,7 +78,9 @@ abstract class CryptoScheme {
 
   /// Derive a child key from a series of given junctions.
   Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path,
-      {Uint8List? output});
+      {Uint8List? output}) {
+    throw UnimplementedError('Implement derive in child class.');
+  }
 
   /// Parses secret uri (`URI`) into a 32 bytes that can be used to generate a key pair.
   ///

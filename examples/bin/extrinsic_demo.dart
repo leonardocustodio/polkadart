@@ -1,6 +1,12 @@
 import 'package:convert/convert.dart';
 import 'package:polkadart/polkadart.dart'
-    show AuthorApi, Extrinsic, Provider, SigningPayload, StateApi;
+    show
+        AuthorApi,
+        Extrinsic,
+        Provider,
+        SignatureType,
+        SigningPayload,
+        StateApi;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 
 import 'package:polkadart_example/generated/polkadot/polkadot.dart';
@@ -30,7 +36,7 @@ Future<void> main(List<String> arguments) async {
       .result
       .replaceAll('0x', '');
 
-  final keyring = await KeyPair.fromMnemonic(
+  final keyring = await KeyPair.sr25519.fromMnemonic(
       "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//0"); // This is a random key
 
   final publicKey = hex.encode(keyring.publicKey.bytes);
@@ -67,7 +73,7 @@ Future<void> main(List<String> arguments) async {
     blockNumber: blockNumber,
     nonce: 0,
     tip: 0,
-  ).encode(api.registry);
+  ).encode(api.registry, SignatureType.sr25519);
 
   final hexExtrinsic = hex.encode(extrinsic);
   print('Extrinsic: $hexExtrinsic');

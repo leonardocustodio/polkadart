@@ -23,6 +23,7 @@ jobs:
           - polkadart_keyring
           - polkadart_scale_codec
           - ss58
+          - sr25519
           - substrate_bip39
           - substrate_metadata
 
