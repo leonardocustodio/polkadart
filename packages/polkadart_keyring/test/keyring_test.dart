@@ -5,9 +5,9 @@ import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Keyring Class: ', () {
+  group('Keyring Class:', () {
     late Keyring keyring;
-    late KeyPair keyPair1, keyPair2, keyPairMemonic;
+    late KeyPair keyPair1, keyPair2, keyPairMnemonic;
     late Uint8List seedOne, seedTwo, message;
     late String mnemonic;
 
@@ -21,14 +21,15 @@ void main() {
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
-      keyPairMemonic = await KeyPair.fromMnemonic(mnemonic);
-      keyPair1 = KeyPair.fromSeed(seedOne);
-      keyPair2 = KeyPair.fromSeed(seedTwo);
+      keyPairMnemonic = await KeyPair.ed25519.fromUri(mnemonic);
+      keyPair1 = KeyPair.ed25519.fromSeed(seedOne);
+      keyPair2 = KeyPair.ed25519.fromSeed(seedTwo);
     });
 
     test('Creating KeyPairs from Mnemonic', () async {
-      final keyPair = await keyring.createKeyPairFromMnemonic(mnemonic);
-      expect(keyPair.address, equals(keyPairMemonic.address));
+      final keyPair = await keyring.fromMnemonic(mnemonic,
+          keyPairType: KeyPairType.ed25519);
+      expect(keyPair.address, equals(keyPairMnemonic.address));
     });
 
     test('Adding and Retrieving KeyPairs', () {
@@ -53,7 +54,7 @@ void main() {
     });
 
     test('Retrieving KeyPairs by PublicKey', () {
-      final publicKey1 = keyPair1.publicKey.bytes;
+      final publicKey1 = keyPair1.bytes;
 
       // Add keyPair1 to key
       keyring.add(keyPair1);
@@ -81,7 +82,7 @@ void main() {
 
     test('Encoding and Decoding Addresses', () {
       final address = keyPair1.address;
-      final publicKey = keyPair1.publicKey.bytes;
+      final publicKey = keyPair1.bytes;
 
       // Encode the public key to an address
       final encodedAddress = keyring.encodeAddress(publicKey);
@@ -96,14 +97,6 @@ void main() {
       expect(decodedPublicKey, equals(publicKey));
     });
 
-    test('Setting and Getting SS58 Address Format', () {
-      // Set the SS58 address format
-      keyring.ss58Format = 42;
-
-      // Check that the SS58 address format is correct
-      expect(keyring.ss58Format, equals(42));
-    });
-
     test('Getting All Public Keys', () {
       expect(keyring.publicKeys, isEmpty);
 
@@ -115,8 +108,8 @@ void main() {
       expect(
           keyring.publicKeys,
           equals([
-            keyPair1.publicKey.bytes.toList(),
-            keyPair2.publicKey.bytes.toList()
+            keyPair1.bytes.toList(growable: false),
+            keyPair2.bytes.toList(growable: false)
           ]));
     });
 
@@ -157,7 +150,7 @@ void main() {
     test('Signing and Verifying', () {
       keyring.add(keyPair2);
 
-      final kp = keyring.getByPublicKey(keyPair2.publicKey.bytes);
+      final kp = keyring.getByPublicKey(keyPair2.bytes);
 
       final signature = kp.sign(message);
 

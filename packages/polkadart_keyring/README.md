@@ -1,6 +1,6 @@
 # Polkadart Keyring
 
-Polkadart Keyring is a manager for ed25519-based key pairs in the keyring. It provides a convenient interface to manage ed25519-based key pairs, allowing you to create key pairs from BIP39 mnemonics, add them to the keyring, retrieve key pairs by address or public key, and perform various operations on them.
+Polkadart Keyring is a manager for sr25519-based key pairs in the keyring. It provides a convenient interface to manage sr25519-based key pairs, allowing you to create key pairs from BIP39 mnemonics, add them to the keyring, retrieve key pairs by address or public key, and perform various operations on them.
 
 ## Installation
 
@@ -21,7 +21,7 @@ You can create a new [KeyPair] from a BIP39 mnemonic and optionally add it to th
 final keyring = Keyring();
 final mnemonic =
     'moral movie very draw assault whisper awful rebuild speed purity repeat card';
-final keyPair = await keyring.createKeyPairFromMnemonic(mnemonic);
+final keyPair = await keyring.fromMnemonic(mnemonic);
 ```
 
 ### Adding and Retrieving KeyPairs
@@ -30,9 +30,9 @@ You can add and retrieve key pairs using the keyring:
 
 ```dart
 final keyring = Keyring();
-final keyPair1 = KeyPair.fromSeed(
+final keyPair1 = KeyPair.sr25519.fromSeed(
     Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
-final keyPair2 = KeyPair.fromSeed(Uint8List.fromList(hex.decode(
+final keyPair2 = KeyPair.sr25519.fromSeed(Uint8List.fromList(hex.decode(
     '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
 // Add keyPair1 to keyring
@@ -53,7 +53,7 @@ You can retrieve key pairs by their public keys:
 
 ```dart
 final keyring = Keyring();
-final keyPair1 = KeyPair.fromSeed(
+final keyPair1 = KeyPair.sr25519.fromSeed(
     Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
 
 final publicKey1 = keyPair1.publicKey.bytes;
@@ -72,7 +72,7 @@ You can remove key pairs from the keyring:
 
 ```dart
 final keyring = Keyring();
-final keyPair1 = KeyPair.fromSeed(
+final keyPair1 = KeyPair.sr25519.fromSeed(
     Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
 
 // Add keyPair1 and keyPair2 to keyring
@@ -91,7 +91,7 @@ You can encode and decode addresses:
 
 ```dart
 final keyring = Keyring();
-final keyPair1 = KeyPair.fromSeed(
+final keyPair1 = KeyPair.sr25519.fromSeed(
     Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
 
 final address = keyPair1.address;
@@ -126,9 +126,9 @@ You can retrieve all public keys in the keyring:
 
 ```dart
 final keyring = Keyring();
-final keyPair1 = KeyPair.fromSeed(
+final keyPair1 = KeyPair.sr25519.fromSeed(
     Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
-final keyPair2 = KeyPair.fromSeed(Uint8List.fromList(hex.decode(
+final keyPair2 = KeyPair.sr25519.fromSeed(Uint8List.fromList(hex.decode(
     '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
 keyring
@@ -144,9 +144,9 @@ You can retrieve all addresses in the keyring:
 
 ```dart
 final keyring = Keyring();
-final keyPair1 = KeyPair.fromSeed(
+final keyPair1 = KeyPair.sr25519.fromSeed(
     Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
-final keyPair2 = KeyPair.fromSeed(Uint8List.fromList(hex.decode(
+final keyPair2 = KeyPair.sr25519.fromSeed(Uint8List.fromList(hex.decode(
     '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
 keyring
@@ -161,9 +161,9 @@ You can retrieve all key pairs in the keyring:
 
 ```dart
 final keyring = Keyring();
-final keyPair1 = KeyPair.fromSeed(
+final keyPair1 = KeyPair.sr25519.fromSeed(
     Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
-final keyPair2 = KeyPair.fromSeed(Uint8List.fromList(hex.decode(
+final keyPair2 = KeyPair.sr25519.fromSeed(Uint8List.fromList(hex.decode(
     '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
 keyring
@@ -179,11 +179,10 @@ You can remove all key pairs from the keyring:
 
 ```dart
 final keyring = Keyring();
-final keyPair1 = KeyPair.fromSeed(
-    Uint8List
+final keyPair1 = KeyPair.sr25519.fromSeed(
+    Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
 
-.fromList('12345678901234567890123456789012'.codeUnits));
-final keyPair2 = KeyPair.fromSeed(Uint8List.fromList(hex.decode(
+final keyPair2 = KeyPair.sr25519.fromSeed(Uint8List.fromList(hex.decode(
     '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
 keyring
@@ -201,7 +200,7 @@ You can sign and verify messages:
 
 ```dart
 final keyring = Keyring();
-final keyPair2 = KeyPair.fromSeed(Uint8List.fromList(hex.decode(
+final keyPair2 = KeyPair.sr25519.fromSeed(Uint8List.fromList(hex.decode(
     '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
 keyring.add(keyPair2);

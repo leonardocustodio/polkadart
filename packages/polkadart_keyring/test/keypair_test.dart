@@ -1,12 +1,11 @@
 import 'dart:typed_data';
-
 import 'package:convert/convert.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('KeyPair Class', () {
-    late KeyPair keyPair, keyPairMemonic;
+  group('Ed25519', () {
+    late KeyPair keyPair, keyPairMnemonic;
     late Uint8List seed;
     late String mnemonic;
     late Uint8List message;
@@ -18,12 +17,12 @@ void main() {
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
-      keyPairMemonic = await KeyPair.fromMnemonic(mnemonic);
-      keyPair = KeyPair.fromSeed(seed);
+      keyPairMnemonic = await KeyPair.ed25519.fromUri(mnemonic);
+      keyPair = KeyPair.ed25519.fromSeed(seed);
     });
 
     test('fromSeed', () {
-      final bytes = keyPair.publicKey.bytes;
+      final bytes = keyPair.bytes;
       final expectedBytes = [
         215,
         90,
@@ -62,7 +61,7 @@ void main() {
     });
 
     test('fromMnemonic', () {
-      expect(keyPairMemonic.address,
+      expect(keyPairMnemonic.address,
           '5GvjEiJk5fFGurvyx4vgjWAKef9yXP31ThQDdeEEhvsdsWx1');
     });
 
@@ -145,15 +144,15 @@ void main() {
     });
 
     test('unlockFromMnemonic', () async {
-      keyPairMemonic.lock();
+      keyPairMnemonic.lock();
 
-      expect(keyPairMemonic.isLocked, true);
-      expect(() => keyPairMemonic.sign(message), throwsException);
+      expect(keyPairMnemonic.isLocked, true);
+      expect(() => keyPairMnemonic.sign(message), throwsException);
 
-      await keyPairMemonic.unlockFromMemonic(mnemonic);
+      await keyPairMnemonic.unlockFromMnemonic(mnemonic);
 
-      expect(() => keyPairMemonic.sign(message), returnsNormally);
-      expect(keyPairMemonic.isLocked, false);
+      expect(() => keyPairMnemonic.sign(message), returnsNormally);
+      expect(keyPairMnemonic.isLocked, false);
     });
 
     test('unlockFromSeed', () {

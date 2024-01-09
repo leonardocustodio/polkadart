@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
-import 'package:polkadart/extrinsic/signed_extensions/asset_hub.dart';
-import 'package:polkadart/extrinsic/signed_extensions/substrate.dart';
+import 'package:polkadart/extrinsic/signature_type.dart';
+import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
+import 'package:polkadart_keyring/polkadart_keyring.dart' as keyring;
 import 'package:polkadart_scale_codec/primitives/primitives.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';
 
@@ -45,53 +46,66 @@ class Extrinsic {
     };
   }
 
-  static Uint8List createSignedExtrinsic(Extrinsic extrinsic, registry) {
-    return extrinsic.encode(registry);
+  static Uint8List createSignedExtrinsic(
+      Extrinsic extrinsic, registry, SignatureType signatureType) {
+    return extrinsic.encode(registry, signatureType);
   }
 
-  Uint8List encode(dynamic registry) {
-    final extrinsicVersion = registry.extrinsicVersion;
+  Uint8List encode(dynamic registry, SignatureType signatureType) {
+    final int extrinsicVersion = registry.extrinsicVersion;
     // Unsigned transaction
-    // final byte = extrinsicVersion & 0b0111_1111
-    final preByte = extrinsicVersion & 127;
+    final int preByte = extrinsicVersion & 127;
     // ignore: unused_local_variable
-    final inHex = preByte.toRadixString(16);
+    final String inHex = preByte.toRadixString(16);
 
     // Signed transaction
-    final extraByte = extrinsicVersion | 128;
-    final hexByte = extraByte.toRadixString(16);
+    final int extraByte = extrinsicVersion | 128;
+    final String hexByte = extraByte.toRadixString(16);
 
     // 00 = MultiAddress::Id
-    final signerType = '00';
+    final String signerType = '00';
 
-    // 00 = ed25519
-    // 01 = sr25519
-    final signatureType = '00'; // We only support ed25519 for now
+    final List<String> extras = <String>[];
 
-    final List extras = [];
+    late final SignedExtensions signedExtensions;
+    if (assetId != null) {
+      signedExtensions = SignedExtensions.assetHubSignedExtensions;
+    } else {
+      signedExtensions = SignedExtensions.substrateSignedExtensions;
+    }
 
-    registry.getSignedExtensionTypes().forEach((extension) {
-      final payload = assetId != null
-          ? AssetHubSignedExtensions.signedExtension(extension, toEncodedMap())
-          : SubstrateSignedExtensions.signedExtension(
-              extension, toEncodedMap());
+    for (final signedExtensiontype in registry.getSignedExtensionTypes()) {
+      final payload =
+          signedExtensions.signedExtension(signedExtensiontype, toEncodedMap());
 
       if (payload.isNotEmpty) {
         extras.add(payload);
       }
-    });
+    }
 
-    final extra = extras.join();
+    final String extra = extras.join();
 
-    final extrinsic = hexByte +
+    final String extrinsic = hexByte +
         signerType +
         signer +
-        signatureType +
+        signatureType.type +
         signature +
         extra +
         method;
 
     // Adds size in compact as prefix
     return U8SequenceCodec.codec.encode(hex.decode(extrinsic));
+  }
+
+  ///
+  /// Encodes the payload and signs it with the supplied keypair
+  /// [registry] The registry
+  /// [signatureType] The signature type
+  /// [keyPair] The keypair
+  /// Returns [Uint8List] Signature
+  ///
+  Uint8List encodeAndSign(
+      dynamic registry, SignatureType signatureType, keyring.KeyPair keyPair) {
+    return keyPair.sign(encode(registry, signatureType));
   }
 }
