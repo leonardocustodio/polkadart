@@ -112,7 +112,8 @@ void main() {
     });
 
     test('signs and verifies', () {
-      final Uint8List message = Uint8List.fromList(utf8.encode('this is a message'));
+      final Uint8List message =
+          Uint8List.fromList(utf8.encode('this is a message'));
       final pair = keyring.getByPublicKey(publicKeyOne);
       final signature = pair.sign(message);
       expect(pair.verify(message, signature), true);
