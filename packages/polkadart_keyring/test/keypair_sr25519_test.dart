@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 void main() {
   group('Sr25519 test cases', () {
     late Keyring keyring;
-    late Uint8List seedOne;
+    late List<int> seedOne;
     late List<int> seedTwo;
     late List<int> publicKeyOne;
     late List<int> publicKeyTwo;
@@ -112,7 +112,7 @@ void main() {
     });
 
     test('signs and verifies', () {
-      final Uint8List message = utf8.encode('this is a message');
+      final Uint8List message = Uint8List.fromList(utf8.encode('this is a message'));
       final pair = keyring.getByPublicKey(publicKeyOne);
       final signature = pair.sign(message);
       expect(pair.verify(message, signature), true);

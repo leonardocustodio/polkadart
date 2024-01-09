@@ -13,7 +13,7 @@ dependencies:
   collection: ^1.17.2
   cryptography: ^2.5.0
   pointycastle: ^3.6.2
-  polkadart_scale_codec: ^1.1.0
+  polkadart_scale_codec: ^1.1.2
 
 dev_dependencies:
   lints: ^2.0.0
