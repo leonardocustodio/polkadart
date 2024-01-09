@@ -20,6 +20,7 @@ This repo is a monorepo for `polkadart` and related packages.
 | [![version][package:polkadart_cli:version]][package:polkadart_cli]                 | [`package:polkadart_cli`][package:polkadart_cli:source]                 |             |
 | [![version][package:polkadart_keyring:version]][package:polkadart_keyring]         | [`package:polkadart_keyring`][package:polkadart_keyring:source]         |             |
 | [![version][package:polkadart_scale_codec:version]][package:polkadart_scale_codec] | [`package:polkadart_scale_codec`][package:polkadart_scale_codec:source] |             |
+| [![version][package:sr25519:version]][package:sr25519]                             | [`package:sr25119`][package:sr25519:source]                             |             |
 | [![version][package:ss58:version]][package:ss58]                                   | [`package:ss58`][package:ss58:source]                                   |             |
 | [![version][package:substrate_bip39:version]][package:substrate_bip39]             | [`package:substrate_bip39`][package:substrate_bip39:source]             |             |
 | [![version][package:substrate_metadata:version]][package:substrate_metadata]       | [`package:substrate_metadata`][package:substrate_metadata:source]       |             |
@@ -52,6 +53,9 @@ This repository is licensed under [Apache 2.0 license](https://github.com/leonar
 [package:polkadart_scale_codec:source]: ./packages/polkadart_scale_codec
 [package:polkadart_scale_codec]: https://pub.dartlang.org/packages/polkadart_scale_codec
 [package:polkadart_scale_codec:version]: https://img.shields.io/pub/v/polkadart_scale_codec.svg
+[package:sr25519:source]: ./packages/sr25519
+[package:sr25519]: https://pub.dartlang.org/packages/sr25519
+[package:sr25519:version]: https://img.shields.io/pub/v/sr25519.svg
 [package:ss58:source]: ./packages/ss58
 [package:ss58]: https://pub.dartlang.org/packages/ss58
 [package:ss58:version]: https://img.shields.io/pub/v/ss58.svg
