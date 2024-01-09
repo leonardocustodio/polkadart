@@ -12,6 +12,7 @@ abstract class KeyPair {
   static Sr25519KeyPair get sr25519 => Sr25519KeyPair();
   late int ss58Format;
   final KeyPairType keyPairType;
+  // ignore: prefer_final_fields
   bool _isLocked = false;
 
   /// constructor
