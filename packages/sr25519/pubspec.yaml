@@ -1,11 +1,11 @@
 name: sr25519
-description: A starting point for sr25519 library
-version: 0.1.0
+description: A sr25519 crypytography library in pure Dart
+version: 0.1.1
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/sr25519
 repository: https://github.com/leonardocustodio/polkadart
 
 environment:
-  sdk: ^3.1.5
+  sdk: ">=3.0.1 <4.0.0"
 
 dependencies:
   collection: ^1.18.0
