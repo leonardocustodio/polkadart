@@ -1,3 +1,6 @@
+## 0.3.1
+- Bump polkadart_keyring version
+
 ## 0.3.0
 
 - Generate storage key prefix methods
