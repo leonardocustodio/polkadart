@@ -3,7 +3,6 @@ description: Substrate Keyring.
 version: 0.3.0
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/polkadart_keyring
 repository: https://github.com/leonardocustodio/polkadart
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
   sdk: ">=3.0.1 <4.0.0"
