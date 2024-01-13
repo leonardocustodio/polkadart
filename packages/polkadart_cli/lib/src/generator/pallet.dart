@@ -526,7 +526,7 @@ Class createPalletTxs(
         ..name = 'Txs'
         ..constructors.add(Constructor((b) => b..constant = true))
         ..methods.addAll(generator.txs.map((tx) => Method((builder) {
-              final txName = ReCase(tx.name).camelCase;
+              var txName = ReCase(tx.name).camelCase;
               final Reference primitive = tx.codec.primitive(dirname);
               final Reference runtimePrimitive =
                   generator.runtimeCall.primitive(dirname);
@@ -546,6 +546,11 @@ Class createPalletTxs(
                       ..named = true
                       ..name = field.sanitizedName)))
                 ..body = Block((b) {
+                  if (sanitize(txName) ==
+                      sanitize(primitive.symbol.toString())) {
+                    txName = '${txName}Variant';
+                  }
+
                   Expression expression =
                       declareFinal('_call').assign(primitive);
 
