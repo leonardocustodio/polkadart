@@ -1,3 +1,6 @@
+## 0.3.1
+- Fixes issues with generating extrinsics called 'call'
+
 ## 0.3.0
 
 - Generate storage key prefix methods
