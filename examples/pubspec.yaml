@@ -11,7 +11,7 @@ dependencies:
   convert: ^3.1.1
   polkadart: ^0.2.0
   polkadart_cli: ^0.3.0
-  polkadart_keyring: ^0.2.1
+  polkadart_keyring: ^0.3.0
   polkadart_scale_codec: ^1.1.2
   ss58: ^1.1.2
   substrate_bip39: ^0.2.0
