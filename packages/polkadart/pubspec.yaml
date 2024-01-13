@@ -4,9 +4,6 @@ version: 0.3.1
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/polkadart
 repository: https://github.com/leonardocustodio/polkadart
 
-# Adding this line until we publish polkadart_keyring's latest version to pub.dev
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
 environment:
   sdk: ">=3.0.1 <4.0.0"
 
