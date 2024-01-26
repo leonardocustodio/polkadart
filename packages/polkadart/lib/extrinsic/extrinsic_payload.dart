@@ -118,7 +118,7 @@ class Extrinsic {
 
   String maybeAssetIdEncoded(dynamic registry) {
     if (_usesChargeAssetTxPayment(registry)) {
-      return assetId != null ?  '01${assetId!.toRadixString(16)}' : '00';
+      return assetId != null ? '01${assetId!.toRadixString(16)}' : '00';
     } else {
       return '';
     }
