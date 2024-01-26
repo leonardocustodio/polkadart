@@ -1,3 +1,6 @@
+## 0.3.2
+- Fixes issue with AssetHub extrinsics
+
 ## 0.3.1
 - Bump polkadart_keyring version
 
