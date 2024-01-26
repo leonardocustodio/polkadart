@@ -30,7 +30,7 @@ class SigningPayload {
     this.assetId,
   });
 
-  toEncodedMap() {
+  toEncodedMap(dynamic registry) {
     return {
       'method': method,
       'specVersion': encodeHex(U32Codec.codec.encode(specVersion)),
@@ -42,7 +42,7 @@ class SigningPayload {
           ? '00'
           : Era.codec.encodeMortal(blockNumber, eraPeriod),
       'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
-      'assetId': assetId != null ? assetId!.toRadixString(16) : '',
+      'assetId': maybeAssetIdEncoded(registry),
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
@@ -58,7 +58,7 @@ class SigningPayload {
     final List<String> additionalExtras = <String>[];
 
     late final SignedExtensions signedExtensions;
-    if (assetId != null) {
+    if (_usesChargeAssetTxPayment(registry)) {
       signedExtensions = SignedExtensions.assetHubSignedExtensions;
     } else {
       signedExtensions = SignedExtensions.substrateSignedExtensions;
@@ -87,5 +87,17 @@ class SigningPayload {
     final String payload = method + extra + addExtra;
 
     return Uint8List.fromList(hex.decode(payload));
+  }
+
+  bool _usesChargeAssetTxPayment(dynamic registry) {
+    return registry.getSignedExtensionTypes().contains('ChargeAssetTxPayment');
+  }
+
+  String maybeAssetIdEncoded(dynamic registry) {
+    if (_usesChargeAssetTxPayment(registry)) {
+      return assetId != null ? assetId!.toRadixString(16) : '00';
+    } else {
+      return '';
+    }
   }
 }

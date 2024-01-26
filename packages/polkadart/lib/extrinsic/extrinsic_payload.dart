@@ -30,7 +30,7 @@ class Extrinsic {
     this.assetId,
   });
 
-  toEncodedMap() {
+  toEncodedMap(dynamic registry) {
     return {
       'signer': signer,
       'method': method,
@@ -39,7 +39,7 @@ class Extrinsic {
           ? '00'
           : Era.codec.encodeMortal(blockNumber, eraPeriod),
       'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
-      'assetId': assetId != null ? assetId!.toRadixString(16) : '',
+      'assetId': maybeAssetIdEncoded(registry),
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
@@ -68,7 +68,8 @@ class Extrinsic {
     final List<String> extras = <String>[];
 
     late final SignedExtensions signedExtensions;
-    if (assetId != null) {
+
+    if (_usesChargeAssetTxPayment(registry)) {
       signedExtensions = SignedExtensions.assetHubSignedExtensions;
     } else {
       signedExtensions = SignedExtensions.substrateSignedExtensions;
@@ -107,5 +108,17 @@ class Extrinsic {
   Uint8List encodeAndSign(
       dynamic registry, SignatureType signatureType, keyring.KeyPair keyPair) {
     return keyPair.sign(encode(registry, signatureType));
+  }
+
+  bool _usesChargeAssetTxPayment(dynamic registry) {
+    return registry.getSignedExtensionTypes().contains('ChargeAssetTxPayment');
+  }
+
+  String maybeAssetIdEncoded(dynamic registry) {
+    if (_usesChargeAssetTxPayment(registry)) {
+      return assetId != null ? assetId!.toRadixString(16) : '00';
+    } else {
+      return '';
+    }
   }
 }
