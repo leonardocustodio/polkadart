@@ -3,6 +3,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:bip39_mnemonic/bip39_mnemonic.dart' show Mnemonic, Language;
 import 'package:convert/convert.dart' show hex;
 import 'package:cryptography/cryptography.dart' show Pbkdf2, Hmac, SecretKey;
+import 'package:substrate_bip39/schemes/secp256k1.dart';
 import './secret_uri.dart' show SecretUri, DeriveJunction;
 import './schemes/ed25519.dart' show Ed25519;
 import './exceptions.dart' show SubstrateBip39Exception;
@@ -11,6 +12,7 @@ export './schemes/ed25519.dart' show Ed25519;
 
 abstract class CryptoScheme {
   static const ed25519 = Ed25519();
+  static const ecdsa = Secp256k1();
 
   /// Size of the seed in bytes
   final int seedSize;

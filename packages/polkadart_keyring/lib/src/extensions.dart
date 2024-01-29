@@ -7,4 +7,7 @@ enum KeyPairType {
 
   /// Sr25519 key pair type.
   sr25519,
+
+  /// ECDSA (Secp256k1)  key pair type.
+  ecdsa,
 }

@@ -10,6 +10,7 @@ part of polkadart_keyring;
 abstract class KeyPair {
   static Ed25519KeyPair get ed25519 => Ed25519KeyPair();
   static Sr25519KeyPair get sr25519 => Sr25519KeyPair();
+  static EcdsaKeyPair get ecdsa => EcdsaKeyPair();
   late int ss58Format;
   final KeyPairType keyPairType;
   // ignore: prefer_final_fields
@@ -18,7 +19,7 @@ abstract class KeyPair {
   /// constructor
   KeyPair(this.keyPairType);
 
-  Uint8List get bytes;
+  Uint8List bytes([bool compressed = true]);
 
   ///
   /// Create a new `KeyPair` from a given seed.
@@ -211,14 +212,14 @@ abstract class KeyPair {
   ///
   bool get isLocked => _isLocked;
 
-  String get hexr => hex.encode(bytes);
+  String get hexr => hex.encode(bytes());
 
   ///
   /// Returns `true` if the `KeyPair` matches with the other object.
   @override
   bool operator ==(Object other) {
-    return const ListEquality().equals(bytes.toList(growable: false),
-        (other as KeyPair).bytes.toList(growable: false));
+    return const ListEquality().equals(bytes().toList(growable: false),
+        (other as KeyPair).bytes().toList(growable: false));
   }
 
   ///

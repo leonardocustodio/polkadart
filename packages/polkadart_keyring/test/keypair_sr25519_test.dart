@@ -80,13 +80,12 @@ void main() {
           keyPair.address, 'xw8P6urbSAronL3zZFB7dg8p7LLSgKCUFDUgjohnf1iP434ic');
     });
 
-    test('test adds the pair: seedTwo', () async {
+    test('test adds the pair: seedTwo', () {
       expect(
           const ListEquality().equals(
-              (await keyring.fromSeed(
-                Uint8List.fromList(seedTwo),
-              ))
-                  .bytes
+              keyring
+                  .fromSeed(Uint8List.fromList(seedTwo))
+                  .bytes()
                   .toList(growable: false),
               publicKeyTwo),
           true);
@@ -108,7 +107,7 @@ void main() {
       expect(keyring.publicKeys, [publicKeyOne, publicKeyTwo.toList()]);
 
       final fetchedKeyPair = keyring.getByPublicKey(publicKeyTwo);
-      expect(fetchedKeyPair.bytes.toList(growable: false), publicKeyTwo);
+      expect(fetchedKeyPair.bytes().toList(growable: false), publicKeyTwo);
     });
 
     test('signs and verifies', () {

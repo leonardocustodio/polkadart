@@ -119,7 +119,7 @@ class Sr25519KeyPair extends KeyPair {
 
   @override
   String get address {
-    return Address(prefix: ss58Format, pubkey: bytes).encode();
+    return Address(prefix: ss58Format, pubkey: bytes()).encode();
   }
 
   @override
@@ -139,7 +139,7 @@ class Sr25519KeyPair extends KeyPair {
   }
 
   void _unlock(sr25519.SecretKey privateKey) {
-    if (privateKey.public().encode().toString() != bytes.toString()) {
+    if (privateKey.public().encode().toString() != bytes().toString()) {
       throw Exception('Public_Key_Mismatch: Invalid seed for given KeyPair.');
     }
     _privateKey = privateKey;
@@ -153,7 +153,8 @@ class Sr25519KeyPair extends KeyPair {
   }
 
   @override
-  Uint8List get bytes => Uint8List.fromList(_publicKey.encode());
+  Uint8List bytes([bool compressed = true]) =>
+      Uint8List.fromList(_publicKey.encode());
 
   ///
   /// Returns `true` if the `KeyPair` matches with the other object.

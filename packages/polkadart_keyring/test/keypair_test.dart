@@ -22,7 +22,7 @@ void main() {
     });
 
     test('fromSeed', () {
-      final bytes = keyPair.bytes;
+      final bytes = keyPair.bytes();
       final expectedBytes = [
         215,
         90,

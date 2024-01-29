@@ -16,10 +16,7 @@ class Pairs {
   ///
   /// - [pair]: The key pair to add to the collection.
   void add(KeyPair pair) {
-    _pairs[Address.decode(pair.address)
-        .pubkey
-        .toList(growable: false)
-        .toString()] = pair;
+    _pairs[pair.bytes().toList(growable: false).toString()] = pair;
   }
 
   /// Get a [KeyPair] from the collection by its address.
@@ -77,7 +74,7 @@ class Pairs {
   /// Get a list of all public keys from the collection.
   List<List<int>> get publicKeys {
     return all
-        .map((pair) => pair.bytes.toList(growable: false))
+        .map((pair) => pair.bytes().toList(growable: false))
         .toList(growable: false);
   }
 
