@@ -13,8 +13,10 @@ dependencies:
   pointycastle: ^3.6.2
   flutter_curve25519: ^0.1.2
   ss58: ^1.1.2
-  substrate_bip39: ^0.3.0
-  secp256k1_ecdsa: ^1.0.0
+  substrate_bip39: 
+    path: ../substrate_bip39
+  secp256k1_ecdsa: 
+    path: ../secp256k1_ecdsa
   typed_data: ^1.3.1 # BSD-3-Clause
   ed25519_edwards: ^0.3.1
   convert: ^3.1.1

@@ -36,14 +36,14 @@ class EcdsaKeyPair extends KeyPair {
     if (_isLocked) {
       throw Exception('KeyPair is locked. Unlock it before signing.');
     }
-    message = _blake2bDigest(message);
+    message = blake2bDigest(message);
     final signature = _privateKey.sign(message);
     return Uint8List.fromList(signature.toCompactRawBytes());
   }
 
   @override
   bool verify(Uint8List message, Uint8List signature) {
-    message = _blake2bDigest(message);
+    message = blake2bDigest(message);
     final signatureObject = secp256k1.Signature.fromCompactBytes(signature);
     return _publicKey.verify(signatureObject, message);
   }
@@ -52,17 +52,9 @@ class EcdsaKeyPair extends KeyPair {
   String get address {
     Uint8List bytesValue = bytes();
     if (bytesValue.length > 32) {
-      bytesValue = _blake2bDigest(bytesValue);
+      bytesValue = blake2bDigest(bytesValue);
     }
     return Address(prefix: ss58Format, pubkey: bytesValue).encode();
-  }
-
-  Uint8List _blake2bDigest(Uint8List data) {
-    final digest = Blake2bDigest(digestSize: 32);
-    digest.update(data, 0, data.length);
-    final output = Uint8List(32);
-    digest.doFinal(output, 0);
-    return output;
   }
 
   secp256k1.PrivateKey _privateKeyFromSeed(Uint8List seed) {

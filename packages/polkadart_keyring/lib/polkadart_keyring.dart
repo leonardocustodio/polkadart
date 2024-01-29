@@ -1,5 +1,6 @@
 library polkadart_keyring;
 
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:convert/convert.dart';
@@ -20,3 +21,5 @@ part 'src/ed25519.dart';
 part 'src/sr25519.dart';
 part 'src/constants.dart';
 part 'src/public_key.dart';
+part 'src/multisig.dart';
+part 'src/hashers.dart';
