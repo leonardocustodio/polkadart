@@ -1,9 +1,7 @@
 name: secp256k1_ecdsa
-description: A starting point for Dart libraries or applications.
-version: 1.0.0
-# repository: https://github.com/my_org/my_repo
-
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+description: secp256k1_ecdsa helps to generate secp256k1 key pairs, sign/verify messages, compress/expand keys and recover public keys.
+version: 0.1.0
+repository: https://github.com/leonardocustodio/polkadart
 
 environment:
   sdk: ^3.2.4

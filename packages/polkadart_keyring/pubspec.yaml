@@ -4,7 +4,6 @@ version: 0.3.0
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/polkadart_keyring
 repository: https://github.com/leonardocustodio/polkadart
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
   sdk: ">=3.0.1 <4.0.0"
@@ -14,10 +13,8 @@ dependencies:
   pointycastle: ^3.6.2
   flutter_curve25519: ^0.1.2
   ss58: ^1.1.2
-  substrate_bip39:
-    path: ../substrate_bip39
-  secp256k1_ecdsa:
-    path: ../secp256k1_ecdsa
+  substrate_bip39: ^0.3.0
+  secp256k1_ecdsa: ^1.0.0
   typed_data: ^1.3.1 # BSD-3-Clause
   ed25519_edwards: ^0.3.1
   convert: ^3.1.1
