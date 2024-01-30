@@ -50,11 +50,20 @@ class EcdsaKeyPair extends KeyPair {
 
   @override
   String get address {
-    Uint8List bytesValue = bytes();
+    return Address(prefix: ss58Format, pubkey: _addressPrivate()).encode();
+  }
+
+  @override
+  String get rawAddress {
+    return hex.encode(_addressPrivate());
+  }
+
+  Uint8List _addressPrivate() {
+    final Uint8List bytesValue = bytes();
     if (bytesValue.length > 32) {
-      bytesValue = _blake2bDigest(bytesValue);
+      return _blake2bDigest(bytesValue);
     }
-    return Address(prefix: ss58Format, pubkey: bytesValue).encode();
+    return bytesValue;
   }
 
   Uint8List _blake2bDigest(Uint8List data) {
