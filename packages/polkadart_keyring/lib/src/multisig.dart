@@ -6,11 +6,12 @@ class MultiSig {
   static Uint8List createMultiSigBytes(
       List<Uint8List> signatories, int threshold) {
     if (signatories.isEmpty) {
-      throw Exception('No signatories provided.');
+      throw ArgumentError('No signatories provided.');
     }
 
     // sort the signatories
-    signatories.sort(uint8ListCompare);
+    final sortedSignatories = List<Uint8List>.from(signatories)
+      ..sort(uint8ListCompare);
 
     // generate the multi output result
     final result = <int>[];
@@ -19,8 +20,9 @@ class MultiSig {
     result.addAll(PREFIX);
 
     // append the length
-    result.addAll(scale_codec.CompactCodec.codec.encode(signatories.length));
-    for (final who in signatories) {
+    result.addAll(
+        scale_codec.CompactCodec.codec.encode(sortedSignatories.length));
+    for (final who in sortedSignatories) {
       result.addAll(who);
     }
     // append the threshold
