@@ -6,6 +6,8 @@ dependency_overrides:
     path: ../packages/polkadart_cli
   polkadart_keyring:
     path: ../packages/polkadart_keyring
+  secp256k1_ecdsa:
+    path: ../packages/secp256k1_ecdsa
   polkadart_scale_codec:
     path: ../packages/polkadart_scale_codec
   ss58:

@@ -43,7 +43,7 @@ void main() {
     });
 
     test('Retrieving KeyPairs by PublicKey', () {
-      final publicKey1 = keyPair1.bytes;
+      final publicKey1 = keyPair1.bytes();
 
       // Add keyPair1 to pairs
       pairs.add(keyPair1);
@@ -69,10 +69,10 @@ void main() {
       expect(() => pairs.getByAddress(address1), throwsArgumentError);
 
       // Remove keyPair2 by public key
-      pairs.removeByPublicKey(keyPair2.bytes);
+      pairs.removeByPublicKey(keyPair2.bytes());
 
       // Check that keyPair2 is removed
-      expect(() => pairs.getByPublicKey(keyPair2.bytes), throwsArgumentError);
+      expect(() => pairs.getByPublicKey(keyPair2.bytes()), throwsArgumentError);
     });
 
     test('Removing All KeyPairs', () {
@@ -96,12 +96,12 @@ void main() {
 
       expect(
           const ListEquality().equals(
-              pairs.publicKeys[0], keyPair1.bytes.toList(growable: false)),
+              pairs.publicKeys[0], keyPair1.bytes().toList(growable: false)),
           true);
 
       expect(
           const ListEquality().equals(
-              pairs.publicKeys[1], keyPair2.bytes.toList(growable: false)),
+              pairs.publicKeys[1], keyPair2.bytes().toList(growable: false)),
           true);
       // Check that addresses are retrieved correctly
       expect(pairs.addresses, contains(keyPair1.address));
