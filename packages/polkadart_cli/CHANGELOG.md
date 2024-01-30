@@ -1,3 +1,6 @@
+## 0.3.2
+- Makes params from runtime calls strongly typed
+
 ## 0.3.1
 - Fixes issues with generating extrinsics called 'call'
 
