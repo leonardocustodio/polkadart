@@ -1,3 +1,6 @@
+## 0.3.2
+- Fixes readme version
+
 ## 0.3.1
 - Adds ecdsa support
 
