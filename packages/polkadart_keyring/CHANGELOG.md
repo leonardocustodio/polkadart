@@ -1,3 +1,6 @@
+## 0.3.1
+- Adds ecdsa support
+
 ## 0.3.0
 - Adds sr25519 support
 
