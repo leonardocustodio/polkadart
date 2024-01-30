@@ -1,14 +1,15 @@
 name: secp256k1_ecdsa
 description: secp256k1_ecdsa helps to generate secp256k1 key pairs, sign/verify messages, compress/expand keys and recover public keys.
 version: 0.1.0
+homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/secp256k1_ecdsa
 repository: https://github.com/leonardocustodio/polkadart
 
 environment:
-  sdk: ^3.2.4
+  sdk: ">=3.0.1 <4.0.0"
 
-# Add regular dependencies here.
 dependencies:
   pointycastle: ^3.7.4
+
 dev_dependencies:
   lints: ^2.1.0
   test: ^1.24.0
