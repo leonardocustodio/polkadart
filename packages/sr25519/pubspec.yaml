@@ -13,7 +13,7 @@ dependencies:
   cryptography: ^2.7.0
   merlin: ^1.0.3
   ristretto255: ^1.0.2
-  substrate_bip39: ^0.2.0
+  substrate_bip39: ^0.3.0
 
 dev_dependencies:
   lints: ^3.0.0
