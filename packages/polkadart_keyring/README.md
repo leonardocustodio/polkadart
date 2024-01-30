@@ -13,6 +13,17 @@ dependencies:
 
 ## Usage
 
+### Creating MultiSig Address
+
+```dart
+    final result = MultiSig.createMultiSigAddress([
+        '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+        '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
+        '5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y'
+        ], 2);
+    // result = 5DjYJStmdZ2rcqXbXGX7TW85JsrW6uG4y9MUcLq2BoPMpRA7
+```
+
 ### Creating KeyPairs from Mnemonic
 
 You can create a new [KeyPair] from a BIP39 mnemonic and optionally add it to the keyring. Here's an example:

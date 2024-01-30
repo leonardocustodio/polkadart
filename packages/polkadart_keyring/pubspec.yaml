@@ -4,7 +4,6 @@ version: 0.3.2
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/polkadart_keyring
 repository: https://github.com/leonardocustodio/polkadart
 
-
 environment:
   sdk: ">=3.0.1 <4.0.0"
 
@@ -20,6 +19,7 @@ dependencies:
   sr25519: ^0.1.0
   merlin: ^1.0.3
   collection: ^1.18.0
+  polkadart_scale_codec: ^1.1.2
 
 dev_dependencies:
   lints: ^2.0.0

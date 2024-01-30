@@ -4,15 +4,14 @@ import 'package:test/test.dart';
 
 void main() {
   test('creates a valid multikey (aligning with Rust, needs sorting)', () {
-    final multisig = MultiSig(2)
-      ..addBytesList([
-        Uint8List.fromList([1, 0, 0, 0, 0, 0, 0, 0]),
-        Uint8List.fromList([3, 0, 0, 0, 0, 0, 0, 0]),
-        Uint8List.fromList([2, 0, 0, 0, 0, 0, 0, 0])
-      ]);
+    final result = MultiSig.createMultiSigBytes([
+      Uint8List.fromList([1, 0, 0, 0, 0, 0, 0, 0]),
+      Uint8List.fromList([3, 0, 0, 0, 0, 0, 0, 0]),
+      Uint8List.fromList([2, 0, 0, 0, 0, 0, 0, 0])
+    ], 2);
 
     expect(
-        multisig.generateMultiSig().toList().toString(),
+        result.toList().toString(),
         Uint8List.fromList([
           67,
           151,
@@ -47,5 +46,15 @@ void main() {
           254,
           79
         ]).toList().toString());
+  });
+
+  test('creates a valid multikey for the address.', () {
+    final result = MultiSig.createMultiSigAddress([
+      '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+      '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
+      '5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y'
+    ], 2);
+
+    expect(result, '5DjYJStmdZ2rcqXbXGX7TW85JsrW6uG4y9MUcLq2BoPMpRA7');
   });
 }
