@@ -43,8 +43,11 @@ class Ed25519KeyPair extends KeyPair {
 
   @override
   String get address {
-    return Address(prefix: ss58Format, pubkey: bytes).encode();
+    return Address(prefix: ss58Format, pubkey: bytes()).encode();
   }
+
+  @override
+  String get rawAddress => address;
 
   @override
   Future<void> unlockFromMnemonic(String mnemonic, [String? password]) async {
@@ -64,7 +67,7 @@ class Ed25519KeyPair extends KeyPair {
   }
 
   void _unlock(ed.PrivateKey privateKey) {
-    if (ed.public(privateKey).bytes.toString() != bytes.toString()) {
+    if (ed.public(privateKey).bytes.toString() != bytes().toString()) {
       throw Exception('Public_Key_Mismatch: Invalid seed for given KeyPair.');
     }
     _privateKey = privateKey;
@@ -81,7 +84,8 @@ class Ed25519KeyPair extends KeyPair {
   }
 
   @override
-  Uint8List get bytes => Uint8List.fromList(_publicKey.bytes);
+  Uint8List bytes([bool compressed = true]) =>
+      Uint8List.fromList(_publicKey.bytes);
 
   ///
   /// Returns `true` if the `KeyPair` matches with the other object.

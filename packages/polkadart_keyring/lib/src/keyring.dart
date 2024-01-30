@@ -26,6 +26,10 @@ class Keyring {
   /// Create a new `Keyring` instance for sr25519.
   static get sr25519 => Keyring._(KeyPairType.sr25519);
 
+  ///
+  /// Create a new `Keyring` instance for sr25519.
+  static get ecdsa => Keyring._(KeyPairType.ecdsa);
+
   /// Create a new [KeyPair] from a BIP39 mnemonic and optionally add it to the keyring.
   ///
   /// This method generates a key pair from the provided [uri].
@@ -48,6 +52,9 @@ class Keyring {
     switch (keyPairType ?? this.keyPairType) {
       case KeyPairType.ed25519:
         pair = await KeyPair.ed25519.fromUri(uri, password);
+        break;
+      case KeyPairType.ecdsa:
+        pair = await KeyPair.ecdsa.fromUri(uri, password);
         break;
       default:
         pair = await KeyPair.sr25519.fromUri(uri, password);
@@ -93,13 +100,16 @@ class Keyring {
   /// final seed = your Uint8List seed;
   /// final keyPair = await keyring.fromSeed(seed);
   /// ```
-  Future<KeyPair> fromSeed(Uint8List seed,
-      {bool addToPairs = false, KeyPairType? keyPairType}) async {
+  KeyPair fromSeed(Uint8List seed,
+      {bool addToPairs = false, KeyPairType? keyPairType}) {
     late KeyPair pair;
 
     switch (keyPairType ?? this.keyPairType) {
       case KeyPairType.ed25519:
         pair = KeyPair.ed25519.fromSeed(seed);
+        break;
+      case KeyPairType.ecdsa:
+        pair = KeyPair.ecdsa.fromSeed(seed);
         break;
       default:
         pair = KeyPair.sr25519.fromSeed(seed);
@@ -222,7 +232,7 @@ class Keyring {
   /// ```
   List<List<int>> get publicKeys {
     return pairs.all
-        .map((pair) => pair.bytes.toList(growable: false))
+        .map((pair) => pair.bytes().toList(growable: false))
         .toList(growable: false);
   }
 
