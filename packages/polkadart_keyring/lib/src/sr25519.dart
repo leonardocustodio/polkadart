@@ -123,6 +123,9 @@ class Sr25519KeyPair extends KeyPair {
   }
 
   @override
+  String get rawAddress => address;
+
+  @override
   Future<void> unlockFromMnemonic(String mnemonic, [String? password]) async {
     final seed = await SubstrateBip39.ed25519.seedFromUri(mnemonic);
     _unlock(sr25519.SecretKey.fromEd25519Bytes(seed));

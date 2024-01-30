@@ -47,6 +47,9 @@ class Ed25519KeyPair extends KeyPair {
   }
 
   @override
+  String get rawAddress => address;
+
+  @override
   Future<void> unlockFromMnemonic(String mnemonic, [String? password]) async {
     final seed =
         await SubstrateBip39.ed25519.seedFromUri(mnemonic, password: password);

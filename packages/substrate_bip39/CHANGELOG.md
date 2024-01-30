@@ -1,3 +1,6 @@
+## 0.3.0
+- Changes for ecdsa support
+
 ## 0.2.0
 
 - License update

@@ -174,6 +174,18 @@ abstract class KeyPair {
   ///
   String get address;
 
+  ///
+  /// Get the raw address of the `KeyPair`.
+  ///
+  /// Example:
+  /// ```dart
+  /// final keyPair = KeyPair.sr25519.fromSeed(seed); // Replace with your actual seed
+  /// print('Raw Address: ${keyPair.rawAddress}');
+  /// ```
+  ///
+  ///
+  String get rawAddress;
+
   /// Get the public key.
   ///
   /// Example:
@@ -211,8 +223,6 @@ abstract class KeyPair {
   ///
   ///
   bool get isLocked => _isLocked;
-
-  String get hexr => hex.encode(bytes());
 
   ///
   /// Returns `true` if the `KeyPair` matches with the other object.

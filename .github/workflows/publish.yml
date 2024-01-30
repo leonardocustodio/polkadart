@@ -14,6 +14,7 @@ jobs:
           - polkadart_cli
           - polkadart_keyring
           - polkadart_scale_codec
+          - secp256k1_ecdsa
           - ss58
           - sr25519
           - substrate_metadata
