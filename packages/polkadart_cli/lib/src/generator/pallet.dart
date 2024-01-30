@@ -539,12 +539,18 @@ Class createPalletTxs(
                 ..name = sanitize(txName, recase: false)
                 ..docs.addAll(sanitizeDocs(tx.docs))
                 ..returns = runtimePrimitive
-                ..optionalParameters
-                    .addAll(tx.fields.map((field) => Parameter((b) => b
-                      ..required =
-                          field.codec.primitive(dirname).isNullable != true
-                      ..named = true
-                      ..name = field.sanitizedName)))
+                ..optionalParameters.addAll(
+                  tx.fields.map(
+                    (field) => Parameter(
+                      (b) => b
+                        ..required =
+                            field.codec.primitive(dirname).isNullable != true
+                        ..named = true
+                        ..name = field.sanitizedName
+                        ..type = field.codec.primitive(dirname),
+                    ),
+                  ),
+                )
                 ..body = Block((b) {
                   if (sanitize(txName) ==
                       sanitize(primitive.symbol.toString())) {
