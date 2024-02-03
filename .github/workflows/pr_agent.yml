@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
   issue_comment:
+  pull_request_target:
+    types: [labeled]
   
 jobs:
   pr_agent_job:
