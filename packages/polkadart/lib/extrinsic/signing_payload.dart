@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
+import 'package:polkadart/polkadart.dart';
 import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart/substrate/era.dart';
@@ -88,7 +89,12 @@ class SigningPayload {
     final String addExtra = additionalExtras.join();
     final String payload = method + extra + addExtra;
 
-    return Uint8List.fromList(hex.decode(payload));
+    final payloadEncoded = Uint8List.fromList(hex.decode(payload));
+
+    // See rust code: https://github.com/paritytech/polkadot-sdk/blob/e349fc9ef8354eea1bafc1040c20d6fe3189e1ec/substrate/primitives/runtime/src/generic/unchecked_extrinsic.rs#L253
+    return payloadEncoded.length > 256
+        ? Blake2bHasher(32).hash(payloadEncoded)
+        : payloadEncoded;
   }
 
   bool _usesChargeAssetTxPayment(dynamic registry) {
