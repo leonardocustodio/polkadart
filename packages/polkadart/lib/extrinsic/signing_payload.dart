@@ -92,7 +92,9 @@ class SigningPayload {
     final payloadEncoded = Uint8List.fromList(hex.decode(payload));
 
     // See rust code: https://github.com/paritytech/polkadot-sdk/blob/e349fc9ef8354eea1bafc1040c20d6fe3189e1ec/substrate/primitives/runtime/src/generic/unchecked_extrinsic.rs#L253
-    return payloadEncoded.length > 256 ? Blake2bHasher(32).hash(payloadEncoded) : payloadEncoded;
+    return payloadEncoded.length > 256
+        ? Blake2bHasher(32).hash(payloadEncoded)
+        : payloadEncoded;
   }
 
   bool _usesChargeAssetTxPayment(dynamic registry) {
