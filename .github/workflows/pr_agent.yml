@@ -1,6 +1,7 @@
 name: PR Agent
 
 on:
+  workflow_dispatch:
   pull_request:
   issue_comment:
   
