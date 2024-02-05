@@ -27,7 +27,6 @@ jobs:
           - sr25519
           - substrate_bip39
           - substrate_metadata
-          - secp256k1_ecdsa
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.package }}
