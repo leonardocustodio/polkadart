@@ -13,10 +13,10 @@ This library is funded by [Web3 Foundation](https://web3.foundation) via their [
 
 ## Packages
 
-This repo is a monorepo for `polkadart` and related pkgs.
+This repo is a monorepo for `polkadart` and related packages.
 
-| Package                                                                    | Description                             |
-|----------------------------------------------------------------------------|-----------------------------------------|
+| Packages and version ___________ | Description <br>___________                            |
+|:---------------------------------------------------------------------------|:----------------------------------------|
 | [![version][pkg:polkadart:version]][pkg:polkadart]                         | The core package that provides tools to connect and interact with the Polkadot or Substrate chains. It abstracts the complexities of the network protocols and offers straightforward APIs. |
 | [![version][pkg:polkadart_cli:version]][pkg:polkadart_cli]                 | A command-line interface tool that generates dart language types and corresponding definitions by interpreting the chain's metadata. |
 | [![version][pkg:polkadart_keyring:version]][pkg:polkadart_keyring]         | Manages keys and addresses for Polkadot/Substrate accounts. Contains cryptographic functions related to creating keys, signing transactions, and managing user identities on the blockchain. |
@@ -44,37 +44,37 @@ Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started
 This repository is licensed under [Apache 2.0 license](https://github.com/leonardocustodio/polkadart/blob/main/LICENSE)
 
 [pkg:polkadart]: https://pub.dartlang.org/packages/polkadart
-[pkg:polkadart:version]: https://img.shields.io/pub/v/polkadart.svg
+[pkg:polkadart:version]: https://img.shields.io/pub/v/polkadart?label=polkadart&link=https%3A%2F%2Fpub.dev%2Fpolkadart
 [pkg:polkadart:source]: ./packages/polkadart
 
 [pkg:polkadart_cli]: https://pub.dartlang.org/packages/polkadart_cli
-[pkg:polkadart_cli:version]: https://img.shields.io/pub/v/polkadart_cli.svg
+[pkg:polkadart_cli:version]: https://img.shields.io/pub/v/polkadart_cli?label=polkadart_cli
 [pkg:polkadart_cli:source]: ./packages/polkadart_cli
 
 [pkg:polkadart_keyring]: https://pub.dartlang.org/packages/polkadart_keyring
-[pkg:polkadart_keyring:version]: https://img.shields.io/pub/v/polkadart_keyring.svg
+[pkg:polkadart_keyring:version]: https://img.shields.io/pub/v/polkadart_keyring?label=polkadart_keyring
 [pkg:polkadart_keyring:source]: ./packages/polkadart_keyring
 
 [pkg:polkadart_scale_codec]: https://pub.dartlang.org/packages/polkadart_scale_codec
-[pkg:polkadart_scale_codec:version]: https://img.shields.io/pub/v/polkadart_scale_codec.svg
+[pkg:polkadart_scale_codec:version]: https://img.shields.io/pub/v/polkadart_scale_codec?label=polkadart_scale_codec
 [pkg:polkadart_scale_codec:source]: ./packages/polkadart_scale_codec
 
 [pkg:secp256k1_ecdsa]: https://pub.dartlang.org/packages/secp256k1_ecdsa
-[pkg:secp256k1_ecdsa:version]: https://img.shields.io/pub/v/secp256k1_ecdsa.svg
+[pkg:secp256k1_ecdsa:version]: https://img.shields.io/pub/v/secp256k1_ecdsa?label=secp256k1_ecdsa
 [pkg:secp256k1_ecdsa:source]: ./packages/secp256k1_ecdsa
 
 [pkg:sr25519]: https://pub.dartlang.org/packages/sr25519
-[pkg:sr25519:version]: https://img.shields.io/pub/v/sr25519.svg
+[pkg:sr25519:version]: https://img.shields.io/pub/v/sr25519?label=sr25519
 [pkg:sr25519:source]: ./packages/sr25519
 
 [pkg:ss58]: https://pub.dartlang.org/packages/ss58
-[pkg:ss58:version]: https://img.shields.io/pub/v/ss58.svg
+[pkg:ss58:version]: https://img.shields.io/pub/v/ss58?label=ss58
 [pkg:ss58:source]: ./packages/ss58
 
 [pkg:substrate_bip39]: https://pub.dartlang.org/packages/substrate_bip39
-[pkg:substrate_bip39:version]: https://img.shields.io/pub/v/substrate_bip39.svg
+[pkg:substrate_bip39:version]: https://img.shields.io/pub/v/substrate_bip39?label=substrate_bip39
 [pkg:substrate_bip39:source]: ./packages/substrate_bip39
 
 [pkg:substrate_metadata]: https://pub.dartlang.org/packages/substrate_metadata
-[pkg:substrate_metadata:version]: https://img.shields.io/pub/v/substrate_metadata.svg
+[pkg:substrate_metadata:version]: https://img.shields.io/pub/v/substrate_metadata?label=substrate_metadata
 [pkg:substrate_metadata:source]: ./packages/substrate_metadata
