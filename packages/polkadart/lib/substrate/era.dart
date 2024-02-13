@@ -9,14 +9,12 @@ class Era {
   static const Era codec = Era._();
 
   int _getTrailingZeros(int number) {
-    final binary = number.toRadixString(2);
-    int index = 0;
-
-    while (binary[binary.length - 1 - index] == '0') {
-      index++;
+    var zero = 0;
+    while ((number & 1) == 0) {
+      zero += 1;
+      number = number >> 1;
     }
-
-    return index;
+    return zero;
   }
 
   String _flipBits(String bitString) {
@@ -78,6 +76,6 @@ class Era {
     final quantizeFactor = max(1, period >> 12);
     final quantizedPhase = phase / quantizeFactor * quantizeFactor;
 
-    return encode(quantizedPhase.toInt(), period);
+    return encode(quantizedPhase.toInt(), calPeriod as int);
   }
 }

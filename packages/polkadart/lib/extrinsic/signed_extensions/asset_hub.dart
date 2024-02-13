@@ -25,18 +25,14 @@ class AssetHubSignedExtensions implements SignedExtensions {
   @override
   String additionalSignedExtension(String extension, Map info) {
     switch (extension) {
-      case 'CheckNonce':
-        return info['nonce'];
-      case 'ChargeAssetTxPayment':
-        return '${info['tip']}${info['assetId']}';
+      case 'CheckMortality':
+        return info['blockHash'];
       case 'CheckSpecVersion':
         return info['specVersion'];
       case 'CheckTxVersion':
         return info['transactionVersion'];
       case 'CheckGenesis':
         return info['genesisHash'];
-      case 'CheckMortality':
-        return info['blockHash'];
       default:
         return '';
     }

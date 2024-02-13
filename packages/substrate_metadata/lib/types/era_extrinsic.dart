@@ -30,25 +30,33 @@ class EraExtrinsic with Codec<Map<String, int>> {
 
   @override
   void encodeTo(Map<String, int> value, Output output) {
-    if (value.isEmpty || (value['period'] == null && value['phase'] == null)) {
+    if (value.isEmpty ||
+        (value['phase'] == null && value['period'] == null) ||
+        (value['phase'] == 0 && value['period'] == 0)) {
       //
       // Immortal
       output.pushByte(0);
       return;
-    } else if (value['period'] == null || value['phase'] == null) {
-      throw Exception(
-          'Both period and phase should be present or both should be absent.');
     }
 
-    //
-    // Mortal
-    final int period = value['period']!;
-    final int phase = value['phase']!;
+    final calPeriod = pow(2, (log(value['period']!) / log(2)).ceil());
+    final phase = value['phase']! % min(max(calPeriod, 4), 1 << 16);
+    final quantizeFactor = max(1, value['period']! >> 12);
+    final quantizedPhase = phase / quantizeFactor * quantizeFactor;
 
-    final int encoded = min(15, max(1, _trailingZeros(period) - 1)) |
-        ((phase ~/ max(period >> 12, 1)) << 4);
+    return output.write(_encode(quantizedPhase.toInt(), calPeriod as int));
+  }
 
-    output.write(_littleIntToUint8List(encoded, 2));
+  _encode(int phase, int period) {
+    if (phase == 0 && period == 0) {
+      return '00';
+    }
+
+    final quantizeFactor = max(period >> 12, 1);
+    final encoded = min(15, max(1, _trailingZeros(period) - 1)) |
+        (phase ~/ quantizeFactor << 4);
+
+    return _littleIntToUint8List(encoded, 2);
   }
 
   int _trailingZeros(int value) {

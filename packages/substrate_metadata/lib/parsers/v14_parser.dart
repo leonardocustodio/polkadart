@@ -41,7 +41,7 @@ class V14Parser {
 
       //
       // calls
-      final calls = <Map<String, dynamic>>[];
+      final calls = <int, MapEntry<String, Map<String, dynamic>>>{};
       if (pallet['calls'] != null) {
         final variants =
             rawMetadata['lookup']['types'][pallet['calls']['type']];
@@ -57,7 +57,7 @@ class V14Parser {
             });
           }
 
-          calls.add({
+          calls[variant['index']] = MapEntry(variant['name'], {
             'name': variant['name'],
             'args': args,
             'docs': variant['docs'],
@@ -95,11 +95,14 @@ class V14Parser {
         //
         // call lookup filling
         final callEnumCodec = <int, MapEntry<String, Codec>>{};
-        for (var callIndex = 0; callIndex < calls.length; callIndex++) {
-          final call = calls[callIndex];
+        for (final callEntry in calls.entries) {
+          final int callIndex = callEntry.key;
+          final MapEntry<String, Map<String, dynamic>> callValue =
+              callEntry.value;
 
           final List<Map<String, dynamic>> callArgs =
-              (call['args'] as List<dynamic>).cast<Map<String, dynamic>>();
+              (callValue.value['args'] as List<dynamic>)
+                  .cast<Map<String, dynamic>>();
 
           final Map<String, Codec> codecs = <String, Codec>{};
           final List<Codec> codecList = <Codec>[];
@@ -120,7 +123,7 @@ class V14Parser {
           } else {
             argsCodec = CompositeCodec(codecs);
           }
-          callEnumCodec[callIndex] = MapEntry(call['name'], argsCodec);
+          callEnumCodec[callIndex] = MapEntry(callValue.key, argsCodec);
         }
         callsCodec[palletIndex] =
             MapEntry(palletName, ComplexEnumCodec.sparse(callEnumCodec));
@@ -228,9 +231,20 @@ class V14Parser {
       }
       final signedExtensionsCompositeCodec = <String, Codec>{};
 
+      // Set the extrinsic version which would be helpful further in extrinsic and signing payload.
+      _resultingRegistry.extrinsicVersion =
+          rawMetadata['extrinsic']['version']!;
+
+      // clear the signedExtensionsMap in the registry
+      _resultingRegistry.signedExtensions.clear();
+
       for (final signedExtensions in rawMetadata['extrinsic']
           ['signedExtensions']) {
         final type = siTypes[signedExtensions['type']];
+        final identifier = signedExtensions['identifier'].toString();
+
+        // put a NullCodec which does nothing
+        _resultingRegistry.signedExtensions[identifier] = NullCodec.codec;
 
         if (type == null || type.toLowerCase() == 'null') {
           continue;
@@ -238,10 +252,11 @@ class V14Parser {
         final typeCodec = _resultingRegistry.parseSpecificCodec(
             _metadataExpander.customCodecRegister, type);
 
-        final identifier =
-            signedExtensions['identifier'].toString().replaceAll('Check', '');
-        String newIdentifier = identifier;
-        switch (identifier) {
+        // overwrite the codec here.
+        _resultingRegistry.signedExtensions[identifier] = typeCodec;
+
+        String newIdentifier = identifier.replaceAll('Check', '');
+        switch (newIdentifier) {
           case 'Mortality':
             signedExtensionsCompositeCodec['era'] =
                 _resultingRegistry.parseSpecificCodec(

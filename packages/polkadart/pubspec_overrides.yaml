@@ -4,3 +4,7 @@ dependency_overrides:
     path: ../polkadart_scale_codec
   substrate_metadata:
     path: ../substrate_metadata
+  polkadart_keyring:
+    path: ../polkadart_keyring
+  substrate_bip39:
+    path: ../substrate_bip39

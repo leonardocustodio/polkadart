@@ -5,8 +5,15 @@ final PREFIX = utf8.encode('modlpy/utilisuba');
 class MultiSig {
   static Uint8List createMultiSigBytes(
       List<Uint8List> signatories, int threshold) {
-    if (signatories.isEmpty) {
-      throw ArgumentError('No signatories provided.');
+    if (signatories.length < 2 || signatories.length > 100) {
+      throw ArgumentError('The signatories should be 2 to 100.');
+    }
+    if (threshold > signatories.length) {
+      throw ArgumentError(
+          'The threshold should not exceed the number of signatories.');
+    }
+    if (threshold < 2) {
+      throw ArgumentError('The threshold should be at least 2.');
     }
 
     // sort the signatories
@@ -29,6 +36,15 @@ class MultiSig {
     result.addAll(bnToU8a(threshold, bitLength: 16));
 
     return blake2bDigest(Uint8List.fromList(result));
+  }
+
+  static List<Uint8List> sortAddressesExcludeMe(
+      List<Uint8List> addresses, Uint8List me) {
+    final sorted = List<Uint8List>.from(addresses);
+    sorted.removeWhere(
+        (address) => address.toList().toString() == me.toList().toString());
+    sorted.sort(uint8ListCompare);
+    return sorted;
   }
 
   static String createMultiSigAddress(List<String> signatories, int threshold,
