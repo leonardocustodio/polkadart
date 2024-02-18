@@ -35,6 +35,10 @@ class MultisigResponse {
     return Signatories.fromAddresses(allSignatories, threshold).mutiSigBytes;
   }
 
+  ///
+  /// ApproveAsMulti
+  ///
+  /// It approves the multisig transaction and sends for further approval to other signatories.
   Future<bool> approveAsMulti(
     Provider provider,
     KeyPair keyPair, {
@@ -48,6 +52,10 @@ class MultisigResponse {
     );
   }
 
+  ///
+  /// AsMulti
+  ///
+  /// It approves the multisig transaction and sends for further approval to other signatories.
   Future<bool>? asMulti(
     Provider provider,
     KeyPair keyPair, {
@@ -61,6 +69,10 @@ class MultisigResponse {
     );
   }
 
+  ///
+  /// CancelAsMulti (Only the owner can cancel the multisig call.)
+  ///
+  /// It cancels the multisig transaction.
   Future<bool> cancelAsMulti(
     Provider provider,
     KeyPair keyPair, {

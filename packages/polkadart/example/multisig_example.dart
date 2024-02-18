@@ -32,11 +32,17 @@ void main() async {
     amount: BigInt.parse('71${'0' * 11}'), // 7 WND
     provider: provider,
   );
-  // Approve this call by TeslaS2
+  // Approve this call by TeslaS1
   await Future.delayed(Duration(seconds: 15));
   await multiSigResponse.approveAsMulti(provider, TeslaS1);
 
-  // Cancel this call by TeslaS3
+  // Execute this call by TeslaS2
   await Future.delayed(Duration(seconds: 15));
-  await multiSigResponse.cancelAsMulti(provider, TeslaS1);
+  await multiSigResponse.approveAsMulti(provider, TeslaS2);
+
+  /* 
+  // Cancel this call by TeslaS1
+  await Future.delayed(Duration(seconds: 15));
+  await multiSigResponse.cancelAsMulti(provider, TeslaS1); 
+  */
 }

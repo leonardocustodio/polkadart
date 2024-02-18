@@ -138,7 +138,7 @@ class Multisig {
   }
 
   ///
-  /// CancelAsMulti
+  /// CancelAsMulti (Only the owner can cancel the multisig call.)
   ///
   /// It cancels the multisig transaction.
   static Future<bool> cancelAsMulti({
