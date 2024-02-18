@@ -16,6 +16,12 @@ class Registry {
     this.codecs.addAll(codecs);
   }
 
+  ///
+  /// Get Signed Extensions
+  Map<String, Codec> getSignedExtensionTypes() {
+    return signedExtensions;
+  }
+
   ProxyCodec _createProxy(
       Map<String, dynamic> metadata, String key, dynamic value) {
     if (_proxies[key] != null) {

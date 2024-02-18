@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:polkadart/scale_codec.dart';
-
 abstract class Payload {
   final Uint8List method; // Call
   final int blockNumber;
@@ -19,13 +17,18 @@ abstract class Payload {
     this.assetId,
   });
 
-  toEncodedMap(Registry registry);
+  toEncodedMap(dynamic registry);
 
-  bool usesChargeAssetTxPayment(Registry registry) {
-    return registry.signedExtensions.containsKey('ChargeAssetTxPayment');
+  bool usesChargeAssetTxPayment(dynamic registry) {
+    if (registry.getSignedExtensionTypes() is Map) {
+      return (registry.getSignedExtensionTypes() as Map)
+          .containsKey('ChargeAssetTxPayment');
+    }
+    return (registry.getSignedExtensionTypes() as List)
+        .contains('ChargeAssetTxPayment');
   }
 
-  String maybeAssetIdEncoded(Registry registry) {
+  String maybeAssetIdEncoded(dynamic registry) {
     if (usesChargeAssetTxPayment(registry)) {
       // '00' and '01' refer to rust's Option variants 'None' and 'Some'.
       return assetId != null ? '01${assetId!.toRadixString(16)}' : '00';

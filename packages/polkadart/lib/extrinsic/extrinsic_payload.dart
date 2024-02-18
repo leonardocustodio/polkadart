@@ -25,7 +25,7 @@ class ExtrinsicPayload extends Payload {
   });
 
   @override
-  toEncodedMap(Registry registry) {
+  toEncodedMap(dynamic registry) {
     return {
       'signer': signer,
       'method': method,
@@ -55,7 +55,7 @@ class ExtrinsicPayload extends Payload {
     );
   }
 
-  Uint8List encode(Registry registry, SignatureType signatureType) {
+  Uint8List encode(dynamic registry, SignatureType signatureType) {
     final ByteOutput output = ByteOutput();
 
     final int extrinsicVersion = registry.extrinsicVersion;
@@ -82,13 +82,21 @@ class ExtrinsicPayload extends Payload {
 
     final encodedMap = toEncodedMap(registry);
 
-    if (_usesChargeAssetTxPayment(registry)) {
+    if (usesChargeAssetTxPayment(registry)) {
       signedExtensions = SignedExtensions.assetHubSignedExtensions;
     } else {
       signedExtensions = SignedExtensions.substrateSignedExtensions;
     }
+    late List<String> keys;
+    if (registry.getSignedExtensionTypes() is Map) {
+      keys = (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+          .keys
+          .toList();
+    } else {
+      keys = registry.getSignedExtensionTypes() as List<String>;
+    }
 
-    for (final signedExtensiontype in registry.signedExtensions.keys) {
+    for (final signedExtensiontype in keys) {
       final payload =
           signedExtensions.signedExtension(signedExtensiontype, encodedMap);
 
@@ -111,17 +119,13 @@ class ExtrinsicPayload extends Payload {
   /// Returns [Uint8List] Signature
   ///
   Uint8List encodeAndSign(
-      Registry registry, SignatureType signatureType, keyring.KeyPair keyPair) {
+      dynamic registry, SignatureType signatureType, keyring.KeyPair keyPair) {
     return keyPair.sign(encode(registry, signatureType));
   }
 
-  bool _usesChargeAssetTxPayment(Registry registry) {
-    return registry.signedExtensions.containsKey('ChargeAssetTxPayment');
-  }
-
   @override
-  String maybeAssetIdEncoded(Registry registry) {
-    if (_usesChargeAssetTxPayment(registry)) {
+  String maybeAssetIdEncoded(dynamic registry) {
+    if (usesChargeAssetTxPayment(registry)) {
       // '00' and '01' refer to rust's Option variants 'None' and 'Some'.
       return assetId != null ? '01${assetId!.toRadixString(16)}' : '00';
     } else {

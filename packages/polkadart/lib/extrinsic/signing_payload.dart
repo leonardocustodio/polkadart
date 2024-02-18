@@ -28,7 +28,7 @@ class SigningPayload extends Payload {
   });
 
   @override
-  toEncodedMap(Registry registry) {
+  toEncodedMap(dynamic registry) {
     return {
       'method': method,
       'specVersion': encodeHex(U32Codec.codec.encode(specVersion)),
@@ -47,7 +47,7 @@ class SigningPayload extends Payload {
     };
   }
 
-  Uint8List encode(Registry registry) {
+  Uint8List encode(dynamic registry) {
     final ByteOutput tempOutput = ByteOutput();
 
     tempOutput.write(method);
@@ -63,15 +63,38 @@ class SigningPayload extends Payload {
 
     final encodedMap = toEncodedMap(registry);
 
-    for (var extension in registry.signedExtensions.keys) {
+    late List<String> typeKeys;
+    if (registry.getSignedExtensionTypes() is Map) {
+      // Usage here for the Registry from the polkadart_scale_codec
+      typeKeys =
+          (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+              .keys
+              .toList();
+    } else {
+      // Usage here for the generated lib from the polkadart_cli
+      typeKeys = registry.getSignedExtensionTypes() as List<String>;
+    }
+
+    for (final extension in typeKeys) {
       final payload = signedExtensions.signedExtension(extension, encodedMap);
 
       if (payload.isNotEmpty) {
         tempOutput.write(hex.decode(payload));
       }
     }
+    late List<String> extraKeys;
+    if (registry.getSignedExtensionExtra() is Map) {
+      // Usage here for the Registry from the polkadart_scale_codec
+      extraKeys =
+          (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+              .keys
+              .toList();
+    } else {
+      // Usage here for the generated lib from the polkadart_cli
+      extraKeys = registry.getSignedExtensionExtra() as List<String>;
+    }
 
-    for (var extension in registry.signedExtensions.keys) {
+    for (final extension in extraKeys) {
       final payload =
           signedExtensions.additionalSignedExtension(extension, encodedMap);
 
