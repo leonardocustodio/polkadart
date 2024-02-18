@@ -116,7 +116,7 @@ class Multisig {
 
     final expectedTxHash = Hasher.blake2b256.hash(signedTx);
     final actualHash = await submitExtrinsic(provider, signedTx);
-    
+
     final isMatched = hex.encode(expectedTxHash) == hex.encode(actualHash);
     assertion(isMatched,
         'The expected hash and the actual hash of the approval transaction does not match.');
@@ -147,7 +147,8 @@ class Multisig {
       return false;
     }
 
-    if (multisigStorage.isOwner(signer.publicKey.bytes.toUint8List()) == false) {
+    if (multisigStorage.isOwner(signer.publicKey.bytes.toUint8List()) ==
+        false) {
       throw OwnerCallException('Only the owner can cancel the multisig call.');
     }
 
