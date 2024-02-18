@@ -16,3 +16,18 @@ extension SignExtrinsicExtension on Uint8List {
     return keyPair.sign(this);
   }
 }
+
+extension KeyPairExtension on keyring.KeyPair {
+  SignatureType get signatureType {
+    switch (keyPairType) {
+      case keyring.KeyPairType.sr25519:
+        return SignatureType.sr25519;
+      case keyring.KeyPairType.ecdsa:
+        return SignatureType.ecdsa;
+      case keyring.KeyPairType.ed25519:
+        return SignatureType.ed25519;
+      default:
+        throw UnsupportedError('Unsupported KeyPair type');
+    }
+  }
+}

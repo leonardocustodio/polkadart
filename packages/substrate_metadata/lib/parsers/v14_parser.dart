@@ -28,7 +28,11 @@ class V14Parser {
     // Temporariy referencing it to GenericCall until the real GenericCall is created below
     // and
     // then add it to the _resultingRegistry
-    _resultingRegistry.addCodec('Call', ProxyCodec());
+    {
+      final proxyCodec = ProxyCodec();
+      _resultingRegistry.addCodec('Call', proxyCodec);
+      _resultingRegistry.addCodec('RuntimeCall', proxyCodec);
+    }
 
     // Iterate over the pallets
     //
@@ -235,7 +239,7 @@ class V14Parser {
       _resultingRegistry.extrinsicVersion =
           rawMetadata['extrinsic']['version']!;
 
-      // clear the signedExtensionsMap in the registry
+      // clear the signedExtensions in the registry
       _resultingRegistry.signedExtensions.clear();
 
       for (final signedExtensions in rawMetadata['extrinsic']

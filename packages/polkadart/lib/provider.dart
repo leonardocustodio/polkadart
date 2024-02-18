@@ -76,7 +76,7 @@ class HttpProvider extends Provider {
   @override
   Future<RpcResponse> send(String method, List<dynamic> params) async {
     final response = await http.post(url, body: {
-      'id': ++_sequence,
+      'id': (++_sequence).toString(),
       'jsonrpc': '2.0',
       'method': method,
       'params': params,

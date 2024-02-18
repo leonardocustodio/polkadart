@@ -9,12 +9,14 @@ class Era {
   static const Era codec = Era._();
 
   int _getTrailingZeros(int number) {
-    var zero = 0;
-    while ((number & 1) == 0) {
-      zero += 1;
-      number = number >> 1;
+    final binary = number.toRadixString(2);
+    int index = 0;
+
+    while (binary[binary.length - 1 - index] == '0') {
+      index++;
     }
-    return zero;
+
+    return index;
   }
 
   String _flipBits(String bitString) {

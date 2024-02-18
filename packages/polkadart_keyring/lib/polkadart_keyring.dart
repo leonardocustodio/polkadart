@@ -9,7 +9,6 @@ import 'package:ed25519_edwards/ed25519_edwards.dart' as ed;
 import 'package:secp256k1_ecdsa/secp256k1.dart' as secp256k1;
 import 'package:ss58/ss58.dart';
 import 'package:sr25519/sr25519.dart' as sr25519;
-import 'package:merlin/merlin.dart' as merlin;
 import 'package:pointycastle/digests/blake2b.dart' show Blake2bDigest;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;

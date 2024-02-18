@@ -5,6 +5,7 @@ import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart/substrate/era.dart';
 
+import '../polkadart.dart';
 import 'abstract_payload.dart';
 
 class SigningPayload extends Payload {
@@ -53,8 +54,6 @@ class SigningPayload extends Payload {
 
     final ByteOutput output = ByteOutput();
 
-    CompactCodec.codec.encodeTo(tempOutput.length, output);
-
     late final SignedExtensions signedExtensions;
     if (usesChargeAssetTxPayment(registry)) {
       signedExtensions = SignedExtensions.assetHubSignedExtensions;
@@ -82,6 +81,11 @@ class SigningPayload extends Payload {
     }
 
     output.write(tempOutput.toBytes());
-    return output.toBytes();
+    final payloadEncoded = output.toBytes();
+
+    // See rust code: https://github.com/paritytech/polkadot-sdk/blob/e349fc9ef8354eea1bafc1040c20d6fe3189e1ec/substrate/primitives/runtime/src/generic/unchecked_extrinsic.rs#L253
+    return payloadEncoded.length > 256
+        ? Blake2bHasher(32).hash(payloadEncoded)
+        : payloadEncoded;
   }
 }
