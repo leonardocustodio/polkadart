@@ -13,6 +13,24 @@ class MultisigResponse {
     required this.allSignatories,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'callData': callData,
+      'callHash': callHash,
+      'threshold': threshold,
+      'allSignatories': allSignatories,
+    };
+  }
+
+  factory MultisigResponse.fromJson(Map<String, dynamic> json) {
+    return MultisigResponse(
+      callData: json['callData'],
+      callHash: json['callHash'],
+      threshold: json['threshold'],
+      allSignatories: json['allSignatories'].cast<String>(),
+    );
+  }
+
   Uint8List get multisigBytes {
     return Signatories.fromAddresses(allSignatories, threshold).mutiSigBytes;
   }

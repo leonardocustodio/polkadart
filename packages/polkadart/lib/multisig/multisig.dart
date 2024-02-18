@@ -10,6 +10,9 @@ class Multisig {
     required BigInt amount,
     required Provider provider,
     required List<String> otherSignatoriesAddressList,
+    int tip = 0,
+    int assetId = 0,
+    int eraPeriod = 64,
   }) async {
     final meta = await MultiSigMeta.fromProvider(provider: provider);
 
@@ -28,25 +31,33 @@ class Multisig {
           mutisigBytes,
           amount,
         ),
+        tip: tip,
+        assetId: assetId,
+        eraPeriod: eraPeriod,
         signer: depositorKeyPair,
         provider: provider,
       );
     }
 
-    final Uint8List callMethod = Transfers.transferKeepAlive.encode(
+    // Making the callData
+    final Uint8List callData = Transfers.transferKeepAlive.encode(
       meta.runtimeMetadata.chainInfo,
       Address.decode(recipientAddress).pubkey,
       amount,
     );
 
     return MultisigResponse(
-      callData: callMethod.toHex(),
-      callHash: Hasher.blake2b256.hash(callMethod).toHex(),
+      callData: callData.toHex(),
+      callHash: Hasher.blake2b256.hash(callData).toHex(),
       threshold: threshold,
       allSignatories: signatories.sortedSignatoriesAddresses,
     );
   }
 
+  ///
+  /// Fetches the multisig storage from the chain.
+  ///
+  /// This will return null if first approval of type`ApproveAsMulti` is not yet done.
   static Future<MultisigStorage?> fetchMultisigStorage(
       Provider provider,
       Duration storageKeyDelay,
@@ -81,6 +92,9 @@ class Multisig {
     required Uint8List method,
     required KeyPair signer,
     required Provider provider,
+    required int tip,
+    required int assetId,
+    required int eraPeriod,
   }) async {
     final nonce = await SystemApi(provider).accountNextIndex(signer.address);
 
@@ -88,14 +102,14 @@ class Multisig {
     /// Creating the first approveAsMulti from the account creator.
     final unsignedApprovalPayload = SigningPayload(
       method: method,
-      assetId: 0,
+      assetId: assetId,
       blockHash: hex.encode(meta.blockHash),
       blockNumber: meta.blockNumber,
-      eraPeriod: 64,
+      eraPeriod: eraPeriod,
       genesisHash: hex.encode(meta.genesisHash),
       nonce: nonce,
       specVersion: meta.specVersion,
-      tip: 0,
+      tip: tip,
       transactionVersion: meta.transactionVersion,
     );
 
@@ -132,6 +146,9 @@ class Multisig {
     required Provider provider,
     required KeyPair signer,
     Duration storageKeyDelay = const Duration(seconds: 20),
+    int tip = 0,
+    int assetId = 0,
+    int eraPeriod = 64,
   }) async {
     final MultisigStorage? multisigStorage = await fetchMultisigStorage(
         provider,
@@ -166,6 +183,9 @@ class Multisig {
         callHash: Uint8List.fromList(hex.decode(multisigResponse.callHash)),
         multiSigStorage: multisigStorage,
       ),
+      tip: tip,
+      assetId: assetId,
+      eraPeriod: eraPeriod,
       signer: signer,
       provider: provider,
     );
@@ -181,6 +201,9 @@ class Multisig {
     required Provider provider,
     required KeyPair signer,
     Duration storageKeyDelay = const Duration(seconds: 20),
+    int tip = 0,
+    int assetId = 0,
+    int eraPeriod = 64,
   }) async {
     final MultisigStorage? multisigStorage = await fetchMultisigStorage(
         provider,
@@ -226,6 +249,9 @@ class Multisig {
         ),
         multiSigStorage: multisigStorage,
       ),
+      tip: tip,
+      assetId: assetId,
+      eraPeriod: eraPeriod,
       signer: signer,
       provider: provider,
     );
@@ -241,6 +267,9 @@ class Multisig {
     required Provider provider,
     required KeyPair signer,
     Duration storageKeyDelay = const Duration(seconds: 25),
+    int tip = 0,
+    int assetId = 0,
+    int eraPeriod = 64,
   }) async {
     final MultisigStorage? multisigStorage = await fetchMultisigStorage(
         provider,
@@ -249,7 +278,7 @@ class Multisig {
         multisigResponse.multisigBytes);
 
     assertion(multisigStorage != null,
-        'The multisig storage does not exist on the chain.');
+        'The multisig storage does not exist on the chain. At least one approval with `approveAsMulti` should be done by signatory before calling `asMulti`.');
 
     if (multisigStorage!
         .isApprovedByAll(multisigResponse.allSignatories.length)) {
@@ -280,6 +309,9 @@ class Multisig {
         multiSigStorage: multisigStorage,
       ),
       signer: signer,
+      tip: tip,
+      assetId: assetId,
+      eraPeriod: eraPeriod,
       provider: provider,
     );
     return true;
