@@ -83,7 +83,7 @@ class SigningPayload extends Payload {
       }
     }
     late List<String> extraKeys;
-    if (registry.getSignedExtensionExtra() is Map) {
+    if (registry.getSignedExtensionTypes() is Map) {
       // Usage here for the Registry from the polkadart_scale_codec
       extraKeys =
           (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)

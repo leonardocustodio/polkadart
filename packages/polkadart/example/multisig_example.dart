@@ -29,20 +29,34 @@ void main() async {
     otherSignatoriesAddressList: [TeslaS2.address, TeslaS3.address],
     threshold: 2,
     recipientAddress: TeslaR.address,
-    amount: BigInt.parse('71${'0' * 11}'), // 7 WND
+    amount: BigInt.parse('711${'0' * 10}'), // 7.11 WND
     provider: provider,
   );
-  // Approve this call by TeslaS1
-  await Future.delayed(Duration(seconds: 15));
-  await multiSigResponse.approveAsMulti(provider, TeslaS1);
 
-  // Execute this call by TeslaS2
-  await Future.delayed(Duration(seconds: 15));
-  await multiSigResponse.approveAsMulti(provider, TeslaS2);
+  // Json for forwarding to other signatories.
+  final json = multiSigResponse.toJson();
 
-  /* 
-  // Cancel this call by TeslaS1
-  await Future.delayed(Duration(seconds: 15));
-  await multiSigResponse.cancelAsMulti(provider, TeslaS1); 
-  */
+  {
+    // Assuming TeslaS2 is the first signatory who is approving.
+    final localResponse = MultisigResponse.fromJson(json);
+    // Approve this call by TeslaS2 and forward for further approval.
+    await Future.delayed(Duration(seconds: 15));
+    await localResponse.approveAsMulti(provider, TeslaS2);
+  }
+
+  {
+    // Assuming TeslaS3 is the first signatory who is approving.
+    final localResponse = MultisigResponse.fromJson(json);
+    // Execute this call by TeslaS3 approval.
+    await Future.delayed(Duration(seconds: 15));
+    await localResponse.asMulti(provider, TeslaS3);
+  }
+
+  // // Cancel this call by TeslaS1
+  //
+  // final localResponse = MultisigResponse.fromJson(json);
+  //
+  // // Cancel this call by TeslaS1
+  // await Future.delayed(Duration(seconds: 15));
+  // await multiSigResponse.cancelAsMulti(provider, TeslaS1);
 }
