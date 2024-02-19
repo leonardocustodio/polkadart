@@ -45,7 +45,7 @@ void main() async {
   }
 
   {
-    // Assuming TeslaS3 is the first signatory who is approving.
+    // Assuming TeslaS3 is the second signatory who is approving.
     final localResponse = MultisigResponse.fromJson(json);
     // Execute this call by TeslaS3 approval.
     await Future.delayed(Duration(seconds: 15));
