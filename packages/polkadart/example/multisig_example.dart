@@ -44,6 +44,16 @@ void main() async {
     await localResponse.approveAsMulti(provider, TeslaS2);
   }
 
+  /**
+   * Although TeslaS3 can call `approveAsMulti` to approve this call which will then
+   * wait for `TeslaS1` to approve via `asMulti` call.
+   * 
+   * In this case:
+   * The last signatory (`TeslaS1`) will not be able to call `approveAsMulti` as it will throw FinalApprovalException.
+   * 
+   * So, `TeslaS1` will have to call `asMulti` to approve this call.
+   */
+
   {
     // Assuming TeslaS3 is the second signatory who is approving.
     final localResponse = MultisigResponse.fromJson(json);
