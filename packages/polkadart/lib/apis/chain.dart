@@ -1,6 +1,6 @@
 part of apis;
 
-/// Substrate state API
+/// Substrate chain API
 class ChainApi<P extends Provider> {
   final P _provider;
 
@@ -25,7 +25,7 @@ class ChainApi<P extends Provider> {
         hex.decode((response.result as String).substring(2)));
   }
 
-  ///
+  /// Get the latest block number or specific block number by BlockHash.
   Future<int> getChainHeader({BlockHash? at}) async {
     final List<String> params = <String>[];
     if (at != null) {
