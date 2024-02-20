@@ -14,6 +14,10 @@ class SigningPayload extends Payload {
   final String genesisHash; // CheckGenesis
   final String blockHash; // CheckMortality
 
+  ///
+  /// Create a new instance of [SigningPayload]
+  ///
+  /// For adding assetId or other custom signedExtensions to the payload, use [customSignedExtensions] with key 'assetId' with its mapped value.
   const SigningPayload({
     required super.method,
     required this.specVersion,
@@ -24,11 +28,11 @@ class SigningPayload extends Payload {
     required super.eraPeriod,
     required super.nonce,
     required super.tip,
-    super.assetId,
+    super.customSignedExtensions,
   });
 
   @override
-  toEncodedMap(dynamic registry) {
+  Map<String, dynamic> toEncodedMap(dynamic registry) {
     return {
       'method': method,
       'specVersion': encodeHex(U32Codec.codec.encode(specVersion)),
@@ -63,45 +67,100 @@ class SigningPayload extends Payload {
 
     final encodedMap = toEncodedMap(registry);
 
-    late List<String> typeKeys;
-    if (registry.getSignedExtensionTypes() is Map) {
-      // Usage here for the Registry from the polkadart_scale_codec
-      typeKeys =
-          (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
-              .keys
-              .toList();
-    } else {
-      // Usage here for the generated lib from the polkadart_cli
-      typeKeys =
-          (registry.getSignedExtensionTypes() as List<dynamic>).cast<String>();
-    }
+    late List<String> signedExtensionKeys;
 
-    for (final extension in typeKeys) {
-      final payload = signedExtensions.signedExtension(extension, encodedMap);
-
-      if (payload.isNotEmpty) {
-        tempOutput.write(hex.decode(payload));
+    //
+    //
+    // Do the keys preparation of signedExtensions
+    {
+      if (registry.getSignedExtensionTypes() is Map) {
+        // Usage here for the Registry from the polkadart_scale_codec
+        signedExtensionKeys =
+            (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+                .keys
+                .toList();
+      } else {
+        // Usage here for the generated lib from the polkadart_cli
+        signedExtensionKeys =
+            (registry.getSignedExtensionTypes() as List<dynamic>)
+                .cast<String>();
       }
     }
-    late List<String> extraKeys;
-    if (registry.getSignedExtensionTypes() is Map) {
-      // Usage here for the Registry from the polkadart_scale_codec
-      extraKeys =
-          (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
-              .keys
-              .toList();
-    } else {
-      // Usage here for the generated lib from the polkadart_cli
-      extraKeys =
-          (registry.getSignedExtensionExtra() as List<dynamic>).cast<String>();
+
+    //
+    // Traverse through the signedExtension keys and encode the payload
+    for (final extension in signedExtensionKeys) {
+      if (encodedMap.containsKey(extension)) {
+        final payload = signedExtensions.signedExtension(extension, encodedMap);
+
+        if (payload.isNotEmpty) {
+          tempOutput.write(hex.decode(payload));
+        }
+      } else {
+        // Most probably, it is a custom signed extension.
+        // check if this signed extension is NullCodec or not!
+        final signedExtensionMap = registry.getSignedExtensionTypes();
+        if (signedExtensionMap[extension] != null &&
+            signedExtensionMap[extension] is! NullCodec &&
+            signedExtensionMap[extension].hashCode !=
+                NullCodec.codec.hashCode) {
+          if (customSignedExtensions.containsKey(extension) == false) {
+            // throw exception as this is encodable key and we need this key to be present in customSignedExtensions
+            throw Exception(
+                'Key `$extension` is missing in customSignedExtensions.');
+          }
+          signedExtensionMap[extension]
+              .encodeTo(customSignedExtensions[extension], tempOutput);
+        }
+      }
     }
 
-    for (final extension in extraKeys) {
-      final payload =
-          signedExtensions.additionalSignedExtension(extension, encodedMap);
+    late List<String> additionalSignedExtensionKeys;
+    {
+      //
+      // Do the keys preparation of signedExtensions
+      if (registry.getSignedExtensionTypes() is Map) {
+        // Usage here for the Registry from the polkadart_scale_codec
+        additionalSignedExtensionKeys =
+            (registry.getAdditionalSignedExtensionTypes()
+                    as Map<String, Codec<dynamic>>)
+                .keys
+                .toList();
+      } else {
+        // Usage here for the generated lib from the polkadart_cli
+        additionalSignedExtensionKeys =
+            (registry.getSignedExtensionExtra() as List<dynamic>)
+                .cast<String>();
+      }
+    }
 
-      if (payload.isNotEmpty) {
-        tempOutput.write(hex.decode(payload));
+    //
+    // Traverse through the additionalSignedExtension keys and encode the payload
+    for (final extension in additionalSignedExtensionKeys) {
+      if (encodedMap.containsKey(extension)) {
+        final payload =
+            signedExtensions.additionalSignedExtension(extension, encodedMap);
+
+        if (payload.isNotEmpty) {
+          tempOutput.write(hex.decode(payload));
+        }
+      } else {
+        // Most probably, it is a custom signed extension.
+        // check if this signed extension is NullCodec or not!
+        final additionalSignedExtensionMap =
+            registry.getAdditionalSignedExtensionTypes();
+        if (additionalSignedExtensionMap[extension] != null &&
+            additionalSignedExtensionMap[extension] is! NullCodec &&
+            additionalSignedExtensionMap[extension].hashCode !=
+                NullCodec.codec.hashCode) {
+          if (customSignedExtensions.containsKey(extension) == false) {
+            // throw exception as this is encodable key and we need this key to be present in customSignedExtensions
+            throw Exception(
+                'Key `$extension` is missing in customSignedExtensions.');
+          }
+          additionalSignedExtensionMap[extension]
+              .encodeTo(customSignedExtensions[extension], tempOutput);
+        }
       }
     }
 
