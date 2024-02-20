@@ -1,36 +1,33 @@
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
-import 'package:polkadart/polkadart.dart';
 import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart/substrate/era.dart';
 
-class SigningPayload {
-  final String method; // Call
+import '../polkadart.dart';
+import 'abstract_payload.dart';
+
+class SigningPayload extends Payload {
   final int specVersion; // CheckSpecVersion
   final int transactionVersion; // CheckTxVersion
   final String genesisHash; // CheckGenesis
   final String blockHash; // CheckMortality
-  final int blockNumber;
-  final int eraPeriod; // CheckMortality
-  final int nonce; // CheckNonce
-  final dynamic tip; // ChargeTransactionPayment
-  final int? assetId; // ChargeAssetTxPayment
 
   const SigningPayload({
-    required this.method,
+    required super.method,
     required this.specVersion,
     required this.transactionVersion,
     required this.genesisHash,
     required this.blockHash,
-    required this.blockNumber,
-    required this.eraPeriod,
-    required this.nonce,
-    required this.tip,
-    this.assetId,
+    required super.blockNumber,
+    required super.eraPeriod,
+    required super.nonce,
+    required super.tip,
+    super.assetId,
   });
 
+  @override
   toEncodedMap(dynamic registry) {
     return {
       'method': method,
@@ -50,63 +47,68 @@ class SigningPayload {
     };
   }
 
-  static Uint8List createSigningPayload(SigningPayload signing, registry) {
-    return signing.encode(registry);
-  }
-
   Uint8List encode(dynamic registry) {
-    final List<String> extras = <String>[];
-    final List<String> additionalExtras = <String>[];
+    final ByteOutput tempOutput = ByteOutput();
+
+    tempOutput.write(method);
+
+    final ByteOutput output = ByteOutput();
 
     late final SignedExtensions signedExtensions;
-    if (_usesChargeAssetTxPayment(registry)) {
+    if (usesChargeAssetTxPayment(registry)) {
       signedExtensions = SignedExtensions.assetHubSignedExtensions;
     } else {
       signedExtensions = SignedExtensions.substrateSignedExtensions;
     }
 
-    registry.getSignedExtensionTypes().forEach((extension) {
+    final encodedMap = toEncodedMap(registry);
+
+    late List<String> typeKeys;
+    if (registry.getSignedExtensionTypes() is Map) {
+      // Usage here for the Registry from the polkadart_scale_codec
+      typeKeys =
+          (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+              .keys
+              .toList();
+    } else {
+      // Usage here for the generated lib from the polkadart_cli
+      typeKeys = registry.getSignedExtensionTypes() as List<String>;
+    }
+
+    for (final extension in typeKeys) {
+      final payload = signedExtensions.signedExtension(extension, encodedMap);
+
+      if (payload.isNotEmpty) {
+        tempOutput.write(hex.decode(payload));
+      }
+    }
+    late List<String> extraKeys;
+    if (registry.getSignedExtensionTypes() is Map) {
+      // Usage here for the Registry from the polkadart_scale_codec
+      extraKeys =
+          (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+              .keys
+              .toList();
+    } else {
+      // Usage here for the generated lib from the polkadart_cli
+      extraKeys = registry.getSignedExtensionExtra() as List<String>;
+    }
+
+    for (final extension in extraKeys) {
       final payload =
-          signedExtensions.signedExtension(extension, toEncodedMap(registry));
+          signedExtensions.additionalSignedExtension(extension, encodedMap);
 
       if (payload.isNotEmpty) {
-        extras.add(payload);
+        tempOutput.write(hex.decode(payload));
       }
-    });
+    }
 
-    registry.getSignedExtensionExtra().forEach((extension) {
-      final payload = signedExtensions.additionalSignedExtension(
-        extension,
-        toEncodedMap(registry),
-      );
-
-      if (payload.isNotEmpty) {
-        additionalExtras.add(payload);
-      }
-    });
-
-    final String extra = extras.join();
-    final String addExtra = additionalExtras.join();
-    final String payload = method + extra + addExtra;
-
-    final payloadEncoded = Uint8List.fromList(hex.decode(payload));
+    output.write(tempOutput.toBytes());
+    final payloadEncoded = output.toBytes();
 
     // See rust code: https://github.com/paritytech/polkadot-sdk/blob/e349fc9ef8354eea1bafc1040c20d6fe3189e1ec/substrate/primitives/runtime/src/generic/unchecked_extrinsic.rs#L253
     return payloadEncoded.length > 256
         ? Blake2bHasher(32).hash(payloadEncoded)
         : payloadEncoded;
-  }
-
-  bool _usesChargeAssetTxPayment(dynamic registry) {
-    return registry.getSignedExtensionTypes().contains('ChargeAssetTxPayment');
-  }
-
-  String maybeAssetIdEncoded(dynamic registry) {
-    if (_usesChargeAssetTxPayment(registry)) {
-      // '00' and '01' refer to rust's Option variants 'None' and 'Some'.
-      return assetId != null ? '01${assetId!.toRadixString(16)}' : '00';
-    } else {
-      return '';
-    }
   }
 }

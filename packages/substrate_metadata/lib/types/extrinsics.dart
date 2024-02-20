@@ -72,11 +72,12 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
       ..write(tempOutput.toBytes());
   }
 
-  static String computeHash(Uint8List extrinsicBytes) {
-    return encodeHex(Blake2bDigest(digestSize: 32).process(extrinsicBytes));
+  static String computeHash(Uint8List extrinsicBytes, [int digestSize = 32]) {
+    return encodeHex(
+        Blake2bDigest(digestSize: digestSize).process(extrinsicBytes));
   }
 
-  static String computeHashFromString(String extrinsic) {
-    return computeHash(decodeHex(extrinsic));
+  static String computeHashFromString(String extrinsic, [int digestSize = 32]) {
+    return computeHash(decodeHex(extrinsic), digestSize);
   }
 }

@@ -1,7 +1,5 @@
 part of polkadart_keyring;
 
-final context = merlin.Transcript('susbtrate');
-
 class Sr25519KeyPair extends KeyPair {
   late sr25519.PublicKey _publicKey;
   late sr25519.SecretKey _privateKey;

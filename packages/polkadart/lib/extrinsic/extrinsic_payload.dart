@@ -3,33 +3,28 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:polkadart/extrinsic/signature_type.dart';
 import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
+import 'package:polkadart/substrate/era.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart' as keyring;
-import 'package:polkadart_scale_codec/primitives/primitives.dart';
-import 'package:polkadart_scale_codec/utils/utils.dart';
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 
-import '../substrate/era.dart';
+import 'abstract_payload.dart';
 
-class Extrinsic {
-  final String signer;
-  final String method;
-  final String signature;
-  final int eraPeriod;
-  final int blockNumber;
-  final int nonce;
-  final dynamic tip;
-  final int? assetId;
+class ExtrinsicPayload extends Payload {
+  final Uint8List signer;
+  final Uint8List signature;
 
-  const Extrinsic({
+  const ExtrinsicPayload({
     required this.signer,
-    required this.method,
+    required super.method,
     required this.signature,
-    required this.eraPeriod,
-    required this.blockNumber,
-    required this.nonce,
-    required this.tip,
-    this.assetId,
+    required super.eraPeriod,
+    required super.blockNumber,
+    required super.nonce,
+    required super.tip,
+    super.assetId,
   });
 
+  @override
   toEncodedMap(dynamic registry) {
     return {
       'signer': signer,
@@ -46,12 +41,23 @@ class Extrinsic {
     };
   }
 
-  static Uint8List createSignedExtrinsic(
-      Extrinsic extrinsic, registry, SignatureType signatureType) {
-    return extrinsic.encode(registry, signatureType);
+  static ExtrinsicPayload fromPayload(
+      Payload payload, Uint8List signer, Uint8List signature) {
+    return ExtrinsicPayload(
+      signer: signer,
+      method: payload.method,
+      signature: signature,
+      eraPeriod: payload.eraPeriod,
+      blockNumber: payload.blockNumber,
+      nonce: payload.nonce,
+      tip: payload.tip,
+      assetId: payload.assetId,
+    );
   }
 
   Uint8List encode(dynamic registry, SignatureType signatureType) {
+    final ByteOutput output = ByteOutput();
+
     final int extrinsicVersion = registry.extrinsicVersion;
     // Unsigned transaction
     final int preByte = extrinsicVersion & 127;
@@ -60,44 +66,49 @@ class Extrinsic {
 
     // Signed transaction
     final int extraByte = extrinsicVersion | 128;
-    final String hexByte = extraByte.toRadixString(16);
 
-    // 00 = MultiAddress::Id
-    final String signerType = '00';
-
-    final List<String> extras = <String>[];
+    output
+      ..pushByte(extraByte)
+      // 00 = MultiAddress::Id
+      ..pushByte(0)
+      // Push Signer Address
+      ..write(signer)
+      // Push signature type byte
+      ..pushByte(signatureType.type)
+      // Push signature
+      ..write(signature);
 
     late final SignedExtensions signedExtensions;
 
-    if (_usesChargeAssetTxPayment(registry)) {
+    final encodedMap = toEncodedMap(registry);
+
+    if (usesChargeAssetTxPayment(registry)) {
       signedExtensions = SignedExtensions.assetHubSignedExtensions;
     } else {
       signedExtensions = SignedExtensions.substrateSignedExtensions;
     }
+    late List<String> keys;
+    if (registry.getSignedExtensionTypes() is Map) {
+      keys = (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+          .keys
+          .toList();
+    } else {
+      keys = registry.getSignedExtensionTypes() as List<String>;
+    }
 
-    for (final signedExtensiontype in registry.getSignedExtensionTypes()) {
-      final payload = signedExtensions.signedExtension(
-        signedExtensiontype,
-        toEncodedMap(registry),
-      );
+    for (final signedExtensiontype in keys) {
+      final payload =
+          signedExtensions.signedExtension(signedExtensiontype, encodedMap);
 
       if (payload.isNotEmpty) {
-        extras.add(payload);
+        output.write(hex.decode(payload));
       }
     }
 
-    final String extra = extras.join();
+    // Add the method call -> transfer.....
+    output.write(method);
 
-    final String extrinsic = hexByte +
-        signerType +
-        signer +
-        signatureType.type +
-        signature +
-        extra +
-        method;
-
-    // Adds size in compact as prefix
-    return U8SequenceCodec.codec.encode(hex.decode(extrinsic));
+    return U8SequenceCodec.codec.encode(output.toBytes());
   }
 
   ///
@@ -112,12 +123,9 @@ class Extrinsic {
     return keyPair.sign(encode(registry, signatureType));
   }
 
-  bool _usesChargeAssetTxPayment(dynamic registry) {
-    return registry.getSignedExtensionTypes().contains('ChargeAssetTxPayment');
-  }
-
+  @override
   String maybeAssetIdEncoded(dynamic registry) {
-    if (_usesChargeAssetTxPayment(registry)) {
+    if (usesChargeAssetTxPayment(registry)) {
       // '00' and '01' refer to rust's Option variants 'None' and 'Some'.
       return assetId != null ? '01${assetId!.toRadixString(16)}' : '00';
     } else {

@@ -16,6 +16,7 @@ dependencies:
   substrate_metadata: ^1.1.2 # Apache 2.0
   hashlib_codecs: ^2.2.0 # BSD-3-Clause
   polkadart_keyring: ^0.3.0
+  ss58: ^1.1.2
 
 dev_dependencies:
   lints: ^2.0.0

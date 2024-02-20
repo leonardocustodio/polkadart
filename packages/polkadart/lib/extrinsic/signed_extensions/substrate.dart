@@ -25,18 +25,14 @@ class SubstrateSignedExtensions implements SignedExtensions {
   @override
   String additionalSignedExtension(String extension, Map info) {
     switch (extension) {
-      case 'CheckNonce':
-        return info['nonce'];
-      case 'ChargeTransactionPayment':
-        return info['tip'];
+      case 'CheckMortality':
+        return info['blockHash'];
       case 'CheckSpecVersion':
         return info['specVersion'];
       case 'CheckTxVersion':
         return info['transactionVersion'];
       case 'CheckGenesis':
         return info['genesisHash'];
-      case 'CheckMortality':
-        return info['blockHash'];
       default:
         return '';
     }
