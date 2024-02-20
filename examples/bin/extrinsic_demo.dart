@@ -9,6 +9,8 @@ import 'package:polkadart/polkadart.dart'
         SignatureType,
         SigningPayload,
         StateApi;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    as scale_codec;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 
 import 'package:polkadart_example/generated/polkadot/polkadot.dart';
@@ -21,6 +23,18 @@ Future<void> main(List<String> arguments) async {
   final stateApi = StateApi(provider);
 
   final runtimeVersion = await stateApi.getRuntimeVersion();
+
+  // Get Metadata
+  final runtimeMetadata = await stateApi.getMetadata();
+  // Get Registry
+  final scale_codec.Registry registry =
+      runtimeMetadata.chainInfo.scaleCodec.registry;
+
+  //
+  // Get SignedExtensions mapped with codecs Map<String, Codec<dynamic>>
+  final Map<String, scale_codec.Codec<dynamic>> signedExtensions =
+      registry.getSignedExtensionTypes();
+  print('Signed Extensions Keys: ${signedExtensions.keys.toList()}');
 
   final specVersion = runtimeVersion.specVersion;
 

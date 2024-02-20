@@ -93,7 +93,8 @@ class ExtrinsicPayload extends Payload {
           .keys
           .toList();
     } else {
-      keys = registry.getSignedExtensionTypes() as List<String>;
+      keys =
+          (registry.getSignedExtensionTypes() as List<dynamic>).cast<String>();
     }
 
     for (final signedExtensiontype in keys) {

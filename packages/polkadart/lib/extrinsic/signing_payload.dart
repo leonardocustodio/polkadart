@@ -72,7 +72,8 @@ class SigningPayload extends Payload {
               .toList();
     } else {
       // Usage here for the generated lib from the polkadart_cli
-      typeKeys = registry.getSignedExtensionTypes() as List<String>;
+      typeKeys =
+          (registry.getSignedExtensionTypes() as List<dynamic>).cast<String>();
     }
 
     for (final extension in typeKeys) {
@@ -91,7 +92,8 @@ class SigningPayload extends Payload {
               .toList();
     } else {
       // Usage here for the generated lib from the polkadart_cli
-      extraKeys = registry.getSignedExtensionExtra() as List<String>;
+      extraKeys =
+          (registry.getSignedExtensionExtra() as List<dynamic>).cast<String>();
     }
 
     for (final extension in extraKeys) {
