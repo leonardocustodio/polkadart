@@ -26,7 +26,7 @@ class Registry {
   ///
   /// Get Additional Signed Extensions
   Map<String, Codec> getAdditionalSignedExtensionTypes() {
-    return additonalSignedExtensions;
+    return additionalSignedExtensions;
   }
 
   ProxyCodec _createProxy(
