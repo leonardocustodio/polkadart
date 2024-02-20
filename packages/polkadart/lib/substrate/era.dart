@@ -78,6 +78,6 @@ class Era {
     final quantizeFactor = max(1, period >> 12);
     final quantizedPhase = phase / quantizeFactor * quantizeFactor;
 
-    return encode(quantizedPhase.toInt(), period);
+    return encode(quantizedPhase.toInt(), calPeriod as int);
   }
 }

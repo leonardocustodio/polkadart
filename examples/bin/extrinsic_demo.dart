@@ -1,8 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:convert/convert.dart';
 import 'package:polkadart/polkadart.dart'
     show
         AuthorApi,
-        Extrinsic,
+        ExtrinsicPayload,
         Provider,
         SignatureType,
         SigningPayload,
@@ -39,11 +41,11 @@ Future<void> main(List<String> arguments) async {
   final keyring = await KeyPair.sr25519.fromMnemonic(
       "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//0"); // This is a random key
 
-  final publicKey = hex.encode(keyring.publicKey.bytes);
+  final publicKey = keyring.publicKey.bytes;
   print('Public Key: $publicKey');
-  final dest = $MultiAddress().id(hex.decode(publicKey));
+  final dest = $MultiAddress().id(publicKey);
   final runtimeCall = api.tx.balances.transferAll(dest: dest, keepAlive: true);
-  final encodedCall = hex.encode(runtimeCall.encode());
+  final encodedCall = runtimeCall.encode();
   print('Encoded call: $encodedCall');
 
   final payloadToSign = SigningPayload(
@@ -65,10 +67,10 @@ Future<void> main(List<String> arguments) async {
   final hexSignature = hex.encode(signature);
   print('Signature: $hexSignature');
 
-  final extrinsic = Extrinsic(
-    signer: publicKey,
+  final extrinsic = ExtrinsicPayload(
+    signer: Uint8List.fromList(publicKey),
     method: encodedCall,
-    signature: hexSignature,
+    signature: signature,
     eraPeriod: 64,
     blockNumber: blockNumber,
     nonce: 0,
