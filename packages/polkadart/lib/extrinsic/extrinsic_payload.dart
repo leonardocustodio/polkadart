@@ -109,9 +109,9 @@ class ExtrinsicPayload extends Payload {
     }
 
     for (final extension in keys) {
-      if (encodedMap.containsKey(extension)) {
-        final payload = signedExtensions.signedExtension(extension, encodedMap);
-
+      final (payload, found) =
+          signedExtensions.signedExtension(extension, encodedMap);
+      if (found) {
         if (payload.isNotEmpty) {
           output.write(hex.decode(payload));
         }
