@@ -13,6 +13,10 @@ class ExtrinsicPayload extends Payload {
   final Uint8List signer;
   final Uint8List signature;
 
+  ///
+  /// Create a new instance of [ExtrinsicPayload]
+  ///
+  /// For adding assetId or other custom signedExtensions to the payload, use [customSignedExtensions] with key 'assetId' with its mapped value.
   const ExtrinsicPayload({
     required this.signer,
     required super.method,
@@ -21,11 +25,11 @@ class ExtrinsicPayload extends Payload {
     required super.blockNumber,
     required super.nonce,
     required super.tip,
-    super.assetId,
+    super.customSignedExtensions,
   });
 
   @override
-  toEncodedMap(dynamic registry) {
+  Map<String, dynamic> toEncodedMap(dynamic registry) {
     return {
       'signer': signer,
       'method': method,
@@ -51,7 +55,7 @@ class ExtrinsicPayload extends Payload {
       blockNumber: payload.blockNumber,
       nonce: payload.nonce,
       tip: payload.tip,
-      assetId: payload.assetId,
+      customSignedExtensions: payload.customSignedExtensions,
     );
   }
 
@@ -87,21 +91,51 @@ class ExtrinsicPayload extends Payload {
     } else {
       signedExtensions = SignedExtensions.substrateSignedExtensions;
     }
+
     late List<String> keys;
-    if (registry.getSignedExtensionTypes() is Map) {
-      keys = (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
-          .keys
-          .toList();
-    } else {
-      keys = registry.getSignedExtensionTypes() as List<String>;
+    {
+      //
+      //
+      // Prepare keys for the encoding
+      if (registry.getSignedExtensionTypes() is Map) {
+        keys =
+            (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+                .keys
+                .toList();
+      } else {
+        keys = (registry.getSignedExtensionTypes() as List<dynamic>)
+            .cast<String>();
+      }
     }
 
-    for (final signedExtensiontype in keys) {
-      final payload =
-          signedExtensions.signedExtension(signedExtensiontype, encodedMap);
+    for (final extension in keys) {
+      if (encodedMap.containsKey(extension)) {
+        final payload = signedExtensions.signedExtension(extension, encodedMap);
 
-      if (payload.isNotEmpty) {
-        output.write(hex.decode(payload));
+        if (payload.isNotEmpty) {
+          output.write(hex.decode(payload));
+        }
+      } else {
+        if (registry.getSignedExtensionTypes() is List) {
+          // This method call is from polkadot cli and not from the Reigstry of the polkadart_scale_codec.
+          continue;
+        }
+        // Most probably, it is a custom signed extension.
+        final signedExtensionMap = registry.getSignedExtensionTypes();
+
+        // check if this signed extension is NullCodec or not!
+        if (signedExtensionMap[extension] != null &&
+            signedExtensionMap[extension] is! NullCodec &&
+            signedExtensionMap[extension].hashCode !=
+                NullCodec.codec.hashCode) {
+          if (customSignedExtensions.containsKey(extension) == false) {
+            // throw exception as this is encodable key and we need this key to be present in customSignedExtensions
+            throw Exception(
+                'Key `$extension` is missing in customSignedExtensions.');
+          }
+          signedExtensionMap[extension]
+              .encodeTo(customSignedExtensions[extension], output);
+        }
       }
     }
 
@@ -121,15 +155,5 @@ class ExtrinsicPayload extends Payload {
   Uint8List encodeAndSign(
       dynamic registry, SignatureType signatureType, keyring.KeyPair keyPair) {
     return keyPair.sign(encode(registry, signatureType));
-  }
-
-  @override
-  String maybeAssetIdEncoded(dynamic registry) {
-    if (usesChargeAssetTxPayment(registry)) {
-      // '00' and '01' refer to rust's Option variants 'None' and 'Some'.
-      return assetId != null ? '01${assetId!.toRadixString(16)}' : '00';
-    } else {
-      return '';
-    }
   }
 }

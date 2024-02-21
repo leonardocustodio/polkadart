@@ -9,6 +9,8 @@ import 'package:polkadart/polkadart.dart'
         SignatureType,
         SigningPayload,
         StateApi;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    as scale_codec;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 
 import 'package:polkadart_example/generated/polkadot/polkadot.dart';
@@ -63,6 +65,39 @@ Future<void> main(List<String> arguments) async {
   final payload = payloadToSign.encode(api.registry);
   print('Payload: ${hex.encode(payload)}');
 
+  // Custom Signed Extensions with TypeRegistry
+  {
+    // Get Metadata
+    final runtimeMetadata = await stateApi.getMetadata();
+    // Get Registry
+    final scale_codec.Registry registry =
+        runtimeMetadata.chainInfo.scaleCodec.registry;
+
+    // Get SignedExtensions mapped with codecs Map<String, Codec<dynamic>>
+    final Map<String, scale_codec.Codec<dynamic>> signedExtensions =
+        registry.getSignedExtensionTypes();
+    print('Signed Extensions Keys: ${signedExtensions.keys.toList()}');
+
+    final payloadWithCustomSignedExtension = SigningPayload(
+      method: encodedCall,
+      specVersion: specVersion,
+      transactionVersion: transactionVersion,
+      genesisHash: genesisHash,
+      blockHash: blockHash,
+      blockNumber: blockNumber,
+      eraPeriod: 64,
+      nonce: 0, // Supposing it is this wallet first transaction
+      tip: 0,
+      customSignedExtensions: <String, dynamic>{
+        'PrevalidateAttests': 0, // A custom Signed Extensions
+      },
+    );
+
+    final customSignedExtensionPayload =
+        payloadWithCustomSignedExtension.encode(registry);
+    print('Payload: ${hex.encode(customSignedExtensionPayload)}');
+  }
+
   final signature = keyring.sign(payload);
   final hexSignature = hex.encode(signature);
   print('Signature: $hexSignature');
@@ -75,6 +110,8 @@ Future<void> main(List<String> arguments) async {
     blockNumber: blockNumber,
     nonce: 0,
     tip: 0,
+    // KeyPair Values of Custom Signed Extensions goes here
+    customSignedExtensions: <String, dynamic>{},
   ).encode(api.registry, SignatureType.sr25519);
 
   final hexExtrinsic = hex.encode(extrinsic);

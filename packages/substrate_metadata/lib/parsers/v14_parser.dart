@@ -233,55 +233,77 @@ class V14Parser {
             extrinsicSignature[name] = codec;
         }
       }
-      final signedExtensionsCompositeCodec = <String, Codec>{};
 
-      // Set the extrinsic version which would be helpful further in extrinsic and signing payload.
-      _resultingRegistry.extrinsicVersion =
-          rawMetadata['extrinsic']['version']!;
+      // SignedExtensions Parsing
+      {
+        final signedExtensionsCompositeCodec = <String, Codec>{};
 
-      // clear the signedExtensions in the registry
-      _resultingRegistry.signedExtensions.clear();
+        // Set the extrinsic version which would be helpful further in extrinsic and signing payload.
+        _resultingRegistry.extrinsicVersion =
+            rawMetadata['extrinsic']['version']!;
 
-      for (final signedExtensions in rawMetadata['extrinsic']
-          ['signedExtensions']) {
-        final type = siTypes[signedExtensions['type']];
-        final identifier = signedExtensions['identifier'].toString();
+        // clear the signedExtensions in the registry
+        _resultingRegistry.signedExtensions.clear();
 
-        // put a NullCodec which does nothing
-        _resultingRegistry.signedExtensions[identifier] = NullCodec.codec;
+        for (final signedExtensions in rawMetadata['extrinsic']
+            ['signedExtensions']) {
+          final type = siTypes[signedExtensions['type']];
+          final additionalSignedType =
+              siTypes[signedExtensions['additionalSigned']];
+          final identifier = signedExtensions['identifier'].toString();
 
-        if (type == null || type.toLowerCase() == 'null') {
-          continue;
-        }
-        final typeCodec = _resultingRegistry.parseSpecificCodec(
-            _metadataExpander.customCodecRegister, type);
+          // put a NullCodec which does nothing
+          _resultingRegistry.signedExtensions[identifier] = NullCodec.codec;
 
-        // overwrite the codec here.
-        _resultingRegistry.signedExtensions[identifier] = typeCodec;
+          // put a NullCodec which does nothing
+          _resultingRegistry.additionalSignedExtensions[identifier] =
+              NullCodec.codec;
 
-        String newIdentifier = identifier.replaceAll('Check', '');
-        switch (newIdentifier) {
-          case 'Mortality':
-            signedExtensionsCompositeCodec['era'] =
-                _resultingRegistry.parseSpecificCodec(
-                    _metadataExpander.customCodecRegister, 'Era');
+          if (type == null || type.toLowerCase() == 'null') {
             continue;
-          case 'ChargeTransactionPayment':
-            newIdentifier = 'tip';
-            break;
-          default:
+          }
+          final typeCodec = _resultingRegistry.parseSpecificCodec(
+              _metadataExpander.customCodecRegister, type);
+
+          // overwrite the codec here.
+          _resultingRegistry.signedExtensions[identifier] = typeCodec;
+
+          if (additionalSignedType != null ||
+              additionalSignedType?.toLowerCase() != 'null') {
+            final additionalSignedTypeCodec =
+                _resultingRegistry.parseSpecificCodec(
+                    _metadataExpander.customCodecRegister,
+                    additionalSignedType!);
+
+            // overwrite the additional signed codec here.
+            _resultingRegistry.additionalSignedExtensions[identifier] =
+                additionalSignedTypeCodec;
+          }
+
+          String newIdentifier = identifier.replaceAll('Check', '');
+          switch (newIdentifier) {
+            case 'Mortality':
+              signedExtensionsCompositeCodec['era'] =
+                  _resultingRegistry.parseSpecificCodec(
+                      _metadataExpander.customCodecRegister, 'Era');
+              continue;
+            case 'ChargeTransactionPayment':
+              newIdentifier = 'tip';
+              break;
+            default:
+          }
+          signedExtensionsCompositeCodec[newIdentifier.snakeCase()] = typeCodec;
         }
-        signedExtensionsCompositeCodec[newIdentifier.snakeCase()] = typeCodec;
+
+        final extrinsicCodec = CompositeCodec(
+          {
+            ...extrinsicSignature,
+            'signedExtensions': CompositeCodec(signedExtensionsCompositeCodec),
+          },
+        );
+
+        _resultingRegistry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
       }
-
-      final extrinsicCodec = CompositeCodec(
-        {
-          ...extrinsicSignature,
-          'signedExtensions': CompositeCodec(signedExtensionsCompositeCodec),
-        },
-      );
-
-      _resultingRegistry.addCodec('ExtrinsicSignatureCodec', extrinsicCodec);
     }
 
     return ChainInfo(
