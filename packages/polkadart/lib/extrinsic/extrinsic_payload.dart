@@ -116,6 +116,10 @@ class ExtrinsicPayload extends Payload {
           output.write(hex.decode(payload));
         }
       } else {
+        if (registry.getSignedExtensionTypes() is List) {
+          // This method call is from polkadot cli and not from the Reigstry of the polkadart_scale_codec.
+          continue;
+        }
         // Most probably, it is a custom signed extension.
         final signedExtensionMap = registry.getSignedExtensionTypes();
 

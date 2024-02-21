@@ -97,6 +97,10 @@ class SigningPayload extends Payload {
           tempOutput.write(hex.decode(payload));
         }
       } else {
+        if (registry.getSignedExtensionTypes() is List) {
+          // This method call is from polkadot cli and not from the Reigstry of the polkadart_scale_codec.
+          continue;
+        }
         // Most probably, it is a custom signed extension.
         // check if this signed extension is NullCodec or not!
         final signedExtensionMap = registry.getSignedExtensionTypes();
@@ -147,6 +151,10 @@ class SigningPayload extends Payload {
       } else {
         // Most probably, it is a custom signed extension.
         // check if this signed extension is NullCodec or not!
+        if (registry.getSignedExtensionTypes() is List) {
+          // This method call is from polkadot cli and not from the Reigstry of the polkadart_scale_codec.
+          continue;
+        }
         final additionalSignedExtensionMap =
             registry.getAdditionalSignedExtensionTypes();
         if (additionalSignedExtensionMap[extension] != null &&
