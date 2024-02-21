@@ -1,3 +1,6 @@
+## 0.4.0
+- Adds support for multisig account
+
 ## 0.3.2
 - Fixes readme version
 

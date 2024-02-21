@@ -1,3 +1,6 @@
+## 0.4.0
+- Adds support for custom signed extensions and multisig accounts
+
 ## 0.3.2
 - Fixes issue with AssetHub extrinsics
 
