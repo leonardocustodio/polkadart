@@ -7,6 +7,6 @@ abstract class SignedExtensions {
   static SubstrateSignedExtensions get substrateSignedExtensions =>
       SubstrateSignedExtensions();
 
-  String signedExtension(String extension, Map info);
-  String additionalSignedExtension(String extension, Map info);
+  (String, bool) signedExtension(String extension, Map info);
+  (String, bool) additionalSignedExtension(String extension, Map info);
 }

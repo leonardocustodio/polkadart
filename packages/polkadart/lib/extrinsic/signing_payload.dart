@@ -90,9 +90,9 @@ class SigningPayload extends Payload {
     //
     // Traverse through the signedExtension keys and encode the payload
     for (final extension in signedExtensionKeys) {
-      if (encodedMap.containsKey(extension)) {
-        final payload = signedExtensions.signedExtension(extension, encodedMap);
-
+      final (payload, found) =
+          signedExtensions.signedExtension(extension, encodedMap);
+      if (found) {
         if (payload.isNotEmpty) {
           tempOutput.write(hex.decode(payload));
         }
@@ -141,10 +141,9 @@ class SigningPayload extends Payload {
     //
     // Traverse through the additionalSignedExtension keys and encode the payload
     for (final extension in additionalSignedExtensionKeys) {
-      if (encodedMap.containsKey(extension)) {
-        final payload =
-            signedExtensions.additionalSignedExtension(extension, encodedMap);
-
+      final (payload, found) =
+          signedExtensions.additionalSignedExtension(extension, encodedMap);
+      if (found) {
         if (payload.isNotEmpty) {
           tempOutput.write(hex.decode(payload));
         }

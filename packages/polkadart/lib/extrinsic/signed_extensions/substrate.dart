@@ -9,32 +9,32 @@ class SubstrateSignedExtensions implements SignedExtensions {
   SubstrateSignedExtensions._internal();
 
   @override
-  String signedExtension(String extension, Map info) {
+  (String, bool) signedExtension(String extension, Map info) {
     switch (extension) {
       case 'CheckMortality':
-        return info['era'];
+        return (info['era'], true);
       case 'CheckNonce':
-        return info['nonce'];
+        return (info['nonce'], true);
       case 'ChargeTransactionPayment':
-        return info['tip'];
+        return (info['tip'], true);
       default:
-        return '';
+        return ('', false);
     }
   }
 
   @override
-  String additionalSignedExtension(String extension, Map info) {
+  (String, bool) additionalSignedExtension(String extension, Map info) {
     switch (extension) {
       case 'CheckMortality':
-        return info['blockHash'];
+        return (info['blockHash'], true);
       case 'CheckSpecVersion':
-        return info['specVersion'];
+        return (info['specVersion'], true);
       case 'CheckTxVersion':
-        return info['transactionVersion'];
+        return (info['transactionVersion'], true);
       case 'CheckGenesis':
-        return info['genesisHash'];
+        return (info['genesisHash'], true);
       default:
-        return '';
+        return ('', false);
     }
   }
 }
