@@ -1,3 +1,6 @@
+## 0.4.0
+- Bump polkadart dependency
+
 ## 0.3.2
 - Makes params from runtime calls strongly typed
 
