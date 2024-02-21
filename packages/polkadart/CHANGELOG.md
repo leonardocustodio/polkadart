@@ -1,3 +1,6 @@
+## 0.4.1
+- Improves custom signed extensions
+
 ## 0.4.0
 - Adds support for custom signed extensions and multisig accounts
 
