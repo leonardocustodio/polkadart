@@ -27,4 +27,4 @@ dev_dependencies:
 polkadart:
   output_dir: lib/generated
   chains:
-    polkadot: wss://rpc.polkadot.io
+    polkadot: wss://rpc.ibp.network/polkadot

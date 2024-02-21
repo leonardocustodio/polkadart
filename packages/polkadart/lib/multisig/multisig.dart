@@ -11,7 +11,6 @@ class Multisig {
     required Provider provider,
     required List<String> otherSignatoriesAddressList,
     int tip = 0,
-    int assetId = 0,
     int eraPeriod = 64,
   }) async {
     final meta = await MultiSigMeta.fromProvider(provider: provider);
@@ -32,7 +31,6 @@ class Multisig {
           amount,
         ),
         tip: tip,
-        assetId: assetId,
         eraPeriod: eraPeriod,
         signer: depositorKeyPair,
         provider: provider,
@@ -93,7 +91,6 @@ class Multisig {
     required KeyPair signer,
     required Provider provider,
     required int tip,
-    required int assetId,
     required int eraPeriod,
   }) async {
     final nonce = await SystemApi(provider).accountNextIndex(signer.address);
@@ -102,7 +99,6 @@ class Multisig {
     /// Creating the first approveAsMulti from the account creator.
     final unsignedApprovalPayload = SigningPayload(
       method: method,
-      assetId: assetId,
       blockHash: hex.encode(meta.blockHash),
       blockNumber: meta.blockNumber,
       eraPeriod: eraPeriod,
@@ -147,7 +143,6 @@ class Multisig {
     required KeyPair signer,
     Duration storageKeyDelay = const Duration(seconds: 20),
     int tip = 0,
-    int assetId = 0,
     int eraPeriod = 64,
   }) async {
     final MultisigStorage? multisigStorage = await fetchMultisigStorage(
@@ -184,7 +179,6 @@ class Multisig {
         multiSigStorage: multisigStorage,
       ),
       tip: tip,
-      assetId: assetId,
       eraPeriod: eraPeriod,
       signer: signer,
       provider: provider,
@@ -202,7 +196,6 @@ class Multisig {
     required KeyPair signer,
     Duration storageKeyDelay = const Duration(seconds: 20),
     int tip = 0,
-    int assetId = 0,
     int eraPeriod = 64,
   }) async {
     final MultisigStorage? multisigStorage = await fetchMultisigStorage(
@@ -250,7 +243,6 @@ class Multisig {
         multiSigStorage: multisigStorage,
       ),
       tip: tip,
-      assetId: assetId,
       eraPeriod: eraPeriod,
       signer: signer,
       provider: provider,
@@ -268,7 +260,6 @@ class Multisig {
     required KeyPair signer,
     Duration storageKeyDelay = const Duration(seconds: 25),
     int tip = 0,
-    int assetId = 0,
     int eraPeriod = 64,
   }) async {
     final MultisigStorage? multisigStorage = await fetchMultisigStorage(
@@ -310,7 +301,6 @@ class Multisig {
       ),
       signer: signer,
       tip: tip,
-      assetId: assetId,
       eraPeriod: eraPeriod,
       provider: provider,
     );

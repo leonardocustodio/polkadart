@@ -6,7 +6,7 @@ abstract class Payload {
   final int eraPeriod; // CheckMortality
   final int nonce; // CheckNonce
   final dynamic tip; // ChargeTransactionPayment
-  final int? assetId; // ChargeAssetTxPayment
+  final Map<String, dynamic> customSignedExtensions;
 
   const Payload({
     required this.method,
@@ -14,10 +14,10 @@ abstract class Payload {
     required this.eraPeriod,
     required this.nonce,
     required this.tip,
-    this.assetId,
+    this.customSignedExtensions = const <String, dynamic>{},
   });
 
-  toEncodedMap(dynamic registry);
+  Map<String, dynamic> toEncodedMap(dynamic registry);
 
   bool usesChargeAssetTxPayment(dynamic registry) {
     if (registry.getSignedExtensionTypes() is Map) {
@@ -31,7 +31,9 @@ abstract class Payload {
   String maybeAssetIdEncoded(dynamic registry) {
     if (usesChargeAssetTxPayment(registry)) {
       // '00' and '01' refer to rust's Option variants 'None' and 'Some'.
-      return assetId != null ? '01${assetId!.toRadixString(16)}' : '00';
+      return customSignedExtensions.containsKey('assetId')
+          ? '01${customSignedExtensions['assetId'].toRadixString(16)}'
+          : '00';
     } else {
       return '';
     }

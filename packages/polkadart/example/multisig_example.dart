@@ -18,7 +18,8 @@ void main() async {
   final keypairR = await keyring.KeyPair.sr25519.fromUri('//keypairR');
   keypairR.ss58Format = 42;
 
-  final provider = Provider.fromUri(Uri.parse('wss://westend-rpc.polkadot.io'));
+  final provider =
+      Provider.fromUri(Uri.parse('wss://rpc-polkadot.luckyfriday.io'));
 
   ///
   /// Create and Fund Multisig

@@ -8,6 +8,7 @@ class Registry {
   final Map<String, ProxyLoader> _proxyLoaders = <String, ProxyLoader>{};
   final Map<String, ProxyCodec> _proxies = <String, ProxyCodec>{};
   final Map<String, Codec> signedExtensions = <String, Codec>{};
+  final Map<String, Codec> additionalSignedExtensions = <String, Codec>{};
   late int extrinsicVersion;
 
   Registry();
@@ -20,6 +21,12 @@ class Registry {
   /// Get Signed Extensions
   Map<String, Codec> getSignedExtensionTypes() {
     return signedExtensions;
+  }
+
+  ///
+  /// Get Additional Signed Extensions
+  Map<String, Codec> getAdditionalSignedExtensionTypes() {
+    return additionalSignedExtensions;
   }
 
   ProxyCodec _createProxy(
