@@ -1,3 +1,6 @@
+## 1.2.0
+- Adds support for custom signed extensions
+
 ## 1.1.2
 
 - License update
