@@ -46,6 +46,7 @@ Future<void> main(List<String> arguments) async {
   final transactionVersion = runtimeVersion.transactionVersion;
   final block = await westProvider.send('chain_getBlock', []);
   final blockNumber = int.parse(block.result['block']['header']['number']);
+  print('Block Number: $blockNumber');
   final blockHash = (await westProvider.send('chain_getBlockHash', []))
       .result
       .replaceAll('0x', '');
