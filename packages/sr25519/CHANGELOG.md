@@ -1,3 +1,6 @@
+## 0.4.0
+- Bump dependency requirements
+
 ## 0.1.1
 - Updates library description
 
