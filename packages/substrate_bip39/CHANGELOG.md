@@ -1,3 +1,6 @@
+## 0.4.0
+- Bump scale codec dependency requirement
+
 ## 0.3.0
 - Changes for ecdsa support
 

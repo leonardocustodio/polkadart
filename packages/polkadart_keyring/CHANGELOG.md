@@ -1,3 +1,6 @@
+## 0.4.1
+- Bump dependency requirements
+
 ## 0.4.0
 - Adds support for multisig account
 
