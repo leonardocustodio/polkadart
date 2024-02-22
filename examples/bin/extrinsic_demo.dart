@@ -26,12 +26,12 @@ Future<void> main(List<String> arguments) async {
 
   // Create sr25519 wallet
   final sr25519Wallet = await KeyPair.sr25519.fromMnemonic(
-      "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//1");
+      "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//2");
   print('Sr25519 Wallet: ${sr25519Wallet.address}');
 
   // Create ecdsa wallet
   final ecdsaWallet = await KeyPair.ecdsa.fromMnemonic(
-      "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//1");
+      "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//2");
   print('Ecdsa Wallet: ${ecdsaWallet.address}');
 
   // Random destination address
@@ -58,7 +58,6 @@ Future<void> main(List<String> arguments) async {
   final runtimeCall =
       westApi.tx.balances.transferAll(dest: multiDest, keepAlive: false);
   final encodedCall = runtimeCall.encode();
-  print('Encoded call: $encodedCall');
 
   final payloadToSign = SigningPayload(
     method: encodedCall,
@@ -113,9 +112,9 @@ Future<void> main(List<String> arguments) async {
   // Send both extrinsic
   final author = AuthorApi(westProvider);
   // final srHash = await author.submitExtrinsic(srExtrinsic);
-  // print('Sr25519 extrinsic hash: $srHash');
-  // final ecHash = await author.submitExtrinsic(ecExtrinsic);
-  // print('Ecdsa extrinsic hash: $ecHash');
+  // print('Sr25519 extrinsic hash: ${hex.encode(srHash)}');
+  final ecHash = await author.submitExtrinsic(ecExtrinsic);
+  print('Ecdsa extrinsic hash: ${hex.encode(ecHash)}');
 
   // Sign & verify messages
 
@@ -125,8 +124,7 @@ Future<void> main(List<String> arguments) async {
   print('Gas Price: ${gasPrice.result}');
 
   // Custom Signed Extension with TypeRegistry
-  final assetProvider =
-      Provider.fromUri(Uri.parse('wss://westend-asset-hub-rpc.polkadot.io'));
+  final assetProvider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
   final assetApi = Assethub(assetProvider);
   final assetState = StateApi(assetProvider);
 
@@ -147,7 +145,6 @@ Future<void> main(List<String> arguments) async {
   final customCall =
       assetApi.tx.balances.transferAll(dest: customDest, keepAlive: false);
   final customEncodedCall = customCall.encode();
-  print('Encoded custom call: $encodedCall');
 
   // Get Metadata
   final customMetadata = await assetState.getMetadata();
@@ -190,7 +187,10 @@ Future<void> main(List<String> arguments) async {
     nonce: 0,
     tip: 0,
     customSignedExtensions: <String, dynamic>{
-      'ChargeAssetTxPayment': 10, // A custom Signed Extensions
+      'ChargeAssetTxPayment': {
+        "tip": 0,
+        "assetId": 0,
+      }, // A custom Signed Extensions
     },
   ).encode(assetApi.registry, SignatureType.sr25519);
   print('custom signed extension extrinsic: ${hex.encode(customExtrinsic)}');
@@ -199,6 +199,28 @@ Future<void> main(List<String> arguments) async {
   // author.submitAndWatchExtrinsic(
   //     extrinsic, (p0) => print("Extrinsic result: ${p0.type} - {${p0.value}}"));
 }
+
+// 2d02 84
+// 00 eab61d5f70b9dc1e48b9138dfe881d50c1cb356866c740ea8fcc32a4a3e1723c
+// 01 0a3e41eb05df3866eea5811a376afaa2a30f3360aa48098b14f92d41e8941e4663f76d6bc754e5d255ce212a4bf102b13cf2dee772ea3bd75622c60fb8929089
+// c501
+// 00
+// 00
+// 0404
+// 00
+// beecf0681cf7e50992bdd7016c956c2b667fcd69d6143b0daec4165017586237
+// 00
+
+// 2d02 84
+// 00 b035d504ae901f2b25b8ba2cc97010d3b6d9b8f4d8d1b09bfc6c978629a2aa36
+// 02 023a4d860e94d09601420338bbb8c1d9c4a29f8793eba27f43b3f1fb1ae81466443c550572aa122d78b13887706e0df912c264251d2a0aaaf4c7139a5f5a2132
+// c501
+// 00
+// 00
+// 0404
+// 00
+// beecf0681cf7e50992bdd7016c956c2b667fcd69d6143b0daec4165017586237
+// 00
 
 // 0x
 // 3102 84
