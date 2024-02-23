@@ -1,6 +1,6 @@
 name: polkadart
 description: Interfaces for interacting with Polkadot JSON RPC interface
-version: 0.4.1
+version: 0.4.2
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/polkadart
 repository: https://github.com/leonardocustodio/polkadart
 
@@ -15,7 +15,7 @@ dependencies:
   polkadart_scale_codec: ^1.2.0 # Apache 2.0
   substrate_metadata: ^1.2.0 # Apache 2.0
   hashlib_codecs: ^2.2.0 # BSD-3-Clause
-  polkadart_keyring: ^0.4.0
+  polkadart_keyring: ^0.4.2
   ss58: ^1.1.2
 
 dev_dependencies:
