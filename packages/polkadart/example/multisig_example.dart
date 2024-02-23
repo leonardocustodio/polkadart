@@ -40,6 +40,7 @@ void main() async {
     final localResponse = MultisigResponse.fromJson(json);
     // Approve this call by keypairS2 and forward for further approval.
     await Future.delayed(Duration(seconds: 15));
+    print('Calling ApproveAsMulti by keypairS2');
     await localResponse.approveAsMulti(provider, keypairS2);
   }
 
@@ -58,6 +59,7 @@ void main() async {
     final localResponse = MultisigResponse.fromJson(json);
     // Execute this call by keypairS3 approval.
     await Future.delayed(Duration(seconds: 15));
+    print('Calling AsMulti by keypairS3');
     await localResponse.asMulti(provider, keypairS3);
   }
 
@@ -67,5 +69,6 @@ void main() async {
   //
   // // Cancel this call by keypairS1
   // await Future.delayed(Duration(seconds: 15));
+  print('Calling CancelAsMulti by keypairS1');
   // await multiSigResponse.cancelAsMulti(provider, keypairS1);
 }

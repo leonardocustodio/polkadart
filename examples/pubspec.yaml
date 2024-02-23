@@ -9,13 +9,13 @@ environment:
 # Add regular dependencies here.
 dependencies:
   convert: ^3.1.1
-  polkadart: ^0.2.0
-  polkadart_cli: ^0.3.0
-  polkadart_keyring: ^0.3.0
-  polkadart_scale_codec: ^1.1.2
+  polkadart: ^0.4.2
+  polkadart_cli: ^0.4.1
+  polkadart_keyring: ^0.4.2
+  polkadart_scale_codec: ^1.2.0
   ss58: ^1.1.2
-  substrate_bip39: ^0.2.0
-  substrate_metadata: ^1.1.2
+  substrate_bip39: ^0.4.0
+  substrate_metadata: ^1.2.0
 
   # Generated files depend on quiver
   quiver: ^3.2.1
@@ -27,4 +27,6 @@ dev_dependencies:
 polkadart:
   output_dir: lib/generated
   chains:
-    polkadot: wss://rpc.ibp.network/polkadot
+    astar: wss://rpc.astar.network
+    westend: wss://westend-rpc.polkadot.io
+    assethub: wss://westend-asset-hub-rpc.polkadot.io

@@ -37,8 +37,9 @@ class EcdsaKeyPair extends KeyPair {
       throw Exception('KeyPair is locked. Unlock it before signing.');
     }
     message = _blake2bDigest(message);
-    final signature = _privateKey.sign(message);
-    return Uint8List.fromList(signature.toCompactRawBytes());
+    final signature = _privateKey.sign(message, lowS: true);
+    return Uint8List.fromList(
+        [...signature.toCompactRawBytes(), signature.recovery ?? 0]);
   }
 
   @override
@@ -104,7 +105,7 @@ class EcdsaKeyPair extends KeyPair {
   }
 
   @override
-  PublicKey get publicKey => PublicKey(_publicKey.toBytes());
+  PublicKey get publicKey => PublicKey(Address.decode(address).pubkey);
 
   /// Returns the public key of the `KeyPair` as a hex string.
   String publicKeyHex([bool compressed = true]) =>

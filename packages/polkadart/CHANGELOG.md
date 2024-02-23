@@ -1,3 +1,6 @@
+## 0.4.2
+- Fixes extrinsics encoded with ecdsa signature
+
 ## 0.4.1
 - Improves custom signed extensions
 
