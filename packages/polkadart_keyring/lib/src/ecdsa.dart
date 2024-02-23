@@ -106,7 +106,7 @@ class EcdsaKeyPair extends KeyPair {
   }
 
   @override
-  PublicKey get publicKey => PublicKey(_addressPrivate());
+  PublicKey get publicKey => PublicKey(Address.decode(address).pubkey);
 
   /// Returns the public key of the `KeyPair` as a hex string.
   String publicKeyHex([bool compressed = true]) =>
