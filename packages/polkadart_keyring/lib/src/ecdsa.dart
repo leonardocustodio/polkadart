@@ -51,8 +51,7 @@ class EcdsaKeyPair extends KeyPair {
 
   @override
   String get address {
-    return Address(prefix: ss58Format, pubkey: bytes())
-        .encode(prefix: ss58Format);
+    return Address(prefix: ss58Format, pubkey: _addressPrivate()).encode();
   }
 
   @override
