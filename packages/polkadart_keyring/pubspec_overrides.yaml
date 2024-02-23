@@ -7,3 +7,5 @@ dependency_overrides:
     path: ../ss58
   substrate_bip39:
     path: ../substrate_bip39
+  secp256k1_ecdsa:
+    path: ../secp256k1_ecdsa

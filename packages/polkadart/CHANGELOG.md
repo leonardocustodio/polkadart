@@ -1,3 +1,6 @@
+## 0.4.3
+- Bumps keyring version
+
 ## 0.4.2
 - Fixes extrinsics encoded with ecdsa signature
 
