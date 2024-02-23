@@ -27,12 +27,12 @@ Future<void> main(List<String> arguments) async {
 
   // Create sr25519 wallet
   final sr25519Wallet = await KeyPair.sr25519.fromMnemonic(
-      "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//2");
+      "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//10");
   print('Sr25519 Wallet: ${sr25519Wallet.address}');
 
   // Create ecdsa wallet
   final ecdsaWallet = await KeyPair.ecdsa.fromMnemonic(
-      "resource mirror lecture smooth midnight muffin position cup pepper fruit vanish also//2");
+      "mushroom grab answer fork ripple virus swamp food excess old client arena//10");
   print('Ecdsa Wallet: ${ecdsaWallet.address}');
 
   // Random destination address
@@ -112,12 +112,10 @@ Future<void> main(List<String> arguments) async {
 
   // Send both extrinsic
   final author = AuthorApi(westProvider);
-  // final srHash = await author.submitExtrinsic(srExtrinsic);
-  // print('Sr25519 extrinsic hash: ${hex.encode(srHash)}');
+  final srHash = await author.submitExtrinsic(srExtrinsic);
+  print('Sr25519 extrinsic hash: ${hex.encode(srHash)}');
   final ecHash = await author.submitExtrinsic(ecExtrinsic);
   print('Ecdsa extrinsic hash: ${hex.encode(ecHash)}');
-
-  // Sign & verify messages
 
   // Custom RPC call
   final astarProvider = Provider.fromUri(Uri.parse('wss://rpc.astar.network'));
