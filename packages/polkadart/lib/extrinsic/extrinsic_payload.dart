@@ -71,11 +71,15 @@ class ExtrinsicPayload extends Payload {
     // Signed transaction
     final int extraByte = extrinsicVersion | 128;
 
-    output
-      ..pushByte(extraByte)
+    output.pushByte(extraByte);
+
+    if (signatureType != SignatureType.ecdsa) {
       // 00 = MultiAddress::Id
-      ..pushByte(0)
-      // Push Signer Address
+      output.pushByte(0);
+    }
+
+    // Push Signer Address
+    output
       ..write(signer)
       // Push signature type byte
       ..pushByte(signatureType.type)

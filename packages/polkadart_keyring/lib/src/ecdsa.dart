@@ -37,8 +37,9 @@ class EcdsaKeyPair extends KeyPair {
       throw Exception('KeyPair is locked. Unlock it before signing.');
     }
     message = _blake2bDigest(message);
-    final signature = _privateKey.sign(message);
-    return Uint8List.fromList(signature.toCompactRawBytes());
+    final signature = _privateKey.sign(message, lowS: true);
+    return Uint8List.fromList(
+        [...signature.toCompactRawBytes(), signature.recovery ?? 0]);
   }
 
   @override
@@ -50,7 +51,8 @@ class EcdsaKeyPair extends KeyPair {
 
   @override
   String get address {
-    return Address(prefix: ss58Format, pubkey: _addressPrivate()).encode();
+    return Address(prefix: ss58Format, pubkey: bytes())
+        .encode(prefix: ss58Format);
   }
 
   @override

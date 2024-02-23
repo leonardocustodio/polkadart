@@ -32,7 +32,7 @@ void main() async {
   group('Ecdsa test cases', () {
     test('test //Alice', () async {
       expect((await keyring.fromUri('//Alice')).address,
-          '5C7C2Z5sWbytvHpuLTvzKunnnRwQxft1jiqrLD5rhucQ5S9X');
+          'KW39r9CJjAVzmkf9zQ4YDb2hqfAVGdRqn53eRqyruqpxAP5YL');
     });
 
     test('adds the pair', () {
@@ -53,7 +53,7 @@ void main() async {
       keyPair.ss58Format = 2;
 
       expect(
-          keyPair.address, 'DrRE1KAcs4pCicX8yJPh7YxkLPQ2vXnCFSVRPQfx38KjEFe');
+          keyPair.address, 'tUSWmNAUurn68Gs1hjUzFfhJuC7VE5tL9ysDFSW6bZEbRsJX');
     });
 
     test('allows publicKeys retrieval', () {
