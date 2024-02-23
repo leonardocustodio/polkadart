@@ -12,9 +12,15 @@ class Signature {
   }
   // create signature from 64b compact repr
   static Signature fromCompactBytes(Uint8List bytes) {
+    int? recovery;
+    if (bytes.length == 65) {
+      recovery = bytes[64];
+      bytes = bytes.sublist(0, 64);
+    }
     bytes =
         Utilities.matchLength(bytes, 64); // compact repr is (32b r)||(32b s)
     return Signature(
+        recovery: recovery,
         r: Utilities.sliceBytes(bytes, 0, fLen),
         s: Utilities.sliceBytes(bytes, fLen, 2 * fLen));
   }
