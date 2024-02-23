@@ -18,7 +18,6 @@ abstract class Payload {
   });
 
   Map<String, dynamic> toEncodedMap(dynamic registry);
-
   bool usesChargeAssetTxPayment(dynamic registry) {
     if (registry.getSignedExtensionTypes() is Map) {
       return (registry.getSignedExtensionTypes() as Map)
@@ -28,7 +27,7 @@ abstract class Payload {
         .contains('ChargeAssetTxPayment');
   }
 
-  String maybeAssetIdEncoded(dynamic registry) {
+/*     String maybeAssetIdEncoded(dynamic registry) {
     if (usesChargeAssetTxPayment(registry)) {
       // '00' and '01' refer to rust's Option variants 'None' and 'Some'.
       return customSignedExtensions.containsKey('assetId')
@@ -37,5 +36,5 @@ abstract class Payload {
     } else {
       return '';
     }
-  }
+  } */
 }
