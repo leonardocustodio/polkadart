@@ -15,8 +15,8 @@ class AssetHubSignedExtensions implements SignedExtensions {
         return (info['era'], true);
       case 'CheckNonce':
         return (info['nonce'], true);
-      case 'ChargeAssetTxPayment':
-        return ('${info['tip']}${info['assetId']}', true);
+      /*  case 'ChargeAssetTxPayment':
+        return ('${info['tip']}${info['assetId']}', true); */
       default:
         return ('', false);
     }

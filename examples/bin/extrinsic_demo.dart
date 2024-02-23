@@ -17,6 +17,7 @@ import 'package:polkadart_example/generated/westend/westend.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:ss58/ss58.dart';
 
 Future<void> main(List<String> arguments) async {
@@ -124,7 +125,8 @@ Future<void> main(List<String> arguments) async {
   print('Gas Price: ${gasPrice.result}');
 
   // Custom Signed Extension with TypeRegistry
-  final assetProvider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final assetProvider =
+      Provider.fromUri(Uri.parse('wss://westend-asset-hub-rpc.polkadot.io'));
   final assetApi = Assethub(assetProvider);
   final assetState = StateApi(assetProvider);
 
@@ -168,7 +170,13 @@ Future<void> main(List<String> arguments) async {
     nonce: 0, // Supposing it is this wallet first transaction
     tip: 0,
     customSignedExtensions: <String, dynamic>{
-      'ChargeAssetTxPayment': 10, // A custom Signed Extensions
+      'ChargeAssetTxPayment': {
+        "tip": BigInt.zero,
+        "asset_id": Option.some({
+          "parents": 1,
+          "interior": MapEntry("Here", null),
+        }),
+      }, // A custom Signed Extensions
     },
   );
 
@@ -188,62 +196,16 @@ Future<void> main(List<String> arguments) async {
     tip: 0,
     customSignedExtensions: <String, dynamic>{
       'ChargeAssetTxPayment': {
-        "tip": 0,
-        "assetId": 0,
+        "tip": BigInt.zero,
+        "asset_id": Option.some({
+          "parents": 1,
+          "interior": MapEntry("Here", null),
+        }),
       }, // A custom Signed Extensions
     },
-  ).encode(assetApi.registry, SignatureType.sr25519);
+  ).encode(registry, SignatureType.sr25519);
   print('custom signed extension extrinsic: ${hex.encode(customExtrinsic)}');
 
-  // final author = AuthorApi(matrixProvider);
-  // author.submitAndWatchExtrinsic(
-  //     extrinsic, (p0) => print("Extrinsic result: ${p0.type} - {${p0.value}}"));
+  final authorAssetHub = AuthorApi(assetProvider);
+  authorAssetHub.submitExtrinsic(customExtrinsic);
 }
-
-// 2d02 84
-// 00 eab61d5f70b9dc1e48b9138dfe881d50c1cb356866c740ea8fcc32a4a3e1723c
-// 01 0a3e41eb05df3866eea5811a376afaa2a30f3360aa48098b14f92d41e8941e4663f76d6bc754e5d255ce212a4bf102b13cf2dee772ea3bd75622c60fb8929089
-// c501
-// 00
-// 00
-// 0404
-// 00
-// beecf0681cf7e50992bdd7016c956c2b667fcd69d6143b0daec4165017586237
-// 00
-
-// 2d02 84
-// 00 b035d504ae901f2b25b8ba2cc97010d3b6d9b8f4d8d1b09bfc6c978629a2aa36
-// 02 023a4d860e94d09601420338bbb8c1d9c4a29f8793eba27f43b3f1fb1ae81466443c550572aa122d78b13887706e0df912c264251d2a0aaaf4c7139a5f5a2132
-// c501
-// 00
-// 00
-// 0404
-// 00
-// beecf0681cf7e50992bdd7016c956c2b667fcd69d6143b0daec4165017586237
-// 00
-
-// 0x
-// 3102 84
-// 00 2ef81b9b68f63a5f92e4cc8f370750c575f3005e284d6a2c8ecfeee0daf49f35
-// 01 7c2c089ae6c97884325ebb059805a208d4591a2e2a1193dc7a7bbeaecbd4821233d87db9e85bc31b64720f271ac94756ee5b4a9332f6c62a95b817048b004288
-// 7501
-// 00
-// 00
-// 00
-// 0a04
-// 00
-// beecf0681cf7e50992bdd7016c956c2b667fcd69d6143b0daec4165017586237
-// 00
-
-// 0x
-// 3102 84
-// 00 88796d1a489e2d12becd39b5db88b431cf76b1bedc3c35216c5cc7dc4fa0d412
-// 01 e0630ddb8965152008659e831b62b76c7c00f2b3854071ff47fa344e33475437f01b8835375cbc00e5b5f99c0c6f9366a9fe5cb6bdc08471201d1b9728809382
-// c503
-// 00
-// 00
-// 00
-// 0404
-// 00
-// beecf0681cf7e50992bdd7016c956c2b667fcd69d6143b0daec4165017586237
-// 00

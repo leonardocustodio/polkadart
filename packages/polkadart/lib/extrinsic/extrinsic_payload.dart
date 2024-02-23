@@ -38,7 +38,7 @@ class ExtrinsicPayload extends Payload {
           ? '00'
           : Era.codec.encodeMortal(blockNumber, eraPeriod),
       'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
-      'assetId': maybeAssetIdEncoded(registry),
+      /* 'assetId': maybeAssetIdEncoded(registry), */
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
@@ -60,6 +60,10 @@ class ExtrinsicPayload extends Payload {
   }
 
   Uint8List encode(dynamic registry, SignatureType signatureType) {
+    if (customSignedExtensions.isNotEmpty && registry is! Registry) {
+      throw Exception(
+          'Custom signed extensions are not supported on this registry. Please use registry from `runtimeMetadata.chainInfo.scaleCodec.registry`.');
+    }
     final ByteOutput output = ByteOutput();
 
     final int extrinsicVersion = registry.extrinsicVersion;
