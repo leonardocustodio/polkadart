@@ -1,3 +1,6 @@
+## 0.4.2
+- Bump polkadart dependency
+
 ## 0.4.1
 - Bump dependency requirements
 
