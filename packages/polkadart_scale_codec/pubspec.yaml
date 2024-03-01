@@ -14,5 +14,5 @@ dependencies:
   typed_data: ^1.3.1 # BSD-3-Clause
 
 dev_dependencies:
-  lints: ^3.0.0 # BSD-3-Clause
+  lints: ^2.0.0 # BSD-3-Clause
   test: ^1.16.0 # BSD-3-Clause
