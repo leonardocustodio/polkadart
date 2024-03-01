@@ -21,12 +21,13 @@ dependencies:
   quiver: ^3.2.1
 
 dev_dependencies:
-  lints: ^2.0.0
+  lints: ^3.0.0
   test: ^1.21.0
 
 polkadart:
   output_dir: lib/generated
   chains:
+    polkadot: wss://rpc.ibp.network/polkadot
     astar: wss://rpc.astar.network
     westend: wss://westend-rpc.polkadot.io
     assethub: wss://westend-asset-hub-rpc.polkadot.io
