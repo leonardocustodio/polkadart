@@ -27,6 +27,7 @@ dev_dependencies:
 polkadart:
   output_dir: lib/generated
   chains:
+    polkadot: wss://rpc.ibp.network/polkadot
     astar: wss://rpc.astar.network
     westend: wss://westend-rpc.polkadot.io
     assethub: wss://westend-asset-hub-rpc.polkadot.io
