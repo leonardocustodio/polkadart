@@ -20,7 +20,7 @@ void main() async {
   teslaR.ss58Format = 42;
 
   final provider =
-      Provider.fromUri(Uri.parse('wss://rpc-polkadot.luckyfriday.io'));
+      Provider.fromUri(Uri.parse('wss://westend.api.onfinality.io/public-ws'));
 
   ///
   /// Create and Fund Multisig
@@ -69,6 +69,6 @@ void main() async {
   //
   // // Cancel this call by TeslaS1
   // await Future.delayed(Duration(seconds: 15));
-  print('Calling CancelAsMulti by TeslaS1');
+  // print('Calling CancelAsMulti by TeslaS1');
   // await multiSigResponse.cancelAsMulti(provider, TeslaS1);
 }
