@@ -1,4 +1,4 @@
-FROM dart:stable-sdk
+FROM dart:stable
 
 RUN apt-get update
 RUN apt-get clean
@@ -10,4 +10,5 @@ COPY . .
 
 ENV PATH="$PATH":"/root/.pub-cache/bin"
 
-CMD ["melos", "test"]
+RUN melos fetch_dependencies
+RUN melos test
