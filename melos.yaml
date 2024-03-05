@@ -10,8 +10,14 @@ packages:
   - examples
 
 scripts:
+  fetch_dependencies:
+    description: Run dart pub get in a specific package to pre-fetch all the packages.
+    run: melos exec --scope="${SCOPE:-*}" -c 1 -- "dart pub get"
+    select-package:
+      flutter: false
+
   test:
-    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart test --coverage="coverage"'
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart test --no-chain-stack-traces --ignore-timeouts --coverage="coverage" --concurrency=1'
 
   coverage:
     run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart run coverage:format_coverage --lcov --in=coverage --out=coverage/coverage.lcov --packages=.dart_tool/package_config.json --report-on=lib'
