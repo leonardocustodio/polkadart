@@ -2,6 +2,14 @@
 
 Provides a clean wrapper around all the methods exposed by a Polkadot/Substrate network client and defines all the types exposed by a node.
 
+## Running Example
+Fetch the dependencies by running:
+```bash
+dart pub get
+# Run the example
+dart run multisig_example.dart
+```
+
 ## Usage
 
 ```dart
