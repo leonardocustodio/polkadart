@@ -5,4 +5,4 @@ environment:
 
 dev_dependencies:
   coverage: ^1.6.3
-  melos: ^4.0.0
+  melos: ^5.1.0
