@@ -25,6 +25,7 @@ class ExtrinsicPayload extends Payload {
     required super.blockNumber,
     required super.nonce,
     required super.tip,
+    super.appId,
     super.customSignedExtensions,
   });
 
@@ -42,6 +43,9 @@ class ExtrinsicPayload extends Payload {
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
+      'appId': appId is int
+          ? encodeHex(CompactCodec.codec.encode(appId))
+          : encodeHex(CompactBigIntCodec.codec.encode(appId)),
     };
   }
 

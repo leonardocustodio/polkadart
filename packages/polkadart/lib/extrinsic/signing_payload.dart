@@ -28,6 +28,7 @@ class SigningPayload extends Payload {
     required super.eraPeriod,
     required super.nonce,
     required super.tip,
+    super.appId,
     super.customSignedExtensions,
   });
 
@@ -48,6 +49,9 @@ class SigningPayload extends Payload {
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
+      'appId': appId is int
+          ? encodeHex(CompactCodec.codec.encode(appId))
+          : encodeHex(CompactBigIntCodec.codec.encode(appId)),
     };
   }
 

@@ -6,6 +6,7 @@ abstract class Payload {
   final int eraPeriod; // CheckMortality
   final int nonce; // CheckNonce
   final dynamic tip; // ChargeTransactionPayment
+  final dynamic appId; // CheckAppId
   final Map<String, dynamic> customSignedExtensions;
 
   const Payload({
@@ -14,6 +15,7 @@ abstract class Payload {
     required this.eraPeriod,
     required this.nonce,
     required this.tip,
+    this.appId,
     this.customSignedExtensions = const <String, dynamic>{},
   });
 

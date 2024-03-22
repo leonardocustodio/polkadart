@@ -17,6 +17,8 @@ class SubstrateSignedExtensions implements SignedExtensions {
         return (info['nonce'], true);
       case 'ChargeTransactionPayment':
         return (info['tip'], true);
+      case 'CheckAppId':
+        return (info['appId'], true);
       default:
         return ('', false);
     }
