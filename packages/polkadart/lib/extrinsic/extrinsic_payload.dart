@@ -42,6 +42,7 @@ class ExtrinsicPayload extends Payload {
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
+      'metadataHash': '00'
     };
   }
 

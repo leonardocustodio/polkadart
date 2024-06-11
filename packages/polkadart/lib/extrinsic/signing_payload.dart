@@ -48,6 +48,7 @@ class SigningPayload extends Payload {
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
+      'metadataHash': '00' // assume 0 for now
     };
   }
 
