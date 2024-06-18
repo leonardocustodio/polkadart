@@ -75,16 +75,20 @@ class HttpProvider extends Provider {
 
   @override
   Future<RpcResponse> send(String method, List<dynamic> params) async {
-    final response = await http.post(url, body: {
-      'id': (++_sequence).toString(),
-      'jsonrpc': '2.0',
-      'method': method,
-      'params': params,
-    });
+    final response = await http.post(url,
+        body: jsonEncode(
+          {
+            'id': (++_sequence).toString(),
+            'jsonrpc': '2.0',
+            'method': method,
+            'params': params,
+          },
+        ),
+        headers: {'Content-Type': 'application/json'});
     final data = jsonDecode(response.body);
 
     return RpcResponse(
-      id: data['id'],
+      id: int.tryParse(data['id'].toString()) ?? -1,
       result: data['result'],
     );
   }
