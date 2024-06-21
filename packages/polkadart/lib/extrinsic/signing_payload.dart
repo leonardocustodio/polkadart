@@ -102,7 +102,6 @@ class SigningPayload extends Payload {
     //
     // Traverse through the signedExtension keys and encode the payload
     for (final extension in signedExtensionKeys) {
-      print("Extension $extension");
       final (payload, found) =
           signedExtensions.signedExtension(extension, encodedMap);
       if (found) {
