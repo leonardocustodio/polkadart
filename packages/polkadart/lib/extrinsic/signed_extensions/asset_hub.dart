@@ -18,7 +18,7 @@ class AssetHubSignedExtensions implements SignedExtensions {
       /*  case 'ChargeAssetTxPayment':
         return ('${info['tip']}${info['assetId']}', true); */
       case 'CheckMetadataHash':
-        return ('${info['metadataHash']}', true);
+        return ('${info['mode']}', true);
       default:
         return ('', false);
     }

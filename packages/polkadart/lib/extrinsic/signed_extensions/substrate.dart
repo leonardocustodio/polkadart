@@ -18,7 +18,7 @@ class SubstrateSignedExtensions implements SignedExtensions {
       case 'ChargeTransactionPayment':
         return (info['tip'], true);
       case 'CheckMetadataHash':
-        return (info['metadataHash'], true);
+        return (info['mode'], true);
       default:
         return ('', false);
     }
