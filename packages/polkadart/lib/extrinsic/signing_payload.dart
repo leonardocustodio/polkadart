@@ -48,6 +48,9 @@ class SigningPayload extends Payload {
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
+      // This is for the `CheckMetadataHash` signed extensions.
+      // signing the metadata hash is not supported now, so we
+      // sign the `Option<MetadataHash>::None` by setting it to '00'.
       'metadataHash': '00' // assume 0 for now
     };
   }
