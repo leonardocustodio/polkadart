@@ -42,14 +42,14 @@ class ExtrinsicPayload extends Payload {
       'tip': tip is int
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
-       // This is for the `CheckMetadataHash` signed extension.
-       // Signing the metadata hash is not supported now, so
-       // the set the enabled byte to false with `mode: '00'`.
-       'mode': '00',
-       // This is for the `CheckMetadataHash` additional signed extension.
-       // Signing the metadata hash is not supported now, so we
-       // sign the `Option<MetadataHash>::None` by setting it to '00'.
-       'metadataHash': '00',
+      // This is for the `CheckMetadataHash` signed extension.
+      // Signing the metadata hash is not supported now, so
+      // the set the enabled byte to false with `mode: '00'`.
+      'mode': '00',
+      // This is for the `CheckMetadataHash` additional signed extension.
+      // Signing the metadata hash is not supported now, so we
+      // sign the `Option<MetadataHash>::None` by setting it to '00'.
+      'metadataHash': '00',
     };
   }
 
