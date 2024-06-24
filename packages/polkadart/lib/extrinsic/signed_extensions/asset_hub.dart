@@ -17,6 +17,8 @@ class AssetHubSignedExtensions implements SignedExtensions {
         return (info['nonce'], true);
       /*  case 'ChargeAssetTxPayment':
         return ('${info['tip']}${info['assetId']}', true); */
+      case 'CheckMetadataHash':
+        return ('${info['mode']}', true);
       default:
         return ('', false);
     }
@@ -33,6 +35,8 @@ class AssetHubSignedExtensions implements SignedExtensions {
         return (info['transactionVersion'], true);
       case 'CheckGenesis':
         return (info['genesisHash'], true);
+      case 'CheckMetadataHash':
+        return (info['metadataHash'], true);
       default:
         return ('', false);
     }
