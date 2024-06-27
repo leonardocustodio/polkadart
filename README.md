@@ -1,4 +1,7 @@
 # **Polkadart**
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Star on Github](https://img.shields.io/github/stars/leonardocustodio/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/leonardocustodio/polkadart)
 [![All Contributors](https://img.shields.io/github/all-contributors/projectOwner/projectName?color=ee8449&style=flat-square)](#contributors)
@@ -37,6 +40,20 @@ Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/leonardocustodio"><img src="https://avatars.githubusercontent.com/u/5619696?v=4?s=100" width="100px;" alt="Leonardo Custodio"/><br /><sub><b>Leonardo Custodio</b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=leonardocustodio" title="Code">💻</a> <a href="https://github.com/leonardocustodio/polkadart/commits?author=leonardocustodio" title="Tests">⚠️</a> <a href="https://github.com/leonardocustodio/polkadart/pulls?q=is%3Apr+reviewed-by%3Aleonardocustodio" title="Reviewed Pull Requests">👀</a> <a href="#question-leonardocustodio" title="Answering Questions">💬</a> <a href="#maintenance-leonardocustodio" title="Maintenance">🚧</a> <a href="#example-leonardocustodio" title="Examples">💡</a> <a href="https://github.com/leonardocustodio/polkadart/commits?author=leonardocustodio" title="Documentation">📖</a> <a href="https://github.com/leonardocustodio/polkadart/issues?q=author%3Aleonardocustodio" title="Bug reports">🐛</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 
