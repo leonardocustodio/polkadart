@@ -62,6 +62,27 @@
       ]
     },
     {
+      "login": "clangenb",
+      "name": "clangenb",
+      "avatar_url": "https://avatars.githubusercontent.com/u/37865735?v=4",
+      "profile": "https://github.com/clangenb",
+      "contributions": [
+        "code",
+        "test",
+        "bug",
+        "question"
+      ]
+    },
+    {
+      "login": "pastre",
+      "name": "Bruno Pastre",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6251198?v=4",
+      "profile": "https://pastre.dev",
+      "contributions": [
+        "review"
+      ]
+    },
+    {
       "login": "weishirongzhen",
       "name": "weiwei",
       "avatar_url": "https://avatars.githubusercontent.com/u/54241621?v=4",
