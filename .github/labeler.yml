@@ -1,0 +1,39 @@
+"pkg: polkadart":
+- changed-files:
+  - any-glob-to-any-file: 'packages/polkadart/**'
+  
+"pkg: polkadart_scale_codec":
+- changed-files:
+  - any-glob-to-any-file: 'packages/polkadart_scale_codec/**'
+
+"pkg: polkadart_cli":
+- changed-files:
+  - any-glob-to-any-file: 'packages/polkadart_cli/**'
+
+"pkg: polkadart_keyring":
+- changed-files:
+  - any-glob-to-any-file: 'packages/polkadart_keyring/**'
+
+"pkg: secp256k1_ecdsa":
+- changed-files:
+  - any-glob-to-any-file: 'packages/secp256k1_ecdsa/**'
+
+"pkg: sr25519":
+- changed-files:
+  - any-glob-to-any-file: 'packages/sr25519/**'
+
+"pkg: ss58":
+- changed-files:
+  - any-glob-to-any-file: 'packages/ss58/**'
+
+"pkg: substrate_bip39":
+- changed-files:
+  - any-glob-to-any-file: 'packages/substrate_bip39/**'
+
+"pkg: substrate_metadata":
+- changed-files:
+  - any-glob-to-any-file: 'packages/substrate_metadata/**'
+
+"type: documentation":
+- changed-files:
+  - any-glob-to-any-file: '**/*.md'
