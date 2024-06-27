@@ -22,6 +22,20 @@
         "doc",
         "bug"
       ]
+    },
+    {
+      "login": "justkawal",
+      "name": "justkawal",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49296873?v=4",
+      "profile": "https://kawal.dev",
+      "contributions": [
+        "code",
+        "test",
+        "review",
+        "maintenance",
+        "example",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
