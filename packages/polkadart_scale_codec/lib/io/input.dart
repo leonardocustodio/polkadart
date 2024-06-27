@@ -42,7 +42,7 @@ mixin Input {
   /// final input = Input.fromHex('0x010203');
   /// print(input.readBytes(3)); // [1, 2, 3]
   /// ```
-  UnmodifiableUint8ListView readBytes(int length);
+  Uint8List readBytes(int length);
 
   ///
   /// returns true if there are bytes left to be read
@@ -108,12 +108,12 @@ class ByteInput with Input {
   }
 
   @override
-  UnmodifiableUint8ListView readBytes(int length) {
+  Uint8List readBytes(int length) {
     if ((offset + length) > _buffer.length) {
       throw Exception('Not enough bytes to read');
     }
     final bytes =
-        UnmodifiableUint8ListView(_buffer.buffer.asUint8List(offset, length));
+        _buffer.buffer.asUint8List(offset, length).asUnmodifiableView();
     offset += length;
     return bytes;
   }

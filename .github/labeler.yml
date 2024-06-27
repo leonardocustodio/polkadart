@@ -44,4 +44,4 @@ github-actions:
 
 "type: dependencies":
 - changed-files:
-  - any-glob-to-any-file: ['**/pubspec.yaml', '**/pubspec.lock']
+  - any-glob-to-any-file: ['**/pubspec.yaml', '**/pubspec.lock', '**/pubspec_overrides.yaml']
