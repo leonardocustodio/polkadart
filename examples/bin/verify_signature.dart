@@ -65,13 +65,10 @@ bool secp256k1Verify(
     Uint8List message, Uint8List signature, Uint8List publicKey) {
   print('Message ECDSA: $message');
   print('Signature ECDSA: $signature');
-
-  final privateKey = [42, ...publicKey];
-  print(privateKey);
-  print('Public Key ECDSA: $privateKey');
+  print('Public Key ECDSA: $publicKey');
 
   print('Test before public key');
-  final pub = secp256k1.PublicKey(privateKey as Uint8List);
+  final pub = secp256k1.PublicKey(publicKey);
   print('Test before address....');
   final addr = Address(pubkey: _addressPrivate(pub), prefix: 42);
   final output = addr.encode();
