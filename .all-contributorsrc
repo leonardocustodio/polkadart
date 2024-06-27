@@ -49,6 +49,17 @@
         "example",
         "bug"
       ]
+    },
+    {
+      "login": "gabrielokura",
+      "name": "Gabriel Okura",
+      "avatar_url": "https://avatars.githubusercontent.com/u/26012776?v=4",
+      "profile": "https://github.com/gabrielokura",
+      "contributions": [
+        "code",
+        "test",
+        "example"
+      ]
     }
   ],
   "contributorsPerLine": 7,
