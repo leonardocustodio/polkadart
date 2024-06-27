@@ -52,7 +52,7 @@ jobs:
 
       - name: Generate Files for polkadart_example
         if: ${{ matrix.package == 'polkadart_example' }}
-        run: cd examples && dart run polkadart_cli:generate -v
+        run: cd examples && dart run polkadart_cli:generate -v && cd ..
 
       - name: Check format
         run: SCOPE="${{ matrix.package }}" dart run melos format
