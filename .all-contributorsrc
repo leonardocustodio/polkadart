@@ -60,6 +60,18 @@
         "test",
         "example"
       ]
+    },
+    {
+      "login": "clangenb",
+      "name": "clangenb",
+      "avatar_url": "https://avatars.githubusercontent.com/u/37865735?v=4",
+      "profile": "https://github.com/clangenb",
+      "contributions": [
+        "code",
+        "test",
+        "bug",
+        "question"
+      ]
     }
   ],
   "contributorsPerLine": 7,
