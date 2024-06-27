@@ -1,7 +1,15 @@
 version: 2
 enable-beta-ecosystems: true
 updates:
+  # Update github actions:
+  - package-ecosystem: github-actions
+    directory: '/'
+    labels: ["dependencies"]
+    schedule:
+      interval: daily
+  # Update flutter dependencies:
   - package-ecosystem: "pub"
     directory: "/"
+    labels: ["dependencies"]
     schedule:
-      interval: "weekly"
+      interval: "daily"
