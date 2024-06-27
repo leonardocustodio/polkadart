@@ -55,16 +55,16 @@ jobs:
         run: cd examples && dart run polkadart_cli:generate -v && cd ..
 
       - name: Check format
-        run: SCOPE="${{ matrix.package }}" dart run melos format
+        run: SCOPE="${{ matrix.package }}" dart run melos run format
 
       - name: Analyze
-        run: SCOPE="${{ matrix.package }}" dart run melos analyze
+        run: SCOPE="${{ matrix.package }}" dart run melos run analyze
 
       - name: Run tests
-        run: SCOPE="${{ matrix.package }}" dart run melos test
+        run: SCOPE="${{ matrix.package }}" dart run melos run test
 
       - name: Run format coverage
-        run: SCOPE="${{ matrix.package }}" dart run melos coverage
+        run: SCOPE="${{ matrix.package }}" dart run melos run coverage
 
       - uses: codecov/codecov-action@v4
         with:
