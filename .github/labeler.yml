@@ -1,52 +1,39 @@
-# Add 'root' label to any root file changes
-# Quotation marks are required for the leading asterisk
-root:
+"pkg: polkadart":
 - changed-files:
-  - any-glob-to-any-file: '*'
-
-# Add 'AnyChange' label to any changes within the entire repository
-AnyChange:
+  - any-glob-to-any-file: 'packages/polkadart/**'
+  
+"pkg: polkadart_scale_codec":
 - changed-files:
-  - any-glob-to-any-file: '**'
+  - any-glob-to-any-file: 'packages/polkadart_scale_codec/**'
 
-# Add 'Documentation' label to any changes within 'docs' folder or any subfolders
-Documentation:
+"pkg: polkadart_cli":
 - changed-files:
-  - any-glob-to-any-file: docs/**
+  - any-glob-to-any-file: 'packages/polkadart_cli/**'
 
-# Add 'Documentation' label to any file changes within 'docs' folder
-Documentation:
+"pkg: polkadart_keyring":
 - changed-files:
-  - any-glob-to-any-file: docs/*
+  - any-glob-to-any-file: 'packages/polkadart_keyring/**'
 
-# Add 'Documentation' label to any file changes within 'docs' or 'guides' folders
-Documentation:
+"pkg: secp256k1_ecdsa":
 - changed-files:
-  - any-glob-to-any-file:
-    - docs/*
-    - guides/*
+  - any-glob-to-any-file: 'packages/secp256k1_ecdsa/**'
 
-## Equivalent of the above mentioned configuration using another syntax
-Documentation:
+"pkg: sr25519":
 - changed-files:
-  - any-glob-to-any-file: ['docs/*', 'guides/*']
+  - any-glob-to-any-file: 'packages/sr25519/**'
 
-# Add 'Documentation' label to any change to .md files within the entire repository 
-Documentation:
+"pkg: ss58":
+- changed-files:
+  - any-glob-to-any-file: 'packages/ss58/**'
+
+"pkg: substrate_bip39":
+- changed-files:
+  - any-glob-to-any-file: 'packages/substrate_bip39/**'
+
+"pkg: substrate_metadata":
+- changed-files:
+  - any-glob-to-any-file: 'packages/substrate_metadata/**'
+
+"type: documentation":
 - changed-files:
   - any-glob-to-any-file: '**/*.md'
-
-# Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
-source:
-- all:
-  - changed-files:
-    - any-glob-to-any-file: 'src/**/*'
-    - all-globs-to-all-files: '!src/docs/*'
-
-# Add 'feature' label to any PR where the head branch name starts with `feature` or has a `feature` section in the name
-feature:
- - head-branch: ['^feature', 'feature']
-
-# Add 'release' label to any PR that is opened against the `main` branch
-release:
- - base-branch: 'main'
