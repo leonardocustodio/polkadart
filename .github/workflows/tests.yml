@@ -61,7 +61,7 @@ jobs:
         run: melos exec --scope="${{ matrix.package }}" -- dart run analyze
 
       - name: Run tests
-        run: Smelos exec --scope="${{ matrix.package }}" -- dart run test
+        run: melos exec --scope="${{ matrix.package }}" -- dart run test
 
       - name: Run format coverage
         run: melos exec --scope="${{ matrix.package }}" -- dart run coverage
