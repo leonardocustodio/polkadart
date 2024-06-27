@@ -37,3 +37,7 @@
 "type: documentation":
 - changed-files:
   - any-glob-to-any-file: '**/*.md'
+
+"type: dependencies":
+  - changed-files:
+      - any-glob-to-any-file: ['**/pubspec.yaml', '**/pubspec.lock']
