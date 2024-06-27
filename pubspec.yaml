@@ -1,8 +1,8 @@
 name: polkadart_workspace
 
 environment:
-  sdk: ">=3.0.1 <4.0.0"
+  sdk: ">=3.3.0 <4.0.0"
 
 dev_dependencies:
-  coverage: ^1.6.3
+  coverage: ^1.8.0
   melos: ^6.1.0
