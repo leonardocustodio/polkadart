@@ -4,12 +4,12 @@ updates:
   # Update github actions:
   - package-ecosystem: github-actions
     directory: '/'
-    labels: ["dependencies"]
+    labels: ["type:dependencies"]
     schedule:
       interval: daily
   # Update flutter dependencies:
   - package-ecosystem: "pub"
     directory: "/"
-    labels: ["dependencies"]
+    labels: ["type:dependencies"]
     schedule:
       interval: "daily"
