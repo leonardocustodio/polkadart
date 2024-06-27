@@ -72,6 +72,15 @@
         "bug",
         "question"
       ]
+    },
+    {
+      "login": "pastre",
+      "name": "Bruno Pastre",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6251198?v=4",
+      "profile": "https://pastre.dev",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
