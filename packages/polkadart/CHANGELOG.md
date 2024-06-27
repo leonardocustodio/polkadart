@@ -1,3 +1,9 @@
+## 0.4.5
+- Add support for CheckMetadataHash extension
+
+## 0.4.4
+- Fixes http provider when rpc sends a non integer ID
+
 ## 0.4.3
 - Bumps keyring version
 
