@@ -36,6 +36,19 @@
         "example",
         "bug"
       ]
+    },
+    {
+      "login": "Lohann",
+      "name": "Lohann Paterno Coutinho Ferreira",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4323004?v=4",
+      "profile": "http://www.lohannferreira.com.br",
+      "contributions": [
+        "code",
+        "test",
+        "review",
+        "example",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
