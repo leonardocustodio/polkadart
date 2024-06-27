@@ -60,6 +60,16 @@
         "test",
         "example"
       ]
+    },
+    {
+      "login": "weishirongzhen",
+      "name": "weiwei",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54241621?v=4",
+      "profile": "https://github.com/weishirongzhen",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
