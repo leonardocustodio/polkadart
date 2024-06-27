@@ -1,3 +1,6 @@
+## 0.4.6
+- Add missing error value parse for http provider
+
 ## 0.4.5
 - Add support for CheckMetadataHash extension
 
