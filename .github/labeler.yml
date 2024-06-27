@@ -1,3 +1,7 @@
+github-actions:
+- changed-files:
+  - any-glob-to-any-file: '.github/**'
+
 "pkg: polkadart":
 - changed-files:
   - any-glob-to-any-file: 'packages/polkadart/**'
@@ -37,3 +41,7 @@
 "type: documentation":
 - changed-files:
   - any-glob-to-any-file: '**/*.md'
+
+"type: dependencies":
+- changed-files:
+  - any-glob-to-any-file: ['**/pubspec.yaml', '**/pubspec.lock', '**/pubspec_overrides.yaml']

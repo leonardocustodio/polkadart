@@ -5,7 +5,7 @@ homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/secp2
 repository: https://github.com/leonardocustodio/polkadart
 
 environment:
-  sdk: ">=3.0.1 <4.0.0"
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   pointycastle: ^3.7.4

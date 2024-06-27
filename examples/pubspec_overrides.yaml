@@ -1,4 +1,4 @@
-# melos_managed_dependency_overrides: polkadart,polkadart_cli,polkadart_keyring,polkadart_scale_codec,ss58,substrate_bip39,substrate_metadata
+# melos_managed_dependency_overrides: polkadart,polkadart_cli,polkadart_keyring,polkadart_scale_codec,ss58,substrate_bip39,substrate_metadata,sr25519
 dependency_overrides:
   polkadart:
     path: ../packages/polkadart
@@ -16,3 +16,5 @@ dependency_overrides:
     path: ../packages/substrate_bip39
   substrate_metadata:
     path: ../packages/substrate_metadata
+  sr25519:
+    path: ../packages/sr25519
