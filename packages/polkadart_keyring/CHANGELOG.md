@@ -1,3 +1,6 @@
+## 0.4.4
+- Fixes `UnmodifiableUint8ListView` missing on newer dart versions
+
 ## 0.4.3
 - Bumps ecdsa version
 
