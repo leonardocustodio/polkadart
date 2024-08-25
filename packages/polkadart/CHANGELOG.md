@@ -1,3 +1,6 @@
+## 0.4.7
+- Fixes `UnmodifiableUint8ListView` missing on newer dart versions
+
 ## 0.4.6
 - Add missing error value parse for http provider
 
