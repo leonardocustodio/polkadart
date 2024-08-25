@@ -1,6 +1,6 @@
 name: polkadart_cli
 description: polkadart_cli is a dart library that generates Dart type code from frame metadata. Generated code relies on Polkadart library.
-version: 0.4.2
+version: 0.4.3
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/polkadart_cli
 repository: https://github.com/leonardocustodio/polkadart
 

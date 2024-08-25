@@ -1,6 +1,6 @@
 name: substrate_metadata
 description: Metadata types for Substrate runtimes
-version: 1.2.0
+version: 1.2.1
 homepage: https://github.com/rankanizer/polkadart/tree/main/packages/substrate_metadata
 repository: https://github.com/rankanizer/polkadart
 

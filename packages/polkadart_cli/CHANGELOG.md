@@ -1,3 +1,6 @@
+## 0.4.3
+- Fixes `UnmodifiableUint8ListView` missing on newer dart versions
+
 ## 0.4.2
 - Bump polkadart dependency
 
