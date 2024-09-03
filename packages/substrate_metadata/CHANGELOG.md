@@ -1,3 +1,6 @@
+## 1.2.2
+- Fixes `toJson()` when decoding BitArray`s
+
 ## 1.2.1
 - Fixes `UnmodifiableUint8ListView` missing on newer dart versions
 
