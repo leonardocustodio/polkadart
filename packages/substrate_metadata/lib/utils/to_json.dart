@@ -37,6 +37,8 @@ extension ToJson<T> on T {
 Object? _encodeJson(Object? value) {
   if (value is BigInt) {
     return value.toString();
+  } else if (value is BitArray) {
+    return value.toJson();
   } else if (value is Option) {
     return _extractSomeValue(value);
   } else if (value is MapEntry) {
