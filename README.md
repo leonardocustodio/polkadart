@@ -52,6 +52,7 @@ Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/BurnWW"><img src="https://avatars.githubusercontent.com/u/94514135?v=4?s=100" width="100px;" alt="Burnww"/><br /><sub><b>Burnww</b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=BurnWW" title="Code">💻</a> <a href="https://github.com/leonardocustodio/polkadart/issues?q=author%3ABurnWW" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://avive.github.io"><img src="https://avatars.githubusercontent.com/u/96002?v=4?s=100" width="100px;" alt="Aviv Eyal"/><br /><sub><b>Aviv Eyal</b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=avive" title="Code">💻</a> <a href="https://github.com/leonardocustodio/polkadart/issues?q=author%3Aavive" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jpnovochadlo"><img src="https://avatars.githubusercontent.com/u/69369894?v=4?s=100" width="100px;" alt="jpnovochadlo"/><br /><sub><b>jpnovochadlo</b></sub></a><br /><a href="#business-jpnovochadlo" title="Business development">💼</a> <a href="#design-jpnovochadlo" title="Design">🎨</a> <a href="https://github.com/leonardocustodio/polkadart/commits?author=jpnovochadlo" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
