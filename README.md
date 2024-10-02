@@ -15,7 +15,7 @@ This library is funded by [Web3 Foundation](https://web3.foundation) via their [
 
 This repo is a monorepo for `polkadart` and related packages.
 
-| Packages <br>____________________ | Description <br>___________                            |
+| Packages <br>_____________________ | Description <br>____________                            |
 |:---------------------------------------------------------------------------|:----------------------------------------|
 | [![version][pkg:polkadart:version]][pkg:polkadart]                         | The core package that provides tools to connect and interact with the Polkadot or Substrate chains. It abstracts the complexities of the network protocols and offers straightforward APIs. |
 | [![version][pkg:polkadart_cli:version]][pkg:polkadart_cli]                 | A command-line interface tool that generates dart language types and corresponding definitions by interpreting the chain's metadata. |
