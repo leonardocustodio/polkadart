@@ -111,6 +111,17 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "jpnovochadlo",
+      "name": "jpnovochadlo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/69369894?v=4",
+      "profile": "https://github.com/jpnovochadlo",
+      "contributions": [
+        "business",
+        "design",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
