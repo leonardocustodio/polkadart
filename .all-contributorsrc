@@ -122,6 +122,16 @@
         "design",
         "doc"
       ]
+    },
+    {
+      "login": "tallesborges",
+      "name": "Talles ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3486359?v=4",
+      "profile": "https://github.com/tallesborges",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
