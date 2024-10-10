@@ -14,10 +14,7 @@ class TypeParameter {
 
   const TypeParameter({required this.name, this.type});
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'type': type
-      };
+  Map<String, dynamic> toJson() => {'name': name, 'type': type};
 }
 
 class $TypeParameterCodec implements Codec<TypeParameter> {

@@ -226,7 +226,8 @@ Map<int, TypeDescriptor> parseTypes(
             final primitiveTypeID = boundedVecTypeDef.type;
             final primitiveType = types[primitiveTypeID]!.type;
             if (primitiveType.typeDef is metadata.TypeDefPrimitive) {
-              final primitiveTypeDef = primitiveType as metadata.TypeDefPrimitive;
+              final primitiveTypeDef =
+                  primitiveType as metadata.TypeDefPrimitive;
               if (primitiveTypeDef.primitive == metadata.Primitive.U8) {
                 generators[typeID] = PrimitiveDescriptor.str(typeID);
                 continue;

@@ -6,7 +6,8 @@ import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_cli/polkadart_cli.dart'
     show ChainGenerator, PubspecConfig;
-import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadataV14;
+import 'package:substrate_metadata/substrate_metadata.dart'
+    show RuntimeMetadataV14;
 
 class ChainProperties {
   final RuntimeMetadataV14 metadata;
@@ -30,6 +31,7 @@ class ChainProperties {
     );
   }
 }
+
 void main(List<String> args) async {
   final config = PubspecConfig.fromPubspecFile();
   final parser = ArgParser();
@@ -52,7 +54,8 @@ void main(List<String> args) async {
     final chain = entry.value;
 
     // Get chain properties
-    final ChainProperties properties = await ChainProperties.fromURL(chain.metadataUri);
+    final ChainProperties properties =
+        await ChainProperties.fromURL(chain.metadataUri);
 
     // Create chain directory
     final chainDirectory =

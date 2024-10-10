@@ -12,9 +12,9 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         StrCodec,
         ByteOutput,
         U8SequenceCodec,
-        OptionCodec, ByteInput;
-import '../scale_info/scale_info.dart'
-    show TypeId, TypeIdCodec, PortableType;
+        OptionCodec,
+        ByteInput;
+import '../scale_info/scale_info.dart' show TypeId, TypeIdCodec, PortableType;
 import 'package:convert/convert.dart' show hex;
 
 part 'common.dart';

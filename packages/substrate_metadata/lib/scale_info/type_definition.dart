@@ -335,9 +335,7 @@ class TypeDefSequence extends TypeDef {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'type': type
-  };
+  Map<String, dynamic> toJson() => {'type': type};
 }
 
 class $TypeDefSequenceCodec implements Codec<TypeDefSequence> {
@@ -394,9 +392,9 @@ class TypeDefArray extends TypeDef {
 
   @override
   Map<String, int> toJson() => {
-    'len': length,
-    'type': type,
-  };
+        'len': length,
+        'type': type,
+      };
 }
 
 class $TypeDefArrayCodec implements Codec<TypeDefArray> {
@@ -451,8 +449,8 @@ class TypeDefCompact extends TypeDef {
 
   @override
   Map<String, int> toJson() => {
-    'type': type,
-  };
+        'type': type,
+      };
 }
 
 class $TypeDefCompactCodec implements Codec<TypeDefCompact> {
@@ -499,8 +497,8 @@ class TypeDefTuple extends TypeDef {
 
   @override
   Map<String, List<int>> toJson() => {
-    'fields': fields,
-  };
+        'fields': fields,
+      };
 }
 
 class $TypeDefTupleCodec implements Codec<TypeDefTuple> {
@@ -667,8 +665,8 @@ class TypeDefPrimitive extends TypeDef {
 
   @override
   Map<String, String> toJson() => {
-    'primitive': primitive.name.toLowerCase(),
-  };
+        'primitive': primitive.name.toLowerCase(),
+      };
 }
 
 /// A primitive Rust type.
@@ -725,9 +723,9 @@ class TypeDefBitSequence extends TypeDef {
 
   @override
   Map<String, int> toJson() => {
-    'bitStoreType': bitStoreType,
-    'bitOrderType': bitOrderType,
-  };
+        'bitStoreType': bitStoreType,
+        'bitOrderType': bitOrderType,
+      };
 }
 
 class $TypeDefBitSequenceCodec implements Codec<TypeDefBitSequence> {

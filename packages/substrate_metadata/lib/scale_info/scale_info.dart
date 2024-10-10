@@ -64,4 +64,3 @@ T? parseOption<T>(dynamic obj) {
   }
   return value;
 }
-

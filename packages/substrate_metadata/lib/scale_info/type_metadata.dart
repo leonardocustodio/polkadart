@@ -57,8 +57,7 @@ class TypeMetadata {
   }
 
   Map<String, dynamic> toJson() {
-    final json = <String, dynamic>{
-    };
+    final json = <String, dynamic>{};
     if (path.isNotEmpty) {
       json['path'] = path;
     }

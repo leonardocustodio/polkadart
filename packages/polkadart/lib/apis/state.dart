@@ -180,7 +180,6 @@ class StateApi<P extends Provider> {
 
   Future<StreamSubscription<Events>> subscribeEvents(
       BlockHash at, Function(Events) onData) async {
-    
     throw UnimplementedError();
     // latestRuntimeMetadata = await getMetadata();
 
