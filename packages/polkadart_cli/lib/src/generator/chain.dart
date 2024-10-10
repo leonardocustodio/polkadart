@@ -8,7 +8,8 @@ import '../typegen/typegen.dart'
         TypeDescriptor,
         TypeBuilder,
         GeneratedOutput;
-import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadataV14;
+import 'package:substrate_metadata/substrate_metadata.dart'
+    show RuntimeMetadataV14;
 import './pallet.dart' show PalletGenerator;
 import './polkadart.dart' show PolkadartGenerator;
 

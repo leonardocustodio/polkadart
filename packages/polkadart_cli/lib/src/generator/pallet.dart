@@ -539,14 +539,15 @@ Class createPalletTxs(
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
-      final isEnumClass = variants.variants.every((variant) => variant.fields.isEmpty);
+      final isEnumClass =
+          variants.variants.every((variant) => variant.fields.isEmpty);
       classBuilder
         ..name = 'Txs'
         ..constructors.add(Constructor((b) => b..constant = true))
         ..methods.addAll(variants.variants.map((variant) => Method((builder) {
               final Reference primitive = variant.primitive(dirname);
               final Reference runtimePrimitive = variants.primitive(dirname);
-              
+
               builder
                 // ..name = sanitize(txName, recase: false)
                 ..name = typegen.Field.toFieldName(variant.name)
@@ -587,7 +588,8 @@ Class createPalletTxs(
                     // instead leaving it as a property.
                     // expression =
                     //     expression.property(sanitize(txName, recase: false));
-                    expression = runtimePrimitive.property(typegen.Field.toFieldName(variant.name));
+                    expression = runtimePrimitive
+                        .property(typegen.Field.toFieldName(variant.name));
                   }
 
                   b.statements.add(expression.returned.statement);

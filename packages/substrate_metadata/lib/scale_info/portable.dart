@@ -13,10 +13,7 @@ class PortableType {
   /// Creates a new field.
   const PortableType({required this.id, required this.type});
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': type.toJson()
-      };
+  Map<String, dynamic> toJson() => {'id': id, 'type': type.toJson()};
 }
 
 class $PortableType implements Codec<PortableType> {
