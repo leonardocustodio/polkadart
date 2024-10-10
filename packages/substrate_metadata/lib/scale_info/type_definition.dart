@@ -7,48 +7,6 @@ abstract class TypeDef {
 
   static const $TypeDefCodec codec = $TypeDefCodec._();
 
-  factory TypeDef.fromJson(Map<String, dynamic> json) {
-    final String typeName = json.keys.first;
-    switch (typeName) {
-      case 'Composite':
-        {
-          return TypeDefComposite.fromJson(json['Composite']);
-        }
-      case 'Variant':
-        {
-          return TypeDefVariant.fromJson(json['Variant']);
-        }
-      case 'Tuple':
-        {
-          return TypeDefTuple((json['Tuple'] as List).cast<int>());
-        }
-      case 'Compact':
-        {
-          return TypeDefCompact.fromJson(json['Compact']);
-        }
-      case 'Array':
-        {
-          return TypeDefArray.fromJson(json['Array']);
-        }
-      case 'Sequence':
-        {
-          return TypeDefSequence.fromJson(json['Sequence']);
-        }
-      case 'Primitive':
-        {
-          return TypeDefPrimitive.fromString(json['Primitive']);
-        }
-      case 'BitSequence':
-        {
-          return TypeDefBitSequence.fromJson(json['BitSequence']);
-        }
-      default:
-        {
-          throw Exception('Unknown primitive type $typeName');
-        }
-    }
-  }
-
   Map<String, dynamic> toJson();
 }
 
@@ -204,12 +162,6 @@ class TypeDefComposite extends TypeDef {
   /// Creates a new struct definition with named fields.
   const TypeDefComposite({required this.fields});
 
-  factory TypeDefComposite.fromJson(Map<String, dynamic> json) {
-    final List<Field> fields =
-        (json['fields'] as List).map((field) => Field.fromJson(field)).toList();
-    return TypeDefComposite(fields: fields);
-  }
-
   @override
   Set<int> typeDependencies() {
     return fields.map((field) => field.type).toSet();
@@ -261,13 +213,6 @@ class TypeDefVariant extends TypeDef {
   const TypeDefVariant({required this.variants});
 
   static const $TypeDefCodec codec = TypeDef.codec;
-
-  factory TypeDefVariant.fromJson(Map<String, dynamic> json) {
-    final List<Variant> variants = (json['variants'] as List)
-        .map((field) => Variant.fromJson(field))
-        .toList();
-    return TypeDefVariant(variants: variants);
-  }
 
   @override
   Set<int> typeDependencies() {
@@ -325,10 +270,6 @@ class TypeDefSequence extends TypeDef {
 
   static const $TypeDefCodec codec = TypeDef.codec;
 
-  factory TypeDefSequence.fromJson(Map<String, dynamic> json) {
-    return TypeDefSequence(type: json['type'] as int);
-  }
-
   @override
   Set<int> typeDependencies() {
     return {type};
@@ -377,13 +318,6 @@ class TypeDefArray extends TypeDef {
 
   /// Creates a new array type.
   const TypeDefArray({required this.type, required this.length});
-
-  factory TypeDefArray.fromJson(Map<String, dynamic> json) {
-    return TypeDefArray(
-      type: json['type'] as int,
-      length: json['len'] as int,
-    );
-  }
 
   @override
   Set<int> typeDependencies() {
@@ -437,10 +371,6 @@ class TypeDefCompact extends TypeDef {
 
   /// Creates a new compact type.
   const TypeDefCompact({required this.type});
-
-  factory TypeDefCompact.fromJson(Map<String, dynamic> json) {
-    return TypeDefCompact(type: json['type'] as int);
-  }
 
   @override
   Set<int> typeDependencies() {
@@ -708,13 +638,6 @@ class TypeDefBitSequence extends TypeDef {
   /// Creates a new bit sequence type.
   const TypeDefBitSequence(
       {required this.bitStoreType, required this.bitOrderType});
-
-  factory TypeDefBitSequence.fromJson(Map<String, dynamic> json) {
-    return TypeDefBitSequence(
-      bitStoreType: json['bitStoreType'] as int,
-      bitOrderType: json['bitOrderType'] as int,
-    );
-  }
 
   @override
   Set<int> typeDependencies() {

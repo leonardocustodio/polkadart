@@ -24,17 +24,6 @@ class Variant {
       required this.fields,
       required this.docs});
 
-  factory Variant.fromJson(Map<String, dynamic> json) {
-    final List<Field> fields =
-        (json['fields'] as List).map((field) => Field.fromJson(field)).toList();
-    return Variant(
-      index: json['index'] as int,
-      name: json['name'] as String,
-      fields: fields,
-      docs: (json['docs'] as List).cast<String>(),
-    );
-  }
-
   Set<int> typeDependencies() {
     return fields.map((field) => field.type).toSet();
   }
