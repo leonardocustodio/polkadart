@@ -49,15 +49,6 @@ class Field {
   const Field(
       {required this.type, this.name, this.typeName, required this.docs});
 
-  factory Field.fromJson(Map<String, dynamic> json) {
-    return Field(
-      type: json['type'] as int,
-      name: parseOption(json['name']),
-      typeName: parseOption(json['typeName']),
-      docs: (json['docs'] as List).cast<String>(),
-    );
-  }
-
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
     if (name != null) {

@@ -8,7 +8,6 @@ import 'package:polkadart/polkadart.dart'
         Provider,
         ExtrinsicStatus,
         BlockHash,
-        RuntimeMetadata,
         KeyValue,
         StorageKey,
         StorageData,

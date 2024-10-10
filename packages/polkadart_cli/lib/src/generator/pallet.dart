@@ -34,7 +34,6 @@ import '../typegen/typegen.dart' as typegen
 import 'package:substrate_metadata/substrate_metadata.dart' as metadata;
 import '../typegen/references.dart' as refs;
 import '../utils/utils.dart' show sanitize, sanitizeDocs;
-import 'dart:convert' show jsonEncode;
 
 enum StorageHasherType {
   /// Identity hashing (no hashing).
