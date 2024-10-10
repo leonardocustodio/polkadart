@@ -5,6 +5,7 @@ abstract class RuntimeMetadata {
   Map<String, dynamic> toJson();
 }
 
+/// Metadata prefixed by 4-bytes for reserved usage (currently magic number)
 class RuntimeMetadataPrefixed {
   final int magicNumber;
   final RuntimeMetadata metadata;
@@ -24,14 +25,6 @@ class RuntimeMetadataPrefixed {
     final input = ByteInput.fromBytes(rawData);
     return codec.decode(input);
   }
-
-  // factory RuntimeMetadataPrefixed.fromHex(String hex) {
-  //   final decodedMetadata = MetadataDecoder.instance.decode(hex);
-  //   return RuntimeMetadataPrefixed(
-  //     version: decodedMetadata.version,
-  //     metadata: decodedMetadata.metadata,
-  //   );
-  // }
 
   Map<String, dynamic> toJson() => {
         'magicNumber': magicNumber,

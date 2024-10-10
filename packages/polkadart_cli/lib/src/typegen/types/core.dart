@@ -6,7 +6,7 @@ abstract class TypeDescriptor {
   const TypeDescriptor();
 
   static Map<int, TypeDescriptor> fromTypes(
-      List<metadata.TypeMetadata> registry, String typesPath) {
+      List<metadata.PortableType> registry, String typesPath) {
     return parseTypes(registry, typesPath);
   }
 

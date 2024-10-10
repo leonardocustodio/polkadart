@@ -4,6 +4,9 @@ part of apis;
 class StateApi<P extends Provider> {
   final P _provider;
 
+  /// Metadata used to decode events.
+  RuntimeMetadataPrefixed? runtimeMetadata;
+
   StateApi(this._provider);
 
   late RuntimeMetadataPrefixed latestRuntimeMetadata;
@@ -149,6 +152,8 @@ class StateApi<P extends Provider> {
   Future<RuntimeMetadataPrefixed> getMetadata({BlockHash? at}) async {
     final List<String> params = at != null ? ['0x${hex.encode(at)}'] : const [];
     final response = await _provider.send('state_getMetadata', params);
+    final metadataPrefixed = RuntimeMetadataPrefixed.fromHex(response.result);
+    runtimeMetadata ??= metadataPrefixed;
     return RuntimeMetadataPrefixed.fromHex(response.result);
   }
 
@@ -175,17 +180,19 @@ class StateApi<P extends Provider> {
 
   Future<StreamSubscription<Events>> subscribeEvents(
       BlockHash at, Function(Events) onData) async {
-    latestRuntimeMetadata = await getMetadata();
+    
+    throw UnimplementedError();
+    // latestRuntimeMetadata = await getMetadata();
 
-    final subscription = await _provider.subscribe('state_subscribeStorage', [
-      ['0x${hex.encode(at)}']
-    ], onCancel: (subscription) async {
-      await _provider.send('state_unsubscribeStorage', [subscription]);
-    });
+    // final subscription = await _provider.subscribe('state_subscribeStorage', [
+    //   ['0x${hex.encode(at)}']
+    // ], onCancel: (subscription) async {
+    //   await _provider.send('state_unsubscribeStorage', [subscription]);
+    // });
 
-    return subscription.stream.map((response) {
-      return Events.fromJson(response.result, latestRuntimeMetadata.metadata);
-    }).listen(onData);
+    // return subscription.stream.map((response) {
+    //   return Events.fromJson(response.result, runtimeMetadata.metadata);
+    // }).listen(onData);
   }
 
   /// Subscribes to storage changes for the provided keys

@@ -23,6 +23,10 @@ class RuntimeMetadataV14 implements RuntimeMetadata {
     required this.runtimeTypeId,
   });
 
+  PortableType typeById(int id) {
+    return types.firstWhere((type) => type.id == id);
+  }
+
   @override
   int runtimeMetadataVersion() {
     return 14;
@@ -102,6 +106,7 @@ enum StorageHasher {
   /// Identity hashing (no hashing).
   identity(true);
 
+  /// Wether the hasher is concatenating the original.
   final bool concat;
 
   static const $StorageHasherCodec codec = $StorageHasherCodec._();
