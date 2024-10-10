@@ -6,7 +6,7 @@ class StateApi<P extends Provider> {
 
   StateApi(this._provider);
 
-  late RuntimeMetadata latestRuntimeMetadata;
+  late RuntimeMetadataPrefixed latestRuntimeMetadata;
 
   /// Call a contract at a block's state.
   Future<Uint8List> call(String method, Uint8List bytes,
@@ -146,10 +146,10 @@ class StateApi<P extends Provider> {
   }
 
   /// Returns the runtime metadata
-  Future<RuntimeMetadata> getMetadata({BlockHash? at}) async {
+  Future<RuntimeMetadataPrefixed> getMetadata({BlockHash? at}) async {
     final List<String> params = at != null ? ['0x${hex.encode(at)}'] : const [];
     final response = await _provider.send('state_getMetadata', params);
-    return RuntimeMetadata.fromHex(response.result);
+    return RuntimeMetadataPrefixed.fromHex(response.result);
   }
 
   /// Get the runtime version.
@@ -184,7 +184,7 @@ class StateApi<P extends Provider> {
     });
 
     return subscription.stream.map((response) {
-      return Events.fromJson(response.result, latestRuntimeMetadata.chainInfo);
+      return Events.fromJson(response.result, latestRuntimeMetadata.metadata);
     }).listen(onData);
   }
 
