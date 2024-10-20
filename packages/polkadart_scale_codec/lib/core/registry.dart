@@ -70,11 +70,18 @@ class Registry {
   ///
   /// Get a codec from the registry
   Codec? getCodec(String codecName) {
+    if (codecs[codecName] == null) {
+      final simpleCodec = getSimpleCodecs(codecName);
+      if (simpleCodec != null) {
+        codecs[codecName] = simpleCodec;
+      }
+    }
+
     return codecs[codecName];
   }
 
   Codec parseSpecificCodec(Map<String, dynamic> metadata, String selectedKey) {
-    late Codec? codec = getCodec(selectedKey);
+    Codec? codec = getCodec(selectedKey);
     if (codec != null) {
       return codec;
     }
@@ -695,7 +702,7 @@ class Registry {
 
   ///
   /// match and return the types which are simple and not parametrized
-  Codec? getSimpleCodecs(String simpleCodecs) {
+  static Codec? getSimpleCodecs(String simpleCodecs) {
     switch (simpleCodecs.toLowerCase()) {
       case 'bitvec':
         return BitSequenceCodec(BitStore.U8, BitOrder.LSB);

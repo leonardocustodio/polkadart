@@ -1,0 +1,26 @@
+name: abi
+description: "A new Flutter package project."
+version: 0.0.1
+homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/abi
+repository: https://github.com/leonardocustodio/polkadart
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  json_schema: ^5.2.0
+  polkadart_scale_codec: ^1.2.1
+  substrate_metadata: ^1.2.2
+  hashlib_codecs: ^2.2.0 # BSD-3-Clause
+  pointycastle: ^3.6.2 # MIT
+  http: ^1.1.0 # BSD-3-Clause
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
+
+dependency_overrides:
+  substrate_metadata:
+    path: ../substrate_metadata
+  polkadart_scale_codec:
+    path: ../polkadart_scale_codec
