@@ -16,6 +16,7 @@ class MetadataV14Expander {
       final primitive = item['type']?['def']?['Primitive'];
       if (primitive != null) {
         registeredSiType[item['id']] = primitive;
+        customCodecRegister[primitive] = primitive;
       }
     }
     for (var item in id2Portable) {
@@ -222,6 +223,8 @@ class MetadataV14Expander {
     }
 
     registeredSiType[id] = '(${tuplesList.join(', ')})';
+    
+    customCodecRegister[registeredSiType[id]!] = registeredSiType[id];
     return registeredSiType[id]!;
   }
 
