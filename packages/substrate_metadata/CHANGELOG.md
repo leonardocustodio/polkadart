@@ -1,3 +1,6 @@
+## 1.2.3
+- Fixes: Exception: Type not found for `MinInflation`
+
 ## 1.2.2
 - Fixes `toJson()` when decoding BitArray`s
 
