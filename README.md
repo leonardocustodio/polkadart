@@ -27,11 +27,18 @@ This repo is a monorepo for `polkadart` and related packages.
 | [![version][pkg:substrate_bip39:version]][pkg:substrate_bip39]             | BIP39 (Bitcoin Improvement Proposal 39) pertains to the generation of mnemonic phrases for cryptographic keys. Creates human-readable phrases that map to the keys used on Substrate-based chains. |
 | [![version][pkg:substrate_metadata:version]][pkg:substrate_metadata]       | Provides the necessary tools to decode the metadata provided by a Substrate blockchain node. And can be used to easily decode constants, extrinsics, events, and other data written in the chain. |
 
-## Documentation and Tests
+## Documentation
 
-You can run all tests from the library by running `docker compose up`;
-<!-- markdown-link-check-disable-next-line -->
-Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started) installed globally you can run `melos test`.
+- [Official documentation](https://polkadart.dev)
+- [polkadart package](https://pub.dev/documentation/polkadart/latest/)
+- [polkadart_cli package](https://pub.dev/documentation/polkadart_cli/latest/)
+- [polkadart_keyring package](https://pub.dev/documentation/polkadart_keyring/latest/)
+- [polkadart_scale_codec package](https://pub.dev/documentation/polkadart_scale_codec/latest/)
+- [secp256k1_ecdsa package](https://pub.dev/documentation/secp256k1_ecdsa/latest/)
+- [sr25519 package](https://pub.dev/documentation/sr25519/latest/)
+- [ss58 package](https://pub.dev/documentation/ss58/latest/)
+- [substrate_bip39 package](https://pub.dev/documentation/substrate_bip39/latest/)
+- [substrate_metadata package](https://pub.dev/documentation/substrate_metadata/latest/)
 
 ## Contributors
 
