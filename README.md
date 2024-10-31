@@ -30,17 +30,35 @@ This repo is a monorepo for `polkadart` and related packages.
 ## Documentation
 
 - [Official documentation](https://polkadart.dev)
-- [polkadart package](https://pub.dev/documentation/polkadart/latest/)
-- [polkadart_cli package](https://pub.dev/documentation/polkadart_cli/latest/)
-- [polkadart_keyring package](https://pub.dev/documentation/polkadart_keyring/latest/)
-- [polkadart_scale_codec package](https://pub.dev/documentation/polkadart_scale_codec/latest/)
-- [secp256k1_ecdsa package](https://pub.dev/documentation/secp256k1_ecdsa/latest/)
-- [sr25519 package](https://pub.dev/documentation/sr25519/latest/)
-- [ss58 package](https://pub.dev/documentation/ss58/latest/)
-- [substrate_bip39 package](https://pub.dev/documentation/substrate_bip39/latest/)
-- [substrate_metadata package](https://pub.dev/documentation/substrate_metadata/latest/)
+- [polkadart Package](https://pub.dev/documentation/polkadart/latest/)
+- [polkadart_cli Package](https://pub.dev/documentation/polkadart_cli/latest/)
+- [polkadart_keyring Package](https://pub.dev/documentation/polkadart_keyring/latest/)
+- [polkadart_scale_codec Package](https://pub.dev/documentation/polkadart_scale_codec/latest/)
+- [secp256k1_ecdsa Package](https://pub.dev/documentation/secp256k1_ecdsa/latest/)
+- [sr25519 Package](https://pub.dev/documentation/sr25519/latest/)
+- [ss58 Package](https://pub.dev/documentation/ss58/latest/)
+- [substrate_bip39 Package](https://pub.dev/documentation/substrate_bip39/latest/)
+- [substrate_metadata Package](https://pub.dev/documentation/substrate_metadata/latest/)
+
+## Community
+
+ - [Telegram](https://t.me/polkadart) - A developer group where you can share your experience and ask for help
+
+## Contributing
+
+There are many ways for you to contribute to the growing community of Polkadart.
+- Propose new features and enhancements
+- Report or fix a bug
+- Write and improve our documentation
+- Translate our documentation
+- Add new snippets and examples
+- Implement new features by sending pull requets
+
+Contributions of any kind are always welcome! ❤️
 
 ## Contributors
+
+A heartfelt thank you to all the contributors for enriching the Polkadart project! [emojis](https://allcontributors.org/docs/en/emoji-key)
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -76,6 +94,8 @@ This repo is a monorepo for `polkadart` and related packages.
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## **License**
 
