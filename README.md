@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/leonardocustodio/polkadart/main/resources/polkadart.svg" height="100" alt="Polkadart" />
+<img src="https://raw.githubusercontent.com/leonardocustodio/polkadart/main/resources/polkadart-logo.png" height="100" alt="Polkadart" />
 </p>
 
 <p align="center">
