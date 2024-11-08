@@ -1,0 +1,14 @@
+name: Test Docker image builds
+
+on:
+  pull_request:
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build docker image
+        run: |
+          docker build -t leonardocustodio/polkadart .
