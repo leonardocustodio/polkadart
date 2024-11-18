@@ -24,31 +24,18 @@ class AbiEvent {
 }
 
 class AbiDescription {
-  final Map<String, dynamic> project;
-  late final Registry registry = Registry();
+  final Map<String, dynamic> _project;
+  final Registry _registry = Registry();
+  late final MetadataV14Expander _expander;
+  final Map<int, Codec> _siTypesCodec = <int, Codec>{};
 
-  late final MetadataV14Expander expander;
-  final Map<int, Codec> siTypesCodec = <int, Codec>{};
-  late final Codec<dynamic> eventValue;
-  late final Codec<dynamic> constructorsValue;
-  late final Codec<dynamic> messagesValue;
-
-  final List<AbiEvent> eventsValue = <AbiEvent>[];
-
-  AbiDescription(this.project) {
-    _parseTypes();
-    eventsValue
-      ..clear()
-      ..addAll(_events());
-    eventValue = _event();
-    constructorsValue = _constructors();
-    messagesValue = _messages();
-    print('Events: $eventsValue');
+  AbiDescription(this._project) {
+    _preParseTypes();
   }
 
-  void _parseTypes() {
+  void _preParseTypes() {
     {
-      final List<dynamic> types = project['types'];
+      final List<dynamic> types = _project['types'];
       for (int i = 0; i < types.length; i++) {
         final String label = types[i]['type']['def'].keys.first;
         types[i]['type']['def'] = <String, dynamic>{
@@ -78,81 +65,97 @@ class AbiDescription {
           }
         }
       }
-      project['types'] = types;
+      _project['types'] = types;
     }
 
-    expander = MetadataV14Expander(project['types']);
-    registry.registerCustomCodec(expander.customCodecRegister);
+    _expander = MetadataV14Expander(_project['types']);
+    _registry.registerCustomCodec(_expander.customCodecRegister);
 
-    for (int index = 0; index < project['types'].length; index++) {
-      String? typeName = expander.registeredSiType[index];
+    for (int index = 0; index < _project['types'].length; index++) {
+      String? typeName = _expander.registeredSiType[index];
       if (typeName == null) {
         throw Exception('Types not found for index: $index');
       }
 
-      Codec<dynamic>? codec = registry.getCodec(typeName);
+      Codec<dynamic>? codec = _registry.getCodec(typeName);
       if (codec != null) {
-        siTypesCodec[index] = codec;
+        _siTypesCodec[index] = codec;
         continue;
       }
-      typeName = expander.customCodecRegister[typeName];
+      typeName = _expander.customCodecRegister[typeName];
       if (typeName == null) {
         throw Exception('Types not found for index: $index');
       }
-      codec = registry.getCodec(typeName);
+      codec = _registry.getCodec(typeName);
       if (codec != null) {
-        siTypesCodec[index] = codec;
+        _siTypesCodec[index] = codec;
         continue;
       }
     }
   }
 
+  SelectorsMap? _messageSelectorsValue;
   SelectorsMap messageSelectors() {
-    final SelectorsMap map = <String, int>{};
-    final List<dynamic> messages = project['spec']['messages'];
-    for (int i = 0; i < messages.length; i++) {
-      map[messages[i]['selector']] = i;
-    }
-    return map;
+    _messageSelectorsValue ??= _selectors('messages');
+    return _messageSelectorsValue!;
   }
 
+  SelectorsMap? _constructorSelectorsValue;
   SelectorsMap constructorSelectors() {
+    _constructorSelectorsValue ??= _selectors('constructors');
+    return _constructorSelectorsValue!;
+  }
+
+  SelectorsMap _selectors(String selectorType) {
     final SelectorsMap map = <String, int>{};
-    final List<dynamic> constructors = project['spec']['constructors'];
-    for (int i = 0; i < constructors.length; i++) {
-      map[constructors[i]['selector']] = i;
+    {
+      final List<dynamic> messages = _project['spec'][selectorType];
+      for (int i = 0; i < messages.length; i++) {
+        map[messages[i]['selector']] = i;
+      }
     }
     return map;
   }
 
-  List<AbiEvent> _events() {
-    final List<AbiEvent> result = <AbiEvent>[];
-
-    for (final eventValue in project['spec']['events']) {
-      int amountIndexed = 0;
-      for (final arg in eventValue['args']) {
-        amountIndexed += arg['indexed'] ? 1 : 0;
+  List<AbiEvent>? _abiEventsValue;
+  List<AbiEvent> abiEvents() {
+    if (_abiEventsValue == null) {
+      _abiEventsValue = <AbiEvent>[];
+      for (final eventValue in _project['spec']['events']) {
+        int amountIndexed = 0;
+        for (final arg in eventValue['args']) {
+          amountIndexed += arg['indexed'] ? 1 : 0;
+        }
+        _abiEventsValue!.add(AbiEvent(
+          name: _normalizeLabel(eventValue['label']),
+          type: _createComposite(eventValue),
+          amountIndexed: amountIndexed,
+          signatureTopic: eventValue['signature_topic'],
+        ));
       }
-      result.add(AbiEvent(
-        name: normalizeLabel(eventValue['label']),
-        type: _createComposite(eventValue),
-        amountIndexed: amountIndexed,
-        signatureTopic: eventValue['signature_topic'],
-      ));
     }
-    return result;
+    return _abiEventsValue!;
   }
 
-  Codec<dynamic> _messages() {
-    return _createMessagesType(project['spec']['messages']);
+  ComplexEnumCodec<dynamic>? _messagesValue;
+  ComplexEnumCodec<dynamic> messages() {
+    _messagesValue ??= _createMessagesType(_project['spec']['messages'])
+        as ComplexEnumCodec<dynamic>;
+    return _messagesValue!;
   }
 
-  Codec<dynamic> _constructors() {
-    return _createMessagesType(project['spec']['constructors']);
+  ComplexEnumCodec<dynamic>? _constructorsValue;
+  ComplexEnumCodec<dynamic> constructors() {
+    _constructorsValue ??= _createMessagesType(_project['spec']['constructors'])
+        as ComplexEnumCodec<dynamic>;
+    return _constructorsValue!;
   }
 
-  Codec<dynamic> _event() {
-    return _createMessagesType(project['spec']['events']);
+  ComplexEnumCodec<dynamic>? _eventValue;
+  ComplexEnumCodec<dynamic> event() {
+    _eventValue ??= _createMessagesType(_project['spec']['constructors'])
+        as ComplexEnumCodec<dynamic>;
+    return _eventValue!;
   }
 
   Codec<dynamic> _createMessagesType(List<dynamic> list) {
@@ -168,7 +171,7 @@ class AbiDescription {
       } else {
         codec = _createComposite(variant);
       }
-      variants[index] = MapEntry(normalizeLabel(variant['label']), codec);
+      variants[index] = MapEntry(_normalizeLabel(variant['label']), codec);
     }
     return ComplexEnumCodec.sparse(variants);
   }
@@ -176,13 +179,13 @@ class AbiDescription {
   Codec<dynamic> _createComposite(Map<String, dynamic> map) {
     final codecMap = <String, Codec<dynamic>>{};
     for (final Map<String, dynamic> arg in map['args']!) {
-      codecMap[normalizeLabel(arg['label'])] =
-          siTypesCodec[arg['type']!['type']!]!;
+      codecMap[_normalizeLabel(arg['label'])] =
+          _siTypesCodec[arg['type']!['type']!]!;
     }
     return CompositeCodec(codecMap);
   }
 
-  String normalizeLabel(String label) {
+  String _normalizeLabel(String label) {
     return label.replaceAll('::', '_');
   }
 }

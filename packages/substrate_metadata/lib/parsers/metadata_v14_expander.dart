@@ -159,7 +159,7 @@ class MetadataV14Expander {
     registeredTypeNames.add(typeString);
     registeredSiType[id] = typeString;
 
-    if (one['def']['Composite']['fields'].length == 0) {
+    if (one['def']['Composite']?['fields'] == null || one['def']['Composite']['fields'].length == 0) {
       registeredSiType[id] = 'Null';
       return 'Null';
     }
@@ -270,6 +270,10 @@ class MetadataV14Expander {
   String _exploreEnum(
       int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     if (registeredSiType[id] != null) {
+      return registeredSiType[id]!;
+    }
+    if (one['def']?['Variant']?['variants'] == null) {
+      registeredSiType[id] = 'Null';
       return registeredSiType[id]!;
     }
 
