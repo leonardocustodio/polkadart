@@ -2,7 +2,9 @@ part of utils;
 
 bool validateSpecVersion(dynamic data, {bool reportMultipleErrors = false}) {
   final schema = JsonSchema.create(SPEC_VERSION_SCHEMA);
-  return Validator(schema).validate(data, reportMultipleErrors: reportMultipleErrors).isValid;
+  return Validator(schema)
+      .validate(data, reportMultipleErrors: reportMultipleErrors)
+      .isValid;
 }
 
 bool validateSpecVersionArray(dynamic data,
@@ -13,8 +15,9 @@ bool validateSpecVersionArray(dynamic data,
       'items': SPEC_VERSION_SCHEMA,
     },
   );
-
-  return Validator(schema).validate(data, reportMultipleErrors: reportMultipleErrors).isValid;
+  return Validator(schema)
+      .validate(data, reportMultipleErrors: reportMultipleErrors)
+      .isValid;
 }
 
 List<SpecVersion> readSpecVersionsFromFilePath(String filePath) {
