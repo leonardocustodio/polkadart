@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   equatable: ^2.0.5
-  json_schema2: ^2.0.2+9 # MIT
+  json_schema: ^5.2.0 # MIT
   pointycastle: ^3.6.2 # BSD-3-Clause
   polkadart_scale_codec: ^1.2.0
   utility: ^1.0.3
