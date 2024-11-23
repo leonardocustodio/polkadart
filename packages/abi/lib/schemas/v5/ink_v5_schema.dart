@@ -1,3 +1,5 @@
+part of abi;
+
 const inkV5Schema = {
   '\$schema': 'http://json-schema.org/draft-07/schema#',
   'title': 'InkProject',

@@ -1,36 +1,35 @@
-library abi;
+part of abi;
 
-import 'package:abi/utils/string_extension.dart';
-import 'package:polkadart_scale_codec/core/core.dart';
-import 'package:polkadart_scale_codec/primitives/primitives.dart';
-import 'package:substrate_metadata/parsers/parsers.dart';
-
-typedef Bytes = String;
-
-typedef SelectorsMap = Map<String, int>;
-
-class AbiEvent {
-  final String name;
-  final Codec<dynamic> type;
-  final int amountIndexed;
-  final Bytes? signatureTopic;
-
-  const AbiEvent({
-    required this.name,
-    required this.type,
-    required this.amountIndexed,
-    this.signatureTopic,
-  });
+class SelectorByteInput {
+  static ByteInput fromHex(String hex, SelectorsMap selectors) {
+    final Uint8List buffer = decodeHex(hex);
+    final String key = encodeHex(buffer.sublist(0, 5));
+    final int? index = selectors[key];
+    if (index == null) {
+      throw Exception('Unknown selector: $key');
+    }
+    final ByteInput input = ByteInput(buffer.sublist(5));
+    input.offset = index;
+    return input;
+  }
 }
 
 class AbiDescription {
   final Map<String, dynamic> _project;
-  final Registry _registry = Registry();
+  final Registry registry = Registry();
   late final MetadataV14Expander _expander;
   final Map<int, Codec> _siTypesCodec = <int, Codec>{};
 
   AbiDescription(this._project) {
     _preParseTypes();
+    // Making first call to initialize and cache all the values
+    abiEvents();
+    constructors();
+    messages();
+  }
+
+  Codec<dynamic>? getCodec(int type) {
+    return _siTypesCodec[type];
   }
 
   void _preParseTypes() {
@@ -69,7 +68,7 @@ class AbiDescription {
     }
 
     _expander = MetadataV14Expander(_project['types']);
-    _registry.registerCustomCodec(_expander.customCodecRegister);
+    registry.registerCustomCodec(_expander.customCodecRegister);
 
     for (int index = 0; index < _project['types'].length; index++) {
       String? typeName = _expander.registeredSiType[index];
@@ -77,7 +76,7 @@ class AbiDescription {
         throw Exception('Types not found for index: $index');
       }
 
-      Codec<dynamic>? codec = _registry.getCodec(typeName);
+      Codec<dynamic>? codec = registry.getCodec(typeName);
       if (codec != null) {
         _siTypesCodec[index] = codec;
         continue;
@@ -86,7 +85,7 @@ class AbiDescription {
       if (typeName == null) {
         throw Exception('Types not found for index: $index');
       }
-      codec = _registry.getCodec(typeName);
+      codec = registry.getCodec(typeName);
       if (codec != null) {
         _siTypesCodec[index] = codec;
         continue;
@@ -151,12 +150,12 @@ class AbiDescription {
     return _constructorsValue!;
   }
 
-  ComplexEnumCodec<dynamic>? _eventValue;
+  /* ComplexEnumCodec<dynamic>? _eventValue;
   ComplexEnumCodec<dynamic> event() {
     _eventValue ??= _createMessagesType(_project['spec']['constructors'])
         as ComplexEnumCodec<dynamic>;
     return _eventValue!;
-  }
+  } */
 
   Codec<dynamic> _createMessagesType(List<dynamic> list) {
     final Map<int, MapEntry<String, Codec<dynamic>>> variants =

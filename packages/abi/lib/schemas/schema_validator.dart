@@ -1,7 +1,4 @@
-import 'package:abi/schemas/v3/ink_v3_schema.dart';
-import 'package:abi/schemas/v4/ink_v4_schema.dart';
-import 'package:abi/schemas/v5/ink_v5_schema.dart';
-import 'package:json_schema/json_schema.dart';
+part of abi;
 
 class SchemaValidator {
   static final JsonSchema validatorV3 = JsonSchema.create(inkV3Schema);

@@ -1,3 +1,5 @@
+part of abi;
+
 extension StringExtensionNull on String? {
   String? capitalize() {
     if (this == null) {

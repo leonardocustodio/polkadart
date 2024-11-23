@@ -1,3 +1,5 @@
+part of abi;
+
 class Utils {
   static String trimHex(String hexString) {
     return hexString.replaceFirst('0x', '');

@@ -2,8 +2,8 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:abi/abi_description.dart';
-import 'package:abi/schemas/schema_validator.dart';
+
+import 'package:abi/abi_base.dart';
 
 void main() {
   final jsonFile =
@@ -16,7 +16,6 @@ void main() {
     ..constructorSelectors()
     ..messageSelectors()
     ..constructors()
-    ..event()
     ..messages();
   print('done Parsing');
 }
