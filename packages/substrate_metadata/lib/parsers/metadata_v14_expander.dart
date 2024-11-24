@@ -159,7 +159,8 @@ class MetadataV14Expander {
     registeredTypeNames.add(typeString);
     registeredSiType[id] = typeString;
 
-    if (one['def']['Composite']?['fields'] == null || one['def']['Composite']['fields'].length == 0) {
+    if (one['def']['Composite']?['fields'] == null ||
+        one['def']['Composite']['fields'].length == 0) {
       registeredSiType[id] = 'Null';
       return 'Null';
     }
@@ -223,7 +224,7 @@ class MetadataV14Expander {
     }
 
     registeredSiType[id] = '(${tuplesList.join(', ')})';
-    
+
     customCodecRegister[registeredSiType[id]!] = registeredSiType[id];
     return registeredSiType[id]!;
   }

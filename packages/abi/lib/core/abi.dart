@@ -49,12 +49,16 @@ class Abi {
     return codec.decode(input);
   }
 
-  dynamic decodeEvent(Uint8List data, List<String> topics) {
+  dynamic decodeEventFromHex(String data, [List<String>? topics]) {
+    return decodeEvent(decodeHex(data), topics);
+  }
+
+  dynamic decodeEvent(Uint8List data, [List<String>? topics]) {
     if (_project['version'] == 5) {
-      if (topics.isEmpty) {
+      if (topics?.isEmpty ?? true) {
         throw Exception('Topics are required if ink! contract is version 5');
       }
-      return _decodeEventV5(data, topics);
+      return _decodeEventV5(data, topics!);
     } else {
       return _decodeEventV4(data);
     }
