@@ -11,9 +11,6 @@ dependencies:
   json_schema: ^5.2.0
   polkadart_scale_codec: ^1.2.1
   substrate_metadata: ^1.2.2
-  hashlib_codecs: ^2.2.0 # BSD-3-Clause
-  pointycastle: ^3.6.2 # MIT
-  http: ^1.1.0 # BSD-3-Clause
 
 dev_dependencies:
   lints: ^2.0.0
