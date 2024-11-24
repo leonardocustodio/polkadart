@@ -1,9 +1,17 @@
-# **Polkadart**
-[![Star on Github](https://img.shields.io/github/stars/leonardocustodio/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=stars)](https://github.com/leonardocustodio/polkadart)
-[![All Contributors](https://img.shields.io/github/all-contributors/leonardocustodio/polkadart?color=ee8449&style=flat-square)](#contributors)
-[![Test Coverage](https://codecov.io/gh/leonardocustodio/polkadart/graph/badge.svg?token=HG3K4LW5UN)](https://codecov.io/gh/leonardocustodio/polkadart)
-[![Build and Tests](https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml)
-[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-purple.svg)](https://www.apache.org/licenses/LICENSE-2.0) <!-- markdown-link-check-disable-line -->
+<p align="center">
+<img src="https://raw.githubusercontent.com/leonardocustodio/polkadart/main/resources/polkadart-logo.png" height="100" alt="Polkadart" />
+</p>
+
+<p align="center">
+<a href="https://github.com/leonardocustodio/polkadart"><img src="https://img.shields.io/github/stars/leonardocustodio/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=Stars" alt="Star on Github"></a>
+<a href="https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml"><img src="https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml/badge.svg?branch=main" alt="build"></a>
+<a href="https://codecov.io/gh/leonardocustodio/polkadart"><img src="https://img.shields.io/codecov/c/github/leonardocustodio/polkadart?label=Codecov&token=HG3K4LW5UN" alt="Codecov"></a>
+<a href="#contributors"><img src="https://img.shields.io/github/all-contributors/leonardocustodio/polkadart?color=ee8449&style=flat-square&label=All%20Contributors" alt="All contributors"></a>
+<a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%202.0-purple.svg?label=License" alt="License: Apache 2"></a>
+<a href="https://t.me/polkadart"><img src="https://img.shields.io/badge/Chat-Telegram-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDI0YzYuNjI3IDAgMTItNS4zNzMgMTItMTJTMTguNjI3IDAgMTIgMCAwIDUuMzczIDAgMTJzNS4zNzMgMTIgMTIgMTJaIiBmaWxsPSJ1cmwoI2EpIi8+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01LjQyNSAxMS44NzFhNzk2LjQxNCA3OTYuNDE0IDAgMCAxIDYuOTk0LTMuMDE4YzMuMzI4LTEuMzg4IDQuMDI3LTEuNjI4IDQuNDc3LTEuNjM4LjEgMCAuMzIuMDIuNDcuMTQuMTIuMS4xNS4yMy4xNy4zMy4wMi4xLjA0LjMxLjAyLjQ3LS4xOCAxLjg5OC0uOTYgNi41MDQtMS4zNiA4LjYyMi0uMTcuOS0uNSAxLjE5OS0uODE5IDEuMjI5LS43LjA2LTEuMjI5LS40Ni0xLjg5OC0uOS0xLjA2LS42ODktMS42NDktMS4xMTktMi42NzgtMS43OTgtMS4xOS0uNzgtLjQyLTEuMjA5LjI2LTEuOTA4LjE4LS4xOCAzLjI0Ny0yLjk3OCAzLjMwNy0zLjIyOC4wMS0uMDMuMDEtLjE1LS4wNi0uMjEtLjA3LS4wNi0uMTctLjA0LS4yNS0uMDItLjExLjAyLTEuNzg4IDEuMTQtNS4wNTYgMy4zNDgtLjQ4LjMzLS45MDkuNDktMS4yOTkuNDgtLjQzLS4wMS0xLjI0OC0uMjQtMS44NjgtLjQ0LS43NS0uMjQtMS4zNDktLjM3LTEuMjk5LS43OS4wMy0uMjIuMzMtLjQ0Ljg5LS42NjlaIiBmaWxsPSIjZmZmIi8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMTEuOTkiIHkxPSIwIiB4Mj0iMTEuOTkiIHkyPSIyMy44MSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiMyQUFCRUUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyMjlFRDkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4K" alt="Telegram"></a>
+</p>
+
+---
 
 <img align="right" width="400" src="https://raw.githubusercontent.com/w3f/Grants-Program/00855ef70bc503433dc9fccc057c2f66a426a82b/static/img/badge_black.svg" />
 
@@ -27,13 +35,38 @@ This repo is a monorepo for `polkadart` and related packages.
 | [![version][pkg:substrate_bip39:version]][pkg:substrate_bip39]             | BIP39 (Bitcoin Improvement Proposal 39) pertains to the generation of mnemonic phrases for cryptographic keys. Creates human-readable phrases that map to the keys used on Substrate-based chains. |
 | [![version][pkg:substrate_metadata:version]][pkg:substrate_metadata]       | Provides the necessary tools to decode the metadata provided by a Substrate blockchain node. And can be used to easily decode constants, extrinsics, events, and other data written in the chain. |
 
-## Documentation and Tests
+## Documentation
 
-You can run all tests from the library by running `docker compose up`;
-<!-- markdown-link-check-disable-next-line -->
-Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started) installed globally you can run `melos test`.
+- [Official documentation](https://polkadart.dev)
+- [polkadart Package](https://pub.dev/documentation/polkadart/latest/)
+- [polkadart_cli Package](https://pub.dev/documentation/polkadart_cli/latest/)
+- [polkadart_keyring Package](https://pub.dev/documentation/polkadart_keyring/latest/)
+- [polkadart_scale_codec Package](https://pub.dev/documentation/polkadart_scale_codec/latest/)
+- [secp256k1_ecdsa Package](https://pub.dev/documentation/secp256k1_ecdsa/latest/)
+- [sr25519 Package](https://pub.dev/documentation/sr25519/latest/)
+- [ss58 Package](https://pub.dev/documentation/ss58/latest/)
+- [substrate_bip39 Package](https://pub.dev/documentation/substrate_bip39/latest/)
+- [substrate_metadata Package](https://pub.dev/documentation/substrate_metadata/latest/)
+
+## Community
+
+ - [Telegram](https://t.me/polkadart) - A developer group where you can share your experience and ask for help
+
+## Contributing
+
+There are many ways for you to contribute to the growing community of Polkadart.
+- Propose new features and enhancements
+- Report or fix a bug
+- Write and improve our documentation
+- Translate our documentation
+- Add new snippets and examples
+- Implement new features by sending pull requets
+
+Contributions of any kind are always welcome! ❤️
 
 ## Contributors
+
+A heartfelt thank you to all the contributors for enriching the Polkadart project! [emojis](https://allcontributors.org/docs/en/emoji-key)
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -54,6 +87,7 @@ Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started
       <td align="center" valign="top" width="14.28%"><a href="https://avive.github.io"><img src="https://avatars.githubusercontent.com/u/96002?v=4?s=100" width="100px;" alt="Aviv Eyal"/><br /><sub><b>Aviv Eyal</b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=avive" title="Code">💻</a> <a href="https://github.com/leonardocustodio/polkadart/issues?q=author%3Aavive" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jpnovochadlo"><img src="https://avatars.githubusercontent.com/u/69369894?v=4?s=100" width="100px;" alt="jpnovochadlo"/><br /><sub><b>jpnovochadlo</b></sub></a><br /><a href="#business-jpnovochadlo" title="Business development">💼</a> <a href="#design-jpnovochadlo" title="Design">🎨</a> <a href="https://github.com/leonardocustodio/polkadart/commits?author=jpnovochadlo" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/tallesborges"><img src="https://avatars.githubusercontent.com/u/3486359?v=4?s=100" width="100px;" alt="Talles "/><br /><sub><b>Talles </b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=tallesborges" title="Code">💻</a> <a href="https://github.com/leonardocustodio/polkadart/commits?author=tallesborges" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://r3lab.com"><img src="https://avatars.githubusercontent.com/u/49204989?v=4?s=100" width="100px;" alt="Burak"/><br /><sub><b>Burak</b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=buraktabn" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
@@ -69,6 +103,8 @@ Or if you have [Melos](https://melos.invertase.dev/~melos-latest/getting-started
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## **License**
 

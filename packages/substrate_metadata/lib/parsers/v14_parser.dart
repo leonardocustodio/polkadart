@@ -32,6 +32,12 @@ class V14Parser {
       final proxyCodec = ProxyCodec();
       _resultingRegistry.addCodec('Call', proxyCodec);
       _resultingRegistry.addCodec('RuntimeCall', proxyCodec);
+      // TODO: Check https://github.com/leonardocustodio/polkadart/pull/487
+      _resultingRegistry.addCodec('MinInflation', proxyCodec);
+      _resultingRegistry.addCodec('MaxInflation', proxyCodec);
+      _resultingRegistry.addCodec('Falloff', proxyCodec);
+      _resultingRegistry.addCodec('IdealStake', proxyCodec);
+      _resultingRegistry.addCodec('UseAuctionSlots', proxyCodec);
     }
 
     // Iterate over the pallets
