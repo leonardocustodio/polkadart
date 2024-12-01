@@ -1,0 +1,9 @@
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    constant_identifier_names: false
+    overridden_fields: false
+    prefer_final_fields: true
+    prefer_final_locals: true
+    prefer_single_quotes: true
