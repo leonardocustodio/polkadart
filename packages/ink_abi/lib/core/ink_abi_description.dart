@@ -1,4 +1,4 @@
-part of abi;
+part of ink_abi;
 
 class SelectorByteInput extends ByteInput {
   int? index;
@@ -29,13 +29,13 @@ class SelectorByteInput extends ByteInput {
   }
 }
 
-class AbiDescription {
+class InkAbiDescription {
   final Map<String, dynamic> _project;
   final Registry registry = Registry();
   late final MetadataV14Expander _expander;
   final Map<int, Codec> _siTypesCodec = <int, Codec>{};
 
-  AbiDescription(this._project) {
+  InkAbiDescription(this._project) {
     _preParseTypes();
     // Making first call to initialize and cache all the values
     abiEvents();
@@ -131,16 +131,16 @@ class AbiDescription {
     return map;
   }
 
-  List<AbiEvent>? _abiEventsValue;
-  List<AbiEvent> abiEvents() {
+  List<InkAbiEvent>? _abiEventsValue;
+  List<InkAbiEvent> abiEvents() {
     if (_abiEventsValue == null) {
-      _abiEventsValue = <AbiEvent>[];
+      _abiEventsValue = <InkAbiEvent>[];
       for (final eventValue in _project['spec']['events']) {
         int amountIndexed = 0;
         for (final arg in eventValue['args']) {
           amountIndexed += arg['indexed'] ? 1 : 0;
         }
-        _abiEventsValue!.add(AbiEvent(
+        _abiEventsValue!.add(InkAbiEvent(
           name: _normalizeLabel(eventValue['label']),
           type: _createComposite(eventValue),
           amountIndexed: amountIndexed,

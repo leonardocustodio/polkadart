@@ -1,4 +1,4 @@
-part of abi;
+part of ink_abi;
 
 class Utils {
   static String trimHex(String hexString) {

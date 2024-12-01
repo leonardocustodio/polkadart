@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         package:
+          - abi
           - polkadart
           - polkadart_cli
           - polkadart_example

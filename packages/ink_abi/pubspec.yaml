@@ -1,7 +1,7 @@
-name: abi
+name: ink_abi
 description: "A new Flutter package project."
 version: 0.0.1
-homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/abi
+homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/ink_abi
 repository: https://github.com/leonardocustodio/polkadart
 
 environment:

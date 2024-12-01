@@ -1,22 +1,22 @@
-part of abi;
+part of ink_abi;
 
-class Abi {
-  late final List<AbiEvent> _events;
+class InkAbi {
+  late final List<InkAbiEvent> _events;
   late final Codec<dynamic> _messages;
   late final Codec<dynamic> _constructors;
   late final SelectorsMap _messageSelectors;
   late final SelectorsMap _constructorSelectors;
   late final Map<String, dynamic> _project;
-  late final AbiDescription _abiDescription;
+  late final InkAbiDescription _inkAbiDescription;
 
-  Abi(Map<String, dynamic> abiJson) {
-    _project = SchemaValidator.getInkProject(abiJson);
-    _abiDescription = AbiDescription(_project);
-    _events = _abiDescription.abiEvents();
-    _messages = _abiDescription.messages();
-    _constructors = _abiDescription.constructors();
-    _messageSelectors = _abiDescription.messageSelectors();
-    _constructorSelectors = _abiDescription.constructorSelectors();
+  InkAbi(Map<String, dynamic> inkAbiJson) {
+    _project = SchemaValidator.getInkProject(inkAbiJson);
+    _inkAbiDescription = InkAbiDescription(_project);
+    _events = _inkAbiDescription.abiEvents();
+    _messages = _inkAbiDescription.messages();
+    _constructors = _inkAbiDescription.constructors();
+    _messageSelectors = _inkAbiDescription.messageSelectors();
+    _constructorSelectors = _inkAbiDescription.constructorSelectors();
   }
 
   Uint8List encodeMessageInput(String selector, List<dynamic> args) {
@@ -26,7 +26,7 @@ class Abi {
     for (int i = 0; i < message['args'].length; i++) {
       final dynamic arg = message['args'][i];
       final Codec<dynamic>? codec =
-          _abiDescription.getCodec(arg['type']['type']);
+          _inkAbiDescription.getCodec(arg['type']['type']);
       if (codec == null) {
         throw Exception(
             'Codec not found for type at index: ${arg['type']['type']}');
@@ -40,7 +40,7 @@ class Abi {
     final message = _getMessage(selector);
     assert(message['returnType']?['type'] != null);
     final Codec<dynamic>? codec =
-        _abiDescription.getCodec(message['returnType']['type']);
+        _inkAbiDescription.getCodec(message['returnType']['type']);
     if (codec == null) {
       throw Exception(
           'Codec not found for type at index: ${message['returnType']['type']}');
@@ -68,20 +68,20 @@ class Abi {
     final ByteInput input = ByteInput(data);
     final int idx = input.read();
     if (_events.isEmpty) {
-      throw Exception('No events found in ABI');
+      throw Exception('No events found in Ink-ABI');
     }
     if (idx < 0 || idx >= _events.length) {
       throw Exception('Unable to find event with index: $idx');
     }
-    final AbiEvent event = _events[idx];
+    final InkAbiEvent event = _events[idx];
     return event.type.decode(input);
   }
 
   dynamic _decodeEventV5(Uint8List data, List<String> topics) {
     if (topics.isNotEmpty) {
       final String topic = topics[0];
-      AbiEvent? event;
-      for (final AbiEvent e in _events) {
+      InkAbiEvent? event;
+      for (final InkAbiEvent e in _events) {
         if (e.signatureTopic == topic) {
           event = e;
           break;
@@ -94,7 +94,7 @@ class Abi {
     }
 
     final int amountOfTopics = topics.length;
-    final List<AbiEvent> potentialEvents = _events.where((AbiEvent event) {
+    final List<InkAbiEvent> potentialEvents = _events.where((InkAbiEvent event) {
       if (event.signatureTopic != null) {
         return false;
       }
@@ -102,7 +102,7 @@ class Abi {
     }).toList(growable: false);
 
     if (potentialEvents.length == 1) {
-      final AbiEvent event = potentialEvents[0];
+      final InkAbiEvent event = potentialEvents[0];
       final ByteInput input = ByteInput(data);
       return event.type.decode(input);
     }

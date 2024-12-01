@@ -1,4 +1,4 @@
-part of abi;
+part of ink_abi;
 
 extension StringExtensionNull on String? {
   String? capitalize() {

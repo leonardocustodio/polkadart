@@ -3,15 +3,15 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:abi/abi_base.dart';
+import 'package:ink_abi/ink_abi_base.dart';
 
 void main() {
   final jsonFile =
-      '/Users/kawal/Desktop/git_projects/polkadart/packages/abi/example/v5_metadata.json';
+      '/Users/kawal/Desktop/git_projects/polkadart/packages/ink_abi/example/v5_metadata.json';
   final json = jsonDecode(File(jsonFile).readAsStringSync());
   final jsonMap = SchemaValidator.getInkProject(json);
-  final abiDescription = AbiDescription(jsonMap);
-  abiDescription
+  final inkAbiDescription = InkAbiDescription(jsonMap);
+  inkAbiDescription
     ..abiEvents()
     ..constructorSelectors()
     ..messageSelectors()

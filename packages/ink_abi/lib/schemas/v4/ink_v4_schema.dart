@@ -1,4 +1,4 @@
-part of abi;
+part of ink_abi;
 
 const inkV4Schema = {
   '\$schema': 'http://json-schema.org/draft-07/schema#',

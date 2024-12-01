@@ -1,12 +1,12 @@
-part of abi;
+part of ink_abi;
 
-class AbiEvent {
+class InkAbiEvent {
   final String name;
   final Codec<dynamic> type;
   final int amountIndexed;
   final String? signatureTopic;
 
-  const AbiEvent({
+  const InkAbiEvent({
     required this.name,
     required this.type,
     required this.amountIndexed,
