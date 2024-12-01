@@ -6,11 +6,13 @@ class SchemaValidator {
   static final JsonSchema validatorV5 = JsonSchema.create(inkV5Schema);
 
   static bool isAbiV4(dynamic inkAbi) {
-    return inkAbi is Map<String, dynamic> && inkAbi['version'].toString() == '4';
+    return inkAbi is Map<String, dynamic> &&
+        inkAbi['version'].toString() == '4';
   }
 
   static bool isAbiV5(dynamic inkAbi) {
-    return inkAbi is Map<String, dynamic> && inkAbi['version'].toString() == '5';
+    return inkAbi is Map<String, dynamic> &&
+        inkAbi['version'].toString() == '5';
   }
 
   static Map<String, dynamic> getInkProject(dynamic inkAbi) {

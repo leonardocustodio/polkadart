@@ -94,7 +94,8 @@ class InkAbi {
     }
 
     final int amountOfTopics = topics.length;
-    final List<InkAbiEvent> potentialEvents = _events.where((InkAbiEvent event) {
+    final List<InkAbiEvent> potentialEvents =
+        _events.where((InkAbiEvent event) {
       if (event.signatureTopic != null) {
         return false;
       }
