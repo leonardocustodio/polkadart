@@ -9,8 +9,10 @@ environment:
 
 dependencies:
   json_schema: ^5.2.0
+  polkadart: ^0.3.0
   polkadart_scale_codec: ^1.2.1
   substrate_metadata: ^1.2.2
+  utility: ^1.0.3
 
 dev_dependencies:
   lints: ^2.0.0
