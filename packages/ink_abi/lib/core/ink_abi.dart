@@ -67,9 +67,9 @@ class InkAbi {
       if (topics?.isEmpty ?? true) {
         throw Exception('Topics are required if ink! contract is version 5');
       }
-      return _decodeEventV5(data, topics!);
+      return _decodeEventV5(_data, topics!);
     } else {
-      return _decodeEventV4(data);
+      return _decodeEventV4(_data);
     }
   }
 

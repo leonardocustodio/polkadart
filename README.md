@@ -34,19 +34,21 @@ This repo is a monorepo for `polkadart` and related packages.
 | [![version][pkg:ss58:version]][pkg:ss58]                                   | SS58 is a cryptocurrency address format used by Substrate. This package includes utilities to encode and decode these addresses. |
 | [![version][pkg:substrate_bip39:version]][pkg:substrate_bip39]             | BIP39 (Bitcoin Improvement Proposal 39) pertains to the generation of mnemonic phrases for cryptographic keys. Creates human-readable phrases that map to the keys used on Substrate-based chains. |
 | [![version][pkg:substrate_metadata:version]][pkg:substrate_metadata]       | Provides the necessary tools to decode the metadata provided by a Substrate blockchain node. And can be used to easily decode constants, extrinsics, events, and other data written in the chain. |
+| [![version][pkg:ink_abi:version]][pkg:ink_abi]                             | Provides the necessary method to decode and encode ink abi. Making it possible to interact with smart contracts at Polkadot ecosystem.  |
 
 ## Documentation
 
 - [Official documentation](https://polkadart.dev)
-- [polkadart Package](https://pub.dev/documentation/polkadart/latest/)
-- [polkadart_cli Package](https://pub.dev/documentation/polkadart_cli/latest/)
-- [polkadart_keyring Package](https://pub.dev/documentation/polkadart_keyring/latest/)
-- [polkadart_scale_codec Package](https://pub.dev/documentation/polkadart_scale_codec/latest/)
-- [secp256k1_ecdsa Package](https://pub.dev/documentation/secp256k1_ecdsa/latest/)
-- [sr25519 Package](https://pub.dev/documentation/sr25519/latest/)
-- [ss58 Package](https://pub.dev/documentation/ss58/latest/)
-- [substrate_bip39 Package](https://pub.dev/documentation/substrate_bip39/latest/)
-- [substrate_metadata Package](https://pub.dev/documentation/substrate_metadata/latest/)
+- [polkadart](https://pub.dev/documentation/polkadart/latest/)
+- [polkadart_cli](https://pub.dev/documentation/polkadart_cli/latest/)
+- [polkadart_keyring](https://pub.dev/documentation/polkadart_keyring/latest/)
+- [polkadart_scale_codec](https://pub.dev/documentation/polkadart_scale_codec/latest/)
+- [secp256k1_ecdsa](https://pub.dev/documentation/secp256k1_ecdsa/latest/)
+- [sr25519](https://pub.dev/documentation/sr25519/latest/)
+- [ss58](https://pub.dev/documentation/ss58/latest/)
+- [substrate_bip39](https://pub.dev/documentation/substrate_bip39/latest/)
+- [substrate_metadata](https://pub.dev/documentation/substrate_metadata/latest/)
+- [ink_abi](https://pub.dev/documentation/ink_abi/latest/)
 
 ## Community
 
@@ -145,3 +147,7 @@ This repository is licensed under [Apache 2.0 license](https://github.com/leonar
 [pkg:substrate_metadata]: https://pub.dartlang.org/packages/substrate_metadata
 [pkg:substrate_metadata:version]: https://img.shields.io/pub/v/substrate_metadata?label=substrate_metadata
 [pkg:substrate_metadata:source]: ./packages/substrate_metadata
+
+[pkg:ink_abi]: https://pub.dartlang.org/packages/ink_abi
+[pkg:ink_abi:version]: https://img.shields.io/pub/v/ink_abi?label=ink_abi
+[pkg:ink_abi:source]: ./packages/ink_abi
