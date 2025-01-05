@@ -8,12 +8,11 @@ class BitSequenceCodecInterface extends CodecInterface {
     required super.id,
     required this.bitStoreType,
     required this.bitOrderType,
-    /* required super.params, */
     super.path,
     super.docs,
   }) : super(kind: TypeKind.bitsequence);
 
-  static BitSequenceCodecInterface fromJson(Map<String, dynamic> json) {
+  static BitSequenceCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
       throw Exception(
           'Exception as didn\'t found the type for this json: $json');

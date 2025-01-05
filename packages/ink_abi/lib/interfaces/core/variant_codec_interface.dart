@@ -8,12 +8,11 @@ class VariantCodecInterface extends CodecInterface {
     required super.id,
     required this.variants,
     this.params,
-    /* required super.params, */
     super.path,
     super.docs,
   }) : super(kind: TypeKind.variant);
 
-  static VariantCodecInterface fromJson(Map<String, dynamic> json) {
+  static VariantCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
       throw Exception(
           'Exception as didn\'t found the type for this json: $json');
@@ -31,7 +30,7 @@ class VariantCodecInterface extends CodecInterface {
       id: id,
       variants: variants,
       params: typeObject['params']
-          ?.map((e) => Params.fromJson(e))
+          ?.map((final e) => Params.fromJson(e))
           ?.toList()
           ?.cast<Params>(),
       path: typeObject['path']?.cast<String>(),
@@ -74,7 +73,7 @@ class Variants {
     this.docs,
   });
 
-  static Variants fromJson(Map<String, dynamic> json) {
+  static Variants fromJson(final Map<String, dynamic> json) {
     if (json['name'] == null || json['index'] == null) {
       throw Exception(
           'Exception as didn\'t found the name neither the index for this json: $json');

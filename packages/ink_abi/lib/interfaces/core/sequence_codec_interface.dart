@@ -6,12 +6,11 @@ class SequenceCodecInterface extends CodecInterface {
   SequenceCodecInterface({
     required super.id,
     required this.type,
-    /* required super.params, */
     super.path,
     super.docs,
   }) : super(kind: TypeKind.sequence);
 
-  static SequenceCodecInterface fromJson(Map<String, dynamic> json) {
+  static SequenceCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
       throw Exception(
           'Exception as didn\'t found the type for this json: $json');
@@ -23,7 +22,6 @@ class SequenceCodecInterface extends CodecInterface {
     return SequenceCodecInterface(
       id: id,
       type: defType.value['type'],
-      /* params: typeObject['params']?.map((e) => Params.fromJson(e))?.toList(), */
       path: typeObject['path']?.cast<String>(),
       docs: typeObject['docs']?.cast<String>(),
     );
@@ -37,7 +35,6 @@ class SequenceCodecInterface extends CodecInterface {
         'def': {
           'Sequence': {'type': type},
         },
-        /* if (params != null) 'params': params!.map((e) => e.toJson()).toList(), */
         'path': super.path ?? <String>[],
         'docs': super.docs ?? <String>[],
       }

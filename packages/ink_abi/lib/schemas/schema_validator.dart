@@ -5,17 +5,17 @@ class SchemaValidator {
   static final JsonSchema validatorV4 = JsonSchema.create(inkV4Schema);
   static final JsonSchema validatorV5 = JsonSchema.create(inkV5Schema);
 
-  static bool isAbiV4(dynamic inkAbi) {
+  static bool isAbiV4(final dynamic inkAbi) {
     return inkAbi is Map<String, dynamic> &&
         inkAbi['version'].toString() == '4';
   }
 
-  static bool isAbiV5(dynamic inkAbi) {
+  static bool isAbiV5(final dynamic inkAbi) {
     return inkAbi is Map<String, dynamic> &&
         inkAbi['version'].toString() == '5';
   }
 
-  static Map<String, dynamic> getInkProject(dynamic inkAbi) {
+  static Map<String, dynamic> getInkProject(final dynamic inkAbi) {
     if (isAbiV5(inkAbi)) {
       final ValidationResults validationResult = validatorV5.validate(inkAbi);
       if (validationResult.isValid) {

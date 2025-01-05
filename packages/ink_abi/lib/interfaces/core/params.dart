@@ -4,12 +4,12 @@ class Params {
   final String name;
   final int type;
 
-  Params({
+  const Params({
     required this.name,
     required this.type,
   });
 
-  static Params fromJson(Map<String, dynamic> json) {
+  static Params fromJson(final Map<String, dynamic> json) {
     if (json['name'] == null || json['type'] == null) {
       throw Exception(
           'Exception as didn\'t found the name neither the type for this json: $json');

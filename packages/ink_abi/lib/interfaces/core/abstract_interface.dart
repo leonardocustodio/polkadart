@@ -9,12 +9,11 @@ abstract class CodecInterface {
   CodecInterface({
     required this.kind,
     required this.id,
-    /* required this.params, */
     this.path,
     this.docs,
   });
 
-  static CodecInterface fromJson(Map<String, dynamic> json) {
+  static CodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['id'] == null || json['type'] == null) {
       throw Exception(
           'Exception as didn\'t found the id neither the type for this json: $json');

@@ -56,21 +56,21 @@ class InkAbi {
 
   dynamic decodeEvent(final dynamic data, [final List<String>? topics]) {
     assert(data is Uint8List || data is List<int> || data is String);
-    late final Uint8List _data;
+    late final Uint8List data0;
     if (data is String) {
-      _data = decodeHex(data);
+      data0 = decodeHex(data);
     } else if (data is List<int>) {
-      _data = Uint8List.fromList(data);
+      data0 = Uint8List.fromList(data);
     } else {
-      _data = data;
+      data0 = data;
     }
     if (_project['version'] == 5) {
       if (topics?.isEmpty ?? true) {
         throw Exception('Topics are required if ink! contract is version 5');
       }
-      return _decodeEventV5(_data, topics!);
+      return _decodeEventV5(data0, topics!);
     } else {
-      return _decodeEventV4(_data);
+      return _decodeEventV4(data0);
     }
   }
 

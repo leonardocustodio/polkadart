@@ -13,7 +13,7 @@ class Field {
     this.docs,
   });
 
-  static Field fromJson(Map<String, dynamic> json) {
+  static Field fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null) {
       throw Exception(
           'Exception as didn\'t found the type for this json: $json');
@@ -46,12 +46,11 @@ class CompositeCodecInterface extends CodecInterface {
   CompositeCodecInterface({
     required super.id,
     required this.fields,
-    /* required super.params, */
     super.path,
     super.docs,
   }) : super(kind: TypeKind.composite);
 
-  static CompositeCodecInterface fromJson(Map<String, dynamic> json) {
+  static CompositeCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
       throw Exception(
           'Exception as didn\'t found the type for this json: $json');
@@ -62,17 +61,13 @@ class CompositeCodecInterface extends CodecInterface {
     List<Field> fields = <Field>[];
     if (defType.value['fields'] != null) {
       fields = (defType.value['fields'] as List)
-          .map((dynamic field) => Field.fromJson(field))
+          .map((final dynamic field) => Field.fromJson(field))
           .toList();
     }
 
     return CompositeCodecInterface(
       id: id,
       fields: fields,
-      /* params: typeObject['params']
-          ?.map((e) => Params.fromJson(e))
-          ?.toList()
-          .cast<Params>(), */
       path: typeObject['path']?.cast<String>(),
       docs: typeObject['docs']?.cast<String>(),
     );
@@ -85,10 +80,10 @@ class CompositeCodecInterface extends CodecInterface {
       'type': {
         'def': {
           'Composite': {
-            'fields': fields.map((field) => field.toJson()).toList(),
+            'fields':
+                fields.map((final Field field) => field.toJson()).toList(),
           }
         },
-        /* if (params != null) 'params': params!.map((e) => e.toJson()).toList(), */
         'path': super.path ?? <String>[],
         'docs': super.docs ?? <String>[],
       }

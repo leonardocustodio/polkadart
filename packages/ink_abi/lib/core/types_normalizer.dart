@@ -50,7 +50,6 @@ List<CodecInterface> _fixWrapperKeepOpaqueTypes(List<CodecInterface> types) {
         docs: <String>[
           'This was added from `_fixWrapperKeepOpaqueTypes` normalizer function call.',
         ],
-        /* params: <Params>[], */
       ),
     );
   }
@@ -84,7 +83,6 @@ List<CodecInterface> _fixU256Structs(final List<CodecInterface> types) {
             return PrimitiveCodecInterface(
               id: type.id,
               primitive: Primitive.u256,
-              /*  params: [], */
             );
           }
         }
@@ -118,7 +116,6 @@ List<CodecInterface> _eliminateWrappers(List<CodecInterface> types) {
               TupleCodecInterface(
                 id: type.id,
                 tuple: [],
-                /* params: type.params, */
               ),
             );
           }
@@ -135,7 +132,6 @@ List<CodecInterface> _eliminateWrappers(List<CodecInterface> types) {
                     return field.type;
                   },
                 ).toList(),
-                /* params: type.params, */
               ),
             );
           }
@@ -160,31 +156,6 @@ List<CodecInterface> _eliminateWrappers(List<CodecInterface> types) {
   return types;
 }
 
-/*
-function removeUnitFieldsFromVariants(types) {
-    return types.map(ty => {
-        if (ty.kind != types_1.TypeKind.Variant)
-            return ty;
-        let variants = ty.variants.map(v => {
-            let nonUnitFields = v.fields.filter(f => {
-                return !isUnitType(types[f.type]);
-            });
-            if (nonUnitFields.length == v.fields.length)
-                return v;
-            if (v.fields[0]?.name == null && nonUnitFields.length > 0)
-                return v;
-            return {
-                ...v,
-                fields: nonUnitFields
-            };
-        });
-        return {
-            ...ty,
-            variants
-        };
-    });
-}
-*/
 List<CodecInterface> _removeUnitFieldsFromVariants(List<CodecInterface> types) {
   return types.map((final CodecInterface type) {
     if (type.kind != TypeKind.variant) {
@@ -228,7 +199,6 @@ List<CodecInterface> _fixCompactTypes(final List<CodecInterface> types) {
           TupleCodecInterface(
             id: type.id,
             tuple: <int>[],
-            /* params: type.params, */
           ),
         );
       case TypeKind.composite:

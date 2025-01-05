@@ -9,7 +9,7 @@ class CompactCodecInterface extends CodecInterface {
     super.docs,
   }) : super(kind: TypeKind.compact);
 
-  static CompactCodecInterface fromJson(Map<String, dynamic> json) {
+  static CompactCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
       throw Exception(
           'Exception as didn\'t found the type for this json: $json');

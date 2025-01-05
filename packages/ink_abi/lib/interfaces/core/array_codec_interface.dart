@@ -8,12 +8,11 @@ class ArrayCodecInterface extends CodecInterface {
     required super.id,
     required this.type,
     required this.len,
-    /* required super.params, */
     super.path,
     super.docs,
   }) : super(kind: TypeKind.array);
 
-  static ArrayCodecInterface fromJson(Map<String, dynamic> json) {
+  static ArrayCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
       throw Exception(
           'Exception as didn\'t found the type for this json: $json');
@@ -28,7 +27,6 @@ class ArrayCodecInterface extends CodecInterface {
       id: id,
       type: type,
       len: len,
-      /* params: typeObject['params']?.map((e) => Params.fromJson(e))?.toList(), */
       path: typeObject['path']?.cast<String>(),
       docs: typeObject['docs']?.cast<String>(),
     );

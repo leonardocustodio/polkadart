@@ -6,12 +6,11 @@ class PrimitiveCodecInterface extends CodecInterface {
   PrimitiveCodecInterface({
     required super.id,
     required this.primitive,
-    /* required super.params, */
     super.path,
     super.docs,
   }) : super(kind: TypeKind.primitive);
 
-  static PrimitiveCodecInterface fromJson(Map<String, dynamic> json) {
+  static PrimitiveCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
       throw Exception(
           'Exception as didn\'t found the type for this json: $json');
@@ -24,7 +23,6 @@ class PrimitiveCodecInterface extends CodecInterface {
     return PrimitiveCodecInterface(
       id: id,
       primitive: primitive,
-      /* params: typeObject['params']?.map((e) => Params.fromJson(e))?.toList(), */
       path: typeObject['path']?.cast<String>(),
       docs: typeObject['docs']?.cast<String>(),
     );
@@ -38,7 +36,6 @@ class PrimitiveCodecInterface extends CodecInterface {
         'def': {
           'Primitive': primitive.name.toString(),
         },
-        /* if (params != null) 'params': params!.map((e) => e.toJson()).toList(), */
         'path': super.path ?? <String>[],
         'docs': super.docs ?? <String>[],
       }

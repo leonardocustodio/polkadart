@@ -24,6 +24,5 @@ part 'schemas/v5/ink_v5_schema.dart';
 part 'schemas/schema_validator.dart';
 
 // utils
-part 'utils/definitions.dart';
 part 'utils/string_extension.dart';
 part 'utils/utils.dart';

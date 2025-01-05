@@ -1,10 +1,13 @@
 part of ink_abi;
 
+typedef SelectorsMap = Map<String, int>;
+
 class SelectorByteInput extends ByteInput {
   int? index;
-  SelectorByteInput._(Uint8List buffer) : super(buffer);
+  SelectorByteInput._(final Uint8List buffer) : super(buffer);
 
-  static SelectorByteInput fromHex(String hex, SelectorsMap selectors) {
+  static SelectorByteInput fromHex(
+      final String hex, final SelectorsMap selectors) {
     final Uint8List buffer = decodeHex(hex);
     final String key = encodeHex(buffer.sublist(0, 4));
     final int? index = selectors['0x$key'];

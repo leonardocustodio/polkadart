@@ -119,7 +119,7 @@ class InkAbiDescription {
   }
 
   List<Field> _createFields(final List<dynamic> args) {
-    return args.map((arg) {
+    return args.map((final arg) {
       return Field(
         name: _normalizeLabel(arg['label']),
         type: arg['type']['type'],
@@ -132,7 +132,7 @@ class InkAbiDescription {
     return label.replaceAll('::', '_');
   }
 
-  int _add(CodecInterface type) {
+  int _add(final CodecInterface type) {
     _types().add(type);
     return _types().length - 1;
   }

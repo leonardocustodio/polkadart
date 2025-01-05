@@ -34,7 +34,7 @@ class OptionCodecInterface extends CodecInterface {
             ],
           }
         },
-        'params': params.map((e) => e.toJson()).toList(),
+        'params': params.map((final Params e) => e.toJson()).toList(),
         'path': super.path ?? <String>[],
         'docs': super.docs ?? <String>[],
       }
