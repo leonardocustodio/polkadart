@@ -1,16 +1,17 @@
-// dart_typegen.dart
+part of ink_cli;
 
-part of ink_abi;
-
-class DartTypegen {
+class TypeGenerator {
   final String abiFilePath;
-  final AbiOutput out;
+  final AbiOutput fileOutput;
 
-  late Map<int, String> _nameAssignment;
-  late InkAbiDescription _description;
-  late Map<String, dynamic> _project;
+  late final Map<int, String> _nameAssignment;
+  late final InkAbiDescription _description;
+  late final Map<String, dynamic> _project;
 
-  DartTypegen(this.abiFilePath, this.out);
+  TypeGenerator({
+    required this.abiFilePath,
+    required this.fileOutput,
+  });
 
   /// 1) Read the file and parse JSON
   dynamic _readMetadata() {
@@ -89,89 +90,91 @@ class DartTypegen {
 
     // 5) Start writing code to `out`
     // For example, we might print some imports:
-    out.line("import 'package:ink_abi/ink_abi_base.dart';");
-    out.line("import 'package:polkadart/polkadart.dart' show StateApi;");
-    out.line("import 'dart:typed_data';");
-    out.line("import 'dart:convert';");
-    out.line();
+    fileOutput.line("// ignore_for_file: non_constant_identifier_names");
+    fileOutput.line();
+    fileOutput.line("import 'package:ink_abi/ink_abi_base.dart';");
+    fileOutput.line("import 'package:polkadart/polkadart.dart' show StateApi;");
+    fileOutput.line("import 'dart:typed_data';");
+    fileOutput.line("import 'dart:convert';");
+    fileOutput.line();
 
     // Then, we might embed the original ABI JSON
     final metadata = JsonEncoder.withIndent('    ').convert(_readMetadata());
-    out.block(
-      start: 'const String metadataJson = r\'\'\'',
+    fileOutput.block(
+      start: 'const String _metadataJson = r\'\'\'',
       cb: () {
         for (final line in metadata.split('\n')) {
-          out.line(line);
+          fileOutput.line(line);
         }
       },
       end: "''' ;",
     );
 
-    out.line();
-    out.block(
-      start: 'final InkAbi _abi = InkAbi(jsonDecode(metadataJson));',
+    fileOutput.line();
+    fileOutput.block(
+      start: 'final InkAbi _abi = InkAbi(jsonDecode(_metadataJson));',
       cb: null,
       end: null,
     );
 
     // Suppose we want to replicate the decodeEvent function, etc.:
-    out.line();
+    fileOutput.line();
     if (_project['version'] == 5) {
-      out.block(
+      fileOutput.block(
         start:
             'dynamic decodeEvent(final String hex, [final List<String>? topics]) {',
         cb: () {
           /* final eventType = ifs.use(_description.event());
           out.line('final $eventType event = _abi.decodeEvent(hex, topics);'); */
-          out.line('return _abi.decodeEvent(hex, topics);');
+          fileOutput.line('return _abi.decodeEvent(hex, topics);');
         },
         end: '}',
       );
     } else {
-      out.block(
+      fileOutput.block(
         start: 'dynamic decodeEvent(final String hex) {',
         cb: () {
           /* final eventType = ifs.use(_description.event());
           out.line('final $eventType event = _abi.decodeEvent(hex);'); */
-          out.line('return _abi.decodeEvent(hex);');
+          fileOutput.line('return _abi.decodeEvent(hex);');
         },
         end: '}',
       );
     }
 
-    out.line();
-    out.block(
+    fileOutput.line();
+    fileOutput.block(
       start: 'dynamic decodeMessage(final String hex) {',
       cb: () {
         /* final msgType = ifs.use(_description.messages());
         out.line('final $msgType msg = _abi.decodeMessage(hex);'); */
-        out.line('return _abi.decodeMessage(hex);');
+        fileOutput.line('return _abi.decodeMessage(hex);');
       },
       end: '}',
     );
 
-    out.line();
-    out.block(
+    fileOutput.line();
+    fileOutput.block(
       start: 'dynamic decodeConstructor(final String hex) {',
       cb: () {
         /* final ctorType = ifs.use(_description.constructors());
         out.line('final $ctorType cons = _abi.decodeConstructor(hex);'); */
-        out.line('return _abi.decodeConstructor(hex);');
+        fileOutput.line('return _abi.decodeConstructor(hex);');
       },
       end: '}',
     );
 
-    out.line();
-    out.block(
+    fileOutput.line();
+    fileOutput.block(
       start: 'class Contract {',
       cb: () {
-        out.line('final StateApi api;');
-        out.line('final Uint8List address;');
-        out.line('final Uint8List? blockHash;');
-        out.line();
-        out.block(
+        fileOutput.line('final StateApi api;');
+        fileOutput.line('final Uint8List address;');
+        fileOutput.line('final Uint8List? blockHash;');
+        fileOutput.line();
+        fileOutput.block(
           start:
-              'Contract({required this.api, required this.address, this.blockHash});',
+              'const Contract({required this.api, required this.address, this.blockHash});',
           cb: () {},
           end: '',
         );
@@ -191,17 +194,17 @@ class DartTypegen {
             }
 
             final methodName = (m['label'] as String).replaceAll('::', '_');
-            out.line();
+            fileOutput.line();
             // Add docs
             final docs = (m['docs'] as List).cast<String>();
-            out.blockComment(docs);
-            out.block(
+            fileOutput.blockComment(docs);
+            fileOutput.block(
               start:
                   'Future<${ifs.use(returnType)}> $methodName($args) async {',
               cb: () {
                 final callArgs =
                     (m['args'] as List).map((arg) => arg['label']).join(', ');
-                out.line(
+                fileOutput.line(
                     "return await _stateCall<${ifs.use(returnType)}>('${m['selector']}', [$callArgs]);");
               },
               end: '}',
@@ -210,17 +213,18 @@ class DartTypegen {
         }
 
         // The private helper method
-        out.line();
-        out.block(
+        fileOutput.line();
+        fileOutput.block(
           start:
               'Future<T> _stateCall<T>(final String selector, final List<dynamic> args) async {',
           cb: () {
-            out.line('final input = _abi.encodeMessageInput(selector, args);');
-            out.line('final data = encodeCall(address, input);');
-            out.line(
+            fileOutput
+                .line('final input = _abi.encodeMessageInput(selector, args);');
+            fileOutput.line('final data = encodeCall(address, input);');
+            fileOutput.line(
                 'final result = await api.call(\'ContractsApi_call\', data, at: blockHash);');
-            out.line(' final value = decodeResult(result);');
-            out.line('return _abi.decodeMessageOutput(selector, value);');
+            fileOutput
+                .line('return _abi.decodeMessageOutput(selector, result);');
           },
           end: '}',
         );
@@ -229,29 +233,7 @@ class DartTypegen {
     );
 
     // 6) Finally, "drain" the sink so that all queued definitions (interfaces, etc.) are printed
-    sink.generate(out);
+    sink.generate(fileOutput);
     return;
-
-    /* out.line();
-    out.block(
-      start: 'class Result<T, E> {',
-      cb: () {
-        out.line('final bool isOk;');
-        out.line('final T? ok;');
-        out.line('final E? err;');
-        out.line();
-        out.block(
-          start: 'Result.ok(this.ok) : isOk = true, err = null;',
-          cb: () {},
-          end: '',
-        );
-        out.block(
-          start: 'Result.err(this.err) : isOk = false, ok = null;',
-          cb: () {},
-          end: '',
-        );
-      },
-      end: '}',
-    ); */
   }
 }

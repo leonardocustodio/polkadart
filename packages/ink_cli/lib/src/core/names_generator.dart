@@ -1,4 +1,4 @@
-part of ink_abi;
+part of ink_cli;
 
 class Names {
   final Map<int, String> _assignment = {};

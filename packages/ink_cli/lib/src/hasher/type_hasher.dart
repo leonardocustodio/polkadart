@@ -1,4 +1,4 @@
-part of ink_abi;
+part of ink_cli;
 
 class TypeHasher extends Hasher {
   final DCGHasher<CodecInterface> _dcg;
@@ -164,13 +164,13 @@ String toStringPrimitive(String primitive) {
   }
 }
 
-final _HASHERS = <List<CodecInterface>, TypeHasher>{};
+final _hashers = <List<CodecInterface>, TypeHasher>{};
 
 TypeHasher getTypeHasher(List<CodecInterface> types) {
-  TypeHasher? hasher = _HASHERS[types];
+  TypeHasher? hasher = _hashers[types];
   if (hasher == null) {
     hasher = TypeHasher(types);
-    _HASHERS[types] = hasher;
+    _hashers[types] = hasher;
   }
   return hasher;
 }

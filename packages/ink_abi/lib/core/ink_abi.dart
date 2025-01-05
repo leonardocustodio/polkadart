@@ -10,7 +10,7 @@ class InkAbi {
   late final Map<String, dynamic> _project;
   late final InkAbiDescription _inkAbiDescription;
 
-  InkAbi(Map<String, dynamic> inkAbiJson) {
+  InkAbi(final Map<String, dynamic> inkAbiJson) {
     _project = SchemaValidator.getInkProject(inkAbiJson);
     _inkAbiDescription = InkAbiDescription(_project);
     _scaleCodec = _inkAbiDescription.codecTypes();
@@ -21,7 +21,8 @@ class InkAbi {
     _constructorSelectors = _inkAbiDescription.constructorSelectors();
   }
 
-  Uint8List encodeMessageInput(String selector, List<dynamic> args) {
+  Uint8List encodeMessageInput(
+      final String selector, final List<dynamic> args) {
     final message = _getMessage(selector);
     final ByteOutput output = ByteOutput();
     output.write(decodeHex(selector));
@@ -37,7 +38,7 @@ class InkAbi {
     return output.toBytes();
   }
 
-  dynamic decodeMessageOutput(String selector, Uint8List value) {
+  dynamic decodeMessageOutput(final String selector, final Uint8List value) {
     final message = _getMessage(selector);
     assert(message['returnType']?['type'] != null);
     final Codec<dynamic>? codec = _scaleCodec[message['returnType']['type']];
@@ -49,11 +50,11 @@ class InkAbi {
     return codec.decode(input);
   }
 
-  dynamic decodeEventFromHex(String data, [List<String>? topics]) {
+  dynamic decodeEventFromHex(final String data, [final List<String>? topics]) {
     return decodeEvent(decodeHex(data), topics);
   }
 
-  dynamic decodeEvent(dynamic data, [List<String>? topics]) {
+  dynamic decodeEvent(final dynamic data, [final List<String>? topics]) {
     assert(data is Uint8List || data is List<int> || data is String);
     late final Uint8List _data;
     if (data is String) {
@@ -73,7 +74,7 @@ class InkAbi {
     }
   }
 
-  dynamic _decodeEventV4(Uint8List data) {
+  dynamic _decodeEventV4(final Uint8List data) {
     final ByteInput input = ByteInput(data);
     final int idx = input.read();
     if (_events.isEmpty) {
@@ -89,7 +90,7 @@ class InkAbi {
     return _scaleCodec[event.type]!.decode(input);
   }
 
-  dynamic _decodeEventV5(Uint8List data, List<String> topics) {
+  dynamic _decodeEventV5(final Uint8List data, final List<String> topics) {
     if (topics.isNotEmpty) {
       final String topic = topics[0];
       InkAbiEvent? event;
@@ -110,7 +111,7 @@ class InkAbi {
 
     final int amountOfTopics = topics.length;
     final List<InkAbiEvent> potentialEvents =
-        _events.where((InkAbiEvent event) {
+        _events.where((final InkAbiEvent event) {
       if (event.signatureTopic != null) {
         return false;
       }
@@ -129,7 +130,7 @@ class InkAbi {
     throw Exception('Unable to determine event');
   }
 
-  dynamic decodeConstructor(String data) {
+  dynamic decodeConstructor(final String data) {
     final ByteInput input =
         SelectorByteInput.fromHex(data, _constructorSelectors);
     if (_scaleCodec[_constructors] == null) {
@@ -138,7 +139,7 @@ class InkAbi {
     return _scaleCodec[_constructors]!.decode(input);
   }
 
-  dynamic decodeMessage(String data) {
+  dynamic decodeMessage(final String data) {
     final ByteInput input = SelectorByteInput.fromHex(data, _messageSelectors);
     if (_scaleCodec[_messages] == null) {
       throw Exception('Codec not found for type at index: $_messages');
@@ -146,7 +147,7 @@ class InkAbi {
     return _scaleCodec[_messages]!.decode(input);
   }
 
-  dynamic _getMessage(String selector) {
+  dynamic _getMessage(final String selector) {
     final int? index = _messageSelectors[selector];
     if (index == null) {
       throw Exception('Unknown selector: $selector');

@@ -1,4 +1,4 @@
-part of ink_abi;
+part of ink_cli;
 
 typedef AbiOutputCallBack = void Function(AbiOutput);
 

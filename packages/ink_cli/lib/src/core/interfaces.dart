@@ -1,4 +1,4 @@
-part of ink_abi;
+part of ink_cli;
 
 class Interfaces {
   /// The "sink" that holds references to the entire type list,
@@ -102,7 +102,7 @@ class Interfaces {
         final res = asResultType(variant);
         if (res != null) {
           final okT = (res['ok'] == null) ? 'Null' : use(res['ok'] as int);
-          final errT = (res['err'] == null) ? 'Null' : use(res['err'] as int);
+          //final errT = (res['err'] == null) ? 'Null' : use(res['err'] as int);
           return okT;
         }
 
