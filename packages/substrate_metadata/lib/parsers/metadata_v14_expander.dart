@@ -118,7 +118,17 @@ class MetadataV14Expander {
       }
     }
 
-    String genName = path.isNotEmpty ? path.last : '$siTypeId';
+    String genName = '';
+    if (path.isNotEmpty) {
+      genName = path.last;
+    } else {
+      if (siTypeId < id2Portable.length) {
+        genName = _fetchTypeName(siTypeId, id2Portable[siTypeId], id2Portable);
+      }
+      if (genName.trim().isEmpty) {
+        genName = siTypeId.toString();
+      }
+    }
     if (registeredTypeNames.contains(genName)) {
       genName = path.join(':');
     }
