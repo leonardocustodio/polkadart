@@ -27,6 +27,9 @@ class Sink {
 
   /// getName(ti): returns the name assigned to a given type index.
   String getName(final int ti) {
+    if (ti < 0 || ti >= types.length) {
+      throw RangeError('Type index $ti is out of bounds');
+    }
     final String? maybeName = nameAssignment[ti];
     if (maybeName == null) {
       throw StateError('No name assigned for type index $ti');

@@ -84,10 +84,11 @@ class InkAbi {
       throw Exception('Unable to find event with index: $idx');
     }
     final InkAbiEvent event = _events[idx];
-    if (_scaleCodec[event.type] == null) {
+    final codec = _scaleCodec[event.type];
+    if (codec == null) {
       throw Exception('Codec not found for type at index: ${event.type}');
     }
-    return _scaleCodec[event.type]!.decode(input);
+    return codec.decode(input);
   }
 
   dynamic _decodeEventV5(final Uint8List data, final List<String> topics) {
@@ -101,11 +102,12 @@ class InkAbi {
         }
       }
       if (event != null) {
-        if (_scaleCodec[event.type] == null) {
+        final codec = _scaleCodec[event.type];
+        if (codec == null) {
           throw Exception('Codec not found for type at index: ${event.type}');
         }
         final ByteInput input = ByteInput(data);
-        return _scaleCodec[event.type]!.decode(input);
+        return codec.decode(input);
       }
     }
 
@@ -120,11 +122,12 @@ class InkAbi {
 
     if (potentialEvents.length == 1) {
       final InkAbiEvent event = potentialEvents[0];
-      if (_scaleCodec[event.type] == null) {
+      final codec = _scaleCodec[event.type];
+      if (codec == null) {
         throw Exception('Codec not found for type at index: ${event.type}');
       }
       final ByteInput input = ByteInput(data);
-      return _scaleCodec[event.type]!.decode(input);
+      return codec.decode(input);
     }
 
     throw Exception('Unable to determine event');
@@ -133,18 +136,20 @@ class InkAbi {
   dynamic decodeConstructor(final String data) {
     final ByteInput input =
         SelectorByteInput.fromHex(data, _constructorSelectors);
-    if (_scaleCodec[_constructors] == null) {
+    final constructorCodec = _scaleCodec[_constructors];
+    if (constructorCodec == null) {
       throw Exception('Codec not found for type at index: $_constructors');
     }
-    return _scaleCodec[_constructors]!.decode(input);
+    return constructorCodec.decode(input);
   }
 
   dynamic decodeMessage(final String data) {
     final ByteInput input = SelectorByteInput.fromHex(data, _messageSelectors);
-    if (_scaleCodec[_messages] == null) {
+    final messageCodec = _scaleCodec[_messages];
+    if (messageCodec == null) {
       throw Exception('Codec not found for type at index: $_messages');
     }
-    return _scaleCodec[_messages]!.decode(input);
+    return messageCodec.decode(input);
   }
 
   dynamic _getMessage(final String selector) {

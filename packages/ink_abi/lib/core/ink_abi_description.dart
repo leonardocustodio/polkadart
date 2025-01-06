@@ -45,6 +45,9 @@ class InkAbiDescription {
   }
 
   int _createMessagesType(final List list) {
+    if (list.isEmpty) {
+      throw ArgumentError('Invalid input list for creating message types');
+    }
     final VariantCodecInterface object = VariantCodecInterface(
       id: -1,
       variants: _createVariants(list),

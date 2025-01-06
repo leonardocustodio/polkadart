@@ -31,6 +31,8 @@ List<CodecInterface> _fixWrapperKeepOpaqueTypes(List<CodecInterface> types) {
       return type;
     }
     if (type is CompositeCodecInterface &&
+        type.fields.isNotEmpty &&
+        type.fields[0].type < types.length &&
         types[type.fields[0].type].kind != TypeKind.compact) {
       return type;
     }
