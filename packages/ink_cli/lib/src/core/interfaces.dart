@@ -121,11 +121,6 @@ class Interfaces {
       case TypeKind.option:
         final optT = (type as OptionCodecInterface).type;
         return '${use(optT)}?';
-
-      // 9) DoNotConstruct
-      default:
-        // If there's a "do not construct" scenario, represent as `Never`.
-        return 'Never';
     }
   }
 
