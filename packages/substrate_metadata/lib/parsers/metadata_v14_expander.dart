@@ -338,7 +338,7 @@ class MetadataV14Expander {
                 MapEntry(variantName, '($typeMapping)');
           }
         } else {
-          // 
+          //
           // Struct Variant
           final Map<String, String> typeMapping = {};
           for (Map<String, dynamic> field in variant['fields']) {
