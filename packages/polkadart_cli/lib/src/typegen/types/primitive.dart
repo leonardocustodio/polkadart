@@ -66,8 +66,6 @@ class PrimitiveDescriptor extends TypeDescriptor {
       case metadata.Primitive.I128:
       case metadata.Primitive.I256:
         return refs.bigInt.type as TypeReference;
-      default:
-        throw Exception('Unsupported primitive $primitive');
     }
   }
 
@@ -103,8 +101,6 @@ class PrimitiveDescriptor extends TypeDescriptor {
         return refs.i128Codec.type as TypeReference;
       case metadata.Primitive.I256:
         return refs.i256Codec.type as TypeReference;
-      default:
-        throw Exception('Unsupported primitive $primitive');
     }
   }
 
@@ -154,8 +150,6 @@ class PrimitiveDescriptor extends TypeDescriptor {
       case metadata.Primitive.I256:
         return bigIntToExpression(I256Codec.codec.decode(input))
             .asLiteralValue();
-      default:
-        throw Exception('Unsupported primitive $primitive');
     }
   }
 
@@ -181,8 +175,6 @@ class PrimitiveDescriptor extends TypeDescriptor {
       case metadata.Primitive.I128:
       case metadata.Primitive.I256:
         return refs.bigInt.type as TypeReference;
-      default:
-        throw Exception('Unsupported primitive $primitive');
     }
   }
 
