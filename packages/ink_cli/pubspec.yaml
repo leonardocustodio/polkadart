@@ -3,10 +3,6 @@ description: ink_cli is a command line interface for ink! smart contracts. Gener
 version: 0.0.1
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/ink_cli
 repository: https://github.com/leonardocustodio/polkadart
-
-# TODO: Remove after ink_abi 0.0.2 is published
-publish_to: none
-
 environment:
   sdk: ">=3.3.0 <4.0.0"
 
@@ -14,8 +10,7 @@ dependencies:
   args: ^2.4.0 # BSD-3-Clause
   console: ^4.1.0
   crypto: ^3.0.6 # MIT
-  ink_abi:
-    path: ../ink_abi
+  ink_abi: ^0.0.2
   path: ^1.8.3 # BSD-3-Clause
   yaml: ^3.1.1 # MIT
 
