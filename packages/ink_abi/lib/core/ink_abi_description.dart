@@ -1,111 +1,13 @@
 part of ink_abi;
 
-class SelectorByteInput extends ByteInput {
-  int? index;
-  SelectorByteInput._(Uint8List buffer) : super(buffer);
-
-  static SelectorByteInput fromHex(String hex, SelectorsMap selectors) {
-    final Uint8List buffer = decodeHex(hex);
-    final String key = encodeHex(buffer.sublist(0, 4));
-    final int? index = selectors['0x$key'];
-    if (index == null) {
-      throw Exception('Unknown selector: $key');
-    }
-    final SelectorByteInput selectorByteInput =
-        SelectorByteInput._(buffer.sublist(4));
-    selectorByteInput.index = index;
-    return selectorByteInput;
-  }
-
-  @override
-  int read() {
-    if (index == null) {
-      return super.read();
-    } else {
-      final int idx = index!;
-      index = null;
-      return idx;
-    }
-  }
-}
-
 class InkAbiDescription {
   final Map<String, dynamic> _project;
-  final Registry registry = Registry();
-  late final MetadataV14Expander _expander;
-  final Map<int, Codec> _siTypesCodec = <int, Codec>{};
 
   InkAbiDescription(this._project) {
-    _preParseTypes();
-    // Making first call to initialize and cache all the values
-    abiEvents();
+    events();
+    event();
     constructors();
     messages();
-  }
-
-  Codec<dynamic>? getCodec(int type) {
-    return _siTypesCodec[type];
-  }
-
-  void _preParseTypes() {
-    {
-      final List<dynamic> types = _project['types'];
-      for (int i = 0; i < types.length; i++) {
-        final String label = types[i]['type']['def'].keys.first;
-        types[i]['type']['def'] = <String, dynamic>{
-          label.capitalize(): types[i]['type']['def'][label]
-        };
-      }
-      for (int i = 0; i < types.length; i++) {
-        if (types[i]['type'].containsKey('path') &&
-            types[i]['type']['path'] is List) {
-          if (!['Option', 'Result'].contains(types[i]['type']['path'][0])) {
-            final List<dynamic> path = types[i]['type']['path'];
-            // TODO: Check if namespace is important or not.
-            //path.insert(0, namespace);
-            types[i]['type']['path'] = path;
-          }
-        } else {
-          types[i]['type']['path'] = <String>[];
-        }
-        if (types[i]['type']['def'].containsKey('Variant')) {
-          if (types[i]['type']['def']['Variant'].containsKey('variants')) {
-            final List<dynamic> variants =
-                types[i]['type']['def']['Variant']['variants'];
-            for (int j = 0; j < variants.length; j++) {
-              variants[j]['fields'] = <dynamic>[];
-            }
-            types[i]['type']['def']['Variant']['variants'] = variants;
-          }
-        }
-      }
-      _project['types'] = types;
-    }
-
-    _expander = MetadataV14Expander(_project['types']);
-    registry.registerCustomCodec(_expander.customCodecRegister);
-
-    for (int index = 0; index < _project['types'].length; index++) {
-      String? typeName = _expander.registeredSiType[index];
-      if (typeName == null) {
-        throw Exception('Types not found for index: $index');
-      }
-
-      Codec<dynamic>? codec = registry.getCodec(typeName);
-      if (codec != null) {
-        _siTypesCodec[index] = codec;
-        continue;
-      }
-      typeName = _expander.customCodecRegister[typeName];
-      if (typeName == null) {
-        throw Exception('Types not found for index: $index');
-      }
-      codec = registry.getCodec(typeName);
-      if (codec != null) {
-        _siTypesCodec[index] = codec;
-        continue;
-      }
-    }
   }
 
   SelectorsMap? _messageSelectorsValue;
@@ -120,86 +22,183 @@ class InkAbiDescription {
     return _constructorSelectorsValue!;
   }
 
-  SelectorsMap _selectors(String selectorType) {
+  SelectorsMap _selectors(final String selectorType) {
     final SelectorsMap map = <String, int>{};
-    {
-      final List<dynamic> messages = _project['spec'][selectorType];
-      for (int i = 0; i < messages.length; i++) {
-        map[messages[i]['selector']] = i;
-      }
+    final List<dynamic> messages = _project['spec'][selectorType];
+    for (int index = 0; index < messages.length; index++) {
+      map[messages[index]['selector']] = index;
     }
     return map;
   }
 
+  int? _messagesValue;
+  int messages() {
+    _messagesValue ??= _createMessagesType(_project['spec']['messages']);
+    return _messagesValue!;
+  }
+
+  int? _constructorsValue;
+  int constructors() {
+    _constructorsValue ??=
+        _createMessagesType(_project['spec']['constructors']);
+    return _constructorsValue!;
+  }
+
+  int _createMessagesType(final List list) {
+    if (list.isEmpty) {
+      throw ArgumentError('Invalid input list for creating message types');
+    }
+    final VariantCodecInterface object = VariantCodecInterface(
+      id: -1,
+      variants: _createVariants(list),
+    );
+    final int actualId = _add(object);
+    object.id = actualId;
+    return actualId;
+  }
+
   List<InkAbiEvent>? _abiEventsValue;
-  List<InkAbiEvent> abiEvents() {
-    if (_abiEventsValue == null) {
-      _abiEventsValue = <InkAbiEvent>[];
-      for (final eventValue in _project['spec']['events']) {
-        int amountIndexed = 0;
-        for (final arg in eventValue['args']) {
-          amountIndexed += arg['indexed'] ? 1 : 0;
-        }
-        _abiEventsValue!.add(InkAbiEvent(
-          name: _normalizeLabel(eventValue['label']),
-          type: _createComposite(eventValue),
-          amountIndexed: amountIndexed,
-          signatureTopic: eventValue['signature_topic'],
-        ));
+  List<InkAbiEvent> events() {
+    if (_abiEventsValue != null) {
+      return _abiEventsValue!;
+    }
+    _abiEventsValue = <InkAbiEvent>[];
+    for (final eventValue in _project['spec']['events']) {
+      int amountIndexed = 0;
+      for (final arg in eventValue['args']) {
+        amountIndexed += arg['indexed'] ? 1 : 0;
       }
+      _abiEventsValue!.add(InkAbiEvent(
+        name: _normalizeLabel(eventValue['label']),
+        type: _createComposite(eventValue),
+        amountIndexed: amountIndexed,
+        signatureTopic: eventValue['signature_topic'],
+      ));
     }
     return _abiEventsValue!;
   }
 
-  ComplexEnumCodec<dynamic>? _messagesValue;
-  ComplexEnumCodec<dynamic> messages() {
-    _messagesValue ??= _createMessagesType(_project['spec']['messages'])
-        as ComplexEnumCodec<dynamic>;
-    return _messagesValue!;
+  int? _eventIndexValue;
+  int event() {
+    if (_eventIndexValue != null) {
+      return _eventIndexValue!;
+    }
+    final object = VariantCodecInterface(
+      id: -1,
+      variants: _createVariants(_project['spec']['events']),
+      path: ['Event'],
+    );
+    _eventIndexValue = _add(object);
+    object.id = _eventIndexValue!;
+    return _eventIndexValue!;
   }
 
-  ComplexEnumCodec<dynamic>? _constructorsValue;
-  ComplexEnumCodec<dynamic> constructors() {
-    _constructorsValue ??= _createMessagesType(_project['spec']['constructors'])
-        as ComplexEnumCodec<dynamic>;
-    return _constructorsValue!;
-  }
-
-  /* ComplexEnumCodec<dynamic>? _eventValue;
-  ComplexEnumCodec<dynamic> event() {
-    _eventValue ??= _createMessagesType(_project['spec']['constructors'])
-        as ComplexEnumCodec<dynamic>;
-    return _eventValue!;
-  } */
-
-  Codec<dynamic> _createMessagesType(List<dynamic> list) {
-    final Map<int, MapEntry<String, Codec<dynamic>>> variants =
-        <int, MapEntry<String, Codec<dynamic>>>{};
-
+  List<Variants> _createVariants(final List list) {
+    final List<Variants> variants = <Variants>[];
     for (int index = 0; index < list.length; index++) {
-      final Map<String, dynamic> variant = list[index];
-      late final Codec<dynamic> codec;
-      if (variant['args'].isEmpty) {
-        // TODO: Check if much simpler approach can be followed here or not?
-        codec = NullCodec.codec;
-      } else {
-        codec = _createComposite(variant);
-      }
-      variants[index] = MapEntry(_normalizeLabel(variant['label']), codec);
+      final variantMap = list[index];
+      variants.add(
+        Variants(
+          name: _normalizeLabel(variantMap['label']),
+          index: index,
+          fields: _createFields(variantMap['args']),
+          docs: variantMap['docs']?.cast<String>(),
+        ),
+      );
     }
-    return ComplexEnumCodec.sparse(variants);
+    return variants;
   }
 
-  Codec<dynamic> _createComposite(Map<String, dynamic> map) {
-    final codecMap = <String, Codec<dynamic>>{};
-    for (final Map<String, dynamic> arg in map['args']!) {
-      codecMap[_normalizeLabel(arg['label'])] =
-          _siTypesCodec[arg['type']!['type']!]!;
-    }
-    return CompositeCodec(codecMap);
+  int _createComposite(final Map<String, dynamic> map) {
+    final CodecInterface composite = CompositeCodecInterface(
+      id: -1,
+      fields: _createFields(map['args']),
+      path: map['path'],
+      docs: map['docs']?.cast<String>(),
+    );
+    final actualId = _add(composite);
+    composite.id = actualId;
+    return actualId;
   }
 
-  String _normalizeLabel(String label) {
+  List<Field> _createFields(final List<dynamic> args) {
+    return args.map((final arg) {
+      return Field(
+        name: _normalizeLabel(arg['label']),
+        type: arg['type']['type'],
+        docs: arg['docs']?.cast<String>(),
+      );
+    }).toList();
+  }
+
+  String _normalizeLabel(final String label) {
     return label.replaceAll('::', '_');
+  }
+
+  int _add(final CodecInterface type) {
+    _types().add(type);
+    return _types().length - 1;
+  }
+
+  List<CodecInterface>? _typesValue;
+  List<CodecInterface> _types() {
+    if (_typesValue != null) {
+      return _typesValue!;
+    }
+    _typesValue = <CodecInterface>[];
+    for (int index = 0; index < _project['types']!.length; index++) {
+      final codecInterface = CodecInterface.fromJson(_project['types']![index]);
+      _typesValue!.add(codecInterface);
+    }
+    return _typesValue!;
+  }
+
+  List<CodecInterface>? _typesListValue;
+  List<CodecInterface> types() {
+    if (_typesListValue != null) {
+      return _typesListValue!;
+    }
+    _typesListValue = normalizeMetadataTypes(_types());
+    return _typesListValue!;
+  }
+
+  Map<int, Codec>? _codecTypesValue;
+  Map<int, Codec> codecTypes() {
+    if (_codecTypesValue != null) {
+      return _codecTypesValue!;
+    }
+    final List<dynamic> typesList = <dynamic>[];
+    final List<CodecInterface> typesInterfaces = types();
+    for (final CodecInterface type in typesInterfaces) {
+      typesList.add(type.toJson());
+    }
+    final MetadataV14Expander expander = MetadataV14Expander(typesList);
+    final Registry registry = Registry();
+    final Map<int, Codec> siTypesCodec = <int, Codec>{};
+    registry.registerCustomCodec(expander.customCodecRegister);
+
+    for (int index = 0; index < typesInterfaces.length; index++) {
+      String? typeName = expander.registeredSiType[index];
+      if (typeName == null) {
+        throw Exception('Types not found for index: $index');
+      }
+
+      Codec<dynamic>? codec = registry.getCodec(typeName);
+      if (codec != null) {
+        siTypesCodec[index] = codec;
+        continue;
+      }
+      typeName = expander.customCodecRegister[typeName];
+      if (typeName == null) {
+        throw Exception('Types not found for index: $index');
+      }
+      codec = registry.getCodec(typeName);
+      if (codec != null) {
+        siTypesCodec[index] = codec;
+        continue;
+      }
+    }
+    _codecTypesValue = siTypesCodec;
+    return siTypesCodec;
   }
 }

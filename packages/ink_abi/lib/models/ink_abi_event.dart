@@ -2,7 +2,7 @@ part of ink_abi;
 
 class InkAbiEvent {
   final String name;
-  final Codec<dynamic> type;
+  final int type;
   final int amountIndexed;
   final String? signatureTopic;
 

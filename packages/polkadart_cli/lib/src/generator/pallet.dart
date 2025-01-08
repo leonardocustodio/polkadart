@@ -102,8 +102,6 @@ class StorageHasher<G extends typegen.TypeDescriptor> {
         return StorageHasher.twoxx256(codec: codec);
       case metadata.StorageHasher.identity:
         return StorageHasher.identity(codec: codec);
-      default:
-        throw Exception('Unknown hasher type: ${hasher.name}');
     }
   }
 }

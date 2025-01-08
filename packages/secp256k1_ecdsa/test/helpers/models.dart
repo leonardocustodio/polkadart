@@ -8,8 +8,6 @@ class Models {
         return Ecdsa.fromJson(json);
       case ModelsType.points:
         return PointModel.fromJson(json);
-      default:
-        throw Exception('Invalid type');
     }
   }
 }
