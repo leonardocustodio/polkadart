@@ -35,6 +35,7 @@ This repo is a monorepo for `polkadart` and related packages.
 | [![version][pkg:substrate_bip39:version]][pkg:substrate_bip39]             | BIP39 (Bitcoin Improvement Proposal 39) pertains to the generation of mnemonic phrases for cryptographic keys. Creates human-readable phrases that map to the keys used on Substrate-based chains. |
 | [![version][pkg:substrate_metadata:version]][pkg:substrate_metadata]       | Provides the necessary tools to decode the metadata provided by a Substrate blockchain node. And can be used to easily decode constants, extrinsics, events, and other data written in the chain. |
 | [![version][pkg:ink_abi:version]][pkg:ink_abi]                             | Provides the necessary method to decode and encode ink abi. Making it possible to interact with smart contracts at Polkadot ecosystem.  |
+| [![version][pkg:ink_cli:version]][pkg:ink_cli]                             | A command-line tool that generates dart language types and definitions by interpreting the ink contract metadata.  |
 
 ## Documentation
 
@@ -49,10 +50,11 @@ This repo is a monorepo for `polkadart` and related packages.
 - [substrate_bip39](https://pub.dev/documentation/substrate_bip39/latest/)
 - [substrate_metadata](https://pub.dev/documentation/substrate_metadata/latest/)
 - [ink_abi](https://pub.dev/documentation/ink_abi/latest/)
+- [ink_cli](https://pub.dev/documentation/ink_cli/latest/)
 
 ## Community
 
- - [Telegram](https://t.me/polkadart) - A developer group where you can share your experience and ask for help
+ - [Matrix](https://matrix.to/#/%23polkadart:matrix.org) - A developer group where you can share your experience and ask for help
 
 ## Contributing
 
@@ -151,3 +153,7 @@ This repository is licensed under [Apache 2.0 license](https://github.com/leonar
 [pkg:ink_abi]: https://pub.dartlang.org/packages/ink_abi
 [pkg:ink_abi:version]: https://img.shields.io/pub/v/ink_abi?label=ink_abi
 [pkg:ink_abi:source]: ./packages/ink_abi
+
+[pkg:ink_cli]: https://pub.dartlang.org/packages/ink_cli
+[pkg:ink_cli:version]: https://img.shields.io/pub/v/ink_cli?label=ink_cli
+[pkg:ink_cli:source]: ./packages/ink_cli
