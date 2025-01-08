@@ -182,8 +182,6 @@ class ArrayDescriptor extends TypeDescriptor {
           return refs.list(ref: refs.string);
         case metadata.Primitive.Bool:
           return refs.list(ref: refs.bool);
-        default:
-          break;
       }
     }
     if (isCircular) {

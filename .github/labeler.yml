@@ -9,6 +9,10 @@ github-actions:
 "pkg: ink_abi":
 - changed-files:
   - any-glob-to-any-file: 'packages/ink_abi/**'
+  
+"pkg: ink_cli":
+- changed-files:
+  - any-glob-to-any-file: 'packages/ink_cli/**'
 
 "pkg: polkadart_scale_codec":
 - changed-files:

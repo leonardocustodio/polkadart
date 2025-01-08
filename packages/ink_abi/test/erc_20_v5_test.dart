@@ -14,7 +14,7 @@ void main() {
   test('decode constructor', () {
     final String data = '0x9bae9d5e00000c6d51c8f7aa0600000000000000';
     final decoded = inkAbi.decodeConstructor(data);
-    expect(decoded.value['total_supply'].toString(),
+    expect(decoded.value['totalSupply'].toString(),
         BigInt.tryParse('123000000000000000000').toString());
   });
 
