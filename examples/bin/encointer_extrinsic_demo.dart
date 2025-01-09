@@ -1,4 +1,3 @@
-
 /// This is an example for encointer that uses the `ChargeAssetTxPayment` signed
 /// extension with an asset id that is not number.
 ///
@@ -16,14 +15,19 @@
 /// ./bootstrap_demo_community.py --signer //Bob
 /// ```
 
-
 import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:polkadart/apis/apis.dart';
 import 'package:polkadart/polkadart.dart'
-    show AuthorApi, ExtrinsicPayload, Provider, SignatureType, SigningPayload, StateApi;
+    show
+        AuthorApi,
+        ExtrinsicPayload,
+        Provider,
+        SignatureType,
+        SigningPayload,
+        StateApi;
 import 'package:polkadart_example/generated/encointer/encointer.dart';
 import 'package:polkadart_example/generated/encointer/types/sp_runtime/multiaddress/multi_address.dart'
     as encointer;
@@ -32,8 +36,8 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 
-import 'package:polkadart_example/generated/encointer/types/encointer_primitives/communities/community_identifier.dart' show CommunityIdentifier;
-
+import 'package:polkadart_example/generated/encointer/types/encointer_primitives/communities/community_identifier.dart'
+    show CommunityIdentifier;
 
 Future<void> main(List<String> arguments) async {
   // Custom Signed Extension with TypeRegistry
@@ -45,26 +49,29 @@ Future<void> main(List<String> arguments) async {
     print('Public Key: $alicePublicKey');
     final bobMultiAddress = encointer.$MultiAddress().id(bob.publicKey.bytes);
 
-    final encointerProvider = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
+    final encointerProvider =
+        Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
     final encointerApi = Encointer(encointerProvider);
     final encointerState = StateApi(encointerProvider);
 
     final encointerRuntimeVersion = await encointerState.getRuntimeVersion();
     final encointerSpecVersion = encointerRuntimeVersion.specVersion;
-    final encointerTransactionVersion = encointerRuntimeVersion.transactionVersion;
+    final encointerTransactionVersion =
+        encointerRuntimeVersion.transactionVersion;
     final encointerBlock = await encointerProvider.send('chain_getBlock', []);
     final encointerBlockNumber =
         int.parse(encointerBlock.result['block']['header']['number']);
-    final encointerBlockHash = (await encointerProvider.send('chain_getBlockHash', []))
-        .result
-        .replaceAll('0x', '');
+    final encointerBlockHash =
+        (await encointerProvider.send('chain_getBlockHash', []))
+            .result
+            .replaceAll('0x', '');
     final encointerGenesisHash =
         (await encointerProvider.send('chain_getBlockHash', [0]))
             .result
             .replaceAll('0x', '');
 
-    final customCall =
-        encointerApi.tx.balances.transferKeepAlive(dest: bobMultiAddress, value: BigInt.from(1000000000000));
+    final customCall = encointerApi.tx.balances.transferKeepAlive(
+        dest: bobMultiAddress, value: BigInt.from(1000000000000));
     final customEncodedCall = customCall.encode();
     print('Custom Encoded Call: ${hex.encode(customEncodedCall)}');
 
@@ -83,7 +90,8 @@ Future<void> main(List<String> arguments) async {
     print('Alice address: ${alice.address}');
     print('Nonce: $nonce1');
 
-    final paymentAsset =  CommunityIdentifier(geohash: utf8.encode('sqm1v'),digest: hex.decode('f08c911c'));
+    final paymentAsset = CommunityIdentifier(
+        geohash: utf8.encode('sqm1v'), digest: hex.decode('f08c911c'));
 
     final payloadWithExtension = SigningPayload(
       method: customEncodedCall,
@@ -108,7 +116,6 @@ Future<void> main(List<String> arguments) async {
 
     final customSignature = alice.sign(customExtensionPayload);
     print('Signature: ${hex.encode(customSignature)}');
-
 
     final customExtrinsic = ExtrinsicPayload(
       signer: Uint8List.fromList(alice.publicKey.bytes),
