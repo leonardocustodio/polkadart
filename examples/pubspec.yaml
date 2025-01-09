@@ -30,5 +30,5 @@ polkadart:
     polkadot: wss://rpc.ibp.network/polkadot
     astar: wss://rpc.astar.network
     westend: wss://westend-rpc.polkadot.io
-    assethub: wss://encointer-kusama.dotters.network
+    assethub:  wss://westend-asset-hub-rpc.polkadot.io
     encointer: wss://encointer-kusama.dotters.network
