@@ -31,3 +31,4 @@ polkadart:
     astar: wss://rpc.astar.network
     westend: wss://westend-rpc.polkadot.io
     assethub: wss://westend-asset-hub-rpc.polkadot.io
+    encointer: wss://encointer-kusama.dotters.network
