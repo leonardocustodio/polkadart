@@ -1,4 +1,21 @@
-// ignore_for_file: non_constant_identifier_names
+
+/// This is an example for encointer that uses the `ChargeAssetTxPayment` signed
+/// extension with an asset id that is not number.
+///
+/// The example assumes that the following has been run:
+/// ```bash
+/// git clone git@github.com:encointer/encointer-node.git
+/// cd encointer-node
+/// cargo build --release
+/// ./target/release/encointer-node-notee --dev --enable-offchain-indexing true --rpc-methods unsafe -lencointer=debug,parity_ws=warn --rpc-external --rpc-port 9944
+/// ```
+///
+/// And in another terminal we run a script to create a test community:
+/// ```bash
+/// cd encointer-node/client
+/// ./bootstrap_demo_community.py --signer //Bob
+/// ```
+
 
 import 'dart:convert';
 import 'dart:typed_data';
