@@ -8,7 +8,8 @@ import '../typegen/typegen.dart'
         TypeDescriptor,
         TypeBuilder,
         GeneratedOutput;
-import '../typegen/runtime_metadata_v14.dart' show RuntimeMetadataV14;
+import 'package:substrate_metadata/substrate_metadata.dart'
+    show RuntimeMetadataV14;
 import './pallet.dart' show PalletGenerator;
 import './polkadart.dart' show PolkadartGenerator;
 
@@ -33,14 +34,14 @@ class ChainGenerator {
 
     // Get type generators
     final Map<int, TypeDescriptor> typeGenerators =
-        TypeDescriptor.fromTypes(metadata.registry, typesPath);
+        TypeDescriptor.fromTypes(metadata.types, typesPath);
 
     // Get pallet generators
     final List<PalletGenerator> palletGenerators = metadata.pallets
         // Remove Empty Pallets
         // TODO: remove this field once we support extrinsics
         .where((pallet) =>
-            pallet.call != null ||
+            pallet.calls != null ||
             pallet.storage != null ||
             pallet.constants.isNotEmpty)
         .map((pallet) => PalletGenerator.fromMetadata(
