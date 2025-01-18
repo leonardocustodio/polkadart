@@ -7,7 +7,7 @@ import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_cli/polkadart_cli.dart'
     show ChainGenerator, PubspecConfig;
 import 'package:substrate_metadata/substrate_metadata.dart'
-    show RuntimeMetadataV14;
+    show RuntimeMetadataV15, RuntimeMetadataV14;
 
 class ChainProperties {
   final RuntimeMetadataV14 metadata;
@@ -19,9 +19,10 @@ class ChainProperties {
     final provider = Provider.fromUri(uri);
     final api = StateApi(provider);
     final decodedMetadata = await api.getMetadata();
-    if (decodedMetadata.metadata is! RuntimeMetadataV14) {
+    if (decodedMetadata.metadata is! RuntimeMetadataV15 &&
+        decodedMetadata.metadata is! RuntimeMetadataV14) {
       await provider.disconnect();
-      throw Exception('Only metadata version 14 is supported');
+      throw Exception('Only metadata versions 14 and 15 are supported');
     }
     final version = await api.getRuntimeVersion();
     await provider.disconnect();

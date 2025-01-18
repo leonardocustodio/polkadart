@@ -49,15 +49,17 @@ class RuntimeMetadataPrefixedCodec implements Codec<RuntimeMetadataPrefixed> {
     }
     final version = U8Codec.codec.decode(input);
 
-    switch (version) {
-      case 14:
-        return RuntimeMetadataPrefixed(
+    return switch (version) {
+      15 => RuntimeMetadataPrefixed(
+          magicNumber: magicNumber,
+          metadata: RuntimeMetadataV15.codec.decode(input),
+        ),
+      14 => RuntimeMetadataPrefixed(
           magicNumber: magicNumber,
           metadata: RuntimeMetadataV14.codec.decode(input),
-        );
-      default:
-        throw Exception('Unsupported metadata version: $version');
-    }
+        ),
+      _ => throw Exception('Unsupported metadata version: $version'),
+    };
   }
 
   @override
