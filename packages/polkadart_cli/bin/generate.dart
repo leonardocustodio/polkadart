@@ -7,10 +7,10 @@ import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_cli/polkadart_cli.dart'
     show ChainGenerator, PubspecConfig;
 import 'package:substrate_metadata/substrate_metadata.dart'
-    show PolkadartMetadata;
+    show RuntimeMetadata;
 
 class ChainProperties {
-  final PolkadartMetadata metadata;
+  final RuntimeMetadata metadata;
   final RuntimeVersion version;
 
   ChainProperties(this.metadata, this.version);
@@ -28,7 +28,7 @@ class ChainProperties {
     }
 
     return ChainProperties(
-      decodedMetadata.metadata as PolkadartMetadata,
+      decodedMetadata.metadata as RuntimeMetadata,
       version,
     );
   }

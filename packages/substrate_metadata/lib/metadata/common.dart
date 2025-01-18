@@ -1,10 +1,5 @@
 part of metadata;
 
-abstract class RuntimeMetadata {
-  int runtimeMetadataVersion();
-  Map<String, dynamic> toJson();
-}
-
 /// Metadata prefixed by 4-bytes for reserved usage (currently magic number)
 class RuntimeMetadataPrefixed {
   final int magicNumber;

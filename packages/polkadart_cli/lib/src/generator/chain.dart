@@ -9,7 +9,7 @@ import '../typegen/typegen.dart'
         TypeBuilder,
         GeneratedOutput;
 import 'package:substrate_metadata/substrate_metadata.dart'
-    show PolkadartMetadata;
+    show RuntimeMetadata;
 import './pallet.dart' show PalletGenerator;
 import './polkadart.dart' show PolkadartGenerator;
 
@@ -28,7 +28,7 @@ class ChainGenerator {
   factory ChainGenerator.fromMetadata(
       {required Directory basePath,
       required chainName,
-      required PolkadartMetadata metadata}) {
+      required RuntimeMetadata metadata}) {
     final typesPath = path.join(basePath.path, 'types');
     final palletsPath = path.join(basePath.path, 'pallets');
 

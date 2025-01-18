@@ -1,8 +1,8 @@
 part of metadata;
 
 /// The metadata of a runtime.
-class RuntimeMetadataV15 extends PolkadartMetadata {
-  static const $PolkadartMetadataCodec codec = $PolkadartMetadataCodec._();
+class RuntimeMetadataV15 extends RuntimeMetadata {
+  static const $RuntimeMetadataCodec codec = $RuntimeMetadataCodec._();
 
   RuntimeMetadataV15({
     required List<PortableType> types,

@@ -1,7 +1,7 @@
 part of metadata;
 
 /// The metadata of a runtime.
-class RuntimeMetadataV14 implements PolkadartMetadata {
+class RuntimeMetadataV14 implements RuntimeMetadata {
   /// Type registry containing all types used in the metadata.
   @override
   final List<PortableType> types;

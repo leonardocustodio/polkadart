@@ -1,7 +1,7 @@
 part of metadata;
 
 /// The metadata of a runtime.
-abstract class PolkadartMetadata implements RuntimeMetadata {
+abstract class RuntimeMetadata {
   /// Type registry containing all types used in the metadata.
   final List<PortableType> types;
 
@@ -23,9 +23,9 @@ abstract class PolkadartMetadata implements RuntimeMetadata {
   /// custom.
   final CustomMetadata custom;
 
-  static const $PolkadartMetadataCodec codec = $PolkadartMetadataCodec._();
+  static const $RuntimeMetadataCodec codec = $RuntimeMetadataCodec._();
 
-  PolkadartMetadata({
+  RuntimeMetadata({
     required this.types,
     required this.pallets,
     required this.extrinsic,
@@ -39,10 +39,8 @@ abstract class PolkadartMetadata implements RuntimeMetadata {
     return types.firstWhere((type) => type.id == id);
   }
 
-  @override
   int runtimeMetadataVersion();
 
-  @override
   Map<String, dynamic> toJson() => {
         'types': types.map((type) => type.toJson()).toList(),
         'pallets': pallets.map((pallet) => pallet.toJson()).toList(),
@@ -54,11 +52,11 @@ abstract class PolkadartMetadata implements RuntimeMetadata {
       };
 }
 
-class $PolkadartMetadataCodec implements Codec<PolkadartMetadata> {
-  const $PolkadartMetadataCodec._();
+class $RuntimeMetadataCodec implements Codec<RuntimeMetadata> {
+  const $RuntimeMetadataCodec._();
 
   @override
-  PolkadartMetadata decode(Input input) {
+  RuntimeMetadata decode(Input input) {
     final types = SequenceCodec(PortableType.codec).decode(input);
     final pallets = SequenceCodec(PalletMetadata.codec).decode(input);
     final extrinsic = ExtrinsicMetadata.codec.decode(input);
@@ -78,14 +76,14 @@ class $PolkadartMetadataCodec implements Codec<PolkadartMetadata> {
   }
 
   @override
-  Uint8List encode(PolkadartMetadata metadata) {
+  Uint8List encode(RuntimeMetadata metadata) {
     final output = ByteOutput(sizeHint(metadata));
     encodeTo(metadata, output);
     return output.toBytes(copy: false);
   }
 
   @override
-  void encodeTo(PolkadartMetadata metadata, Output output) {
+  void encodeTo(RuntimeMetadata metadata, Output output) {
     SequenceCodec(PortableType.codec).encodeTo(metadata.types, output);
     SequenceCodec(PalletMetadata.codec).encodeTo(metadata.pallets, output);
     ExtrinsicMetadata.codec.encodeTo(metadata.extrinsic, output);
@@ -96,7 +94,7 @@ class $PolkadartMetadataCodec implements Codec<PolkadartMetadata> {
   }
 
   @override
-  int sizeHint(PolkadartMetadata metadata) {
+  int sizeHint(RuntimeMetadata metadata) {
     int size = SequenceCodec(PortableType.codec).sizeHint(metadata.types);
     size += SequenceCodec(PalletMetadata.codec).sizeHint(metadata.pallets);
     size += ExtrinsicMetadata.codec.sizeHint(metadata.extrinsic);
@@ -177,8 +175,6 @@ enum StorageHasher {
         return 'Twox64Concat';
       case identity:
         return 'Identity';
-      default:
-        return name;
     }
   }
 }

@@ -22,7 +22,7 @@ class PolkadartGenerator {
   String filePath;
   String name;
   List<PalletGenerator> pallets;
-  m.PolkadartMetadata metadata;
+  m.RuntimeMetadata metadata;
 
   PolkadartGenerator({
     required this.filePath,
