@@ -55,6 +55,8 @@ This repo is a monorepo for `polkadart` and related packages.
 ## Community
 
  - [Matrix](https://matrix.to/#/%23polkadart:matrix.org) - A developer group where you can share your experience and ask for help
+ - [Polkadot Forum](https://forum.polkadot.network/t/introducing-polkadart-a-dart-and-flutter-library-for-polkadot-based-blockchains/10697) - The polkadart thread on the official polkadot forum 
+ - [Encointer Wallet](https://github.com/encointer/encointer-wallet-flutter) - A mobile wallet made on flutter that uses polkadart
 
 ## Contributing
 
