@@ -6,11 +6,11 @@ import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_cli/polkadart_cli.dart'
     show ChainGenerator, PubspecConfig;
-import 'package:polkadart_cli/src/typegen/runtime_metadata_v14.dart'
-    show RuntimeMetadataV14;
+import 'package:substrate_metadata/substrate_metadata.dart'
+    show RuntimeMetadata;
 
 class ChainProperties {
-  final RuntimeMetadataV14 metadata;
+  final RuntimeMetadata metadata;
   final RuntimeVersion version;
 
   ChainProperties(this.metadata, this.version);
@@ -19,33 +19,19 @@ class ChainProperties {
     final provider = Provider.fromUri(uri);
     final api = StateApi(provider);
     final decodedMetadata = await api.getMetadata();
-    if (decodedMetadata.version != 14) {
-      await provider.disconnect();
-      throw Exception('Only metadata version 14 is supported');
-    }
     final version = await api.getRuntimeVersion();
+
     await provider.disconnect();
+
+    if (![14, 15].contains(decodedMetadata.metadata.runtimeMetadataVersion())) {
+      throw Exception('Only metadata versions 14 and 15 are supported');
+    }
+
     return ChainProperties(
-      RuntimeMetadataV14.fromJson(decodedMetadata.toJson()['metadata']),
+      decodedMetadata.metadata as RuntimeMetadata,
       version,
     );
   }
-}
-
-Future<ChainProperties> chainProperties(Uri url) async {
-  final provider = Provider.fromUri(url);
-  final api = StateApi(provider);
-  final decodedMetadata = await api.getMetadata();
-  if (decodedMetadata.version != 14) {
-    await provider.disconnect();
-    throw Exception('Only metadata version 14 is supported');
-  }
-  final version = await api.getRuntimeVersion();
-  await provider.disconnect();
-  return ChainProperties(
-    RuntimeMetadataV14.fromJson(decodedMetadata.toJson()['metadata']),
-    version,
-  );
 }
 
 void main(List<String> args) async {
@@ -70,7 +56,8 @@ void main(List<String> args) async {
     final chain = entry.value;
 
     // Get chain properties
-    final ChainProperties properties = await chainProperties(chain.metadataUri);
+    final ChainProperties properties =
+        await ChainProperties.fromURL(chain.metadataUri);
 
     // Create chain directory
     final chainDirectory =
