@@ -90,9 +90,9 @@ class $PolkadartMetadataCodec implements Codec<PolkadartMetadata> {
     SequenceCodec(PalletMetadata.codec).encodeTo(metadata.pallets, output);
     ExtrinsicMetadata.codec.encodeTo(metadata.extrinsic, output);
     TypeIdCodec.codec.encodeTo(metadata.runtimeTypeId, output);
-    SequenceCodec(ApiMetadata.codec).encodeTo(metadata.apis!, output);
-    OuterEnumMetadata.codec.encodeTo(metadata.outerEnums!, output);
-    CustomMetadata.codec.encodeTo(metadata.custom!, output);
+    SequenceCodec(ApiMetadata.codec).encodeTo(metadata.apis, output);
+    OuterEnumMetadata.codec.encodeTo(metadata.outerEnums, output);
+    CustomMetadata.codec.encodeTo(metadata.custom, output);
   }
 
   @override
@@ -101,9 +101,9 @@ class $PolkadartMetadataCodec implements Codec<PolkadartMetadata> {
     size += SequenceCodec(PalletMetadata.codec).sizeHint(metadata.pallets);
     size += ExtrinsicMetadata.codec.sizeHint(metadata.extrinsic);
     size += TypeIdCodec.codec.sizeHint(metadata.runtimeTypeId);
-    size += SequenceCodec(ApiMetadata.codec).sizeHint(metadata.apis!);
-    size += OuterEnumMetadata.codec.sizeHint(metadata.outerEnums!);
-    size += CustomMetadata.codec.sizeHint(metadata.custom!);
+    size += SequenceCodec(ApiMetadata.codec).sizeHint(metadata.apis);
+    size += OuterEnumMetadata.codec.sizeHint(metadata.outerEnums);
+    size += CustomMetadata.codec.sizeHint(metadata.custom);
     return size;
   }
 }
@@ -1375,10 +1375,9 @@ class $CustomMetadataCodec implements Codec<CustomMetadata> {
 
   @override
   int sizeHint(CustomMetadata metadata) {
-    int size = BTreeMapCodec(
+    return BTreeMapCodec(
             keyCodec: StrCodec.codec, valueCodec: CustomMetadataEntry.codec)
         .sizeHint(metadata.map);
-    return size;
   }
 }
 
