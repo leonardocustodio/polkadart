@@ -49,6 +49,8 @@ class RuntimeMetadataPrefixedCodec implements Codec<RuntimeMetadataPrefixed> {
     }
     final version = U8Codec.codec.decode(input);
 
+    print('Metadata version: $version');
+
     return switch (version) {
       15 => RuntimeMetadataPrefixed(
           magicNumber: magicNumber,

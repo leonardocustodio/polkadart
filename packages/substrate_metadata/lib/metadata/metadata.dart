@@ -19,5 +19,6 @@ import '../scale_info/scale_info.dart' show TypeId, TypeIdCodec, PortableType;
 import 'package:convert/convert.dart' show hex;
 
 part 'common.dart';
+part 'polkadart.dart';
 part 'v14.dart';
 part 'v15.dart';

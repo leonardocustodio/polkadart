@@ -23,6 +23,14 @@ class $PortableType implements Codec<PortableType> {
   PortableType decode(Input input) {
     final id = TypeIdCodec.codec.decode(input);
     final type = TypeMetadata.codec.decode(input);
+
+    final runtimeCall = type.path.contains('RuntimeCall');
+    final runtimeEvent = type.path.contains('RuntimeEvent');
+    final runtimeError = type.path.contains('RuntimeError');
+    if (runtimeCall || runtimeEvent || runtimeError) {
+      print('Runtime type: ${type.path}');
+    }
+
     return PortableType(
       id: id,
       type: type,
