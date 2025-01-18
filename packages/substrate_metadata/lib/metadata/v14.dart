@@ -19,17 +19,13 @@ class RuntimeMetadataV14 implements PolkadartMetadata {
   final TypeId runtimeTypeId;
 
   @override
-  List<ApiMetadata> get apis => [];
+  final List<ApiMetadata> apis = [];
 
   @override
-  CustomMetadata get custom => CustomMetadata(map: {});
+  final CustomMetadata custom = CustomMetadata(map: {});
 
   @override
-  OuterEnumMetadata get outerEnums => OuterEnumMetadata(
-        callType: 0,
-        eventType: 0,
-        errorType: 0,
-      ); // TODO: Implement
+  final OuterEnumMetadata outerEnums;
 
   static const $RuntimeMetadataCodecV14 codec = $RuntimeMetadataCodecV14._();
 
@@ -38,6 +34,7 @@ class RuntimeMetadataV14 implements PolkadartMetadata {
     required this.pallets,
     required this.extrinsic,
     required this.runtimeTypeId,
+    required this.outerEnums,
   });
 
   @override
@@ -62,12 +59,40 @@ class RuntimeMetadataV14 implements PolkadartMetadata {
 class $RuntimeMetadataCodecV14 implements Codec<RuntimeMetadataV14> {
   const $RuntimeMetadataCodecV14._();
 
+  OuterEnumMetadata generateOuterEnums(List<PortableType> types) {
+    var callType = 0;
+    var eventType = 0;
+    var errorType = 0;
+
+    for (final type in types) {
+      if (type.type.path.contains('RuntimeCall')) {
+        callType = type.id;
+      }
+      if (type.type.path.contains('RuntimeEvent')) {
+        eventType = type.id;
+      }
+      if (type.type.path.contains('RuntimeError')) {
+        errorType = type.id;
+      }
+
+      // TODO: It is possible that RuntimeError doesn't exists in the metadata
+      // In that case, we should create a new type RuntimeError and add it
+      // See: https://github.com/paritytech/subxt/blob/2d9de19040c862e1a7c97d572839983e43f336ea/metadata/src/from_into/v14.rs#L354-L389
+    }
+
+    return OuterEnumMetadata(
+      callType: callType,
+      eventType: eventType,
+      errorType: errorType,
+    );
+  }
+
   @override
   RuntimeMetadataV14 decode(Input input) {
     final types = SequenceCodec(PortableType.codec).decode(input);
     final pallets = SequenceCodec(PalletMetadataV14.codec).decode(input);
     final extrinsic = ExtrinsicMetadataV14.codec.decode(input, types: types);
-    print('Extrinsic: ${extrinsic.toJson()}');
+    final outerEnums = generateOuterEnums(types);
 
     final runtimeTypeId = TypeIdCodec.codec.decode(input);
     return RuntimeMetadataV14(
@@ -75,6 +100,7 @@ class $RuntimeMetadataCodecV14 implements Codec<RuntimeMetadataV14> {
       pallets: pallets,
       extrinsic: extrinsic,
       runtimeTypeId: runtimeTypeId,
+      outerEnums: outerEnums,
     );
   }
 

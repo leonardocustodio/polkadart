@@ -154,7 +154,7 @@ class StateApi<P extends Provider> {
     final response = await _provider.send('state_getMetadata', params);
     final metadataPrefixed = RuntimeMetadataPrefixed.fromHex(response.result);
     runtimeMetadata ??= metadataPrefixed;
-    return RuntimeMetadataPrefixed.fromHex(response.result);
+    return metadataPrefixed;
   }
 
   /// Get the runtime version.
