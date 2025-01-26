@@ -28,12 +28,13 @@ class SequenceDescriptor extends TypeDescriptor {
         case metadata.Primitive.U8:
         case metadata.Primitive.U16:
         case metadata.Primitive.U32:
-        case metadata.Primitive.U64:
         case metadata.Primitive.I8:
         case metadata.Primitive.I16:
         case metadata.Primitive.I32:
-        case metadata.Primitive.I64:
           return refs.list(ref: refs.int);
+        case metadata.Primitive.U64:
+        case metadata.Primitive.I64:
+          return refs.list(ref: refs.bigInt);
         default:
           break;
       }
@@ -108,6 +109,22 @@ class SequenceDescriptor extends TypeDescriptor {
     return literalList(values, refs.int).asLiteralValue();
   }
 
+  LiteralValue listToExpressionBigInt(List<BigInt> values, bool constant) {
+    final TypeReference listType = refs.list(ref: refs.bigInt);
+    if (!constant && values.every((value) => value == BigInt.zero)) {
+      return listType.newInstanceNamed(
+          'filled',
+          [literalNum(values.length), refer('BigInt.zero')],
+          {'growable': literalTrue}).asLiteralValue();
+    }
+
+    final bigIntExpressions = values.map((value) {
+      return refer('BigInt.from').call([literalNum(value.toInt())]);
+    }).toList();
+
+    return literalList(bigIntExpressions, refs.bigInt).asLiteralValue();
+  }
+
   @override
   LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     if (typeDef is PrimitiveDescriptor) {
@@ -124,7 +141,7 @@ class SequenceDescriptor extends TypeDescriptor {
           return listToExpression(list, constant);
         case metadata.Primitive.U64:
           final list = U64SequenceCodec.codec.decode(input);
-          return listToExpression(list, constant);
+          return listToExpressionBigInt(list, constant);
         case metadata.Primitive.I8:
           final list = I8SequenceCodec.codec.decode(input);
           return listToExpression(list, constant);
@@ -136,7 +153,7 @@ class SequenceDescriptor extends TypeDescriptor {
           return listToExpression(list, constant);
         case metadata.Primitive.I64:
           final list = I64SequenceCodec.codec.decode(input);
-          return listToExpression(list, constant);
+          return listToExpressionBigInt(list, constant);
         default:
           break;
       }
@@ -162,12 +179,12 @@ class SequenceDescriptor extends TypeDescriptor {
         case metadata.Primitive.Char:
         case metadata.Primitive.U16:
         case metadata.Primitive.U32:
-        case metadata.Primitive.U64:
         case metadata.Primitive.I8:
         case metadata.Primitive.I16:
         case metadata.Primitive.I32:
-        case metadata.Primitive.I64:
           return refs.list(ref: refs.int);
+        case metadata.Primitive.U64:
+        case metadata.Primitive.I64:
         case metadata.Primitive.U128:
         case metadata.Primitive.I128:
         case metadata.Primitive.U256:
