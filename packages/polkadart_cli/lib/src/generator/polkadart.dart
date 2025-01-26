@@ -12,7 +12,7 @@ import 'package:code_builder/code_builder.dart'
         FieldModifier,
         MethodModifier;
 import 'package:path/path.dart' as p;
-import '../typegen/runtime_metadata_v14.dart' as m;
+import 'package:substrate_metadata/substrate_metadata.dart' as m;
 import './pallet.dart' show PalletGenerator;
 import '../typegen/references.dart' as refs;
 import '../typegen/typegen.dart' show GeneratedOutput;
@@ -22,7 +22,7 @@ class PolkadartGenerator {
   String filePath;
   String name;
   List<PalletGenerator> pallets;
-  m.RuntimeMetadataV14 metadata;
+  m.RuntimeMetadata metadata;
 
   PolkadartGenerator({
     required this.filePath,
@@ -51,10 +51,10 @@ class PolkadartGenerator {
           final String signedExtensionTypes =
               metadata.extrinsic.signedExtensions
                   .where((extension) {
-                    final type = extension.type;
-                    final typeDef = metadata.registry[type].typeDef;
+                    final typeID = extension.type;
+                    final typeDef = metadata.typeById(typeID).type.typeDef;
                     return (typeDef is m.TypeDefTuple &&
-                            typeDef.types.isNotEmpty) ||
+                            typeDef.fields.isNotEmpty) ||
                         (typeDef is m.TypeDefComposite &&
                             typeDef.fields.isNotEmpty) ||
                         (typeDef is! m.TypeDefComposite &&
@@ -68,10 +68,10 @@ class PolkadartGenerator {
           final String signedExtensionExtra =
               metadata.extrinsic.signedExtensions
                   .where((extension) {
-                    final type = extension.additionalSigned;
-                    final typeDef = metadata.registry[type].typeDef;
+                    final typeID = extension.additionalSigned;
+                    final typeDef = metadata.typeById(typeID).type.typeDef;
                     return (typeDef is m.TypeDefTuple &&
-                            typeDef.types.isNotEmpty) ||
+                            typeDef.fields.isNotEmpty) ||
                         (typeDef is m.TypeDefComposite &&
                             typeDef.fields.isNotEmpty) ||
                         (typeDef is! m.TypeDefComposite &&
@@ -230,7 +230,7 @@ class PolkadartGenerator {
               Constructor((b) => b..constant = false),
             )
             ..fields.addAll(
-              pallets.where((pallet) => pallet.txs.isNotEmpty).map(
+              pallets.where((pallet) => pallet.runtimeCall != null).map(
                     (pallet) => Field(
                       (b) => b
                         ..name = sanitize(pallet.name)

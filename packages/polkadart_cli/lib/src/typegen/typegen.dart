@@ -79,7 +79,7 @@ import '../utils/utils.dart'
         sanitizeClassName,
         sanitizeDocs;
 import './class_builder.dart' as classbuilder;
-import './runtime_metadata_v14.dart' as metadata;
+import 'package:substrate_metadata/substrate_metadata.dart' as metadata;
 import './references.dart' as refs;
 
 part './types/array.dart';

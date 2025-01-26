@@ -1,6 +1,6 @@
 name: substrate_metadata
 description: Metadata types for Substrate runtimes
-version: 1.2.3
+version: 1.3.0
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/substrate_metadata
 repository: https://github.com/leonardocustodio/polkadart
 
@@ -8,10 +8,11 @@ environment:
   sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
+  convert: ^3.1.1 # BSD-3-Clause
   equatable: ^2.0.5
-  json_schema2: ^2.0.2+9 # MIT
+  json_schema: ^5.2.0
   pointycastle: ^3.6.2 # BSD-3-Clause
-  polkadart_scale_codec: ^1.2.0
+  polkadart_scale_codec: ^1.3.0
   utility: ^1.0.3
 
 dev_dependencies:

@@ -10,6 +10,8 @@ jobs:
     strategy:
       matrix:
         package:
+          - ink_abi
+          - ink_cli
           - polkadart
           - polkadart_cli
           - polkadart_keyring

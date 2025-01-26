@@ -2,7 +2,7 @@ library utils;
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:json_schema2/json_schema2.dart';
+import 'package:json_schema/json_schema.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import '../constants/spec_version_schema.dart';
 import '../exceptions/exceptions.dart';

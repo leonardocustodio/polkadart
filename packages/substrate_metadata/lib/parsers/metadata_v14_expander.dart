@@ -16,6 +16,7 @@ class MetadataV14Expander {
       final primitive = item['type']?['def']?['Primitive'];
       if (primitive != null) {
         registeredSiType[item['id']] = primitive;
+        customCodecRegister[primitive] = primitive;
       }
     }
     for (var item in id2Portable) {
@@ -81,12 +82,14 @@ class MetadataV14Expander {
       return registeredSiType[id]!;
     }
     if (one['def']?['Variant'] != null) {
-      final String variantType = one['path'][0];
-      switch (variantType) {
-        case 'Option':
-          return _exploreOption(id, one, id2Portable);
-        case 'Result':
-          return _exploreResult(id, one, id2Portable);
+      if (one['path'] is List && one['path'].length > 0) {
+        final String variantType = one['path'][0];
+        switch (variantType) {
+          case 'Option':
+            return _exploreOption(id, one, id2Portable);
+          case 'Result':
+            return _exploreResult(id, one, id2Portable);
+        }
       }
       return _exploreEnum(id, one, id2Portable);
     }
@@ -115,7 +118,17 @@ class MetadataV14Expander {
       }
     }
 
-    String genName = path.isNotEmpty ? path.last : '';
+    String genName = '';
+    if (path.isNotEmpty) {
+      genName = path.last;
+    } else {
+      if (siTypeId < id2Portable.length) {
+        genName = _fetchTypeName(siTypeId, id2Portable[siTypeId], id2Portable);
+      }
+      if (genName.trim().isEmpty) {
+        genName = siTypeId.toString();
+      }
+    }
     if (registeredTypeNames.contains(genName)) {
       genName = path.join(':');
     }
@@ -154,14 +167,15 @@ class MetadataV14Expander {
 
   String _exploreComposite(
       int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+    if (one['def']['Composite']?['fields'] == null ||
+        one['def']['Composite']['fields'].length == 0) {
+      registeredSiType[id] = 'Null';
+      return 'Null';
+    }
     final String typeString = _genPathName(one['path'], id, {}, []);
     registeredTypeNames.add(typeString);
     registeredSiType[id] = typeString;
 
-    if (one['def']['Composite']['fields'].length == 0) {
-      registeredSiType[id] = 'Null';
-      return 'Null';
-    }
     if (one['def']['Composite']['fields'].length == 1) {
       final int siType = one['def']['Composite']['fields'][0]['type'];
       final String subType = registeredSiType[siType] ??
@@ -222,6 +236,8 @@ class MetadataV14Expander {
     }
 
     registeredSiType[id] = '(${tuplesList.join(', ')})';
+
+    customCodecRegister[registeredSiType[id]!] = registeredSiType[id];
     return registeredSiType[id]!;
   }
 
@@ -269,6 +285,10 @@ class MetadataV14Expander {
     if (registeredSiType[id] != null) {
       return registeredSiType[id]!;
     }
+    if (one['def']?['Variant']?['variants'] == null) {
+      registeredSiType[id] = 'Null';
+      return registeredSiType[id]!;
+    }
 
     final String typeString = _genPathName(one['path'], id, {}, []);
     registeredTypeNames.add(typeString);
@@ -282,25 +302,27 @@ class MetadataV14Expander {
         <int, MapEntry<String, dynamic>>{};
 
     for (final Map<String, dynamic> variant in variants) {
-      final int index = variant['index'];
-      final String name = variant['name'];
-      variantNameMap[index] = MapEntry(name, 'Null');
+      final int variantIndex = variant['index'];
+      final String variantName = variant['name'];
+      variantNameMap[variantIndex] = MapEntry(variantName, 'Null');
 
-      switch (variant['fields'].length) {
-        case 0:
-          break;
-        case 1:
-          final int siType = variant['fields'][0]['type'];
-          variantNameMap[index] = MapEntry(
-              name,
-              registeredSiType[siType] ??
-                  _genPathName(id2Portable[siType]['type']['path'], siType,
-                      id2Portable[siType], id2Portable));
-          break;
-        default:
-          // field count> 1, enum one element is struct
-          // If there is no name the fields are a tuple
-          if (variant['fields'][0]['name'] == null) {
+      if (variant['fields'] != null && variant['fields'].isNotEmpty) {
+        if (variant['fields'][0]['name'] == null) {
+          //
+          // Fields are of type either tuple or single type
+          final int fieldsLength = variant['fields'].length;
+          if (fieldsLength == 1) {
+            //
+            // Single type Variant
+            final int siType = variant['fields'][0]['type'];
+            variantNameMap[variantIndex] = MapEntry(
+                variantName,
+                registeredSiType[siType] ??
+                    _genPathName(id2Portable[siType]['type']['path'], siType,
+                        id2Portable[siType], id2Portable));
+          } else {
+            //
+            // Tuple Variant
             String typeMapping = '';
             for (Map<String, dynamic> field in variant['fields']) {
               final int siType = field['type'];
@@ -312,10 +334,12 @@ class MetadataV14Expander {
                   _genPathName(id2Portable[siType]['type']['path'], siType,
                       id2Portable[siType], id2Portable);
             }
-            variantNameMap[index] = MapEntry(name, '($typeMapping)');
-            break;
+            variantNameMap[variantIndex] =
+                MapEntry(variantName, '($typeMapping)');
           }
-
+        } else {
+          //
+          // Struct Variant
           final Map<String, String> typeMapping = {};
           for (Map<String, dynamic> field in variant['fields']) {
             final String valueName = field['name'];
@@ -325,8 +349,8 @@ class MetadataV14Expander {
                     id2Portable[siType], id2Portable);
             typeMapping[valueName] = subType;
           }
-          variantNameMap[index] = MapEntry(name, typeMapping);
-          break;
+          variantNameMap[variantIndex] = MapEntry(variantName, typeMapping);
+        }
       }
     }
 

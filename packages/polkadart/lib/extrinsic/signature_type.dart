@@ -26,8 +26,6 @@ extension KeyPairExtension on keyring.KeyPair {
         return SignatureType.ecdsa;
       case keyring.KeyPairType.ed25519:
         return SignatureType.ed25519;
-      default:
-        throw UnsupportedError('Unsupported KeyPair type');
     }
   }
 }

@@ -6,9 +6,9 @@
 <a href="https://github.com/leonardocustodio/polkadart"><img src="https://img.shields.io/github/stars/leonardocustodio/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=Stars" alt="Star on Github"></a>
 <a href="https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml"><img src="https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml/badge.svg?branch=main" alt="build"></a>
 <a href="https://codecov.io/gh/leonardocustodio/polkadart"><img src="https://img.shields.io/codecov/c/github/leonardocustodio/polkadart?label=Codecov&token=HG3K4LW5UN" alt="Codecov"></a>
-<a href="#contributors"><img src="https://img.shields.io/github/all-contributors/leonardocustodio/polkadart?color=ee8449&style=flat-square&label=All%20Contributors" alt="All contributors"></a>
+<a href="#contributors"><img src="https://img.shields.io/github/all-contributors/leonardocustodio/polkadart?color=ee8449&label=All%20Contributors" alt="All contributors"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%202.0-purple.svg?label=License" alt="License: Apache 2"></a>
-<a href="https://t.me/polkadart"><img src="https://img.shields.io/badge/Chat-Telegram-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDI0YzYuNjI3IDAgMTItNS4zNzMgMTItMTJTMTguNjI3IDAgMTIgMCAwIDUuMzczIDAgMTJzNS4zNzMgMTIgMTIgMTJaIiBmaWxsPSJ1cmwoI2EpIi8+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01LjQyNSAxMS44NzFhNzk2LjQxNCA3OTYuNDE0IDAgMCAxIDYuOTk0LTMuMDE4YzMuMzI4LTEuMzg4IDQuMDI3LTEuNjI4IDQuNDc3LTEuNjM4LjEgMCAuMzIuMDIuNDcuMTQuMTIuMS4xNS4yMy4xNy4zMy4wMi4xLjA0LjMxLjAyLjQ3LS4xOCAxLjg5OC0uOTYgNi41MDQtMS4zNiA4LjYyMi0uMTcuOS0uNSAxLjE5OS0uODE5IDEuMjI5LS43LjA2LTEuMjI5LS40Ni0xLjg5OC0uOS0xLjA2LS42ODktMS42NDktMS4xMTktMi42NzgtMS43OTgtMS4xOS0uNzgtLjQyLTEuMjA5LjI2LTEuOTA4LjE4LS4xOCAzLjI0Ny0yLjk3OCAzLjMwNy0zLjIyOC4wMS0uMDMuMDEtLjE1LS4wNi0uMjEtLjA3LS4wNi0uMTctLjA0LS4yNS0uMDItLjExLjAyLTEuNzg4IDEuMTQtNS4wNTYgMy4zNDgtLjQ4LjMzLS45MDkuNDktMS4yOTkuNDgtLjQzLS4wMS0xLjI0OC0uMjQtMS44NjgtLjQ0LS43NS0uMjQtMS4zNDktLjM3LTEuMjk5LS43OS4wMy0uMjIuMzMtLjQ0Ljg5LS42NjlaIiBmaWxsPSIjZmZmIi8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMTEuOTkiIHkxPSIwIiB4Mj0iMTEuOTkiIHkyPSIyMy44MSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiMyQUFCRUUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyMjlFRDkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48L3N2Zz4K" alt="Telegram"></a>
+<a href="https://matrix.to/#/%23polkadart:matrix.org"><img alt="Matrix" src="https://img.shields.io/matrix/polkadart%3Amatrix.org?label=Matrix.org"></a>
 </p>
 
 ---
@@ -34,23 +34,29 @@ This repo is a monorepo for `polkadart` and related packages.
 | [![version][pkg:ss58:version]][pkg:ss58]                                   | SS58 is a cryptocurrency address format used by Substrate. This package includes utilities to encode and decode these addresses. |
 | [![version][pkg:substrate_bip39:version]][pkg:substrate_bip39]             | BIP39 (Bitcoin Improvement Proposal 39) pertains to the generation of mnemonic phrases for cryptographic keys. Creates human-readable phrases that map to the keys used on Substrate-based chains. |
 | [![version][pkg:substrate_metadata:version]][pkg:substrate_metadata]       | Provides the necessary tools to decode the metadata provided by a Substrate blockchain node. And can be used to easily decode constants, extrinsics, events, and other data written in the chain. |
+| [![version][pkg:ink_abi:version]][pkg:ink_abi]                             | Provides the necessary method to decode and encode ink abi. Making it possible to interact with smart contracts at Polkadot ecosystem.  |
+| [![version][pkg:ink_cli:version]][pkg:ink_cli]                             | A command-line tool that generates dart language types and definitions by interpreting the ink contract metadata.  |
 
 ## Documentation
 
 - [Official documentation](https://polkadart.dev)
-- [polkadart Package](https://pub.dev/documentation/polkadart/latest/)
-- [polkadart_cli Package](https://pub.dev/documentation/polkadart_cli/latest/)
-- [polkadart_keyring Package](https://pub.dev/documentation/polkadart_keyring/latest/)
-- [polkadart_scale_codec Package](https://pub.dev/documentation/polkadart_scale_codec/latest/)
-- [secp256k1_ecdsa Package](https://pub.dev/documentation/secp256k1_ecdsa/latest/)
-- [sr25519 Package](https://pub.dev/documentation/sr25519/latest/)
-- [ss58 Package](https://pub.dev/documentation/ss58/latest/)
-- [substrate_bip39 Package](https://pub.dev/documentation/substrate_bip39/latest/)
-- [substrate_metadata Package](https://pub.dev/documentation/substrate_metadata/latest/)
+- [polkadart](https://pub.dev/documentation/polkadart/latest/)
+- [polkadart_cli](https://pub.dev/documentation/polkadart_cli/latest/)
+- [polkadart_keyring](https://pub.dev/documentation/polkadart_keyring/latest/)
+- [polkadart_scale_codec](https://pub.dev/documentation/polkadart_scale_codec/latest/)
+- [secp256k1_ecdsa](https://pub.dev/documentation/secp256k1_ecdsa/latest/)
+- [sr25519](https://pub.dev/documentation/sr25519/latest/)
+- [ss58](https://pub.dev/documentation/ss58/latest/)
+- [substrate_bip39](https://pub.dev/documentation/substrate_bip39/latest/)
+- [substrate_metadata](https://pub.dev/documentation/substrate_metadata/latest/)
+- [ink_abi](https://pub.dev/documentation/ink_abi/latest/)
+- [ink_cli](https://pub.dev/documentation/ink_cli/latest/)
 
 ## Community
 
- - [Telegram](https://t.me/polkadart) - A developer group where you can share your experience and ask for help
+ - [Matrix](https://matrix.to/#/%23polkadart:matrix.org) - A developer group where you can share your experience and ask for help
+ - [Polkadot Forum](https://forum.polkadot.network/t/introducing-polkadart-a-dart-and-flutter-library-for-polkadot-based-blockchains/10697) - The polkadart thread on the official polkadot forum 
+ - [Encointer Wallet](https://github.com/encointer/encointer-wallet-flutter) - A mobile wallet made on flutter that uses polkadart
 
 ## Contributing
 
@@ -87,6 +93,7 @@ A heartfelt thank you to all the contributors for enriching the Polkadart projec
       <td align="center" valign="top" width="14.28%"><a href="https://avive.github.io"><img src="https://avatars.githubusercontent.com/u/96002?v=4?s=100" width="100px;" alt="Aviv Eyal"/><br /><sub><b>Aviv Eyal</b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=avive" title="Code">💻</a> <a href="https://github.com/leonardocustodio/polkadart/issues?q=author%3Aavive" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jpnovochadlo"><img src="https://avatars.githubusercontent.com/u/69369894?v=4?s=100" width="100px;" alt="jpnovochadlo"/><br /><sub><b>jpnovochadlo</b></sub></a><br /><a href="#business-jpnovochadlo" title="Business development">💼</a> <a href="#design-jpnovochadlo" title="Design">🎨</a> <a href="https://github.com/leonardocustodio/polkadart/commits?author=jpnovochadlo" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/tallesborges"><img src="https://avatars.githubusercontent.com/u/3486359?v=4?s=100" width="100px;" alt="Talles "/><br /><sub><b>Talles </b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=tallesborges" title="Code">💻</a> <a href="https://github.com/leonardocustodio/polkadart/commits?author=tallesborges" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://r3lab.com"><img src="https://avatars.githubusercontent.com/u/49204989?v=4?s=100" width="100px;" alt="Burak"/><br /><sub><b>Burak</b></sub></a><br /><a href="https://github.com/leonardocustodio/polkadart/commits?author=buraktabn" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
@@ -144,3 +151,11 @@ This repository is licensed under [Apache 2.0 license](https://github.com/leonar
 [pkg:substrate_metadata]: https://pub.dartlang.org/packages/substrate_metadata
 [pkg:substrate_metadata:version]: https://img.shields.io/pub/v/substrate_metadata?label=substrate_metadata
 [pkg:substrate_metadata:source]: ./packages/substrate_metadata
+
+[pkg:ink_abi]: https://pub.dartlang.org/packages/ink_abi
+[pkg:ink_abi:version]: https://img.shields.io/pub/v/ink_abi?label=ink_abi
+[pkg:ink_abi:source]: ./packages/ink_abi
+
+[pkg:ink_cli]: https://pub.dartlang.org/packages/ink_cli
+[pkg:ink_cli:version]: https://img.shields.io/pub/v/ink_cli?label=ink_cli
+[pkg:ink_cli:source]: ./packages/ink_cli

@@ -12,7 +12,7 @@ class SetCodec with Codec<List<String>> {
     assertion(bitLength > 0, 'bitLength should be greater than 0.');
     assertion(bitLength <= 256, 'bitLength should be less than 256.');
 
-    final codec = Registry().getSimpleCodecs('U$bitLength');
+    final codec = Registry.getSimpleCodecs('U$bitLength');
     assertion(codec != null, 'codec should not be null.');
 
     final setIndex = codec!.decode(input);
@@ -38,7 +38,7 @@ class SetCodec with Codec<List<String>> {
     assertion(bitLength > 0, 'bitLength should be greater than 0.');
     assertion(bitLength <= 256, 'bitLength should be less than 256.');
 
-    final codec = Registry().getSimpleCodecs('U$bitLength');
+    final codec = Registry.getSimpleCodecs('U$bitLength');
     assertion(codec != null, 'codec should not be null.');
 
     var setIndex = 0;
