@@ -1053,7 +1053,6 @@ class Contract {
   final Uint8List? blockHash;
 
   const Contract({required this.api, required this.address, this.blockHash});
-  
 
   ///
   ///Creates a new ERC-20 contract with the specified initial supply.
@@ -1079,11 +1078,13 @@ class Contract {
   /// Returns the amount which `spender` is still allowed to withdraw from `owner`.
   ///
   /// Returns `0` if no allowance has been set.
-  Future<Balance> allowance(final AccountId owner, final AccountId spender) async {
+  Future<Balance> allowance(
+      final AccountId owner, final AccountId spender) async {
     return await _stateCall<Balance>('0x6a00165e', [owner, spender]);
   }
 
-  Future<T> _stateCall<T>(final String selector, final List<dynamic> args) async {
+  Future<T> _stateCall<T>(
+      final String selector, final List<dynamic> args) async {
     final input = _abi.encodeMessageInput(selector, args);
     final data = encodeCall(address, input);
     final result = await api.call('ContractsApi_call', data, at: blockHash);

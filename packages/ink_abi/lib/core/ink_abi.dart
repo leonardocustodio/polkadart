@@ -28,7 +28,8 @@ class InkAbi {
     return scaleCodec[type]!;
   }
 
-  Uint8List encodeConstructorInput(final String selector, final List<dynamic> args) {
+  Uint8List encodeConstructorInput(
+      final String selector, final List<dynamic> args) {
     final constructor = getConstructor(selector);
     final ByteOutput output = ByteOutput();
     output.write(decodeHex(selector));
@@ -155,6 +156,7 @@ class InkAbi {
     }
     return _project['spec']['messages'][index];
   }
+
   dynamic getConstructor(final String selector) {
     final int? index = _constructorSelectors[selector];
     if (index == null) {

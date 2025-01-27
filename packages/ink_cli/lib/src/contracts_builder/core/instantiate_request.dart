@@ -1,13 +1,13 @@
 part of ink_cli;
 
 class InstantiateRequest {
-  final String _contractAddress;
+  final List<int> _contractAddress;
   final dynamic _result;
 
   const InstantiateRequest(this._contractAddress, this._result)
       : assert(_result != null);
 
-  String get contractAddress => _contractAddress;
+  List<int> get contractAddress => _contractAddress;
 
   get result => _result;
 

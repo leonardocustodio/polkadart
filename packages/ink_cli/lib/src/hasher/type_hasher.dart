@@ -1,6 +1,6 @@
 part of ink_cli;
 
-class TypeHasher extends Hasher {
+class TypeHasher extends HasherAbstract {
   final DCGHasher<CodecInterface> _dcg;
 
   TypeHasher(List<CodecInterface> types)
@@ -13,7 +13,7 @@ class TypeHasher extends Hasher {
 }
 
 Map<String, dynamic> _computeHash(
-    List<CodecInterface> types, Hasher hasher, CodecInterface type) {
+    List<CodecInterface> types, HasherAbstract hasher, CodecInterface type) {
   switch (type.kind) {
     //
     // Primitive

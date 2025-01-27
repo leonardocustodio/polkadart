@@ -1,32 +1,39 @@
 part of ink_cli;
 
-class InkCliContract {
+class ContractDeployer {
   final Provider provider;
   final RuntimeMetadata runtimeMetadata;
   final ScaleCodec codec;
 
-  InkCliContract(this.provider, this.runtimeMetadata, this.codec);
+  const ContractDeployer(this.provider, this.runtimeMetadata, this.codec);
 
-  static Future<InkCliContract> from({required final Provider provider}) async {
+  static Future<ContractDeployer> from({
+    required final Provider provider,
+  }) async {
     final runtimeMetadata = await StateApi(provider).getMetadata();
-    final codec = runtimeMetadata.chainInfo.scaleCodec;
-    codec.registry.registerCustomCodec(_contractDefinitions);
-    return InkCliContract(provider, runtimeMetadata, codec);
+    runtimeMetadata.chainInfo.scaleCodec.registry
+        .registerCustomCodec(_contractDefinitions);
+    return ContractDeployer(
+        provider, runtimeMetadata, runtimeMetadata.chainInfo.scaleCodec);
   }
 
-  Future<dynamic> deployContract({
+  Future<InstantiateRequest> deployContract({
     required final Uint8List code,
     required final String selector,
     required final KeyPair keypair,
-    required final List<dynamic> args,
+    required final List<dynamic> constructorArgs,
+    BigInt? storageDepositLimit,
     final InkAbi? inkAbi,
     final Map<String, dynamic> extraOptions = const <String, dynamic>{},
     Uint8List? salt,
     GasLimit? gasLimit,
+    final dynamic tip = 0,
+    final int eraPeriod = 0,
   }) async {
     late Uint8List encodedAbiSelector;
     if (inkAbi != null) {
-      encodedAbiSelector = inkAbi.encodeConstructorInput(selector, args);
+      encodedAbiSelector =
+          inkAbi.encodeConstructorInput(selector, constructorArgs);
     } else {
       encodedAbiSelector = decodeHex(selector);
     }
@@ -44,42 +51,35 @@ class InkCliContract {
       salt: salt,
       input: output.toBytes(),
     );
+    if (execResult.result.ok == null) {
+      throw Exception(
+          'Exception occurend when instantiating request: ${execResult.result.err}');
+    }
 
     gasLimit ??= GasLimit.from(execResult.gasRequired);
 
-    return;
-
-    /* 
-    late final Option storageDepositLimit;
-    if (extraOptions.containsKey('storageDepositLimit')) {
-      if (extraOptions['storageDepositLimit'] is Option) {
-        storageDepositLimit = extraOptions['storageDepositLimit'];
-      } else {
-        storageDepositLimit = Option.some(extraOptions['storageDepositLimit']);
-      }
-    } else {
-      storageDepositLimit = Option.some(BigInt.zero);
-    }
-
-    final objectToDecode = MapEntry(
-      'instantiate_with_code',
-      <String, dynamic>{
-        'value': BigInt.zero,
-        'gas_limit': gasLimit,
-        'storage_deposit_limit': storageDepositLimit,
-        'code': code,
-        'data': output.toBytes(),
-        'salt': salt,
-      },
+    final args = InstantiateWithCodeArgs(
+      value: storageDepositLimit ?? BigInt.zero,
+      gasLimit: gasLimit,
+      storageDepositLimit: Option.none(),
+      code: code,
+      data: encodedAbiSelector,
+      salt: salt,
     );
 
-    final ByteOutput result = ByteOutput();
-    _contractCodec.encodeTo(objectToDecode, result);
+    final extrinsic = await ContractBuilder.signAndBuildExtrinsic(
+      provider: provider,
+      signer: keypair,
+      methodArgs: args,
+      registry: codec.registry,
+      tip: tip,
+      eraPeriod: eraPeriod,
+    );
 
     return InstantiateRequest(
       execResult.result.ok!.accountId,
-      result,
-    ); */
+      extrinsic,
+    );
   }
 
   Future<ContractExecResult> instantiateRequest({

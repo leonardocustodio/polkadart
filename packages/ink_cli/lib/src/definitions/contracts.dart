@@ -8,7 +8,7 @@ final _contractDefinitions = <String, dynamic>{
     'debugMessage': 'Text',
     'result': 'InstantiateReturnValue'
   },
-'ContractExecResult': <String, String>{
+  'ContractExecResult': <String, String>{
     'gasConsumed': 'Weight',
     'gasRequired': 'Weight',
     'StorageDeposit': 'StorageDeposit',
@@ -30,7 +30,7 @@ final _contractDefinitions = <String, dynamic>{
       '_bitLength': 32,
       'Revert': 1,
     }
-  }, 
+  },
   'Weight': 'WeightV1',
   'WeightV1': 'U64',
   'WeightV2': <String, String>{

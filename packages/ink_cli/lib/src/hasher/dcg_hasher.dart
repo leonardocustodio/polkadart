@@ -3,7 +3,7 @@ part of ink_cli;
 typedef Ni = int;
 typedef Hash = String;
 
-abstract class Hasher {
+abstract class HasherAbstract {
   Hash getHash(Ni nodeIndex);
 }
 
@@ -35,7 +35,7 @@ typedef HashNodeCallback<T> = Function(
 /// The Tarjan-based algorithm is embedded for hashing strongly connected
 /// components. We store partial results in a cache, so repeated traversals
 /// do not redo the entire DFS for strongly connected subgraphs.
-class DCGHasher<T> implements Hasher {
+class DCGHasher<T> implements HasherAbstract {
   /// A cache of hashes, to avoid recomputation.
   final List<String> cache;
 
