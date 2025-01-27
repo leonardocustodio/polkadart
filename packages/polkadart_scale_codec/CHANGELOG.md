@@ -1,3 +1,6 @@
+## 1.3.0
+- Removes `json_schema2` from being a required dependency
+
 ## 1.2.1
 - Fixes `UnmodifiableUint8ListView` missing on newer dart versions
 

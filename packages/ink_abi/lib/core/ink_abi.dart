@@ -106,6 +106,10 @@ class InkAbi {
         }
       }
       if (event != null) {
+        final codec = scaleCodec[event.type];
+        if (codec == null) {
+          throw Exception('Codec not found for type at index: ${event.type}');
+        }
         final ByteInput input = ByteInput(data);
         return getCodec(event.type).decode(input);
       }
@@ -122,6 +126,10 @@ class InkAbi {
 
     if (potentialEvents.length == 1) {
       final InkAbiEvent event = potentialEvents[0];
+      final codec = scaleCodec[event.type];
+      if (codec == null) {
+        throw Exception('Codec not found for type at index: ${event.type}');
+      }
       final ByteInput input = ByteInput(data);
       return getCodec(event.type).decode(input);
     }

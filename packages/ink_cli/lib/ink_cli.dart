@@ -30,6 +30,13 @@ part 'src/core/names_generator.dart';
 part 'src/core/sink.dart';
 part 'src/core/type_generator.dart';
 
+// core
+part 'src/core/interfaces.dart';
+part 'src/core/type_generator.dart';
+part 'src/core/names_generator.dart';
+part 'src/core/sink.dart';
+part 'src/core/abi_output.dart';
+
 // hasher
 part 'src/hasher/type_hasher.dart';
 part 'src/hasher/dcg_hasher.dart';

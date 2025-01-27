@@ -1031,7 +1031,7 @@ const String _metadataJson = r'''
       ],
       "version": 5
   }
-''' ;
+''';
 
 final InkAbi _abi = InkAbi(jsonDecode(_metadataJson));
 
