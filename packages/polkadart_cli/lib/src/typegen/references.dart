@@ -53,11 +53,6 @@ const uint32Buffer =
     Reference('Uint32Buffer', 'package:typed_data/typed_buffers.dart');
 const unmodifiableUint32ListView =
     Reference('UnmodifiableUint32ListView', 'dart:typed_data');
-const uint64List = Reference('Uint64List', 'dart:typed_data');
-const uint64Buffer =
-    Reference('Uint64Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableUint64ListView =
-    Reference('UnmodifiableUint64ListView', 'dart:typed_data');
 const int8List = Reference('Int8List', 'dart:typed_data');
 const int8Buffer =
     Reference('Int8Buffer', 'package:typed_data/typed_buffers.dart');
@@ -73,11 +68,6 @@ const int32Buffer =
     Reference('Int32Buffer', 'package:typed_data/typed_buffers.dart');
 const unmodifiableInt32ListView =
     Reference('UnmodifiableInt32ListView', 'dart:typed_data');
-const int64List = Reference('Int64List', 'dart:typed_data');
-const int64Buffer =
-    Reference('Int64Buffer', 'package:typed_data/typed_buffers.dart');
-const unmodifiableInt64ListView =
-    Reference('UnmodifiableInt64ListView', 'dart:typed_data');
 const mapEntry = Reference('MapEntry', 'dart:core');
 
 TypeReference list({Reference? ref}) {

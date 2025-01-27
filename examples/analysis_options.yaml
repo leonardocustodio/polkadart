@@ -13,6 +13,11 @@
 
 include: package:lints/recommended.yaml
 
+analyzer:
+  exclude:
+    - bin/**
+    - lib/generated/**
+
 linter:
   rules:
     # Generated files don't satisfy this.
