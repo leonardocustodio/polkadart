@@ -1031,7 +1031,7 @@ const String _metadataJson = r'''
       ],
       "version": 5
   }
-''';
+''' ;
 
 final InkAbi _abi = InkAbi(jsonDecode(_metadataJson));
 
@@ -1053,6 +1053,13 @@ class Contract {
   final Uint8List? blockHash;
 
   const Contract({required this.api, required this.address, this.blockHash});
+  
+
+  ///
+  ///Creates a new ERC-20 contract with the specified initial supply.
+  Future<Null> cons_new(final Balance total_supply) async {
+    return await _stateCall<Null>('0x9bae9d5e', [total_supply]);
+  }
 
   ///
   /// Returns the total token supply.
@@ -1072,13 +1079,11 @@ class Contract {
   /// Returns the amount which `spender` is still allowed to withdraw from `owner`.
   ///
   /// Returns `0` if no allowance has been set.
-  Future<Balance> allowance(
-      final AccountId owner, final AccountId spender) async {
+  Future<Balance> allowance(final AccountId owner, final AccountId spender) async {
     return await _stateCall<Balance>('0x6a00165e', [owner, spender]);
   }
 
-  Future<T> _stateCall<T>(
-      final String selector, final List<dynamic> args) async {
+  Future<T> _stateCall<T>(final String selector, final List<dynamic> args) async {
     final input = _abi.encodeMessageInput(selector, args);
     final data = encodeCall(address, input);
     final result = await api.call('ContractsApi_call', data, at: blockHash);

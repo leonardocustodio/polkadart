@@ -180,6 +180,37 @@ class TypeGenerator {
         );
 
         // For each message that doesn't mutate, create a method
+        final constructors = _project['spec']['constructors'] as List;
+        for (final m in constructors) {
+          // build signature
+          final args = (m['args'] as List)
+              .map((arg) =>
+                  'final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .join(', ');
+          final returnType = m['returnType']?['type'];
+          if (returnType == null) {
+            continue;
+          }
+
+          final methodName = (m['label'] as String).replaceAll('::', '_');
+          fileOutput.line();
+          // Add docs
+          final docs = (m['docs'] as List).cast<String>();
+          fileOutput.blockComment(docs);
+          fileOutput.block(
+            start:
+                'Future<${ifs.use(returnType)}> cons_$methodName($args) async {',
+            cb: () {
+              final callArgs =
+                  (m['args'] as List).map((arg) => arg['label']).join(', ');
+              fileOutput.line(
+                  "return await _stateCall<${ifs.use(returnType)}>('${m['selector']}', [$callArgs]);");
+            },
+            end: '}',
+          );
+        }
+
+        // For each message that doesn't mutate, create a method
         final messages = _project['spec']['messages'] as List;
         for (final m in messages) {
           if (m['mutates'] == false) {
