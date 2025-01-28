@@ -23,10 +23,6 @@ class ContractMeta {
     // Get the latest block number from the chain
     final int blockNumber = await chainApi.getChainHeader();
 
-    // Get the blockhash of the latest block
-    final Uint8List blockHash =
-        await chainApi.getBlockHash(blockNumber: blockNumber);
-
     // Get the genesis hash of the chain from block number: 0
     final Uint8List genesisHash = await chainApi.getBlockHash(blockNumber: 0);
 
@@ -37,7 +33,8 @@ class ContractMeta {
 
     return ContractMeta(
       blockNumber: blockNumber,
-      blockHash: blockHash,
+      // This is intentionally done
+      blockHash: genesisHash,
       genesisHash: genesisHash,
       runtimeMetadata: runtimeMetadata,
       specVersion: stateRuntimeVersion.specVersion,

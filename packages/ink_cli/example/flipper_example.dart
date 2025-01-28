@@ -2,7 +2,6 @@ import 'package:ink_cli/ink_cli.dart';
 import 'package:polkadart/polkadart.dart';
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-
 import 'constants.dart';
 
 void main() async {
@@ -11,21 +10,12 @@ void main() async {
   final polkadart =
       Provider.fromUri(Uri.parse('wss://shibuya-rpc.dwellir.com'));
   final inkContract = await ContractDeployer.from(provider: polkadart);
-  final value = await inkContract.deployContract(
-    /*
-      required final Uint8List code,
-      required final String selector,
-      required final KeyPair keypair,
-      required final Provider provider,
-      required final List<dynamic> args,
-      final InkAbi? inkAbi,
-      final Map<String, dynamic> extraOptions = const <String, dynamic>{},
-      Uint8List? salt,
-    */
+
+  final InstantiateRequest value = await inkContract.deployContract(
     code: decodeHex(Constants.flipperCode),
     selector: '0x9bae9d5e01',
     keypair: keyPair,
-    args: [],
+    constructorArgs: [],
   );
-  print('dont');
+  print('done $value');
 }

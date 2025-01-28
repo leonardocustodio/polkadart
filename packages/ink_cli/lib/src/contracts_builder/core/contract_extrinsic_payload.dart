@@ -33,11 +33,12 @@ class ContractExtrinsicPayload {
     if (eraPeriod == 0) {
       output.pushByte(0);
     } else {
-      Era.codec.encodeMortal(meta.blockNumber, eraPeriod);
+      output.write(
+          decodeHex(Era.codec.encodeMortal(meta.blockNumber, eraPeriod)));
     }
 
     // nonce
-    CompactCodec.codec.encode(nonce);
+    CompactCodec.codec.encodeTo(nonce, output);
 
     // tip
     if (tip is int) {
@@ -56,6 +57,7 @@ class ContractExtrinsicPayload {
     // Add the method call -> transfer.....
     output.write(method);
 
-    return U8SequenceCodec.codec.encode(output.toBytes());
+    final result = U8SequenceCodec.codec.encode(output.toBytes());
+    return result;
   }
 }

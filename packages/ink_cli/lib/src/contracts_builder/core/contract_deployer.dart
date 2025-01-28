@@ -31,7 +31,7 @@ class ContractDeployer {
     final int eraPeriod = 0,
   }) async {
     late Uint8List encodedAbiSelector;
-    if (inkAbi != null) {
+    if (inkAbi != null && constructorArgs.isNotEmpty) {
       encodedAbiSelector =
           inkAbi.encodeConstructorInput(selector, constructorArgs);
     } else {
@@ -40,9 +40,7 @@ class ContractDeployer {
 
     final ByteOutput output = ByteOutput();
     output.write(encodedAbiSelector);
-    // TODO: Revert this salt thing.
-    //salt ??= getSalt();
-    salt = decodeHex('6791c0b0');
+    salt ??= getSalt();
 
     // estimate gas-limit
     final execResult = await instantiateRequest(
@@ -76,6 +74,14 @@ class ContractDeployer {
       eraPeriod: eraPeriod,
     );
 
+    final Uint8List expectedTxHash = Hasher.blake2b256.hash(extrinsic);
+    final Uint8List actualHash =
+        await ContractBuilder.submitExtrinsic(provider, extrinsic);
+
+    final bool isMatched = encodeHex(expectedTxHash) == encodeHex(actualHash);
+    assertion(isMatched,
+        'The expected hash and the actual hash of the approval transaction does not match.');
+
     return InstantiateRequest(
       execResult.result.ok!.accountId,
       extrinsic,
@@ -106,28 +112,12 @@ class ContractDeployer {
     bytesCodec.encodeTo(input, data);
     // salt
     bytesCodec.encodeTo(salt, data);
+
     final Uint8List result = await StateApi(provider)
         .call('ContractsApi_instantiate', data.toBytes());
 
-    {
-      final file = File(
-          '/Users/kawal/Desktop/git_projects/polkadart/packages/ink_cli/example/calculated.txt');
-      file.createSync(recursive: true);
-      file.writeAsStringSync(encodeHex(result));
-    }
-
     final res =
         codec.decode('ContractInstantiateResult', ByteInput.fromBytes(result));
-    final value = ToJson(res).toJson();
-    return ContractExecResult.fromJson(value);
+    return ContractExecResult.fromJson(ToJson(res).toJson());
   }
-
-  /*  Future<dynamic> signAndBuildExtrinsic({
-    required Uint8List encodedCall,
-  }) async {
-    final multiSigMeta = await MultiSigMeta.fromProvider(provider: provider);
-
-    final genesisHash = multiSigMeta.genesisHash;
-    final runtimeVersion = multiSigMeta.
-  } */
 }

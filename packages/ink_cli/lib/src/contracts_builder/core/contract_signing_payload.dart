@@ -20,11 +20,12 @@ class ContractSigningPayload {
     if (eraPeriod == 0) {
       output.pushByte(0);
     } else {
-      Era.codec.encodeMortal(meta.blockNumber, eraPeriod);
+      output.write(
+          decodeHex(Era.codec.encodeMortal(meta.blockNumber, eraPeriod)));
     }
 
     // nonce
-    CompactCodec.codec.encode(nonce);
+    CompactCodec.codec.encodeTo(nonce, output);
 
     // tip
     if (tip is int) {
@@ -41,10 +42,10 @@ class ContractSigningPayload {
     }
 
     // specVersion
-    U32Codec.codec.encode(meta.specVersion);
+    U32Codec.codec.encodeTo(meta.specVersion, output);
 
     // transactionVersion
-    U32Codec.codec.encode(meta.transactionVersion);
+    U32Codec.codec.encodeTo(meta.transactionVersion, output);
 
     // genesisHash
     output.write(meta.genesisHash);

@@ -55,15 +55,7 @@ class ContractBuilder {
       checkMetadataHash: checkMetadataHash,
       signature: payloadSignature,
     );
-
-    final Uint8List expectedTxHash = Hasher.blake2b256.hash(signedContractTx);
-    final Uint8List actualHash =
-        await submitExtrinsic(provider, signedContractTx);
-
-    final bool isMatched = encodeHex(expectedTxHash) == encodeHex(actualHash);
-    assertion(isMatched,
-        'The expected hash and the actual hash of the approval transaction does not match.');
-    return actualHash;
+    return signedContractTx;
   }
 
   ///

@@ -92,8 +92,11 @@ class TypeGenerator {
     // For example, we might print some imports:
     fileOutput.line("// ignore_for_file: non_constant_identifier_names");
     fileOutput.line();
+    fileOutput
+        .line("import 'package:polkadart_keyring/polkadart_keyring.dart';");
     fileOutput.line("import 'package:ink_abi/ink_abi_base.dart';");
-    fileOutput.line("import 'package:polkadart/polkadart.dart' show StateApi;");
+    fileOutput.line("import 'package:ink_cli/ink_cli.dart';");
+    fileOutput.line("import 'package:polkadart/polkadart.dart';");
     fileOutput.line("import 'dart:typed_data';");
     fileOutput.line("import 'dart:convert';");
     fileOutput.line();
@@ -101,13 +104,13 @@ class TypeGenerator {
     // Then, we might embed the original ABI JSON
     final metadata = JsonEncoder.withIndent('    ').convert(_readMetadata());
     fileOutput.block(
-      start: 'const String _metadataJson = r\'\'\'',
+      start: "const String _metadataJson = '''",
       cb: () {
         for (final line in metadata.split('\n')) {
           fileOutput.line(line);
         }
       },
-      end: "''' ;",
+      end: "''';",
     );
 
     fileOutput.line();
@@ -168,15 +171,18 @@ class TypeGenerator {
     fileOutput.block(
       start: 'class Contract {',
       cb: () {
-        fileOutput.line('final StateApi api;');
+        fileOutput.line('final Provider provider;');
         fileOutput.line('final Uint8List address;');
         fileOutput.line('final Uint8List? blockHash;');
         fileOutput.line();
         fileOutput.block(
-          start:
-              'const Contract({required this.api, required this.address, this.blockHash});',
-          cb: () {},
-          end: '',
+          start: 'const Contract({',
+          cb: () {
+            fileOutput.line('required this.provider,');
+            fileOutput.line('required this.address,');
+            fileOutput.line('this.blockHash,');
+          },
+          end: '});',
         );
 
         // For each message that doesn't mutate, create a method
@@ -185,26 +191,66 @@ class TypeGenerator {
           // build signature
           final args = (m['args'] as List)
               .map((arg) =>
-                  'final ${ifs.use(arg['type']['type'])} ${arg['label']}')
-              .join(', ');
+                  'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .toList();
           final returnType = m['returnType']?['type'];
           if (returnType == null) {
             continue;
           }
 
           final methodName = (m['label'] as String).replaceAll('::', '_');
+          args.addAll(
+            <String>[
+              'required final Uint8List code',
+              'required final KeyPair keyPair',
+              'final Map<String, dynamic> extraOptions = const <String, dynamic>{}',
+              'final BigInt? storageDepositLimit',
+              'final Uint8List? salt',
+              'final GasLimit? gasLimit',
+              'final dynamic tip = 0',
+              'final int eraPeriod = 0',
+            ],
+          );
+
           fileOutput.line();
           // Add docs
           final docs = (m['docs'] as List).cast<String>();
           fileOutput.blockComment(docs);
           fileOutput.block(
-            start:
-                'Future<${ifs.use(returnType)}> cons_$methodName($args) async {',
+            start: 'Future<InstantiateRequest> ${methodName}_contract({',
             cb: () {
-              final callArgs =
-                  (m['args'] as List).map((arg) => arg['label']).join(', ');
+              for (final String arg in args) {
+                fileOutput.line('$arg,');
+              }
+            },
+            end: null,
+          );
+
+          fileOutput.block(
+            start: '}) async {',
+            cb: () {
               fileOutput.line(
-                  "return await _stateCall<${ifs.use(returnType)}>('${m['selector']}', [$callArgs]);");
+                  'final deployer = await ContractDeployer.from(provider: provider);');
+
+              fileOutput.block(
+                start: 'return await deployer.deployContract(',
+                cb: () {
+                  fileOutput.line('inkAbi: _abi,');
+                  fileOutput.line("selector: '${m['selector']}',");
+                  fileOutput.line('code: code,');
+                  fileOutput.line('keypair: keyPair,');
+                  fileOutput.line('extraOptions: extraOptions,');
+                  fileOutput.line('storageDepositLimit: storageDepositLimit,');
+                  fileOutput.line('salt: salt,');
+                  fileOutput.line('gasLimit: gasLimit,');
+                  fileOutput.line('tip: tip,');
+                  fileOutput.line('eraPeriod: eraPeriod,');
+                  final callArgs =
+                      (m['args'] as List).map((arg) => arg['label']).join(', ');
+                  fileOutput.line("constructorArgs: [$callArgs],");
+                },
+                end: ');',
+              );
             },
             end: '}',
           );
@@ -252,6 +298,7 @@ class TypeGenerator {
             fileOutput
                 .line('final input = _abi.encodeMessageInput(selector, args);');
             fileOutput.line('final data = encodeCall(address, input);');
+            fileOutput.line('final api = StateApi(provider);');
             fileOutput.line(
                 'final result = await api.call(\'ContractsApi_call\', data, at: blockHash);');
             fileOutput
