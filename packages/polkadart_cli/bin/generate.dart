@@ -28,7 +28,7 @@ class ChainProperties {
     }
 
     return ChainProperties(
-      decodedMetadata.metadata as RuntimeMetadata,
+      decodedMetadata.metadata,
       version,
     );
   }
