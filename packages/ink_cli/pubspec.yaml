@@ -31,4 +31,7 @@ dependency_overrides:
   # Helps in the git build for now.
   ink_abi:
     path: ../ink_abi
-
+  polkadart:
+    path: ../polkadart
+  substrate_metadata:
+    path: ../substrate_metadata

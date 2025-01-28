@@ -152,7 +152,7 @@ class Interfaces {
   }
 
   /// Convert ink_abi "primitive"
-  String _toNativePrimitive(Primitive primitive) {
+  String _toNativePrimitive(interfaces_base.Primitive primitive) {
     switch (primitive.name.toUpperCase()) {
       case 'I8':
       case 'U8':

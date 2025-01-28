@@ -2,7 +2,7 @@ part of ink_cli;
 
 class ContractDeployer {
   final Provider provider;
-  final RuntimeMetadata runtimeMetadata;
+  final RuntimeMetadataPrefixed runtimeMetadata;
   final ScaleCodec codec;
 
   const ContractDeployer(this.provider, this.runtimeMetadata, this.codec);
@@ -11,10 +11,10 @@ class ContractDeployer {
     required final Provider provider,
   }) async {
     final runtimeMetadata = await StateApi(provider).getMetadata();
-    runtimeMetadata.chainInfo.scaleCodec.registry
+    runtimeMetadata.metadata.chainInfo.scaleCodec.registry
         .registerCustomCodec(_contractDefinitions);
-    return ContractDeployer(
-        provider, runtimeMetadata, runtimeMetadata.chainInfo.scaleCodec);
+    return ContractDeployer(provider, runtimeMetadata.metadata,
+        runtimeMetadata.metadata.chainInfo.scaleCodec);
   }
 
   Future<InstantiateRequest> deployContract({

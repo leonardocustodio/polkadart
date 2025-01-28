@@ -19,17 +19,11 @@ class ContractBuilder {
 
     bool? checkMetadataHash;
     final signedExtensions =
-        meta.runtimeMetadata.metadata['extrinsic']?['signedExtensions'];
-    if (signedExtensions != null && signedExtensions is List) {
-      for (final extension in signedExtensions) {
-        if (extension is Map &&
-            extension['identifier'] != null &&
-            extension['identifier'] is String &&
-            (extension['identifier'] as String).toLowerCase() ==
-                'checkmetadatahash') {
-          checkMetadataHash = false;
-          break;
-        }
+        meta.runtimeMetadata.metadata.extrinsic.signedExtensions;
+    for (final extension in signedExtensions) {
+      if (extension.identifier.toLowerCase() == 'checkmetadatahash') {
+        checkMetadataHash = false;
+        break;
       }
     }
 
