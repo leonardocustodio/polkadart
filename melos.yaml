@@ -3,7 +3,7 @@ repository: https://github.com/leonardocustodio/polkadart
 
 command:
   bootstrap:
-    usePubspecOverrides: true
+    usePubspecOverrides: false
 
 packages:
   - packages/**
