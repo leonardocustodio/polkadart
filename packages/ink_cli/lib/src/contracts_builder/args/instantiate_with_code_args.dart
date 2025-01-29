@@ -17,6 +17,7 @@ class InstantiateWithCodeArgs implements ContractArgs {
     required this.salt,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'value': value,
