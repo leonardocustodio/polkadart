@@ -1,13 +1,13 @@
 # melos_managed_dependency_overrides: polkadart_scale_codec,ss58,sr25519
 # melos_managed_dependency_overrides
-#dependency_overrides:
-#  polkadart_scale_codec:
-#    path: ../polkadart_scale_codec
-#  ss58:
-#    path: ../ss58
-#  substrate_bip39:
-#    path: ../substrate_bip39
-#  secp256k1_ecdsa:
-#    path: ../secp256k1_ecdsa
-#  sr25519:
-#    path: ../sr25519
+dependency_overrides:
+  polkadart_scale_codec:
+    path: ../polkadart_scale_codec
+  ss58:
+    path: ../ss58
+  substrate_bip39:
+    path: ../substrate_bip39
+  secp256k1_ecdsa:
+    path: ../secp256k1_ecdsa
+  sr25519:
+    path: ../sr25519

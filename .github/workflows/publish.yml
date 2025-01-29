@@ -11,7 +11,6 @@ jobs:
       matrix:
         package:
           - ink_abi
-          - ink_cli
           - polkadart
           - polkadart_cli
           - polkadart_keyring
@@ -21,6 +20,7 @@ jobs:
           - sr25519
           - substrate_metadata
           - substrate_bip39
+          - ink_cli
 
     steps:
       - uses: actions/checkout@v4

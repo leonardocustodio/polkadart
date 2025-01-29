@@ -18,7 +18,6 @@ jobs:
       matrix:
         package:
           - ink_abi
-          - ink_cli
           - polkadart
           - polkadart_cli
           - polkadart_example
@@ -29,6 +28,7 @@ jobs:
           - sr25519
           - substrate_bip39
           - substrate_metadata
+          - ink_cli
 
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.package }}
