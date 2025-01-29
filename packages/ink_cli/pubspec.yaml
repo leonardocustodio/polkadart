@@ -4,9 +4,6 @@ version: 0.0.1
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/ink_cli
 repository: https://github.com/leonardocustodio/polkadart
 
-# TODO: Remove after ink_abi 0.0.2 is published
-publish_to: none
-
 environment:
   sdk: ">=3.3.0 <4.0.0"
 
@@ -31,7 +28,3 @@ dependency_overrides:
   # Helps in the git build for now.
   ink_abi:
     path: ../ink_abi
-  polkadart:
-    path: ../polkadart
-  substrate_metadata:
-    path: ../substrate_metadata

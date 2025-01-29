@@ -2,7 +2,7 @@ part of ink_cli;
 
 class ContractDeployer {
   final Provider provider;
-  final RuntimeMetadataPrefixed runtimeMetadata;
+  final RuntimeMetadata runtimeMetadata;
   final ScaleCodec codec;
 
   const ContractDeployer(this.provider, this.runtimeMetadata, this.codec);
@@ -11,10 +11,10 @@ class ContractDeployer {
     required final Provider provider,
   }) async {
     final runtimeMetadata = await StateApi(provider).getMetadata();
-    runtimeMetadata.metadata.chainInfo.scaleCodec.registry
+    runtimeMetadata.chainInfo.scaleCodec.registry
         .registerCustomCodec(_contractDefinitions);
-    return ContractDeployer(provider, runtimeMetadata.metadata,
-        runtimeMetadata.metadata.chainInfo.scaleCodec);
+    return ContractDeployer(
+        provider, runtimeMetadata, runtimeMetadata.chainInfo.scaleCodec);
   }
 
   Future<InstantiateRequest> deployContract({
@@ -97,7 +97,7 @@ class ContractDeployer {
     final ByteOutput data = ByteOutput();
     // signer
     data.write(keypair.publicKey.bytes);
-    codec.encodeTo('Balance', BigInt.zero, data);
+    U128Codec.codec.encodeTo(BigInt.zero, data);
     // gas_limit
     data.pushByte(0);
     // proof_size

@@ -6,7 +6,7 @@ class ContractMeta {
   final Uint8List genesisHash;
   final int specVersion;
   final int transactionVersion;
-  final RuntimeMetadataPrefixed runtimeMetadata;
+  final RuntimeMetadata runtimeMetadata;
 
   const ContractMeta({
     required this.blockNumber,
@@ -27,8 +27,7 @@ class ContractMeta {
     final Uint8List genesisHash = await chainApi.getBlockHash(blockNumber: 0);
 
     final StateApi stateApi = StateApi(provider);
-    final RuntimeMetadataPrefixed runtimeMetadata =
-        await stateApi.getMetadata();
+    final RuntimeMetadata runtimeMetadata = await stateApi.getMetadata();
     final RuntimeVersion stateRuntimeVersion =
         await stateApi.getRuntimeVersion();
 

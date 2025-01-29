@@ -18,8 +18,3 @@ dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.0
 
-dependency_overrides:
-  substrate_metadata:
-    path: ../substrate_metadata
-  polkadart_scale_codec:
-    path: ../polkadart_scale_codec
