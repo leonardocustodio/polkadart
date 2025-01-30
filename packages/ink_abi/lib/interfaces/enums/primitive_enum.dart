@@ -43,11 +43,12 @@ enum Primitive {
         return Primitive.u128;
       case 'U256':
         return Primitive.u256;
-      case 'Bool':
+      case 'BOOL':
         return Primitive.bool;
-      case 'Str':
+      case 'STRING':
+      case 'STR':
         return Primitive.str;
-      case 'Char':
+      case 'CHAR':
         return Primitive.char;
       default:
         throw Exception('Invalid Primitive');
