@@ -70,49 +70,55 @@ class $TypeDefCodec implements Codec<TypeDef> {
       case TypeDefComposite:
         {
           U8Codec.codec.encodeTo(0, output);
-          $TypeDefCompositeCodec._().encode(value as TypeDefComposite);
+          $TypeDefCompositeCodec
+              ._()
+              .encodeTo(value as TypeDefComposite, output);
           break;
         }
       case TypeDefVariant:
         {
           U8Codec.codec.encodeTo(1, output);
-          $TypeDefVariantCodec._().encode(value as TypeDefVariant);
+          $TypeDefVariantCodec._().encodeTo(value as TypeDefVariant, output);
           break;
         }
       case TypeDefSequence:
         {
           U8Codec.codec.encodeTo(2, output);
-          $TypeDefSequenceCodec._().encode(value as TypeDefSequence);
+          $TypeDefSequenceCodec._().encodeTo(value as TypeDefSequence, output);
           break;
         }
       case TypeDefArray:
         {
           U8Codec.codec.encodeTo(3, output);
-          $TypeDefArrayCodec._().encode(value as TypeDefArray);
+          $TypeDefArrayCodec._().encodeTo(value as TypeDefArray, output);
           break;
         }
       case TypeDefTuple:
         {
           U8Codec.codec.encodeTo(4, output);
-          $TypeDefTupleCodec._().encode(value as TypeDefTuple);
+          $TypeDefTupleCodec._().encodeTo(value as TypeDefTuple, output);
           break;
         }
       case TypeDefPrimitive:
         {
           U8Codec.codec.encodeTo(5, output);
-          $TypeDefPrimitiveCodec._().encode(value as TypeDefPrimitive);
+          $TypeDefPrimitiveCodec
+              ._()
+              .encodeTo(value as TypeDefPrimitive, output);
           break;
         }
       case TypeDefCompact:
         {
           U8Codec.codec.encodeTo(6, output);
-          $TypeDefCompactCodec._().encode(value as TypeDefCompact);
+          $TypeDefCompactCodec._().encodeTo(value as TypeDefCompact, output);
           break;
         }
       case TypeDefBitSequence:
         {
           U8Codec.codec.encodeTo(7, output);
-          $TypeDefBitSequenceCodec._().encode(value as TypeDefBitSequence);
+          $TypeDefBitSequenceCodec
+              ._()
+              .encodeTo(value as TypeDefBitSequence, output);
           break;
         }
       default:
@@ -196,6 +202,7 @@ class $TypeDefCompositeCodec implements Codec<TypeDefComposite> {
   @override
   void encodeTo(TypeDefComposite value, Output output) {
     SequenceCodec(Field.codec).encodeTo(value.fields, output);
+    print('After seq: ${(output as ByteOutput).toBytes()}');
   }
 
   @override

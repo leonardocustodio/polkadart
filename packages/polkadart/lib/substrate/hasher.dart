@@ -9,6 +9,9 @@ abstract class Hasher {
   static const blake2b64 = Blake2bHasher(8);
   static const blake2b128 = Blake2bHasher(16);
   static const blake2b256 = Blake2bHasher(32);
+  static const blake364 = Blake3Hasher(8);
+  static const blake3128 = Blake3Hasher(16);
+  static const blake3256 = Blake3Hasher(32);
   static const twoxx64 = TwoxxHasher(1);
   static const twoxx128 = TwoxxHasher(2);
   static const twoxx256 = TwoxxHasher(4);
@@ -27,6 +30,17 @@ abstract class Hasher {
   Uint8List hashString(String str) {
     final data = Uint8List.fromList(utf8.encode(str));
     return hash(data);
+  }
+}
+
+/// Blake3 hash
+class Blake3Hasher extends Hasher {
+  const Blake3Hasher(super.size);
+
+  @override
+  void hashTo({required Uint8List data, required Uint8List output}) {
+    final digest = blake3(data, digestSize);
+    output.setAll(0, digest);
   }
 }
 
