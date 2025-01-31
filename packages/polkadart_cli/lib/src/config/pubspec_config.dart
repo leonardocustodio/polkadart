@@ -35,8 +35,7 @@ class PubspecConfig {
     final pubspecYaml = yaml.loadYaml(pubspecFileContent);
 
     if (pubspecYaml is! yaml.YamlMap) {
-      throw ConfigException.parseError(
-          'Expected YAML map but got ${pubspecYaml.runtimeType}.');
+      throw ConfigException.parseError('Expected YAML map but got ${pubspecYaml.runtimeType}.');
     }
 
     // Extract polkadart section
@@ -49,31 +48,24 @@ class PubspecConfig {
     final enabled = polkadartConfig['enabled'];
     if (enabled != null && enabled is! bool) {
       throw ConfigException.invalidField(
-          path: 'polkadart.enabled',
-          expect: 'boolean',
-          actual: enabled.runtimeType);
+          path: 'polkadart.enabled', expect: 'boolean', actual: enabled.runtimeType);
     }
 
     // Extract polkadart.output_dir section
     final outputDir = polkadartConfig['output_dir'];
     if (outputDir != null && outputDir is! String) {
       throw ConfigException.invalidField(
-          path: 'polkadart.output_dir',
-          expect: 'string',
-          actual: outputDir.runtimeType);
+          path: 'polkadart.output_dir', expect: 'string', actual: outputDir.runtimeType);
     }
 
     // Extract polkadart.chains section
     final chains = polkadartConfig['chains'];
     if (chains == null) {
-      throw ConfigException.parseError(
-          "Can't find 'polkadart.chains' section.");
+      throw ConfigException.parseError("Can't find 'polkadart.chains' section.");
     }
     if (chains is! yaml.YamlMap) {
       throw ConfigException.invalidField(
-          path: 'polkadart.chains',
-          expect: 'YAML map',
-          actual: chains.runtimeType);
+          path: 'polkadart.chains', expect: 'YAML map', actual: chains.runtimeType);
     }
 
     return PubspecConfig._(
@@ -81,8 +73,7 @@ class PubspecConfig {
       outputDir: polkadartConfig['output_dir'] ?? './lib/generated',
       chains: {
         for (final entry in chains.entries)
-          entry.key: ChainSettings.fromConfig(
-              'polkadart.chains.${entry.key}', entry.value)
+          entry.key: ChainSettings.fromConfig('polkadart.chains.${entry.key}', entry.value)
       },
     );
   }
@@ -118,28 +109,23 @@ class ChainSettings {
       if (chainSettings is yaml.YamlMap) {
         final uri = chainSettings['metadata_uri'];
         if (uri == null) {
-          throw ConfigException.parseError(
-              "Can't find '$path.metadata_uri' section.");
+          throw ConfigException.parseError("Can't find '$path.metadata_uri' section.");
         }
         if (uri is! String) {
           throw ConfigException.invalidField(
-              path: '$path.metadata_uri',
-              expect: 'string',
-              actual: uri.runtimeType);
+              path: '$path.metadata_uri', expect: 'string', actual: uri.runtimeType);
         }
         metadataUri = Uri.parse(uri);
       } else {
         throw ConfigException.invalidField(
-            path: path,
-            expect: 'string or YAML map',
-            actual: chainSettings.runtimeType);
+            path: path, expect: 'string or YAML map', actual: chainSettings.runtimeType);
       }
     }
 
-    // if (!_validUriSchemes.contains(metadataUri.scheme)) {
-    //   throw ConfigException(
-    //       'The parameter "$path.metadata_uri" is invalid, must a valid Websocket (wss/ws) or (http/https) uri');
-    // }
+    if (!_validUriSchemes.contains(metadataUri.scheme)) {
+      throw ConfigException(
+          'The parameter "$path.metadata_uri" is invalid, must a valid Websocket (wss/ws) or (http/https) uri');
+    }
 
     // Parse class_name
     // final classname = chainSettings['class_name'];

@@ -1178,17 +1178,6 @@ class MetadataMerkleizer {
     final hashTree = getHashTree();
     final proofs = proofData.proofIndexes.map((idx) => hashTree[idx]).toList();
 
-    final merged = mergeUint8([
-      CompactCodec.codec.encode(proofData.leaves.length),
-      ...proofData.leaves,
-      CompactCodec.codec.encode(proofData.leafIndexes.length),
-      ...proofData.leafIndexes.map((x) => U32Codec.codec.encode(x)),
-      CompactCodec.codec.encode(proofs.length),
-      ...proofs,
-      extrinsicMeta.encode(),
-      extraInfo.encode(),
-    ]);
-
     return mergeUint8([
       CompactCodec.codec.encode(proofData.leaves.length),
       ...proofData.leaves,

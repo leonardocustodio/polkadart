@@ -5,17 +5,21 @@ import 'package:substrate_metadata/metadata/metadata.dart';
 import 'package:test/test.dart';
 import 'snapshot.dart';
 
-final file = File(
-        '/Users/custodio/Development/Experio/polkadart/packages/substrate_metadata/test/metadata/ksm.bin')
-    .readAsBytesSync();
-final metadata = RuntimeMetadataPrefixed.fromHex(encodeHex(file)).metadata;
-final merkleizedMetadata = MetadataMerkleizer.fromMetadata(
-  metadata,
-  decimals: 12,
-  tokenSymbol: 'KSM',
-);
-
 void main() {
+  late final RuntimeMetadata runtimeMetadata;
+  late final MetadataMerkleizer merkleizedMetadata;
+
+  setUpAll(() {
+    final ksmData = Uri.directory(Directory.current.path).resolve('test/metadata/ksm.bin');
+    final ksmMetadata = File(ksmData.path).readAsBytesSync();
+    runtimeMetadata = RuntimeMetadataPrefixed.fromBytes(ksmMetadata).metadata;
+    merkleizedMetadata = MetadataMerkleizer.fromMetadata(
+      runtimeMetadata,
+      decimals: 12,
+      tokenSymbol: 'KSM',
+    );
+  });
+
   group('Metadata merkleize tests:', () {
     test('digests', () {
       final digest = merkleizedMetadata.digest();
@@ -56,7 +60,7 @@ void main() {
     test('fails to create with wrong extra info', () {
       expect(
           () => MetadataMerkleizer.fromMetadata(
-                metadata,
+                runtimeMetadata,
                 decimals: 12,
                 tokenSymbol: 'KSM',
                 base58Prefix: 1,

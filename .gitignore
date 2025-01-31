@@ -13,8 +13,6 @@ examples/**/macos/
 # Include specific entitlements files which enable internet access
 !examples/**/macos/Runner/DebugProfile.entitlements
 
-packages/merkleize-metadata
-
 # Miscellaneous
 coverage/
 *.class
