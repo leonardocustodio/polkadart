@@ -22,3 +22,8 @@ dependencies:
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.16.0
+
+polkadart:
+  output_dir: lib/generated
+  chains:
+    kusama: /Users/custodio/Development/Experio/polkadart/packages/polkadart_cli/ksm.bin

@@ -1,19 +1,42 @@
-import 'dart:io' show Directory;
+import 'dart:convert';
+import 'dart:io' show Directory, File;
 import 'package:polkadart/polkadart.dart'
     show Provider, StateApi, RuntimeVersion;
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
+import 'package:polkadart/scale_codec.dart';
 import 'package:recase/recase.dart' show ReCase;
 import 'package:polkadart_cli/polkadart_cli.dart'
     show ChainGenerator, PubspecConfig;
 import 'package:substrate_metadata/substrate_metadata.dart'
-    show RuntimeMetadata;
+    show RuntimeMetadata, RuntimeMetadataPrefixed;
 
 class ChainProperties {
   final RuntimeMetadata metadata;
   final RuntimeVersion version;
 
   ChainProperties(this.metadata, this.version);
+
+  static Future<ChainProperties> fromFile(Uri uri) async {
+    print(uri.path);
+    final provider =
+        Provider.fromUri(Uri.parse('wss://kusama-rpc.polkadot.io'));
+    final api = StateApi(provider);
+    final version = await api.getRuntimeVersion();
+
+    final metadata = await File(uri.path).readAsBytes();
+    final metadataPrefixed =
+        RuntimeMetadataPrefixed.fromHex(encodeHex(metadata));
+
+    // write json to file
+    final metadataFile = File('metadata.json');
+    metadataFile.writeAsStringSync(metadataPrefixed.toJson().toString());
+
+    return ChainProperties(
+      metadataPrefixed.metadata,
+      version,
+    );
+  }
 
   static Future<ChainProperties> fromURL(Uri uri) async {
     final provider = Provider.fromUri(uri);
@@ -57,7 +80,7 @@ void main(List<String> args) async {
 
     // Get chain properties
     final ChainProperties properties =
-        await ChainProperties.fromURL(chain.metadataUri);
+        await ChainProperties.fromFile(chain.metadataUri);
 
     // Create chain directory
     final chainDirectory =

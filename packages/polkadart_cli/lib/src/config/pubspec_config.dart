@@ -136,10 +136,10 @@ class ChainSettings {
       }
     }
 
-    if (!_validUriSchemes.contains(metadataUri.scheme)) {
-      throw ConfigException(
-          'The parameter "$path.metadata_uri" is invalid, must a valid Websocket (wss/ws) or (http/https) uri');
-    }
+    // if (!_validUriSchemes.contains(metadataUri.scheme)) {
+    //   throw ConfigException(
+    //       'The parameter "$path.metadata_uri" is invalid, must a valid Websocket (wss/ws) or (http/https) uri');
+    // }
 
     // Parse class_name
     // final classname = chainSettings['class_name'];
