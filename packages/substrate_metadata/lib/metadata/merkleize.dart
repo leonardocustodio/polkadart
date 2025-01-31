@@ -144,19 +144,23 @@ class LookupTypeDef {
                 ),
               )
               .toList()),
-      final TypeDefSequence def => LookupTypeDef(tag: 'sequence', value: def.type),
+      final TypeDefSequence def =>
+        LookupTypeDef(tag: 'sequence', value: def.type),
       final TypeDefArray def => LookupTypeDef(
           tag: 'array',
           value: (len: def.length, type: def.type),
         ),
       final TypeDefTuple def => LookupTypeDef(tag: 'tuple', value: def.fields),
-      final TypeDefBitSequence def => LookupTypeDef(tag: 'bitSequence', value: def),
+      final TypeDefBitSequence def =>
+        LookupTypeDef(tag: 'bitSequence', value: def),
       final TypeDefPrimitive def => LookupTypeDef(
           tag: 'primitive',
           value: (tag: def.primitive.name.toLowerCase(), value: null),
         ),
-      final TypeDefCompact def => LookupTypeDef(tag: 'compact', value: def.type),
-      _ => throw Exception('Unknown type definition runtime type ${typeDef.runtimeType}'),
+      final TypeDefCompact def =>
+        LookupTypeDef(tag: 'compact', value: def.type),
+      _ => throw Exception(
+          'Unknown type definition runtime type ${typeDef.runtimeType}'),
     };
   }
 
@@ -200,7 +204,10 @@ class LookupValue {
   final LookupTypeDef def;
 
   const LookupValue(
-      {required this.id, required this.path, required this.params, required this.def});
+      {required this.id,
+      required this.path,
+      required this.params,
+      required this.def});
 }
 
 class LookupEntry {
@@ -229,7 +236,11 @@ class LookupField {
   final String? typeName;
   final List<String> docs;
 
-  const LookupField({required this.name, required this.ty, this.typeName, this.docs = const []});
+  const LookupField(
+      {required this.name,
+      required this.ty,
+      this.typeName,
+      this.docs = const []});
 
   void encodeTo(LookupField value, ByteOutput output) {
     OptionCodec(StrCodec.codec).encodeTo(name, output);
@@ -291,7 +302,10 @@ class LookupTypeDefEnumeration {
   final List<String> docs;
 
   const LookupTypeDefEnumeration(
-      {required this.name, required this.fields, required this.index, this.docs = const []});
+      {required this.name,
+      required this.fields,
+      required this.index,
+      this.docs = const []});
 
   void encodeTo(LookupTypeDefEnumeration value, ByteOutput output) {
     StrCodec.codec.encodeTo(value.name, output);
@@ -342,7 +356,8 @@ class LookupTypeDefBitSequence {
   final int numBytes;
   final bool leastSignificantBitFirst;
 
-  const LookupTypeDefBitSequence({required this.numBytes, required this.leastSignificantBitFirst});
+  const LookupTypeDefBitSequence(
+      {required this.numBytes, required this.leastSignificantBitFirst});
 
   void encodeTo(LookupTypeDefBitSequence value, ByteOutput output) {
     U8Codec.codec.encodeTo(numBytes, output);
@@ -403,7 +418,8 @@ class ExtrinsicInfo {
     callTy.encodeTo(callTy, output);
     signatureTy.encodeTo(signatureTy, output);
 
-    CompactBigIntCodec.codec.encodeTo(BigInt.from(signedExtensions.length), output);
+    CompactBigIntCodec.codec
+        .encodeTo(BigInt.from(signedExtensions.length), output);
     for (final extension in signedExtensions) {
       final identifier = extension.identifier;
       CompactBigIntCodec.codec.encodeTo(BigInt.from(identifier.length), output);
@@ -411,8 +427,10 @@ class ExtrinsicInfo {
         U8Codec.codec.encodeTo(identifier.codeUnitAt(i), output);
       }
 
-      extension.includedInExtrinsic.encodeTo(extension.includedInExtrinsic, output);
-      extension.includedInSignedData.encodeTo(extension.includedInSignedData, output);
+      extension.includedInExtrinsic
+          .encodeTo(extension.includedInExtrinsic, output);
+      extension.includedInSignedData
+          .encodeTo(extension.includedInSignedData, output);
     }
 
     return output.toBytes();
@@ -470,13 +488,15 @@ class MetadataMerkleizer {
     this.specName,
     this.base58Prefix,
   }) {
-    final PalletMetadata system = metadata.pallets.firstWhere((p) => p.name == 'System',
+    final PalletMetadata system = metadata.pallets.firstWhere(
+        (p) => p.name == 'System',
         orElse: () => throw Exception('System pallet not found'));
     final PalletConstantMetadata ss58prefix = system.constants.firstWhere(
       (c) => c.name == 'SS58Prefix',
       orElse: () => throw Exception('System.ss58Prefix constant not found'),
     );
-    final PalletConstantMetadata version = system.constants.firstWhere((c) => c.name == 'Version',
+    final PalletConstantMetadata version = system.constants.firstWhere(
+        (c) => c.name == 'Version',
         orElse: () => throw Exception('System.Version constant not found'));
 
     final ss58 = decodeTypeDef(
@@ -485,7 +505,8 @@ class MetadataMerkleizer {
     );
 
     assertion(ss58 != null, 'SS58 prefix not found');
-    assertion(base58Prefix == null || ss58 == base58Prefix, 'SS58 prefix mismatch');
+    assertion(
+        base58Prefix == null || ss58 == base58Prefix, 'SS58 prefix mismatch');
 
     final runtime = decodeTypeDef(
       metadata.typeById(version.type).type.typeDef,
@@ -493,10 +514,11 @@ class MetadataMerkleizer {
     );
 
     assertion(runtime['spec_name'] != null, 'Spec name not found');
-    assertion(
-        specVersion == null || runtime['spec_version'] == specVersion, 'Spec version mismatch');
+    assertion(specVersion == null || runtime['spec_version'] == specVersion,
+        'Spec version mismatch');
     assertion(runtime['spec_version'] != null, 'Spec version not found');
-    assertion(specName == null || runtime['spec_name'] == specName, 'Spec name mismatch');
+    assertion(specName == null || runtime['spec_name'] == specName,
+        'Spec name mismatch');
 
     extraInfo = ExtraInfo(
         decimals: decimals,
@@ -526,20 +548,26 @@ class MetadataMerkleizer {
 
     final Map<int, int> accessibleTypes = getAccessibleTypes(definitions);
     final lookup = getLookup(definitions, accessibleTypes);
-    final List<Uint8List> lookupEncoded = lookup.map<Uint8List>((l) => l.encode(l)).toList();
+    final List<Uint8List> lookupEncoded =
+        lookup.map<Uint8List>((l) => l.encode(l)).toList();
 
     this.lookup = lookup;
     this.lookupEncoded = lookupEncoded;
     extrinsicMeta = ExtrinsicInfo(
       version: metadata.extrinsic.version,
-      addressTy: getTypeRef(definitions, accessibleTypes, metadata.extrinsic.addressType),
-      callTy: getTypeRef(definitions, accessibleTypes, metadata.extrinsic.callType),
-      signatureTy: getTypeRef(definitions, accessibleTypes, metadata.extrinsic.signatureType),
+      addressTy: getTypeRef(
+          definitions, accessibleTypes, metadata.extrinsic.addressType),
+      callTy:
+          getTypeRef(definitions, accessibleTypes, metadata.extrinsic.callType),
+      signatureTy: getTypeRef(
+          definitions, accessibleTypes, metadata.extrinsic.signatureType),
       signedExtensions: metadata.extrinsic.signedExtensions
           .map((se) => (
                 identifier: se.identifier,
-                includedInExtrinsic: getTypeRef(definitions, accessibleTypes, se.type),
-                includedInSignedData: getTypeRef(definitions, accessibleTypes, se.additionalSigned),
+                includedInExtrinsic:
+                    getTypeRef(definitions, accessibleTypes, se.type),
+                includedInSignedData: getTypeRef(
+                    definitions, accessibleTypes, se.additionalSigned),
               ))
           .toList(),
     );
@@ -580,17 +608,19 @@ class MetadataMerkleizer {
       return def.value.tag;
     }
 
-    if ((def.tag != 'composite' && def.tag != 'tuple') || def.value.length > 1) {
+    if ((def.tag != 'composite' && def.tag != 'tuple') ||
+        def.value.length > 1) {
       throw Exception('TypeDef provided does not map to a primitive type');
     }
 
     return def.value.length == 0
         ? null
-        : getPrimitive(definitions, def.tag == 'tuple' ? def.value[0] : def.value[0].type);
+        : getPrimitive(
+            definitions, def.tag == 'tuple' ? def.value[0] : def.value[0].type);
   }
 
-  TypeRef getTypeRef(
-      Map<int, LookupValue> definitions, Map<int, int> accessibleTypes, int frameId) {
+  TypeRef getTypeRef(Map<int, LookupValue> definitions,
+      Map<int, int> accessibleTypes, int frameId) {
     final def = definitions[frameId]!.def;
 
     if (def.tag == 'primitive') {
@@ -608,8 +638,8 @@ class MetadataMerkleizer {
         : TypeRef(tag: 'void', value: null);
   }
 
-  List<LookupTypeDef> constructLookupTypeDef(
-      Map<int, LookupValue> definitions, Map<int, int> accessibleTypes, int frameId) {
+  List<LookupTypeDef> constructLookupTypeDef(Map<int, LookupValue> definitions,
+      Map<int, int> accessibleTypes, int frameId) {
     final def = definitions[frameId]!.def;
 
     switch (def.tag) {
@@ -643,7 +673,8 @@ class MetadataMerkleizer {
                         (field) => LookupField(
                           name: field.name,
                           typeName: field.typeName,
-                          ty: getTypeRef(definitions, accessibleTypes, field.type),
+                          ty: getTypeRef(
+                              definitions, accessibleTypes, field.type),
                         ),
                       )
                       .toList(),
@@ -664,7 +695,8 @@ class MetadataMerkleizer {
             tag: def.tag,
             value: LookupTypeDefArray(
               len: def.value.len,
-              typeParam: getTypeRef(definitions, accessibleTypes, def.value.type),
+              typeParam:
+                  getTypeRef(definitions, accessibleTypes, def.value.type),
             ),
           ),
         ];
@@ -672,8 +704,10 @@ class MetadataMerkleizer {
         return [
           LookupTypeDef(
             tag: def.tag,
-            value:
-                def.value.map<TypeRef>((t) => getTypeRef(definitions, accessibleTypes, t)).toList(),
+            value: def.value
+                .map<TypeRef>(
+                    (t) => getTypeRef(definitions, accessibleTypes, t))
+                .toList(),
           ),
         ];
       case 'bitSequence':
@@ -700,7 +734,8 @@ class MetadataMerkleizer {
     throw Exception('FrameId($frameId) should have been filtered out');
   }
 
-  Lookup getLookup(Map<int, LookupValue> definitions, Map<int, int> accessibleTypes) {
+  Lookup getLookup(
+      Map<int, LookupValue> definitions, Map<int, int> accessibleTypes) {
     final Lookup typeTree = [];
 
     for (final entry in accessibleTypes.entries) {
@@ -708,7 +743,8 @@ class MetadataMerkleizer {
       final typeId = entry.value;
       final path = definitions[frameId]!.path;
 
-      for (final def in constructLookupTypeDef(definitions, accessibleTypes, frameId)) {
+      for (final def
+          in constructLookupTypeDef(definitions, accessibleTypes, frameId)) {
         typeTree.add(LookupEntry(
           path: path,
           typeId: typeId,
@@ -840,8 +876,10 @@ class MetadataMerkleizer {
   List<dynamic>? decodeTuple(TypeDefTuple def, Input input) {
     if (def.fields.isEmpty) return null;
 
-    return List.generate(def.fields.length,
-        (i) => decodeTypeDef(metadata.typeById(def.fields[i]).type.typeDef, input));
+    return List.generate(
+        def.fields.length,
+        (i) => decodeTypeDef(
+            metadata.typeById(def.fields[i]).type.typeDef, input));
   }
 
   List<dynamic> decodeArray(TypeDefArray def, Input input) {
@@ -888,7 +926,8 @@ class MetadataMerkleizer {
     );
   }
 
-  (int version, bool signed, Uint8List bytes) decodeExtrinsic(Uint8List extrinsic) {
+  (int version, bool signed, Uint8List bytes) decodeExtrinsic(
+      Uint8List extrinsic) {
     final input = Input.fromBytes(extrinsic);
     CompactCodec.codec.decode(input);
     final ver = versionDecoder(input);
@@ -898,7 +937,8 @@ class MetadataMerkleizer {
   }
 
   Uint8List mergeUint8(List<Uint8List> inputs) {
-    final list = Uint8List(inputs.fold<int>(0, (sum, element) => sum + element.length));
+    final list =
+        Uint8List(inputs.fold<int>(0, (sum, element) => sum + element.length));
     var offset = 0;
     for (final element in inputs) {
       list.setAll(offset, element);
@@ -966,8 +1006,8 @@ class MetadataMerkleizer {
     }
   }
 
-  innerDecodeAndCollect(
-      Input input, TypeRef typeRef, Map<int, List<int>> idToLookups, Set<int> collected) {
+  innerDecodeAndCollect(Input input, TypeRef typeRef,
+      Map<int, List<int>> idToLookups, Set<int> collected) {
     if (typeRef.tag != 'perId') {
       skipTypeRef(typeRef, input);
       return;
@@ -988,8 +1028,9 @@ class MetadataMerkleizer {
     switch (current.typeDef.tag) {
       case 'enumeration':
         final selectedIdx = U8Codec.codec.decode(input);
-        final result =
-            lookupIdxs.map((lookupIdx) => [lookup[lookupIdx].typeDef, lookupIdx]).firstWhere((x) {
+        final result = lookupIdxs
+            .map((lookupIdx) => [lookup[lookupIdx].typeDef, lookupIdx])
+            .firstWhere((x) {
           final variant = x[0] as LookupTypeDef;
           return variant.value.index == selectedIdx;
         });
@@ -1071,7 +1112,8 @@ class MetadataMerkleizer {
   }
 
   getProofData(List<int> knownLeavesIdxs) {
-    final knownLeaves = knownLeavesIdxs.map((idx) => lookupEncoded[idx]).toList();
+    final knownLeaves =
+        knownLeavesIdxs.map((idx) => lookupEncoded[idx]).toList();
 
     final startingIdx = lookupEncoded.length - 1;
     final leafIdxs = knownLeavesIdxs.map((idx) => startingIdx + idx).toList();
@@ -1166,7 +1208,8 @@ class MetadataMerkleizer {
     }
 
     for (var i = hashTree.length - 2; i > 0; i -= 2) {
-      hashTree[(i - 1) ~/ 2] = blake3Hash(mergeUint8([hashTree[i], hashTree[i + 1]]));
+      hashTree[(i - 1) ~/ 2] =
+          blake3Hash(mergeUint8([hashTree[i], hashTree[i + 1]]));
     }
 
     return hashTree;
@@ -1193,8 +1236,12 @@ class MetadataMerkleizer {
   Uint8List getProofForExtrinsicPayload(Uint8List payload) {
     final List<TypeRef> typeRefs = [
       extrinsicMeta.callTy,
-      ...extrinsicMeta.signedExtensions.map((e) => e.includedInExtrinsic).toList(),
-      ...extrinsicMeta.signedExtensions.map((e) => e.includedInSignedData).toList(),
+      ...extrinsicMeta.signedExtensions
+          .map((e) => e.includedInExtrinsic)
+          .toList(),
+      ...extrinsicMeta.signedExtensions
+          .map((e) => e.includedInSignedData)
+          .toList(),
     ];
 
     return generateProof(
@@ -1202,8 +1249,8 @@ class MetadataMerkleizer {
     );
   }
 
-  Uint8List getProofForExtrinsicParts(
-      Uint8List callData, Uint8List includedInExtrinsic, Uint8List includedInSignedData) {
+  Uint8List getProofForExtrinsicParts(Uint8List callData,
+      Uint8List includedInExtrinsic, Uint8List includedInSignedData) {
     final bytes = mergeUint8([
       callData,
       includedInExtrinsic,
@@ -1231,10 +1278,13 @@ class MetadataMerkleizer {
         : [extrinsicMeta.callTy];
 
     if (txAdditionalSigned != null) {
-      typeRefs.addAll(extrinsicMeta.signedExtensions.map((e) => e.includedInSignedData));
+      typeRefs.addAll(
+          extrinsicMeta.signedExtensions.map((e) => e.includedInSignedData));
     }
 
-    final proofBytes = txAdditionalSigned != null ? mergeUint8([bytes, txAdditionalSigned]) : bytes;
+    final proofBytes = txAdditionalSigned != null
+        ? mergeUint8([bytes, txAdditionalSigned])
+        : bytes;
 
     return generateProof(decodeAndCollectKnownLeafs(proofBytes, typeRefs));
   }
