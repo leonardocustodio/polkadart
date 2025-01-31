@@ -8,6 +8,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
 import 'dart:convert';
 import './hash/xxh64.dart';
 import './hash/block_hash.dart';
+import './hash/blake3.dart';
 
 part './hasher.dart';
 part './storage.dart';

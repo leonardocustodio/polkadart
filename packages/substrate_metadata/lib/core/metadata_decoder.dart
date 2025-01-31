@@ -30,8 +30,8 @@ class MetadataDecoder {
     final version = U8Codec.codec.decode(source);
     assertion(9 <= version,
         'Expected version greater then 9, but got $version. Versions below 9 are not supported by this lib');
-    assertion(15 > version,
-        'Expected version less then 15, but got $version. Versions above 15 are not supported by this lib');
+    assertion(16 > version,
+        'Expected version less then 16, but got $version. Versions above 16 are not supported by this lib');
 
     // Kusama Hack :o
     // See https://github.com/polkadot-js/api/commit/a9211690be6b68ad6c6dad7852f1665cadcfa5b2
@@ -89,13 +89,13 @@ class RegistryCreator {
 
   RegistryCreator._internal();
 
-  final _registry = <Registry?>[]..length = 6;
+  final _registry = <Registry?>[]..length = 7;
 
   // create [] operator
   Registry operator [](int version) {
-    if (version < 9 || version > 14) {
+    if (version < 9 || version > 15) {
       throw Exception(
-          'Expected version between 9 and 14, but got $version, Only V9 - V14 are supported');
+          'Expected version between 9 and 15, but got $version, Only V9 - V15 are supported');
     }
     return Registry.from(
         (_registry[version - 9] ?? _createRegistry(version)).codecs);
