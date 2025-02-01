@@ -27,32 +27,25 @@ Future<void> main(List<String> arguments) async {
   final alicePublicKey = hex.encode(alice.publicKey.bytes);
   print('Public Key: $alicePublicKey');
 
-  final provider =
-  Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
+  final provider = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
   final api = Polkadot(provider);
   final state = StateApi(provider);
 
   final runtime = await state.getRuntimeVersion();
   final specVersion = runtime.specVersion;
-  final txVersion =
-      runtime.transactionVersion;
+  final txVersion = runtime.transactionVersion;
 
   final block = await provider.send('chain_getBlock', []);
-  final blockNumber =
-  int.parse(block.result['block']['header']['number']);
-  final blockHash =
-  (await provider.send('chain_getBlockHash', []))
+  final blockNumber = int.parse(block.result['block']['header']['number']);
+  final blockHash = (await provider.send('chain_getBlockHash', []))
       .result
       .replaceAll('0x', '');
-  final genesisHash =
-  (await provider.send('chain_getBlockHash', [0]))
+  final genesisHash = (await provider.send('chain_getBlockHash', [0]))
       .result
       .replaceAll('0x', '');
 
-  final customCall = api.tx.balances.transferKeepAlive(
-      dest: dest, value: BigInt.from(1000000000000));
-
-
+  final customCall = api.tx.balances
+      .transferKeepAlive(dest: dest, value: BigInt.from(1000000000000));
 
   // final customEncodedCall = customCall.encode();
   // print('Custom Encoded Call: ${hex.encode(customEncodedCall)}');
