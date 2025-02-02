@@ -1,3 +1,6 @@
+## 0.2.0
+- All packages have been bumped to add web support
+
 ## 0.1.0
 - Removes `json_schema2` from being a required dependency
 
