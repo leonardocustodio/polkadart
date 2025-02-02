@@ -1,4 +1,4 @@
-name: polkadart
+name: polkadart_monorepo
 repository: https://github.com/leonardocustodio/polkadart
 
 command:
@@ -6,8 +6,8 @@ command:
     usePubspecOverrides: true
 
 packages:
+  - apps/**
   - packages/**
-  - examples
 
 scripts:
   fetch_dependencies:
