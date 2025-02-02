@@ -27,9 +27,9 @@ dev_dependencies:
 polkadart:
   output_dir: lib/generated
   chains:
-    kusama: wss://kusama-rpc.publicnode.com
-    polkadot: wss://rpc.ibp.network/polkadot
+    polkadot: wss://rpc.polkadot.io
+    kusama: wss://kusama-rpc.polkadot.io
     astar: wss://rpc.astar.network
-    westend: wss://westend-rpc.polkadot.io
-    assethub: wss://westend-asset-hub-rpc.polkadot.io
+    paseo: wss://paseo-rpc.dwellir.com
+    assethub: wss://asset-hub-paseo-rpc.dwellir.com
     encointer: wss://encointer-kusama.dotters.network

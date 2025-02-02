@@ -39,7 +39,6 @@ class ChainGenerator {
     // Get pallet generators
     final List<PalletGenerator> palletGenerators = metadata.pallets
         // Remove Empty Pallets
-        // TODO: remove this field once we support extrinsics
         .where((pallet) =>
             pallet.calls != null ||
             pallet.storage != null ||
@@ -49,6 +48,11 @@ class ChainGenerator {
                   palletsPath, '${ReCase(pallet.name).snakeCase}.dart'),
               palletMetadata: pallet,
               registry: typeGenerators,
+              outerEnums: {
+                'call': metadata.outerEnums.callType,
+                'event': metadata.outerEnums.eventType,
+                'error': metadata.outerEnums.errorType,
+              },
             ))
         .toList();
 

@@ -16,6 +16,9 @@ analyzer:
   errors:
     use_string_in_part_of_directives: ignore
 
+formatter:
+  page_width: 100
+
 # Uncomment the following section to specify additional rules.
 
 # linter:

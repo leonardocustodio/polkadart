@@ -50,7 +50,7 @@ Future<void> main(List<String> arguments) async {
     final bobMultiAddress = encointer.$MultiAddress().id(bob.publicKey.bytes);
 
     final encointerProvider =
-        Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
+        Provider.fromUri(Uri.parse('wss://encointer-kusama.dotters.network'));
     final encointerApi = Encointer(encointerProvider);
     final encointerState = StateApi(encointerProvider);
 
