@@ -24,7 +24,8 @@ import 'package:ss58/ss58.dart';
 import 'generated/polkadot/polkadot.dart';
 
 Future<void> main(List<String> arguments) async {
-  final api = Polkadot(Provider.fromUri(Uri.parse('wss://paseo-rpc.dwellir.com')));
+  final api =
+      Polkadot(Provider.fromUri(Uri.parse('wss://paseo-rpc.dwellir.com')));
   final bob = await KeyPair.sr25519.fromUri('//Bob');
   final bobMultiAddress = polkadot.$MultiAddress().id(bob.publicKey.bytes);
 
