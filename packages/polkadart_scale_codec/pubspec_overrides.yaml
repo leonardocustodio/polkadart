@@ -2,3 +2,15 @@
 dependency_overrides:
   substrate_metadata:
     path: ../substrate_metadata
+  polkadart:
+    path: ../polkadart
+  polkadart_keyring:
+    path: ../polkadart_keyring
+  secp256k1_ecdsa:
+    path: ../secp256k1_ecdsa
+  sr25519:
+    path: ../sr25519
+  ss58:
+    path: ../ss58
+  substrate_bip39:
+    path: ../substrate_bip39

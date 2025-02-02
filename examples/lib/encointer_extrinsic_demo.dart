@@ -78,7 +78,8 @@ Future<void> main(List<String> arguments) async {
     // Get Metadata
     final customMetadata = await encointerState.getMetadata();
     // Get Registry
-    final scale_codec.Registry registry = customMetadata.chainInfo.scaleCodec.registry;
+    final scale_codec.Registry registry =
+        customMetadata.chainInfo.scaleCodec.registry;
 
     // Get SignedExtensions mapped with codecs Map<String, Codec<dynamic>>
     final Map<String, scale_codec.Codec<dynamic>> signedExtensions =

@@ -13,27 +13,27 @@ import 'package:polkadart/polkadart.dart'
         SignatureType,
         SigningPayload,
         StateApi;
-import 'package:polkadart_example/generated/assethub/assethub.dart';
-import 'package:polkadart_example/generated/assethub/types/sp_runtime/multiaddress/multi_address.dart'
-    as asset_hub;
-import 'package:polkadart_example/generated/paseo/types/sp_runtime/multiaddress/multi_address.dart' as paseo;
-import 'package:polkadart_example/generated/paseo/paseo.dart';
+import 'package:polkadart_example/generated/polkadot/types/sp_runtime/multiaddress/multi_address.dart'
+    as polkadot;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
     as scale_codec;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:ss58/ss58.dart';
 
+import 'generated/polkadot/polkadot.dart';
+
 Future<void> main(List<String> arguments) async {
-  final api = Paseo(Provider.fromUri(Uri.parse('wss://paseo-rpc.dwellir.com')));
+  final api = Polkadot(Provider.fromUri(Uri.parse('wss://paseo-rpc.dwellir.com')));
   final bob = await KeyPair.sr25519.fromUri('//Bob');
-  final bobMultiAddress = paseo.$MultiAddress().id(bob.publicKey.bytes);
+  final bobMultiAddress = polkadot.$MultiAddress().id(bob.publicKey.bytes);
 
   // 0x05040028c01eccb4d2cada1cd3b326eb159aa3ece72c25198808ec8d3cae8ed2f4fb3a00
   //     04008eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a4800
-  final encodedTx = api.tx.balances.transferAll(dest: bobMultiAddress, keepAlive: false).encode();
+  final encodedTx = api.tx.balances
+      .transferAll(dest: bobMultiAddress, keepAlive: false)
+      .encode();
   print(encodeHex(encodedTx));
-
 
   // Create sr25519 wallet
   // final sr25519Wallet = await KeyPair.sr25519.fromMnemonic(
