@@ -20,6 +20,9 @@ linter:
     constant_identifier_names: false
     non_constant_identifier_names: false
 
+formatter:
+  page_width: 100
+
 # analyzer:
 #   exclude:
 #     - path/to/excluded/files/**

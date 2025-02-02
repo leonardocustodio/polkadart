@@ -149,7 +149,14 @@ class StateApi<P extends Provider> {
   }
 
   /// Returns the runtime metadata
-  Future<RuntimeMetadataPrefixed> getMetadata({BlockHash? at}) async {
+  Future<RuntimeMetadata> getMetadata({BlockHash? at}) async {
+    final List<String> params = at != null ? ['0x${hex.encode(at)}'] : const [];
+    final response = await _provider.send('state_getMetadata', params);
+    return RuntimeMetadata.fromHex(response.result);
+  }
+
+  /// Returns typed runtime metadata
+  Future<RuntimeMetadataPrefixed> getTypedMetadata({BlockHash? at}) async {
     final List<String> params = at != null ? ['0x${hex.encode(at)}'] : const [];
     final response = await _provider.send('state_getMetadata', params);
     final metadataPrefixed = RuntimeMetadataPrefixed.fromHex(response.result);

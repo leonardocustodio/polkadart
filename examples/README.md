@@ -13,6 +13,6 @@ Feel free to change to whatever network you want. After that you can generate th
 `dart run polkadart_cli:generate -v`
 
 Finally to run an example you can do:
-* `dart run bin/extrinsic_demo.dart`
-* `dart run bin/get_account_infos_demo.dart`
+* `dart run lib/extrinsic_demo.dart`
+* `dart run lib/get_account_infos_demo.dart`
 

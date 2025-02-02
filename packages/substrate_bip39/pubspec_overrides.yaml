@@ -1,4 +1,17 @@
+# melos_managed_dependency_overrides: polkadart,polkadart_keyring,secp256k1_ecdsa,sr25519,ss58,substrate_metadata
 # melos_managed_dependency_overrides
 dependency_overrides:
   polkadart_scale_codec:
     path: ../polkadart_scale_codec
+  polkadart:
+    path: ../polkadart
+  polkadart_keyring:
+    path: ../polkadart_keyring
+  secp256k1_ecdsa:
+    path: ../secp256k1_ecdsa
+  sr25519:
+    path: ../sr25519
+  ss58:
+    path: ../ss58
+  substrate_metadata:
+    path: ../substrate_metadata

@@ -325,7 +325,8 @@ class PalletGenerator {
   List<Storage> storages;
   // List<Tx> txs;
   List<Constant> constants;
-  typegen.VariantBuilder? runtimeCall;
+  typegen.VariantBuilder? calls;
+  typegen.VariantBuilder runtimeCall;
 
   PalletGenerator({
     required this.filePath,
@@ -333,6 +334,7 @@ class PalletGenerator {
     required this.storages,
     // required this.txs,
     required this.constants,
+    required this.calls,
     required this.runtimeCall,
   });
 
@@ -340,6 +342,7 @@ class PalletGenerator {
     required String filePath,
     required metadata.PalletMetadata palletMetadata,
     required Map<int, typegen.TypeDescriptor> registry,
+    required Map<String, int> outerEnums,
   }) {
     // Load storages
     final List<Storage>? storages = palletMetadata.storage?.entries
@@ -347,19 +350,21 @@ class PalletGenerator {
             Storage.fromMetadata(storageMetadata, registry))
         .toList();
 
+    // Load runtime call
+    final runtimeCallType = registry[outerEnums['call']]!;
+
     // Load calls
-    var runtimeCallType = palletMetadata.calls != null
+    var callType = palletMetadata.calls != null
         ? registry[palletMetadata.calls!.type]
         : null;
-    if (runtimeCallType != null) {
-      while (runtimeCallType is typegen.TypeDefBuilder) {
-        runtimeCallType = runtimeCallType.generator;
+    if (callType != null) {
+      while (callType is typegen.TypeDefBuilder) {
+        callType = callType.generator;
       }
-      if (runtimeCallType is typegen.EmptyDescriptor) {
-        runtimeCallType = null;
-      } else if (runtimeCallType is! typegen.VariantBuilder) {
-        throw Exception(
-            'Invalid runtime call type "${runtimeCallType.runtimeType}"');
+      if (callType is typegen.EmptyDescriptor) {
+        callType = null;
+      } else if (callType is! typegen.VariantBuilder) {
+        throw Exception('Invalid runtime call type "${callType.runtimeType}"');
       }
     }
 
@@ -368,14 +373,15 @@ class PalletGenerator {
         .map((constantMetadata) =>
             Constant.fromMetadata(constantMetadata, registry))
         .toList();
+
     // Build pallet
     return PalletGenerator(
       filePath: filePath,
       name: palletMetadata.name,
       storages: storages ?? [],
-      // txs: txs,
       constants: constants,
-      runtimeCall: runtimeCallType as typegen.VariantBuilder?,
+      calls: callType as typegen.VariantBuilder?,
+      runtimeCall: runtimeCallType as typegen.VariantBuilder,
     );
   }
 
@@ -402,12 +408,9 @@ class PalletGenerator {
     if (storages.isNotEmpty) {
       classes.add(createPalletQueries(this));
     }
-    if (runtimeCall != null) {
-      classes.add(createPalletTxs(this, runtimeCall!));
+    if (calls != null) {
+      classes.add(createPalletTxs(this, calls!, runtimeCall));
     }
-    // if (txs.isNotEmpty) {
-    //   classes.add(createPalletTxs(this));
-    // }
     if (constants.isNotEmpty) {
       classes.add(createPalletConstants(this));
     }
@@ -533,9 +536,15 @@ Class createPalletQueries(
 Class createPalletTxs(
   PalletGenerator generator,
   typegen.VariantBuilder variants,
+  typegen.VariantBuilder runtimeVariant,
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
+
+      final runtimeGenerator = runtimeVariant.variants.first.generator;
+      final runtimePrimitive = runtimeGenerator.primitive(dirname);
+      final runtimeCall = refer(generator.name, runtimePrimitive.url);
+
       final isEnumClass =
           variants.variants.every((variant) => variant.fields.isEmpty);
       classBuilder
@@ -543,13 +552,13 @@ Class createPalletTxs(
         ..constructors.add(Constructor((b) => b..constant = true))
         ..methods.addAll(variants.variants.map((variant) => Method((builder) {
               final Reference primitive = variant.primitive(dirname);
-              final Reference runtimePrimitive = variants.primitive(dirname);
+              final Reference callPrimitive = variants.primitive(dirname);
 
               builder
-                // ..name = sanitize(txName, recase: false)
                 ..name = typegen.Field.toFieldName(variant.name)
                 ..docs.addAll(sanitizeDocs(variant.docs))
-                ..returns = isEnumClass ? runtimePrimitive : primitive
+                // ..returns = isEnumClass ? runtimePrimitive : primitive
+                ..returns = runtimeCall
                 ..optionalParameters.addAll(
                   variant.fields.map(
                     (field) => Parameter(
@@ -563,39 +572,27 @@ Class createPalletTxs(
                   ),
                 )
                 ..body = Block((b) {
-                  // if (sanitize(txName) ==
-                  //     sanitize(primitive.symbol.toString())) {
-                  //   txName = '${txName}Variant';
-                  // }
-
-                  // Expression expression =
-                  //     declareFinal('_call').assign(primitive);
-
                   Expression expression;
 
                   if (isEnumClass == false) {
                     // not an simple enum class, contains parametrized fields.
-                    expression = primitive.call([], {
-                      for (final field in variant.fields)
-                        field.sanitizedName:
-                            CodeExpression(Code(field.sanitizedName))
-                    });
+                    expression = runtimeCall.call([
+                      primitive.call([], {
+                        for (final field in variant.fields)
+                          field.sanitizedName:
+                              CodeExpression(Code(field.sanitizedName))
+                      })
+                    ]);
                   } else {
-                    // simple enum class no need to call () contructor
+                    // simple enum class no need to call () constructor
                     // instead leaving it as a property.
-                    // expression =
-                    //     expression.property(sanitize(txName, recase: false));
-                    expression = runtimePrimitive
-                        .property(typegen.Field.toFieldName(variant.name));
+                    expression = runtimeCall.call([
+                      callPrimitive
+                          .property(typegen.Field.toFieldName(variant.name))
+                    ]);
                   }
 
                   b.statements.add(expression.returned.statement);
-                  // ..statements.add(runtimePrimitive
-                  //     .property('values')
-                  //     // .property(ReCase(generator.name).camelCase)
-                  //     .call([CodeExpression(Code('_call'))])
-                  //     .returned
-                  //     .statement);
                 });
             })));
     });
