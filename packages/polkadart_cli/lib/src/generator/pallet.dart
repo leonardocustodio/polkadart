@@ -20,7 +20,6 @@ import 'package:code_builder/code_builder.dart'
 import 'package:path/path.dart' as p;
 import 'package:polkadart/scale_codec.dart' as scale_codec;
 import 'package:recase/recase.dart' show ReCase;
-import 'package:substrate_metadata/utils/utils.dart';
 import '../typegen/typegen.dart' as typegen
     show
         TypeDescriptor,
