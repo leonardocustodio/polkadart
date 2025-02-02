@@ -352,7 +352,7 @@ class PalletGenerator {
         .toList();
 
     // Load runtime call
-    final runtimeCallType =  registry[outerEnums['call']]!;
+    final runtimeCallType = registry[outerEnums['call']]!;
 
     // Load calls
     var callType = palletMetadata.calls != null
@@ -365,8 +365,7 @@ class PalletGenerator {
       if (callType is typegen.EmptyDescriptor) {
         callType = null;
       } else if (callType is! typegen.VariantBuilder) {
-        throw Exception(
-            'Invalid runtime call type "${callType.runtimeType}"');
+        throw Exception('Invalid runtime call type "${callType.runtimeType}"');
       }
     }
 
@@ -536,9 +535,9 @@ Class createPalletQueries(
     });
 
 Class createPalletTxs(
-    PalletGenerator generator,
-    typegen.VariantBuilder variants,
-    typegen.VariantBuilder runtimeVariant,
+  PalletGenerator generator,
+  typegen.VariantBuilder variants,
+  typegen.VariantBuilder runtimeVariant,
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
@@ -548,7 +547,7 @@ Class createPalletTxs(
       final runtimeCall = refer(generator.name, runtimePrimitive.url);
 
       final isEnumClass =
-      variants.variants.every((variant) => variant.fields.isEmpty);
+          variants.variants.every((variant) => variant.fields.isEmpty);
       classBuilder
         ..name = 'Txs'
         ..constructors.add(Constructor((b) => b..constant = true))
@@ -578,16 +577,20 @@ Class createPalletTxs(
 
                   if (isEnumClass == false) {
                     // not an simple enum class, contains parametrized fields.
-                    expression = runtimeCall.call([primitive.call([], {
-                      for (final field in variant.fields)
-                        field.sanitizedName:
-                        CodeExpression(Code(field.sanitizedName))
-                    })]);
-
+                    expression = runtimeCall.call([
+                      primitive.call([], {
+                        for (final field in variant.fields)
+                          field.sanitizedName:
+                              CodeExpression(Code(field.sanitizedName))
+                      })
+                    ]);
                   } else {
                     // simple enum class no need to call () constructor
                     // instead leaving it as a property.
-                    expression = runtimeCall.call([callPrimitive.property(typegen.Field.toFieldName(variant.name))]);
+                    expression = runtimeCall.call([
+                      callPrimitive
+                          .property(typegen.Field.toFieldName(variant.name))
+                    ]);
                   }
 
                   b.statements.add(expression.returned.statement);
