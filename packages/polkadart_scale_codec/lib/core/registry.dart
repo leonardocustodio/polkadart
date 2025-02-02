@@ -17,13 +17,6 @@ class Registry {
     this.codecs.addAll(codecs);
   }
 
-  Registry.fromRuntimeMetadata(RuntimeMetadata runtimeMetadata) {
-    runtimeMetadata.types.forEach((type) => {
-          // This needs to be done, so we don't break the other packages for now
-          // Remove the type and let it be dynamic so we don't need to depend on substrate_metadata if possible
-        });
-  }
-
   ///
   /// Get Signed Extensions
   Map<String, Codec> getSignedExtensionTypes() {

@@ -20,6 +20,7 @@ import 'package:code_builder/code_builder.dart'
 import 'package:path/path.dart' as p;
 import 'package:polkadart/scale_codec.dart' as scale_codec;
 import 'package:recase/recase.dart' show ReCase;
+import 'package:substrate_metadata/utils/utils.dart';
 import '../typegen/typegen.dart' as typegen
     show
         TypeDescriptor,
@@ -326,6 +327,7 @@ class PalletGenerator {
   // List<Tx> txs;
   List<Constant> constants;
   typegen.VariantBuilder? runtimeCall;
+  Map<String, typegen.VariantBuilder> outerEnums;
 
   PalletGenerator({
     required this.filePath,
@@ -334,12 +336,14 @@ class PalletGenerator {
     // required this.txs,
     required this.constants,
     required this.runtimeCall,
+    required this.outerEnums,
   });
 
   factory PalletGenerator.fromMetadata({
     required String filePath,
     required metadata.PalletMetadata palletMetadata,
     required Map<int, typegen.TypeDescriptor> registry,
+    required Map<String, int> outerEnums,
   }) {
     // Load storages
     final List<Storage>? storages = palletMetadata.storage?.entries
@@ -351,6 +355,7 @@ class PalletGenerator {
     var runtimeCallType = palletMetadata.calls != null
         ? registry[palletMetadata.calls!.type]
         : null;
+
     if (runtimeCallType != null) {
       while (runtimeCallType is typegen.TypeDefBuilder) {
         runtimeCallType = runtimeCallType.generator;
@@ -362,6 +367,8 @@ class PalletGenerator {
             'Invalid runtime call type "${runtimeCallType.runtimeType}"');
       }
     }
+
+    final callType = registry[outerEnums['call']]!;
 
     // Load constants
     final List<Constant> constants = palletMetadata.constants
@@ -376,6 +383,9 @@ class PalletGenerator {
       // txs: txs,
       constants: constants,
       runtimeCall: runtimeCallType as typegen.VariantBuilder?,
+      outerEnums: {
+        'call': callType as typegen.VariantBuilder,
+      },
     );
   }
 
@@ -403,11 +413,8 @@ class PalletGenerator {
       classes.add(createPalletQueries(this));
     }
     if (runtimeCall != null) {
-      classes.add(createPalletTxs(this, runtimeCall!));
+      classes.add(createPalletTxs(this, runtimeCall!, outerEnums['call']!));
     }
-    // if (txs.isNotEmpty) {
-    //   classes.add(createPalletTxs(this));
-    // }
     if (constants.isNotEmpty) {
       classes.add(createPalletConstants(this));
     }
@@ -533,9 +540,12 @@ Class createPalletQueries(
 Class createPalletTxs(
   PalletGenerator generator,
   typegen.VariantBuilder variants,
+    typegen.VariantBuilder callType,
 ) =>
     Class((classBuilder) {
       final dirname = p.dirname(generator.filePath);
+      print('${callType.name} : ${callType.id()} - ${callType.variants.length} - ${callType.originalName} - ${callType.variants.first.name} - ${callType.variants.first.index}');
+
       final isEnumClass =
           variants.variants.every((variant) => variant.fields.isEmpty);
       classBuilder

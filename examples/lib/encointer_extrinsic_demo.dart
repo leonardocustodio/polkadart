@@ -50,7 +50,7 @@ Future<void> main(List<String> arguments) async {
     final bobMultiAddress = encointer.$MultiAddress().id(bob.publicKey.bytes);
 
     final encointerProvider =
-        Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
+        Provider.fromUri(Uri.parse('wss://encointer-kusama.dotters.network'));
     final encointerApi = Encointer(encointerProvider);
     final encointerState = StateApi(encointerProvider);
 
@@ -78,8 +78,7 @@ Future<void> main(List<String> arguments) async {
     // Get Metadata
     final customMetadata = await encointerState.getMetadata();
     // Get Registry
-    final scale_codec.Registry registry =
-        scale_codec.Registry.fromRuntimeMetadata(customMetadata.metadata);
+    final scale_codec.Registry registry = customMetadata.chainInfo.scaleCodec.registry;
 
     // Get SignedExtensions mapped with codecs Map<String, Codec<dynamic>>
     final Map<String, scale_codec.Codec<dynamic>> signedExtensions =
