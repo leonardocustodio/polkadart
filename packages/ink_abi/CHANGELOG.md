@@ -1,3 +1,6 @@
+## 0.2.1
+- Packages were bumped for new publish workflow
+
 ## 0.2.0
 - All packages have been bumped to add web support
 
