@@ -43,7 +43,7 @@ jobs:
         run: |
           echo "MELOS_SDK_PATH=$MELOS_SDK_PATH" >> "${GITHUB_ENV}"
           dart pub get
-          dart run melos bootstrap
+          dart run melos run fetch_dependencies
         env:
           MELOS_SDK_PATH: ${{ env.FLUTTER_ROOT }}
 
