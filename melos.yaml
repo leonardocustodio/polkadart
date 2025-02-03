@@ -12,7 +12,7 @@ packages:
 scripts:
   fetch_dependencies:
     description: Run dart pub get in a specific package to pre-fetch all the packages.
-    run: melos exec --scope="${SCOPE:-*}" -c 1 -- "dart pub get"
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- "dart pub get"
     select-package:
       flutter: false
 
