@@ -1,8 +1,8 @@
-name: Publish to Pub.dev
+name: Publish secp256k1_ecdsa
 on:
   push:
     tags:
-      - 'secp256k1_ecdsa-v[0-9]+.[0-9]+.[0-9]+'
+      - 'secp256k1_ecdsa-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:

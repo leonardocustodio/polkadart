@@ -1,8 +1,8 @@
-name: Publish to Pub.dev
+name: Publish sr25519
 on:
   push:
     tags:
-      - 'sr25519-v[0-9]+.[0-9]+.[0-9]+'
+      - 'sr25519-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:
