@@ -1,8 +1,8 @@
-name: Publish to Pub.dev
+name: Publish ink_cli
 on:
   push:
     tags:
-      - 'ink_cli-v[0-9]+.[0-9]+.[0-9]+'
+      - 'ink_cli-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:

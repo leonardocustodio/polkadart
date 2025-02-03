@@ -1,8 +1,8 @@
-name: Publish ink_abi
+name: Publish polkadart_cli
 on:
   push:
     tags:
-      - 'ink_abi-[0-9]+.[0-9]+.[0-9]+'
+      - 'polkadart-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:
@@ -11,4 +11,4 @@ jobs:
     uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
     with:
       environment: pub.dev
-      working-directory: packages/ink_abi
+      working-directory: packages/polkadart
