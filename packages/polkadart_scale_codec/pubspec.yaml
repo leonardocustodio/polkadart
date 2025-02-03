@@ -16,5 +16,5 @@ dependencies:
   substrate_metadata: ^1.4.0
 
 dev_dependencies:
-  lints: ^2.0.0 # BSD-3-Clause
+  lints: ^5.1.1 # BSD-3-Clause
   test: ^1.16.0 # BSD-3-Clause
