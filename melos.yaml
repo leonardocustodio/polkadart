@@ -1,10 +1,5 @@
 name: polkadart_monorepo
 repository: https://github.com/leonardocustodio/polkadart
-
-command:
-  bootstrap:
-    usePubspecOverrides: true
-
 packages:
   - apps/**
   - packages/**
@@ -12,18 +7,18 @@ packages:
 scripts:
   fetch_dependencies:
     description: Run dart pub get in a specific package to pre-fetch all the packages.
-    run: melos exec --scope="${SCOPE:-*}" -c 1 -- "dart pub get"
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- "dart pub get"
     select-package:
       flutter: false
 
   test:
-    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart test --no-chain-stack-traces --ignore-timeouts --coverage="coverage" --concurrency=1'
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart test --no-chain-stack-traces --ignore-timeouts --coverage="coverage" --concurrency=1'
 
   coverage:
-    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart run coverage:format_coverage --lcov --in=coverage --out=coverage/coverage.lcov --packages=.dart_tool/package_config.json --report-on=lib'
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart run coverage:format_coverage --lcov --in=coverage --out=coverage/coverage.lcov --report-on=lib'
   
   format:
-    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart format . --set-exit-if-changed'
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart format . --set-exit-if-changed'
   
   analyze:
-    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 --fail-fast -- 'dart analyze --fatal-infos .'
+    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart analyze --fatal-infos .'
