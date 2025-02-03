@@ -1,3 +1,6 @@
+## 0.6.1
+- Fixes `multisig_meta` and adds 'CheckMetadataHash' extension functionality
+
 ## 0.6.0
 - All packages have been bumped to add web support
 

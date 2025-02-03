@@ -28,6 +28,7 @@ class SigningPayload extends Payload {
     required super.eraPeriod,
     required super.nonce,
     required super.tip,
+    super.metadataHash,
     super.customSignedExtensions,
   });
 
@@ -49,13 +50,13 @@ class SigningPayload extends Payload {
           ? encodeHex(CompactCodec.codec.encode(tip))
           : encodeHex(CompactBigIntCodec.codec.encode(tip)),
       // This is for the `CheckMetadataHash` signed extension.
-      // signing the metadata hash is not supported now, so
-      // the set the enabled byte false with `mode: '00'`.
-      'mode': '00',
+      // it sets the mode byte to true if a metadataHash is present.
+      'mode': metadataHash == '00' ? '00' : '01',
       // This is for the `CheckMetadataHash` additional signed extensions.
-      // Signing the metadata hash is not supported now, so we
-      // sign the `Option<MetadataHash>::None` by setting it to '00'.
-      'metadataHash': '00',
+      // we sign the `Option<MetadataHash>::None` by setting it to '00'.
+      'metadataHash': metadataHash == '00'
+          ? '00'
+          : '01${metadataHash.replaceAll('0x', '')}',
     };
   }
 
@@ -116,6 +117,7 @@ class SigningPayload extends Payload {
         // Most probably, it is a custom signed extension.
         // check if this signed extension is NullCodec or not!
         final signedExtensionMap = registry.getSignedExtensionTypes();
+        print(signedExtensionMap);
         if (signedExtensionMap[extension] != null &&
             signedExtensionMap[extension] is! NullCodec &&
             signedExtensionMap[extension].hashCode !=
@@ -163,7 +165,7 @@ class SigningPayload extends Payload {
         // Most probably, it is a custom signed extension.
         // check if this signed extension is NullCodec or not!
         if (registry.getSignedExtensionTypes() is List) {
-          // This method call is from polkadot cli and not from the Reigstry of the polkadart_scale_codec.
+          // This method call is from polkadot cli and not from the Registry of the polkadart_scale_codec.
           continue;
         }
         final additionalSignedExtensionMap =

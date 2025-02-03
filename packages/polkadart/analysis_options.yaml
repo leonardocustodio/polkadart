@@ -1,9 +1,5 @@
 include: package:lints/recommended.yaml
 
-analyzer:
-  exclude:
-    - lib/multisig/*
-
 linter:
   rules:
     constant_identifier_names: false
