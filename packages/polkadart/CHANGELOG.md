@@ -1,3 +1,6 @@
+## 0.6.1
+- Fixes `multisig_meta`
+
 ## 0.6.0
 - All packages have been bumped to add web support
 
