@@ -1,8 +1,8 @@
-name: Publish to Pub.dev
+name: Publish ss58
 on:
   push:
     tags:
-      - 'ss58-v[0-9]+.[0-9]+.[0-9]+'
+      - 'ss58-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:

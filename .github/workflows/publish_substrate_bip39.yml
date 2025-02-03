@@ -1,8 +1,8 @@
-name: Publish to Pub.dev
+name: Publish substrate_bip39
 on:
   push:
     tags:
-      - 'substrate_bip39-v[0-9]+.[0-9]+.[0-9]+'
+      - 'substrate_bip39-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:

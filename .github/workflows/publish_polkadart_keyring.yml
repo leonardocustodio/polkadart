@@ -1,8 +1,8 @@
-name: Publish to Pub.dev
+name: Publish polkadart_keyring
 on:
   push:
     tags:
-      - 'polkadart_keyring-v[0-9]+.[0-9]+.[0-9]+'
+      - 'polkadart_keyring-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:

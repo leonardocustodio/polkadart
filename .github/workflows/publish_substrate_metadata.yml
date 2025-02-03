@@ -1,8 +1,8 @@
-name: Publish to Pub.dev
+name: Publish substrate_metadata
 on:
   push:
     tags:
-      - 'substrate_metadata-v[0-9]+.[0-9]+.[0-9]+'
+      - 'substrate_metadata-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:
