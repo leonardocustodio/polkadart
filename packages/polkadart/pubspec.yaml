@@ -16,7 +16,7 @@ dependencies:
   polkadart_scale_codec: ^1.4.0 # Apache 2.0
   substrate_metadata: ^1.4.0 # Apache 2.0
   hashlib_codecs: ^2.2.0 # BSD-3-Clause
-  polkadart_keyring: ^0.6.0
+  polkadart_keyring: ^0.6.1
   ss58: ^1.3.0
 
 dev_dependencies:
