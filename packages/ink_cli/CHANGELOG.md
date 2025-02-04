@@ -1,3 +1,6 @@
+## 0.2.2
+- General fixes for ink_cli
+
 ## 0.2.1
 - Packages were bumped for new publish workflow
 
