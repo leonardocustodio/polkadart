@@ -36,6 +36,11 @@ class TypeGenerator {
 
     // Reserve certain names
     names.reserve('metadata');
+    names.reserve('bool');
+    names.reserve('String');
+    names.reserve('double');
+    names.reserve('int');
+    names.reserve('List');
 
     // Set known custom names, e.g. for event, messages, constructors
     names.assign(_description.event(), 'Event');
@@ -104,18 +109,18 @@ class TypeGenerator {
     // Then, we might embed the original ABI JSON
     final metadata = JsonEncoder.withIndent('    ').convert(_readMetadata());
     fileOutput.block(
-      start: "const String _metadataJson = '''",
+      start: "final _metadataJson = ",
       cb: () {
         for (final line in metadata.split('\n')) {
           fileOutput.line(line);
         }
       },
-      end: "''';",
+      end: ";",
     );
 
     fileOutput.line();
     fileOutput.block(
-      start: 'final InkAbi _abi = InkAbi(jsonDecode(_metadataJson));',
+      start: 'final InkAbi _abi = InkAbi(_metadataJson);',
       cb: null,
       end: null,
     );
@@ -259,41 +264,40 @@ class TypeGenerator {
         // For each message that doesn't mutate, create a method
         final messages = _project['spec']['messages'] as List;
         for (final m in messages) {
-          if (m['mutates'] == false) {
-            // build signature
-            final args = (m['args'] as List)
-                .map((arg) =>
-                    'final ${ifs.use(arg['type']['type'])} ${arg['label']}')
-                .join(', ');
-            final returnType = m['returnType']?['type'];
-            if (returnType == null) {
+          // build signature
+          final args = (m['args'] as List)
+              .map((arg) =>
+                  'final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .join(', ');
+          //final returnType = m['returnType']?['type'];
+          /* if (returnType == null) {
               continue;
-            }
+            } */
 
-            final methodName = (m['label'] as String).replaceAll('::', '_');
-            fileOutput.line();
-            // Add docs
-            final docs = (m['docs'] as List).cast<String>();
-            fileOutput.blockComment(docs);
-            fileOutput.block(
-              start:
-                  'Future<${ifs.use(returnType)}> $methodName($args) async {',
-              cb: () {
-                final callArgs =
-                    (m['args'] as List).map((arg) => arg['label']).join(', ');
-                fileOutput.line(
-                    "return await _stateCall<${ifs.use(returnType)}>('${m['selector']}', [$callArgs]);");
-              },
-              end: '}',
-            );
-          }
+          final methodName = (m['label'] as String).replaceAll('::', '_');
+          fileOutput.line();
+          // Add docs
+          final docs = (m['docs'] as List).cast<String>();
+          fileOutput.blockComment(docs);
+          fileOutput.block(
+            // Investigate it when optimizing polkadart_scale_codec: ${returnType == null ? 'dynamic' : ifs.use(returnType)}
+            start: 'Future<dynamic> $methodName($args) async {',
+            cb: () {
+              final callArgs =
+                  (m['args'] as List).map((arg) => arg['label']).join(', ');
+              // /* Investigate it when optimizing polkadart_scale_codec: <${returnType == null ? 'dynamic' : ifs.use(returnType)}> */
+              fileOutput.line(
+                  "return _stateCall('${m['selector']}', [$callArgs]);");
+            },
+            end: '}',
+          );
         }
 
         // The private helper method
         fileOutput.line();
         fileOutput.block(
           start:
-              'Future<T> _stateCall<T>(final String selector, final List<dynamic> args) async {',
+              'Future<dynamic> _stateCall(final String selector, final List<dynamic> args) async {',
           cb: () {
             fileOutput
                 .line('final input = _abi.encodeMessageInput(selector, args);');
@@ -301,8 +305,9 @@ class TypeGenerator {
             fileOutput.line('final api = StateApi(provider);');
             fileOutput.line(
                 'final result = await api.call(\'ContractsApi_call\', data, at: blockHash);');
-            fileOutput
-                .line('return _abi.decodeMessageOutput(selector, result);');
+            fileOutput.line('final decodedResult = decodeResult(result);');
+            fileOutput.line(
+                'return _abi.decodeMessageOutput(selector, decodedResult);');
           },
           end: '}',
         );

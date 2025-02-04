@@ -101,7 +101,7 @@ class Interfaces {
         // Attempt to interpret as a known "Result"
         final res = asResultType(variant);
         if (res != null) {
-          final okT = (res['ok'] == null) ? 'Null' : use(res['ok'] as int);
+          final okT = (res['ok'] == null) ? 'void' : use(res['ok'] as int);
           //final errT = (res['err'] == null) ? 'Null' : use(res['err'] as int);
           return okT;
         }
@@ -110,7 +110,7 @@ class Interfaces {
         final opt = asOptionType(variant);
         if (opt != null) {
           final someT =
-              (opt['some'] == null) ? 'Null' : use(opt['some'] as int);
+              (opt['some'] == null) ? 'void' : use(opt['some'] as int);
           return 'Option<$someT>';
         }
 
@@ -125,7 +125,7 @@ class Interfaces {
   }
 
   String _makeTuple(List<int> fields) {
-    if (fields.isEmpty) return 'Null';
+    if (fields.isEmpty) return 'void';
     final typeList = fields.map((f) => use(f)).join(', ');
     return '($typeList)';
   }
