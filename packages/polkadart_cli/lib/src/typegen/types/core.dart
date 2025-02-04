@@ -52,7 +52,7 @@ class GeneratedOutput {
   final List<Enum> enums;
 
   static final _dartfmt = DartFormatter(
-    languageVersion: DartFormatter.latestLanguageVersion,
+    languageVersion: DartFormatter.latestShortStyleLanguageVersion,
   );
 
   const GeneratedOutput(
