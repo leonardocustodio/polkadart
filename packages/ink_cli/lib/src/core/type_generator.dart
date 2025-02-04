@@ -286,8 +286,8 @@ class TypeGenerator {
               final callArgs =
                   (m['args'] as List).map((arg) => arg['label']).join(', ');
               // /* Investigate it when optimizing polkadart_scale_codec: <${returnType == null ? 'dynamic' : ifs.use(returnType)}> */
-              fileOutput.line(
-                  "return _stateCall('${m['selector']}', [$callArgs]);");
+              fileOutput
+                  .line("return _stateCall('${m['selector']}', [$callArgs]);");
             },
             end: '}',
           );
