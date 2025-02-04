@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:ink_cli/ink_cli.dart';
 import 'package:polkadart/polkadart.dart';
@@ -8,8 +9,8 @@ import 'constants.dart';
 import 'generated_erc20.dart';
 
 void main() async {
-  final fileOutput = FileOutput(
-      '/Users/kawal/Desktop/git_projects/polkadart/packages/ink_cli/example/generated_erc20.dart');
+  final String dir = Directory.current.absolute.path;
+  final fileOutput = FileOutput('$dir/example/generated_erc20.dart');
   final generator = TypeGenerator(
       abiFilePath: './example/ink_erc20.json', fileOutput: fileOutput);
   generator.generate();
@@ -22,7 +23,7 @@ void main() async {
 
   final contract = Contract(
     provider: polkadart,
-    address: Uint8List.fromList([]),
+    address: Uint8List.fromList(keyPair.publicKey.bytes.toList()),
   );
 
   final InstantiateRequest result = await contract.new_contract(

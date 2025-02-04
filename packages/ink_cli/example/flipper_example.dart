@@ -17,5 +17,5 @@ void main() async {
     keypair: keyPair,
     constructorArgs: [],
   );
-  print('done $value');
+  print('Deployed $value');
 }
