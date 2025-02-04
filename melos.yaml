@@ -11,9 +11,6 @@ scripts:
     select-package:
       flutter: false
 
-  get:
-    run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart pub get'
-
   test:
     run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart test --no-chain-stack-traces --ignore-timeouts --coverage="coverage" --concurrency=1'
 
