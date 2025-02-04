@@ -230,7 +230,7 @@ class PolkadartGenerator {
               Constructor((b) => b..constant = false),
             )
             ..fields.addAll(
-              pallets.where((pallet) => pallet.runtimeCall != null).map(
+              pallets.where((pallet) => pallet.calls != null).map(
                     (pallet) => Field(
                       (b) => b
                         ..name = sanitize(pallet.name)

@@ -4,32 +4,32 @@ version: 1.0.0
 publish_to: 'none'
 
 environment:
-  sdk: ^3.0.0
+  sdk: ^3.6.0
 
 # Add regular dependencies here.
 dependencies:
   convert: ^3.1.1
-  polkadart: ^0.4.7
-  polkadart_keyring: ^0.4.4
-  polkadart_scale_codec: ^1.2.1
-  ss58: ^1.1.3
-  substrate_bip39: ^0.4.1
-  substrate_metadata: ^1.2.2
+  polkadart: ^0.6.1
+  polkadart_keyring: ^0.6.1
+  polkadart_scale_codec: ^1.4.1
+  ss58: ^1.3.1
+  substrate_bip39: ^0.6.1
+  substrate_metadata: ^1.4.1
 
   # Generated files depend on quiver
   quiver: ^3.2.1
 
 dev_dependencies:
-  polkadart_cli: ^0.4.3
+  polkadart_cli: ^0.6.1
   lints: ^2.0.0
   test: ^1.21.0
 
 polkadart:
   output_dir: lib/generated
   chains:
-    kusama: wss://kusama-rpc.publicnode.com
-    polkadot: wss://rpc.ibp.network/polkadot
+    polkadot: wss://rpc.polkadot.io
+    kusama: wss://kusama-rpc.polkadot.io
     astar: wss://rpc.astar.network
-    westend: wss://westend-rpc.polkadot.io
-    assethub: wss://westend-asset-hub-rpc.polkadot.io
+    paseo: wss://paseo-rpc.dwellir.com
+    assethub: wss://asset-hub-paseo-rpc.dwellir.com
     encointer: wss://encointer-kusama.dotters.network

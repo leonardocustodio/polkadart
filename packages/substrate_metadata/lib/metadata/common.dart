@@ -21,6 +21,11 @@ class RuntimeMetadataPrefixed {
     return codec.decode(input);
   }
 
+  factory RuntimeMetadataPrefixed.fromBytes(Uint8List rawData) {
+    final input = ByteInput.fromBytes(rawData);
+    return codec.decode(input);
+  }
+
   Map<String, dynamic> toJson() => {
         'magicNumber': magicNumber,
         'metadata': {

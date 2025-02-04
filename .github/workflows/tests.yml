@@ -13,7 +13,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         package:
@@ -30,10 +29,6 @@ jobs:
           - substrate_metadata
           - ink_cli
 
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.package }}
-      cancel-in-progress: true
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,13 +43,13 @@ jobs:
         run: |
           echo "MELOS_SDK_PATH=$MELOS_SDK_PATH" >> "${GITHUB_ENV}"
           dart pub get
-          dart run melos bootstrap
+          dart run melos run fetch_dependencies
         env:
           MELOS_SDK_PATH: ${{ env.FLUTTER_ROOT }}
 
       - name: Generate Files for polkadart_example
         if: ${{ matrix.package == 'polkadart_example' }}
-        run: cd examples && dart run polkadart_cli:generate -v && cd ..
+        run: cd apps/examples && dart run polkadart_cli:generate -v && cd ../..
 
       - name: Check format
         run: SCOPE="${{ matrix.package }}" dart run melos run format

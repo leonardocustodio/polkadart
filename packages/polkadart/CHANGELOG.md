@@ -1,3 +1,9 @@
+## 0.6.1
+- Fixes `multisig_meta` and adds 'CheckMetadataHash' extension functionality
+
+## 0.6.0
+- All packages have been bumped to add web support
+
 ## 0.5.0
 - Removes `json_schema2` from being a required dependency
 

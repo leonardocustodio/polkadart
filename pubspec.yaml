@@ -1,8 +1,22 @@
-name: polkadart_workspace
+name: polkadart_monorepo
+publish_to: none
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
+  sdk: ^3.6.0
+
+workspace:
+  - packages/ink_abi
+  - packages/ink_cli
+  - packages/polkadart
+  - packages/polkadart_cli
+  - packages/polkadart_keyring
+  - packages/polkadart_scale_codec
+  - packages/secp256k1_ecdsa
+  - packages/sr25519
+  - packages/ss58
+  - packages/substrate_bip39
+  - packages/substrate_metadata
 
 dev_dependencies:
   coverage: ^1.10.0
-  melos: ^6.2.0
+  melos: ^6.3.2

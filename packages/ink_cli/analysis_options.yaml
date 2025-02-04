@@ -18,6 +18,9 @@ analyzer:
     unnecessary_library_name: ignore
     depend_on_referenced_packages: ignore
 
+formatter:
+  page_width: 100
+
 # Uncomment the following section to specify additional rules.
 
 # linter:

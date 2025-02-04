@@ -19,6 +19,9 @@ linter:
   rules:
     use_string_in_part_of_directives: false
 
+formatter:
+  page_width: 100
+
 # analyzer:
 #   exclude:
 #     - path/to/excluded/files/**
