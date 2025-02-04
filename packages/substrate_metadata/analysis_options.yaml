@@ -10,3 +10,10 @@ linter:
 
 formatter:
   page_width: 100
+
+analyzer:
+  errors:
+    use_string_in_part_of_directives: ignore
+    unnecessary_library_name: ignore
+    unnecessary_to_list_in_spreads: ignore
+    type_literal_in_constant_pattern: ignore

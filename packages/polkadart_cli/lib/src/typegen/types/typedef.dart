@@ -12,7 +12,7 @@ class TypeDefBuilder extends TypeBuilder {
     required this.docs,
   }) : super(filePath);
 
-  TypeDefBuilder._lazy(String filePath, this.name, this.docs) : super(filePath);
+  TypeDefBuilder._lazy(super.filePath, this.name, this.docs);
 
   factory TypeDefBuilder.lazy({
     required int id,

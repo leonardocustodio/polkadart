@@ -1,6 +1,8 @@
 analyzer:
   errors:
+    unnecessary_library_name: ignore
     unused_local_variable: ignore
+    use_string_in_part_of_directives: ignore
 include: package:lints/recommended.yaml
 
 linter:
