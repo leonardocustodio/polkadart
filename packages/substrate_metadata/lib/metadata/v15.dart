@@ -5,22 +5,14 @@ class RuntimeMetadataV15 extends RuntimeMetadata {
   static const $RuntimeMetadataCodec codec = $RuntimeMetadataCodec._();
 
   RuntimeMetadataV15({
-    required List<PortableType> types,
-    required List<PalletMetadata> pallets,
-    required ExtrinsicMetadata extrinsic,
-    required TypeId runtimeTypeId,
-    required List<ApiMetadata> apis,
-    required OuterEnumMetadata outerEnums,
-    required CustomMetadata custom,
-  }) : super(
-          types: types,
-          pallets: pallets,
-          extrinsic: extrinsic,
-          runtimeTypeId: runtimeTypeId,
-          apis: apis,
-          outerEnums: outerEnums,
-          custom: custom,
-        );
+    required super.types,
+    required super.pallets,
+    required super.extrinsic,
+    required super.runtimeTypeId,
+    required super.apis,
+    required super.outerEnums,
+    required super.custom,
+  });
 
   @override
   int runtimeMetadataVersion() {

@@ -21,6 +21,11 @@ linter:
 
 formatter:
   page_width: 100
+analyzer:
+  errors:
+    use_string_in_part_of_directives: ignore
+    unnecessary_library_name: ignore
+    unintended_html_in_doc_comment: ignore
 
 # analyzer:
 #   exclude:

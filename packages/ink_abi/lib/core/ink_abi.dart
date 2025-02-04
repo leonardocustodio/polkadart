@@ -1,53 +1,62 @@
 part of ink_abi;
 
 class InkAbi {
-  late final Map<int, Codec> _scaleCodec;
+  late final Map<int, Codec> scaleCodec;
   late final List<InkAbiEvent> _events;
   late final int _messages;
   late final int _constructors;
   late final SelectorsMap _messageSelectors;
   late final SelectorsMap _constructorSelectors;
   late final Map<String, dynamic> _project;
-  late final InkAbiDescription _inkAbiDescription;
+  late final InkAbiDescription inkAbiDescription;
 
   InkAbi(final Map<String, dynamic> inkAbiJson) {
     _project = SchemaValidator.getInkProject(inkAbiJson);
-    _inkAbiDescription = InkAbiDescription(_project);
-    _scaleCodec = _inkAbiDescription.codecTypes();
-    _events = _inkAbiDescription.events();
-    _messages = _inkAbiDescription.messages();
-    _constructors = _inkAbiDescription.constructors();
-    _messageSelectors = _inkAbiDescription.messageSelectors();
-    _constructorSelectors = _inkAbiDescription.constructorSelectors();
+    inkAbiDescription = InkAbiDescription(_project);
+    scaleCodec = inkAbiDescription.codecTypes();
+    _events = inkAbiDescription.events();
+    _messages = inkAbiDescription.messages();
+    _constructors = inkAbiDescription.constructors();
+    _messageSelectors = inkAbiDescription.messageSelectors();
+    _constructorSelectors = inkAbiDescription.constructorSelectors();
+  }
+
+  Codec getCodec(final int type) {
+    if (scaleCodec[type] == null) {
+      throw Exception('Codec not found for type at index: $type');
+    }
+    return scaleCodec[type]!;
+  }
+
+  Uint8List encodeConstructorInput(
+      final String selector, final List<dynamic> args) {
+    final constructor = getConstructor(selector);
+    final ByteOutput output = ByteOutput();
+    output.write(decodeHex(selector));
+    for (int i = 0; i < constructor['args'].length; i++) {
+      final dynamic arg = constructor['args'][i];
+      getCodec(arg['type']['type']).encodeTo(args[i], output);
+    }
+    return output.toBytes();
   }
 
   Uint8List encodeMessageInput(
       final String selector, final List<dynamic> args) {
-    final message = _getMessage(selector);
+    final message = getMessage(selector);
     final ByteOutput output = ByteOutput();
     output.write(decodeHex(selector));
     for (int i = 0; i < message['args'].length; i++) {
       final dynamic arg = message['args'][i];
-      final Codec<dynamic>? codec = _scaleCodec[arg['type']['type']];
-      if (codec == null) {
-        throw Exception(
-            'Codec not found for type at index: ${arg['type']['type']}');
-      }
-      codec.encodeTo(args[i], output);
+      getCodec(arg['type']['type']).encodeTo(args[i], output);
     }
     return output.toBytes();
   }
 
   dynamic decodeMessageOutput(final String selector, final Uint8List value) {
-    final message = _getMessage(selector);
+    final message = getMessage(selector);
     assert(message['returnType']?['type'] != null);
-    final Codec<dynamic>? codec = _scaleCodec[message['returnType']['type']];
-    if (codec == null) {
-      throw Exception(
-          'Codec not found for type at index: ${message['returnType']['type']}');
-    }
     final ByteInput input = ByteInput(value);
-    return codec.decode(input);
+    return getCodec(message['returnType']['type']).decode(input);
   }
 
   dynamic decodeEventFromHex(final String data, [final List<String>? topics]) {
@@ -84,11 +93,7 @@ class InkAbi {
       throw Exception('Unable to find event with index: $idx');
     }
     final InkAbiEvent event = _events[idx];
-    final codec = _scaleCodec[event.type];
-    if (codec == null) {
-      throw Exception('Codec not found for type at index: ${event.type}');
-    }
-    return codec.decode(input);
+    return getCodec(event.type).decode(input);
   }
 
   dynamic _decodeEventV5(final Uint8List data, final List<String> topics) {
@@ -102,12 +107,12 @@ class InkAbi {
         }
       }
       if (event != null) {
-        final codec = _scaleCodec[event.type];
+        final codec = scaleCodec[event.type];
         if (codec == null) {
           throw Exception('Codec not found for type at index: ${event.type}');
         }
         final ByteInput input = ByteInput(data);
-        return codec.decode(input);
+        return getCodec(event.type).decode(input);
       }
     }
 
@@ -122,12 +127,12 @@ class InkAbi {
 
     if (potentialEvents.length == 1) {
       final InkAbiEvent event = potentialEvents[0];
-      final codec = _scaleCodec[event.type];
+      final codec = scaleCodec[event.type];
       if (codec == null) {
         throw Exception('Codec not found for type at index: ${event.type}');
       }
       final ByteInput input = ByteInput(data);
-      return codec.decode(input);
+      return getCodec(event.type).decode(input);
     }
 
     throw Exception('Unable to determine event');
@@ -136,27 +141,27 @@ class InkAbi {
   dynamic decodeConstructor(final String data) {
     final ByteInput input =
         SelectorByteInput.fromHex(data, _constructorSelectors);
-    final constructorCodec = _scaleCodec[_constructors];
-    if (constructorCodec == null) {
-      throw Exception('Codec not found for type at index: $_constructors');
-    }
-    return constructorCodec.decode(input);
+    return getCodec(_constructors).decode(input);
   }
 
   dynamic decodeMessage(final String data) {
     final ByteInput input = SelectorByteInput.fromHex(data, _messageSelectors);
-    final messageCodec = _scaleCodec[_messages];
-    if (messageCodec == null) {
-      throw Exception('Codec not found for type at index: $_messages');
-    }
-    return messageCodec.decode(input);
+    return getCodec(_messages).decode(input);
   }
 
-  dynamic _getMessage(final String selector) {
+  dynamic getMessage(final String selector) {
     final int? index = _messageSelectors[selector];
     if (index == null) {
       throw Exception('Unknown selector: $selector');
     }
     return _project['spec']['messages'][index];
+  }
+
+  dynamic getConstructor(final String selector) {
+    final int? index = _constructorSelectors[selector];
+    if (index == null) {
+      throw Exception('Unknown selector: $selector');
+    }
+    return _project['spec']['constructors'][index];
   }
 }

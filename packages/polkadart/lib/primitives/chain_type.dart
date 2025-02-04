@@ -100,16 +100,16 @@ class $ChainTypeCodec with Codec<ChainType> {
     Output output,
   ) {
     switch (value.runtimeType) {
-      case Development:
+      case const (Development):
         (value as Development).encodeTo(output);
         break;
-      case Local:
+      case const (Local):
         (value as Local).encodeTo(output);
         break;
-      case Live:
+      case const (Live):
         (value as Live).encodeTo(output);
         break;
-      case Custom:
+      case const (Custom):
         (value as Custom).encodeTo(output);
         break;
       default:
@@ -121,11 +121,11 @@ class $ChainTypeCodec with Codec<ChainType> {
   @override
   int sizeHint(ChainType value) {
     switch (value.runtimeType) {
-      case Development:
-      case Local:
-      case Live:
+      case const (Development):
+      case const (Local):
+      case const (Live):
         return 1;
-      case Custom:
+      case const (Custom):
         return (value as Custom)._sizeHint();
       default:
         throw Exception(

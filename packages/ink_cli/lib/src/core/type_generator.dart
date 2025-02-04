@@ -36,6 +36,11 @@ class TypeGenerator {
 
     // Reserve certain names
     names.reserve('metadata');
+    names.reserve('bool');
+    names.reserve('String');
+    names.reserve('double');
+    names.reserve('int');
+    names.reserve('List');
 
     // Set known custom names, e.g. for event, messages, constructors
     names.assign(_description.event(), 'Event');
@@ -92,8 +97,11 @@ class TypeGenerator {
     // For example, we might print some imports:
     fileOutput.line("// ignore_for_file: non_constant_identifier_names");
     fileOutput.line();
+    fileOutput
+        .line("import 'package:polkadart_keyring/polkadart_keyring.dart';");
     fileOutput.line("import 'package:ink_abi/ink_abi_base.dart';");
-    fileOutput.line("import 'package:polkadart/polkadart.dart' show StateApi;");
+    fileOutput.line("import 'package:ink_cli/ink_cli.dart';");
+    fileOutput.line("import 'package:polkadart/polkadart.dart';");
     fileOutput.line("import 'dart:typed_data';");
     fileOutput.line("import 'dart:convert';");
     fileOutput.line();
@@ -101,18 +109,18 @@ class TypeGenerator {
     // Then, we might embed the original ABI JSON
     final metadata = JsonEncoder.withIndent('    ').convert(_readMetadata());
     fileOutput.block(
-      start: 'const String _metadataJson = r\'\'\'',
+      start: "final _metadataJson = ",
       cb: () {
         for (final line in metadata.split('\n')) {
           fileOutput.line(line);
         }
       },
-      end: "''' ;",
+      end: ";",
     );
 
     fileOutput.line();
     fileOutput.block(
-      start: 'final InkAbi _abi = InkAbi(jsonDecode(_metadataJson));',
+      start: 'final InkAbi _abi = InkAbi(_metadataJson);',
       cb: null,
       end: null,
     );
@@ -168,63 +176,138 @@ class TypeGenerator {
     fileOutput.block(
       start: 'class Contract {',
       cb: () {
-        fileOutput.line('final StateApi api;');
+        fileOutput.line('final Provider provider;');
         fileOutput.line('final Uint8List address;');
         fileOutput.line('final Uint8List? blockHash;');
         fileOutput.line();
         fileOutput.block(
-          start:
-              'const Contract({required this.api, required this.address, this.blockHash});',
-          cb: () {},
-          end: '',
+          start: 'const Contract({',
+          cb: () {
+            fileOutput.line('required this.provider,');
+            fileOutput.line('required this.address,');
+            fileOutput.line('this.blockHash,');
+          },
+          end: '});',
         );
+
+        // For each message that doesn't mutate, create a method
+        final constructors = _project['spec']['constructors'] as List;
+        for (final m in constructors) {
+          // build signature
+          final args = (m['args'] as List)
+              .map((arg) =>
+                  'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .toList();
+          final returnType = m['returnType']?['type'];
+          if (returnType == null) {
+            continue;
+          }
+
+          final methodName = (m['label'] as String).replaceAll('::', '_');
+          args.addAll(
+            <String>[
+              'required final Uint8List code',
+              'required final KeyPair keyPair',
+              'final Map<String, dynamic> extraOptions = const <String, dynamic>{}',
+              'final BigInt? storageDepositLimit',
+              'final Uint8List? salt',
+              'final GasLimit? gasLimit',
+              'final dynamic tip = 0',
+              'final int eraPeriod = 0',
+            ],
+          );
+
+          fileOutput.line();
+          // Add docs
+          final docs = (m['docs'] as List).cast<String>();
+          fileOutput.blockComment(docs);
+          fileOutput.block(
+            start: 'Future<InstantiateRequest> ${methodName}_contract({',
+            cb: () {
+              for (final String arg in args) {
+                fileOutput.line('$arg,');
+              }
+            },
+            end: null,
+          );
+
+          fileOutput.block(
+            start: '}) async {',
+            cb: () {
+              fileOutput.line(
+                  'final deployer = await ContractDeployer.from(provider: provider);');
+
+              fileOutput.block(
+                start: 'return await deployer.deployContract(',
+                cb: () {
+                  fileOutput.line('inkAbi: _abi,');
+                  fileOutput.line("selector: '${m['selector']}',");
+                  fileOutput.line('code: code,');
+                  fileOutput.line('keypair: keyPair,');
+                  fileOutput.line('extraOptions: extraOptions,');
+                  fileOutput.line('storageDepositLimit: storageDepositLimit,');
+                  fileOutput.line('salt: salt,');
+                  fileOutput.line('gasLimit: gasLimit,');
+                  fileOutput.line('tip: tip,');
+                  fileOutput.line('eraPeriod: eraPeriod,');
+                  final callArgs =
+                      (m['args'] as List).map((arg) => arg['label']).join(', ');
+                  fileOutput.line("constructorArgs: [$callArgs],");
+                },
+                end: ');',
+              );
+            },
+            end: '}',
+          );
+        }
 
         // For each message that doesn't mutate, create a method
         final messages = _project['spec']['messages'] as List;
         for (final m in messages) {
-          if (m['mutates'] == false) {
-            // build signature
-            final args = (m['args'] as List)
-                .map((arg) =>
-                    'final ${ifs.use(arg['type']['type'])} ${arg['label']}')
-                .join(', ');
-            final returnType = m['returnType']?['type'];
-            if (returnType == null) {
+          // build signature
+          final args = (m['args'] as List)
+              .map((arg) =>
+                  'final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .join(', ');
+          //final returnType = m['returnType']?['type'];
+          /* if (returnType == null) {
               continue;
-            }
+            } */
 
-            final methodName = (m['label'] as String).replaceAll('::', '_');
-            fileOutput.line();
-            // Add docs
-            final docs = (m['docs'] as List).cast<String>();
-            fileOutput.blockComment(docs);
-            fileOutput.block(
-              start:
-                  'Future<${ifs.use(returnType)}> $methodName($args) async {',
-              cb: () {
-                final callArgs =
-                    (m['args'] as List).map((arg) => arg['label']).join(', ');
-                fileOutput.line(
-                    "return await _stateCall<${ifs.use(returnType)}>('${m['selector']}', [$callArgs]);");
-              },
-              end: '}',
-            );
-          }
+          final methodName = (m['label'] as String).replaceAll('::', '_');
+          fileOutput.line();
+          // Add docs
+          final docs = (m['docs'] as List).cast<String>();
+          fileOutput.blockComment(docs);
+          fileOutput.block(
+            // Investigate it when optimizing polkadart_scale_codec: ${returnType == null ? 'dynamic' : ifs.use(returnType)}
+            start: 'Future<dynamic> $methodName($args) async {',
+            cb: () {
+              final callArgs =
+                  (m['args'] as List).map((arg) => arg['label']).join(', ');
+              // /* Investigate it when optimizing polkadart_scale_codec: <${returnType == null ? 'dynamic' : ifs.use(returnType)}> */
+              fileOutput
+                  .line("return _stateCall('${m['selector']}', [$callArgs]);");
+            },
+            end: '}',
+          );
         }
 
         // The private helper method
         fileOutput.line();
         fileOutput.block(
           start:
-              'Future<T> _stateCall<T>(final String selector, final List<dynamic> args) async {',
+              'Future<dynamic> _stateCall(final String selector, final List<dynamic> args) async {',
           cb: () {
             fileOutput
                 .line('final input = _abi.encodeMessageInput(selector, args);');
             fileOutput.line('final data = encodeCall(address, input);');
+            fileOutput.line('final api = StateApi(provider);');
             fileOutput.line(
                 'final result = await api.call(\'ContractsApi_call\', data, at: blockHash);');
-            fileOutput
-                .line('return _abi.decodeMessageOutput(selector, result);');
+            fileOutput.line('final decodedResult = decodeResult(result);');
+            fileOutput.line(
+                'return _abi.decodeMessageOutput(selector, decodedResult);');
           },
           end: '}',
         );

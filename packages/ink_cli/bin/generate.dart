@@ -1,4 +1,4 @@
-library translate;
+library ink_cli;
 
 import 'dart:io';
 import 'package:args/args.dart';
