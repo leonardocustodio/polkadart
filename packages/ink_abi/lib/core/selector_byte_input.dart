@@ -4,7 +4,7 @@ typedef SelectorsMap = Map<String, int>;
 
 class SelectorByteInput extends ByteInput {
   int? index;
-  SelectorByteInput._(final Uint8List buffer) : super(buffer);
+  SelectorByteInput._(super.buffer);
 
   static SelectorByteInput fromHex(
       final String hex, final SelectorsMap selectors) {

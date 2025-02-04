@@ -51,7 +51,9 @@ class GeneratedOutput {
   final List<Class> classes;
   final List<Enum> enums;
 
-  static final _dartfmt = DartFormatter();
+  static final _dartfmt = DartFormatter(
+    languageVersion: DartFormatter.latestShortStyleLanguageVersion,
+  );
 
   const GeneratedOutput(
       {required this.classes, required this.enums, required this.typedefs});

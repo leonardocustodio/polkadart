@@ -8,7 +8,7 @@ To use Polkadart Keyring in your Dart project, add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  polkadart_keyring: ^0.3.2
+  polkadart_keyring: ^0.6.1
 ```
 
 ## Usage

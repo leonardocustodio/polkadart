@@ -15,6 +15,10 @@ include: package:lints/recommended.yaml
 
 formatter:
   page_width: 100
+analyzer:
+  errors:
+    use_string_in_part_of_directives: ignore
+    unnecessary_library_name: ignore
 
 # Uncomment the following section to specify additional rules.
 

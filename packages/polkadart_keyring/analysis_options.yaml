@@ -8,3 +8,8 @@ linter:
     prefer_final_locals: true
     prefer_single_quotes: true
     non_constant_identifier_names: false
+
+analyzer:
+  errors:
+    use_string_in_part_of_directives: ignore
+    unnecessary_library_name: ignore

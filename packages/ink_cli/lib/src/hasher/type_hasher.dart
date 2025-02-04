@@ -1,6 +1,6 @@
 part of ink_cli;
 
-class TypeHasher extends Hasher {
+class TypeHasher extends HasherAbstract {
   final DCGHasher<CodecInterface> _dcg;
 
   TypeHasher(List<CodecInterface> types)
@@ -13,7 +13,7 @@ class TypeHasher extends Hasher {
 }
 
 Map<String, dynamic> _computeHash(
-    List<CodecInterface> types, Hasher hasher, CodecInterface type) {
+    List<CodecInterface> types, HasherAbstract hasher, CodecInterface type) {
   switch (type.kind) {
     //
     // Primitive
@@ -66,7 +66,7 @@ Map<String, dynamic> _computeHash(
               .toList(),
         };
       } else {
-        final List<Field> fields = composite.fields.toList();
+        final List<interfaces_base.Field> fields = composite.fields.toList();
         fields.sort(compareByName);
         return <String, dynamic>{
           'struct': fields
@@ -101,7 +101,7 @@ Map<String, dynamic> _computeHash(
                   TupleCodecInterface(
                     id: -1,
                     tuple: variant.fields
-                        .map((final Field field) => field.type)
+                        .map((final interfaces_base.Field field) => field.type)
                         .toList(),
                   ),
                 ),
@@ -114,7 +114,7 @@ Map<String, dynamic> _computeHash(
               'name': variant.name,
               'type': fields
                   .map(
-                    (final Field field) => <String, dynamic>{
+                    (final interfaces_base.Field field) => <String, dynamic>{
                       'name': field.name,
                       'type': hasher.getHash(field.type),
                     },

@@ -67,7 +67,7 @@ class AbiOutput {
     }
     line('///');
     for (final String l in lines) {
-      line('///${_escapeBlockComment(l)}');
+      line('/// ${_escapeBlockComment(l)}');
     }
   }
 

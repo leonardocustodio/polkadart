@@ -22,6 +22,10 @@ linter:
 
 formatter:
   page_width: 100
+analyzer:
+  errors:
+    use_string_in_part_of_directives: ignore
+    unnecessary_library_name: ignore
 
 # analyzer:
 #   exclude:

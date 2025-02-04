@@ -1,6 +1,6 @@
-/// (From Tag: @subsquid/substrate-metadata-explorer_v1.0.7)
-///
-/// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata-explorer_v1.0.7/substrate-metadata-explorer/src/specVersion.schema.json
+// (From Tag: @subsquid/substrate-metadata-explorer_v1.0.7)
+//
+// Referenced from: https://github.com/subsquid/squid/blob/%40subsquid/substrate-metadata-explorer_v1.0.7/substrate-metadata-explorer/src/specVersion.schema.json
 
 // ignore_for_file: constant_identifier_names
 

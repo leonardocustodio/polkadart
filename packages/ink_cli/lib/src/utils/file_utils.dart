@@ -1,5 +1,14 @@
 part of ink_cli;
 
+Uint8List getSalt() {
+// Get the current timestamp in seconds
+  final int timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+// Convert the timestamp to a hexadecimal string
+  final String salt = timestamp.toRadixString(16);
+  return decodeHex(salt);
+}
+
 /// Gets the root directory path.
 String getRootDirectoryPath() => getRootDirectory().path;
 
