@@ -1,5 +1,5 @@
-package-lock.json
-node_modules/
+/package-lock.json
+node_modules
 
 # Ignoring native folders of the example as they can be re-generated easily using:
 # flutter create --platforms=android,ios,web,windows,macos .
@@ -59,4 +59,3 @@ lib/generated_plugin_registrant.dart
 # - https://fvm.app/docs/getting_started/configuration/
 # - https://seanconnolly.dev/flutter-version-management
 .fvm/flutter_sdk
-packages/demo_old
