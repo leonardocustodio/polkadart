@@ -6,10 +6,18 @@ updates:
     directory: '/'
     labels: ["type: dependencies"]
     schedule:
-      interval: daily
+      interval: weekly
+      
   # Update flutter dependencies:
   - package-ecosystem: "pub"
     directory: "/"
+    labels: ["type: dependencies"]
+    schedule:
+      interval: "daily"
+
+  # Update node dependencies:
+  - package-ecosystem: "npm"
+    directories: ["./", "./docs"]
     labels: ["type: dependencies"]
     schedule:
       interval: "daily"
