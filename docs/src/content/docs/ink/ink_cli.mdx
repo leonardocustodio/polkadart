@@ -1,0 +1,109 @@
+---
+title: Ink CLI
+---
+
+`ink_cli` is a Dart library designed to simplify the process of generating Dart classes and methods for interacting with ink! smart contracts. It enables developers to seamlessly deploy, call, and manage smart contracts on Substrate-based blockchains.
+
+## Requirements
+
+Before using `ink_cli`, ensure you have:
+
+* Dart `>=3.6.0`
+* `polkadart` & `polkadart_keyring` for blockchain interaction
+* `ink_abi` for contract ABI parsing
+
+## Installation
+
+Add the following dependencies to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  ink_cli: any
+  polkadart: any
+  polkadart_keyring: any
+  ink_abi: any
+```
+
+Then, run:
+
+```sh
+  dart pub get
+```
+or
+
+```sh
+  flutter pub get
+```
+
+## Contract Code Generation
+
+`ink_cli` provides an automated way to generate Dart classes and methods from an ink! contract metadata JSON file.
+
+### Example: Generating a Contract Class
+
+```dart
+import 'dart:io';
+import 'package:ink_cli/ink_cli.dart';
+
+void main() {
+  final String dir = Directory.current.absolute.path;
+  final fileOutput = FileOutput('$dir/example/generated_erc20.dart');
+  final generator = TypeGenerator(
+      abiFilePath: './example/ink_erc20.json', fileOutput: fileOutput);
+  generator.generate();
+  fileOutput.write();
+}
+```
+
+This will generate a Dart class representing the contract, allowing for direct interaction.
+
+## Deploying and Interacting with a Contract
+
+Once the contract class is generated, you can use it to deploy and interact with the smart contract on a Substrate blockchain.
+
+### Example: Deploying a New ERC-20 Contract
+
+```dart
+import 'dart:typed_data';
+import 'package:polkadart/polkadart.dart';
+import 'package:polkadart_keyring/polkadart_keyring.dart';
+import 'generated_erc20.dart';
+
+void main() async {
+  final polkadart = Provider.fromUri(Uri.parse('wss://shibuya-rpc.dwellir.com'));
+  final keyPair = KeyPair.sr25519.fromSeed(decodeHex(
+      '0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a'));
+
+  final contract = Contract(
+    provider: polkadart,
+    address: Uint8List.fromList(keyPair.publicKey.bytes.toList()),
+  );
+
+  final InstantiateRequest result = await contract.new_contract(
+    total_supply: BigInt.from(100000000),
+    code: decodeHex(Constants.erc20Code),
+    keyPair: keyPair,
+  );
+  print('Contract deployed: $result');
+}
+```
+
+### Example: Calling Contract Methods
+
+After generating code, you can call contract functions to fetch balances, allowances, and perform transactions.
+
+```dart
+Future<Balance> getTotalSupply(Contract contract) async {
+  return await contract.total_supply();
+}
+
+Future<Balance> getBalanceOf(Contract contract, AccountId owner) async {
+  return await contract.balance_of(owner);
+}
+```
+
+## Why Use ink_cli?
+
+- **Automated Code Generation**: No need to manually write contract interaction code.
+- **Seamless Integration**: Works with `polkadart` for blockchain communication.
+- **Scalable & Extendable**: Supports multiple versions of ink! metadata.

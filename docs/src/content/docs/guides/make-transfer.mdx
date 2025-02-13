@@ -1,0 +1,75 @@
+---
+title: Make a balance transfer
+sidebar:
+  order: 5
+---
+
+Perhaps the most common operation done in any blockchain is transferring funds from one account to another.
+Here we will show you how to make a simple balance transfer using Polkadart.
+
+#### Make a transfer
+
+```dart
+import 'package:demo/generated/polkadot/polkadot.dart';
+import 'package:demo/generated/polkadot/types/sp_runtime/multiaddress/multi_address.dart';
+import 'package:polkadart/polkadart.dart';
+import 'package:polkadart/scale_codec.dart';
+import 'package:polkadart_keyring/polkadart_keyring.dart';
+
+Future<void> main(List<String> arguments) async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final polkadot = Polkadot(provider);
+
+  final wallet = await KeyPair.sr25519.fromUri("//Alice");
+  print('Alice\' wallet: ${wallet.address}');
+
+  // Get information necessary to build a proper extrinsic
+  final runtimeVersion = await polkadot.rpc.state.getRuntimeVersion();
+  final currentBlockNumber = (await polkadot.query.system.number()) - 1;
+  final currentBlockHash = await polkadot.query.system.blockHash(currentBlockNumber);
+  final genesisHash = await polkadot.query.system.blockHash(0);
+  final nonce = await polkadot.rpc.system.accountNextIndex(wallet.address);
+
+  // Make the encoded call
+  final multiAddress = $MultiAddress().id(wallet.publicKey.bytes);
+  final transferCall = polkadot.tx.balances.transferKeepAlive(dest: multiAddress, value: BigInt.one);
+  final encodedCall = transferCall.encode();
+
+  // Make the payload
+  final payload = SigningPayload(
+      method: encodedCall,
+      specVersion: runtimeVersion.specVersion,
+      transactionVersion: runtimeVersion.transactionVersion,
+      genesisHash: encodeHex(genesisHash),
+      blockHash: encodeHex(currentBlockHash),
+      blockNumber: currentBlockNumber,
+      eraPeriod: 64,
+      nonce: nonce,
+      tip: 0).encode(polkadot.registry);
+
+  // Sign the payload and build the final extrinsic
+  final signature = wallet.sign(payload);
+  final extrinsic = ExtrinsicPayload(
+    signer: wallet.bytes(),
+    method: encodedCall,
+    signature: signature,
+    eraPeriod: 64,
+    blockNumber: currentBlockNumber,
+    nonce: nonce,
+    tip: 0,
+  ).encode(polkadot.registry, SignatureType.sr25519);
+
+  // Send the extrinsic to the blockchain
+  final author = AuthorApi(provider);
+  await author.submitAndWatchExtrinsic(extrinsic, (data) {
+    print(data);
+  });
+}
+
+// Output:
+// Alice' wallet: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
+// ready: null
+// broadcast: [12D3KooWH6tanw7GDdvspfEpt2gEbn82Na84deJDnMNJptJCfAKU, 12D3KooWN8pzDyuAAZ126uR6WcwYThbMWSPnXf7cimKHCZVn34iB, 12D3KooWDUjbGEP1fExf7LDze8iScY6ycsB8B7K3Gfnb2wwffhxK, 12D3KooWHTuZXi5jfAztC68Wf9wbHk8g3pFs9uUVpw9tib13zQWf, 12D3KooWGGBCu1AwCLt5LWE63RTPorR3PjX7Q3cDZrRku59NPkB5, 12D3KooWB6iwHFUoLpSxp6jNCkExzukVJF1hKWNRBvZWtt34gVXh, 12D3KooWEtK675m8iU8Hpc1E5SLnBMPZgzZfdp4uUGDmyh7LEgR3, 12D3KooW9zVuJRTqsPJ5KoA7QSPzCxesYT8FhAKRDwdLdYXAkim3, 12D3KooWPgHhBcG2zD6uND3M6XWdd8MuXCU2Z6xjZs5typTVqUVd, 12D3KooWGQudnpbyypxqUmQdsmpGCfHDu9ip4oqeMM4M4pPxcSmJ, 12D3KooWSS1FFy4VgJmf5kioR5MotCS3LFNHWM3Z1GxQfmUcKqiy, 12D3KooWQZkoqjez2aJ8GsTf1K5vCY2PV3XxwVf9B3iuuYYxViEE, 12D3KooWHHyDiQXNvgtW2pxNsgGntpz6AuSni3Dgem6EYY7PeMZM, 12D3KooWLJ5DEEcifVAXnJZAyznxd6xWsEvwS6U43nD5JmUxQGPb, 12D3KooWADSbUQbTLHf4dzp8NtWK3DJFj3TSyWxv3v1wooCU77YC, 12D3KooWCmUArt3vWrmNTCtvXf7RCWWhgSgU5jUcqD1cgPiL7w1z, 12D3KooWPe66mj1D4T4KcwsJikeJScxSVNS2iae6oJHGnF99DTLc, 12D3KooWH3toosYujUH3jvZDrVsudJp9CEUc8ajyNGAUeMvRYqYd, 12D3KooWAuKeacpNPdFq7sLjXmgS23SyGu4Us7Z4fRiJoVK3aky2, 12D3KooWFUUj8yJ3sJzXjtPZAvhuK1bAhbn9JPa7KAYCoDN1MLmZ, 12D3KooWCx3GoZeH2MZ4eFmqeYa9RPppC4eZopW8GbEgyYcrrhQA, 12D3KooWPWHUu17HfaPuK7fbszNd6chFDzwHL3HCVw5miNfAKjLN, 12D3KooWPWRX8XUxV3pYeYb1fZpK2RSycTFhrVZ4Su65HxuYzRSh, 12D3KooWH57Fx8xR8FJhkDuvZDg2Jav3ZEJohjMtyLC1CGXVZ1vK, 12D3KooWLc4ieE6EGZ3B8yZ7JnaQqJKU7ocGXRVNufkE9Nh8E3XQ, 12D3KooWCRcoJqxeKVDTcKxqv4kdeUGkoJkWggZJyhrfhh4jAHY4, 12D3KooWAwWmTPHPeUruUrAm53KjUrAGVqdwSKPmRa7RC65yE7aL, 12D3KooWRuAURXtSTkbiz6tccf6QhABKuYmQw2w3wy16ZjhAQEsA, 12D3KooWAgv6KKySREnXRy6V136VM7orMtLTdXifcLkofUTeN76o, 12D3KooWLnf7gQkZVjDcKkoxfxAYuoJZcFukkV3zvkNMvYwvZLV4, 12D3KooWDjsafUnHj8SfCuG8pYBzNFMbq8GuTWQ9AT1SbSa4X3qy, 12D3KooWQj2P4jDanJtktEJnTFqbtv8rqo8s3iqaTi58yE5GMoPa, 12D3KooWJhMu1NSHC2xJgSi73GznghPXBc6oq2VZdUYvJJd8MLU7, 12D3KooWSz85vPmCcQ9fwaHpSrPyaAXRP2fB5phetz6txD444Jmn, 12D3KooWKz8dMRwWnw7UVZrrWegYBPBufBhpxBYSjk4JELyxKrTS, 12D3KooWLcFJj4mvUBD38FckCqafTYavJxZBeQknxVAvkhMFATiB, 12D3KooWNgzmWzP2cdDoinwsCva1vrXdN1bKHbnrzvkz66hQhmtc, 12D3KooWAbPXnoRSng2B5W9rXwz2A3tVrPMy8brnSvmDcyvnJs7X, 12D3KooWRmVgYuBa54Xo225zBAhfesdSPM8TL5JruNmYFUa5m9dP, 12D3KooW9xysa5Q6KuANonoMBp8AgYpCAcpyUk6Z2wxpEbN4ru2N]
+// inBlock: 0xc3c341788f41a28046b7e0cac16629a2205acf1259ebfb5b52da0f2ae9e09959
+// finalized: 0xc3c341788f41a28046b7e0cac16629a2205acf1259ebfb5b52da0f2ae9e09959
+```

@@ -1,0 +1,52 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+ icon?: string;
+ title: string;
+ href: string;
+}
+
+const { icon, title, href } = Astro.props;
+---
+
+<article class="card sl-flex">
+  {icon && <Icon name={icon} class="icon" />}
+  <div class="content">
+    <p class="title"><a href={href} target="_blank">{title}</a></p>
+    <div class="body"><slot /></div>
+  </div>
+</article>
+
+<style>
+  .card {
+    --sl-card-border: var(--sl-color-purple);
+    --sl-card-bg: var(--sl-color-purple-low);
+    border: 1px solid var(--sl-color-gray-5);
+    background-color: var(--sl-color-black);
+    padding: clamp(1rem, calc(0.125rem + 3vw), 2.5rem);
+    display: flex;
+    gap: clamp(0.5rem, calc(0.125rem + 1vw), 1rem);
+  }
+  .icon {
+    padding: 0.2em;
+    border-radius: 0.25rem;
+    flex: 0 0 25%;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 2;
+  }
+  .title {
+    font-weight: 600;
+    font-size: var(--sl-text-h4);
+    color: var(--sl-color-white);
+    line-height: var(--sl-line-height-headings);
+  }
+  .body {
+    margin: 0;
+    font-size: clamp(var(--sl-text-sm), calc(0.5rem + 1vw), var(--sl-text-body));
+  }
+</style>

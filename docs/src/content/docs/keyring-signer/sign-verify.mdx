@@ -1,0 +1,18 @@
+---
+title: Signing and Verifying
+next: Guides & FAQ
+---
+
+```dart
+final keyring = Keyring();
+final keyPair2 = KeyPair.sr25519.fromSeed(Uint8List.fromList(hex.decode(
+    '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
+
+keyring.add(keyPair2);
+
+final kp = keyring.getByPublicKey(keyPair2.publicKey.bytes);
+
+final signature = kp.sign(message);
+
+final isVerified = kp.verify(message, signature);
+```

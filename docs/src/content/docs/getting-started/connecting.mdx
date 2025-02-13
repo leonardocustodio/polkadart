@@ -1,0 +1,45 @@
+---
+title: Connecting to a network
+---
+
+After you have installed Polkadart and generated the types, you can now connect to a network and start querying the chain.
+
+#### Using Provider and the generated API
+
+Let's create a sample application together, inside `bin/demo.dart` let's add the following code:
+
+```dart title="demo.dart"
+import 'package:demo/generated/polkadot/polkadot.dart';
+import 'package:polkadart/provider.dart';
+
+Future<void> main(List<String> arguments) async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final polkadot = Polkadot(provider);
+
+  final query = await polkadot.rpc.state.getRuntimeVersion();
+  print(query.toJson());
+}
+```
+
+Now you can run your application:
+
+```bash
+dart run bin/demo.dart
+```
+
+You should see the runtime version of the Polkadot chain.
+
+```dart
+{
+	specName: polkadot,
+	implName: parity-polkadot,
+	authoringVersion: 0,
+	specVersion: 1003003,
+	implVersion: 0,
+	apis: [...],
+	transactionVersion: 26,
+	stateVersion: 1
+}
+```
+
+You have now successfully connected to a Polkadot and made your first query to the chain! 🚀

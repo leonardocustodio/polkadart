@@ -1,0 +1,49 @@
+---
+title: Read storage
+sidebar:
+  order: 4
+---
+
+Reading the storage also called the chain state is a common operation in blockchain development.
+The storage can hold anything from balance of an account to the configuration of the chain.
+It is also possible to read the storage from a specific block, which is useful for historical data analysis.
+
+Here we are showing you how to retrieve the storage and decode it.
+
+#### Reading storage from the current block
+
+```dart
+import 'package:demo/generated/polkadot/polkadot.dart';
+import 'package:polkadart/polkadart.dart';
+
+Future<void> main(List<String> arguments) async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final polkadot = Polkadot(provider);
+
+  polkadot.query.system.number().then((blockNumber) {
+    print('Current block number: $blockNumber');
+  });
+}
+
+// Output: Current block number: 23208989
+```
+
+#### Reading storage from a specific block
+
+```dart
+import 'package:demo/generated/polkadot/polkadot.dart';
+import 'package:polkadart/polkadart.dart';
+import 'package:polkadart/scale_codec.dart';
+
+Future<void> main(List<String> arguments) async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final polkadot = Polkadot(provider);
+	final block = decodeHex('0x43c65760a5e36e9c95b2c493b78e7b01a2f8be5b0b48d543168d9f2c6fc4eb10');
+
+  polkadot.query.system.number(at: block).then((blockNumber) {
+    print('Current block number: $blockNumber');
+  });
+}
+
+// Output: Current block number: 23208972
+```

@@ -1,0 +1,2189 @@
+---
+title: Constants
+next: Keyring & Signer
+---
+
+## Reference
+
+### system
+
+#### blockWeights
+
+```dart
+ final _i20.BlockWeights blockWeights = _i20.BlockWeights(
+    baseBlock: _i15.Weight(
+      refTime: BigInt.from(13806190000),
+      proofSize: BigInt.zero,
+    ),
+    maxBlock: _i15.Weight(
+      refTime: BigInt.from(2000000000000),
+      proofSize: BigInt.parse(
+        '18446744073709551615',
+        radix: 10,
+      ),
+    ),
+    perClass: _i21.PerDispatchClass(
+      normal: _i22.WeightsPerClass(
+        baseExtrinsic: _i15.Weight(
+          refTime: BigInt.from(126045000),
+          proofSize: BigInt.zero,
+        ),
+        maxExtrinsic: _i15.Weight(
+          refTime: BigInt.from(1479873955000),
+          proofSize: BigInt.parse(
+            '13650590614545068195',
+            radix: 10,
+          ),
+        ),
+        maxTotal: _i15.Weight(
+          refTime: BigInt.from(1500000000000),
+          proofSize: BigInt.parse(
+            '13835058055282163711',
+            radix: 10,
+          ),
+        ),
+        reserved: _i15.Weight(
+          refTime: BigInt.zero,
+          proofSize: BigInt.zero,
+        ),
+      ),
+      operational: _i22.WeightsPerClass(
+        baseExtrinsic: _i15.Weight(
+          refTime: BigInt.from(126045000),
+          proofSize: BigInt.zero,
+        ),
+        maxExtrinsic: _i15.Weight(
+          refTime: BigInt.from(1979873955000),
+          proofSize: BigInt.parse(
+            '18262276632972456099',
+            radix: 10,
+          ),
+        ),
+        maxTotal: _i15.Weight(
+          refTime: BigInt.from(2000000000000),
+          proofSize: BigInt.parse(
+            '18446744073709551615',
+            radix: 10,
+          ),
+        ),
+        reserved: _i15.Weight(
+          refTime: BigInt.from(500000000000),
+          proofSize: BigInt.parse(
+            '4611686018427387904',
+            radix: 10,
+          ),
+        ),
+      ),
+      mandatory: _i22.WeightsPerClass(
+        baseExtrinsic: _i15.Weight(
+          refTime: BigInt.from(126045000),
+          proofSize: BigInt.zero,
+        ),
+        maxExtrinsic: null,
+        maxTotal: null,
+        reserved: null,
+      ),
+    ),
+  );
+```
+
+Block & extrinsics weights: base values and limits.
+
+#### blockLength
+
+```dart
+  final _i23.BlockLength blockLength = const _i23.BlockLength(
+      max: _i24.PerDispatchClass(
+    normal: 3932160,
+    operational: 5242880,
+    mandatory: 5242880,
+  ));
+```
+
+The maximum length of a block (in bytes).
+
+#### blockHashCount
+
+```dart
+  final int blockHashCount = 4096;
+```
+
+Maximum number of block number to block hash mappings to keep (oldest pruned first).
+
+#### dbWeight
+
+```dart
+  final _i25.RuntimeDbWeight dbWeight = _i25.RuntimeDbWeight(
+    read: BigInt.from(20499000),
+    write: BigInt.from(83471000),
+  );
+```
+
+The weight of runtime database operations the runtime can invoke.
+
+#### version
+
+```dart
+ final _i26.RuntimeVersion version = const _i26.RuntimeVersion(
+    specName: 'polkadot',
+    implName: 'parity-polkadot',
+    authoringVersion: 0,
+    specVersion: 1003000,
+    implVersion: 0,
+    apis: [
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          223,
+          106,
+          203,
+          104,
+          153,
+          7,
+          96,
+          155,
+        ],
+        5,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          55,
+          227,
+          151,
+          252,
+          124,
+          145,
+          245,
+          228,
+        ],
+        2,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          64,
+          254,
+          58,
+          212,
+          1,
+          248,
+          149,
+          154,
+        ],
+        6,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          23,
+          166,
+          188,
+          13,
+          0,
+          98,
+          174,
+          179,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          24,
+          239,
+          88,
+          163,
+          182,
+          123,
+          167,
+          112,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          210,
+          188,
+          152,
+          151,
+          238,
+          208,
+          143,
+          21,
+        ],
+        3,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          247,
+          139,
+          39,
+          139,
+          229,
+          63,
+          69,
+          76,
+        ],
+        2,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          175,
+          44,
+          2,
+          151,
+          162,
+          62,
+          109,
+          61,
+        ],
+        11,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          73,
+          234,
+          175,
+          27,
+          84,
+          138,
+          12,
+          176,
+        ],
+        3,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          145,
+          213,
+          223,
+          24,
+          176,
+          210,
+          207,
+          88,
+        ],
+        2,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          42,
+          94,
+          146,
+          70,
+          85,
+          57,
+          158,
+          96,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          237,
+          153,
+          197,
+          172,
+          178,
+          94,
+          237,
+          245,
+        ],
+        3,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          203,
+          202,
+          37,
+          227,
+          159,
+          20,
+          35,
+          135,
+        ],
+        2,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          104,
+          122,
+          212,
+          74,
+          211,
+          127,
+          3,
+          194,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          171,
+          60,
+          5,
+          114,
+          41,
+          31,
+          235,
+          139,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          188,
+          157,
+          137,
+          144,
+          79,
+          91,
+          146,
+          63,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          55,
+          200,
+          187,
+          19,
+          80,
+          169,
+          162,
+          168,
+        ],
+        4,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          243,
+          255,
+          20,
+          213,
+          171,
+          82,
+          112,
+          89,
+        ],
+        3,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          111,
+          245,
+          46,
+          232,
+          88,
+          230,
+          197,
+          189,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          145,
+          177,
+          200,
+          177,
+          99,
+          40,
+          235,
+          146,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          159,
+          251,
+          80,
+          90,
+          167,
+          56,
+          214,
+          156,
+        ],
+        1,
+      ),
+      _i19.Tuple2<List<int>, int>(
+        <int>[
+          251,
+          197,
+          119,
+          185,
+          215,
+          71,
+          239,
+          214,
+        ],
+        1,
+      ),
+    ],
+    transactionVersion: 26,
+    stateVersion: 1,
+  );
+```
+
+Get the chain's in-code version.
+
+#### S58Prefix
+
+```dart
+final int sS58Prefix = 0;
+```
+
+The designated SS58 prefix of this chain.
+This replaces the "ss58Format" property declared in the chain spec. Reason is
+that the runtime should know about the prefix in order to make use of it as
+an identifier of the chain.
+
+### scheduler
+
+#### maximumWeight
+
+```dart
+  final _i10.Weight maximumWeight = _i10.Weight(
+    refTime: BigInt.from(1600000000000),
+    proofSize: BigInt.parse(
+      '14757395258967641292',
+      radix: 10,
+    ),
+  );
+```
+
+The maximum weight that may be scheduled per block for any dispatchables.
+
+#### maxScheduledPerBlock
+
+```dart
+final int maxScheduledPerBlock = 50;
+```
+
+The maximum number of scheduled calls in the queue for a single block.
+NOTE:
+Dependent pallets' benchmarks might require a higher limit for the setting. Set a
+higher limit under `runtime-benchmarks` feature.
+
+### babe
+
+#### epochDuration
+
+```dart
+  final BigInt epochDuration = BigInt.from(2400);
+```
+
+The amount of time, in slots, that each epoch should last.
+NOTE: Currently it is not possible to change the epoch duration after
+the chain has started. Attempting to do so will brick block production.
+
+#### expectedBlockTime
+
+```dart
+  final BigInt expectedBlockTime = BigInt.from(6000);
+```
+
+The expected average block time at which BABE should be creating
+blocks. Since BABE is probabilistic it is not trivial to figure out
+what the expected average block time should be based on the slot
+duration and the security parameter `c` (where `1 - c` represents
+the probability of a slot being empty).
+
+#### maxAuthorities
+
+```dart
+  final int maxAuthorities = 100000;
+```
+
+Max number of authorities allowed
+
+#### maxNominators
+
+```dart
+  final int maxNominators = 512;
+```
+
+The maximum number of nominators for each validator.
+
+### timestamp
+
+#### minimumPeriod
+
+```dart
+  final BigInt minimumPeriod = BigInt.from(3000);
+```
+
+The minimum period between blocks.
+Be aware that this is different to the _expected_ period that the block production
+apparatus provides. Your chosen consensus system will generally work with this to
+determine a sensible block time. For example, in the Aura pallet it will be double this
+period on default settings.
+
+### indices
+
+#### deposit
+
+```dart
+  final BigInt deposit = BigInt.from(100000000000);
+```
+
+The deposit needed for reserving an index.
+
+### balances
+
+#### existentialDeposit
+
+```dart
+  final BigInt existentialDeposit = BigInt.from(10000000000);
+```
+
+The minimum amount required to keep an account open. MUST BE GREATER THAN ZERO!
+If you _really_ need it to be zero, you can enable the feature `insecure_zero_ed` for
+this pallet. However, you do so at your own risk: this will open up a major DoS vector.
+In case you have multiple sources of provider references, you may also get unexpected
+behaviour if you set this to zero.
+Bottom line: Do yourself a favour and make it at least one!
+
+#### maxLocks
+
+```dart
+  final int maxLocks = 50;
+```
+
+The maximum number of locks that should exist on an account.
+Not strictly enforced, but used for weight estimation.
+Use of locks is deprecated in favour of freezes. See `https://github.com/paritytech/substrate/pull/12951/`
+
+#### maxReserves
+
+```dart
+  final int maxReserves = 50;
+```
+
+The maximum number of named reserves that can exist on an account.
+Use of reserves is deprecated in favour of holds. See `https://github.com/paritytech/substrate/pull/12951/`
+
+#### maxFreezes
+
+```dart
+  final int maxFreezes = 8;
+```
+
+The maximum number of individual freeze locks that can exist on an account at any time.
+
+### transactionPayment
+
+#### operationalFeeMultiplier
+
+```dart
+  final int operationalFeeMultiplier = 5;
+```
+
+A fee multiplier for `Operational` extrinsics to compute "virtual tip" to boost their
+`priority`
+This value is multiplied by the `final_fee` to obtain a "virtual tip" that is later
+added to a tip component in regular `priority` calculations.
+It means that a `Normal` transaction can front-run a similarly-sized `Operational`
+extrinsic (with no tip), by including a tip value greater than the virtual tip.
+
+```rust
+For `Normal`
+let priority = priority_calc(tip);
+
+For `Operational`
+let virtual_tip = (inclusion_fee + tip) * OperationalFeeMultiplier;
+let priority = priority_calc(tip + virtual_tip);
+```
+
+Note that since we use `final_fee` the multiplier applies also to the regular `tip`
+sent with the transaction. So, not only does the transaction get a priority bump based
+on the `inclusion_fee`, but we also amplify the impact of tips applied to `Operational`
+transactions.
+
+### staking
+
+#### historyDepth
+
+```dart
+  final int historyDepth = 84;
+```
+
+Number of eras to keep in history.
+Following information is kept for eras in `[current_era -
+HistoryDepth, current_era]`: `ErasStakers`, `ErasStakersClipped`,
+`ErasValidatorPrefs`, `ErasValidatorReward`, `ErasRewardPoints`,
+`ErasTotalStake`, `ErasStartSessionIndex`, `ClaimedRewards`, `ErasStakersPaged`,
+`ErasStakersOverview`.
+Must be more than the number of eras delayed by session.
+I.e. active era must always be in history. I.e. `active_era >
+current_era - history_depth` must be guaranteed.
+If migrating an existing pallet from storage value to config value,
+this should be set to same value or greater as in storage.
+Note: `HistoryDepth` is used as the upper bound for the `BoundedVec`
+item `StakingLedger.legacy_claimed_rewards`. Setting this value lower than
+the existing value can lead to inconsistencies in the
+`StakingLedger` and will need to be handled properly in a migration.
+The test `reducing_history_depth_abrupt` shows this effect.
+
+#### sessionsPerEra
+
+```dart
+  final int sessionsPerEra = 6;
+```
+
+Number of sessions per era.
+
+#### bondingDuration
+
+```dart
+  final int bondingDuration = 28;
+```
+
+Number of eras that staked funds must remain bonded for.
+
+#### slashDeferDuration
+
+```dart
+  final int slashDeferDuration = 27;
+```
+
+Number of eras that slashes are deferred by, after computation.
+This should be less than the bonding duration. Set to 0 if slashes
+should be applied immediately, without opportunity for intervention.
+
+#### maxExposurePageSize
+
+```dart
+  final int maxExposurePageSize = 512;
+```
+
+The maximum size of each `T::ExposurePage`.
+An `ExposurePage` is weakly bounded to a maximum of `MaxExposurePageSize`
+nominators.
+For older non-paged exposure, a reward payout was restricted to the top
+`MaxExposurePageSize` nominators. This is to limit the i/o cost for the
+nominator payout.
+Note: `MaxExposurePageSize` is used to bound `ClaimedRewards` and is unsafe to reduce
+without handling it in a migration.
+
+#### maxUnlockingChunks
+
+```dart
+  final int maxUnlockingChunks = 32;
+```
+
+The maximum number of `unlocking` chunks a `StakingLedger` can
+have. Effectively determines how many unique eras a staker may be
+unbonding in.
+Note: `MaxUnlockingChunks` is used as the upper bound for the
+`BoundedVec` item `StakingLedger.unlocking`. Setting this value
+lower than the existing value can lead to inconsistencies in the
+`StakingLedger` and will need to be handled properly in a runtime
+migration. The test `reducing_max_unlocking_chunks_abrupt` shows
+this effect.
+
+### grandpa
+
+#### maxAuthorities
+
+```dart
+  final int maxAuthorities = 100000;
+```
+
+Max Authorities in use
+
+#### maxNominators
+
+```dart
+  final int maxNominators = 512;
+```
+
+The maximum number of nominators for each validator.
+
+#### maxSetIdSessionEntries
+
+```dart
+  final BigInt maxSetIdSessionEntries = BigInt.from(168);
+```
+
+The maximum number of entries to keep in the set id to session index mapping.
+Since the `SetIdSession` map is only used for validating equivocations this
+value should relate to the bonding duration of whatever staking system is
+being used (if any). If equivocation handling is not enabled then this value
+can be zero.
+
+### treasury
+
+#### spendPeriod
+
+```dart
+  final int spendPeriod = 345600;
+```
+
+Period between successive spends.
+
+#### burn
+
+```dart
+  final _i12.Permill burn = 10000;
+```
+
+Percentage of spare funds (if any) that are burnt per spend period.
+
+#### palletId
+
+```dart
+  final _i13.PalletId palletId = const <int>[
+    112,
+    121,
+    47,
+    116,
+    114,
+    115,
+    114,
+    121,
+  ];
+```
+
+The treasury's pallet id, used for deriving its sovereign account ID.
+
+#### maxApprovals
+
+```dart
+  final int maxApprovals = 100;
+```
+
+The maximum number of approvals that can wait in the spending queue.
+NOTE: This parameter is also used within the Bounties Pallet extension if enabled.
+
+#### payoutPeriod
+
+```dart
+  final int payoutPeriod = 432000;
+```
+
+The period during which an approved treasury spend has to be claimed.
+
+### convictionVoting
+
+#### maxVotes
+
+```dart
+  final int maxVotes = 512;
+```
+
+The maximum number of concurrent votes an account may have.
+Also used to compute weight, an overly large value can lead to extrinsics with large
+weight estimation: see `delegate` for instance.
+
+#### voteLockingPeriod
+
+```dart
+  final int voteLockingPeriod = 100800;\
+```
+
+The minimum period of vote locking.
+It should be no shorter than enactment period to ensure that in the case of an approval,
+those successful voters are locked into the consequences that their votes entail.
+
+### referenda
+
+#### submissionDeposit
+
+```dart
+  final BigInt submissionDeposit = BigInt.from(10000000000);
+```
+
+The minimum amount to be used as a deposit for a public referendum proposal.
+
+#### maxQueued
+
+```dart
+  final int maxQueued = 100;
+```
+
+Maximum size of the referendum queue for a single track.
+
+#### undecidingTimeout
+
+```dart
+  final int undecidingTimeout = 201600;
+```
+
+The number of blocks after submission that a referendum must begin being decided by.
+Once this passes, then anyone may cancel the referendum.
+
+#### alarmInterval
+
+```dart
+  final int alarmInterval = 1;
+```
+
+Quantization level for the referendum wakeup scheduler. A higher number will result in
+fewer storage reads/writes needed for smaller voters, but also result in delays to the
+automatic referendum status changes. Explicit servicing instructions are unaffected.
+
+#### tracks
+
+```dart
+ final List<_i4.Tuple2<int, _i13.TrackInfo>> tracks = [
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      0,
+      _i13.TrackInfo(
+        name: 'root',
+        maxDeciding: 1,
+        decisionDeposit: BigInt.from(1000000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 14400,
+        minEnactmentPeriod: 14400,
+        minApproval: _i14.Reciprocal(
+          factor: BigInt.from(222222224),
+          xOffset: BigInt.from(333333335),
+          yOffset: BigInt.from(333333332),
+        ),
+        minSupport: const _i14.LinearDecreasing(
+          length: 1000000000,
+          floor: 0,
+          ceil: 500000000,
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      1,
+      _i13.TrackInfo(
+        name: 'whitelisted_caller',
+        maxDeciding: 100,
+        decisionDeposit: BigInt.from(100000000000000),
+        preparePeriod: 300,
+        decisionPeriod: 403200,
+        confirmPeriod: 100,
+        minEnactmentPeriod: 100,
+        minApproval: _i14.Reciprocal(
+          factor: BigInt.from(270899180),
+          xOffset: BigInt.from(389830523),
+          yOffset: BigInt.from(305084738),
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(8650766),
+          xOffset: BigInt.from(18867926),
+          yOffset: BigInt.from(41509433),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      2,
+      _i13.TrackInfo(
+        name: 'wish_for_change',
+        maxDeciding: 10,
+        decisionDeposit: BigInt.from(200000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 14400,
+        minEnactmentPeriod: 100,
+        minApproval: _i14.Reciprocal(
+          factor: BigInt.from(222222224),
+          xOffset: BigInt.from(333333335),
+          yOffset: BigInt.from(333333332),
+        ),
+        minSupport: const _i14.LinearDecreasing(
+          length: 1000000000,
+          floor: 0,
+          ceil: 500000000,
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      10,
+      _i13.TrackInfo(
+        name: 'staking_admin',
+        maxDeciding: 10,
+        decisionDeposit: BigInt.from(50000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 1800,
+        minEnactmentPeriod: 100,
+        minApproval: const _i14.LinearDecreasing(
+          length: 607142857,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(7892829),
+          xOffset: BigInt.from(15544040),
+          yOffset: BigInt.from(-7772020),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      11,
+      _i13.TrackInfo(
+        name: 'treasurer',
+        maxDeciding: 10,
+        decisionDeposit: BigInt.from(10000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 100800,
+        minEnactmentPeriod: 14400,
+        minApproval: _i14.Reciprocal(
+          factor: BigInt.from(222222224),
+          xOffset: BigInt.from(333333335),
+          yOffset: BigInt.from(333333332),
+        ),
+        minSupport: const _i14.LinearDecreasing(
+          length: 1000000000,
+          floor: 0,
+          ceil: 500000000,
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      12,
+      _i13.TrackInfo(
+        name: 'lease_admin',
+        maxDeciding: 10,
+        decisionDeposit: BigInt.from(50000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 1800,
+        minEnactmentPeriod: 100,
+        minApproval: const _i14.LinearDecreasing(
+          length: 607142857,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(7892829),
+          xOffset: BigInt.from(15544040),
+          yOffset: BigInt.from(-7772020),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      13,
+      _i13.TrackInfo(
+        name: 'fellowship_admin',
+        maxDeciding: 10,
+        decisionDeposit: BigInt.from(50000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 1800,
+        minEnactmentPeriod: 100,
+        minApproval: const _i14.LinearDecreasing(
+          length: 607142857,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(7892829),
+          xOffset: BigInt.from(15544040),
+          yOffset: BigInt.from(-7772020),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      14,
+      _i13.TrackInfo(
+        name: 'general_admin',
+        maxDeciding: 10,
+        decisionDeposit: BigInt.from(50000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 1800,
+        minEnactmentPeriod: 100,
+        minApproval: _i14.Reciprocal(
+          factor: BigInt.from(222222224),
+          xOffset: BigInt.from(333333335),
+          yOffset: BigInt.from(333333332),
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(49586777),
+          xOffset: BigInt.from(90909091),
+          yOffset: BigInt.from(-45454546),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      15,
+      _i13.TrackInfo(
+        name: 'auction_admin',
+        maxDeciding: 10,
+        decisionDeposit: BigInt.from(50000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 1800,
+        minEnactmentPeriod: 100,
+        minApproval: _i14.Reciprocal(
+          factor: BigInt.from(222222224),
+          xOffset: BigInt.from(333333335),
+          yOffset: BigInt.from(333333332),
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(49586777),
+          xOffset: BigInt.from(90909091),
+          yOffset: BigInt.from(-45454546),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      20,
+      _i13.TrackInfo(
+        name: 'referendum_canceller',
+        maxDeciding: 1000,
+        decisionDeposit: BigInt.from(100000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 100800,
+        confirmPeriod: 1800,
+        minEnactmentPeriod: 100,
+        minApproval: const _i14.LinearDecreasing(
+          length: 607142857,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(7892829),
+          xOffset: BigInt.from(15544040),
+          yOffset: BigInt.from(-7772020),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      21,
+      _i13.TrackInfo(
+        name: 'referendum_killer',
+        maxDeciding: 1000,
+        decisionDeposit: BigInt.from(500000000000000),
+        preparePeriod: 1200,
+        decisionPeriod: 403200,
+        confirmPeriod: 1800,
+        minEnactmentPeriod: 100,
+        minApproval: const _i14.LinearDecreasing(
+          length: 607142857,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(7892829),
+          xOffset: BigInt.from(15544040),
+          yOffset: BigInt.from(-7772020),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      30,
+      _i13.TrackInfo(
+        name: 'small_tipper',
+        maxDeciding: 200,
+        decisionDeposit: BigInt.from(10000000000),
+        preparePeriod: 10,
+        decisionPeriod: 100800,
+        confirmPeriod: 100,
+        minEnactmentPeriod: 10,
+        minApproval: const _i14.LinearDecreasing(
+          length: 357142857,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(1620729),
+          xOffset: BigInt.from(3231018),
+          yOffset: BigInt.from(-1615509),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      31,
+      _i13.TrackInfo(
+        name: 'big_tipper',
+        maxDeciding: 100,
+        decisionDeposit: BigInt.from(100000000000),
+        preparePeriod: 100,
+        decisionPeriod: 100800,
+        confirmPeriod: 600,
+        minEnactmentPeriod: 100,
+        minApproval: const _i14.LinearDecreasing(
+          length: 357142857,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(4149097),
+          xOffset: BigInt.from(8230453),
+          yOffset: BigInt.from(-4115227),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      32,
+      _i13.TrackInfo(
+        name: 'small_spender',
+        maxDeciding: 50,
+        decisionDeposit: BigInt.from(1000000000000),
+        preparePeriod: 2400,
+        decisionPeriod: 403200,
+        confirmPeriod: 28800,
+        minEnactmentPeriod: 14400,
+        minApproval: const _i14.LinearDecreasing(
+          length: 607142857,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(7892829),
+          xOffset: BigInt.from(15544040),
+          yOffset: BigInt.from(-7772020),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      33,
+      _i13.TrackInfo(
+        name: 'medium_spender',
+        maxDeciding: 50,
+        decisionDeposit: BigInt.from(2000000000000),
+        preparePeriod: 2400,
+        decisionPeriod: 403200,
+        confirmPeriod: 57600,
+        minEnactmentPeriod: 14400,
+        minApproval: const _i14.LinearDecreasing(
+          length: 821428571,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(14377233),
+          xOffset: BigInt.from(27972031),
+          yOffset: BigInt.from(-13986016),
+        ),
+      ),
+    ),
+    _i4.Tuple2<int, _i13.TrackInfo>(
+      34,
+      _i13.TrackInfo(
+        name: 'big_spender',
+        maxDeciding: 50,
+        decisionDeposit: BigInt.from(4000000000000),
+        preparePeriod: 2400,
+        decisionPeriod: 403200,
+        confirmPeriod: 100800,
+        minEnactmentPeriod: 14400,
+        minApproval: const _i14.LinearDecreasing(
+          length: 1000000000,
+          floor: 500000000,
+          ceil: 1000000000,
+        ),
+        minSupport: _i14.Reciprocal(
+          factor: BigInt.from(28326977),
+          xOffset: BigInt.from(53763445),
+          yOffset: BigInt.from(-26881723),
+        ),
+      ),
+    ),
+```
+
+Information concerning the different referendum tracks.
+
+### claims
+
+#### prefix
+
+```dart
+
+  final List<int> prefix = const <int>[
+    80,
+    97,
+    121,
+    32,
+    68,
+    79,
+    84,
+    115,
+    32,
+    116,
+    111,
+    32,
+    116,
+    104,
+    101,
+    32,
+    80,
+    111,
+    108,
+    107,
+    97,
+    100,
+    111,
+    116,
+    32,
+    97,
+    99,
+    99,
+    111,
+    117,
+    110,
+    116,
+    58,
+  ];
+```
+
+### vesting
+
+#### minVestedTransfer
+
+```dart
+  final BigInt minVestedTransfer = BigInt.from(10000000000);
+```
+
+The minimum amount transferred to call `vested_transfer`.
+
+#### maxVestingSchedules
+
+```dart
+  final int maxVestingSchedules = 28;
+```
+
+### utility
+
+#### batchedCallsLimit
+
+```dart
+  final int batchedCallsLimit = 10922;
+```
+
+The limit on the number of batched calls.
+
+### proxy
+
+#### proxyDepositBase
+
+```dart
+  final BigInt proxyDepositBase = BigInt.from(200080000000);
+```
+
+The base amount of currency needed to reserve for creating a proxy.
+This is held for an additional storage item whose value size is
+`sizeof(Balance)` bytes and whose key size is `sizeof(AccountId)` bytes.
+
+#### proxyDepositFactor
+
+```dart
+  final BigInt proxyDepositFactor = BigInt.from(330000000);
+```
+
+The amount of currency needed per proxy added.
+This is held for adding 32 bytes plus an instance of `ProxyType` more into a
+pre-existing storage value. Thus, when configuring `ProxyDepositFactor` one should take
+into account `32 + proxy_type.encode().len()` bytes of data.
+
+#### maxProxies
+
+```dart
+  final int maxProxies = 32;
+```
+
+The maximum amount of proxies allowed for a single account.
+
+#### maxPending
+
+```dart
+  final int maxPending = 32;
+```
+
+The maximum amount of time-delayed announcements that are allowed to be pending.
+
+#### announcementDepositBase
+
+```dart
+  final BigInt announcementDepositBase = BigInt.from(200080000000);
+```
+
+The base amount of currency needed to reserve for creating an announcement.
+This is held when a new storage item holding a `Balance` is created (typically 16
+bytes).
+
+#### announcementDepositFactor
+
+```dart
+  final BigInt announcementDepositFactor = BigInt.from(660000000);
+```
+
+The amount of currency needed per announcement made.
+This is held for adding an `AccountId`, `Hash` and `BlockNumber` (typically 68 bytes)
+into a pre-existing storage value.
+
+### multisig
+
+#### depositBase
+
+```dart
+  final BigInt depositBase = BigInt.from(200880000000);
+```
+
+The base amount of currency needed to reserve for creating a multisig execution or to
+store a dispatch call for later.
+This is held for an additional storage item whose value size is
+`4 + sizeof((BlockNumber, Balance, AccountId))` bytes and whose key size is
+`32 + sizeof(AccountId)` bytes.
+
+#### depositFactor
+
+```dart
+  final BigInt depositFactor = BigInt.from(320000000);
+```
+
+The amount of currency needed per unit threshold when creating a multisig execution.
+This is held for adding 32 bytes more into a pre-existing storage value.
+
+#### maxSignatories
+
+```dart
+  final int maxSignatories = 100;
+```
+
+The maximum amount of signatories allowed in the multisig.
+
+### bounties
+
+#### bountyDepositBase
+
+```dart
+  final BigInt bountyDepositBase = BigInt.from(10000000000);
+```
+
+The amount held on deposit for placing a bounty proposal.
+
+#### bountyDepositPayoutDelay
+
+```dart
+  final int bountyDepositPayoutDelay = 0;
+```
+
+The delay period for which a bounty beneficiary need to wait before claim the payout.
+
+#### bountyUpdatePeriod
+
+```dart
+  final int bountyUpdatePeriod = 1296000;
+```
+
+Bounty duration in blocks.
+
+#### curatorDepositMultiplier
+
+```dart
+  final _i9.Permill curatorDepositMultiplier = 500000;
+```
+
+The curator deposit is calculated as a percentage of the curator fee.
+This deposit has optional upper and lower bounds with `CuratorDepositMax` and
+`CuratorDepositMin`.
+
+#### curatorDepositMax
+
+```dart
+  final BigInt? curatorDepositMax = BigInt.from(2000000000000);
+```
+
+Maximum amount of funds that should be placed in a deposit for making a proposal.
+
+#### curatorDepositMin
+
+```dart
+  final BigInt? curatorDepositMin = BigInt.from(100000000000);
+```
+
+Minimum amount of funds that should be placed in a deposit for making a proposal.
+
+#### bountyValueMinimum
+
+```dart
+  final BigInt bountyValueMinimum = BigInt.from(100000000000);
+```
+
+Minimum value for a bounty.
+
+#### dataDepositPerByte
+
+```dart
+  final BigInt dataDepositPerByte = BigInt.from(100000000);
+```
+
+The amount held on deposit per byte within the tip report reason or bounty description.
+
+#### maximumReasonLength
+
+```dart
+  final int maximumReasonLength = 16384;
+```
+
+Maximum acceptable reason length.
+Benchmarks depend on this value, be sure to update weights file when changing this value
+
+### childBounties
+
+#### maxActiveChildBountyCount
+
+```dart
+  Maximum number of child bounties that can be added to a parent bounty.
+```
+
+Maximum number of child bounties that can be added to a parent bounty.
+
+#### childBountyValueMinimum
+
+```dart
+  final BigInt childBountyValueMinimum = BigInt.from(10000000000);
+```
+
+Minimum value for a child-bounty.
+
+### electionProviderMultiPhase
+
+#### betterSignedThreshold
+
+```dart
+  final _i17.Perbill betterSignedThreshold = 0;
+```
+
+The minimum amount of improvement to the solution score that defines a solution as
+"better" in the Signed phase.
+
+#### offchainRepeat
+
+```dart
+  final int offchainRepeat = 18;
+```
+
+The repeat threshold of the offchain worker.
+For example, if it is 5, that means that at least 5 blocks will elapse between attempts
+to submit the worker's solution.
+
+#### minerTxPriority
+
+```dart
+  final BigInt minerTxPriority = BigInt.parse(
+    '16602069666338596453',
+    radix: 10,
+  );
+```
+
+The priority of the unsigned transaction submitted in the unsigned-phase
+
+#### signedMaxSubmissions
+
+```dart
+  final int signedMaxSubmissions = 16;
+```
+
+Maximum number of signed submissions that can be queued.
+It is best to avoid adjusting this during an election, as it impacts downstream data
+structures. In particular, `SignedSubmissionIndices<T>` is bounded on this value. If you
+update this value during an election, you _must_ ensure that
+`SignedSubmissionIndices.len()` is less than or equal to the new value. Otherwise,
+attempts to submit new solutions may cause a runtime panic.
+
+#### signedMaxWeight
+
+```dart
+  final _i18.Weight signedMaxWeight = _i18.Weight(
+    refTime: BigInt.from(1466067765000),
+    proofSize: BigInt.parse(
+      '13650590614545068195',
+      radix: 10,
+    ),
+  );
+```
+
+Maximum weight of a signed solution.
+If `Config::MinerConfig` is being implemented to submit signed solutions (outside of
+this pallet), then `MinerConfig::solution_weight` is used to compare against
+this value.
+
+#### signedMaxRefunds
+
+```dart
+  final int signedMaxRefunds = 4;
+```
+
+The maximum amount of unchecked solutions to refund the call fee for.
+
+#### signedRewardBase
+
+```dart
+  final BigInt signedRewardBase = BigInt.from(10000000000);
+```
+
+Base reward for a signed solution
+
+#### signedDepositByte
+
+```dart
+  final BigInt signedDepositByte = BigInt.from(97656);
+```
+
+Per-byte deposit for a signed solution.
+
+#### signedDepositWeight
+
+```dart
+  Per-weight deposit for a signed solution.
+```
+
+final BigInt signedDepositWeight = BigInt.zero;
+
+#### maxWinners
+
+```dart
+  final int maxWinners = 1200;
+```
+
+The maximum number of winners that can be elected by this `ElectionProvider`
+implementation.
+Note: This must always be greater or equal to `T::DataProvider::desired_targets()`.
+
+#### minerMaxLength
+
+```dart
+  final int minerMaxLength = 3538944;
+```
+
+#### minerMaxWeight
+
+```dart
+  final _i18.Weight minerMaxWeight = _i18.Weight(
+    refTime: BigInt.from(1466067765000),
+    proofSize: BigInt.parse(
+      '13650590614545068195',
+      radix: 10,
+    ),
+  );
+```
+
+#### minerMaxVotesPerVoter
+
+```dart
+ final int minerMaxVotesPerVoter = 16;
+```
+
+#### minerMaxWinners
+
+```dart
+  final int minerMaxWinners = 1200;
+```
+
+### voterList
+
+#### bagThresholds
+
+```dart
+final List<int> bagThresholds = const <int>[
+    10000000000,
+    11131723507,
+    12391526824,
+    13793905044,
+    15354993703,
+    17092754435,
+    19027181634,
+    21180532507,
+    23577583160,
+    26245913670,
+    29216225417,
+    32522694326,
+    36203364094,
+    40300583912,
+    44861495728,
+    49938576656,
+    55590242767,
+    61881521217,
+    68884798439,
+    76680653006,
+    85358782760,
+    95019036859,
+    105772564622,
+    117743094401,
+    131068357174,
+    145901671259,
+    162413706368,
+    180794447305,
+    201255379901,
+    224031924337,
+    249386143848,
+    277609759981,
+    309027509097,
+    344000878735,
+    382932266827,
+    426269611626,
+    474511545609,
+    528213132664,
+    587992254562,
+    654536720209,
+    728612179460,
+    811070932564,
+    902861736593,
+    1005040721687,
+    1118783542717,
+    1245398906179,
+    1386343627960,
+    1543239395225,
+    1717891425287,
+    1912309236147,
+    2128729767682,
+    2369643119512,
+    2637821201686,
+    2936349627828,
+    3268663217709,
+    3638585517729,
+    4050372794022,
+    4508763004364,
+    5019030312352,
+    5587045771074,
+    6219344874498,
+    6923202753807,
+    7706717883882,
+    8578905263043,
+    9549800138161,
+    10630573468586,
+    11833660457397,
+    13172903628838,
+    14663712098160,
+    16323238866411,
+    18170578180087,
+    20226985226447,
+    22516120692255,
+    25064322999817,
+    27900911352605,
+    31058523077268,
+    34573489143434,
+    38486252181966,
+    42841831811331,
+    47690342626046,
+    53087570807094,
+    59095615988698,
+    65783605766662,
+    73228491069308,
+    81515931542404,
+    90741281135191,
+    101010685227495,
+    112442301921293,
+    125167661548718,
+    139333180038781,
+    155101843555358,
+    172655083789626,
+    192194865483744,
+    213946010204502,
+    238158783103893,
+    265111772429462,
+    295115094915607,
+    328513963936552,
+    365692661475578,
+    407078959611349,
+    453149042394237,
+    504432984742966,
+    561520851400862,
+    625069486125324,
+    695810069225823,
+    774556530406243,
+    862214913708369,
+    959793802308039,
+    1068415923109985,
+    1189331064661951,
+    1323930457019515,
+    1473762779014021,
+    1640551977100649,
+    1826217100807404,
+    2032894383008501,
+    2262961819074188,
+    2519066527700738,
+    2804155208229882,
+    3121508044894685,
+    3474776448088622,
+    3868025066902796,
+    4305778556320752,
+    4793073637166665,
+    5335517047800242,
+    5939350054341159,
+    6611520261667250,
+    7359761551432161,
+    8192683066856378,
+    9119868268136230,
+    10151985198186376,
+    11300909227415580,
+    12579859689817292,
+    14003551982487792,
+    15588366878604342,
+    17352539001951086,
+    19316366631550092,
+    21502445250375680,
+    23935927525325748,
+    26644812709737600,
+    29660268798266784,
+    33016991140790860,
+    36753601641491664,
+    40913093136236104,
+    45543324061189736,
+    50697569104240168,
+    56435132174936472,
+    62822028745677552,
+    69931745415056768,
+    77846085432775824,
+    86656109914600688,
+    96463185576826656,
+    107380151045315664,
+    119532615158469088,
+    133060402202199856,
+    148119160705543712,
+    164882154307451552,
+    183542255300186560,
+    204314163786713728,
+    227436877985347776,
+    253176444104585088,
+    281829017427734464,
+    313724269827691328,
+    349229182918168832,
+    388752270484770624,
+    432748278778513664,
+    481723418752617984,
+    536241190443833600,
+    596928866512693376,
+    664484709541257600,
+    739686006129409280,
+    823398010228713984,
+    916583898614395264,
+    1020315853041475584,
+    1135787396594579584,
+    1264327126171442688,
+    1407413999103859968,
+    1566694349801462272,
+    1744000832209069824,
+    1941373506026471680,
+    2161083309305266176,
+    2405658187494662656,
+    2677912179572818944,
+    2980977795924034048,
+    3318342060496414208,
+    3693886631935247360,
+    4111932465319354368,
+    4577289528371127808,
+    5095312144166932480,
+    5671960597112134656,
+    6313869711009142784,
+    7028425188266614784,
+    7823848588596424704,
+    8709291924949524480,
+    9223372036854775807,
+    9223372036854775807,
+    9223372036854775807,
+    9223372036854775807,
+    9223372036854775807,
+    9223372036854775807,
+    9223372036854775807,
+  ];
+```
+
+The list of thresholds separating the various bags.
+Ids are separated into unsorted bags according to their score. This specifies the
+thresholds separating the bags. An id's bag is the largest bag for which the id's score
+is less than or equal to its upper threshold.
+When ids are iterated, higher bags are iterated completely before lower bags. This means
+that iteration is _semi-sorted_: ids of higher score tend to come before ids of lower
+score, but peer ids within a particular bag are sorted in insertion order.
+
+- Expressing the constant
+  This constant must be sorted in strictly increasing order. Duplicate items are not
+  permitted.
+  There is an implied upper limit of `Score::MAX`; that value does not need to be
+  specified within the bag. For any two threshold lists, if one ends with
+  `Score::MAX`, the other one does not, and they are otherwise equal, the two
+  lists will behave identically.
+- Calculation
+  It is recommended to generate the set of thresholds in a geometric series, such that
+  there exists some constant ratio such that `threshold[k + 1] == (threshold[k] *
+constant_ratio).max(threshold[k] + 1)` for all `k`.
+  The helpers in the `/utils/frame/generate-bags` module can simplify this calculation.
+- Examples
+- If `BagThresholds::get().is_empty()`, then all ids are put into the same bag, and
+  iteration is strictly in insertion order.
+- If `BagThresholds::get().len() == 64`, and the thresholds are determined according to
+  the procedure given above, then the constant ratio is equal to 2.
+- If `BagThresholds::get().len() == 200`, and the thresholds are determined according to
+  the procedure given above, then the constant ratio is approximately equal to 1.248.
+- If the threshold list begins `[1, 2, 3, ...]`, then an id with score 0 or 1 will fall
+  into bag 0, an id with score 2 will fall into bag 1, etc.
+- Migration
+  In the event that this list ever changes, a copy of the old bags list must be retained.
+  With that `List::migrate` can be called, which will perform the appropriate migration.
+
+### nominationPools
+
+#### palletId
+
+```dart
+  final _i24.PalletId palletId = const <int>[
+    112,
+    121,
+    47,
+    110,
+    111,
+    112,
+    108,
+    115,
+  ];
+```
+
+The nomination pool's pallet id.
+
+#### maxPointsToBalance
+
+```dart
+  final int maxPointsToBalance = 10;
+```
+
+The maximum pool points-to-balance ratio that an `open` pool can have.
+This is important in the event slashing takes place and the pool's points-to-balance
+ratio becomes disproportional.
+Moreover, this relates to the `RewardCounter` type as well, as the arithmetic operations
+are a function of number of points, and by setting this value to e.g. 10, you ensure
+that the total number of points in the system are at most 10 times the total_issuance of
+the chain, in the absolute worse case.
+For a value of 10, the threshold would be a pool points-to-balance ratio of 10:1.
+Such a scenario would also be the equivalent of the pool being 90% slashed.
+
+#### maxUnbonding
+
+```dart
+  final int maxUnbonding = 32;
+```
+
+The maximum number of simultaneous unbonding chunks that can exist per member.
+
+### fastUnstake
+
+#### deposit
+
+```dart
+  final BigInt deposit = BigInt.from(10000000000);
+```
+
+Deposit to take for unstaking, to make sure we're able to slash the it in order to cover
+the costs of resources on unsuccessful unstake.
+
+### paras
+
+#### unsignedPriority
+
+```dart
+  final BigInt unsignedPriority = BigInt.parse(
+    '18446744073709551615',
+    radix: 10,
+  );
+```
+
+### onDemand
+
+#### trafficDefaultValue
+
+```dart
+  final _i12.FixedU128 trafficDefaultValue = BigInt.parse(
+    '1000000000000000000',
+    radix: 10,
+  );
+```
+
+The default value for the spot traffic multiplier.
+
+#### maxHistoricalRevenue
+
+```dart
+  final int maxHistoricalRevenue = 160;
+```
+
+The maximum number of blocks some historical revenue
+information stored for.
+
+#### palletId
+
+```dart
+  final _i13.PalletId palletId = const <int>[
+    112,
+    121,
+    47,
+    111,
+    110,
+    100,
+    109,
+    100,
+  ];
+```
+
+Identifier for the internal revenue balance.
+
+### registrar
+
+#### paraDeposit
+
+```dart
+  final BigInt paraDeposit = BigInt.from(1000000000000);
+```
+
+The deposit to be paid to run a on-demand parachain.
+This should include the cost for storing the genesis head and validation code.
+
+#### dataDepositPerByte
+
+```dart
+  final BigInt dataDepositPerByte = BigInt.from(10000000);
+```
+
+The deposit to be paid per byte stored on chain.
+
+### slots
+
+#### leasePeriod
+
+```dart
+  final int leasePeriod = 1209600;
+```
+
+The number of blocks over which a single period lasts.
+
+#### leaseOffset
+
+```dart
+  final int leaseOffset = 921600;
+```
+
+The number of blocks to offset each lease period by.
+
+### auctions
+
+#### endingPeriod
+
+```dart
+  final int endingPeriod = 72000;
+```
+
+The number of blocks over which an auction may be retroactively ended.
+
+#### sampleLength
+
+```dart
+  final int sampleLength = 20;
+```
+
+The length of each sample to take during the ending period.
+`EndingPeriod` / `SampleLength` = Total # of Samples
+
+#### slotRangeCount
+
+```dart
+  final int slotRangeCount = 36;
+```
+
+#### leasePeriodsPerSlot
+
+```dart
+  final int leasePeriodsPerSlot = 8;
+```
+
+### crowdloan
+
+#### palletId
+
+```dart
+  final _i12.PalletId palletId = const <int>[
+    112,
+    121,
+    47,
+    99,
+    102,
+    117,
+    110,
+    100,
+  ];
+```
+
+`PalletId` for the crowdloan pallet. An appropriate value could be
+`PalletId(*b"py/cfund")`
+
+#### minContribution
+
+```dart
+  final BigInt minContribution = BigInt.from(50000000000);
+```
+
+The minimum amount that may be contributed into a crowdloan. Should almost certainly be
+at least `ExistentialDeposit`.
+
+#### removeKeysLimit
+
+```dart
+  final int removeKeysLimit = 1000;
+```
+
+Max number of storage keys to remove per extrinsic call.
+
+### coretime
+
+#### brokerId
+
+```dart
+  final int brokerId = 1005;
+```
+
+The ParaId of the coretime chain.
+
+#### brokerPotLocation
+
+```dart
+final _i6.Junctions brokerPotLocation = const _i6.X1([
+    _i7.AccountId32(
+      network: null,
+      id: <int>[
+        109,
+        111,
+        100,
+        108,
+        112,
+        121,
+        47,
+        98,
+        114,
+        111,
+        107,
+        101,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+      ],
+    )
+  ]);
+```
+
+The coretime chain pot location.
+
+### stateTrieMigration
+
+#### maxKeyLen
+
+```dart
+  final int maxKeyLen = 512;
+```
+
+Maximal number of bytes that a key can have.
+FRAME itself does not limit the key length.
+The concrete value must therefore depend on your storage usage.
+A `frame_support::storage::StorageNMap` for example can have an arbitrary number of
+keys which are then hashed and concatenated, resulting in arbitrarily long keys.
+Use the _state migration RPC_ to retrieve the length of the longest key in your
+storage:
+The migration will halt with a `Halted` event if this value is too small.
+Since there is no real penalty from over-estimating, it is advised to use a large
+value. The default is 512 byte.
+Some key lengths for reference:
+
+- `frame_support::storage::StorageValue`: 32 byte
+- `frame_support::storage::StorageMap`: 64 byte
+- `frame_support::storage::StorageDoubleMap`: 96 byte
+
+### messageQueue
+
+#### heapSize
+
+```dart
+  final int heapSize = 65536;
+```
+
+The size of the page; this implies the maximum message size which can be sent.
+A good value depends on the expected message sizes, their weights, the weight that is
+available for processing them and the maximal needed message size. The maximal message
+size is slightly lower than this as defined by `MaxMessageLenOf`.
+
+#### maxStale
+
+```dart
+  final int maxStale = 8;
+```
+
+The maximum number of stale pages (i.e. of overweight messages) allowed before culling
+can happen. Once there are more stale pages than this, then historical pages may be
+dropped, even if they contain unprocessed overweight messages.
+
+#### serviceWeight
+
+```dart
+  final _i10.Weight? serviceWeight = _i10.Weight(
+    refTime: BigInt.from(400000000000),
+    proofSize: BigInt.parse(
+      '3689348814741910323',
+      radix: 10,
+    ),
+  );
+```
+
+The amount of weight (if any) which should be provided to the message queue for
+servicing enqueued items `on_initialize`.
+This may be legitimately `None` in the case that you will call
+`ServiceQueues::service_queues` manually or set `Self::IdleMaxServiceWeight` to have
+it run in `on_idle`.
+
+#### idleMaxServiceWeight
+
+```dart
+  final _i10.Weight? idleMaxServiceWeight = _i10.Weight(
+    refTime: BigInt.from(400000000000),
+    proofSize: BigInt.parse(
+      '3689348814741910323',
+      radix: 10,
+    ),
+  );
+```
+
+The maximum amount of weight (if any) to be used from remaining weight `on_idle` which
+should be provided to the message queue for servicing enqueued items `on_idle`.
+Useful for parachains to process messages at the same block they are received.
+If `None`, it will not call `ServiceQueues::service_queues` in `on_idle`.
+
+### beefy
+
+#### maxAuthorities
+
+```dart
+  final int maxAuthorities = 100000;
+```
+
+The maximum number of authorities that can be added.
+
+#### maxNominators
+
+```dart
+  final int maxNominators = 512;
+```
+
+The maximum number of nominators for each validator.
+
+#### maxSetIdSessionEntries
+
+```dart
+  final BigInt maxSetIdSessionEntries = BigInt.from(168);
+```
+
+The maximum number of entries to keep in the set id to session index mapping.
+Since the `SetIdSession` map is only used for validating equivocations this
+value should relate to the bonding duration of whatever staking system is
+being used (if any). If equivocation handling is not enabled then this value
+can be zero.

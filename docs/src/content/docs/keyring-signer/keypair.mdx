@@ -1,0 +1,91 @@
+---
+title: Keypair
+---
+
+## Creating keypair
+
+You can create a keypair in multiple ways, using BIP39 mnemonic, URI, seed, in the following examples we will create a keypair for Alice using each of these methods.
+
+### From mnemonic
+
+```dart
+final keyring = Keyring();
+final mnemonic = 'bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice';
+final keypair = await keyring.fromMnemonic(mnemonic);
+print('Alice address: ${keypair.address}');
+```
+
+### From URI
+
+```dart
+final keyring = Keyring();
+final keypair = await keyring.fromUri('//Alice');
+print('Alice address: ${keyPair.address}');
+```
+
+### From Seed
+
+```dart
+final keyring = Keyring();
+final keypair = await keyring.fromSeed(decodeHex('0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a'));
+print('Alice address: ${keypair.address}');
+```
+
+## Manage keypair
+
+The keyring provides a way to manage keypairs, you can add, retrieve, and remove keypairs.
+
+### Add keypair
+
+```dart
+final keyring = Keyring();
+final keyPair1 = KeyPair.sr25519.fromSeed(
+    Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
+final keyPair2 = KeyPair.sr25519.fromSeed(Uint8List.fromList(hex.decode(
+    '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
+
+// Add keyPair1 to keyring
+keyring.add(keyPair1);
+
+final address1 = keyPair1.address;
+final address2 = keyPair2.address;
+
+// Add keyPair2 to keyring
+keyring.add(keyPair2);
+
+final addresses = keyring.addresses;
+```
+
+### Retrieve keypair
+
+```dart
+final keyring = Keyring();
+final keyPair1 = KeyPair.sr25519.fromSeed(
+    Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
+
+final publicKey1 = keyPair1.publicKey.bytes;
+
+// Add keyPair1 to key
+keyring.add(keyPair1);
+
+final keyPair = keyring.getByPublicKey(publicKey1);
+
+final nonExistentKeyPair = keyring.getByPublicKey([1, 2, 3]);
+```
+
+### Remove keypair
+
+```dart
+final keyring = Keyring();
+final keyPair1 = KeyPair.sr25519.fromSeed(
+    Uint8List.fromList('12345678901234567890123456789012'.codeUnits));
+
+// Add keyPair1 and keyPair2 to keyring
+keyring.add(keyPair1);
+keyring.add(keyPair2);
+
+final address1 = keyPair1.address;
+keyring.remove(address1);
+
+final nonExistentKeyPair = keyring.getByAddress(address1);
+```

@@ -1,0 +1,28 @@
+---
+title: Listen to new blocks
+sidebar:
+  order: 2
+---
+
+Blocks are the fundamental unit of time in a blockchain. They are created by the network every few seconds and contain a list of transactions that have been validated by the network.
+
+Many applications need to listen to new blocks as they are created in order to update their state or trigger some action. In the following snippet we are showing you how to listen to new blocks using Polkadart.
+
+
+```dart
+import 'package:polkadart/polkadart.dart';
+
+Future<void> main(List<String> arguments) async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final subscription = await provider.subscribe('chain_subscribeNewHeads', []);
+
+  subscription.stream.forEach((response) {
+    print('New head: ${response.result}');
+  });
+}
+```
+
+```bash frame="none"
+New head: {parentHash: 0x3754eb0ce660717868bf38b795075fcfc6aa203adb0929155f8cda241f5434b3, number: 0x1622278, stateRoot: 0x23f76264620c5c018dad925bcce8d881eea8e0388dd50c2f9214bcc1dc550ea3, extrinsicsRoot: 0x56e3a2a8642b6f651953eb57893c8fbf2e5500cf8a568a310f325cb9a52e9639, digest: {logs: [0x0642414245b501039f010000109b301100000000ee1dd8472584ffa6f214c229215366b3ad0e29cb71529e9835ac63114ac05877e44938bdfa3bb2b913364980d40db0523187406a3b05b534a5f1ef04516f960ea3625d9ae35b952e97df444965bd65ee569d0454a99aceca6dc5bac25091470a, 0x0442454546840335617d959f20181a3f85b44ab8055c51d5d2c5a0cfd5317466ab4fcd682903ad, 0x05424142450101423b8e5baa2963090161fc01eab9abf90eba3766aeb440bde6c1b01d8bc42f5301ec9e96d881fc7e683c596bfdfe0ccba427e7d22052818f401fa3f736559586]}}
+New head: {parentHash: 0x230fdd23a0b5167bca1ca76a49187ac2d6af502d5106952b51f43513d3c7e15c, number: 0x1622279, stateRoot: 0x2402f9ed5aac51091ce35bb637ce0cdde8b5c619605f595378cc8817451d30ad, extrinsicsRoot: 0xb276911ad92e1882e49e8c54754127f5097ab0647fdc103ae80ac6a937375bb1, digest: {logs: [0x0642414245b5010318000000119b301100000000aa58edbb34b52bcd3875c2ec4a4191f5cf54b4ac9e9eece6fe503a259a9172459a99c1bba25454b6ed0135c1813480280e2f5d0fd13317128f694fd079d84b015252bfb306f52d38b631aa8c306396195a3d52fc5adb92b99956256fcda10c0a, 0x04424545468403befc57c5c4d15a74507a0f5baf3e28fd7a264981db1779604d896ea8eb991b85, 0x05424142450101c09e18c1c5cf39abf1b47523c53d03b798fa1a9f0e0d7e76c306af5e9c06fe3d399d869f970209b17cdd9155a51056169e3e1ba394b2a23514a17607d301fc8b]}}
+```
