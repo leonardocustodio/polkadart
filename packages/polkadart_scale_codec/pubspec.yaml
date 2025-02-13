@@ -17,4 +17,4 @@ dependencies:
 
 dev_dependencies:
   lints: ^5.1.1 # BSD-3-Clause
-  test: ^1.16.0 # BSD-3-Clause
+  test: ^1.25.15 # BSD-3-Clause
