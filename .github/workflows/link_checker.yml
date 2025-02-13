@@ -1,22 +1,6 @@
 name: Link Check
 on:
-  pull_request:
-    branches:
-      - master
-      - main
-      - re-design
-      - develop
-      - release-v*
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
   push:
-    branches:
-      - master
-      - main
-      - re-design
 
 # Declare default permissions as read only.
 permissions: read-all
