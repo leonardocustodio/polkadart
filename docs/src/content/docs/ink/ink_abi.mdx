@@ -1,0 +1,61 @@
+---
+title: Ink ABI
+---
+
+Dart library for handling ink! smart contract metadata.
+
+## Requirements
+
+Ensure that your environment meets the following requirements:
+
+* Dart `>=3.6.0`
+* Compatible with Flutter and pure Dart projects
+
+## Installation
+
+To install `ink_abi` in your Dart project, add the following dependency to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  ink_abi: any
+```
+
+Then, run:
+
+```sh
+  dart pub get
+```
+or
+```sh
+  flutter pub get
+```
+
+## ABI Support
+
+Ink! smart contract metadata serves as a blueprint for how a contract is structured and interacts with external systems. It defines storage layouts, executable methods, and data types, ensuring seamless communication between the contract and its callers. This makes it easier for developers to build, analyze, and integrate contracts efficiently across different platforms.
+
+Currently, `ink_abi` supports metadata versions: **v3, v4, v5**.
+
+## Example Usage
+
+Below is an example demonstrating how to load and parse an ink! contract metadata file:
+
+```dart
+import 'dart:convert';
+import 'dart:io';
+import 'package:ink_abi/ink_abi_base.dart';
+
+void main() {
+  // Define the path to the metadata JSON file
+  final String dir = Directory.current.absolute.path;
+  final String jsonFilePath = '$dir/your_metadata_json_file.json';
+
+  // Read and parse JSON metadata
+  final json = jsonDecode(File(jsonFilePath).readAsStringSync());
+  
+  // Initialize InkAbi with parsed metadata
+  final InkAbi inkAbi = InkAbi(json);
+}
+```
+
+This initializes an `InkAbi` instance using metadata from a JSON file, allowing interaction with the contract in a structured manner.

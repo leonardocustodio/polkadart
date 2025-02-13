@@ -1,0 +1,156 @@
+---
+title: State API
+---
+
+The State API provides a way to query the state of the blockchain. It allows you to query the runtime version, metadata, storage, and subscribe to storage changes.
+This API is available through the `StateApi` class from the `polkadart` package.
+
+### Sample usage
+
+```dart
+import 'package:polkadart/apis/apis.dart';
+import 'package:polkadart/polkadart.dart' show Provider, StateApi;
+
+void main() async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final stateApi = StateApi(provider);
+  final runtimeVersion = await stateApi.getRuntimeVersion();
+
+  print(runtimeVersion.toJson());
+}
+```
+
+You will get the following output:
+
+```dart
+{
+	specName: polkadot,
+	implName: parity-polkadot,
+	authoringVersion: 0,
+	specVersion: 1003003,
+	implVersion: 0,
+	apis: [...],
+	transactionVersion: 26,
+	stateVersion: 1
+}
+```
+
+## Methods
+
+There are several methods available in the `StateApi` class that allow you to query the state of the blockchain. Here are some of the most commonly used methods:
+
+### call
+
+```dart
+Future<Uint8List> call(String method, Uint8List bytes, {BlockHash? at})
+```
+
+Call a contract at a block's state
+
+### getPairs
+
+```dart
+Future<List<KeyValue>> getPairs(StorageKey prefix, {BlockHash? at})
+```
+
+Returns the keys with prefix, leave empty to get all the keys
+
+### getKeysPaged
+
+```dart
+Future<List<StorageKey>> getKeysPaged({required StorageKey key, required int count, StorageKey? startKey, BlockHash? at})
+```
+
+Returns the keys with prefix with pagination support.
+Up to `count` keys will be returned.
+If `startKey` is passed, return next keys in storage in lexicographic order.
+
+### getStorage
+
+```dart
+Future<StorageData?> getStorage(StorageKey key, {BlockHash? at})
+```
+
+Returns a storage entry at a specific block's state.
+
+### getStorageHash
+
+```dart
+Future<BlockHash?> getStorageHash(StorageKey key, {BlockHash? at})
+```
+
+Returns the hash of a storage entry at a block's state.
+
+### getStorageSize
+
+```dart
+Future<int?> getStorageSize(StorageKey key, {BlockHash? at})
+```
+
+Returns the size of a storage entry at a block's state.
+
+### queryStorage
+
+```dart
+Future<List<StorageChangeSet>> queryStorage(List<StorageKey> keys, BlockHash fromBlock,{BlockHash? toBlock})
+```
+
+Query historical storage entries (by key) starting from a block given as the second
+parameter.
+
+NOTE This first returned result contains the initial state of storage for all keys.
+Subsequent values in the vector represent changes to the previous state (diffs).
+
+### queryStorageAt
+
+```dart
+Future<List<StorageChangeSet>> queryStorageAt(List<StorageKey> keys, {BlockHash? at})
+```
+
+Query storage entries (by key) starting at block hash given as the second parameter.
+
+### getReadProof
+
+```dart
+Future<ReadProof> getReadProof(List<StorageKey> keys, {BlockHash? at})
+```
+
+Returns proof of storage entries at a specific block's state.
+
+### getMetadata
+
+```dart
+Future<RuntimeMetadata> getMetadata({BlockHash? at})
+```
+
+Returns the runtime metadata
+
+### getRuntimeVersion
+
+```dart
+Future<RuntimeVersion> getRuntimeVersion({BlockHash? at})
+```
+
+Get the runtime version.
+
+### subscribeRuntimeVersion
+
+```dart
+Future<StreamSubscription<RuntimeVersion>> subscribeRuntimeVersion(Function(RuntimeVersion) onData)
+```
+
+Retrieves the runtime version via subscription
+
+### subscribeEvents
+
+```dart
+Future<StreamSubscription<Events>> subscribeEvents(BlockHash at, Function(Events) onData)
+```
+
+### subscribeStorage
+
+```dart
+Future<StreamSubscription<StorageChangeSet>> subscribeStorage(List<Uint8List> storageKeys, Function(StorageChangeSet) onData)
+```
+
+Subscribes to storage changes for the provided keys

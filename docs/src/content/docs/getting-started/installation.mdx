@@ -1,0 +1,31 @@
+---
+title: Installation
+---
+
+Let's create a sample application together:
+
+```bash
+dart create demo
+```
+
+Now let's add Polkadart packages, we will add all of them for demonstration purposes:
+
+```bash
+dart pub add polkadart polkadart_cli polkadart_keyring polkadart_scale_codec secp256k1_ecdsa sr25519 ss58 substrate_bip39 substrate_metadata
+```
+
+You should now have something like this in your pubsec.yaml file:
+
+```yaml title="pubspec.yaml"
+dependencies:
+  polkadart: ^0.4.7
+  polkadart_cli: ^0.4.3
+  polkadart_keyring: ^0.4.4
+  polkadart_scale_codec: ^1.2.1
+  secp256k1_ecdsa: ^0.4.1
+  sr25519: ^0.4.1
+  ss58: ^1.1.3
+  substrate_bip39: ^0.4.1
+  substrate_metadata: ^1.2.3
+```
+

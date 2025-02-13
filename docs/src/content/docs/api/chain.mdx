@@ -1,0 +1,49 @@
+---
+title: Chain API
+---
+
+The Chain API is mainly used to get information needed to build and sign transactions.
+This API is available through the `ChainApi` class from the `polkadart` package.
+
+### Sample usage
+
+```dart
+import 'package:polkadart/apis/apis.dart';
+import 'package:polkadart/polkadart.dart' show Provider, ChainApi;
+
+void main() async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final chainApi = ChainApi(provider);
+
+  final header = await chainApi.getChainHeader();
+
+  print(header.toString());
+}
+```
+
+You will get the following output:
+
+```dart
+23198099
+```
+
+## Methods
+
+There are a few methods available in the `ChainApi` class, you can find them below:
+
+### getBlockHash
+
+```dart
+Future<BlockHash> getBlockHash({int? blockNumber})
+```
+
+Returns the BlockHash for the given block number.
+If no block number is provided, it will return the hash of the latest block at chain height.
+
+### getChainHeader
+
+```dart
+Future<int> getChainHeader({BlockHash? at})
+```
+
+Get the latest block number or specific block number by BlockHash.

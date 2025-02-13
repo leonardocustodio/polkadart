@@ -1,0 +1,42 @@
+---
+title: Overview
+---
+
+One of the most important aspects of working with blockchain is the ability of signing transactions. The Polkadart Keyring package provide a convenient way to manage key pairs and sign transactions.
+
+#### Installation
+
+
+Add the following to your `pubspec.yaml` file:
+
+```yaml title="pubspec.yaml"
+dependencies:
+  polkadart_keyring: ^0.4.4
+```
+
+Get the dependencies by running:
+
+```bash
+dart pub get
+```
+
+#### Sample usage
+
+```dart title="demo.dart"
+import 'package:polkadart_keyring/polkadart_keyring.dart';
+
+Future<void> main(List<String> arguments) async {
+  final keyring = Keyring();
+  final keyPair = await keyring.fromUri('//Alice');
+
+  print('Alice address: ${keyPair.address}');
+}
+```
+
+You will get the following output:
+
+```dart
+Alice address: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY
+```
+
+The keyring is a very powerful tool and we will show you what you can do with it in the following sections.

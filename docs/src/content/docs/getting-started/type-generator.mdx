@@ -1,0 +1,27 @@
+---
+title: Type generator
+---
+
+Type generation is a crucial part of working with Polkadot and Polkadot based chains.
+Each network has its own set of types, APIs, extrinsics and Polkadart provides a way to generate these types for you.
+This makes it easier to work with any chains with the security of type-safety and auto-completion.
+
+#### Generating types
+
+We will use Polkadart CLI to generate the types for us, add the following configuration at the end of your pubspec file.
+
+```yaml title="pubspec.yaml"
+polkadart:
+  output_dir: lib/generated
+  chains:
+    polkadot: wss://rpc.polkadot.io
+    kusama: wss://kusama-rpc.polkadot.io
+```
+
+Now let's generate the types:
+
+```bash
+dart run polkadart_cli:generate -v
+```
+
+You will see that a folder `lib/generated` was created for you with everything you need to start working with Polkadot and Kusama.

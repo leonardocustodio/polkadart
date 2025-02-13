@@ -1,0 +1,56 @@
+---
+title: Listen to balances
+sidebar:
+  order: 3
+---
+
+Knowing the balance of a wallet is a fundamental operation in any blockchain application. You can query the balance of each wallet on-demand, but it is more efficient to listen to balance changes in real-time.
+
+The example below shows how to retrieve and subscribe to balance updates.
+
+#### Get balance using generated code
+
+```dart
+import 'package:demo/generated/polkadot/polkadot.dart';
+import 'package:polkadart/polkadart.dart';
+import 'package:ss58/ss58.dart';
+
+Future<void> main(List<String> arguments) async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final polkadot = Polkadot(provider);
+
+  // Account from SS58 address
+  final account = Address.decode('19t9Q2ay58hMDaeg6eeBhqmHsRnc2jDMV3cYYw9zbc59HLj');
+
+  // Retrieve Account Balance
+  final accountInfo = await polkadot.query.system.account(account.pubkey);
+  print('Balance: ${accountInfo.data.free}');
+
+  // Output: Balance: 20109379543332
+}
+```
+
+#### Listen to balance changes
+
+```dart
+import 'package:demo/generated/polkadot/polkadot.dart';
+import 'package:demo/generated/polkadot/types/frame_system/account_info.dart';
+import 'package:polkadart/polkadart.dart';
+import 'package:polkadart/scale_codec.dart';
+import 'package:ss58/ss58.dart';
+
+Future<void> main(List<String arguments) async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final polkadot = Polkadot(provider);
+
+  final account = Address.decode('5HHJX1Nq3f6QH8HGxnCemyBQ4eAcpUwmKoLMw5AvboavPfrh');
+  final storageKey = polkadot.query.system.accountKey(account.pubkey);
+
+  polkadot.rpc.state.subscribeStorage([storageKey], (storage) {
+    final accountInfo = AccountInfo.decode(Input.fromBytes(storage.changes[0].value!));
+    print('Account Info: ${accountInfo.toJson()}');
+  });
+
+	// Output: Account Info: {nonce: 28, consumers: 1, providers: 1, sufficients: 0, data: {free: 1010064392159, reserved: 50611660000000, frozen: 0, flags: 170141183460469231731687303715884105728}}
+
+```

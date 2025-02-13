@@ -1,0 +1,200 @@
+---
+title: System API
+---
+
+The System API provides a way to query the system information of the blockchain. It allows you to query the chain name, version, health, and more.
+This API is available through the `SystemApi` class from the `polkadart` package.
+
+### Sample usage
+
+```dart
+import 'package:polkadart/apis/apis.dart';
+import 'package:polkadart/polkadart.dart' show Provider;
+
+void main() async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final systemApi = SystemApi(provider);
+  final chain = await systemApi.chain();
+
+  print(chain);
+}
+```
+
+You will get the following output:
+
+```dart
+Polkadot
+```
+
+## Methods
+
+There are several methods available in the `SystemApi` class that allow you to query the system information of the blockchain. Here are some of the most commonly used methods:
+
+### name
+
+```dart
+Future<String> name()
+```
+
+Get the node's implementation name. Plain old string.
+
+### version
+
+```dart
+Future<String> version()
+```
+
+Get the node implementation's version. Should be a semver string.
+
+### chain
+
+```dart
+Future<String> chain()
+```
+
+Get the chain's name. Given as a string identifier.
+
+### chainType
+
+```dart
+Future<ChainType> chainType()
+```
+
+Get the chain's type.
+
+### health
+
+```dart
+Future<Health> health()
+```
+
+Return health status of the node.
+
+Node is considered healthy if it is:
+
+- connected to some peers (unless running in dev mode)
+- not performing a major sync
+
+### localPeerId
+
+```dart
+Future<String> localPeerId()
+```
+
+Returns the base58-encoded PeerId of the node.
+
+### localListenAddresses
+
+```dart
+Future<List<String>> localListenAddresses()
+```
+
+Returns the multi-addresses that the local node is listening on
+
+The addresses include a trailing `/p2p/` with the local PeerId, and are thus suitable to
+be passed to `addReservedPeer` or as a bootnode address for example.
+
+### peers
+
+```dart
+Future<List<PeerInfo<H, N>>> peers() async {
+```
+
+Returns currently connected peers
+
+unsafe: This method is only active with appropriate flags
+
+### accountNextIndex
+
+```dart
+Future<int> accountNextIndex(String account)
+```
+
+Returns the next valid index (aka nonce) for given account.
+
+This method takes into consideration all pending transactions
+currently in the pool and if no transactions are found in the pool
+it fallbacks to query the index from the runtime (aka. state nonce).
+
+### dryRun
+
+```dart
+Future<Uint8List> dryRun(Uint8List extrinsic, {BlockHash? at})
+```
+
+Dry run an extrinsic at a given block. Return SCALE encoded ApplyExtrinsicResult.
+
+### nodeRoles
+
+```dart
+Future<List<String>> nodeRoles()
+```
+
+Returns the roles the node is running as.
+
+### properties
+
+```dart
+Future<Map<String, dynamic>> properties() async
+```
+
+Get a custom set of properties as a JSON object, defined in the chain spec.
+
+### addReservedPeer
+
+```dart
+Future<String?> addReservedPeer(String peer)
+```
+
+Adds a reserved peer. Returns the empty string or an error. The string
+parameter should encode a `p2p` multiaddr.
+
+`/ip4/198.51.100.19/tcp/30333/p2p/QmSk5HQbn6LhUwDiNMseVUjuRYhEtYj4aUZ6WfWoGURpdV`
+is an example of a valid, passing multiaddr with PeerId attached.
+
+unsafe: This method is only active with appropriate flags
+
+### removeReservedPeer
+
+```dart
+Future<String?> removeReservedPeer(String peerId)
+```
+
+Remove a reserved peer. Returns the empty string or an error. The string
+should encode only the PeerId e.g. `QmSk5HQbn6LhUwDiNMseVUjuRYhEtYj4aUZ6WfWoGURpdV`.
+
+unsafe: This method is only active with appropriate flags
+
+### reservedPeers
+
+```dart
+Future<List<String>> reservedPeers()
+```
+
+Returns the list of reserved peers
+
+### addLogFilter
+
+```dart
+Future<dynamic> addLogFilter(String directives)
+```
+
+Adds the supplied directives to the current log filter
+unsafe: This method is only active with appropriate flags
+
+### resetLogFilter
+
+```dart
+Future<dynamic> resetLogFilter()
+```
+
+Resets the log filter to Substrate defaults
+unsafe: This method is only active with appropriate flags
+
+### syncState
+
+```dart
+Future<SyncState> syncState()
+```
+
+Returns the state of the syncing of the node: starting block, current best block, highest known block.

@@ -1,0 +1,10 @@
+@use '../scss/fontawesome';
+@use '../scss/solid';
+@use '../scss/brands';
+
+.package-badge {
+    font-size: 10px!important;
+    border: 0;
+    border-radius: 0.25rem;
+    background-color: #1967d2;
+}

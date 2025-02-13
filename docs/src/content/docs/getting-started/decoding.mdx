@@ -1,0 +1,64 @@
+---
+title: Decoding chain data
+next: Polkadart API
+---
+
+As you start working with Polkadot and Polkadot based chains, you will need to decode chain data to human-readable format.
+
+#### Querying and decoding chain data
+
+We will create another sample application together, to see how that works. Inside `bin/demo.dart` let's add the following code:
+
+
+```dart title="demo.dart"
+import 'package:convert/convert.dart';
+import 'package:demo/generated/polkadot/polkadot.dart';
+import 'package:polkadart/scale_codec.dart';
+import 'package:demo/generated/polkadot/types/sp_core/crypto/account_id32.dart';
+import 'package:polkadart/polkadart.dart' show Provider;
+import 'package:demo/generated/polkadot/polkadot.dart';
+
+Future<void> main(List<String> arguments) async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final polkadot = Polkadot(provider);
+
+  final accountMapPrefix = polkadot.query.system.accountMapPrefix();
+  final keys = await polkadot.rpc.state.getKeysPaged(key: accountMapPrefix, count: 10);
+
+  print("First 10 account storage keys: ${keys.map((key) => '0x${hex.encode(key)}')}");
+
+  final accountIds = keys.map((key) => const AccountId32Codec().decode(ByteInput(key.sublist(32))));
+  print("First 10 account pubKeys: ${accountIds.map((account) => '0x${hex.encode(account)}')}");
+
+  final accountInfos = await Future.wait(accountIds.map((account) => polkadot.query.system.account(account)));
+
+  for (final accountInfo in accountInfos) {
+    print('AccountInfo: ${accountInfo.toJson()}');
+  }
+}
+```
+
+Now you can run your application:
+
+```bash
+dart run bin/demo.dart
+```
+
+You should see the first 10 account storage keys and their corresponding account info.
+
+```bash
+First 10 account storage keys: (0x26aa394eea5630e07c48ae0c9558cef7b99d880ec681799c0cf30e8886371da900001c2ed146255b0bed7891676f22e9047ff8ec5bf639dd08672157cff3c675aec4ec17276036689e07b405a05b4449, 0x26aa394eea5630e07c48ae0c9558cef7b99d880ec681799c0cf30e8886371da900002233d8a3dd7c3bcea0c38ec1e4421d3073024a77ed24474b4c13f8949e9e2a63725be5a6ff10b04c136a25d488c3, 0x26aa394eea5630e07c48ae0c9558cef7b99d880ec681799c0cf30e8886371da900002ed3d34f8412441bdb1db5d4a9dfbc74238ff6bdc1b5e59208c688812cde864a815776980edd8ed2965115e01615, ..., 0x26aa394eea5630e07c48ae0c9558cef7b99d880ec681799c0cf30e8886371da9000069eb42781aa99b0695f2166d6a382eabfbaabc9302400e24924da229bfdf57e9ea5f26dc4657b8eac7be066bd506, 0x26aa394eea5630e07c48ae0c9558cef7b99d880ec681799c0cf30e8886371da900007098e9333ac03decdd85800a888868caf96152aaa206c709b238499142c8b818bb2951169736e08286976840b7ca)
+First 10 account pubKeys: (0x00001c2ed146255b0bed7891676f22e9047ff8ec5bf639dd08672157cff3c675, 0x00002233d8a3dd7c3bcea0c38ec1e4421d3073024a77ed24474b4c13f8949e9e, 0x00002ed3d34f8412441bdb1db5d4a9dfbc74238ff6bdc1b5e59208c688812cde, ..., 0x000069eb42781aa99b0695f2166d6a382eabfbaabc9302400e24924da229bfdf, 0x00007098e9333ac03decdd85800a888868caf96152aaa206c709b238499142c8)
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+AccountInfo: {nonce: 0, consumers: 0, providers: 0, sufficients: 0, data: {free: 0, reserved: 0, frozen: 0, flags: 170141183460469231731687303715884105728}}
+```
+
+You have now successfully queried and decoded chain data! 🚀

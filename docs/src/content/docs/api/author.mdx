@@ -1,0 +1,57 @@
+---
+title: Author API
+next: Blockchain API
+---
+
+The Author API provides a way to submit and watch extrinsics on the blockchain.
+This API is available through the `AuthorApi` class from the `polkadart` package.
+
+### Sample usage
+
+```dart
+import 'dart:typed_data';
+import 'package:convert/convert.dart';
+import 'package:polkadart/apis/apis.dart';
+import 'package:polkadart/polkadart.dart' show Provider, AuthorApi;
+
+void main() async {
+  final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
+  final author = AuthorApi(provider);
+
+  final extrinsic = hex.decode('cd018400e6c8ca9e309a1cce16eee662a9b3886f0c7b7fddce5cd89db7a6eba0a2aa003b01b873dd1fe5a0b23641496be8d7f2938f06698ca07c1de6d75a4e6f18159aaa5fdca09d9bf50d71d80f4055e34c8a40097c3c9a34d8309dbe9ca97ff450b9a28700580000000024506f6c6b6164617274');
+  final submit = await author.submitAndWatchExtrinsic(extrinsic as Uint8List, (data) => print('From here: ${data.type} - ${data.value}'));
+}
+```
+
+If you send a valid extrinsic, you will get an output similar to this:
+
+```bash
+Instance of '_ForwardingStreamSubscription<SubscriptionMessage<dynamic>, ExtrinsicStatus>'
+From here: broadcast - [12D3KooWEW8fqaHq47NfZx5M8VHpnGaPYFPKNyoRxHNxJNaftxex, 12D3KooWRXzBHd1cMG5DRGwo5Uw6AVB3NM35s9hJZJPLVXEjnJm1, 12D3KooWNhvdEMm58VzCogLN8zSY8M22z2BxW6HFSCzm7uxtWD4k, 12D3KooWFvW8WS6BgGqH9YwCzbYNDHt54eXu74MXsWTy5YBNVG8p, 12D3KooWKyCEReVMRfDJVMWPqYHkgNBxRuzBeGrh45gFNaRyo3xa, 12D3KooWR9ZQqixCCskgLs1iQMqFYYLsFdei1CQgg2TRkpuerU8r, 12D3KooWHVDNuABpm6oZ8ZCuiE4MvnMsZTxrURm92ESDexj1YCTw, 12D3KooWM1RwsLQPtGfDksczydDZvZjeY9ZcsanhzyJvPzCAHwpS, 12D3KooWGTYAoDHV656gGVydaG8HzPSLRKq7JYhkKCxLVEaWSZVH, 12D3KooWQXgbYeL1ueo2oD8aEktrKW57Nz2gmQocHuVknAevgWn8, 12D3KooWRCXsj3xpfQ1FAuPgTHetoF9CGEGifEPciY6vvgBZskm6, 12D3KooWRUuNjg4RE8zyXrrJWZsKCiPLMFa4KGVp88axt3SRRGs9, 12D3KooWE2ECqN3V6Y9CKfx4oth8EsF9MRcrkFsTFUv6SP8JMyLL, 12D3KooWEJr54XaHzGXwDNggSoAacmR8zWFymRAiYQa8cnRr9Syj, 12D3KooWNBfDPCootySrUTFVVFdbRzpGTEgfFM23PJVouY9Vd247, 12D3KooWHJBMZgt7ymAdTRtadPcGXpJw79vBGe8z53r9JMkZW7Ha, 12D3KooWBsWrDEmpvS3uV48LEv3Hn71UcjQHN5efBgncdrQwoCHK, 12D3KooWGP4bnFEY1mcR9XFjf7vTqM9Tr7ZejM3GmZF5UptCYBas, 12D3KooWPWRX8XUxV3pYeYb1fZpK2RSycTFhrVZ4Su65HxuYzRSh, 12D3KooWMcih1WAz1dhu1Wq86PgUamtHEkBgxRHiCFfPqqHk6Qfc, 12D3KooWNuVTLRUZ7L2Zr8eXkCRBdPxCYPukmkVFB5S5ivN7cQii, 12D3KooWNJQAKSRvvu35yUHTsJiaSDDQyn3smpme48ec5hEaw8pm, 12D3KooWEePxbZvZge79AZqhDeqgNLuxeXiQu8Dev7v5YRkr2wR2, 12D3KooWFX5YwGhDfyJ3d2XDNSMZ5CsM1tzGtRtZydCtVs2xybVz, 12D3KooWQVrexwN3D2QSV38FDw7cUpy9SR8Z1iEbTsNTKRT3cPy4, 12D3KooWRsDm136qDqn6KSYdWY1qe988DPNCVuCXs2Gr5s8Z8EdN, 12D3KooWBfLF5p1Ln6UXcbLebd5GsADYrzrgbZow9zUFrWc5ieQY, 12D3KooWDUjbGEP1fExf7LDze8iScY6ycsB8B7K3Gfnb2wwffhxK, 12D3KooWKeTsEemCLPktDzypvrdit1vp5Za4zjtJ47bphVzAbibP, 12D3KooWCsjxFCTatxzz1j1wUnhNfmW4wWGTJzJQF4bUTZFLybPH, 12D3KooWNk7QhDvH4vHcpWEtJzvzBhiUXjdLEEyTuhD9aYzmsxBj, 12D3KooWHkp51QVBwvdoSKt2VZwApGymVZe4NsfZ8yd6PVDHnfos, 12D3KooWLaCmjNjPtrEPz5EFtNNioNutYSPydbTQmMAgXvG6peKR, 12D3KooWBaPqD5By7WZF1yPiuyd8mmHDYv3FPx2wjrF2tYDA2vct, 12D3KooWQZkoqjez2aJ8GsTf1K5vCY2PV3XxwVf9B3iuuYYxViEE, 12D3KooWPhm3P3xV2FAa2pRwi751ofrM4dCX9E1cAkQXPgAXmUv2, 12D3KooWGAkVvjifuhNmNPRBzDqLeqQ9PzAMqZSC7jc7GXKxyKAM, 12D3KooWQvuM83h996TEAV91j7WXjeZXET3ZnnC1N6sLnAA7Ye7n, 12D3KooWDRJxWNZMd7LsyrwziDzjarHNYgRkCS9TZc7uGz1tS9KU, 12D3KooWBn8eMBgQz2WR6zNMoEfDvuQ3i9oMrXhtWK4c3UEHzAo6, 12D3KooWS7HX5pNMXCDPQP5dapVPPwgzPp6cPhVgsGFwkdpV4sEc, 12D3KooWLZxXQsbADZSQmUinWASqpZMNo9NdRr4DDcvFjtCwGfhi, 12D3KooWRehgtSgMoCBKN1Dd2G6btn13HMA6pgu4vU18GRVmyzic, 12D3KooWFhmerVkfFpS198agSBJuPvebhBAEn6zb569ogXvnzq8G, 12D3KooWQZF95Wre2JSUX5zMy5ACy6zkXSqjsUV615kfF7VY6d9N, 12D3KooWKZwp59WkysZYAKLUGLJhsYKHRhvNaXvhD7fBhhCuPDy1, 12D3KooWGk8zv6TJqYtJnJtSCyUTKH3xAQg8VvvuiGNRhQ2uK8AZ]
+From here: inBlock - 0x726aeb560cb25b7c731ddb7ec1df8f845ae31d2eeb98478e6f716a7e05a8ac5a
+From here: retracted - 0x726aeb560cb25b7c731ddb7ec1df8f845ae31d2eeb98478e6f716a7e05a8ac5a
+From here: inBlock - 0xaeaa329613992c9f06e4bff428acc49656209dad19b2829b020122058cf00aa5
+From here: finalized - 0xaeaa329613992c9f06e4bff428acc49656209dad19b2829b020122058cf00aa5
+```
+
+## Methods
+
+There are just two methods available in the `AuthorApi` class, you can find them below:
+
+### submitExtrinsic
+
+```dart
+Future<Uint8List> submitExtrinsic(Uint8List extrinsic)
+```
+
+Submit a fully formatted extrinsic for block inclusion.
+The type will be changed to Extrinsic later
+
+### submitAndWatchExtrinsic
+
+```dart
+Future<StreamSubscription<ExtrinsicStatus>> submitAndWatchExtrinsic(
+Uint8List extrinsic, Function(ExtrinsicStatus) onData)
+```
+
+Submits and subscribe to watch an extrinsic until unsubscribed.
