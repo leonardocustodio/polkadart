@@ -33,7 +33,7 @@ const data: ContributorsData = await response.json();
         {data.contributors.map((contributor: Contributor) => (
             <li class="contributor-card">
                 <div class="card-content">
-                    <a href={contributor.profile} target="_blank" rel="noopener">
+                    <a href={"https://github.com/" + contributor.login} target="_blank" rel="noopener">
                         <div class="img-container">
                             <img 
                                 src={contributor.avatar_url} 
@@ -41,7 +41,7 @@ const data: ContributorsData = await response.json();
                                 loading="lazy"
                             />
                         </div>
-                        <span class="contributor-name">{contributor.name}</span>
+                        <span class="contributor-name">{contributor.login}</span>
                     </a>
                 </div>
             </li>
@@ -51,14 +51,14 @@ const data: ContributorsData = await response.json();
 
 <style>
     .contributors-section {
-        padding: 2rem 0;
+        padding: 0.5rem 0;
     }
 
     /* Override Starlight's styles */
     :where(.contributors-section) .contributors-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 1.5rem;
+        gap: 0.1rem;
         max-width: 1200px;
         margin: 0 auto;
         padding: 0;
@@ -67,6 +67,10 @@ const data: ContributorsData = await response.json();
 
     :where(.contributors-section) .contributors-grid > li {
         margin-top: 0 !important;
+    }
+
+    :where(.contributors-section) .contributors-grid li > :last-child:not(li, ul, ol, a, strong, em, del, span, input, code, br, :where(.not-content *)) {
+        margin-bottom: 0.5rem !important;
     }
 
     .contributor-card {
@@ -100,14 +104,14 @@ const data: ContributorsData = await response.json();
         left: 0;
         width: 100%;
         height: 100%;
-        border-radius: 8px;
         object-fit: cover;
         display: block;
         margin: 0;
     }
 
     .contributor-name {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+        font-weight: bold;
         text-align: center;
         overflow: hidden;
         text-overflow: ellipsis;
