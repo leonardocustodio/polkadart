@@ -1,3 +1,6 @@
+## 0.2.2
+- Upgrade `ink_abi` to work with the new version of `ink_cli`
+
 ## 0.2.1
 - Packages were bumped for new publish workflow
 
