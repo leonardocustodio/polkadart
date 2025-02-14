@@ -37,7 +37,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "sass-embedded": "^1.83.4",
-    "starlight-links-validator": "^0.14.2",
+    "starlight-links-validator": "^0.14.3",
     "vite": "^6.1.0"
   }
 }
