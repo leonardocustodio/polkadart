@@ -4,7 +4,7 @@
 
 <p align="center">
 <a href="https://github.com/leonardocustodio/polkadart"><img src="https://img.shields.io/github/stars/leonardocustodio/polkadart.svg?style=flat&logo=github&colorB=deeppink&label=Stars" alt="Star on Github"></a>
-<a href="https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml"><img src="https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml/badge.svg?branch=main" alt="build"></a>
+<a href="https://github.com/leonardocustodio/polkadart/actions/workflows/tests.yml"><img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/leonardocustodio/polkadart/tests.yml?style=flat&label=Tests"></a>
 <a href="https://codecov.io/gh/leonardocustodio/polkadart"><img src="https://img.shields.io/codecov/c/github/leonardocustodio/polkadart?label=Codecov&token=HG3K4LW5UN" alt="Codecov"></a>
 <a href="#contributors"><img src="https://img.shields.io/github/all-contributors/leonardocustodio/polkadart?color=ee8449&label=All%20Contributors" alt="All contributors"></a>
 <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%202.0-purple.svg?label=License" alt="License: Apache 2"></a>
