@@ -10,7 +10,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        sparse-checkout: docs
+        with:
+          sparse-checkout: docs
 
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
