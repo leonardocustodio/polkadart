@@ -4,7 +4,10 @@ on:
   push:
     paths-ignore:
       - "**.md"
-      - "docs/**"
+      - ".github/workflows/**"
+    paths:
+      - "packages/**"
+      - ".github/workflows/tests.yml"
 
 jobs:
   build:
