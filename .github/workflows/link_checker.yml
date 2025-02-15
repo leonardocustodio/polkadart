@@ -1,10 +1,10 @@
 name: Link Check
 on:
   push:
+    paths:
+      - "**.md"
 
-# Declare default permissions as read only.
 permissions: read-all
-
 jobs:
   markdown-link-check:
     name: Markdown link checks

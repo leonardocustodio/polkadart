@@ -3,9 +3,13 @@ name: Build Docker Image
 on:
   push:
     paths-ignore:
-      - "**.md"
       - "docs/**"
-
+      - ".github/workflows/**"
+    paths:
+      - "packages/**"
+      - ".github/workflows/docker_build.yml"
+      - "Dockerfile"
+       
 jobs:
   push:
     runs-on: ubuntu-latest
