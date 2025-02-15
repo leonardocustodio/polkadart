@@ -2,7 +2,7 @@
 title: Ink CLI
 ---
 
-`ink_cli` is a Dart library designed to simplify the process of generating Dart classes and methods for interacting with ink! smart contracts. It enables developers to seamlessly deploy, call, and manage smart contracts on Substrate-based blockchains.
+`ink_cli` is a Dart library designed to simplify the process of generating Dart classes and methods for interacting with ink! smart contracts. The first step is to generate type-safe Dart code from your contract metadata using the TypeGenerator.
 
 ## Requirements
 
@@ -35,11 +35,9 @@ or
   flutter pub get
 ```
 
-## Contract Code Generation
+## Generate Contract Class
 
-`ink_cli` provides an automated way to generate Dart classes and methods from an ink! contract metadata JSON file.
-
-### Example: Generating a Contract Class
+The first step to interact with an ink! contract is to generate the Dart contract class from the contract metadata:
 
 ```dart
 import 'dart:io';
@@ -47,42 +45,47 @@ import 'package:ink_cli/ink_cli.dart';
 
 void main() {
   final String dir = Directory.current.absolute.path;
-  final fileOutput = FileOutput('$dir/example/generated_erc20.dart');
+  final fileOutput = FileOutput('$dir/example/generated_flipper.dart');
   final generator = TypeGenerator(
-      abiFilePath: './example/ink_erc20.json', fileOutput: fileOutput);
+      abiFilePath: './example/flipper.json', fileOutput: fileOutput);
   generator.generate();
   fileOutput.write();
 }
 ```
 
-This will generate a Dart class representing the contract, allowing for direct interaction.
+This will generate a type-safe Dart class with all the contract methods and types that can be imported and used to interact with the deployed contract.
 
 ## Deploying and Interacting with a Contract
 
 Once the contract class is generated, you can use it to deploy and interact with the smart contract on a Substrate blockchain.
 
-### Example: Deploying a New ERC-20 Contract
+### Example: Deploying the Flipper Contract
 
 ```dart
 import 'dart:typed_data';
 import 'package:polkadart/polkadart.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'generated_erc20.dart';
+import 'generated_flipper.dart';
 
 void main() async {
-  final polkadart = Provider.fromUri(Uri.parse('wss://shibuya-rpc.dwellir.com'));
-  final keyPair = KeyPair.sr25519.fromSeed(decodeHex(
-      '0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a'));
+  final polkadart = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
+
+  // Using Alice account
+  final alice = KeyPair.sr25519.fromUri('//Alice');
+
+  // Alternative: Using custom seed
+  // final keyPair = KeyPair.sr25519.fromSeed(decodeHex(
+  //     '0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a'));
 
   final contract = Contract(
     provider: polkadart,
-    address: Uint8List.fromList(keyPair.publicKey.bytes.toList()),
+    address: Uint8List.fromList(alice.publicKey.bytes.toList()),
   );
 
   final InstantiateRequest result = await contract.new_contract(
-    total_supply: BigInt.from(100000000),
-    code: decodeHex(Constants.erc20Code),
-    keyPair: keyPair,
+    init_value: true,
+    code: decodeHex(Constants.flipperCode),
+    keyPair: alice,
   );
   print('Contract deployed: $result');
 }
@@ -90,15 +93,15 @@ void main() async {
 
 ### Example: Calling Contract Methods
 
-After generating code, you can call contract functions to fetch balances, allowances, and perform transactions.
+After generating code, you can call contract functions to flip the boolean value and get its current state.
 
 ```dart
-Future<Balance> getTotalSupply(Contract contract) async {
-  return await contract.total_supply();
+Future<void> flip(Contract contract) async {
+  await contract.flip();
 }
 
-Future<Balance> getBalanceOf(Contract contract, AccountId owner) async {
-  return await contract.balance_of(owner);
+Future<bool> get(Contract contract) async {
+  return await contract.get();
 }
 ```
 

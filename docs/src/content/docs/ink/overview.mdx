@@ -1,3 +1,58 @@
 ---
-title: Overview
+title: Getting Started with ink! Smart Contracts
 ---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components'
+
+ink! is a Rust-based domain-specific language for writing WebAssembly smart contracts that provides specialized #[ink(...)] attribute macros enabling secure and efficient smart contract development on Substrate-based chains.
+
+Before proceeding, ensure you have followed the complete setup guide at https://use.ink/getting-started/setup to configure your development environment with all required dependencies including Rust, cargo-contract, and other tools.
+
+#### Creating Your First Contract
+
+Create a new ink! contract project:
+
+```bash title="Create new contract"
+cargo contract new flipper
+cd flipper
+```
+
+Build the contract to generate the Wasm bundle:
+
+```bash title="Build contract"
+cargo contract build
+```
+
+This will generate the `.contract` bundle file in `target/ink/`.
+
+#### Deploying Your Contract
+
+First, start your local node (if you haven't installed it yet, follow the guide at https://use.ink/getting-started/running-substrate):
+
+```bash title="Start local node"
+substrate-contracts-node
+```
+
+Then the contract can be deployed using the contracts UI:
+
+```dart title="Deploy steps"
+1. Go to https://ui.use.ink
+2. Select "Local Node" from the dropdown at top left
+3. Click "Add New Contract" in sidebar
+4. Click "Upload New Contract Code"
+5. Select deployment account (e.g. ALICE)
+6. Name your contract (e.g. "Flipper")
+7. Drag & drop the .contract file
+8. Click "Next"
+9. Accept default settings
+10. Click "Upload and Instantiate"
+```
+
+#### Sample Usage
+
+Learn how to interact with ink! smart contracts using Polkadart tools and libraries.
+
+<CardGrid>
+    <LinkCard title="Parse contract metadata" href="/ink/ink_abi" description="Parse and handle ink! contract metadata"></LinkCard>
+    <LinkCard title="Generate contract bindings" href="/ink/ink_cli" description="Generate type-safe Dart code from contract metadata"></LinkCard>
+</CardGrid>
