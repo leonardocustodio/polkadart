@@ -25,5 +25,5 @@ jobs:
 
       - name: Build application
         run: |
-          cd docs
+          cd docs && cp .env.example .env
           npm run build
