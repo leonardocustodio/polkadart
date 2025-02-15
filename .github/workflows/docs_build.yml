@@ -24,4 +24,6 @@ jobs:
           npm ci
 
       - name: Build application
-        run: npm run build
+        run: |
+          cd docs
+          npm run build
