@@ -4,6 +4,9 @@ on:
     paths:
       - "docs/**"
       - ".github/workflows/docs_build.yml"
+  push:
+    branches:
+      - main
 
 jobs:
   build:
