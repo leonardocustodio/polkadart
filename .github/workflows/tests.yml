@@ -2,7 +2,6 @@ name: Build and Tests
 
 on:
   pull_request:
-  push:
     paths:
       - "!**.md"
       - "!.github/workflows/**"
