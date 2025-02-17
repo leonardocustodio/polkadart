@@ -11,8 +11,7 @@ class Signature {
   /// Signature.fromBytes returns a new Signature from the given bytes List<int>
   factory Signature.fromBytes(Uint8List bytes) {
     if (bytes.length != 64) {
-      throw Exception(
-          'Invalid bytes. Expected bytes of length 64, got ${bytes.length}');
+      throw Exception('Invalid bytes. Expected bytes of length 64, got ${bytes.length}');
     }
 
     final sig = Signature._();
@@ -24,8 +23,7 @@ class Signature {
   factory Signature.fromHex(String s) {
     final sigHex = hex.decode(s);
     if (sigHex.length != 64) {
-      throw Exception(
-          'Invalid hex string. Expected 64 bytes, got ${sigHex.length}');
+      throw Exception('Invalid hex string. Expected 64 bytes, got ${sigHex.length}');
     }
 
     final sig = Signature._();

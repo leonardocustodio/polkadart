@@ -98,13 +98,10 @@ class SequenceDescriptor extends TypeDescriptor {
   LiteralValue listToExpression(List<int> values, bool constant) {
     final TypeReference listType = refs.list(ref: refs.int);
     if (!constant && values.every((value) => value == 0)) {
-      return listType.newInstanceNamed(
-          'filled',
-          [literalNum(values.length), literalNum(0)],
+      return listType.newInstanceNamed('filled', [literalNum(values.length), literalNum(0)],
           {'growable': literalTrue}).asLiteralValue();
     } else if (constant) {
-      return literalConstList(values, refs.int)
-          .asLiteralValue(isConstant: true);
+      return literalConstList(values, refs.int).asLiteralValue(isConstant: true);
     }
     return literalList(values, refs.int).asLiteralValue();
   }
@@ -112,9 +109,7 @@ class SequenceDescriptor extends TypeDescriptor {
   LiteralValue listToExpressionBigInt(List<BigInt> values, bool constant) {
     final TypeReference listType = refs.list(ref: refs.bigInt);
     if (!constant && values.every((value) => value == BigInt.zero)) {
-      return listType.newInstanceNamed(
-          'filled',
-          [literalNum(values.length), refer('BigInt.zero')],
+      return listType.newInstanceNamed('filled', [literalNum(values.length), refer('BigInt.zero')],
           {'growable': literalTrue}).asLiteralValue();
     }
 
@@ -161,8 +156,7 @@ class SequenceDescriptor extends TypeDescriptor {
 
     final length = CompactCodec.codec.decode(input);
     final values = <LiteralValue>[
-      for (int i = 0; i < length; i++)
-        typeDef.valueFrom(from, input, constant: constant)
+      for (int i = 0; i < length; i++) typeDef.valueFrom(from, input, constant: constant)
     ];
 
     if (constant && values.every((value) => value.isConstant)) {

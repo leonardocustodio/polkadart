@@ -1,8 +1,7 @@
 import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
 
 class SubstrateSignedExtensions implements SignedExtensions {
-  static final SubstrateSignedExtensions _instance =
-      SubstrateSignedExtensions._internal();
+  static final SubstrateSignedExtensions _instance = SubstrateSignedExtensions._internal();
 
   factory SubstrateSignedExtensions() => _instance;
 

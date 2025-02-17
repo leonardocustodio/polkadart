@@ -12,10 +12,7 @@ const V11 = <String, dynamic>{
   'ExtrinsicMetadataV11': {'version': 'U8', 'signedExtensions': 'Vec<Text>'},
   'FunctionArgumentMetadataV11': 'FunctionArgumentMetadataV10',
   'FunctionMetadataV11': 'FunctionMetadataV10',
-  'MetadataV11': {
-    'modules': 'Vec<ModuleMetadataV11>',
-    'extrinsic': 'ExtrinsicMetadataV11'
-  },
+  'MetadataV11': {'modules': 'Vec<ModuleMetadataV11>', 'extrinsic': 'ExtrinsicMetadataV11'},
   'ModuleConstantMetadataV11': 'ModuleConstantMetadataV10',
   'ModuleMetadataV11': {
     'name': 'Text',
@@ -36,12 +33,7 @@ const V11 = <String, dynamic>{
   'StorageEntryTypeV11': {
     '_enum': {
       'Plain': 'Type',
-      'Map': {
-        'hasher': 'StorageHasherV11',
-        'key': 'Type',
-        'value': 'Type',
-        'linked': 'bool'
-      },
+      'Map': {'hasher': 'StorageHasherV11', 'key': 'Type', 'value': 'Type', 'linked': 'bool'},
       'DoubleMap': {
         'hasher': 'StorageHasherV11',
         'key1': 'Type',
@@ -51,10 +43,7 @@ const V11 = <String, dynamic>{
       }
     }
   },
-  'StorageMetadataV11': {
-    'prefix': 'Text',
-    'items': 'Vec<StorageEntryMetadataV11>'
-  },
+  'StorageMetadataV11': {'prefix': 'Text', 'items': 'Vec<StorageEntryMetadataV11>'},
   'StorageHasherV11': {
     '_enum': {
       'Blake2_128': 'Null',

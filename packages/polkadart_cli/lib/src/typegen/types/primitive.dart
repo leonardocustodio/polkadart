@@ -10,36 +10,21 @@ class PrimitiveDescriptor extends TypeDescriptor {
       : primitiveType = primitive,
         _id = id;
 
-  factory PrimitiveDescriptor.str(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.Str);
-  factory PrimitiveDescriptor.char(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.Char);
-  factory PrimitiveDescriptor.bool(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.Bool);
-  factory PrimitiveDescriptor.i8(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.I8);
-  factory PrimitiveDescriptor.i16(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.I16);
-  factory PrimitiveDescriptor.i32(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.I32);
-  factory PrimitiveDescriptor.i64(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.I64);
-  factory PrimitiveDescriptor.i128(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.I128);
-  factory PrimitiveDescriptor.i256(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.I256);
-  factory PrimitiveDescriptor.u8(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.U8);
-  factory PrimitiveDescriptor.u16(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.U16);
-  factory PrimitiveDescriptor.u32(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.U32);
-  factory PrimitiveDescriptor.u64(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.U64);
-  factory PrimitiveDescriptor.u128(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.U128);
-  factory PrimitiveDescriptor.u256(int id) =>
-      PrimitiveDescriptor._(id, metadata.Primitive.U256);
+  factory PrimitiveDescriptor.str(int id) => PrimitiveDescriptor._(id, metadata.Primitive.Str);
+  factory PrimitiveDescriptor.char(int id) => PrimitiveDescriptor._(id, metadata.Primitive.Char);
+  factory PrimitiveDescriptor.bool(int id) => PrimitiveDescriptor._(id, metadata.Primitive.Bool);
+  factory PrimitiveDescriptor.i8(int id) => PrimitiveDescriptor._(id, metadata.Primitive.I8);
+  factory PrimitiveDescriptor.i16(int id) => PrimitiveDescriptor._(id, metadata.Primitive.I16);
+  factory PrimitiveDescriptor.i32(int id) => PrimitiveDescriptor._(id, metadata.Primitive.I32);
+  factory PrimitiveDescriptor.i64(int id) => PrimitiveDescriptor._(id, metadata.Primitive.I64);
+  factory PrimitiveDescriptor.i128(int id) => PrimitiveDescriptor._(id, metadata.Primitive.I128);
+  factory PrimitiveDescriptor.i256(int id) => PrimitiveDescriptor._(id, metadata.Primitive.I256);
+  factory PrimitiveDescriptor.u8(int id) => PrimitiveDescriptor._(id, metadata.Primitive.U8);
+  factory PrimitiveDescriptor.u16(int id) => PrimitiveDescriptor._(id, metadata.Primitive.U16);
+  factory PrimitiveDescriptor.u32(int id) => PrimitiveDescriptor._(id, metadata.Primitive.U32);
+  factory PrimitiveDescriptor.u64(int id) => PrimitiveDescriptor._(id, metadata.Primitive.U64);
+  factory PrimitiveDescriptor.u128(int id) => PrimitiveDescriptor._(id, metadata.Primitive.U128);
+  factory PrimitiveDescriptor.u256(int id) => PrimitiveDescriptor._(id, metadata.Primitive.U256);
 
   @override
   int id() => _id;
@@ -108,48 +93,34 @@ class PrimitiveDescriptor extends TypeDescriptor {
   LiteralValue valueFrom(BasePath from, Input input, {constant = false}) {
     switch (primitiveType) {
       case metadata.Primitive.Bool:
-        return literalBool(BoolCodec.codec.decode(input))
-            .asLiteralValue(isConstant: true);
+        return literalBool(BoolCodec.codec.decode(input)).asLiteralValue(isConstant: true);
       case metadata.Primitive.Str:
-        return literalString(StrCodec.codec.decode(input))
-            .asLiteralValue(isConstant: true);
+        return literalString(StrCodec.codec.decode(input)).asLiteralValue(isConstant: true);
       case metadata.Primitive.Char:
       case metadata.Primitive.U8:
-        return literalNum(U8Codec.codec.decode(input))
-            .asLiteralValue(isConstant: true);
+        return literalNum(U8Codec.codec.decode(input)).asLiteralValue(isConstant: true);
       case metadata.Primitive.U16:
-        return literalNum(U16Codec.codec.decode(input))
-            .asLiteralValue(isConstant: true);
+        return literalNum(U16Codec.codec.decode(input)).asLiteralValue(isConstant: true);
       case metadata.Primitive.U32:
-        return literalNum(U32Codec.codec.decode(input))
-            .asLiteralValue(isConstant: true);
+        return literalNum(U32Codec.codec.decode(input)).asLiteralValue(isConstant: true);
       case metadata.Primitive.U64:
-        return bigIntToExpression(U64Codec.codec.decode(input))
-            .asLiteralValue();
+        return bigIntToExpression(U64Codec.codec.decode(input)).asLiteralValue();
       case metadata.Primitive.U128:
-        return bigIntToExpression(U128Codec.codec.decode(input))
-            .asLiteralValue();
+        return bigIntToExpression(U128Codec.codec.decode(input)).asLiteralValue();
       case metadata.Primitive.U256:
-        return bigIntToExpression(U256Codec.codec.decode(input))
-            .asLiteralValue();
+        return bigIntToExpression(U256Codec.codec.decode(input)).asLiteralValue();
       case metadata.Primitive.I8:
-        return literalNum(I8Codec.codec.decode(input))
-            .asLiteralValue(isConstant: true);
+        return literalNum(I8Codec.codec.decode(input)).asLiteralValue(isConstant: true);
       case metadata.Primitive.I16:
-        return literalNum(I16Codec.codec.decode(input))
-            .asLiteralValue(isConstant: true);
+        return literalNum(I16Codec.codec.decode(input)).asLiteralValue(isConstant: true);
       case metadata.Primitive.I32:
-        return literalNum(I32Codec.codec.decode(input))
-            .asLiteralValue(isConstant: true);
+        return literalNum(I32Codec.codec.decode(input)).asLiteralValue(isConstant: true);
       case metadata.Primitive.I64:
-        return bigIntToExpression(I64Codec.codec.decode(input))
-            .asLiteralValue();
+        return bigIntToExpression(I64Codec.codec.decode(input)).asLiteralValue();
       case metadata.Primitive.I128:
-        return bigIntToExpression(I128Codec.codec.decode(input))
-            .asLiteralValue();
+        return bigIntToExpression(I128Codec.codec.decode(input)).asLiteralValue();
       case metadata.Primitive.I256:
-        return bigIntToExpression(I256Codec.codec.decode(input))
-            .asLiteralValue();
+        return bigIntToExpression(I256Codec.codec.decode(input)).asLiteralValue();
     }
   }
 

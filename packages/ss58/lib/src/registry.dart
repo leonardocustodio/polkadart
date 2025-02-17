@@ -41,8 +41,7 @@ class Registry {
   /// Initialize the registry with the [jsonString], process it to find list of registries
   /// and return a new instance of [Registry].
   factory Registry.fromJsonString(String jsonString) {
-    List<dynamic> dynamicItems =
-        jsonDecode(jsonString)['registry'] as List<dynamic>;
+    List<dynamic> dynamicItems = jsonDecode(jsonString)['registry'] as List<dynamic>;
     List<RegistryItem> convertedItems = dynamicItems.map((value) {
       return RegistryItem.fromJson(value as Map<String, dynamic>);
     }).toList();

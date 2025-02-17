@@ -64,8 +64,7 @@ class Sink {
   String qualify(final String prefix, String expression) {
     final RegExp splitRegex = RegExp(r'[<>&|,()\[\]{}:]');
     final List<String> parts = expression.split(splitRegex);
-    final Iterable<String> trimmedParts =
-        parts.map((t) => t.trim()).where((t) => t.isNotEmpty);
+    final Iterable<String> trimmedParts = parts.map((t) => t.trim()).where((t) => t.isNotEmpty);
 
     // Collect any parts that are known assigned names
     final Set<String> local = <String>{};

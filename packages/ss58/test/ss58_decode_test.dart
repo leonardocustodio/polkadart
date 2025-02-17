@@ -2,10 +2,7 @@ import 'dart:typed_data' show Uint8List;
 
 import 'package:convert/convert.dart' show hex;
 import 'package:ss58/src/exceptions.dart'
-    show
-        BadAddressLengthException,
-        InvalidPrefixException,
-        InvalidCheckSumException;
+    show BadAddressLengthException, InvalidPrefixException, InvalidCheckSumException;
 import 'package:ss58/src/address.dart' show Address;
 import 'package:test/test.dart';
 
@@ -16,14 +13,12 @@ void main() {
           Address.decode('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
 
       final int prefix = 42;
-      final Uint8List bytes = Uint8List.fromList(hex.decode(
-          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'));
+      final Uint8List bytes = Uint8List.fromList(
+          hex.decode('d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'));
 
       expect(decodedAddress, Address(prefix: prefix, pubkey: bytes));
     });
-    test(
-        'Should decode the given kusama addresses and return prefix equal to kusama prefix',
-        () {
+    test('Should decode the given kusama addresses and return prefix equal to kusama prefix', () {
       final kusamaPrefix = 2;
 
       // kusama addresses
@@ -36,9 +31,7 @@ void main() {
       expect(Address.decode(address3).prefix, kusamaPrefix);
     });
 
-    test(
-        'Should decode the given polkadot address and return prefix equal to polkadot prefix',
-        () {
+    test('Should decode the given polkadot address and return prefix equal to polkadot prefix', () {
       final polkadotPrefix = 0;
 
       // polkadot address
@@ -47,9 +40,7 @@ void main() {
       expect(Address.decode(address).prefix, polkadotPrefix);
     });
 
-    test(
-        'Should decode the given crust address and return prefix equal to crust prefix',
-        () {
+    test('Should decode the given crust address and return prefix equal to crust prefix', () {
       final crustPrefix = 66;
 
       // polkadot address
@@ -59,8 +50,7 @@ void main() {
     });
   });
   group('SS58Codec decode method exception testing', () {
-    test('should throw BadAddressLengthException when data.lentgh is too small',
-        () {
+    test('should throw BadAddressLengthException when data.lentgh is too small', () {
       final expectedErrorMessage = 'Bad Length Address: KS.';
       expect(
         () => Address.decode('KS'),
@@ -72,8 +62,7 @@ void main() {
       );
     });
 
-    test(
-        'should throw InvalidPrefixException when first character of data is greater than 127',
+    test('should throw InvalidPrefixException when first character of data is greater than 127',
         () {
       // Ex:
       // ```
@@ -86,8 +75,7 @@ void main() {
         () => Address.decode('fRWKeM1KzddF4G6N6isvg6SpFVWJLLXRyYvK1dXLx4xjP'),
         throwsA(
           predicate((exception) =>
-              exception is InvalidPrefixException &&
-              exception.toString() == expectedErrorMessage),
+              exception is InvalidPrefixException && exception.toString() == expectedErrorMessage),
         ),
       );
     });
@@ -97,8 +85,7 @@ void main() {
         () {
       final expectedErrorMessage = 'Bad Length Address.';
       expect(
-        () => Address.decode(
-            '3HX1zEyzCbxeXe34JY8SNSVAZ6djFccsV5f67PTied4CcWHspQ'),
+        () => Address.decode('3HX1zEyzCbxeXe34JY8SNSVAZ6djFccsV5f67PTied4CcWHspQ'),
         throwsA(
           predicate((exception) =>
               exception is BadAddressLengthException &&
@@ -106,8 +93,7 @@ void main() {
         ),
       );
       expect(
-        () => Address.decode(
-            '4pa95kBXvMqgbpDXkFVHE9JfnNqamjYQYtmSTZGcnBXwvnmosP'),
+        () => Address.decode('4pa95kBXvMqgbpDXkFVHE9JfnNqamjYQYtmSTZGcnBXwvnmosP'),
         throwsA(
           predicate((exception) =>
               exception is BadAddressLengthException &&
@@ -115,8 +101,7 @@ void main() {
         ),
       );
       expect(
-        () => Address.decode(
-            '3rr8zEMfiR2AjQYpVvncJCAcRP7CLzfxMGuUU2Pw2MCotrsQnS'),
+        () => Address.decode('3rr8zEMfiR2AjQYpVvncJCAcRP7CLzfxMGuUU2Pw2MCotrsQnS'),
         throwsA(
           predicate((exception) =>
               exception is BadAddressLengthException &&
@@ -124,8 +109,7 @@ void main() {
         ),
       );
       expect(
-        () => Address.decode(
-            '4uqUGom7PszVSaZipgHYwVNsMESj1W6cmMZYeXGFeeXGX6VEqm'),
+        () => Address.decode('4uqUGom7PszVSaZipgHYwVNsMESj1W6cmMZYeXGFeeXGX6VEqm'),
         throwsA(
           predicate((exception) =>
               exception is BadAddressLengthException &&
@@ -134,13 +118,10 @@ void main() {
       );
     });
 
-    test(
-        'Should throw InvalidCheckSumException when decoded address is Invalid',
-        () {
+    test('Should throw InvalidCheckSumException when decoded address is Invalid', () {
       final expectedErrorMessage = 'Invalid checksum';
       expect(
-        () =>
-            Address.decode('3HX1zEyzCbxeXe34JY8SNSVAZ6djFccsV5f67PTied4CcWHs'),
+        () => Address.decode('3HX1zEyzCbxeXe34JY8SNSVAZ6djFccsV5f67PTied4CcWHs'),
         throwsA(
           predicate((exception) =>
               exception is InvalidCheckSumException &&

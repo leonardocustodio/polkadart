@@ -8,9 +8,8 @@ class MetadataV14Expander {
   final customCodecRegister = <String, dynamic>{};
 
   MetadataV14Expander(List<dynamic> types) {
-    final id2Portable = types
-        .map((e) => (e as Map<String, dynamic>).toJson())
-        .toList(growable: false);
+    final id2Portable =
+        types.map((e) => (e as Map<String, dynamic>).toJson()).toList(growable: false);
 
     for (var item in id2Portable) {
       final primitive = item['type']?['def']?['Primitive'];
@@ -40,14 +39,12 @@ class MetadataV14Expander {
       }
     }
     for (var item in id2Portable) {
-      if (item['type']['path'].length > 1 &&
-          item['type']['path'][0] == 'primitive_types') {
+      if (item['type']['path'].length > 1 && item['type']['path'][0] == 'primitive_types') {
         _fetchTypeName(item['id'], item, id2Portable);
       }
     }
     for (var item in id2Portable) {
-      if (item['type']['path'].length > 1 &&
-          item['type']['path'][0] == 'sp_core') {
+      if (item['type']['path'].length > 1 && item['type']['path'][0] == 'sp_core') {
         _fetchTypeName(item['id'], item, id2Portable);
       }
     }
@@ -56,8 +53,7 @@ class MetadataV14Expander {
     }
   }
 
-  String _fetchTypeName(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _fetchTypeName(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     if (registeredSiType[id] != null) {
       return registeredSiType[id]!;
     }
@@ -143,16 +139,12 @@ class MetadataV14Expander {
       if (one['type']['def']?['Sequence'] != null) {
         final sequenceSubTypeId = one['type']['def']?['Sequence']['type'];
 
-        String? subType = _genPathName(
-            id2Portable[sequenceSubTypeId]['type']['path'],
-            sequenceSubTypeId,
-            id2Portable[sequenceSubTypeId],
-            id2Portable);
+        String? subType = _genPathName(id2Portable[sequenceSubTypeId]['type']['path'],
+            sequenceSubTypeId, id2Portable[sequenceSubTypeId], id2Portable);
 
         if (subType == '') {
           subType = registeredSiType[sequenceSubTypeId] ??
-              _fetchTypeName(sequenceSubTypeId, id2Portable[sequenceSubTypeId],
-                  id2Portable);
+              _fetchTypeName(sequenceSubTypeId, id2Portable[sequenceSubTypeId], id2Portable);
         }
         registeredSiType[siTypeId] = 'Vec<$subType>';
         return 'Vec<$subType>';
@@ -165,8 +157,7 @@ class MetadataV14Expander {
     return genName;
   }
 
-  String _exploreComposite(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _exploreComposite(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     if (one['def']['Composite']?['fields'] == null ||
         one['def']['Composite']['fields'].length == 0) {
       registeredSiType[id] = 'Null';
@@ -178,8 +169,8 @@ class MetadataV14Expander {
 
     if (one['def']['Composite']['fields'].length == 1) {
       final int siType = one['def']['Composite']['fields'][0]['type'];
-      final String subType = registeredSiType[siType] ??
-          _fetchTypeName(siType, id2Portable[siType], id2Portable);
+      final String subType =
+          registeredSiType[siType] ?? _fetchTypeName(siType, id2Portable[siType], id2Portable);
       final String typeString = _genPathName(one['path'], id, {}, []);
       registeredTypeNames.add(typeString);
       customCodecRegister[typeString] = subType;
@@ -189,19 +180,16 @@ class MetadataV14Expander {
     final Map<String, String> tempStruct = <String, String>{};
     for (var field in one['def']['Composite']['fields']) {
       final subTypeName = registeredSiType[field['type']] ??
-          _fetchTypeName(
-              field['type'], id2Portable[field['type']], id2Portable);
+          _fetchTypeName(field['type'], id2Portable[field['type']], id2Portable);
 
-      tempStruct[field['name'] ??
-          field['typeName']?.toLowerCase() ??
-          subTypeName.toLowerCase()] = subTypeName;
+      tempStruct[field['name'] ?? field['typeName']?.toLowerCase() ?? subTypeName.toLowerCase()] =
+          subTypeName;
     }
     customCodecRegister[typeString] = tempStruct;
     return typeString;
   }
 
-  String _exploreArray(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _exploreArray(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     final int siType = one['def']['Array']['type'];
 
     registeredSiType[id] =
@@ -211,8 +199,7 @@ class MetadataV14Expander {
     return registeredSiType[id]!;
   }
 
-  String _exploreSequence(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _exploreSequence(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     final int siType = one['def']['Sequence']['type'];
 
     registeredSiType[id] =
@@ -221,8 +208,7 @@ class MetadataV14Expander {
     return registeredSiType[id]!;
   }
 
-  String _exploreTuple(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _exploreTuple(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     if (one['def']['Tuple'].length == 0) {
       registeredSiType[id] = 'Null';
       return 'Null';
@@ -230,8 +216,8 @@ class MetadataV14Expander {
     final List<String> tuplesList = <String>[];
     for (final tuple in one['def']['Tuple']) {
       final int siType = tuple as int;
-      final String tupleType = registeredSiType[siType] ??
-          _fetchTypeName(siType, id2Portable[siType], id2Portable);
+      final String tupleType =
+          registeredSiType[siType] ?? _fetchTypeName(siType, id2Portable[siType], id2Portable);
       tuplesList.add(tupleType);
     }
 
@@ -241,8 +227,7 @@ class MetadataV14Expander {
     return registeredSiType[id]!;
   }
 
-  String _exploreCompact(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _exploreCompact(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     final int siType = one['def']['Compact']['type'];
 
     registeredSiType[id] =
@@ -252,8 +237,7 @@ class MetadataV14Expander {
     return registeredSiType[id]!;
   }
 
-  String _exploreOption(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _exploreOption(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     final int siType = one['params'][0]['type'];
 
     registeredSiType[id] =
@@ -263,14 +247,13 @@ class MetadataV14Expander {
     return registeredSiType[id]!;
   }
 
-  String _exploreResult(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _exploreResult(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     final int resultOk = one['params'][0]['type'];
 
     final int resultErr = one['params'][1]['type'];
 
-    final String okType = registeredSiType[resultOk] ??
-        _fetchTypeName(resultOk, id2Portable[resultOk], id2Portable);
+    final String okType =
+        registeredSiType[resultOk] ?? _fetchTypeName(resultOk, id2Portable[resultOk], id2Portable);
 
     final String errType = registeredSiType[resultErr] ??
         _fetchTypeName(resultErr, id2Portable[resultErr], id2Portable);
@@ -280,8 +263,7 @@ class MetadataV14Expander {
     return registeredSiType[id]!;
   }
 
-  String _exploreEnum(
-      int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
+  String _exploreEnum(int id, Map<String, dynamic> one, List<dynamic> id2Portable) {
     if (registeredSiType[id] != null) {
       return registeredSiType[id]!;
     }
@@ -298,8 +280,7 @@ class MetadataV14Expander {
 
     variants.sort((a, b) => a['index'] < b['index'] ? -1 : 1);
 
-    final Map<int, MapEntry<String, dynamic>> variantNameMap =
-        <int, MapEntry<String, dynamic>>{};
+    final Map<int, MapEntry<String, dynamic>> variantNameMap = <int, MapEntry<String, dynamic>>{};
 
     for (final Map<String, dynamic> variant in variants) {
       final int variantIndex = variant['index'];
@@ -318,8 +299,8 @@ class MetadataV14Expander {
             variantNameMap[variantIndex] = MapEntry(
                 variantName,
                 registeredSiType[siType] ??
-                    _genPathName(id2Portable[siType]['type']['path'], siType,
-                        id2Portable[siType], id2Portable));
+                    _genPathName(id2Portable[siType]['type']['path'], siType, id2Portable[siType],
+                        id2Portable));
           } else {
             //
             // Tuple Variant
@@ -331,11 +312,10 @@ class MetadataV14Expander {
                 typeMapping += ', ';
               }
               typeMapping += registeredSiType[siType] ??
-                  _genPathName(id2Portable[siType]['type']['path'], siType,
-                      id2Portable[siType], id2Portable);
+                  _genPathName(id2Portable[siType]['type']['path'], siType, id2Portable[siType],
+                      id2Portable);
             }
-            variantNameMap[variantIndex] =
-                MapEntry(variantName, '($typeMapping)');
+            variantNameMap[variantIndex] = MapEntry(variantName, '($typeMapping)');
           }
         } else {
           //
@@ -345,8 +325,8 @@ class MetadataV14Expander {
             final String valueName = field['name'];
             final int siType = field['type'];
             final subType = registeredSiType[siType] ??
-                _genPathName(id2Portable[siType]['type']['path'], siType,
-                    id2Portable[siType], id2Portable);
+                _genPathName(
+                    id2Portable[siType]['type']['path'], siType, id2Portable[siType], id2Portable);
             typeMapping[valueName] = subType;
           }
           variantNameMap[variantIndex] = MapEntry(variantName, typeMapping);
@@ -359,8 +339,8 @@ class MetadataV14Expander {
     // hence should throw error from the Enum Codec if the index is being tried to use.
     // This is done to avoid the need of having a separate codec for each enum.
 
-    if (variantNameMap.values.every((MapEntry<String, dynamic> e) =>
-        e.value is String && e.value == 'Null')) {
+    if (variantNameMap.values
+        .every((MapEntry<String, dynamic> e) => e.value is String && e.value == 'Null')) {
       // enum all values are 'Null' Type or null and hence it is not a parameterized enum
       result = <String, int>{};
       variantNameMap.forEach((int index, MapEntry<String, dynamic> e) {

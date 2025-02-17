@@ -17,13 +17,12 @@ class Names {
   }
 
   bool _isFree(final String name) {
-    return _reserved.contains(name) == false &&
-        _assigned.containsKey(name) == false;
+    return _reserved.contains(name) == false && _assigned.containsKey(name) == false;
   }
 
   void reserve(final String name) {
-    assert(_isFree(name),
-        'Cannot reserve name "$name" because it is already reserved or assigned.');
+    assert(
+        _isFree(name), 'Cannot reserve name "$name" because it is already reserved or assigned.');
     _reserved.add(name);
   }
 
@@ -134,8 +133,7 @@ bool isNameNeeded(final List<CodecInterface> types, final int ti) {
   final CodecInterface ty = types[ti];
   switch (ty.kind) {
     case TypeKind.variant:
-      return asResultType(ty as VariantCodecInterface) == null &&
-          asOptionType(ty) == null;
+      return asResultType(ty as VariantCodecInterface) == null && asOptionType(ty) == null;
     case TypeKind.composite:
       return true;
     default:

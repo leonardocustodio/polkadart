@@ -3,9 +3,7 @@ import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 
 void main() {
-  test(
-      'Should return one instance of RegistryItem when call fromJson constructor',
-      () {
+  test('Should return one instance of RegistryItem when call fromJson constructor', () {
     final Map<String, dynamic> json = {
       'prefix': 2,
       "network": "kusama",

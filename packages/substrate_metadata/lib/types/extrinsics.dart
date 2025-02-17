@@ -33,8 +33,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
     final signed = meta & BigInt.from(128).toInt();
 
     if (signed != 0) {
-      result['signature'] =
-          chainInfo.scaleCodec.decode('ExtrinsicSignatureCodec', input);
+      result['signature'] = chainInfo.scaleCodec.decode('ExtrinsicSignatureCodec', input);
     }
 
     result['calls'] = chainInfo.scaleCodec.decode('Call', input);
@@ -59,8 +58,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
 
       //
       // Start encoding the signature
-      chainInfo.scaleCodec
-          .encodeTo('ExtrinsicSignatureCodec', value['signature'], tempOutput);
+      chainInfo.scaleCodec.encodeTo('ExtrinsicSignatureCodec', value['signature'], tempOutput);
     }
 
     chainInfo.scaleCodec.encodeTo('Call', value['calls'], tempOutput);
@@ -73,8 +71,7 @@ class ExtrinsicsCodec with Codec<Map<String, dynamic>> {
   }
 
   static String computeHash(Uint8List extrinsicBytes, [int digestSize = 32]) {
-    return encodeHex(
-        Blake2bDigest(digestSize: digestSize).process(extrinsicBytes));
+    return encodeHex(Blake2bDigest(digestSize: digestSize).process(extrinsicBytes));
   }
 
   static String computeHashFromString(String extrinsic, [int digestSize = 32]) {

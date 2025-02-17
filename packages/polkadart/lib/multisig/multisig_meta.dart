@@ -24,16 +24,14 @@ class MultiSigMeta {
     final int blockNumber = await chainApi.getChainHeader();
 
     // Get the blockhash of the latest block
-    final Uint8List blockHash =
-        await chainApi.getBlockHash(blockNumber: blockNumber);
+    final Uint8List blockHash = await chainApi.getBlockHash(blockNumber: blockNumber);
 
     // Get the genesis hash of the chain from block number: 0
     final Uint8List genesisHash = await chainApi.getBlockHash(blockNumber: 0);
 
     final StateApi stateApi = StateApi(provider);
     final RuntimeMetadata runtimeMetadata = await stateApi.getMetadata();
-    final RuntimeVersion stateRuntimeVersion =
-        await stateApi.getRuntimeVersion();
+    final RuntimeVersion stateRuntimeVersion = await stateApi.getRuntimeVersion();
 
     return MultiSigMeta(
       blockNumber: blockNumber,

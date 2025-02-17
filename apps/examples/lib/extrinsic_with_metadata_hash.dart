@@ -3,18 +3,11 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:polkadart/apis/apis.dart';
 import 'package:polkadart/polkadart.dart'
-    show
-        AuthorApi,
-        ExtrinsicPayload,
-        Provider,
-        SignatureType,
-        SigningPayload,
-        StateApi;
+    show AuthorApi, ExtrinsicPayload, Provider, SignatureType, SigningPayload, StateApi;
 import 'package:polkadart_example/generated/polkadot/types/sp_runtime/multiaddress/multi_address.dart'
     as polkadot;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
-    as scale_codec;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale_codec;
 import 'package:substrate_metadata/metadata/merkleize.dart';
 import 'generated/polkadot/polkadot.dart';
 
@@ -35,15 +28,11 @@ Future<void> main(List<String> arguments) async {
   final txVersion = runtimeVersion.transactionVersion;
   final block = await provider.send('chain_getBlock', []);
   final blockHeight = int.parse(block.result['block']['header']['number']);
-  final blockHash = (await provider.send('chain_getBlockHash', []))
-      .result
-      .replaceAll('0x', '');
-  final genesisHash = (await provider.send('chain_getBlockHash', [0]))
-      .result
-      .replaceAll('0x', '');
+  final blockHash = (await provider.send('chain_getBlockHash', [])).result.replaceAll('0x', '');
+  final genesisHash = (await provider.send('chain_getBlockHash', [0])).result.replaceAll('0x', '');
 
-  final call = api.tx.balances.transferKeepAlive(
-      dest: bobMultiAddress, value: BigInt.from(1000000000000));
+  final call =
+      api.tx.balances.transferKeepAlive(dest: bobMultiAddress, value: BigInt.from(1000000000000));
   final encodedCall = call.encode();
   print('Custom Encoded Call: ${hex.encode(encodedCall)}');
 
@@ -54,8 +43,8 @@ Future<void> main(List<String> arguments) async {
 
   // Get MetadataHash
   final typedMetadata = await state.getTypedMetadata();
-  final merkleizer = MetadataMerkleizer.fromMetadata(typedMetadata.metadata,
-      decimals: 10, tokenSymbol: 'DOT');
+  final merkleizer =
+      MetadataMerkleizer.fromMetadata(typedMetadata.metadata, decimals: 10, tokenSymbol: 'DOT');
   final metadataHash = hex.encode(merkleizer.digest());
 
   // Get SignedExtensions mapped with codecs Map<String, Codec<dynamic>>

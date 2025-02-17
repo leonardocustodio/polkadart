@@ -77,14 +77,12 @@ void main() {
 
     final (inout, proof) = priv.vrfSign(signTranscript);
 
-    final bool ok =
-        pub.vrfVerify(verifyTranscript, inout.getVrfOutput(), proof);
+    final bool ok = pub.vrfVerify(verifyTranscript, inout.getVrfOutput(), proof);
     expect(ok, true);
 
     proof.c = newRandomScalar();
 
-    final bool ok2 =
-        pub.vrfVerify(verify2Transcript, inout.getVrfOutput(), proof);
+    final bool ok2 = pub.vrfVerify(verify2Transcript, inout.getVrfOutput(), proof);
     expect(ok2, false);
   });
 
@@ -126,8 +124,7 @@ void main() {
     ]);
     final pub = PublicKey.newPublicKey(pubbytes);
 
-    final transcript =
-        Sr25519.newSigningContext(utf8.encode('yo!'), utf8.encode('meow'));
+    final transcript = Sr25519.newSigningContext(utf8.encode('yo!'), utf8.encode('meow'));
     final Uint8List inputbytes = Uint8List.fromList([
       56,
       52,
@@ -458,24 +455,8 @@ void main() {
       84,
       15
     ]);
-    final Uint8List makeBytes16Expected = Uint8List.fromList([
-      169,
-      57,
-      149,
-      50,
-      0,
-      243,
-      120,
-      138,
-      25,
-      250,
-      74,
-      235,
-      247,
-      137,
-      228,
-      40
-    ]);
+    final Uint8List makeBytes16Expected = Uint8List.fromList(
+        [169, 57, 149, 50, 0, 243, 120, 138, 25, 250, 74, 235, 247, 137, 228, 40]);
 
     final PublicKey pubkey = PublicKey.newPublicKey(pub);
 
@@ -492,8 +473,7 @@ void main() {
     final bool ok = pubkey.vrfVerify(verifyTranscript, out, p);
     expect(ok, true);
 
-    final List<int> bytes =
-        inout.makeBytes(16, utf8.encode('substrate-babe-vrf'));
+    final List<int> bytes = inout.makeBytes(16, utf8.encode('substrate-babe-vrf'));
 
     expect(const ListEquality().equals(makeBytes16Expected, bytes), true);
   });
@@ -669,24 +649,8 @@ void main() {
       7,
       14
     ]);
-    final Uint8List makeBytes16Expected = Uint8List.fromList([
-      193,
-      153,
-      104,
-      18,
-      4,
-      27,
-      121,
-      146,
-      149,
-      228,
-      12,
-      17,
-      251,
-      184,
-      117,
-      16
-    ]);
+    final Uint8List makeBytes16Expected = Uint8List.fromList(
+        [193, 153, 104, 18, 4, 27, 121, 146, 149, 228, 12, 17, 251, 184, 117, 16]);
 
     final PublicKey pubkey = PublicKey.newPublicKey(pub);
     pubkey.kusamaVRF = false;
@@ -703,8 +667,7 @@ void main() {
     final bool ok = pubkey.vrfVerify(verifyTranscript, out, p);
     expect(ok, true);
 
-    final List<int> bytes =
-        inout.makeBytes(16, utf8.encode('substrate-babe-vrf'));
+    final List<int> bytes = inout.makeBytes(16, utf8.encode('substrate-babe-vrf'));
     expect(const ListEquality().equals(makeBytes16Expected, bytes), true);
   });
 
@@ -719,8 +682,7 @@ void main() {
 
     final (inout, proof) = priv.vrfSign(signTranscript);
 
-    final bool verified =
-        pub.vrfVerify(verifyTranscript, inout.getVrfOutput(), proof);
+    final bool verified = pub.vrfVerify(verifyTranscript, inout.getVrfOutput(), proof);
 
     // Not verified because [public key is at infinity].
     expect(verified, false);

@@ -5,8 +5,7 @@ class RuntimeMetadataPrefixed {
   final int magicNumber;
   final RuntimeMetadata metadata;
 
-  static const RuntimeMetadataPrefixedCodec codec =
-      RuntimeMetadataPrefixedCodec();
+  static const RuntimeMetadataPrefixedCodec codec = RuntimeMetadataPrefixedCodec();
 
   RuntimeMetadataPrefixed({required this.magicNumber, required this.metadata});
 
@@ -28,9 +27,7 @@ class RuntimeMetadataPrefixed {
 
   Map<String, dynamic> toJson() => {
         'magicNumber': magicNumber,
-        'metadata': {
-          'V${metadata.runtimeMetadataVersion()}': metadata.toJson()
-        },
+        'metadata': {'V${metadata.runtimeMetadataVersion()}': metadata.toJson()},
       };
 }
 
@@ -44,8 +41,7 @@ class RuntimeMetadataPrefixedCodec implements Codec<RuntimeMetadataPrefixed> {
   decode(Input input) {
     final magicNumber = U32Codec.codec.decode(input);
     if (magicNumber != META_RESERVED) {
-      throw Exception(
-          'Invalid magic number: got $magicNumber expected $META_RESERVED');
+      throw Exception('Invalid magic number: got $magicNumber expected $META_RESERVED');
     }
     final version = U8Codec.codec.decode(input);
 

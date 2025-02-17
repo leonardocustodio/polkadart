@@ -63,24 +63,18 @@ class StorageHasher<G extends typegen.TypeDescriptor> {
   final G codec;
 
   const StorageHasher({required this.hasher, required this.codec});
-  const StorageHasher.identity({required this.codec})
-      : hasher = StorageHasherType.identity;
-  const StorageHasher.blake128({required this.codec})
-      : hasher = StorageHasherType.blake2b128;
+  const StorageHasher.identity({required this.codec}) : hasher = StorageHasherType.identity;
+  const StorageHasher.blake128({required this.codec}) : hasher = StorageHasherType.blake2b128;
   const StorageHasher.blake128Concat({required this.codec})
       : hasher = StorageHasherType.blake2b128Concat;
-  const StorageHasher.blake256({required this.codec})
-      : hasher = StorageHasherType.blake2b256;
-  const StorageHasher.twoxx64({required this.codec})
-      : hasher = StorageHasherType.twoxx64;
+  const StorageHasher.blake256({required this.codec}) : hasher = StorageHasherType.blake2b256;
+  const StorageHasher.twoxx64({required this.codec}) : hasher = StorageHasherType.twoxx64;
   const StorageHasher.twoxx64Concat({required this.codec})
       : hasher = StorageHasherType.twoxx64Concat;
-  const StorageHasher.twoxx128({required this.codec})
-      : hasher = StorageHasherType.twoxx128;
+  const StorageHasher.twoxx128({required this.codec}) : hasher = StorageHasherType.twoxx128;
   const StorageHasher.twoxx128Concat({required this.codec})
       : hasher = StorageHasherType.twoxx128Concat;
-  const StorageHasher.twoxx256({required this.codec})
-      : hasher = StorageHasherType.twoxx256;
+  const StorageHasher.twoxx256({required this.codec}) : hasher = StorageHasherType.twoxx256;
 
   Expression instance(typegen.BasePath from) {
     return hasher.instance(codec.codecInstance(from), from);
@@ -137,8 +131,8 @@ class Storage {
     this.docs = const [],
   });
 
-  factory Storage.fromMetadata(metadata.StorageEntryMetadata storageMetadata,
-      Map<int, typegen.TypeDescriptor> registry) {
+  factory Storage.fromMetadata(
+      metadata.StorageEntryMetadata storageMetadata, Map<int, typegen.TypeDescriptor> registry) {
     final type = storageMetadata.type;
     final valueCodec = registry[type.value]!;
     final List<typegen.TypeDescriptor> keysCodec;
@@ -147,8 +141,7 @@ class Storage {
     if (type.key != null) {
       final keyId = type.key!;
       if (type.hashers.isEmpty) {
-        throw Exception(
-            'Invalid storage, hashers cannot be empty when key is present');
+        throw Exception('Invalid storage, hashers cannot be empty when key is present');
       } else if (type.hashers.length == 1) {
         keysCodec = [registry[keyId]!];
       } else {
@@ -161,8 +154,7 @@ class Storage {
 
     // Check if hasher's amount matches key's amount
     if (keysCodec.length != type.hashers.length) {
-      throw Exception(
-          'Invalid storage, hasher\'s amount does not match key\'s amount');
+      throw Exception('Invalid storage, hasher\'s amount does not match key\'s amount');
     }
 
     // Build storage hashers
@@ -179,8 +171,7 @@ class Storage {
       hashers: hashers,
       valueCodec: valueCodec,
       defaultValue: storageMetadata.defaultValue,
-      isNullable:
-          storageMetadata.modifier == metadata.StorageEntryModifier.optional,
+      isNullable: storageMetadata.modifier == metadata.StorageEntryModifier.optional,
       docs: storageMetadata.docs,
     );
   }
@@ -191,8 +182,7 @@ class Storage {
         return refs.storageValue(valueCodec.primitive(from));
       case 1:
         return refs.storageMap(
-            key: hashers[0].codec.primitive(from),
-            value: valueCodec.primitive(from));
+            key: hashers[0].codec.primitive(from), value: valueCodec.primitive(from));
       case 2:
         return refs.storageDoubleMap(
             key1: hashers[0].codec.primitive(from),
@@ -346,17 +336,14 @@ class PalletGenerator {
   }) {
     // Load storages
     final List<Storage>? storages = palletMetadata.storage?.entries
-        .map((storageMetadata) =>
-            Storage.fromMetadata(storageMetadata, registry))
+        .map((storageMetadata) => Storage.fromMetadata(storageMetadata, registry))
         .toList();
 
     // Load runtime call
     final runtimeCallType = registry[outerEnums['call']]!;
 
     // Load calls
-    var callType = palletMetadata.calls != null
-        ? registry[palletMetadata.calls!.type]
-        : null;
+    var callType = palletMetadata.calls != null ? registry[palletMetadata.calls!.type] : null;
     if (callType != null) {
       while (callType is typegen.TypeDefBuilder) {
         callType = callType.generator;
@@ -370,8 +357,7 @@ class PalletGenerator {
 
     // Load constants
     final List<Constant> constants = palletMetadata.constants
-        .map((constantMetadata) =>
-            Constant.fromMetadata(constantMetadata, registry))
+        .map((constantMetadata) => Constant.fromMetadata(constantMetadata, registry))
         .toList();
 
     // Build pallet
@@ -458,77 +444,65 @@ Class createPalletQueries(
                   ..type = refs.blockHash.asNullable()
                   ..named = true
                   ..name = 'at'))
-                ..requiredParameters
-                    .addAll(storage.hashers.map((hasher) => Parameter((b) => b
-                      ..type = hasher.codec.primitive(dirname)
-                      ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
+                ..requiredParameters.addAll(storage.hashers.map((hasher) => Parameter((b) => b
+                  ..type = hasher.codec.primitive(dirname)
+                  ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
                 ..body = Block((b) => b
                   // final hashedKey = _storageName.hashedKeyFor(key1);
-                  ..statements.add(declareFinal('hashedKey')
-                      .assignHashedKey(storageName, storage)
-                      .statement)
+                  ..statements.add(
+                      declareFinal('hashedKey').assignHashedKey(storageName, storage).statement)
                   // final bytes = await api.queryStorage([hashedKey]);
                   ..statements.add(declareFinal('bytes')
-                      .assign(refer('__api').property('getStorage').call(
-                          [refer('hashedKey')], {'at': refer('at')}).awaited)
+                      .assign(refer('__api')
+                          .property('getStorage')
+                          .call([refer('hashedKey')], {'at': refer('at')}).awaited)
                       .statement)
                   ..statements.add(Code('if (bytes != null) {'))
-                  ..statements
-                      .add(Code('  return _$storageName.decodeValue(bytes);'))
+                  ..statements.add(Code('  return _$storageName.decodeValue(bytes);'))
                   ..statements.add(Code('}'))
                   ..statements.add(storage.isNullable
                       ? Code('return null; /* Nullable */')
                       : storage.valueCodec
                           .valueFrom(
                             dirname,
-                            scale_codec.ByteInput(
-                                Uint8List.fromList(storage.defaultValue)),
+                            scale_codec.ByteInput(Uint8List.fromList(storage.defaultValue)),
                           )
                           .returned
                           .statement)
-                  ..statements.add(
-                      storage.isNullable ? Code('') : Code('/* Default */')));
+                  ..statements.add(storage.isNullable ? Code('') : Code('/* Default */')));
             })))
         ..methods.addAll(generator.storages.map((storage) => Method((builder) {
               final storageName = ReCase(storage.name).camelCase;
               builder
                 ..name = sanitize(storage.keyMethodName(), recase: false)
-                ..docs.addAll(sanitizeDocs(
-                    ['Returns the storage key for `$storageName`.']))
+                ..docs.addAll(sanitizeDocs(['Returns the storage key for `$storageName`.']))
                 ..returns = refs.uint8List
-                ..requiredParameters
-                    .addAll(storage.hashers.map((hasher) => Parameter((b) => b
-                      ..type = hasher.codec.primitive(dirname)
-                      ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
+                ..requiredParameters.addAll(storage.hashers.map((hasher) => Parameter((b) => b
+                  ..type = hasher.codec.primitive(dirname)
+                  ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
                 ..body = Block((b) => b
-                  ..statements.add(declareFinal('hashedKey')
-                      .assignHashedKey(storageName, storage)
-                      .statement)
+                  ..statements.add(
+                      declareFinal('hashedKey').assignHashedKey(storageName, storage).statement)
                   ..statements.add(Code('  return hashedKey;')));
             })))
         ..methods.addAll(generator.storages
             // We don't support maps with depth > 2 yet.
-            .where((storage) =>
-                storage.hashers.isNotEmpty && storage.hashers.length < 3)
+            .where((storage) => storage.hashers.isNotEmpty && storage.hashers.length < 3)
             .map((storage) => Method((builder) {
                   final storageName = ReCase(storage.name).camelCase;
                   builder
-                    ..name =
-                        sanitize(storage.mapPrefixMethodName(), recase: false)
-                    ..docs.addAll(sanitizeDocs([
-                      'Returns the storage map key prefix for `$storageName`.'
-                    ]))
+                    ..name = sanitize(storage.mapPrefixMethodName(), recase: false)
+                    ..docs.addAll(
+                        sanitizeDocs(['Returns the storage map key prefix for `$storageName`.']))
                     ..returns = refs.uint8List
                     ..requiredParameters.addAll(storage.hashers
                         .getRange(0, storage.hashers.length - 1)
                         .map((hasher) => Parameter((b) => b
                           ..type = hasher.codec.primitive(dirname)
-                          ..name =
-                              'key${storage.hashers.indexOf(hasher) + 1}')))
+                          ..name = 'key${storage.hashers.indexOf(hasher) + 1}')))
                     ..body = Block((b) => b
-                      ..statements.add(declareFinal('hashedKey')
-                          .assignMapPrefix(storageName, storage)
-                          .statement)
+                      ..statements.add(
+                          declareFinal('hashedKey').assignMapPrefix(storageName, storage).statement)
                       ..statements.add(Code('  return hashedKey;')));
                 })));
     });
@@ -545,8 +519,7 @@ Class createPalletTxs(
       final runtimePrimitive = runtimeGenerator.primitive(dirname);
       final runtimeCall = refer(generator.name, runtimePrimitive.url);
 
-      final isEnumClass =
-          variants.variants.every((variant) => variant.fields.isEmpty);
+      final isEnumClass = variants.variants.every((variant) => variant.fields.isEmpty);
       classBuilder
         ..name = 'Txs'
         ..constructors.add(Constructor((b) => b..constant = true))
@@ -563,8 +536,7 @@ Class createPalletTxs(
                   variant.fields.map(
                     (field) => Parameter(
                       (b) => b
-                        ..required =
-                            field.codec.primitive(dirname).isNullable != true
+                        ..required = field.codec.primitive(dirname).isNullable != true
                         ..named = true
                         ..name = field.sanitizedName
                         ..type = field.codec.primitive(dirname),
@@ -579,17 +551,14 @@ Class createPalletTxs(
                     expression = runtimeCall.call([
                       primitive.call([], {
                         for (final field in variant.fields)
-                          field.sanitizedName:
-                              CodeExpression(Code(field.sanitizedName))
+                          field.sanitizedName: CodeExpression(Code(field.sanitizedName))
                       })
                     ]);
                   } else {
                     // simple enum class no need to call () constructor
                     // instead leaving it as a property.
-                    expression = runtimeCall.call([
-                      callPrimitive
-                          .property(typegen.Field.toFieldName(variant.name))
-                    ]);
+                    expression = runtimeCall
+                        .call([callPrimitive.property(typegen.Field.toFieldName(variant.name))]);
                   }
 
                   b.statements.add(expression.returned.statement);
@@ -611,8 +580,7 @@ Class createPalletConstants(
           ..modifier = FieldModifier.final$
           ..docs.addAll(sanitizeDocs(constant.docs))
           ..assignment = constant.codec
-              .valueFrom(dirname,
-                  scale_codec.ByteInput(Uint8List.fromList(constant.value)),
+              .valueFrom(dirname, scale_codec.ByteInput(Uint8List.fromList(constant.value)),
                   constant: true)
               .code)));
     });
@@ -633,8 +601,7 @@ extension AssignHashedKeyExtension on Expression {
   Expression assignHashedKey(String storageName, Storage storage) {
     return assign(refer('_$storageName')
         .property(storage.hashers.isEmpty ? 'hashedKey' : 'hashedKeyFor')
-        .call(storage.hashers.map(
-            (hasher) => refer('key${storage.hashers.indexOf(hasher) + 1}'))));
+        .call(storage.hashers.map((hasher) => refer('key${storage.hashers.indexOf(hasher) + 1}'))));
   }
 
   Expression assignMapPrefix(String storageName, Storage storage) {
@@ -650,8 +617,7 @@ extension AssignHashedKeyExtension on Expression {
       );
     }
 
-    return assign(refer('_$storageName').property('mapPrefix').call(storage
-        .hashers
+    return assign(refer('_$storageName').property('mapPrefix').call(storage.hashers
         // Checked above that hasher is not empty.
         .getRange(0, storage.hashers.length - 1)
         .map((hasher) => refer('key${storage.hashers.indexOf(hasher) + 1}'))));

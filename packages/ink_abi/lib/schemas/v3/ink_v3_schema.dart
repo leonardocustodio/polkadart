@@ -42,21 +42,18 @@ const inkV3Schema = {
   ],
   'definitions': {
     'ArrayLayout_for_PortableForm': {
-      'description':
-          'A layout for an array of associated cells with the same encoding.',
+      'description': 'A layout for an array of associated cells with the same encoding.',
       'type': 'object',
       'required': ['cellsPerElem', 'layout', 'len', 'offset'],
       'properties': {
         'cellsPerElem': {
-          'description':
-              'The number of cells each element in the array layout consists of.',
+          'description': 'The number of cells each element in the array layout consists of.',
           'type': 'integer',
           'format': 'uint64',
           'minimum': 0.0
         },
         'layout': {
-          'description':
-              'The layout of the elements stored in the array layout.',
+          'description': 'The layout of the elements stored in the array layout.',
           'allOf': [
             {'\$ref': '#/definitions/Layout_for_PortableForm'}
           ]
@@ -81,10 +78,7 @@ const inkV3Schema = {
       'type': 'object',
       'required': ['key', 'ty'],
       'properties': {
-        'key': {
-          'description': 'The offset key into the storage.',
-          'type': 'string'
-        },
+        'key': {'description': 'The offset key into the storage.', 'type': 'string'},
         'ty': {
           'description': 'The type of the encoded entity.',
           'type': 'integer',
@@ -114,8 +108,7 @@ const inkV3Schema = {
           'type': 'string'
         },
         'payable': {
-          'description':
-              'If the constructor accepts any `value` from the caller.',
+          'description': 'If the constructor accepts any `value` from the caller.',
           'type': 'boolean'
         },
         'selector': {
@@ -164,16 +157,13 @@ const inkV3Schema = {
       'required': ['dispatchKey', 'variants'],
       'properties': {
         'dispatchKey': {
-          'description':
-              'The key where the discriminant is stored to dispatch the variants.',
+          'description': 'The key where the discriminant is stored to dispatch the variants.',
           'type': 'string'
         },
         'variants': {
           'description': 'The variants of the enum.',
           'type': 'object',
-          'additionalProperties': {
-            '\$ref': '#/definitions/StructLayout_for_PortableForm'
-          }
+          'additionalProperties': {'\$ref': '#/definitions/StructLayout_for_PortableForm'}
         }
       }
     },
@@ -187,14 +177,8 @@ const inkV3Schema = {
           'type': 'array',
           'items': {'type': 'string'}
         },
-        'indexed': {
-          'description': 'If the event parameter is indexed.',
-          'type': 'boolean'
-        },
-        'label': {
-          'description': 'The label of the parameter.',
-          'type': 'string'
-        },
+        'indexed': {'description': 'If the event parameter is indexed.', 'type': 'boolean'},
+        'label': {'description': 'The label of the parameter.', 'type': 'string'},
         'type': {
           'description': 'The type of the parameter.',
           'allOf': [
@@ -262,8 +246,7 @@ const inkV3Schema = {
           'minimum': 0.0
         },
         'typeName': {
-          'description':
-              'The name of the type of the field as it appears in the source code.',
+          'description': 'The name of the type of the field as it appears in the source code.',
           'type': ['string', 'null']
         }
       }
@@ -287,8 +270,7 @@ const inkV3Schema = {
           ]
         },
         'strategy': {
-          'description':
-              'The hashing strategy to layout the underlying elements.',
+          'description': 'The hashing strategy to layout the underlying elements.',
           'allOf': [
             {'\$ref': '#/definitions/HashingStrategy'}
           ]
@@ -320,8 +302,7 @@ const inkV3Schema = {
       }
     },
     'InkProject': {
-      'description':
-          'An entire ink! project for metadata file generation purposes.',
+      'description': 'An entire ink! project for metadata file generation purposes.',
       'type': 'object',
       'required': ['spec', 'storage', 'types'],
       'properties': {
@@ -352,8 +333,7 @@ const inkV3Schema = {
       }
     },
     'Layout_for_PortableForm': {
-      'description':
-          'Represents the static storage layout of an ink! smart contract.',
+      'description': 'Represents the static storage layout of an ink! smart contract.',
       'oneOf': [
         {
           'description':
@@ -395,8 +375,7 @@ const inkV3Schema = {
           'additionalProperties': false
         },
         {
-          'description':
-              'An enum layout with a discriminant telling which variant is layed out.',
+          'description': 'An enum layout with a discriminant telling which variant is layed out.',
           'type': 'object',
           'required': ['enum'],
           'properties': {
@@ -411,10 +390,7 @@ const inkV3Schema = {
       'type': 'object',
       'required': ['label', 'type'],
       'properties': {
-        'label': {
-          'description': 'The label of the parameter.',
-          'type': 'string'
-        },
+        'label': {'description': 'The label of the parameter.', 'type': 'string'},
         'type': {
           'description': 'The type of the parameter.',
           'allOf': [
@@ -444,8 +420,7 @@ const inkV3Schema = {
           'type': 'string'
         },
         'mutates': {
-          'description':
-              'If the message is allowed to mutate the contract state.',
+          'description': 'If the message is allowed to mutate the contract state.',
           'type': 'boolean'
         },
         'payable': {
@@ -468,8 +443,7 @@ const inkV3Schema = {
       }
     },
     'MetadataVersionDeprecated': {
-      'description':
-          'Enum to represent a deprecated metadata version that cannot be instantiated.',
+      'description': 'Enum to represent a deprecated metadata version that cannot be instantiated.',
       'type': 'object'
     },
     'PortableType': {
@@ -481,13 +455,11 @@ const inkV3Schema = {
       }
     },
     'Selector': {
-      'description':
-          'The 4 byte selector to identify constructors and messages',
+      'description': 'The 4 byte selector to identify constructors and messages',
       'type': 'string'
     },
     'StructLayout_for_PortableForm': {
-      'description':
-          'A struct layout with consecutive fields of different layout.',
+      'description': 'A struct layout with consecutive fields of different layout.',
       'type': 'object',
       'required': ['fields'],
       'properties': {
@@ -543,8 +515,7 @@ const inkV3Schema = {
       'required': ['type'],
       'properties': {
         'type': {
-          'description':
-              'The type wrapped in [`Compact`], i.e. the `T` in `Compact<T>`.',
+          'description': 'The type wrapped in [`Compact`], i.e. the `T` in `Compact<T>`.',
           'type': 'integer',
           'format': 'uint32',
           'minimum': 0.0
@@ -586,8 +557,7 @@ const inkV3Schema = {
       ]
     },
     'TypeDefSequence_for_PortableForm': {
-      'description':
-          'A type to refer to a sequence of elements of the same type.',
+      'description': 'A type to refer to a sequence of elements of the same type.',
       'type': 'object',
       'required': ['type'],
       'properties': {
@@ -620,9 +590,7 @@ const inkV3Schema = {
           'type': 'object',
           'required': ['composite'],
           'properties': {
-            'composite': {
-              '\$ref': '#/definitions/TypeDefComposite_for_PortableForm'
-            }
+            'composite': {'\$ref': '#/definitions/TypeDefComposite_for_PortableForm'}
           },
           'additionalProperties': false
         },
@@ -631,9 +599,7 @@ const inkV3Schema = {
           'type': 'object',
           'required': ['variant'],
           'properties': {
-            'variant': {
-              '\$ref': '#/definitions/TypeDefVariant_for_PortableForm'
-            }
+            'variant': {'\$ref': '#/definitions/TypeDefVariant_for_PortableForm'}
           },
           'additionalProperties': false
         },
@@ -642,9 +608,7 @@ const inkV3Schema = {
           'type': 'object',
           'required': ['sequence'],
           'properties': {
-            'sequence': {
-              '\$ref': '#/definitions/TypeDefSequence_for_PortableForm'
-            }
+            'sequence': {'\$ref': '#/definitions/TypeDefSequence_for_PortableForm'}
           },
           'additionalProperties': false
         },
@@ -683,9 +647,7 @@ const inkV3Schema = {
           'type': 'object',
           'required': ['compact'],
           'properties': {
-            'compact': {
-              '\$ref': '#/definitions/TypeDefCompact_for_PortableForm'
-            }
+            'compact': {'\$ref': '#/definitions/TypeDefCompact_for_PortableForm'}
           },
           'additionalProperties': false
         },
@@ -694,9 +656,7 @@ const inkV3Schema = {
           'type': 'object',
           'required': ['bitsequence'],
           'properties': {
-            'bitsequence': {
-              '\$ref': '#/definitions/TypeDefBitSequence_for_PortableForm'
-            }
+            'bitsequence': {'\$ref': '#/definitions/TypeDefBitSequence_for_PortableForm'}
           },
           'additionalProperties': false
         }
@@ -727,8 +687,7 @@ const inkV3Schema = {
       'required': ['displayName', 'type'],
       'properties': {
         'displayName': {
-          'description':
-              'The compile-time known displayed representation of the type.',
+          'description': 'The compile-time known displayed representation of the type.',
           'type': 'array',
           'items': {'type': 'string'}
         },
@@ -763,8 +722,7 @@ const inkV3Schema = {
           'items': {'\$ref': '#/definitions/TypeParameter_for_PortableForm'}
         },
         'path': {
-          'description':
-              'The unique path to the type. Can be empty for built-in types',
+          'description': 'The unique path to the type. Can be empty for built-in types',
           'type': 'array',
           'items': {'type': 'string'}
         }

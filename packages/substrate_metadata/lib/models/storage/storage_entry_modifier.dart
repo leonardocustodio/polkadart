@@ -64,20 +64,17 @@ class StorageEntryTypeV14 {
 }
 
 class StorageEntryTypeV14_Plain extends StorageEntryTypeV14 {
-  const StorageEntryTypeV14_Plain({required super.value})
-      : super(kind: 'Plain');
+  const StorageEntryTypeV14_Plain({required super.value}) : super(kind: 'Plain');
 }
 
 class StorageEntryTypeV14_Map extends StorageEntryTypeV14 {
   final List<StorageHasherV11> hashers;
   final int key;
-  const StorageEntryTypeV14_Map(
-      {required this.hashers, required this.key, required super.value})
+  const StorageEntryTypeV14_Map({required this.hashers, required this.key, required super.value})
       : super(kind: 'Map');
 
   /// Creates Class Object from `Json`
-  static StorageEntryTypeV14_Map fromJson(Map<String, dynamic> map) =>
-      StorageEntryTypeV14_Map(
+  static StorageEntryTypeV14_Map fromJson(Map<String, dynamic> map) => StorageEntryTypeV14_Map(
         key: map['key'],
         hashers: (map['hashers'] as List)
             .map((value) => StorageHasherV11.fromKey(value))
