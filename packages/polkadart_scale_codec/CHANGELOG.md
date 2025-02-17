@@ -1,3 +1,6 @@
+## 1.4.2
+- Fixes an issue when decoding a Bytes string
+
 ## 1.4.1
 - Packages were bumped for new publish workflow
 
