@@ -8,11 +8,7 @@ class Si1Type {
   final Si1TypeDef def;
   final List<String> docs;
 
-  const Si1Type(
-      {required this.path,
-      required this.params,
-      required this.def,
-      required this.docs});
+  const Si1Type({required this.path, required this.params, required this.def, required this.docs});
 
   /// Creates Class Object from `Json`
   static Si1Type fromJson(Map<String, dynamic> map) => Si1Type(
@@ -27,9 +23,7 @@ class Si1Type {
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'path': path,
-        'params': params
-            .map((Si1TypeParameter value) => value.toJson())
-            .toList(growable: false),
+        'params': params.map((Si1TypeParameter value) => value.toJson()).toList(growable: false),
         'def': Si1TypeDef.toJson(def),
         'docs': docs,
       };
@@ -84,14 +78,11 @@ class Si1TypeDef {
   static MapEntry<String, dynamic> toJson(Si1TypeDef value) {
     switch (value.kind) {
       case 'Composite':
-        return MapEntry(
-            value.kind, (value as Si1TypeDef_Composite).value.toJson());
+        return MapEntry(value.kind, (value as Si1TypeDef_Composite).value.toJson());
       case 'Variant':
-        return MapEntry(
-            value.kind, (value as Si1TypeDef_Variant).value.toJson());
+        return MapEntry(value.kind, (value as Si1TypeDef_Variant).value.toJson());
       case 'Sequence':
-        return MapEntry(
-            value.kind, (value as Si1TypeDef_Sequence).value.toJson());
+        return MapEntry(value.kind, (value as Si1TypeDef_Sequence).value.toJson());
       case 'Array':
         return MapEntry(value.kind, (value as Si1TypeDef_Array).value.toJson());
       case 'Tuple':
@@ -99,11 +90,9 @@ class Si1TypeDef {
       case 'Primitive':
         return MapEntry(value.kind, (value as Si1TypeDef_Primitive).value.kind);
       case 'Compact':
-        return MapEntry(
-            value.kind, (value as Si1TypeDef_Compact).value.toJson());
+        return MapEntry(value.kind, (value as Si1TypeDef_Compact).value.toJson());
       case 'BitSequence':
-        return MapEntry(
-            value.kind, (value as Si1TypeDef_BitSequence).value.toJson());
+        return MapEntry(value.kind, (value as Si1TypeDef_BitSequence).value.toJson());
       default:
         throw UnexpectedTypeException('Unexpected type: ${value.kind}');
     }
@@ -171,8 +160,7 @@ class Si1TypeDef_Tuple extends Si1TypeDef {
   const Si1TypeDef_Tuple({required this.value}) : super(kind: 'Tuple');
 
   /// Creates Class Object from `Json`
-  static Si1TypeDef_Tuple fromJson(List list) =>
-      Si1TypeDef_Tuple(value: list.cast<int>());
+  static Si1TypeDef_Tuple fromJson(List list) => Si1TypeDef_Tuple(value: list.cast<int>());
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
@@ -205,8 +193,7 @@ class Si1TypeDef_Compact extends Si1TypeDef {
 
 class Si1TypeDef_BitSequence extends Si1TypeDef {
   final Si1TypeDefBitSequence value;
-  const Si1TypeDef_BitSequence({required this.value})
-      : super(kind: 'BitSequence');
+  const Si1TypeDef_BitSequence({required this.value}) : super(kind: 'BitSequence');
 
   /// Creates Class Object from `Json`
   static Si1TypeDef_BitSequence fromJson(Map<String, dynamic> map) =>
@@ -223,8 +210,7 @@ class Si1TypeDefComposite {
   const Si1TypeDefComposite({required this.fields});
 
   /// Creates Class Object from `Json`
-  static Si1TypeDefComposite fromJson(Map<String, dynamic> map) =>
-      Si1TypeDefComposite(
+  static Si1TypeDefComposite fromJson(Map<String, dynamic> map) => Si1TypeDefComposite(
         fields: (map['fields'] as List)
             .map((value) => Si1Field.fromJson(value))
             .toList(growable: false),
@@ -241,8 +227,7 @@ class Si1TypeDefVariant {
   const Si1TypeDefVariant({required this.variants});
 
   /// Creates Class Object from `Json`
-  static Si1TypeDefVariant fromJson(Map<String, dynamic> map) =>
-      Si1TypeDefVariant(
+  static Si1TypeDefVariant fromJson(Map<String, dynamic> map) => Si1TypeDefVariant(
         variants: (map['variants'] as List)
             .map((value) => Si1Variant.fromJson(value))
             .toList(growable: false),
@@ -250,8 +235,7 @@ class Si1TypeDefVariant {
 
   /// Creates Map from Class Object
   Map<String, dynamic> toJson() => {
-        'variants':
-            variants.map((value) => value.toJson()).toList(growable: false),
+        'variants': variants.map((value) => value.toJson()).toList(growable: false),
       };
 }
 
@@ -302,12 +286,10 @@ class Si1TypeDefCompact {
 class Si1TypeDefBitSequence {
   final int bitStoreType;
   final int bitOrderType;
-  const Si1TypeDefBitSequence(
-      {required this.bitOrderType, required this.bitStoreType});
+  const Si1TypeDefBitSequence({required this.bitOrderType, required this.bitStoreType});
 
   /// Creates Class Object from `Json`
-  static Si1TypeDefBitSequence fromJson(Map<String, dynamic> map) =>
-      Si1TypeDefBitSequence(
+  static Si1TypeDefBitSequence fromJson(Map<String, dynamic> map) => Si1TypeDefBitSequence(
         bitStoreType: map['bitStoreType'],
         bitOrderType: map['bitOrderType'],
       );
@@ -324,11 +306,7 @@ class Si1Field {
   final String? name;
   final int type;
   final List<String> docs;
-  Si1Field(
-      {required this.name,
-      required this.type,
-      this.typeName,
-      required this.docs});
+  Si1Field({required this.name, required this.type, this.typeName, required this.docs});
 
   /// Creates Class Object from `Json`
   static Si1Field fromJson(Map<String, dynamic> map) => Si1Field(
@@ -353,17 +331,13 @@ class Si1Variant {
   final int index;
   final List<String> docs;
   const Si1Variant(
-      {required this.name,
-      required this.fields,
-      required this.index,
-      required this.docs});
+      {required this.name, required this.fields, required this.index, required this.docs});
 
   /// Creates Class Object from `Json`
   static Si1Variant fromJson(Map<String, dynamic> map) => Si1Variant(
       name: map['name'],
-      fields: (map['fields'] as List)
-          .map((value) => Si1Field.fromJson(value))
-          .toList(growable: false),
+      fields:
+          (map['fields'] as List).map((value) => Si1Field.fromJson(value)).toList(growable: false),
       index: map['index'],
       docs: (map['docs'] as List).cast<String>());
 

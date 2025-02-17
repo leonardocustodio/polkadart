@@ -11,10 +11,8 @@ class ContractDeployer {
     required final Provider provider,
   }) async {
     final runtimeMetadata = await StateApi(provider).getMetadata();
-    runtimeMetadata.chainInfo.scaleCodec.registry
-        .registerCustomCodec(_contractDefinitions);
-    return ContractDeployer(
-        provider, runtimeMetadata, runtimeMetadata.chainInfo.scaleCodec);
+    runtimeMetadata.chainInfo.scaleCodec.registry.registerCustomCodec(_contractDefinitions);
+    return ContractDeployer(provider, runtimeMetadata, runtimeMetadata.chainInfo.scaleCodec);
   }
 
   Future<InstantiateRequest> deployContract({
@@ -32,8 +30,7 @@ class ContractDeployer {
   }) async {
     late Uint8List encodedAbiSelector;
     if (inkAbi != null && constructorArgs.isNotEmpty) {
-      encodedAbiSelector =
-          inkAbi.encodeConstructorInput(selector, constructorArgs);
+      encodedAbiSelector = inkAbi.encodeConstructorInput(selector, constructorArgs);
     } else {
       encodedAbiSelector = decodeHex(selector);
     }
@@ -50,8 +47,7 @@ class ContractDeployer {
       input: output.toBytes(),
     );
     if (execResult.result.ok == null) {
-      throw Exception(
-          'Exception occurend when instantiating request: ${execResult.result.err}');
+      throw Exception('Exception occurend when instantiating request: ${execResult.result.err}');
     }
 
     gasLimit ??= GasLimit.from(execResult.gasRequired);
@@ -75,8 +71,7 @@ class ContractDeployer {
     );
 
     final Uint8List expectedTxHash = Hasher.blake2b256.hash(extrinsic);
-    final Uint8List actualHash =
-        await ContractBuilder.submitExtrinsic(provider, extrinsic);
+    final Uint8List actualHash = await ContractBuilder.submitExtrinsic(provider, extrinsic);
 
     final bool isMatched = encodeHex(expectedTxHash) == encodeHex(actualHash);
     assertion(isMatched,
@@ -113,11 +108,10 @@ class ContractDeployer {
     // salt
     bytesCodec.encodeTo(salt, data);
 
-    final Uint8List result = await StateApi(provider)
-        .call('ContractsApi_instantiate', data.toBytes());
+    final Uint8List result =
+        await StateApi(provider).call('ContractsApi_instantiate', data.toBytes());
 
-    final res =
-        codec.decode('ContractInstantiateResult', ByteInput.fromBytes(result));
+    final res = codec.decode('ContractInstantiateResult', ByteInput.fromBytes(result));
     return ContractExecResult.fromJson(ToJson(res).toJson());
   }
 }

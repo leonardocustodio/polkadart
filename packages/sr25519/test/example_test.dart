@@ -8,11 +8,9 @@ void main() {
     final msg = utf8.encode('hello friends');
     final signingCtx = utf8.encode('example');
 
-    final merlin.Transcript signingTranscript =
-        Sr25519.newSigningContext(signingCtx, msg);
+    final merlin.Transcript signingTranscript = Sr25519.newSigningContext(signingCtx, msg);
 
-    final merlin.Transcript verifyTranscript =
-        Sr25519.newSigningContext(signingCtx, msg);
+    final merlin.Transcript verifyTranscript = Sr25519.newSigningContext(signingCtx, msg);
 
     final keypair = Sr25519.generateKeyPair();
 

@@ -22,11 +22,9 @@ abstract class Payload {
   Map<String, dynamic> toEncodedMap(dynamic registry);
   bool usesChargeAssetTxPayment(dynamic registry) {
     if (registry.getSignedExtensionTypes() is Map) {
-      return (registry.getSignedExtensionTypes() as Map)
-          .containsKey('ChargeAssetTxPayment');
+      return (registry.getSignedExtensionTypes() as Map).containsKey('ChargeAssetTxPayment');
     }
-    return (registry.getSignedExtensionTypes() as List)
-        .contains('ChargeAssetTxPayment');
+    return (registry.getSignedExtensionTypes() as List).contains('ChargeAssetTxPayment');
   }
 
 /*     String maybeAssetIdEncoded(dynamic registry) {

@@ -1,11 +1,10 @@
 name: Build and Tests
 
 on:
-  push:
-    paths-ignore:
-      - "**.md"
-      - ".github/workflows/**"
+  pull_request:
     paths:
+      - "!**.md"
+      - "!.github/workflows/**"
       - "packages/**"
       - ".github/workflows/tests.yml"
 

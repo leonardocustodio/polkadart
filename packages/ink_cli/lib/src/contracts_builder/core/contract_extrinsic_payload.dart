@@ -33,8 +33,7 @@ class ContractExtrinsicPayload {
     if (eraPeriod == 0) {
       output.pushByte(0);
     } else {
-      output.write(
-          decodeHex(Era.codec.encodeMortal(meta.blockNumber, eraPeriod)));
+      output.write(decodeHex(Era.codec.encodeMortal(meta.blockNumber, eraPeriod)));
     }
 
     // nonce

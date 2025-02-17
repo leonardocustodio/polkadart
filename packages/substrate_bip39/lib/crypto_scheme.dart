@@ -52,23 +52,20 @@ abstract class CryptoScheme {
   /// Any other length will return an error.
   ///
   /// `password` is analog to BIP39 seed generation itself, with an empty string being defalt.
-  static Future<List<int>> miniSecretFromEntropy(List<int> entropy,
-      {String password = ''}) async {
+  static Future<List<int>> miniSecretFromEntropy(List<int> entropy, {String password = ''}) async {
     final seed = await seedFromEntropy(entropy, password: password);
     return seed.sublist(0, 32);
   }
 
   /// Similar to `miniSecretFromEntropy`, except that it provides the 64-byte seed directly.
-  static Future<List<int>> seedFromEntropy(List<int> entropy,
-      {String? password}) async {
+  static Future<List<int>> seedFromEntropy(List<int> entropy, {String? password}) async {
     if (entropy.length < 16 || entropy.length > 32 || entropy.length % 4 != 0) {
       throw SubstrateBip39Exception.invalidEntropy(
           'InvalidEntropy: byte length must be between 16 and 32 and multiple of 4');
     }
 
     final salt = 'mnemonic${password ?? ''}';
-    final pbkdf2 =
-        Pbkdf2(macAlgorithm: Hmac.sha512(), iterations: 2048, bits: 512);
+    final pbkdf2 = Pbkdf2(macAlgorithm: Hmac.sha512(), iterations: 2048, bits: 512);
 
     final secret = await pbkdf2.deriveKey(
       secretKey: SecretKey(entropy),
@@ -79,8 +76,7 @@ abstract class CryptoScheme {
   }
 
   /// Derive a child key from a series of given junctions.
-  Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path,
-      {Uint8List? output}) {
+  Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path, {Uint8List? output}) {
     throw UnimplementedError('Implement derive in child class.');
   }
 
@@ -113,8 +109,7 @@ abstract class CryptoScheme {
   Future<List<int>> seedFromUri(String uri, {String? password}) async {
     try {
       final entropy = Mnemonic.fromSentence(uri, Language.english).entropy;
-      final seed =
-          await CryptoScheme.seedFromEntropy(entropy, password: password);
+      final seed = await CryptoScheme.seedFromEntropy(entropy, password: password);
       return seed.sublist(0, 32);
       // ignore: empty_catches
     } catch (e) {}
@@ -133,14 +128,12 @@ abstract class CryptoScheme {
     final passwordOverride = password ?? secretUri.password;
     final List<int> entropy;
     try {
-      entropy =
-          Mnemonic.fromSentence(secretUri.phrase, Language.english).entropy;
+      entropy = Mnemonic.fromSentence(secretUri.phrase, Language.english).entropy;
     } on Exception catch (e) {
       throw SubstrateBip39Exception.fromException(e);
     }
 
-    List<int> seed =
-        await CryptoScheme.seedFromEntropy(entropy, password: passwordOverride);
+    List<int> seed = await CryptoScheme.seedFromEntropy(entropy, password: passwordOverride);
     seed = seed.sublist(0, 32);
 
     return await derive(seed, secretUri.junctions);

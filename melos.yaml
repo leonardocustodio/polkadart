@@ -1,7 +1,6 @@
 name: polkadart_monorepo
 repository: https://github.com/leonardocustodio/polkadart
 packages:
-  - apps/**
   - packages/**
 
 scripts:

@@ -1,9 +1,5 @@
 import 'package:polkadart_cli/polkadart_cli.dart'
-    show
-        TypeDefBuilder,
-        PrimitiveDescriptor,
-        SequenceDescriptor,
-        CompositeBuilder;
+    show TypeDefBuilder, PrimitiveDescriptor, SequenceDescriptor, CompositeBuilder;
 import 'package:test/test.dart';
 
 void main() {
@@ -97,11 +93,7 @@ void main() {
         filePath: './types/some_type.dart',
         name: 'SomeType',
         generator: CompositeBuilder(
-            id: 5,
-            filePath: './types/point.dart',
-            name: 'Point',
-            docs: [],
-            fields: []),
+            id: 5, filePath: './types/point.dart', name: 'Point', docs: [], fields: []),
         docs: [],
       );
       expect(

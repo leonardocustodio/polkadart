@@ -22,8 +22,7 @@ class CompositeBuilder extends TypeBuilder {
   }
 
   bool unnamedFields() {
-    return fields.isNotEmpty &&
-        fields.every((field) => field.originalName == null);
+    return fields.isNotEmpty && fields.every((field) => field.originalName == null);
   }
 
   @override
@@ -49,8 +48,8 @@ class CompositeBuilder extends TypeBuilder {
       return literalNull.asLiteralValue(isConstant: true);
     }
 
-    final args = CallArguments.fromFields(fields,
-        (field) => field.codec.valueFrom(from, input, constant: constant));
+    final args = CallArguments.fromFields(
+        fields, (field) => field.codec.valueFrom(from, input, constant: constant));
 
     if (constant && args.every((value) => value.isConstant)) {
       return primitive(from)
@@ -58,9 +57,7 @@ class CompositeBuilder extends TypeBuilder {
           .asLiteralValue(isConstant: true);
     }
 
-    return primitive(from)
-        .newInstance(args.positional, args.named)
-        .asLiteralValue();
+    return primitive(from).newInstance(args.positional, args.named).asLiteralValue();
   }
 
   @override
@@ -83,8 +80,7 @@ class CompositeBuilder extends TypeBuilder {
     }
 
     // Check if all fields are of the same type, otherwise use dynamic
-    final type = findCommonType(
-        fields.map((field) => context.jsonTypeFrom(field.codec)));
+    final type = findCommonType(fields.map((field) => context.jsonTypeFrom(field.codec)));
 
     // If all field are unnamed, return a list
     if (fields.every((field) => field.originalName == null)) {
@@ -101,12 +97,11 @@ class CompositeBuilder extends TypeBuilder {
       return literalNull;
     }
     if (fields.length == 1 && fields.first.originalName == null) {
-      return fields.first.codec
-          .instanceToJson(from, refer(fields.first.sanitizedName));
+      return fields.first.codec.instanceToJson(from, refer(fields.first.sanitizedName));
     }
     if (fields.every((field) => field.originalName == null)) {
-      return literalList(fields.map((field) =>
-          field.codec.instanceToJson(from, refer(field.sanitizedName))));
+      return literalList(
+          fields.map((field) => field.codec.instanceToJson(from, refer(field.sanitizedName))));
     }
     return literalMap({
       for (final field in fields)
@@ -124,7 +119,6 @@ class CompositeBuilder extends TypeBuilder {
   GeneratedOutput build() {
     final typeBuilder = classbuilder.createCompositeClass(this);
     final codecBuilder = classbuilder.createCompositeCodec(this);
-    return GeneratedOutput(
-        classes: [typeBuilder, codecBuilder], enums: [], typedefs: []);
+    return GeneratedOutput(classes: [typeBuilder, codecBuilder], enums: [], typedefs: []);
   }
 }

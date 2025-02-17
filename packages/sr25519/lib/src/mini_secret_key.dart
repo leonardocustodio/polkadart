@@ -28,8 +28,7 @@ class MiniSecretKey implements DerivableKey {
 
   /// GenerateMiniSecretKey generates a mini secret key from random
   factory MiniSecretKey.generateMiniSecretKey([Random? random]) {
-    final s =
-        List<int>.generate(32, (i) => (random ?? Random.secure()).nextInt(256));
+    final s = List<int>.generate(32, (i) => (random ?? Random.secure()).nextInt(256));
 
     return MiniSecretKey.fromRawKey(s);
   }
@@ -94,8 +93,7 @@ class MiniSecretKey implements DerivableKey {
 
   /// HardDeriveMiniSecretKey implements BIP-32 like 'hard' derivation of a mini
   /// secret from a mini secret key
-  (MiniSecretKey, List<int>) hardDeriveMiniSecretKey(
-      List<int> i, List<int> cc) {
+  (MiniSecretKey, List<int>) hardDeriveMiniSecretKey(List<int> i, List<int> cc) {
     return expandEd25519().hardDeriveMiniSecretKey(i, cc);
   }
 

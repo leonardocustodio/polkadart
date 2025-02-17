@@ -71,9 +71,9 @@ class BitSequenceDescriptor extends TypeDescriptor {
     final bitArray = BitSequenceCodec(store, order).decode(input);
     return primitive(from).property('fromByteBuffer').call([
       literalNum(bitArray.length),
-      refs.uint32List.property('fromList').call([
-        literalConstList(bitArray.asUint32Iterable().toList())
-      ]).property('buffer'),
+      refs.uint32List
+          .property('fromList')
+          .call([literalConstList(bitArray.asUint32Iterable().toList())]).property('buffer'),
     ]).asLiteralValue();
   }
 

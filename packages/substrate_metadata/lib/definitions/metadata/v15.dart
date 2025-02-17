@@ -35,15 +35,8 @@ const V15 = <String, dynamic>{
     ...Si1Variant,
     'args': 'Vec<Type>',
   },
-  'FunctionArgumentMetadataV15': {
-    'name': 'Text',
-    'type': 'Type',
-    'typeName': 'Option<Type>'
-  },
-  'FunctionMetadataV15': {
-    ...Si1Variant,
-    'args': 'Vec<FunctionArgumentMetadataV15>'
-  },
+  'FunctionArgumentMetadataV15': {'name': 'Text', 'type': 'Type', 'typeName': 'Option<Type>'},
+  'FunctionMetadataV15': {...Si1Variant, 'args': 'Vec<FunctionArgumentMetadataV15>'},
 
   // V15
   'CustomMetadataV15': {
@@ -58,11 +51,7 @@ const V15 = <String, dynamic>{
     'eventType': 'Si1LookupTypeId',
     'errorType': 'Si1LookupTypeId',
   },
-  'ApiMetadataV15': {
-    'name': 'Text',
-    'methods': 'Vec<ApiMethodMetadataV15>',
-    'docs': 'Vec<Text>'
-  },
+  'ApiMetadataV15': {'name': 'Text', 'methods': 'Vec<ApiMethodMetadataV15>', 'docs': 'Vec<Text>'},
   'ApiMethodMetadataV15': {
     'name': 'Text',
     'inputs': 'Vec<MethodInputEntryTypeV15>',

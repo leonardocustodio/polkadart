@@ -20,8 +20,7 @@ import 'package:polkadart/polkadart.dart'
         StorageData,
         StorageKey,
         SyncState;
-import 'package:substrate_metadata/substrate_metadata.dart'
-    show RuntimeMetadataPrefixed;
+import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadataPrefixed;
 
 part './author.dart';
 part './chain.dart';
