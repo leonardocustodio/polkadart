@@ -15,7 +15,6 @@ include: package:lints/recommended.yaml
 
 analyzer:
   exclude:
-    - bin/**
     - lib/generated/**
 
 linter:
