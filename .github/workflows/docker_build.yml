@@ -2,10 +2,9 @@ name: Build Docker Image
 
 on:
   push:
-    paths-ignore:
-      - "docs/**"
-      - ".github/workflows/**"
     paths:
+      - "!docs/**"
+      - "!.github/workflows/**"
       - "packages/**"
       - ".github/workflows/docker_build.yml"
       - "Dockerfile"
