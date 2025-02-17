@@ -8,6 +8,9 @@ on:
       - "packages/**"
       - ".github/workflows/docker_build.yml"
       - "Dockerfile"
+  push:
+    branches:
+      - main
        
 jobs:
   push:
