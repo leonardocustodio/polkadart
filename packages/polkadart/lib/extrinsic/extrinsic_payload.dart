@@ -35,9 +35,7 @@ class ExtrinsicPayload extends Payload {
       'signer': signer,
       'method': method,
       'signature': signature,
-      'era': eraPeriod == 0
-          ? '00'
-          : Era.codec.encodeMortal(blockNumber, eraPeriod),
+      'era': eraPeriod == 0 ? '00' : Era.codec.encodeMortal(blockNumber, eraPeriod),
       'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
       /* 'assetId': maybeAssetIdEncoded(registry), */
       'tip': tip is int
@@ -48,14 +46,11 @@ class ExtrinsicPayload extends Payload {
       'mode': metadataHash == '00' ? '00' : '01',
       // This is for the `CheckMetadataHash` additional signed extensions.
       // we sign the `Option<MetadataHash>::None` by setting it to '00'.
-      'metadataHash': metadataHash == '00'
-          ? '00'
-          : '01${metadataHash.replaceAll('0x', '')}',
+      'metadataHash': metadataHash == '00' ? '00' : '01${metadataHash.replaceAll('0x', '')}',
     };
   }
 
-  static ExtrinsicPayload fromPayload(
-      Payload payload, Uint8List signer, Uint8List signature) {
+  static ExtrinsicPayload fromPayload(Payload payload, Uint8List signer, Uint8List signature) {
     return ExtrinsicPayload(
       signer: signer,
       method: payload.method,
@@ -111,19 +106,14 @@ class ExtrinsicPayload extends Payload {
       //
       // Prepare keys for the encoding
       if (registry.getSignedExtensionTypes() is Map) {
-        keys =
-            (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
-                .keys
-                .toList();
+        keys = (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>).keys.toList();
       } else {
-        keys = (registry.getSignedExtensionTypes() as List<dynamic>)
-            .cast<String>();
+        keys = (registry.getSignedExtensionTypes() as List<dynamic>).cast<String>();
       }
     }
 
     for (final extension in keys) {
-      final (payload, found) =
-          signedExtensions.signedExtension(extension, encodedMap);
+      final (payload, found) = signedExtensions.signedExtension(extension, encodedMap);
       if (found) {
         if (payload.isNotEmpty) {
           output.write(hex.decode(payload));
@@ -139,15 +129,12 @@ class ExtrinsicPayload extends Payload {
         // check if this signed extension is NullCodec or not!
         if (signedExtensionMap[extension] != null &&
             signedExtensionMap[extension] is! NullCodec &&
-            signedExtensionMap[extension].hashCode !=
-                NullCodec.codec.hashCode) {
+            signedExtensionMap[extension].hashCode != NullCodec.codec.hashCode) {
           if (customSignedExtensions.containsKey(extension) == false) {
             // throw exception as this is encodable key and we need this key to be present in customSignedExtensions
-            throw Exception(
-                'Key `$extension` is missing in customSignedExtensions.');
+            throw Exception('Key `$extension` is missing in customSignedExtensions.');
           }
-          signedExtensionMap[extension]
-              .encodeTo(customSignedExtensions[extension], output);
+          signedExtensionMap[extension].encodeTo(customSignedExtensions[extension], output);
         }
       }
     }
@@ -165,8 +152,7 @@ class ExtrinsicPayload extends Payload {
   /// [keyPair] The keypair
   /// Returns [Uint8List] Signature
   ///
-  Uint8List encodeAndSign(
-      dynamic registry, SignatureType signatureType, keyring.KeyPair keyPair) {
+  Uint8List encodeAndSign(dynamic registry, SignatureType signatureType, keyring.KeyPair keyPair) {
     return keyPair.sign(encode(registry, signatureType));
   }
 }

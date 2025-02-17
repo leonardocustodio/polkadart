@@ -32,12 +32,7 @@ const V10 = <String, dynamic>{
   'StorageEntryTypeV10': {
     '_enum': {
       'Plain': 'Type',
-      'Map': {
-        'hasher': 'StorageHasherV10',
-        'key': 'Type',
-        'value': 'Type',
-        'linked': 'bool'
-      },
+      'Map': {'hasher': 'StorageHasherV10', 'key': 'Type', 'value': 'Type', 'linked': 'bool'},
       'DoubleMap': {
         'hasher': 'StorageHasherV10',
         'key1': 'Type',
@@ -47,10 +42,7 @@ const V10 = <String, dynamic>{
       }
     }
   },
-  'StorageMetadataV10': {
-    'prefix': 'Text',
-    'items': 'Vec<StorageEntryMetadataV10>'
-  },
+  'StorageMetadataV10': {'prefix': 'Text', 'items': 'Vec<StorageEntryMetadataV10>'},
   'StorageHasherV10': {
     '_enum': {
       'Blake2_128': 'Null', // eslint-disable-line camelcase

@@ -12,10 +12,7 @@ const V13 = <String, dynamic>{
   'ExtrinsicMetadataV13': 'ExtrinsicMetadataV12',
   'FunctionArgumentMetadataV13': 'FunctionArgumentMetadataV12',
   'FunctionMetadataV13': 'FunctionMetadataV12',
-  'MetadataV13': {
-    'modules': 'Vec<ModuleMetadataV13>',
-    'extrinsic': 'ExtrinsicMetadataV13'
-  },
+  'MetadataV13': {'modules': 'Vec<ModuleMetadataV13>', 'extrinsic': 'ExtrinsicMetadataV13'},
   'ModuleConstantMetadataV13': 'ModuleConstantMetadataV12',
   'ModuleMetadataV13': {
     'name': 'Text',
@@ -37,12 +34,7 @@ const V13 = <String, dynamic>{
   'StorageEntryTypeV13': {
     '_enum': {
       'Plain': 'Type',
-      'Map': {
-        'hasher': 'StorageHasherV13',
-        'key': 'Type',
-        'value': 'Type',
-        'linked': 'bool'
-      },
+      'Map': {'hasher': 'StorageHasherV13', 'key': 'Type', 'value': 'Type', 'linked': 'bool'},
       'DoubleMap': {
         'hasher': 'StorageHasherV13',
         'key1': 'Type',
@@ -50,16 +42,9 @@ const V13 = <String, dynamic>{
         'value': 'Type',
         'key2Hasher': 'StorageHasherV13'
       },
-      'NMap': {
-        'keyVec': 'Vec<Type>',
-        'hashers': 'Vec<StorageHasherV13>',
-        'value': 'Type'
-      }
+      'NMap': {'keyVec': 'Vec<Type>', 'hashers': 'Vec<StorageHasherV13>', 'value': 'Type'}
     }
   },
-  'StorageMetadataV13': {
-    'prefix': 'Text',
-    'items': 'Vec<StorageEntryMetadataV13>'
-  },
+  'StorageMetadataV13': {'prefix': 'Text', 'items': 'Vec<StorageEntryMetadataV13>'},
   'StorageHasherV13': 'StorageHasherV12'
 };

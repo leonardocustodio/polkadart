@@ -1,6 +1,6 @@
 name: Build Docs
 on:
-  push:
+  pull_request:
     paths:
       - "docs/**"
       - ".github/workflows/docs_build.yml"

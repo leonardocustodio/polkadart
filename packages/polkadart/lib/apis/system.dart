@@ -116,8 +116,7 @@ class SystemApi<P extends Provider, H, N> {
   ///
   /// unsafe: This method is only active with appropriate flags
   Future<String?> removeReservedPeer(String peerId) async {
-    final response =
-        await _provider.send('system_removeReservedPeer', [peerId]);
+    final response = await _provider.send('system_removeReservedPeer', [peerId]);
     return response.result as String?;
   }
 

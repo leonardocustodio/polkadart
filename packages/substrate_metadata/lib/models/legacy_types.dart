@@ -21,10 +21,7 @@ class LegacyTypesWithSpecVersionRange extends LegacyTypes {
   final List<int?> minmax;
 
   LegacyTypesWithSpecVersionRange(
-      {required this.minmax,
-      required super.types,
-      super.typesAlias,
-      super.signedExtensions});
+      {required this.minmax, required super.types, super.typesAlias, super.signedExtensions});
 
   static LegacyTypesWithSpecVersionRange fromJson(Map<String, dynamic> map) {
     return LegacyTypesWithSpecVersionRange(
@@ -40,10 +37,7 @@ class LegacyTypesBundle extends LegacyTypes {
   final List<LegacyTypesWithSpecVersionRange>? versions;
 
   LegacyTypesBundle(
-      {this.versions,
-      required super.types,
-      super.typesAlias,
-      super.signedExtensions});
+      {this.versions, required super.types, super.typesAlias, super.signedExtensions});
 
   static LegacyTypesBundle fromJson(Map<String, dynamic> map) {
     return LegacyTypesBundle(

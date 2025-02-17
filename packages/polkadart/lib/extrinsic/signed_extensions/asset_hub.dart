@@ -1,8 +1,7 @@
 import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
 
 class AssetHubSignedExtensions implements SignedExtensions {
-  static final AssetHubSignedExtensions _instance =
-      AssetHubSignedExtensions._internal();
+  static final AssetHubSignedExtensions _instance = AssetHubSignedExtensions._internal();
 
   factory AssetHubSignedExtensions() => _instance;
 

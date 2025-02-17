@@ -2,14 +2,8 @@ import 'dart:io' show File, Directory;
 import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as path;
 import '../typegen/typegen.dart'
-    show
-        VariantBuilder,
-        TupleBuilder,
-        TypeDescriptor,
-        TypeBuilder,
-        GeneratedOutput;
-import 'package:substrate_metadata/substrate_metadata.dart'
-    show RuntimeMetadata;
+    show VariantBuilder, TupleBuilder, TypeDescriptor, TypeBuilder, GeneratedOutput;
+import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadata;
 import './pallet.dart' show PalletGenerator;
 import './polkadart.dart' show PolkadartGenerator;
 
@@ -20,15 +14,10 @@ class ChainGenerator {
   final Map<int, TypeDescriptor> types;
 
   ChainGenerator(
-      {required this.name,
-      required this.directory,
-      required this.polkadart,
-      required this.types});
+      {required this.name, required this.directory, required this.polkadart, required this.types});
 
   factory ChainGenerator.fromMetadata(
-      {required Directory basePath,
-      required chainName,
-      required RuntimeMetadata metadata}) {
+      {required Directory basePath, required chainName, required RuntimeMetadata metadata}) {
     final typesPath = path.join(basePath.path, 'types');
     final palletsPath = path.join(basePath.path, 'pallets');
 
@@ -40,12 +29,9 @@ class ChainGenerator {
     final List<PalletGenerator> palletGenerators = metadata.pallets
         // Remove Empty Pallets
         .where((pallet) =>
-            pallet.calls != null ||
-            pallet.storage != null ||
-            pallet.constants.isNotEmpty)
+            pallet.calls != null || pallet.storage != null || pallet.constants.isNotEmpty)
         .map((pallet) => PalletGenerator.fromMetadata(
-              filePath: path.join(
-                  palletsPath, '${ReCase(pallet.name).snakeCase}.dart'),
+              filePath: path.join(palletsPath, '${ReCase(pallet.name).snakeCase}.dart'),
               palletMetadata: pallet,
               registry: typeGenerators,
               outerEnums: {
@@ -69,8 +55,7 @@ class ChainGenerator {
           index++;
           if (builder is VariantBuilder) {
             final filename = path.basenameWithoutExtension(builder.filePath);
-            builder.filePath = path.join(
-                path.dirname(builder.filePath), '${filename}_$index.dart');
+            builder.filePath = path.join(path.dirname(builder.filePath), '${filename}_$index.dart');
             for (final variant in builder.variants) {
               if (variant.name == builder.name) {
                 variant.name = '${variant.name}Variant';
@@ -78,8 +63,7 @@ class ChainGenerator {
             }
           } else {
             final filename = path.basenameWithoutExtension(builder.filePath);
-            builder.filePath = path.join(
-                path.dirname(builder.filePath), '${filename}_$index.dart');
+            builder.filePath = path.join(path.dirname(builder.filePath), '${filename}_$index.dart');
           }
         }
       }
@@ -89,8 +73,7 @@ class ChainGenerator {
       name: chainName,
       directory: basePath,
       polkadart: PolkadartGenerator(
-        filePath: path.setExtension(
-            path.join(basePath.path, ReCase(chainName).snakeCase), '.dart'),
+        filePath: path.setExtension(path.join(basePath.path, ReCase(chainName).snakeCase), '.dart'),
         name: ReCase(chainName).pascalCase,
         pallets: palletGenerators,
         metadata: metadata,
@@ -148,8 +131,7 @@ class ChainGenerator {
 }
 
 /// Group TypeBuilder per file
-Map<String, List<TypeBuilder>> _groupTypeBuilderPerFile(
-    Iterable<TypeDescriptor> typeGenerators) {
+Map<String, List<TypeBuilder>> _groupTypeBuilderPerFile(Iterable<TypeDescriptor> typeGenerators) {
   final Map<String, List<TypeBuilder>> generatorPerFile = {};
 
   for (final generator in typeGenerators) {
@@ -160,9 +142,9 @@ Map<String, List<TypeBuilder>> _groupTypeBuilderPerFile(
       generatorPerFile[generator.filePath] = [generator];
     } else if (generator is TupleBuilder) {
       final builders = generatorPerFile[generator.filePath]!;
-      final isDuplicated = builders.whereType<TupleBuilder>().any(
-          (tupleBuilder) =>
-              tupleBuilder.generators.length == generator.generators.length);
+      final isDuplicated = builders
+          .whereType<TupleBuilder>()
+          .any((tupleBuilder) => tupleBuilder.generators.length == generator.generators.length);
       if (!isDuplicated) {
         generatorPerFile[generator.filePath]!.add(generator);
       }

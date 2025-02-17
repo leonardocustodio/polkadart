@@ -109,13 +109,16 @@ class ByteInput with Input {
 
   @override
   Uint8List readBytes(int length) {
-    if ((offset + length) > _buffer.length) {
-      throw Exception('Not enough bytes to read');
+    final int beg = offset;
+    final int end = offset + length;
+
+    if (end > _buffer.length) {
+      throw Exception('End of buffer reached');
     }
-    final bytes =
-        _buffer.buffer.asUint8List(offset, length).asUnmodifiableView();
-    offset += length;
-    return bytes;
+
+    offset = end; // Update the index
+    return Uint8List.fromList(
+        _buffer.sublist(beg, end).toList()); // Extract the required bytes
   }
 
   /// clone

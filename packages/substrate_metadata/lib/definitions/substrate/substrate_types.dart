@@ -64,15 +64,8 @@ const substrateTypes = {
     }
   },
   'AssetApprovalKey': {'owner': 'AccountId', 'delegate': 'AccountId'},
-  'AssetApproval': {
-    'amount': 'TAssetBalance',
-    'deposit': 'TAssetDepositBalance'
-  },
-  'AssetBalance': {
-    'balance': 'TAssetBalance',
-    'isFrozen': 'bool',
-    'isSufficient': 'bool'
-  },
+  'AssetApproval': {'amount': 'TAssetBalance', 'deposit': 'TAssetDepositBalance'},
+  'AssetBalance': {'balance': 'TAssetBalance', 'isFrozen': 'bool', 'isSufficient': 'bool'},
   'AssetDestroyWitness': {
     'accounts': 'Compact<u32>',
     'sufficients': 'Compact<u32>',
@@ -133,17 +126,10 @@ const substrateTypes = {
     }
   },
   'UncleEntryItem': {
-    '_enum': {
-      'InclusionHeight': 'BlockNumber',
-      'Uncle': '(Hash, Option<AccountId>)'
-    }
+    '_enum': {'InclusionHeight': 'BlockNumber', 'Uncle': '(Hash, Option<AccountId>)'}
   },
   'AllowedSlots': {
-    '_enum': [
-      'PrimarySlots',
-      'PrimaryAndSecondaryPlainSlots',
-      'PrimaryAndSecondaryVRFSlots'
-    ]
+    '_enum': ['PrimarySlots', 'PrimaryAndSecondaryPlainSlots', 'PrimaryAndSecondaryVRFSlots']
   },
   'BabeAuthorityWeight': 'u64',
   'BabeEpochConfiguration': {'c': '(u64, u64)', 'allowedSlots': 'AllowedSlots'},
@@ -157,11 +143,7 @@ const substrateTypes = {
   'BabeWeight': 'u64',
   'MaybeRandomness': 'Option<Randomness>',
   'MaybeVrf': 'Option<VrfData>',
-  'EpochAuthorship': {
-    'primary': 'Vec<u64>',
-    'secondary': 'Vec<u64>',
-    'secondary_vrf': 'Vec<u64>'
-  },
+  'EpochAuthorship': {'primary': 'Vec<u64>', 'secondary': 'Vec<u64>', 'secondary_vrf': 'Vec<u64>'},
   'NextConfigDescriptor': {
     '_enum': {'V0': 'Null', 'V1': 'NextConfigDescriptorV1'}
   },
@@ -181,10 +163,7 @@ const substrateTypes = {
     'vrfOutput': 'VrfOutput',
     'vrfProof': 'VrfProof'
   },
-  'RawBabePreDigestSecondaryPlain': {
-    'authorityIndex': 'u32',
-    'slotNumber': 'SlotNumber'
-  },
+  'RawBabePreDigestSecondaryPlain': {'authorityIndex': 'u32', 'slotNumber': 'SlotNumber'},
   'RawBabePreDigestSecondaryVRF': {
     'authorityIndex': 'u32',
     'slotNumber': 'SlotNumber',
@@ -228,11 +207,7 @@ const substrateTypes = {
     'until': 'BlockNumber',
     'reasons': 'WithdrawReasons'
   },
-  'BalanceLock': {
-    'id': 'LockIdentifier',
-    'amount': 'Balance',
-    'reasons': 'Reasons'
-  },
+  'BalanceLock': {'id': 'LockIdentifier', 'amount': 'Balance', 'reasons': 'Reasons'},
   'BalanceStatus': {
     '_enum': ['Free', 'Reserved']
   },
@@ -241,19 +216,9 @@ const substrateTypes = {
   },
   'ReserveData': {'id': 'ReserveIdentifier', 'amount': 'Balance'},
   'ReserveIdentifier': '[u8; 8]',
-  'VestingSchedule': {
-    'offset': 'Balance',
-    'perBlock': 'Balance',
-    'startingBlock': 'BlockNumber'
-  },
+  'VestingSchedule': {'offset': 'Balance', 'perBlock': 'Balance', 'startingBlock': 'BlockNumber'},
   'WithdrawReasons': {
-    '_set': {
-      'TransactionPayment': 1,
-      'Transfer': 2,
-      'Reserve': 4,
-      'Fee': 8,
-      'Tip': 16
-    }
+    '_set': {'TransactionPayment': 1, 'Transfer': 2, 'Reserve': 4, 'Fee': 8, 'Tip': 16}
   },
   'BeefyCommitment': {
     'payload': 'BeefyPayload',
@@ -289,10 +254,7 @@ const substrateTypes = {
   'DispatchFeePayment': {
     '_enum': ['AtSourceChain', 'AtTargetChain']
   },
-  'InboundLaneData': {
-    'relayers': 'Vec<UnrewardedRelayer>',
-    'lastConfirmedNonce': 'MessageNonce'
-  },
+  'InboundLaneData': {'relayers': 'Vec<UnrewardedRelayer>', 'lastConfirmedNonce': 'MessageNonce'},
   'InboundRelayer': 'AccountId',
   'InitializationData': {
     'header': 'Header',
@@ -334,10 +296,7 @@ const substrateTypes = {
   },
   'Parameter': 'Null',
   'RelayerId': 'AccountId',
-  'UnrewardedRelayer': {
-    'relayer': 'RelayerId',
-    'messages': 'DeliveredMessages'
-  },
+  'UnrewardedRelayer': {'relayer': 'RelayerId', 'messages': 'DeliveredMessages'},
   'UnrewardedRelayersState': {
     'unrewardedRelayer_Entries': 'MessageNonce',
     'messagesInOldestEntry': 'MessageNonce',
@@ -392,19 +351,11 @@ const substrateTypes = {
   'ContractExecResultTo255': {
     '_enum': {'Success': 'ContractExecResultSuccessTo255', 'Error': 'Null'}
   },
-  'ContractExecResultSuccessTo260': {
-    'flags': 'u32',
-    'data': 'Bytes',
-    'gasConsumed': 'u64'
-  },
+  'ContractExecResultSuccessTo260': {'flags': 'u32', 'data': 'Bytes', 'gasConsumed': 'u64'},
   'ContractExecResultTo260': {
     '_enum': {'Success': 'ContractExecResultSuccessTo260', 'Error': 'Null'}
   },
-  'ContractExecResultErrModule': {
-    'index': 'u8',
-    'error': 'u8',
-    'message': 'Option<Text>'
-  },
+  'ContractExecResultErrModule': {'index': 'u8', 'error': 'u8', 'message': 'Option<Text>'},
   'ContractExecResultErr': {
     '_enum': {
       'Other': 'Text',
@@ -429,10 +380,7 @@ const substrateTypes = {
     'result': 'ContractExecResultResult'
   },
   'ContractInfo': {
-    '_enum': {
-      'Alive': 'AliveContractInfo',
-      'Tombstone': 'TombstoneContractInfo'
-    }
+    '_enum': {'Alive': 'AliveContractInfo', 'Tombstone': 'TombstoneContractInfo'}
   },
   'ContractStorageKey': '[u8; 32]',
   'DeletedContract': {'pairCount': 'u32', 'trieId': 'TrieId'},
@@ -558,10 +506,7 @@ const substrateTypes = {
     'accountId': 'AccountId',
     'rentProjection': 'Option<RentProjection>'
   },
-  'InstantiateReturnValue': {
-    'result': 'ExecReturnValue',
-    'accountId': 'AccountId'
-  },
+  'InstantiateReturnValue': {'result': 'ExecReturnValue', 'accountId': 'AccountId'},
   'InstructionWeights': {
     'i64const': 'u32',
     'i64load': 'u32',
@@ -727,10 +672,7 @@ const substrateTypes = {
   },
   'ContractLayoutKey': '[u8; 32]',
   'ContractLayoutStruct': {'fields': 'Vec<ContractLayoutStructField>'},
-  'ContractLayoutStructField': {
-    'layout': 'ContractStorageLayout',
-    'name': 'Text'
-  },
+  'ContractLayoutStructField': {'layout': 'ContractStorageLayout', 'name': 'Text'},
   'ContractStorageLayout': {
     '_enum': {
       'Cell': 'ContractLayoutCell',
@@ -759,11 +701,7 @@ const substrateTypes = {
     'type': 'ContractTypeSpec',
     'docs': 'Vec<Text>'
   },
-  'ContractEventSpec': {
-    'name': 'Text',
-    'args': 'Vec<ContractEventParamSpec>',
-    'docs': 'Vec<Text>'
-  },
+  'ContractEventSpec': {'name': 'Text', 'args': 'Vec<ContractEventParamSpec>', 'docs': 'Vec<Text>'},
   'ContractMessageParamSpec': {'name': 'Text', 'type': 'ContractTypeSpec'},
   'ContractMessageSpec': {
     'name': 'Text',
@@ -775,22 +713,10 @@ const substrateTypes = {
     'docs': 'Vec<Text>'
   },
   'ContractSelector': '[u8; 4]',
-  'ContractTypeSpec': {
-    'type': 'SiLookupTypeId',
-    'displayName': 'ContractDisplayName'
-  },
-  'ContractProjectInfo': {
-    'source': 'ContractProjectSource',
-    'contract': 'ContractProjectContract'
-  },
-  'ContractMetadataV0': {
-    'types': 'Vec<Si0Type>',
-    'spec': 'ContractContractSpec'
-  },
-  'ContractMetadataV1': {
-    'types': 'Vec<PortableType>',
-    'spec': 'ContractContractSpec'
-  },
+  'ContractTypeSpec': {'type': 'SiLookupTypeId', 'displayName': 'ContractDisplayName'},
+  'ContractProjectInfo': {'source': 'ContractProjectSource', 'contract': 'ContractProjectContract'},
+  'ContractMetadataV0': {'types': 'Vec<Si0Type>', 'spec': 'ContractContractSpec'},
+  'ContractMetadataV1': {'types': 'Vec<PortableType>', 'spec': 'ContractContractSpec'},
   'PortableType': {
     'id': 'SiLookupTypeId',
     'type': 'SiType',
@@ -855,15 +781,7 @@ const substrateTypes = {
   'AccountVoteSplit': {'aye': 'Balance', 'nay': 'Balance'},
   'AccountVoteStandard': {'vote': 'Vote', 'balance': 'Balance'},
   'Conviction': {
-    '_enum': [
-      'None',
-      'Locked1x',
-      'Locked2x',
-      'Locked3x',
-      'Locked4x',
-      'Locked5x',
-      'Locked6x'
-    ]
+    '_enum': ['None', 'Locked1x', 'Locked2x', 'Locked3x', 'Locked4x', 'Locked5x', 'Locked6x']
   },
   'Delegations': {'votes': 'Balance', 'capital': 'Balance'},
   'PreimageStatus': {
@@ -890,10 +808,7 @@ const substrateTypes = {
     'delay': 'BlockNumber'
   },
   'ReferendumInfo': {
-    '_enum': {
-      'Ongoing': 'ReferendumStatus',
-      'Finished': 'ReferendumInfoFinished'
-    }
+    '_enum': {'Ongoing': 'ReferendumStatus', 'Finished': 'ReferendumInfoFinished'}
   },
   'ReferendumInfoFinished': {'approved': 'bool', 'end': 'BlockNumber'},
   'ReferendumStatus': {
@@ -1089,11 +1004,7 @@ const substrateTypes = {
     'topics': 'Option<EthFilterTopic>'
   },
   'EthFilterAddress': {
-    '_enum': {
-      'Single': 'EthAddress',
-      'Multiple': 'Vec<EthAddress>',
-      'Null': 'Null'
-    }
+    '_enum': {'Single': 'EthAddress', 'Multiple': 'Vec<EthAddress>', 'Null': 'Null'}
   },
   'EthFilterChanges': {
     '_enum': {'Logs': 'Vec<EthLog>', 'Hashes': 'Vec<H256>', 'Empty': 'Null'}
@@ -1210,12 +1121,7 @@ const substrateTypes = {
     'logs': 'Vec<EthLog>',
     'logsBloom': 'EthBloom'
   },
-  'EthWork': {
-    'powHash': 'H256',
-    'seedHash': 'H256',
-    'target': 'H256',
-    'number': 'Option<u64>'
-  },
+  'EthWork': {'powHash': 'H256', 'seedHash': 'H256', 'target': 'H256', 'number': 'Option<u64>'},
   'EvmAccount': {'nonce': 'u256', 'balance': 'u256'},
   'EvmLog': {'address': 'H160', 'topics': 'Vec<H256>', 'data': 'Bytes'},
   'EvmVicinity': {'gasPrice': 'u256', 'origin': 'H160'},
@@ -1272,10 +1178,7 @@ const substrateTypes = {
   'EcdsaSignature': '[u8; 65]',
   'Ed25519Signature': 'H512',
   'Sr25519Signature': 'H512',
-  'AssetOptions': {
-    'initalIssuance': 'Compact<Balance>',
-    'permissions': 'PermissionLatest'
-  },
+  'AssetOptions': {'initalIssuance': 'Compact<Balance>', 'permissions': 'PermissionLatest'},
   'Owner': {
     '_enum': {'None': 'Null', 'Address': 'AccountId'}
   },
@@ -1326,15 +1229,9 @@ const substrateTypes = {
   'DelayKindBest': {'medianLastFinalized': 'BlockNumber'},
   'EncodedFinalityProofs': 'Bytes',
   'GrandpaEquivocation': {
-    '_enum': {
-      'Prevote': 'GrandpaEquivocationValue',
-      'Precommit': 'GrandpaEquivocationValue'
-    }
+    '_enum': {'Prevote': 'GrandpaEquivocationValue', 'Precommit': 'GrandpaEquivocationValue'}
   },
-  'GrandpaEquivocationProof': {
-    'setId': 'SetId',
-    'equivocation': 'GrandpaEquivocation'
-  },
+  'GrandpaEquivocationProof': {'setId': 'SetId', 'equivocation': 'GrandpaEquivocation'},
   'GrandpaEquivocationValue': {
     'roundNumber': 'u64',
     'identity': 'AuthorityId',
@@ -1347,10 +1244,7 @@ const substrateTypes = {
     'targetNumber': 'BlockNumber',
     'precommits': 'Vec<GrandpaSignedPrecommit>'
   },
-  'GrandpaPrecommit': {
-    'targetHash': 'BlockHash',
-    'targetNumber': 'BlockNumber'
-  },
+  'GrandpaPrecommit': {'targetHash': 'BlockHash', 'targetNumber': 'BlockNumber'},
   'GrandpaSignedPrecommit': {
     'precommit': 'GrandpaPrecommit',
     'signature': 'AuthoritySignature',
@@ -1375,11 +1269,7 @@ const substrateTypes = {
   'PendingResume': {'scheduledAt': 'BlockNumber', 'delay': 'BlockNumber'},
   'Precommits': {'currentWeight': 'u32', 'missing': 'BTreeSet<AuthorityId>'},
   'Prevotes': {'currentWeight': 'u32', 'missing': 'BTreeSet<AuthorityId>'},
-  'ReportedRoundStates': {
-    'setId': 'u32',
-    'best': 'RoundState',
-    'background': 'Vec<RoundState>'
-  },
+  'ReportedRoundStates': {'setId': 'u32', 'best': 'RoundState', 'background': 'Vec<RoundState>'},
   'RoundState': {
     'round': 'u32',
     'totalWeight': 'u32',
@@ -1459,11 +1349,7 @@ const substrateTypes = {
     'info': 'IdentityInfo'
   },
   'RegistrarIndex': 'u32',
-  'RegistrarInfo': {
-    'account': 'AccountId',
-    'fee': 'Balance',
-    'fields': 'IdentityFields'
-  },
+  'RegistrarInfo': {'account': 'AccountId', 'fee': 'Balance', 'fields': 'IdentityFields'},
   'AuthIndex': 'u32',
   'AuthoritySignature': 'Signature',
   'Heartbeat': {
@@ -1481,10 +1367,7 @@ const substrateTypes = {
   },
   'OpaqueMultiaddr': 'Bytes',
   'OpaquePeerId': 'Bytes',
-  'OpaqueNetworkState': {
-    'peerId': 'OpaquePeerId',
-    'externalAddresses': 'Vec<OpaqueMultiaddr>'
-  },
+  'OpaqueNetworkState': {'peerId': 'OpaquePeerId', 'externalAddresses': 'Vec<OpaqueMultiaddr>'},
   'CallIndex': '(u8, u8)',
   'LotteryConfig': {
     'price': 'Balance',
@@ -1520,16 +1403,12 @@ const substrateTypes = {
     'concludedAt': 'Option<BlockNumber>'
   },
   'DisputeStatement': {
-    '_enum': {
-      'Valid': 'ValidDisputeStatementKind',
-      'Invalid': 'InvalidDisputeStatementKind'
-    }
+    '_enum': {'Valid': 'ValidDisputeStatementKind', 'Invalid': 'InvalidDisputeStatementKind'}
   },
   'DisputeStatementSet': {
     'candidateHash': 'CandidateHash',
     'session': 'SessionIndex',
-    'statements':
-        'Vec<(DisputeStatement, ParaValidatorIndex, ValidatorSignature)>'
+    'statements': 'Vec<(DisputeStatement, ParaValidatorIndex, ValidatorSignature)>'
   },
   'ExplicitDisputeStatement': {
     'valid': 'bool',
@@ -1574,10 +1453,7 @@ const substrateTypes = {
     'name': 'Bytes',
     'balance': 'Balance'
   },
-  'RegisteredParachainInfo': {
-    'validators': 'Vec<ValidatorId>',
-    'proposer': 'AccountId'
-  },
+  'RegisteredParachainInfo': {'validators': 'Vec<ValidatorId>', 'proposer': 'AccountId'},
   'Bidder': {
     '_enum': {'New': 'NewBidder', 'Existing': 'ParaId'}
   },
@@ -1588,15 +1464,8 @@ const substrateTypes = {
       'Deploy': 'IncomingParachainDeploy'
     }
   },
-  'IncomingParachainDeploy': {
-    'code': 'ValidationCode',
-    'initialHeadData': 'HeadData'
-  },
-  'IncomingParachainFixed': {
-    'codeHash': 'Hash',
-    'codeSize': 'u32',
-    'initialHeadData': 'HeadData'
-  },
+  'IncomingParachainDeploy': {'code': 'ValidationCode', 'initialHeadData': 'HeadData'},
+  'IncomingParachainFixed': {'codeHash': 'Hash', 'codeSize': 'u32', 'initialHeadData': 'HeadData'},
   'NewBidder': {'who': 'AccountId', 'sub': 'SubId'},
   'SubId': 'u32',
   'AuctionIndex': 'u32',
@@ -1659,10 +1528,7 @@ const substrateTypes = {
   },
   'AuthorityDiscoveryId': 'AccountId',
   'AvailabilityBitfield': 'BitVec',
-  'AvailabilityBitfieldRecord': {
-    'bitfield': 'AvailabilityBitfield',
-    'submittedTt': 'BlockNumber'
-  },
+  'AvailabilityBitfieldRecord': {'bitfield': 'AvailabilityBitfield', 'submittedTt': 'BlockNumber'},
   'BackedCandidate': {
     'candidate': 'CommittedCandidateReceipt',
     'validityVotes': 'Vec<ValidityAttestation>',
@@ -1705,10 +1571,7 @@ const substrateTypes = {
     'backedInNumber': 'BlockNumber',
     'backingGroup': 'GroupIndex'
   },
-  'CandidateReceipt': {
-    'descriptor': 'CandidateDescriptor',
-    'commitmentsHash': 'Hash'
-  },
+  'CandidateReceipt': {'descriptor': 'CandidateDescriptor', 'commitmentsHash': 'Hash'},
   'GlobalValidationData': {
     'maxCodeSize': 'u32',
     'maxHeadDataSize': 'u32',
@@ -1787,10 +1650,7 @@ const substrateTypes = {
     'neededApprovals': 'u32',
     'relayVrfModuloSamples': 'u32'
   },
-  'InboundDownwardMessage': {
-    'pubSentAt': 'BlockNumber',
-    'pubMsg': 'DownwardMessage'
-  },
+  'InboundDownwardMessage': {'pubSentAt': 'BlockNumber', 'pubMsg': 'DownwardMessage'},
   'InboundHrmpMessage': {'sentAt': 'BlockNumber', 'data': 'Bytes'},
   'InboundHrmpMessages': 'Vec<InboundHrmpMessage>',
   'LocalValidationData': {
@@ -1819,11 +1679,7 @@ const substrateTypes = {
     'disputes': 'MultiDisputeStatementSet',
     'parentHeader': 'Header'
   },
-  'ParaGenesisArgs': {
-    'genesisHead': 'Bytes',
-    'validationCode': 'Bytes',
-    'parachain': 'bool'
-  },
+  'ParaGenesisArgs': {'genesisHead': 'Bytes', 'validationCode': 'Bytes', 'parachain': 'bool'},
   'ParaId': 'u32',
   'ParaInfo': {'manager': 'AccountId', 'deposit': 'Balance', 'locked': 'bool'},
   'ParaLifecycle': {
@@ -1845,10 +1701,7 @@ const substrateTypes = {
     '_enum': ['Always', 'Dynamic']
   },
   'ParathreadClaim': '(ParaId, CollatorId)',
-  'ParathreadClaimQueue': {
-    'queue': 'Vec<QueuedParathread>',
-    'nextCoreOffset': 'u32'
-  },
+  'ParathreadClaimQueue': {'queue': 'Vec<QueuedParathread>', 'nextCoreOffset': 'u32'},
   'ParathreadEntry': {'claim': 'ParathreadClaim', 'retries': 'u32'},
   'ParaValidatorIndex': 'u32',
   'PersistedValidationData': {
@@ -1863,10 +1716,7 @@ const substrateTypes = {
   'RelayHash': 'Hash',
   'RelayChainHash': 'RelayHash',
   'Remark': '[u8; 32]',
-  'ReplacementTimes': {
-    'expectedAt': 'BlockNumber',
-    'activatedAt': 'BlockNumber'
-  },
+  'ReplacementTimes': {'expectedAt': 'BlockNumber', 'activatedAt': 'BlockNumber'},
   'Retriable': {
     '_enum': {'Never': 'Null', 'WithRetries': 'u32'}
   },
@@ -1894,12 +1744,7 @@ const substrateTypes = {
   'SignedAvailabilityBitfields': 'Vec<SignedAvailabilityBitfield>',
   'SigningContext': {'sessionIndex': 'SessionIndex', 'parentHash': 'Hash'},
   'Statement': {
-    '_enum': {
-      'Never': 'Null',
-      'Candidate': 'Hash',
-      'Valid': 'Hash',
-      'Invalid': 'Hash'
-    }
+    '_enum': {'Never': 'Null', 'Candidate': 'Hash', 'Valid': 'Hash', 'Invalid': 'Hash'}
   },
   'TransientValidationData': {
     'maxCodeSize': 'u32',
@@ -1926,17 +1771,10 @@ const substrateTypes = {
     'persisted': 'PersistedValidationData',
     'transient': 'TransientValidationData'
   },
-  'ValidationDataType': {
-    'validationData': 'ValidationData',
-    'relayChainState': 'Vec<Bytes>'
-  },
+  'ValidationDataType': {'validationData': 'ValidationData', 'relayChainState': 'Vec<Bytes>'},
   'ValidatorSignature': 'Signature',
   'ValidityAttestation': {
-    '_enum': {
-      'Never': 'Null',
-      'Implicit': 'ValidatorSignature',
-      'Explicit': 'ValidatorSignature'
-    }
+    '_enum': {'Never': 'Null', 'Implicit': 'ValidatorSignature', 'Explicit': 'ValidatorSignature'}
   },
   'MessagingStateSnapshot': {
     'relayDispatchQueueSize': '(u32, u32)',
@@ -1946,30 +1784,14 @@ const substrateTypes = {
   'SystemInherentData': 'ParachainInherentData',
   'VecInboundHrmpMessage': 'Vec<InboundHrmpMessage>',
   'FeeDetails': {'inclusionFee': 'Option<InclusionFee>'},
-  'InclusionFee': {
-    'baseFee': 'Balance',
-    'lenFee': 'Balance',
-    'adjustedWeightFee': 'Balance'
-  },
-  'RuntimeDispatchInfo': {
-    'weight': 'Weight',
-    'class': 'DispatchClass',
-    'partialFee': 'Balance'
-  },
+  'InclusionFee': {'baseFee': 'Balance', 'lenFee': 'Balance', 'adjustedWeightFee': 'Balance'},
+  'RuntimeDispatchInfo': {'weight': 'Weight', 'class': 'DispatchClass', 'partialFee': 'Balance'},
   'Approvals': '[bool; 4]',
-  'ProxyDefinition': {
-    'delegate': 'AccountId',
-    'proxyType': 'ProxyType',
-    'delay': 'BlockNumber'
-  },
+  'ProxyDefinition': {'delegate': 'AccountId', 'proxyType': 'ProxyType', 'delay': 'BlockNumber'},
   'ProxyType': {
     '_enum': ['Any', 'NonTransfer', 'Governance', 'Staking']
   },
-  'ProxyAnnouncement': {
-    'real': 'AccountId',
-    'callHash': 'Hash',
-    'height': 'BlockNumber'
-  },
+  'ProxyAnnouncement': {'real': 'AccountId', 'callHash': 'Hash', 'height': 'BlockNumber'},
   'AccountStatus': {
     'validity': 'AccountValidity',
     'freeBalance': 'Balance',
@@ -1978,20 +1800,9 @@ const substrateTypes = {
     'vat': 'Permill'
   },
   'AccountValidity': {
-    '_enum': [
-      'Invalid',
-      'Initiated',
-      'Pending',
-      'ValidLow',
-      'ValidHigh',
-      'Completed'
-    ]
+    '_enum': ['Invalid', 'Initiated', 'Pending', 'ValidLow', 'ValidHigh', 'Completed']
   },
-  'ActiveRecovery': {
-    'created': 'BlockNumber',
-    'deposit': 'Balance',
-    'friends': 'Vec<AccountId>'
-  },
+  'ActiveRecovery': {'created': 'BlockNumber', 'deposit': 'Balance', 'friends': 'Vec<AccountId>'},
   'RecoveryConfig': {
     'delayPeriod': 'BlockNumber',
     'deposit': 'Balance',
@@ -2101,10 +1912,7 @@ const substrateTypes = {
     'block': 'Block',
     'justification': 'Option<EncodedJustification>'
   },
-  'SignedBlockWithJustifications': {
-    'block': 'Block',
-    'justifications': 'Option<Justifications>'
-  },
+  'SignedBlockWithJustifications': {'block': 'Block', 'justifications': 'Option<Justifications>'},
   'Slot': 'u64',
   'StorageData': 'Bytes',
   'StorageProof': {'trieNodes': 'Vec<Bytes>'},
@@ -2132,11 +1940,7 @@ const substrateTypes = {
   },
   'Si0LookupTypeId': 'u32',
   'Si0Path': 'Vec<Text>',
-  'Si0Type': {
-    'path': 'Si0Path',
-    'params': 'Vec<Si0LookupTypeId>',
-    'def': 'Si0TypeDef'
-  },
+  'Si0Type': {'path': 'Si0Path', 'params': 'Vec<Si0LookupTypeId>', 'def': 'Si0TypeDef'},
   'Si0TypeDef': {
     '_enum': {
       'Composite': 'Si0TypeDefComposite',
@@ -2151,10 +1955,7 @@ const substrateTypes = {
     }
   },
   'Si0TypeDefArray': {'len': 'u32', 'type': 'Si0LookupTypeId'},
-  'Si0TypeDefBitSequence': {
-    'bitStoreType': 'Si0LookupTypeId',
-    'bitOrderType': 'Si0LookupTypeId'
-  },
+  'Si0TypeDefBitSequence': {'bitStoreType': 'Si0LookupTypeId', 'bitOrderType': 'Si0LookupTypeId'},
   'Si0TypeDefCompact': {'type': 'Si0LookupTypeId'},
   'Si0TypeDefComposite': {'fields': 'Vec<Si0Field>'},
   'Si0TypeDefPhantom': 'Null',
@@ -2216,10 +2017,7 @@ const substrateTypes = {
     }
   },
   'Si1TypeDefArray': {'len': 'u32', 'type': 'Si1LookupTypeId'},
-  'Si1TypeDefBitSequence': {
-    'bitStoreType': 'Si1LookupTypeId',
-    'bitOrderType': 'Si1LookupTypeId'
-  },
+  'Si1TypeDefBitSequence': {'bitStoreType': 'Si1LookupTypeId', 'bitOrderType': 'Si1LookupTypeId'},
   'Si1TypeDefCompact': {'type': 'Si1LookupTypeId'},
   'Si1TypeDefComposite': {'fields': 'Vec<Si1Field>'},
   'Si1TypeDefPrimitive': 'Si0TypeDefPrimitive',
@@ -2227,12 +2025,7 @@ const substrateTypes = {
   'Si1TypeDefTuple': 'Vec<Si1LookupTypeId>',
   'Si1TypeParameter': {'name': 'Text', 'type': 'Option<Si1LookupTypeId>'},
   'Si1TypeDefVariant': {'variants': 'Vec<Si1Variant>'},
-  'Si1Variant': {
-    'name': 'Text',
-    'fields': 'Vec<Si1Field>',
-    'index': 'u8',
-    'docs': 'Vec<Text>'
-  },
+  'Si1Variant': {'name': 'Text', 'fields': 'Vec<Si1Field>', 'index': 'u8', 'docs': 'Vec<Text>'},
   'SiField': 'Si1Field',
   'SiLookupTypeId': 'Si1LookupTypeId',
   'SiPath': 'Si1Path',
@@ -2273,14 +2066,10 @@ const substrateTypes = {
   'SessionKeys3': '(AccountId, AccountId, AccountId)',
   'SessionKeys4': '(AccountId, AccountId, AccountId, AccountId)',
   'SessionKeys5': '(AccountId, AccountId, AccountId, AccountId, AccountId)',
-  'SessionKeys6':
-      '(AccountId, AccountId, AccountId, AccountId, AccountId, AccountId)',
-  'SessionKeys6B':
-      '(AccountId, AccountId, AccountId, AccountId, AccountId, BeefyKey)',
-  'SessionKeys7':
-      '(AccountId, AccountId, AccountId, AccountId, AccountId, AccountId, AccountId)',
-  'SessionKeys7B':
-      '(AccountId, AccountId, AccountId, AccountId, AccountId, AccountId, BeefyKey)',
+  'SessionKeys6': '(AccountId, AccountId, AccountId, AccountId, AccountId, AccountId)',
+  'SessionKeys6B': '(AccountId, AccountId, AccountId, AccountId, AccountId, BeefyKey)',
+  'SessionKeys7': '(AccountId, AccountId, AccountId, AccountId, AccountId, AccountId, AccountId)',
+  'SessionKeys7B': '(AccountId, AccountId, AccountId, AccountId, AccountId, AccountId, BeefyKey)',
   'SessionKeys8':
       '(AccountId, AccountId, AccountId, AccountId, AccountId, AccountId, AccountId, AccountId)',
   'SessionKeys8B':
@@ -2321,85 +2110,47 @@ const substrateTypes = {
   'CompactAssignments': 'CompactAssignmentsWith16',
   'CompactAssignmentsWith16': {
     'votes1': 'Vec<(NominatorIndexCompact, ValidatorIndexCompact)>',
-    'votes2':
-        'Vec<(NominatorIndexCompact, CompactScoreCompact, ValidatorIndexCompact)>',
-    'votes3':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 2], ValidatorIndexCompact)>',
-    'votes4':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 3], ValidatorIndexCompact)>',
-    'votes5':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 4], ValidatorIndexCompact)>',
-    'votes6':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 5], ValidatorIndexCompact)>',
-    'votes7':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 6], ValidatorIndexCompact)>',
-    'votes8':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 7], ValidatorIndexCompact)>',
-    'votes9':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 8], ValidatorIndexCompact)>',
-    'votes10':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 9], ValidatorIndexCompact)>',
-    'votes11':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 10], ValidatorIndexCompact)>',
-    'votes12':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 11], ValidatorIndexCompact)>',
-    'votes13':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 12], ValidatorIndexCompact)>',
-    'votes14':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 13], ValidatorIndexCompact)>',
-    'votes15':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 14], ValidatorIndexCompact)>',
-    'votes16':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 15], ValidatorIndexCompact)>'
+    'votes2': 'Vec<(NominatorIndexCompact, CompactScoreCompact, ValidatorIndexCompact)>',
+    'votes3': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 2], ValidatorIndexCompact)>',
+    'votes4': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 3], ValidatorIndexCompact)>',
+    'votes5': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 4], ValidatorIndexCompact)>',
+    'votes6': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 5], ValidatorIndexCompact)>',
+    'votes7': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 6], ValidatorIndexCompact)>',
+    'votes8': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 7], ValidatorIndexCompact)>',
+    'votes9': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 8], ValidatorIndexCompact)>',
+    'votes10': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 9], ValidatorIndexCompact)>',
+    'votes11': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 10], ValidatorIndexCompact)>',
+    'votes12': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 11], ValidatorIndexCompact)>',
+    'votes13': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 12], ValidatorIndexCompact)>',
+    'votes14': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 13], ValidatorIndexCompact)>',
+    'votes15': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 14], ValidatorIndexCompact)>',
+    'votes16': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 15], ValidatorIndexCompact)>'
   },
   'CompactAssignmentsWith24': {
     'votes1': 'Vec<(NominatorIndexCompact, ValidatorIndexCompact)>',
-    'votes2':
-        'Vec<(NominatorIndexCompact, CompactScoreCompact, ValidatorIndexCompact)>',
-    'votes3':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 2], ValidatorIndexCompact)>',
-    'votes4':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 3], ValidatorIndexCompact)>',
-    'votes5':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 4], ValidatorIndexCompact)>',
-    'votes6':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 5], ValidatorIndexCompact)>',
-    'votes7':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 6], ValidatorIndexCompact)>',
-    'votes8':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 7], ValidatorIndexCompact)>',
-    'votes9':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 8], ValidatorIndexCompact)>',
-    'votes10':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 9], ValidatorIndexCompact)>',
-    'votes11':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 10], ValidatorIndexCompact)>',
-    'votes12':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 11], ValidatorIndexCompact)>',
-    'votes13':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 12], ValidatorIndexCompact)>',
-    'votes14':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 13], ValidatorIndexCompact)>',
-    'votes15':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 14], ValidatorIndexCompact)>',
-    'votes16':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 15], ValidatorIndexCompact)>',
-    'votes17':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 16], ValidatorIndexCompact)>',
-    'votes18':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 17], ValidatorIndexCompact)>',
-    'votes19':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 18], ValidatorIndexCompact)>',
-    'votes20':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 19], ValidatorIndexCompact)>',
-    'votes21':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 20], ValidatorIndexCompact)>',
-    'votes22':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 21], ValidatorIndexCompact)>',
-    'votes23':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 22], ValidatorIndexCompact)>',
-    'votes24':
-        'Vec<(NominatorIndexCompact, [CompactScoreCompact; 23], ValidatorIndexCompact)>'
+    'votes2': 'Vec<(NominatorIndexCompact, CompactScoreCompact, ValidatorIndexCompact)>',
+    'votes3': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 2], ValidatorIndexCompact)>',
+    'votes4': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 3], ValidatorIndexCompact)>',
+    'votes5': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 4], ValidatorIndexCompact)>',
+    'votes6': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 5], ValidatorIndexCompact)>',
+    'votes7': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 6], ValidatorIndexCompact)>',
+    'votes8': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 7], ValidatorIndexCompact)>',
+    'votes9': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 8], ValidatorIndexCompact)>',
+    'votes10': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 9], ValidatorIndexCompact)>',
+    'votes11': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 10], ValidatorIndexCompact)>',
+    'votes12': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 11], ValidatorIndexCompact)>',
+    'votes13': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 12], ValidatorIndexCompact)>',
+    'votes14': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 13], ValidatorIndexCompact)>',
+    'votes15': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 14], ValidatorIndexCompact)>',
+    'votes16': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 15], ValidatorIndexCompact)>',
+    'votes17': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 16], ValidatorIndexCompact)>',
+    'votes18': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 17], ValidatorIndexCompact)>',
+    'votes19': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 18], ValidatorIndexCompact)>',
+    'votes20': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 19], ValidatorIndexCompact)>',
+    'votes21': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 20], ValidatorIndexCompact)>',
+    'votes22': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 21], ValidatorIndexCompact)>',
+    'votes23': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 22], ValidatorIndexCompact)>',
+    'votes24': 'Vec<(NominatorIndexCompact, [CompactScoreCompact; 23], ValidatorIndexCompact)>'
   },
   'CompactAssignmentsTo265': 'CompactAssignmentsWith16',
   'CompactAssignmentsTo257': {
@@ -2476,35 +2227,18 @@ const substrateTypes = {
     'solution': 'RawSolution',
     'reward': 'Balance'
   },
-  'SignedSubmissionTo276': {
-    'who': 'AccountId',
-    'deposit': 'Balance',
-    'solution': 'RawSolution'
-  },
+  'SignedSubmissionTo276': {'who': 'AccountId', 'deposit': 'Balance', 'solution': 'RawSolution'},
   'SignedSubmissionOf': 'SignedSubmission',
-  'SolutionOrSnapshotSize': {
-    'voters': 'Compact<u32>',
-    'targets': 'Compact<u32>'
-  },
-  'SolutionSupport': {
-    'total': 'ExtendedBalance',
-    'voters': 'Vec<(AccountId, ExtendedBalance)>'
-  },
+  'SolutionOrSnapshotSize': {'voters': 'Compact<u32>', 'targets': 'Compact<u32>'},
+  'SolutionSupport': {'total': 'ExtendedBalance', 'voters': 'Vec<(AccountId, ExtendedBalance)>'},
   'SolutionSupports': 'Vec<(AccountId, SolutionSupport)>',
   'Supports': 'SolutionSupports',
   'SubmissionIndicesOf': 'BTreeMap<ElectionScore, u32>',
-  'Voter': {
-    'votes': 'Vec<AccountId>',
-    'stake': 'Balance',
-    'deposit': 'Balance'
-  },
+  'Voter': {'votes': 'Vec<AccountId>', 'stake': 'Balance', 'deposit': 'Balance'},
   'VoteWeight': 'u64',
   'ActiveEraInfo': {'index': 'EraIndex', 'start': 'Option<Moment>'},
   'EraIndex': 'u32',
-  'EraRewardPoints': {
-    'total': 'RewardPoint',
-    'individual': 'BTreeMap<AccountId, RewardPoint>'
-  },
+  'EraRewardPoints': {'total': 'RewardPoint', 'individual': 'BTreeMap<AccountId, RewardPoint>'},
   'EraRewards': {'total': 'u32', 'rewards': 'Vec<u32>'},
   'Exposure': {
     'total': 'Compact<Balance>',
@@ -2517,11 +2251,7 @@ const substrateTypes = {
   'IndividualExposure': {'who': 'AccountId', 'value': 'Compact<Balance>'},
   'KeyType': 'AccountId',
   'MomentOf': 'Moment',
-  'Nominations': {
-    'targets': 'Vec<AccountId>',
-    'submittedIn': 'EraIndex',
-    'suppressed': 'bool'
-  },
+  'Nominations': {'targets': 'Vec<AccountId>', 'submittedIn': 'EraIndex', 'suppressed': 'bool'},
   'NominatorIndex': 'u32',
   'NominatorIndexCompact': 'Compact<NominatorIndex>',
   'OffchainAccuracy': 'PerU16',
@@ -2537,11 +2267,7 @@ const substrateTypes = {
     }
   },
   'RewardPoint': 'u32',
-  'SlashJournalEntry': {
-    'who': 'AccountId',
-    'amount': 'Balance',
-    'ownSlash': 'Balance'
-  },
+  'SlashJournalEntry': {'who': 'AccountId', 'amount': 'Balance', 'ownSlash': 'Balance'},
   'SlashingSpansTo204': {
     'spanIndex': 'SpanIndex',
     'lastStart': 'EraIndex',
@@ -2588,10 +2314,7 @@ const substrateTypes = {
   'ValidatorIndexCompact': 'Compact<ValidatorIndex>',
   'ValidatorPrefs': 'ValidatorPrefsWithBlocked',
   'ValidatorPrefsWithCommission': {'commission': 'Compact<Perbill>'},
-  'ValidatorPrefsWithBlocked': {
-    'commission': 'Compact<Perbill>',
-    'blocked': 'bool'
-  },
+  'ValidatorPrefsWithBlocked': {'commission': 'Compact<Perbill>', 'blocked': 'bool'},
   'ValidatorPrefsTo196': {'validatorPayment': 'Compact<Balance>'},
   'ValidatorPrefsTo145': {
     'unstakeThreshold': 'Compact<u32>',
@@ -2606,11 +2329,7 @@ const substrateTypes = {
     'spans': 'Vec<BlockTraceSpan>',
     'events': 'Vec<BlockTraceEvent>'
   },
-  'BlockTraceEvent': {
-    'target': 'Text',
-    'data': 'BlockTraceEventData',
-    'parentId': 'Option<u64>'
-  },
+  'BlockTraceEvent': {'target': 'Text', 'data': 'BlockTraceEventData', 'parentId': 'Option<u64>'},
   'BlockTraceEventData': {'stringValues': 'HashMap<Text, Text>'},
   'BlockTraceSpan': {
     'id': 'u64',
@@ -2645,16 +2364,8 @@ const substrateTypes = {
     'degree': 'u8'
   },
   'AccountInfo': 'AccountInfoWithTripleRefCount',
-  'AccountInfoWithRefCountU8': {
-    'nonce': 'Index',
-    'refcount': 'u8',
-    'data': 'AccountData'
-  },
-  'AccountInfoWithRefCount': {
-    'nonce': 'Index',
-    'refcount': 'RefCount',
-    'data': 'AccountData'
-  },
+  'AccountInfoWithRefCountU8': {'nonce': 'Index', 'refcount': 'u8', 'data': 'AccountData'},
+  'AccountInfoWithRefCount': {'nonce': 'Index', 'refcount': 'RefCount', 'data': 'AccountData'},
   'AccountInfoWithDualRefCount': {
     'nonce': 'Index',
     'consumers': 'RefCount',
@@ -2681,12 +2392,7 @@ const substrateTypes = {
   },
   'ChainProperties': 'GenericChainProperties',
   'ChainType': {
-    '_enum': {
-      'Development': 'Null',
-      'Local': 'Null',
-      'Live': 'Null',
-      'Custom': 'Text'
-    }
+    '_enum': {'Development': 'Null', 'Local': 'Null', 'Live': 'Null', 'Custom': 'Text'}
   },
   'ConsumedWeight': 'PerDispatchClassWeight',
   'DigestOf': 'Digest',
@@ -2707,17 +2413,9 @@ const substrateTypes = {
   },
   'DispatchErrorModule': {'index': 'u8', 'error': 'u8'},
   'DispatchErrorTo198': {'module': 'Option<u8>', 'error': 'u8'},
-  'DispatchInfo': {
-    'weight': 'Weight',
-    'class': 'DispatchClass',
-    'paysFee': 'Pays'
-  },
+  'DispatchInfo': {'weight': 'Weight', 'class': 'DispatchClass', 'paysFee': 'Pays'},
   'DispatchInfoTo190': {'weight': 'Weight', 'class': 'DispatchClass'},
-  'DispatchInfoTo244': {
-    'weight': 'Weight',
-    'class': 'DispatchClass',
-    'paysFee': 'bool'
-  },
+  'DispatchInfoTo244': {'weight': 'Weight', 'class': 'DispatchClass', 'paysFee': 'bool'},
   'DispatchOutcome': 'Result<(), DispatchError>',
   'DispatchResult': 'Result<(), DispatchError>',
   'DispatchResultOf': 'DispatchResult',
@@ -2753,18 +2451,10 @@ const substrateTypes = {
     'averageUploadPerSec': 'u64',
     'peerset': 'NetworkStatePeerset'
   },
-  'NetworkStatePeerset': {
-    'messageQueue': 'u64',
-    'nodes': 'HashMap<Text, NetworkStatePeersetInfo>'
-  },
+  'NetworkStatePeerset': {'messageQueue': 'u64', 'nodes': 'HashMap<Text, NetworkStatePeersetInfo>'},
   'NetworkStatePeersetInfo': {'connected': 'bool', 'reputation': 'i32'},
   'NodeRole': {
-    '_enum': {
-      'Full': 'Null',
-      'LightClient': 'Null',
-      'Authority': 'Null',
-      'UnknownRole': 'u8'
-    }
+    '_enum': {'Full': 'Null', 'LightClient': 'Null', 'Authority': 'Null', 'UnknownRole': 'u8'}
   },
   'NotConnectedPeer': {
     'knownAddresses': 'Vec<Text>',
@@ -2789,27 +2479,15 @@ const substrateTypes = {
     'bestHash': 'Hash',
     'bestNumber': 'BlockNumber'
   },
-  'PerDispatchClassU32': {
-    'normal': 'u32',
-    'operational': 'u32',
-    'mandatory': 'u32'
-  },
-  'PerDispatchClassWeight': {
-    'normal': 'Weight',
-    'operational': 'Weight',
-    'mandatory': 'Weight'
-  },
+  'PerDispatchClassU32': {'normal': 'u32', 'operational': 'u32', 'mandatory': 'u32'},
+  'PerDispatchClassWeight': {'normal': 'Weight', 'operational': 'Weight', 'mandatory': 'Weight'},
   'PerDispatchClassWeightsPerClass': {
     'normal': 'WeightPerClass',
     'operational': 'WeightPerClass',
     'mandatory': 'WeightPerClass'
   },
   'Phase': {
-    '_enum': {
-      'ApplyExtrinsic': 'u32',
-      'Finalization': 'Null',
-      'Initialization': 'Null'
-    }
+    '_enum': {'ApplyExtrinsic': 'u32', 'Finalization': 'Null', 'Initialization': 'Null'}
   },
   'RawOrigin': {
     '_enum': {'Root': 'Null', 'Signed': 'AccountId', 'None': 'Null'}
@@ -2838,11 +2516,7 @@ const substrateTypes = {
     '_enum': {'Invalid': 'InvalidTransaction', 'Unknown': 'UnknownTransaction'}
   },
   'UnknownTransaction': {
-    '_enum': {
-      'CannotLookup': 'Null',
-      'NoUnsignedValidator': 'Null',
-      'Custom': 'u8'
-    }
+    '_enum': {'CannotLookup': 'Null', 'NoUnsignedValidator': 'Null', 'Custom': 'u8'}
   },
   'WeightPerClass': {
     'baseExtrinsic': 'Weight',
@@ -2928,16 +2602,8 @@ const substrateTypes = {
     'isFrozen': 'bool',
     'deposit': 'DepositBalance'
   },
-  'ClassMetadata': {
-    'deposit': 'DepositBalance',
-    'data': 'Vec<u8>',
-    'isFrozen': 'bool'
-  },
-  'InstanceMetadata': {
-    'deposit': 'DepositBalance',
-    'data': 'Vec<u8>',
-    'isFrozen': 'bool'
-  },
+  'ClassMetadata': {'deposit': 'DepositBalance', 'data': 'Vec<u8>', 'isFrozen': 'bool'},
+  'InstanceMetadata': {'deposit': 'DepositBalance', 'data': 'Vec<u8>', 'isFrozen': 'bool'},
   'Multisig': {
     'when': 'Timepoint',
     'deposit': 'Balance',
@@ -2945,11 +2611,7 @@ const substrateTypes = {
     'approvals': 'Vec<AccountId>'
   },
   'Timepoint': {'height': 'BlockNumber', 'index': 'u32'},
-  'VestingInfo': {
-    'locked': 'Balance',
-    'perBlock': 'Balance',
-    'startingBlock': 'BlockNumber'
-  },
+  'VestingInfo': {'locked': 'Balance', 'perBlock': 'Balance', 'startingBlock': 'BlockNumber'},
   'BodyId': {
     '_enum': {
       'Unit': 'Null',
@@ -2972,12 +2634,7 @@ const substrateTypes = {
   },
   'InteriorMultiLocation': 'Junctions',
   'NetworkId': {
-    '_enum': {
-      'Any': 'Null',
-      'Named': 'Vec<u8>',
-      'Polkadot': 'Null',
-      'Kusama': 'Null'
-    }
+    '_enum': {'Any': 'Null', 'Named': 'Vec<u8>', 'Polkadot': 'Null', 'Kusama': 'Null'}
   },
   'XcmOrigin': {
     '_enum': {'Xcm': 'MultiLocation'}
@@ -3037,15 +2694,9 @@ const substrateTypes = {
       'AllConcreteFungible': 'MultiLocationV0',
       'AllConcreteNonFungible': 'MultiLocationV0',
       'AbstractFungible': {'id': 'Vec<u8>', 'instance': 'Compact<u128>'},
-      'AbstractNonFungible': {
-        'class': 'Vec<u8>',
-        'instance': 'AssetInstanceV0'
-      },
+      'AbstractNonFungible': {'class': 'Vec<u8>', 'instance': 'AssetInstanceV0'},
       'ConcreteFungible': {'id': 'MultiLocationV0', 'amount': 'Compact<u128>'},
-      'ConcreteNonFungible': {
-        'class': 'MultiLocationV0',
-        'instance': 'AssetInstanceV0'
-      }
+      'ConcreteNonFungible': {'class': 'MultiLocationV0', 'instance': 'AssetInstanceV0'}
     }
   },
   'MultiLocationV0': {
@@ -3056,10 +2707,8 @@ const substrateTypes = {
       'X3': '(JunctionV0, JunctionV0, JunctionV0)',
       'X4': '(JunctionV0, JunctionV0, JunctionV0, JunctionV0)',
       'X5': '(JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0)',
-      'X6':
-          '(JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0)',
-      'X7':
-          '(JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0)',
+      'X6': '(JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0)',
+      'X7': '(JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0)',
       'X8':
           '(JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0, JunctionV0)'
     }
@@ -3072,23 +2721,11 @@ const substrateTypes = {
   },
   'XcmV0': {
     '_enum': {
-      'WithdrawAsset': {
-        'assets': 'Vec<MultiAssetV0>',
-        'effects': 'Vec<XcmOrderV0>'
-      },
-      'ReserveAssetDeposit': {
-        'assets': 'Vec<MultiAssetV0>',
-        'effects': 'Vec<XcmOrderV0>'
-      },
-      'ReceiveTeleportedAsset': {
-        'assets': 'Vec<MultiAssetV0>',
-        'effects': 'Vec<XcmOrderV0>'
-      },
+      'WithdrawAsset': {'assets': 'Vec<MultiAssetV0>', 'effects': 'Vec<XcmOrderV0>'},
+      'ReserveAssetDeposit': {'assets': 'Vec<MultiAssetV0>', 'effects': 'Vec<XcmOrderV0>'},
+      'ReceiveTeleportedAsset': {'assets': 'Vec<MultiAssetV0>', 'effects': 'Vec<XcmOrderV0>'},
       'QueryResponse': {'queryId': 'Compact<u64>', 'response': 'ResponseV0'},
-      'TransferAsset': {
-        'assets': 'Vec<MultiAssetV0>',
-        'dest': 'MultiLocationV0'
-      },
+      'TransferAsset': {'assets': 'Vec<MultiAssetV0>', 'dest': 'MultiLocationV0'},
       'TransferReserveAsset': {
         'assets': 'Vec<MultiAssetV0>',
         'dest': 'MultiLocationV0',
@@ -3148,19 +2785,13 @@ const substrateTypes = {
   'XcmOrderV0': {
     '_enum': {
       'Null': 'Null',
-      'DepositAsset': {
-        'assets': 'Vec<MultiAssetV0>',
-        'dest': 'MultiLocationV0'
-      },
+      'DepositAsset': {'assets': 'Vec<MultiAssetV0>', 'dest': 'MultiLocationV0'},
       'DepositReserveAsset': {
         'assets': 'Vec<MultiAssetV0>',
         'dest': 'MultiLocationV0',
         'effects': 'Vec<XcmOrderV0>'
       },
-      'ExchangeAsset': {
-        'give': 'Vec<MultiAssetV0>',
-        'receive': 'Vec<MultiAssetV0>'
-      },
+      'ExchangeAsset': {'give': 'Vec<MultiAssetV0>', 'receive': 'Vec<MultiAssetV0>'},
       'InitiateReserveWithdraw': {
         'assets': 'Vec<MultiAssetV0>',
         'reserve': 'MultiLocationV0',
@@ -3220,10 +2851,8 @@ const substrateTypes = {
       'X3': '(JunctionV1, JunctionV1, JunctionV1)',
       'X4': '(JunctionV1, JunctionV1, JunctionV1, JunctionV1)',
       'X5': '(JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1)',
-      'X6':
-          '(JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1)',
-      'X7':
-          '(JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1)',
+      'X6': '(JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1)',
+      'X7': '(JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1)',
       'X8':
           '(JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1, JunctionV1)'
     }
@@ -3249,18 +2878,9 @@ const substrateTypes = {
   },
   'XcmV1': {
     '_enum': {
-      'WithdrawAsset': {
-        'assets': 'MultiAssetsV1',
-        'effects': 'Vec<XcmOrderV1>'
-      },
-      'ReserveAssetDeposit': {
-        'assets': 'MultiAssetsV1',
-        'effects': 'Vec<XcmOrderV1>'
-      },
-      'ReceiveTeleportedAsset': {
-        'assets': 'MultiAssetsV1',
-        'effects': 'Vec<XcmOrderV1>'
-      },
+      'WithdrawAsset': {'assets': 'MultiAssetsV1', 'effects': 'Vec<XcmOrderV1>'},
+      'ReserveAssetDeposit': {'assets': 'MultiAssetsV1', 'effects': 'Vec<XcmOrderV1>'},
+      'ReceiveTeleportedAsset': {'assets': 'MultiAssetsV1', 'effects': 'Vec<XcmOrderV1>'},
       'QueryResponse': {'queryId': 'Compact<u64>', 'response': 'ResponseV1'},
       'TransferAsset': {'assets': 'MultiAssetsV1', 'dest': 'MultiLocationV1'},
       'TransferReserveAsset': {
@@ -3334,10 +2954,7 @@ const substrateTypes = {
         'dest': 'MultiLocationV1',
         'effects': 'Vec<XcmOrderV1>'
       },
-      'ExchangeAsset': {
-        'give': 'MultiAssetFilterV1',
-        'receive': 'MultiAssetsV1'
-      },
+      'ExchangeAsset': {'give': 'MultiAssetFilterV1', 'receive': 'MultiAssetsV1'},
       'InitiateReserveWithdraw': {
         'assets': 'MultiAssetFilterV1',
         'reserve': 'MultiLocationV1',
@@ -3373,11 +2990,7 @@ const substrateTypes = {
   'OriginKindV2': 'OriginKindV1',
   'WildFungibilityV2': 'WildFungibilityV1',
   'ResponseV2': {
-    '_enum': {
-      'Null': 'Null',
-      'Assets': 'MultiAssetsV2',
-      'ExecutionResult': 'ResponseV2Result'
-    }
+    '_enum': {'Null': 'Null', 'Assets': 'MultiAssetsV2', 'ExecutionResult': 'ResponseV2Result'}
   },
   'ResponseV2Error': '(u32, XcmErrorV2)',
   'ResponseV2Result': 'Result<Null, ResponseV2Error>',
@@ -3394,10 +3007,7 @@ const substrateTypes = {
         'response': 'ResponseV2',
         'maxWeight': 'Compact<u64>'
       },
-      'TransferAsset': {
-        'assets': 'MultiAssetsV2',
-        'beneficiary': 'MultiLocationV2'
-      },
+      'TransferAsset': {'assets': 'MultiAssetsV2', 'beneficiary': 'MultiLocationV2'},
       'TransferReserveAsset': {
         'assets': 'MultiAssetsV2',
         'dest': 'MultiLocationV2',
@@ -3437,10 +3047,7 @@ const substrateTypes = {
         'dest': 'MultiLocationV2',
         'xcm': 'XcmV2'
       },
-      'ExchangeAsset': {
-        'give': 'MultiAssetFilterV2',
-        'receive': 'MultiAssetsV2'
-      },
+      'ExchangeAsset': {'give': 'MultiAssetFilterV2', 'receive': 'MultiAssetsV2'},
       'InitiateReserveWithdraw': {
         'assets': 'MultiAssetFilterV2',
         'reserve': 'MultiLocationV2',
@@ -3525,11 +3132,7 @@ const substrateTypes = {
     '_enum': ['Native', 'SovereignAccount', 'Superuser', 'Xcm']
   },
   'Outcome': {
-    '_enum': {
-      'Complete': 'Weight',
-      'Incomplete': '(Weight, XcmErrorV0)',
-      'Error': 'XcmErrorV0'
-    }
+    '_enum': {'Complete': 'Weight', 'Incomplete': '(Weight, XcmErrorV0)', 'Error': 'XcmErrorV0'}
   },
   'QueryId': 'u64',
   'QueryStatus': {
@@ -3561,24 +3164,12 @@ const substrateTypes = {
     '_enum': {'V0': 'MultiAssetV0', 'V1': 'MultiAssetV1', 'V2': 'MultiAssetV2'}
   },
   'VersionedMultiAssets': {
-    '_enum': {
-      'V0': 'Vec<MultiAssetV0>',
-      'V1': 'MultiAssetsV1',
-      'V2': 'MultiAssetsV2'
-    }
+    '_enum': {'V0': 'Vec<MultiAssetV0>', 'V1': 'MultiAssetsV1', 'V2': 'MultiAssetsV2'}
   },
   'VersionedMultiLocation': {
-    '_enum': {
-      'V0': 'MultiLocationV0',
-      'V1': 'MultiLocationV1',
-      'V2': 'MultiLocationV2'
-    }
+    '_enum': {'V0': 'MultiLocationV0', 'V1': 'MultiLocationV1', 'V2': 'MultiLocationV2'}
   },
-  'VersionedResponse': {
-    'V0': 'ResponseV0',
-    'V1': 'ResponseV1',
-    'V2': 'ResponseV2'
-  },
+  'VersionedResponse': {'V0': 'ResponseV0', 'V1': 'ResponseV1', 'V2': 'ResponseV2'},
   'VersionedXcm': {
     '_enum': {'V0': 'XcmV0', 'V1': 'XcmV1', 'V2': 'XcmV2'}
   },

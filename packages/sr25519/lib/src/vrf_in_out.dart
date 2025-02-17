@@ -18,8 +18,7 @@ class VrfInOut {
 
   /// EncodeOutput returns the 64-byte encoding of the input and output concatenated
   List<int> encode() {
-    return List<int>.from([...input.encode(), ...output.encode()],
-        growable: false);
+    return List<int>.from([...input.encode(), ...output.encode()], growable: false);
   }
 
   /// makeBytes returns raw bytes output from the VRF

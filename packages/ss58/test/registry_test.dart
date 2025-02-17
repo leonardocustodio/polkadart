@@ -5,17 +5,14 @@ import 'package:test/scaffolding.dart';
 import 'package:ss58/util/ss58_registry_json.dart' as reg;
 
 void main() {
-  test(
-      'Should return a Registry instance when default constructor is called with empty list',
-      () {
+  test('Should return a Registry instance when default constructor is called with empty list', () {
     final List<RegistryItem> registryData = [];
     final registry = Registry(registryData);
 
     expect(registry, isA<Registry>());
   });
 
-  test('Should return a Registry instance when default constructor is called',
-      () {
+  test('Should return a Registry instance when default constructor is called', () {
     final item = RegistryItem.fromJson({
       "prefix": 0,
       "network": "polkadot",
@@ -30,9 +27,7 @@ void main() {
 
     expect(registry, isA<Registry>());
   });
-  test(
-      'Should throw DuplicatePrefixException when items list has items with same prefix',
-      () {
+  test('Should throw DuplicatePrefixException when items list has items with same prefix', () {
     final item = RegistryItem.fromJson({
       "prefix": 0,
       "network": "polkadot",
@@ -51,15 +46,12 @@ void main() {
       () => Registry(registryData),
       throwsA(
         predicate((exception) =>
-            exception is DuplicatePrefixException &&
-            exception.toString() == expectedErrorMessage),
+            exception is DuplicatePrefixException && exception.toString() == expectedErrorMessage),
       ),
     );
   });
 
-  test(
-      'Should throw DuplicatePrefixException when items list has items with same network',
-      () {
+  test('Should throw DuplicatePrefixException when items list has items with same network', () {
     final item = RegistryItem.fromJson({
       "prefix": 0,
       "network": "polkadot",
@@ -87,14 +79,11 @@ void main() {
       () => Registry(registryData),
       throwsA(
         predicate((exception) =>
-            exception is DuplicateNetworkException &&
-            exception.toString() == expectedErrorMessage),
+            exception is DuplicateNetworkException && exception.toString() == expectedErrorMessage),
       ),
     );
   });
-  test(
-      'Should return a Registry instance when factory fromJsonString is called',
-      () {
+  test('Should return a Registry instance when factory fromJsonString is called', () {
     final registry = Registry.fromJsonString(reg.jsonRegistryData);
 
     expect(registry, isA<Registry>());
@@ -139,8 +128,7 @@ void main() {
     expect(registryItem.prefix, prefix);
   });
 
-  test(
-      'Should throw NoEntryForPrefixException when getByPrefix is called with nonexistent prefix',
+  test('Should throw NoEntryForPrefixException when getByPrefix is called with nonexistent prefix',
       () {
     final registry = Registry.fromJsonString(reg.jsonRegistryData);
 
@@ -152,8 +140,7 @@ void main() {
       () => registry.getByPrefix(prefix),
       throwsA(
         predicate((exception) =>
-            exception is NoEntryForPrefixException &&
-            exception.toString() == expectedErrorMessage),
+            exception is NoEntryForPrefixException && exception.toString() == expectedErrorMessage),
       ),
     );
   });
@@ -166,8 +153,7 @@ void main() {
     final int kusamaPrefix = 2;
     final String kusamaNetwork = 'kusama';
 
-    expect(registry.getByNetwork(kusamaNetwork),
-        registry.getByPrefix(kusamaPrefix));
+    expect(registry.getByNetwork(kusamaNetwork), registry.getByPrefix(kusamaPrefix));
   });
 
   test('Should return registry items', () {

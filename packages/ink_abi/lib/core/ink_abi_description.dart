@@ -39,8 +39,7 @@ class InkAbiDescription {
 
   int? _constructorsValue;
   int constructors() {
-    _constructorsValue ??=
-        _createMessagesType(_project['spec']['constructors']);
+    _constructorsValue ??= _createMessagesType(_project['spec']['constructors']);
     return _constructorsValue!;
   }
 

@@ -74,8 +74,7 @@ List<CodecInterface> _fixU256Structs(final List<CodecInterface> types) {
         //
         // Check if field.kind is TypeKind.Array
         // and field.length is 4
-        if (field.kind == TypeKind.array &&
-            (field as ArrayCodecInterface).len == 4) {
+        if (field.kind == TypeKind.array && (field as ArrayCodecInterface).len == 4) {
           final CodecInterface element = types[field.type];
           //
           // Check if element.kind is TypeKind.Primitive
@@ -104,8 +103,7 @@ List<CodecInterface> _eliminateWrappers(List<CodecInterface> types) {
         case TypeKind.tuple:
           if ((type as TupleCodecInterface).tuple.length == 1) {
             changed = true;
-            final newType =
-                CodecInterface.fromJson(types[type.tuple[0]].toJson());
+            final newType = CodecInterface.fromJson(types[type.tuple[0]].toJson());
             newType.id = type.id;
             return _replaceType(type, newType);
           }
@@ -205,16 +203,11 @@ List<CodecInterface> _fixCompactTypes(final List<CodecInterface> types) {
         );
       case TypeKind.composite:
         assert((compact as CompositeCodecInterface).fields.length == 1);
-        final int compactTi =
-            (compact as CompositeCodecInterface).fields[0].type;
+        final int compactTi = (compact as CompositeCodecInterface).fields[0].type;
         compact = types[compactTi];
 
         assert(compact.kind == TypeKind.primitive);
-        assert((compact as PrimitiveCodecInterface)
-                .primitive
-                .name[0]
-                .toUpperCase() ==
-            'U');
+        assert((compact as PrimitiveCodecInterface).primitive.name[0].toUpperCase() == 'U');
         type.type = compactTi;
         return type;
       default:
@@ -245,8 +238,7 @@ List<CodecInterface> _introduceOptionType(final List<CodecInterface> types) {
 }
 
 bool isOptionType(CodecInterface type) {
-  if (type.kind != TypeKind.variant ||
-      (type as VariantCodecInterface).variants.length != 2) {
+  if (type.kind != TypeKind.variant || (type as VariantCodecInterface).variants.length != 2) {
     return false;
   }
   final Variants v0 = type.variants[0];
@@ -281,9 +273,7 @@ List<CodecInterface> _mutateResultType(final List<CodecInterface> types) {
 bool isResultType(CodecInterface type) {
   if (type.kind != TypeKind.variant ||
       (type as VariantCodecInterface).variants.length != 2 ||
-      (type.path == null ||
-          type.path!.length != 1 ||
-          type.path![0] != 'Result')) {
+      (type.path == null || type.path!.length != 1 || type.path![0] != 'Result')) {
     return false;
   }
   final Variants v0 = type.variants[0];
@@ -299,8 +289,7 @@ bool isResultType(CodecInterface type) {
 
 List<CodecInterface> _replaceUnitOptionWithBoolean(List<CodecInterface> types) {
   return types.map((final CodecInterface type) {
-    if (type.kind == TypeKind.option &&
-        _isUnitType(types[(type as OptionCodecInterface).type])) {
+    if (type.kind == TypeKind.option && _isUnitType(types[(type as OptionCodecInterface).type])) {
       return _replaceType(
         type,
         PrimitiveCodecInterface(
@@ -344,8 +333,7 @@ List<CodecInterface> _normalizedFieldNames(final List<CodecInterface> types) {
   return types.map((final CodecInterface type) {
     switch (type.kind) {
       case TypeKind.composite:
-        (type as CompositeCodecInterface).fields =
-            _convertToCamelCase(type.fields);
+        (type as CompositeCodecInterface).fields = _convertToCamelCase(type.fields);
         return type;
       case TypeKind.variant:
         (type as VariantCodecInterface).variants = type.variants.map(
@@ -363,9 +351,7 @@ List<CodecInterface> _normalizedFieldNames(final List<CodecInterface> types) {
 
 List<Field> _convertToCamelCase(final List<Field> fields) {
   return fields.map((final Field field) {
-    if (field.name != null &&
-        field.name!.trim().isNotEmpty &&
-        field.name!.contains('_')) {
+    if (field.name != null && field.name!.trim().isNotEmpty && field.name!.contains('_')) {
       final List<String> parts = field.name!.split('_');
       if (parts.length > 1) {
         field.name = parts[0] +
@@ -380,8 +366,7 @@ List<Field> _convertToCamelCase(final List<Field> fields) {
   }).toList();
 }
 
-CodecInterface _replaceType(
-    final CodecInterface prev, final CodecInterface next) {
+CodecInterface _replaceType(final CodecInterface prev, final CodecInterface next) {
   if (prev.path != null && prev.path!.isNotEmpty) {
     next.path = prev.path?.toList();
   }
@@ -392,6 +377,5 @@ CodecInterface _replaceType(
 }
 
 bool _isUnitType(final CodecInterface type) {
-  return type.kind == TypeKind.tuple &&
-      (type as TupleCodecInterface).tuple.isEmpty;
+  return type.kind == TypeKind.tuple && (type as TupleCodecInterface).tuple.isEmpty;
 }

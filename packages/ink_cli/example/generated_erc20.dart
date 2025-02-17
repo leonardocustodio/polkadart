@@ -761,13 +761,11 @@ class Contract {
     return await _stateCall<Balance>('0x0f755a56', [owner]);
   }
 
-  Future<Balance> allowance(
-      final AccountId owner, final AccountId spender) async {
+  Future<Balance> allowance(final AccountId owner, final AccountId spender) async {
     return await _stateCall<Balance>('0x6a00165e', [owner, spender]);
   }
 
-  Future<T> _stateCall<T>(
-      final String selector, final List<dynamic> args) async {
+  Future<T> _stateCall<T>(final String selector, final List<dynamic> args) async {
     final input = _abi.encodeMessageInput(selector, args);
     final data = encodeCall(address, input);
     final api = StateApi(provider);
