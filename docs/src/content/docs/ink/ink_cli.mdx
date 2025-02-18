@@ -106,11 +106,8 @@ void callContract(List<int> address) async {
     address: Uint8List.fromList(address),
   );
 
-  print('Flip value: ${await contract.get()}');
-
-  await contract.flip();
-
-  print('Flip value after flip: ${await contract.get()}');
+  // Call the get method
+  print('Get value: ${await contract.get()}');
 }
 ```
 
