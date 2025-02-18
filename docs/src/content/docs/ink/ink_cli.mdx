@@ -44,10 +44,9 @@ import 'dart:io';
 import 'package:ink_cli/ink_cli.dart';
 
 void generateTypes() {
-  final String dir = Directory.current.absolute.path;
-  final fileOutput = FileOutput('$dir/example/generated_flipper.dart');
+  final fileOutput = FileOutput('generated_flipper.dart');
   final generator = TypeGenerator(
-      abiFilePath: './example/flipper.json', fileOutput: fileOutput);
+      abiFilePath: 'flipper.json', fileOutput: fileOutput);
   generator.generate();
   fileOutput.write();
 }
@@ -64,7 +63,7 @@ import 'dart:typed_data';
 import 'package:ink_cli/ink_cli.dart';
 import 'package:polkadart/polkadart.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import '../example/generated_flipper.dart';
+import 'generated_flipper.dart';
 
 Future<InstantiateRequest> deployContract() async {
   final polkadart = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
@@ -75,7 +74,7 @@ Future<InstantiateRequest> deployContract() async {
     address: Uint8List.fromList(alice.publicKey.bytes.toList()),
   );
 
-  final contractFile = File('./example/flipper.wasm');
+  final contractFile = File('flipper.wasm');
 
   final InstantiateRequest result = await contract.new_contract(
     init_value: true,
@@ -96,7 +95,7 @@ Here's an example of interacting with a deployed contract:
 ```dart
 import 'dart:typed_data';
 import 'package:polkadart/polkadart.dart';
-import '../example/generated_flipper.dart';
+import 'generated_flipper.dart';
 
 void callContract(List<int> address) async {
   final polkadart = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));

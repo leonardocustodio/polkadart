@@ -46,11 +46,8 @@ import 'dart:io';
 import 'package:ink_abi/ink_abi_base.dart';
 
 void main() {
-  // Define the path to the Flipper metadata JSON file
-  final String jsonFilePath = './example/flipper.json';
-
   // Read and parse the Flipper contract metadata
-  final json = jsonDecode(File(jsonFilePath).readAsStringSync());
+  final json = jsonDecode(File('flipper.json').readAsStringSync());
 
   // Initialize InkAbi with Flipper metadata
   final InkAbi inkAbi = InkAbi(json);
