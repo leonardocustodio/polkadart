@@ -1,0 +1,101 @@
+---
+title: Interacting with ink! Smart Contracts
+sidebar:
+  order: 6
+---
+
+This guide shows how to interact with ink! smart contracts using Polkadart. We'll demonstrate using the Flipper contract example.
+
+### Prerequisites
+
+Before getting started, you'll need to:
+
+1. [Set up your ink! development environment](https://use.ink/getting-started/setup) - Install Rust and required dependencies
+2. [Create an ink! project](https://use.ink/getting-started/creating-an-ink-project) - Create and test a basic Flipper contract
+3. [Build your contract](https://use.ink/getting-started/building-your-contract) - Compile the contract to Wasm
+4. [Run a Substrate node](https://use.ink/getting-started/running-substrate) - Start a local development node
+
+For more details, refer to the [official ink! documentation](https://use.ink/).
+
+#### Installation
+
+Add the required dependencies to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  ink_abi: any
+  ink_cli: any
+  polkadart: any
+  polkadart_keyring: any
+```
+
+Run:
+```bash
+dart pub get
+```
+
+#### Generate Contract Bindings
+
+Create a file named `generate_contract.dart`:
+
+```dart
+import 'package:ink_cli/ink_cli.dart';
+
+void main() {
+  final fileOutput = FileOutput('generated_flipper.dart');
+  final generator =
+      TypeGenerator(abiFilePath: 'flipper.json', fileOutput: fileOutput);
+  generator.generate();
+  fileOutput.write();
+}
+```
+
+Run this script to generate the contract bindings:
+
+```bash
+dart run generate_contract.dart
+```
+
+#### Deploy and Interact
+
+Create a file named `flipper_demo.dart`:
+
+```dart
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:polkadart/polkadart.dart';
+import 'package:polkadart_keyring/polkadart_keyring.dart';
+import 'generated_flipper.dart';
+
+Future<void> main() async {
+  final provider = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
+  final alice = await KeyPair.sr25519.fromUri('//Alice');
+
+  // Deploy contract
+  final contract = Contract(
+    provider: provider,
+    address: Uint8List.fromList(alice.publicKey.bytes),
+  );
+
+  final result = await contract.new_contract(
+    init_value: true,
+    code: await File('flipper.wasm').readAsBytes(),
+    keyPair: alice,
+  );
+
+  final contractAddress = result.contractAddress;
+  print('Contract deployed at: $contractAddress');
+
+  // Initialize contract instance
+  final deployedContract = Contract(
+    provider: provider,
+    address: Uint8List.fromList(result.contractAddress),
+  );
+
+  await Future.delayed(Duration(seconds: 1));
+
+  // Query initial value
+  final initialValue = await deployedContract.get();
+  print('Initial value: $initialValue');
+}
+```

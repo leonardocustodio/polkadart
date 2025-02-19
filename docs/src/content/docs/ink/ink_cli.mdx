@@ -2,7 +2,7 @@
 title: Ink CLI
 ---
 
-`ink_cli` is a Dart library designed to simplify the process of generating Dart classes and methods for interacting with ink! smart contracts. The first step is to generate type-safe Dart code from your contract metadata using the TypeGenerator.
+`ink_cli` is a Dart library designed to simplify the process of generating Dart classes and methods for interacting with ink! smart contracts. This documentation will show you how to use ink_cli with examples from a simple Flipper contract.
 
 ## Requirements
 
@@ -18,10 +18,10 @@ Add the following dependencies to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
+  ink_abi: any
   ink_cli: any
   polkadart: any
   polkadart_keyring: any
-  ink_abi: any
 ```
 
 Then, run:
@@ -35,77 +35,84 @@ or
   flutter pub get
 ```
 
-## Generate Contract Class
+## Generating Contract Classes
 
-The first step to interact with an ink! contract is to generate the Dart contract class from the contract metadata:
+The core functionality of ink_cli is generating type-safe Dart classes from ink! contract metadata. Here's how to generate contract classes:
 
 ```dart
 import 'dart:io';
 import 'package:ink_cli/ink_cli.dart';
 
-void main() {
-  final String dir = Directory.current.absolute.path;
-  final fileOutput = FileOutput('$dir/example/generated_flipper.dart');
+void generateTypes() {
+  final fileOutput = FileOutput('generated_flipper.dart');
   final generator = TypeGenerator(
-      abiFilePath: './example/flipper.json', fileOutput: fileOutput);
+      abiFilePath: 'flipper.json', fileOutput: fileOutput);
   generator.generate();
   fileOutput.write();
 }
 ```
 
-This will generate a type-safe Dart class with all the contract methods and types that can be imported and used to interact with the deployed contract.
+## Deploying Contracts
 
-## Deploying and Interacting with a Contract
-
-Once the contract class is generated, you can use it to deploy and interact with the smart contract on a Substrate blockchain.
-
-### Example: Deploying the Flipper Contract
+Once classes are generated, you can deploy contracts using the generated code:
 
 ```dart
+import 'dart:io';
+import 'dart:typed_data' show Uint8List;
 import 'dart:typed_data';
+import 'package:ink_cli/ink_cli.dart';
 import 'package:polkadart/polkadart.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'generated_flipper.dart';
 
-void main() async {
+Future<InstantiateRequest> deployContract() async {
   final polkadart = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
-
-  // Using Alice account
-  final alice = KeyPair.sr25519.fromUri('//Alice');
-
-  // Alternative: Using custom seed
-  // final keyPair = KeyPair.sr25519.fromSeed(decodeHex(
-  //     '0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a'));
+  final alice = await KeyPair.sr25519.fromUri('//Alice');
 
   final contract = Contract(
     provider: polkadart,
     address: Uint8List.fromList(alice.publicKey.bytes.toList()),
   );
 
+  final contractFile = File('flipper.wasm');
+
   final InstantiateRequest result = await contract.new_contract(
     init_value: true,
-    code: decodeHex(Constants.flipperCode),
+    code: await contractFile.readAsBytes(),
     keyPair: alice,
   );
-  print('Contract deployed: $result');
+
+  print('Contract address: 0x${encodeHex(result.contractAddress)}');
+
+  return result;
 }
 ```
 
-### Example: Calling Contract Methods
+## Contract Interaction
 
-After generating code, you can call contract functions to flip the boolean value and get its current state.
+Here's an example of interacting with a deployed contract:
 
 ```dart
-Future<void> flip(Contract contract) async {
-  await contract.flip();
-}
+import 'dart:typed_data';
+import 'package:polkadart/polkadart.dart';
+import 'generated_flipper.dart';
 
-Future<bool> get(Contract contract) async {
-  return await contract.get();
+void callContract(List<int> address) async {
+  final polkadart = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
+
+  final contract = Contract(
+    provider: polkadart,
+    address: Uint8List.fromList(address),
+  );
+
+  // Call the get method
+  print('Get value: ${await contract.get()}');
 }
 ```
 
-## Why Use ink_cli?
+## Features
+
+ink_cli provides several key features:
 
 - **Automated Code Generation**: No need to manually write contract interaction code.
 - **Seamless Integration**: Works with `polkadart` for blockchain communication.
