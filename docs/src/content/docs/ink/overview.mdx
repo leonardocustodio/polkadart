@@ -2,57 +2,48 @@
 title: Getting Started with ink! Smart Contracts
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components'
+The Polkadart ink! packages provide tools for interacting with ink! smart contracts from Dart and Flutter applications. You can use these packages to parse contract metadata, generate type-safe bindings, deploy contracts and interact with them.
 
-ink! is a Rust-based domain-specific language for writing WebAssembly smart contracts that provides specialized #[ink(...)] attribute macros enabling secure and efficient smart contract development on Substrate-based chains.
+#### Installation
 
-Before proceeding, ensure you have followed the complete setup guide at https://use.ink/getting-started/setup to configure your development environment with all required dependencies including Rust, cargo-contract, and other tools.
+Add the following to your `pubspec.yaml` file:
 
-#### Creating Your First Contract
-
-Create a new ink! contract project:
-
-```bash title="Create new contract"
-cargo contract new flipper
-cd flipper
+```yaml title="pubspec.yaml"
+dependencies:
+  ink_abi: any
+  ink_cli: any
 ```
 
-Build the contract to generate the Wasm bundle:
+Get the dependencies by running:
 
-```bash title="Build contract"
-cargo contract build
+```bash
+dart pub get
 ```
 
-This will generate the `.contract` bundle file in `target/ink/`.
+#### Sample usage
 
-#### Deploying Your Contract
+```dart title="demo.dart"
+import 'dart:convert';
+import 'dart:io';
+import 'package:ink_abi/ink_abi.dart';
+import 'package:ink_cli/ink_cli.dart';
 
-First, start your local node (if you haven't installed it yet, follow the guide at https://use.ink/getting-started/running-substrate):
+Future<void> main() async {
+  // Parse contract metadata
+  final json = jsonDecode(File('flipper.json').readAsStringSync());
+  final abi = InkAbi(json);
 
-```bash title="Start local node"
-substrate-contracts-node
+  // Generate Dart bindings
+  final generator = TypeGenerator(
+    abiFilePath: 'flipper.json',
+    fileOutput: FileOutput('generated_flipper.dart')
+  );
+  generator.generate();
+
+  print('Contract ABI loaded and bindings generated');
+}
 ```
 
-Then the contract can be deployed using the contracts UI:
+This will load the Flipper contract metadata and generate type-safe Dart bindings for interacting with the contract.
 
-```dart title="Deploy steps"
-1. Go to https://ui.use.ink
-2. Select "Local Node" from the dropdown at top left
-3. Click "Add New Contract" in sidebar
-4. Click "Upload New Contract Code"
-5. Select deployment account (e.g. ALICE)
-6. Name your contract (e.g. "Flipper")
-7. Drag & drop the .contract file
-8. Click "Next"
-9. Accept default settings
-10. Click "Upload and Instantiate"
-```
-
-#### Sample Usage
-
-Learn how to interact with ink! smart contracts using Polkadart tools and libraries.
-
-<CardGrid>
-    <LinkCard title="Parse contract metadata" href="/ink/ink_abi" description="Parse and handle ink! contract metadata"></LinkCard>
-    <LinkCard title="Generate contract bindings" href="/ink/ink_cli" description="Generate type-safe Dart code from contract metadata"></LinkCard>
-</CardGrid>
+The ink! packages allow you to work with smart contracts in a type-safe way, making contract interactions more reliable and maintainable.
