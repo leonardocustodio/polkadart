@@ -9,8 +9,17 @@ class ContractsMethod {
     this.args,
   );
 
+  static ContractsMethod methodCall({
+    required final ContractArgs args,
+  }) {
+    return ContractsMethod._(
+      'call',
+      args,
+    );
+  }
+
   static ContractsMethod instantiateWithCode({
-    required final InstantiateWithCodeArgs args,
+    required final ContractArgs args,
   }) {
     return ContractsMethod._(
       'instantiate_with_code',

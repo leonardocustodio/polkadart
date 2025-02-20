@@ -4,14 +4,10 @@ class ContractBuilder {
   static Future<Uint8List> signAndBuildExtrinsic({
     required final Provider provider,
     required final KeyPair signer,
-    required final InstantiateWithCodeArgs methodArgs,
-    required final scale_codec.Registry registry,
+    required final Uint8List methodCall,
     final dynamic tip = 0,
     final int eraPeriod = 0,
   }) async {
-    final Uint8List methodCall =
-        ContractsMethod.instantiateWithCode(args: methodArgs).encode(registry);
-
     final ContractMeta meta =
         await ContractMeta.fromProvider(provider: provider);
     final int nonce =
@@ -63,6 +59,7 @@ class ContractBuilder {
       nonce: nonce,
       checkMetadataHash: checkMetadataHash,
       signature: payloadSignature,
+      eraPeriod: eraPeriod,
     );
     return signedContractTx;
   }

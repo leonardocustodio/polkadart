@@ -19,9 +19,11 @@ import 'package:polkadart/scale_codec.dart' as scale_codec;
 /// contracts_builder
 // - contract_args
 part 'src/contracts_builder/args/contract_args.dart';
+part 'src/contracts_builder/args/contract_call_args.dart';
 part 'src/contracts_builder/args/instantiate_with_code_args.dart';
 // - core
 part 'src/contracts_builder/core/contract_builder.dart';
+part 'src/contracts_builder/core/contract_mutator.dart';
 part 'src/contracts_builder/core/contract_deployer.dart';
 part 'src/contracts_builder/core/contract_extrinsic_payload.dart';
 part 'src/contracts_builder/core/contract_meta.dart';

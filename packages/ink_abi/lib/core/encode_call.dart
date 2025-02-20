@@ -1,11 +1,12 @@
 part of ink_abi;
 
-Uint8List encodeCall(final Uint8List address, final Uint8List input) {
+Uint8List encodeCall(final Uint8List address, final Uint8List input,
+    final Uint8List contractAddress) {
   final ByteOutput output = ByteOutput();
   // origin
   output.write(address);
   // dest
-  output.write(address);
+  output.write(contractAddress);
   // balance
   U128Codec.codec.encodeTo(BigInt.zero, output);
   // optional gas-limit
