@@ -39,7 +39,8 @@ void main(final List<String> args) async {
 
   try {
     final fileOutput = FileOutput(outputFile);
-    final generator = TypeGenerator(abiFilePath: sourceMetadataFile, fileOutput: fileOutput);
+    final generator =
+        TypeGenerator(abiFilePath: sourceMetadataFile, fileOutput: fileOutput);
     generator.generate();
     fileOutput.write();
     _setBrightGreen();
@@ -69,12 +70,14 @@ ArgParser _initiateParse() {
   );
   parser.addOption(
     _sourceMetadataFile,
-    help: '$_sourceMetadataFile file is used to parse and generate contract methods',
+    help:
+        '$_sourceMetadataFile file is used to parse and generate contract methods',
     abbr: 's',
   );
   parser.addOption(
     _outputFile,
-    help: '$_outputFile will be the file where the generated contract methods will be written',
+    help:
+        '$_outputFile will be the file where the generated contract methods will be written',
     abbr: 'o',
   );
 

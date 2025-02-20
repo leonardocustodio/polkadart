@@ -7,7 +7,8 @@ class GasLimit {
   const GasLimit({required this.refTime, required this.proofSize});
 
   static GasLimit from(final Map<String, dynamic> gasLimit) {
-    if (gasLimit.containsKey('proof_size') && gasLimit.containsKey('ref_time')) {
+    if (gasLimit.containsKey('proof_size') &&
+        gasLimit.containsKey('ref_time')) {
       // We already have th result which we wanted.
       return GasLimit(
         proofSize: BigInt.parse(gasLimit['proof_size']),

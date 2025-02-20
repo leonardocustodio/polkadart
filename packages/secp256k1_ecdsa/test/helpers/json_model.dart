@@ -39,13 +39,19 @@ class InValid {
                 .toList(),
         pointAdd = json['pointAdd'] == null
             ? <PointAdd>[]
-            : (json['pointAdd'] as List).map((value) => PointAdd.fromJson(value)).toList(),
+            : (json['pointAdd'] as List)
+                .map((value) => PointAdd.fromJson(value))
+                .toList(),
         privateAdd = json['privateAdd'] == null
             ? <PrivateAdd>[]
-            : (json['privateAdd'] as List).map((value) => PrivateAdd.fromJson(value)).toList(),
+            : (json['privateAdd'] as List)
+                .map((value) => PrivateAdd.fromJson(value))
+                .toList(),
         privateSub = json['privateSub'] == null
             ? <PrivateSub>[]
-            : (json['privateSub'] as List).map((value) => PrivateSub.fromJson(value)).toList();
+            : (json['privateSub'] as List)
+                .map((value) => PrivateSub.fromJson(value))
+                .toList();
 }
 
 class Valid {
@@ -79,7 +85,9 @@ class Valid {
                 .toList(),
         pointAdd = json['pointAdd'] == null
             ? <PointAdd>[]
-            : (json['pointAdd'] as List).map((value) => PointAdd.fromJson(value)).toList(),
+            : (json['pointAdd'] as List)
+                .map((value) => PointAdd.fromJson(value))
+                .toList(),
         pointAddScalar = json['pointAddScalar'] == null
             ? <PointAddScalar>[]
             : (json['pointAddScalar'] as List)
@@ -87,22 +95,34 @@ class Valid {
                 .toList(),
         isPoint = json['isPoint'] == null
             ? <IsPoint>[]
-            : (json['isPoint'] as List).map((value) => IsPoint.fromJson(value)).toList(),
+            : (json['isPoint'] as List)
+                .map((value) => IsPoint.fromJson(value))
+                .toList(),
         isPrivate = json['isPrivate'] == null
             ? <IsPrivate>[]
-            : (json['isPrivate'] as List).map((value) => IsPrivate.fromJson(value)).toList(),
+            : (json['isPrivate'] as List)
+                .map((value) => IsPrivate.fromJson(value))
+                .toList(),
         privateAdd = json['privateAdd'] == null
             ? <PrivateAdd>[]
-            : (json['privateAdd'] as List).map((value) => PrivateAdd.fromJson(value)).toList(),
+            : (json['privateAdd'] as List)
+                .map((value) => PrivateAdd.fromJson(value))
+                .toList(),
         privateSub = json['privateSub'] == null
             ? <PrivateSub>[]
-            : (json['privateSub'] as List).map((value) => PrivateSub.fromJson(value)).toList(),
+            : (json['privateSub'] as List)
+                .map((value) => PrivateSub.fromJson(value))
+                .toList(),
         add = json['add'] == null
             ? <Add>[]
-            : (json['add'] as List).map((value) => Add.fromJson(value)).toList(),
+            : (json['add'] as List)
+                .map((value) => Add.fromJson(value))
+                .toList(),
         negate = json['negate'] == null
             ? <Negate>[]
-            : (json['negate'] as List).map((value) => Negate.fromJson(value)).toList();
+            : (json['negate'] as List)
+                .map((value) => Negate.fromJson(value))
+                .toList();
 }
 
 class PointMultiply {

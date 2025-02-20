@@ -16,11 +16,13 @@ class StorageEntryMetadataV9 {
       required this.docs});
 
   /// Creates Class Object from `Json`
-  static StorageEntryMetadataV9 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV9(
+  static StorageEntryMetadataV9 fromJson(Map<String, dynamic> map) =>
+      StorageEntryMetadataV9(
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV9.fromJson(map['type']),
-        fallback: Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
+        fallback:
+            Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
 
@@ -50,11 +52,13 @@ class StorageEntryMetadataV10 {
       required this.docs});
 
   /// Creates Class Object from `Json`
-  static StorageEntryMetadataV10 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV10(
+  static StorageEntryMetadataV10 fromJson(Map<String, dynamic> map) =>
+      StorageEntryMetadataV10(
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV10.fromJson(map['type']),
-        fallback: Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
+        fallback:
+            Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
 
@@ -84,7 +88,8 @@ class StorageEntryMetadataV11 {
       required this.docs});
 
   /// Creates Class Object from `Json`
-  static StorageEntryMetadataV11 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV11(
+  static StorageEntryMetadataV11 fromJson(Map<String, dynamic> map) =>
+      StorageEntryMetadataV11(
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV11.fromJson(map['type']),
@@ -118,7 +123,8 @@ class StorageEntryMetadataV13 {
       required this.docs});
 
   /// Creates Class Object from `Json`
-  static StorageEntryMetadataV13 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV13(
+  static StorageEntryMetadataV13 fromJson(Map<String, dynamic> map) =>
+      StorageEntryMetadataV13(
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV13.fromJson(map['type']),
@@ -151,7 +157,8 @@ class StorageEntryMetadataV14 {
       required this.docs});
 
   /// Creates Class Object from `Json`
-  static StorageEntryMetadataV14 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV14(
+  static StorageEntryMetadataV14 fromJson(Map<String, dynamic> map) =>
+      StorageEntryMetadataV14(
         name: map['name'],
         modifier: StorageEntryModifierV9.fromKey(map['modifier']),
         type: StorageEntryTypeV14.fromJson(map['type']),

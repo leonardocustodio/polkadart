@@ -45,7 +45,8 @@ class Variant extends TypeDescriptor {
     }
 
     // Check if all fields are of the same type, otherwise use dynamic
-    final type = findCommonType(fields.map((field) => context.jsonTypeFrom(field.codec)));
+    final type = findCommonType(
+        fields.map((field) => context.jsonTypeFrom(field.codec)));
 
     // If all fields are unnamed, returns Map<String, List<T>>
     if (fields.every((field) => field.originalName == null)) {
@@ -62,13 +63,14 @@ class Variant extends TypeDescriptor {
     }
     if (fields.length == 1 && fields.first.originalName == null) {
       return literalMap({
-        originalName: fields.first.codec.instanceToJson(from, refer(fields.first.sanitizedName))
+        originalName: fields.first.codec
+            .instanceToJson(from, refer(fields.first.sanitizedName))
       });
     }
     if (fields.every((field) => field.originalName == null)) {
       return literalMap({
-        originalName: literalList(
-            fields.map((field) => field.codec.instanceToJson(from, refer(field.sanitizedName))))
+        originalName: literalList(fields.map((field) =>
+            field.codec.instanceToJson(from, refer(field.sanitizedName))))
       });
     }
     return literalMap({
@@ -154,20 +156,23 @@ class VariantBuilder extends TypeBuilder {
     }
 
     final variantType = variant.primitive(from);
-    final args = CallArguments.fromFields(
-        variant.fields, (field) => field.codec.valueFrom(from, input, constant: constant));
+    final args = CallArguments.fromFields(variant.fields,
+        (field) => field.codec.valueFrom(from, input, constant: constant));
     if (constant && args.every((value) => value.isConstant)) {
       return variantType
           .constInstance(args.positional, args.named)
           .asLiteralValue(isConstant: true);
     }
-    return variantType.newInstance(args.positional, args.named).asLiteralValue();
+    return variantType
+        .newInstance(args.positional, args.named)
+        .asLiteralValue();
   }
 
   @override
   TypeReference jsonType(bool isCircular, TypeBuilderContext context) {
     // For Simple Variants json type is String
-    if (variants.isNotEmpty && variants.every((variant) => variant.fields.isEmpty)) {
+    if (variants.isNotEmpty &&
+        variants.every((variant) => variant.fields.isEmpty)) {
       return refs.string.type as TypeReference;
     }
 
@@ -176,8 +181,8 @@ class VariantBuilder extends TypeBuilder {
     }
 
     // Check if all variants are of the same type, otherwise use Map<String, dynamic>
-    final complexJsonType =
-        findCommonType(variants.map((variant) => context.jsonTypeFrom(variant)));
+    final complexJsonType = findCommonType(
+        variants.map((variant) => context.jsonTypeFrom(variant)));
     if (complexJsonType.symbol != 'Map') {
       throw Exception('$name: Invalid complex variant type: $complexJsonType');
     }
@@ -192,25 +197,29 @@ class VariantBuilder extends TypeBuilder {
   @override
   GeneratedOutput build() {
     // Simple Variants
-    if (variants.isNotEmpty && variants.every((variant) => variant.fields.isEmpty)) {
+    if (variants.isNotEmpty &&
+        variants.every((variant) => variant.fields.isEmpty)) {
       final simpleEnum = classbuilder.createSimpleVariantEnum(this);
       final simpleCodec = classbuilder.createSimpleVariantCodec(this);
-      return GeneratedOutput(classes: [simpleCodec], enums: [simpleEnum], typedefs: []);
+      return GeneratedOutput(
+          classes: [simpleCodec], enums: [simpleEnum], typedefs: []);
     }
 
     // Complex Variants
     final dirname = p.dirname(filePath);
     final builderContext = TypeBuilderContext(from: dirname);
-    final variantsJsonType =
-        variants.map((variant) => builderContext.jsonTypeFrom(variant)).toList();
+    final variantsJsonType = variants
+        .map((variant) => builderContext.jsonTypeFrom(variant))
+        .toList();
     final baseClassJsonType = findCommonType(variantsJsonType);
-    final baseClass = classbuilder.createVariantBaseClass(this, baseClassJsonType);
+    final baseClass =
+        classbuilder.createVariantBaseClass(this, baseClassJsonType);
     final valuesClass = classbuilder.createVariantValuesClass(this);
     final codecClass = classbuilder.createVariantCodec(this);
     final classes = [baseClass, valuesClass, codecClass];
     for (int i = 0; i < variants.length; i++) {
-      classes
-          .add(classbuilder.createVariantClass(filePath, name, variants[i], variantsJsonType[i]));
+      classes.add(classbuilder.createVariantClass(
+          filePath, name, variants[i], variantsJsonType[i]));
     }
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }

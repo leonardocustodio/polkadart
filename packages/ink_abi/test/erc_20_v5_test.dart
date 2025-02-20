@@ -7,7 +7,8 @@ import 'package:test/test.dart';
 
 void main() {
   final String jsonFilePath = './test/test_resources/v5_metadata.json';
-  final Map<String, dynamic> metadataV5 = jsonDecode(File(jsonFilePath).readAsStringSync());
+  final Map<String, dynamic> metadataV5 =
+      jsonDecode(File(jsonFilePath).readAsStringSync());
   final InkAbi inkAbi = InkAbi(metadataV5);
 
   test('decode constructor', () {
@@ -30,7 +31,8 @@ void main() {
         '0xda002226d93b2c422b95b780a2493e738716050ccad6ddbd7d58f1943bc6373d');
     expect('0x${encodeHex(decoded['spender'].cast<int>())}',
         '0xa69162c917081d15673558e13607b1b2261f2ae7b21ba911c3cd676767251266');
-    expect(decoded['value'].toString(), BigInt.tryParse('1000000000000000000').toString());
+    expect(decoded['value'].toString(),
+        BigInt.tryParse('1000000000000000000').toString());
   });
 
   test('decode anonymous event', () {
@@ -45,7 +47,8 @@ void main() {
         '0xda002226d93b2c422b95b780a2493e738716050ccad6ddbd7d58f1943bc6373d');
     expect(('0x${encodeHex(decoded['to'].value.cast<int>())}'),
         '0xa69162c917081d15673558e13607b1b2261f2ae7b21ba911c3cd676767251266');
-    expect(decoded['value'].toString(), BigInt.tryParse('100000000000000000').toString());
+    expect(decoded['value'].toString(),
+        BigInt.tryParse('100000000000000000').toString());
   });
 
   test('decode message', () {
@@ -54,6 +57,7 @@ void main() {
     final decoded = inkAbi.decodeMessage(data);
     expect(('0x${encodeHex(decoded.value['to'].cast<int>())}'),
         '0xa69162c917081d15673558e13607b1b2261f2ae7b21ba911c3cd676767251266');
-    expect(decoded.value['value'].toString(), BigInt.tryParse('100000000000000000').toString());
+    expect(decoded.value['value'].toString(),
+        BigInt.tryParse('100000000000000000').toString());
   });
 }

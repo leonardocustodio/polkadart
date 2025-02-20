@@ -6,7 +6,10 @@ import 'package:base_x/base_x.dart' show BaseXCodec;
 import 'package:cryptography/dart.dart' show DartBlake2b;
 
 import './exceptions.dart'
-    show InvalidCheckSumException, InvalidPrefixException, BadAddressLengthException;
+    show
+        InvalidCheckSumException,
+        InvalidPrefixException,
+        BadAddressLengthException;
 
 /// [Private]
 ///
@@ -17,7 +20,8 @@ const List<int> _hashPrefix = [83, 83, 53, 56, 80, 82, 69];
 /// [Private]
 ///
 /// Fast base encoding / decoding of any given alphabet using bitcoin style leading zero compression.
-final _base58 = BaseXCodec('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
+final _base58 =
+    BaseXCodec('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
 class Address extends Equatable {
   ///

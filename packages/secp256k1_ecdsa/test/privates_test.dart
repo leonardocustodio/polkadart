@@ -7,7 +7,8 @@ import 'helpers/utils.dart';
 
 void main() {
   final PointModel points =
-      getJsonFor('test/test_resources/points.json', ModelsType.points) as PointModel;
+      getJsonFor('test/test_resources/points.json', ModelsType.points)
+          as PointModel;
 
   group('Privates Test', () {
     test('fromHex() assertValidity', () {
@@ -47,7 +48,8 @@ void main() {
 
     test('#add(other)', () {
       for (final vector in points.valid.pointAdd) {
-        final (String P, String Q, String? expected) = (vector.p, vector.q, vector.expected);
+        final (String P, String Q, String? expected) =
+            (vector.p, vector.q, vector.expected);
         final gotP = Point.fromHex(P);
         final gotQ = Point.fromHex(Q);
         if (expected != null) {
@@ -62,12 +64,14 @@ void main() {
 
     test('#multiply(privateKey)', () {
       for (final vector in points.valid.pointMultiply) {
-        final (String P, String d, String? expected) = (vector.p, vector.d, vector.expected);
+        final (String P, String d, String? expected) =
+            (vector.p, vector.d, vector.expected);
         final p = Point.fromHex(P);
         if (expected != null) {
           expect(p.multiply(hexToBigInt(d)).toHex(true), expected, reason: P);
         } else {
-          expect(() => p.multiply(hexToBigInt(d)).toHex(true), throwsA(isA<Exception>()));
+          expect(() => p.multiply(hexToBigInt(d)).toHex(true),
+              throwsA(isA<Exception>()));
         }
       }
 

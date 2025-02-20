@@ -12,7 +12,8 @@ class TupleCodecInterface extends CodecInterface {
 
   static TupleCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
-      throw Exception('Exception as didn\'t found the type for this json: $json');
+      throw Exception(
+          'Exception as didn\'t found the type for this json: $json');
     }
     final int id = json['id'];
     final Map<String, dynamic> typeObject = json['type'];

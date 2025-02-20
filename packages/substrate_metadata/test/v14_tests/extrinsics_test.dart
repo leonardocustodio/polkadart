@@ -23,7 +23,8 @@ void main() {
 
       final output = HexOutput();
 
-      ExtrinsicsCodec(chainInfo: chainInfo).encodeTo(_decodedExtrinsicMap(), output);
+      ExtrinsicsCodec(chainInfo: chainInfo)
+          .encodeTo(_decodedExtrinsicMap(), output);
 
       expect(output.toString(), _encodedExtrinsicHex);
     });
@@ -35,9 +36,11 @@ void main() {
 
       final input = Input.fromHex(_encodedExtrinsicHex);
 
-      final dynamic decoded = ExtrinsicsCodec(chainInfo: chainInfo).decode(input);
+      final dynamic decoded =
+          ExtrinsicsCodec(chainInfo: chainInfo).decode(input);
 
-      expect((decoded as Map<String, dynamic>).toJson(), _decodedExtrinsicMap().toJson());
+      expect((decoded as Map<String, dynamic>).toJson(),
+          _decodedExtrinsicMap().toJson());
     });
   });
 }

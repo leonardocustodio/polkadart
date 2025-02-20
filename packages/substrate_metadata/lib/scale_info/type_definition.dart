@@ -70,7 +70,9 @@ class $TypeDefCodec implements Codec<TypeDef> {
       case TypeDefComposite:
         {
           U8Codec.codec.encodeTo(0, output);
-          $TypeDefCompositeCodec._().encodeTo(value as TypeDefComposite, output);
+          $TypeDefCompositeCodec
+              ._()
+              .encodeTo(value as TypeDefComposite, output);
           break;
         }
       case TypeDefVariant:
@@ -100,7 +102,9 @@ class $TypeDefCodec implements Codec<TypeDef> {
       case TypeDefPrimitive:
         {
           U8Codec.codec.encodeTo(5, output);
-          $TypeDefPrimitiveCodec._().encodeTo(value as TypeDefPrimitive, output);
+          $TypeDefPrimitiveCodec
+              ._()
+              .encodeTo(value as TypeDefPrimitive, output);
           break;
         }
       case TypeDefCompact:
@@ -112,11 +116,14 @@ class $TypeDefCodec implements Codec<TypeDef> {
       case TypeDefBitSequence:
         {
           U8Codec.codec.encodeTo(7, output);
-          $TypeDefBitSequenceCodec._().encodeTo(value as TypeDefBitSequence, output);
+          $TypeDefBitSequenceCodec
+              ._()
+              .encodeTo(value as TypeDefBitSequence, output);
           break;
         }
       default:
-        throw Exception('Unknown type definition runtime type ${value.runtimeType}');
+        throw Exception(
+            'Unknown type definition runtime type ${value.runtimeType}');
     }
   }
 
@@ -124,7 +131,8 @@ class $TypeDefCodec implements Codec<TypeDef> {
   int sizeHint(TypeDef value) {
     switch (value.runtimeType) {
       case TypeDefComposite:
-        return $TypeDefCompositeCodec._().sizeHint(value as TypeDefComposite) + 1;
+        return $TypeDefCompositeCodec._().sizeHint(value as TypeDefComposite) +
+            1;
       case TypeDefVariant:
         return $TypeDefVariantCodec._().sizeHint(value as TypeDefVariant) + 1;
       case TypeDefSequence:
@@ -134,11 +142,15 @@ class $TypeDefCodec implements Codec<TypeDef> {
       case TypeDefTuple:
         return $TypeDefTupleCodec._().sizeHint(value as TypeDefTuple) + 1;
       case TypeDefPrimitive:
-        return $TypeDefPrimitiveCodec._().sizeHint(value as TypeDefPrimitive) + 1;
+        return $TypeDefPrimitiveCodec._().sizeHint(value as TypeDefPrimitive) +
+            1;
       case TypeDefCompact:
         return $TypeDefCompactCodec._().sizeHint(value as TypeDefCompact) + 1;
       case TypeDefBitSequence:
-        return $TypeDefBitSequenceCodec._().sizeHint(value as TypeDefBitSequence) + 1;
+        return $TypeDefBitSequenceCodec
+                ._()
+                .sizeHint(value as TypeDefBitSequence) +
+            1;
       default:
         throw Exception('Unknown type definition variant $value');
     }
@@ -631,7 +643,8 @@ class TypeDefBitSequence extends TypeDef {
   static const $TypeDefCodec codec = TypeDef.codec;
 
   /// Creates a new bit sequence type.
-  const TypeDefBitSequence({required this.bitStoreType, required this.bitOrderType});
+  const TypeDefBitSequence(
+      {required this.bitStoreType, required this.bitOrderType});
 
   @override
   Set<int> typeDependencies() {
@@ -652,7 +665,8 @@ class $TypeDefBitSequenceCodec implements Codec<TypeDefBitSequence> {
   TypeDefBitSequence decode(Input input) {
     final bitStoreType = TypeIdCodec.codec.decode(input);
     final bitOrderType = TypeIdCodec.codec.decode(input);
-    return TypeDefBitSequence(bitStoreType: bitStoreType, bitOrderType: bitOrderType);
+    return TypeDefBitSequence(
+        bitStoreType: bitStoreType, bitOrderType: bitOrderType);
   }
 
   @override

@@ -25,11 +25,16 @@ class Utilities {
       result[i] = random.nextInt(256);
     }
     BigInt bigInt = BigInt.parse(
-        result.reversed.toList().map((byte) => byte.toRadixString(16).padLeft(2, '0')).join(''),
+        result.reversed
+            .toList()
+            .map((byte) => byte.toRadixString(16).padLeft(2, '0'))
+            .join(''),
         radix: 16);
     bigInt &= max; // Ensures the number is within the range.
 
-    return bigInt < min ? min : bigInt; // Ensures the number is not below the minimum.
+    return bigInt < min
+        ? min
+        : bigInt; // Ensures the number is not below the minimum.
   }
 
   /// Hexadecimal to bytes
@@ -130,7 +135,8 @@ class Utilities {
   /// if a number is bigger than CURVE.n/2
   static bool moreThanHalfN(BigInt n) => n > (N >> 1);
 
-  static String _padh(dynamic n, int pad) => n.toRadixString(16).padLeft(pad, '0');
+  static String _padh(dynamic n, int pad) =>
+      n.toRadixString(16).padLeft(pad, '0');
 
   static String padhBigInt(BigInt n, int pad) => _padh(n, pad);
 
@@ -237,7 +243,8 @@ class Utilities {
     return bytes;
   }
 
-  static (Uint8List seed, K2SigFunc k2sig) prepSig(Uint8List message, BigInt privateKey,
+  static (Uint8List seed, K2SigFunc k2sig) prepSig(
+      Uint8List message, BigInt privateKey,
       {RandomBytesFunc? randomBytesFunc, bool? lowS, Uint8List? extraEntropy}) {
     // RFC6979 3.2: we skip step A
     lowS ??= true;
@@ -299,7 +306,9 @@ class Utilities {
     // So, a special, fast case. Paper: "Square Roots from 1;24,51,10 to Dan Shanks".
     var r = BigInt.one;
     // powMod: modular exponentiation.
-    for (var num = n, e = (P + BigInt.one) ~/ BigInt.from(4); e > BigInt.zero; e >>= 1) {
+    for (var num = n, e = (P + BigInt.one) ~/ BigInt.from(4);
+        e > BigInt.zero;
+        e >>= 1) {
       // Uses exponentiation by squaring.
       if ((e & BigInt.one) == BigInt.one) {
         r = (r * num) % P;

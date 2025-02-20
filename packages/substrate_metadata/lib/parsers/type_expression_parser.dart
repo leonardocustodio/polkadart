@@ -7,7 +7,8 @@ class TypeExpParser {
 
   ///
   /// Cached copy of tokenized types for faster processing
-  static final Map<String, RegistryType> _tokenizedTypes = <String, RegistryType>{};
+  static final Map<String, RegistryType> _tokenizedTypes =
+      <String, RegistryType>{};
 
   TypeExpParser._();
 
@@ -142,7 +143,9 @@ class TypeExpParser {
       name = nameTok;
     }
     while (isNotEmpty(_tok('::')) && isNotEmpty(item = _name())) {}
-    if (name == 'InherentOfflineReport' && name == trait && item == 'Inherent') {
+    if (name == 'InherentOfflineReport' &&
+        name == trait &&
+        item == 'Inherent') {
     } else if (name == 'exec' && item == 'StorageKey') {
       name = 'ContractStorageKey';
     } else if (name == 'Lookup' && item == 'Source') {
@@ -153,9 +156,9 @@ class TypeExpParser {
       _assert(trait != 'HasCompact');
       name = item!;
     } else if (trait == 'HasCompact') {
-      return RegistryNamedType(
-          name: 'Compact',
-          params: <dynamic>[RegistryNamedType(name: name, params: _typeParameters())]);
+      return RegistryNamedType(name: 'Compact', params: <dynamic>[
+        RegistryNamedType(name: name, params: _typeParameters())
+      ]);
     }
     return RegistryNamedType(name: name, params: _typeParameters());
   }
@@ -192,7 +195,8 @@ class TypeExpParser {
     _assertTok('u8');
     _assertTok(']');
     return RegistryNamedType(
-        name: 'Vec', params: <dynamic>[RegistryNamedType(name: 'u8', params: <dynamic>[])]);
+        name: 'Vec',
+        params: <dynamic>[RegistryNamedType(name: 'u8', params: <dynamic>[])]);
   }
 
   RegistryType? _anyType() {
@@ -275,7 +279,8 @@ class RegistryNamedType extends RegistryType with EquatableMixin {
 
   /// list items can be of type -> `RegistryType` or `int`
   final List<dynamic> params;
-  const RegistryNamedType({required this.name, required this.params}) : super(kind: 'named');
+  const RegistryNamedType({required this.name, required this.params})
+      : super(kind: 'named');
 
   @override
   List<Object?> get props => [name, params, 'named'];
@@ -288,7 +293,8 @@ class RegistryNamedType extends RegistryType with EquatableMixin {
 class RegistryArrayType extends RegistryType with EquatableMixin {
   final RegistryType item;
   final int length;
-  const RegistryArrayType({required this.item, required this.length}) : super(kind: 'array');
+  const RegistryArrayType({required this.item, required this.length})
+      : super(kind: 'array');
 
   @override
   List<Object?> get props => [item, length, 'array'];

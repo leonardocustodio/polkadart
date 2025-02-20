@@ -62,7 +62,8 @@ const Set<String> reservedClassnNames = {
 };
 
 bool isValidClassName(String value) =>
-    RegExp(r'^[A-Z][a-zA-Z0-9]*$').hasMatch(value) && !reservedClassnNames.contains(value);
+    RegExp(r'^[A-Z][a-zA-Z0-9]*$').hasMatch(value) &&
+    !reservedClassnNames.contains(value);
 
 String sanitize(String name, {recase = true}) {
   if (name.startsWith('r#')) {
@@ -110,9 +111,8 @@ Expression bigIntToExpression(BigInt value) {
   }
 
   // Otherwise, use string parser
-  return constants.bigInt
-      .property('parse')
-      .call([literalString(value.toRadixString(10))], {'radix': literalNum(10)});
+  return constants.bigInt.property('parse').call(
+      [literalString(value.toRadixString(10))], {'radix': literalNum(10)});
 }
 
 // Return a compatible type for two types.
@@ -147,8 +147,8 @@ TypeReference _toCompatibleType(TypeReference a, TypeReference b) {
 
     // Recusively convert subtypes
     for (int i = 0; i < a.types.length; i++) {
-      final type =
-          _toCompatibleType(a.types[i].type as TypeReference, b.types[i].type as TypeReference);
+      final type = _toCompatibleType(
+          a.types[i].type as TypeReference, b.types[i].type as TypeReference);
       builder.types.add(type);
     }
 

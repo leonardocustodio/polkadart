@@ -16,7 +16,8 @@ void main() {
   final metadataV14 = metatadaJson['v14'];
   group('Events Decode/Encode: ', () {
     test('Encode Test', () {
-      final DecodedMetadata metadata = MetadataDecoder.instance.decode(metadataV14);
+      final DecodedMetadata metadata =
+          MetadataDecoder.instance.decode(metadataV14);
 
       final ChainInfo chainInfo = ChainInfo.fromMetadata(metadata);
 
@@ -34,9 +35,11 @@ void main() {
 
       final input = Input.fromHex(_encodedEventsHex);
 
-      final List<dynamic> decodedEvents = chainInfo.scaleCodec.decode('EventCodec', input);
+      final List<dynamic> decodedEvents =
+          chainInfo.scaleCodec.decode('EventCodec', input);
 
-      expect((_decodedEvents() as List<dynamic>).toJson(), decodedEvents.toJson());
+      expect(
+          (_decodedEvents() as List<dynamic>).toJson(), decodedEvents.toJson());
     });
   });
 }
@@ -236,8 +239,8 @@ dynamic _decodedEvents() {
     },
     {
       'phase': MapEntry('ApplyExtrinsic', 2),
-      'event':
-          MapEntry('Treasury', MapEntry('Deposit', {'BalanceOf<T, I>': BigInt.from(124800012)})),
+      'event': MapEntry('Treasury',
+          MapEntry('Deposit', {'BalanceOf<T, I>': BigInt.from(124800012)})),
       'topics': []
     },
     {
@@ -288,7 +291,11 @@ dynamic _decodedEvents() {
       'event': MapEntry(
           'System',
           MapEntry('ExtrinsicSuccess', {
-            'DispatchInfo': {'weight': BigInt.from(191562000), 'class': 'Normal', 'pays_fee': 'Yes'}
+            'DispatchInfo': {
+              'weight': BigInt.from(191562000),
+              'class': 'Normal',
+              'pays_fee': 'Yes'
+            }
           })),
       'topics': []
     },
@@ -456,8 +463,8 @@ dynamic _decodedEvents() {
     },
     {
       'phase': MapEntry('ApplyExtrinsic', 3),
-      'event':
-          MapEntry('Treasury', MapEntry('Deposit', {'BalanceOf<T, I>': BigInt.from(124800012)})),
+      'event': MapEntry('Treasury',
+          MapEntry('Deposit', {'BalanceOf<T, I>': BigInt.from(124800012)})),
       'topics': []
     },
     {
@@ -508,7 +515,11 @@ dynamic _decodedEvents() {
       'event': MapEntry(
           'System',
           MapEntry('ExtrinsicSuccess', {
-            'DispatchInfo': {'weight': BigInt.from(191562000), 'class': 'Normal', 'pays_fee': 'Yes'}
+            'DispatchInfo': {
+              'weight': BigInt.from(191562000),
+              'class': 'Normal',
+              'pays_fee': 'Yes'
+            }
           })),
       'topics': []
     }

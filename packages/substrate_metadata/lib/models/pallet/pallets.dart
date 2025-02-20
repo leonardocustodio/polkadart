@@ -33,7 +33,9 @@ class PalletMetadataV14 {
       obj.storage = PalletStorageMetadataV14.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null && map['calls'] is Option && (map['calls'] as Option).value != null) {
+    if (map['calls'] != null &&
+        map['calls'] is Option &&
+        (map['calls'] as Option).value != null) {
       obj.calls = PalletCallMetadataV14.fromJson(map['calls'].value);
     }
 
@@ -66,8 +68,9 @@ class PalletMetadataV14 {
     final localEvents = events?.toJson();
     data['events'] = localEvents != null ? Option.some(localEvents) : None;
 
-    data['constants'] =
-        constants.map((PalletConstantMetadataV14 value) => value.toJson()).toList(growable: false);
+    data['constants'] = constants
+        .map((PalletConstantMetadataV14 value) => value.toJson())
+        .toList(growable: false);
 
     final localErrors = errors?.toJson();
     data['errors'] = localErrors != null ? Option.some(localErrors) : None;
@@ -84,17 +87,19 @@ class PalletStorageMetadataV14 {
   const PalletStorageMetadataV14({required this.prefix, required this.items});
 
   /// Creates Class Object from `Json`
-  static PalletStorageMetadataV14 fromJson(Map<String, dynamic> map) => PalletStorageMetadataV14(
-      prefix: map['prefix'],
-      items: (map['items'] as List)
-          .map((value) => StorageEntryMetadataV14.fromJson(value))
-          .toList(growable: false));
+  static PalletStorageMetadataV14 fromJson(Map<String, dynamic> map) =>
+      PalletStorageMetadataV14(
+          prefix: map['prefix'],
+          items: (map['items'] as List)
+              .map((value) => StorageEntryMetadataV14.fromJson(value))
+              .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'prefix': prefix,
-        'items':
-            items.map((StorageEntryMetadataV14 value) => value.toJson()).toList(growable: false),
+        'items': items
+            .map((StorageEntryMetadataV14 value) => value.toJson())
+            .toList(growable: false),
       };
 }
 
@@ -133,14 +138,18 @@ class PalletConstantMetadataV14 {
   final List<String> docs;
 
   const PalletConstantMetadataV14(
-      {required this.name, required this.type, required this.value, required this.docs});
+      {required this.name,
+      required this.type,
+      required this.value,
+      required this.docs});
 
   /// Creates Class Object from `Json`
-  static PalletConstantMetadataV14 fromJson(Map<String, dynamic> map) => PalletConstantMetadataV14(
-      name: map['name'],
-      type: map['type'],
-      value: Uint8List.fromList((map['value'] as List).cast<int>()),
-      docs: (map['docs'] as List).cast<String>());
+  static PalletConstantMetadataV14 fromJson(Map<String, dynamic> map) =>
+      PalletConstantMetadataV14(
+          name: map['name'],
+          type: map['type'],
+          value: Uint8List.fromList((map['value'] as List).cast<int>()),
+          docs: (map['docs'] as List).cast<String>());
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {

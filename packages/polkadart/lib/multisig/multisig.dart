@@ -56,8 +56,11 @@ class Multisig {
   /// Fetches the multisig storage from the chain.
   ///
   /// This will return null if first approval of type`ApproveAsMulti` is not yet done.
-  static Future<MultisigStorage?> fetchMultisigStorage(Provider provider, Duration storageKeyDelay,
-      Uint8List callHash, Uint8List multisigBytes) async {
+  static Future<MultisigStorage?> fetchMultisigStorage(
+      Provider provider,
+      Duration storageKeyDelay,
+      Uint8List callHash,
+      Uint8List multisigBytes) async {
     //
     // Multisig Storage creation
     MultisigStorage? decoded;
@@ -71,10 +74,12 @@ class Multisig {
 
       //
       // Fetch the storage from the chain.
-      final Uint8List? multisigStorage = await fetchStorage(provider, multisigStorageKey);
+      final Uint8List? multisigStorage =
+          await fetchStorage(provider, multisigStorageKey);
 
       if (multisigStorage != null) {
-        decoded = MultisigStorage.decodeFrom(ByteInput.fromBytes(multisigStorage));
+        decoded =
+            MultisigStorage.decodeFrom(ByteInput.fromBytes(multisigStorage));
       }
     }
     return decoded;
@@ -104,13 +109,15 @@ class Multisig {
       transactionVersion: meta.transactionVersion,
     );
 
-    final Uint8List signingPayload =
-        unsignedApprovalPayload.encode(meta.runtimeMetadata.chainInfo.scaleCodec.registry);
+    final Uint8List signingPayload = unsignedApprovalPayload
+        .encode(meta.runtimeMetadata.chainInfo.scaleCodec.registry);
 
     final Uint8List signature = sign(signer, signingPayload);
 
     final ExtrinsicPayload extrinsicPayload = ExtrinsicPayload.fromPayload(
-        unsignedApprovalPayload, Address.decode(signer.address).pubkey, signature);
+        unsignedApprovalPayload,
+        Address.decode(signer.address).pubkey,
+        signature);
 
     final Uint8List signedTx = extrinsicPayload.encode(
       meta.runtimeMetadata.chainInfo.scaleCodec.registry,
@@ -138,28 +145,35 @@ class Multisig {
     int tip = 0,
     int eraPeriod = 64,
   }) async {
-    final MultisigStorage? multisigStorage = await fetchMultisigStorage(provider, storageKeyDelay,
-        multisigResponse.callHash.hexToUint8List(), multisigResponse.multisigBytes);
+    final MultisigStorage? multisigStorage = await fetchMultisigStorage(
+        provider,
+        storageKeyDelay,
+        multisigResponse.callHash.hexToUint8List(),
+        multisigResponse.multisigBytes);
 
-    assertion(multisigStorage != null, 'The multisig storage does not exist on the chain.');
+    assertion(multisigStorage != null,
+        'The multisig storage does not exist on the chain.');
 
-    if (multisigStorage!.isApprovedByAll(multisigResponse.allSignatories.length)) {
+    if (multisigStorage!
+        .isApprovedByAll(multisigResponse.allSignatories.length)) {
       return false;
     }
 
-    if (multisigStorage.isOwner(signer.publicKey.bytes.toUint8List()) == false) {
+    if (multisigStorage.isOwner(signer.publicKey.bytes.toUint8List()) ==
+        false) {
       throw OwnerCallException('Only the owner can cancel the multisig call.');
     }
 
     final meta = await MultiSigMeta.fromProvider(provider: provider);
-    final signatories =
-        Signatories.fromAddresses(multisigResponse.allSignatories, multisigResponse.threshold);
+    final signatories = Signatories.fromAddresses(
+        multisigResponse.allSignatories, multisigResponse.threshold);
 
     await _createAndSubmitPayload(
       meta: meta,
       method: cancelAsMultiMethod(
         chainInfo: meta.runtimeMetadata.chainInfo,
-        otherSignatories: signatories.signatoriesExcludeBytes(signer.publicKey.bytes),
+        otherSignatories:
+            signatories.signatoriesExcludeBytes(signer.publicKey.bytes),
         threshold: multisigResponse.threshold,
         callHash: Uint8List.fromList(hex.decode(multisigResponse.callHash)),
         multiSigStorage: multisigStorage,
@@ -184,35 +198,42 @@ class Multisig {
     int tip = 0,
     int eraPeriod = 64,
   }) async {
-    final MultisigStorage? multisigStorage = await fetchMultisigStorage(provider, storageKeyDelay,
-        multisigResponse.callHash.hexToUint8List(), multisigResponse.multisigBytes);
+    final MultisigStorage? multisigStorage = await fetchMultisigStorage(
+        provider,
+        storageKeyDelay,
+        multisigResponse.callHash.hexToUint8List(),
+        multisigResponse.multisigBytes);
 
     if (multisigStorage != null) {
-      if (multisigStorage.isApprovedByAll(multisigResponse.allSignatories.length)) {
+      if (multisigStorage
+          .isApprovedByAll(multisigResponse.allSignatories.length)) {
         return true;
       }
 
-      if (multisigStorage.isAlreadyApprovedBy(signer.publicKey.bytes.toUint8List())) {
+      if (multisigStorage
+          .isAlreadyApprovedBy(signer.publicKey.bytes.toUint8List())) {
         return true;
       }
 
       // Cannot do approveAsMulti if only one approval is left.
       // The last approval should be done with asMulti.
-      if (multisigStorage.isOnlyOneApprovalLeft(multisigResponse.allSignatories.length)) {
+      if (multisigStorage
+          .isOnlyOneApprovalLeft(multisigResponse.allSignatories.length)) {
         throw FinalApprovalException(
             'The final approval call should be done with method `asMulti(...)` to execute the transaction.');
       }
     }
 
     final meta = await MultiSigMeta.fromProvider(provider: provider);
-    final signatories =
-        Signatories.fromAddresses(multisigResponse.allSignatories, multisigResponse.threshold);
+    final signatories = Signatories.fromAddresses(
+        multisigResponse.allSignatories, multisigResponse.threshold);
 
     await _createAndSubmitPayload(
       meta: meta,
       method: approveAsMultiMethod(
         chainInfo: meta.runtimeMetadata.chainInfo,
-        otherSignatories: signatories.signatoriesExcludeBytes(signer.publicKey.bytes),
+        otherSignatories:
+            signatories.signatoriesExcludeBytes(signer.publicKey.bytes),
         threshold: multisigResponse.threshold,
         callHash: Uint8List.fromList(hex.decode(multisigResponse.callHash)),
         maxWeight: Weight(
@@ -241,29 +262,35 @@ class Multisig {
     int tip = 0,
     int eraPeriod = 64,
   }) async {
-    final MultisigStorage? multisigStorage = await fetchMultisigStorage(provider, storageKeyDelay,
-        multisigResponse.callHash.hexToUint8List(), multisigResponse.multisigBytes);
+    final MultisigStorage? multisigStorage = await fetchMultisigStorage(
+        provider,
+        storageKeyDelay,
+        multisigResponse.callHash.hexToUint8List(),
+        multisigResponse.multisigBytes);
 
     assertion(multisigStorage != null,
         'The multisig storage does not exist on the chain. At least one approval with `approveAsMulti` should be done by signatory before calling `asMulti`.');
 
-    if (multisigStorage!.isApprovedByAll(multisigResponse.allSignatories.length)) {
+    if (multisigStorage!
+        .isApprovedByAll(multisigResponse.allSignatories.length)) {
       return true;
     }
 
-    if (multisigStorage.isAlreadyApprovedBy(signer.publicKey.bytes.toUint8List())) {
+    if (multisigStorage
+        .isAlreadyApprovedBy(signer.publicKey.bytes.toUint8List())) {
       return true;
     }
 
     final meta = await MultiSigMeta.fromProvider(provider: provider);
-    final signatories =
-        Signatories.fromAddresses(multisigResponse.allSignatories, multisigResponse.threshold);
+    final signatories = Signatories.fromAddresses(
+        multisigResponse.allSignatories, multisigResponse.threshold);
 
     await _createAndSubmitPayload(
       meta: meta,
       method: asMultiMethod(
         chainInfo: meta.runtimeMetadata.chainInfo,
-        otherSignatories: signatories.signatoriesExcludeBytes(signer.publicKey.bytes),
+        otherSignatories:
+            signatories.signatoriesExcludeBytes(signer.publicKey.bytes),
         threshold: multisigResponse.threshold,
         callData: Uint8List.fromList(hex.decode(multisigResponse.callData)),
         maxWeight: Weight(
@@ -304,7 +331,8 @@ class Multisig {
     );
     final ByteOutput output = ByteOutput();
 
-    chainInfo.scaleCodec.registry.codecs['Call']!.encodeTo(cancelArgument, output);
+    chainInfo.scaleCodec.registry.codecs['Call']!
+        .encodeTo(cancelArgument, output);
     return output.toBytes();
   }
 
@@ -327,7 +355,8 @@ class Multisig {
           'threshold': threshold,
           'other_signatories': otherSignatories,
           'maybe_timepoint': multiSigStorage?.timePoint != null
-              ? Option<Map<String, dynamic>>.some(multiSigStorage!.timePoint.toMap())
+              ? Option<Map<String, dynamic>>.some(
+                  multiSigStorage!.timePoint.toMap())
               : Option<Map<String, dynamic>>.none(),
           'call_hash': callHash,
           'max_weight': maxWeight.toMap(),
@@ -336,7 +365,8 @@ class Multisig {
     );
     final ByteOutput output = ByteOutput();
 
-    chainInfo.scaleCodec.registry.codecs['Call']!.encodeTo(approvalArgument, output);
+    chainInfo.scaleCodec.registry.codecs['Call']!
+        .encodeTo(approvalArgument, output);
     return output.toBytes();
   }
 
@@ -349,8 +379,8 @@ class Multisig {
       required Uint8List callData,
       required Weight maxWeight,
       required MultisigStorage multiSigStorage}) {
-    final decodedCall =
-        chainInfo.scaleCodec.registry.codecs['Call']!.decode(ByteInput.fromBytes(callData));
+    final decodedCall = chainInfo.scaleCodec.registry.codecs['Call']!
+        .decode(ByteInput.fromBytes(callData));
     final approvalArgument = MapEntry(
       'Multisig',
       MapEntry(
@@ -358,7 +388,8 @@ class Multisig {
         {
           'threshold': threshold,
           'other_signatories': otherSignatories,
-          'maybe_timepoint': Option<Map<String, dynamic>>.some(multiSigStorage.timePoint.toMap()),
+          'maybe_timepoint': Option<Map<String, dynamic>>.some(
+              multiSigStorage.timePoint.toMap()),
           'call': decodedCall,
           'max_weight': maxWeight.toMap(),
         },
@@ -366,7 +397,8 @@ class Multisig {
     );
     final ByteOutput output = ByteOutput();
 
-    chainInfo.scaleCodec.registry.codecs['Call']!.encodeTo(approvalArgument, output);
+    chainInfo.scaleCodec.registry.codecs['Call']!
+        .encodeTo(approvalArgument, output);
     return output.toBytes();
   }
 
@@ -384,7 +416,8 @@ class Multisig {
   ///
   /// Submits the extrinsic to the chain and returns the hash of the transaction.
   ///
-  static Future<Uint8List> submitExtrinsic(Provider provider, Uint8List extrinsic) async {
+  static Future<Uint8List> submitExtrinsic(
+      Provider provider, Uint8List extrinsic) async {
     return await AuthorApi(provider).submitExtrinsic(extrinsic);
   }
 
@@ -392,7 +425,8 @@ class Multisig {
   /// Returns the multisig storage from the chain.
   ///
   /// If the storage does not exist, it will return null.
-  static Future<Uint8List?> fetchStorage(Provider provider, Uint8List storageKey) async {
+  static Future<Uint8List?> fetchStorage(
+      Provider provider, Uint8List storageKey) async {
     return await StateApi(provider).getStorage(storageKey);
   }
 }

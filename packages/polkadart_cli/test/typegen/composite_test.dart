@@ -1,22 +1,27 @@
-import 'package:polkadart_cli/polkadart_cli.dart' show PrimitiveDescriptor, CompositeBuilder, Field;
+import 'package:polkadart_cli/polkadart_cli.dart'
+    show PrimitiveDescriptor, CompositeBuilder, Field;
 import 'package:test/test.dart';
 
 void main() {
   group('CompositeGenerator', () {
     test('Point(x, y)', () {
-      final generator =
-          CompositeBuilder(id: 5, filePath: './types/point.dart', name: 'Point', docs: [], fields: [
-        Field(
-          originalName: 'x',
-          codec: PrimitiveDescriptor.i32(1),
+      final generator = CompositeBuilder(
+          id: 5,
+          filePath: './types/point.dart',
+          name: 'Point',
           docs: [],
-        ),
-        Field(
-          originalName: 'y',
-          codec: PrimitiveDescriptor.i32(1),
-          docs: [],
-        ),
-      ]);
+          fields: [
+            Field(
+              originalName: 'x',
+              codec: PrimitiveDescriptor.i32(1),
+              docs: [],
+            ),
+            Field(
+              originalName: 'y',
+              codec: PrimitiveDescriptor.i32(1),
+              docs: [],
+            ),
+          ]);
 
       // Check the point class
       final output = generator.build();
@@ -24,20 +29,39 @@ void main() {
       final pointClass = output.classes.first;
       expect(pointClass.name, 'Point');
       expect(pointClass.fields.length, 3);
-      expect(pointClass.fields.firstWhere((f) => f.name == 'x').type!.symbol, 'int');
-      expect(pointClass.fields.firstWhere((f) => f.name == 'y').type!.symbol, 'int');
-      expect(pointClass.fields.firstWhere((f) => f.name == 'codec').type!.symbol, '\$PointCodec');
+      expect(pointClass.fields.firstWhere((f) => f.name == 'x').type!.symbol,
+          'int');
+      expect(pointClass.fields.firstWhere((f) => f.name == 'y').type!.symbol,
+          'int');
+      expect(
+          pointClass.fields.firstWhere((f) => f.name == 'codec').type!.symbol,
+          '\$PointCodec');
 
       // Check the codec class
       final pointCodecClass = output.classes.last;
       expect(pointCodecClass.name, '\$PointCodec');
       expect(pointCodecClass.fields.length, 0);
       expect(pointCodecClass.methods.length, 3);
-      expect(pointCodecClass.methods.firstWhere((m) => m.name == 'encodeTo').returns?.type.symbol,
+      expect(
+          pointCodecClass.methods
+              .firstWhere((m) => m.name == 'encodeTo')
+              .returns
+              ?.type
+              .symbol,
           'void');
-      expect(pointCodecClass.methods.firstWhere((m) => m.name == 'decode').returns?.type.symbol,
+      expect(
+          pointCodecClass.methods
+              .firstWhere((m) => m.name == 'decode')
+              .returns
+              ?.type
+              .symbol,
           'Point');
-      expect(pointCodecClass.methods.firstWhere((m) => m.name == 'sizeHint').returns?.type.symbol,
+      expect(
+          pointCodecClass.methods
+              .firstWhere((m) => m.name == 'sizeHint')
+              .returns
+              ?.type
+              .symbol,
           'int');
 
       expect(

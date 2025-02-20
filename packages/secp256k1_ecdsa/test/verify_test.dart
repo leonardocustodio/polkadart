@@ -8,7 +8,8 @@ import 'helpers/models.dart';
 import 'helpers/utils.dart';
 
 void main() {
-  final Ecdsa ecdsa = getJsonFor('test/test_resources/ecdsa.json', ModelsType.ecdsa) as Ecdsa;
+  final Ecdsa ecdsa =
+      getJsonFor('test/test_resources/ecdsa.json', ModelsType.ecdsa) as Ecdsa;
 
   group('verify()', () {
     test('verify signature', () {
@@ -41,8 +42,8 @@ void main() {
     });
 
     test('verify random signatures', () {
-      final randomMessage =
-          Utilities.hexToBytes(getRandomBigInt().toRadixString(16).padLeft(64, '0'));
+      final randomMessage = Utilities.hexToBytes(
+          getRandomBigInt().toRadixString(16).padLeft(64, '0'));
       final privateKey = PrivateKey(getRandomBigInt());
       final publicKey = privateKey.getPublicKey();
       final signature = privateKey.sign(randomMessage);
@@ -101,8 +102,8 @@ void main() {
       expect(verified, false);
     });
     test('not verify msg = curve order', () {
-      final msg =
-          Utilities.hexToBytes('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141');
+      final msg = Utilities.hexToBytes(
+          'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141');
       final x = BigInt.parse(
           '55066263022277343669578718895168534326250603453777594175500187360389116729240');
       final y = BigInt.parse(
@@ -116,8 +117,8 @@ void main() {
       expect(pub.verify(sig, msg), false);
     });
     test('verify non-strict msg bb5a...', () {
-      final msg =
-          Utilities.hexToBytes('bb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023');
+      final msg = Utilities.hexToBytes(
+          'bb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023');
       final x = BigInt.parse(
           '3252872872578928810725465493269682203671229454553002637820453004368632726370');
       final y = BigInt.parse(
@@ -139,7 +140,8 @@ void main() {
         } catch (e) {
           continue;
         }
-        expect(publicKey.verify(signature, Utilities.hexToBytes(vector.m)), false);
+        expect(
+            publicKey.verify(signature, Utilities.hexToBytes(vector.m)), false);
       }
     });
   });

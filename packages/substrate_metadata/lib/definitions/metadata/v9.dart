@@ -43,7 +43,12 @@ const V9 = <String, dynamic>{
   'StorageEntryTypeV9': {
     '_enum': {
       'Plain': 'Type',
-      'Map': {'hasher': 'StorageHasherV9', 'key': 'Type', 'value': 'Type', 'linked': 'bool'},
+      'Map': {
+        'hasher': 'StorageHasherV9',
+        'key': 'Type',
+        'value': 'Type',
+        'linked': 'bool'
+      },
       'DoubleMap': {
         'hasher': 'StorageHasherV9',
         'key1': 'Type',
@@ -62,5 +67,8 @@ const V9 = <String, dynamic>{
       'Twox64Concat': 'Null'
     }
   },
-  'StorageMetadataV9': {'prefix': 'Text', 'items': 'Vec<StorageEntryMetadataV9>'}
+  'StorageMetadataV9': {
+    'prefix': 'Text',
+    'items': 'Vec<StorageEntryMetadataV9>'
+  }
 };

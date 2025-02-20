@@ -11,9 +11,11 @@ class ChainInfo {
     required this.constants,
   });
 
-  static ChainInfo fromMetadata(DecodedMetadata metadata, [LegacyTypes? legacyTypes]) {
+  static ChainInfo fromMetadata(DecodedMetadata metadata,
+      [LegacyTypes? legacyTypes]) {
     if (metadata.isPreV14) {
-      assertion(legacyTypes != null, 'Legacy types are required for metadata versions below 14');
+      assertion(legacyTypes != null,
+          'Legacy types are required for metadata versions below 14');
       return LegacyParser(metadata, legacyTypes!).getChainInfo();
     }
     return V14Parser(metadata).getChainInfo();

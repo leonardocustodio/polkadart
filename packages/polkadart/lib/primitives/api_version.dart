@@ -83,6 +83,7 @@ class $ApiVersionCodec with Codec<ApiVersion> {
 
   @override
   int sizeHint(ApiVersion value) {
-    return U64Codec.codec.sizeHint(value.id) + U32Codec.codec.sizeHint(value.version);
+    return U64Codec.codec.sizeHint(value.id) +
+        U32Codec.codec.sizeHint(value.version);
   }
 }

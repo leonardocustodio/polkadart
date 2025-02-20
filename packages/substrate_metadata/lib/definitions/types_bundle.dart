@@ -6,18 +6,21 @@ import '../models/legacy_types.dart';
 ///
 /// Checks the bundle versions for inRange,
 /// and `over-writes` the types of the `metadata_definitions` by using the `bundle`.
-LegacyTypes getLegacyTypesFromBundle(LegacyTypesBundle bundle, int specVersion) {
+LegacyTypes getLegacyTypesFromBundle(
+    LegacyTypesBundle bundle, int specVersion) {
   final types = LegacyTypes(
     types: <String, dynamic>{
       ...substrateTypesBundle.types,
       ...bundle.types,
     },
     typesAlias: <String, Map<String, String>>{
-      if (substrateTypesBundle.typesAlias != null) ...substrateTypesBundle.typesAlias!,
+      if (substrateTypesBundle.typesAlias != null)
+        ...substrateTypesBundle.typesAlias!,
       if (bundle.typesAlias != null) ...bundle.typesAlias!,
     },
     signedExtensions: <String, String>{
-      if (substrateTypesBundle.signedExtensions != null) ...substrateTypesBundle.signedExtensions!,
+      if (substrateTypesBundle.signedExtensions != null)
+        ...substrateTypesBundle.signedExtensions!,
       if (bundle.signedExtensions != null) ...bundle.signedExtensions!,
     },
   );

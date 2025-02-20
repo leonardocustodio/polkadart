@@ -50,7 +50,8 @@ class TypeGenerator {
     // Possibly alias event argument types, etc.
     void addArgAlias(Map<String, dynamic> arg) {
       final typeSpec = arg['type'];
-      if (typeSpec?['displayName'] is List && typeSpec['displayName'].isNotEmpty) {
+      if (typeSpec?['displayName'] is List &&
+          typeSpec['displayName'].isNotEmpty) {
         final displayList = List<String>.from(typeSpec['displayName']);
         final aliasName = displayList.last;
         names.alias(typeSpec['type'], aliasName);
@@ -96,7 +97,8 @@ class TypeGenerator {
     // For example, we might print some imports:
     fileOutput.line("// ignore_for_file: non_constant_identifier_names");
     fileOutput.line();
-    fileOutput.line("import 'package:polkadart_keyring/polkadart_keyring.dart';");
+    fileOutput
+        .line("import 'package:polkadart_keyring/polkadart_keyring.dart';");
     fileOutput.line("import 'package:ink_abi/ink_abi_base.dart';");
     fileOutput.line("import 'package:ink_cli/ink_cli.dart';");
     fileOutput.line("import 'package:polkadart/polkadart.dart';");
@@ -126,7 +128,8 @@ class TypeGenerator {
     fileOutput.line();
     if (_project['version'] == 5) {
       fileOutput.block(
-        start: 'dynamic decodeEvent(final String hex, [final List<String>? topics]) {',
+        start:
+            'dynamic decodeEvent(final String hex, [final List<String>? topics]) {',
         cb: () {
           /* final eventType = ifs.use(_description.event());
           out.line('final $eventType event = _abi.decodeEvent(hex, topics);'); */
@@ -193,7 +196,8 @@ class TypeGenerator {
         for (final m in constructors) {
           // build signature
           final args = (m['args'] as List)
-              .map((arg) => 'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .map((arg) =>
+                  'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
               .toList();
           final returnType = m['returnType']?['type'];
           if (returnType == null) {
@@ -245,7 +249,8 @@ class TypeGenerator {
                   fileOutput.line('gasLimit: gasLimit,');
                   fileOutput.line('tip: tip,');
                   fileOutput.line('eraPeriod: eraPeriod,');
-                  final callArgs = (m['args'] as List).map((arg) => arg['label']).join(', ');
+                  final callArgs =
+                      (m['args'] as List).map((arg) => arg['label']).join(', ');
                   fileOutput.line("constructorArgs: [$callArgs],");
                 },
                 end: ');',

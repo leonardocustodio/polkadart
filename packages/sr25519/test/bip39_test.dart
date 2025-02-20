@@ -132,13 +132,15 @@ void main() {
       final hexEntropy = value.$2;
       final hexSeed = value.$3;
       late List<int> entropy;
-      expect(() => entropy = Bip39.mnemonicToEntropy(mnemonic), returnsNormally);
+      expect(
+          () => entropy = Bip39.mnemonicToEntropy(mnemonic), returnsNormally);
       expect(hexEntropy, hex.encode(entropy));
 
       final seed = await Bip39.seedFromMnemonic(mnemonic, 'Substrate');
       expect(hex.encode(seed), hexSeed);
 
-      final miniSecret = await Bip39.miniSecretKeyFromMnemonic(mnemonic, 'Substrate');
+      final miniSecret =
+          await Bip39.miniSecretKeyFromMnemonic(mnemonic, 'Substrate');
 
       expect(hex.encode(miniSecret), hexSeed.substring(0, 64));
     });

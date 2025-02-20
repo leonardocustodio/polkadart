@@ -4,5 +4,6 @@ part of models;
 class DecodedBlockExtrinsics {
   final int blockNumber;
   final List<Map<String, dynamic>> extrinsics;
-  const DecodedBlockExtrinsics({required this.blockNumber, required this.extrinsics});
+  const DecodedBlockExtrinsics(
+      {required this.blockNumber, required this.extrinsics});
 }

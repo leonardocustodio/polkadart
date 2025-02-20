@@ -223,7 +223,8 @@ class $PalletMetadataCodecV14 implements Codec<PalletMetadataV14> {
     OptionCodec(PalletStorageMetadata.codec).encodeTo(metadata.storage, output);
     OptionCodec(PalletCallMetadata.codec).encodeTo(metadata.calls, output);
     OptionCodec(PalletEventMetadata.codec).encodeTo(metadata.event, output);
-    SequenceCodec(PalletConstantMetadata.codec).encodeTo(metadata.constants, output);
+    SequenceCodec(PalletConstantMetadata.codec)
+        .encodeTo(metadata.constants, output);
     OptionCodec(PalletErrorMetadata.codec).encodeTo(metadata.error, output);
     U8Codec.codec.encodeTo(metadata.index, output);
   }
@@ -234,7 +235,8 @@ class $PalletMetadataCodecV14 implements Codec<PalletMetadataV14> {
     size += OptionCodec(PalletStorageMetadata.codec).sizeHint(metadata.storage);
     size += OptionCodec(PalletCallMetadata.codec).sizeHint(metadata.calls);
     size += OptionCodec(PalletEventMetadata.codec).sizeHint(metadata.event);
-    size += SequenceCodec(PalletConstantMetadata.codec).sizeHint(metadata.constants);
+    size += SequenceCodec(PalletConstantMetadata.codec)
+        .sizeHint(metadata.constants);
     size += OptionCodec(PalletErrorMetadata.codec).sizeHint(metadata.error);
     size += U8Codec.codec.sizeHint(metadata.index);
     return size;
@@ -266,7 +268,8 @@ class ExtrinsicMetadataV14 implements ExtrinsicMetadata {
   @override
   final List<SignedExtensionMetadata> signedExtensions;
 
-  static const $ExtrinsicMetadataCodecV14 codec = $ExtrinsicMetadataCodecV14._();
+  static const $ExtrinsicMetadataCodecV14 codec =
+      $ExtrinsicMetadataCodecV14._();
 
   ExtrinsicMetadataV14({
     required this.type,
@@ -323,7 +326,8 @@ class ExtrinsicPartTypeIds {
 class $ExtrinsicMetadataCodecV14 implements Codec<ExtrinsicMetadataV14> {
   const $ExtrinsicMetadataCodecV14._();
 
-  ExtrinsicPartTypeIds extractExtrinsicParts(TypeId extrinsicId, List<PortableType> types) {
+  ExtrinsicPartTypeIds extractExtrinsicParts(
+      TypeId extrinsicId, List<PortableType> types) {
     final extrinsicType = types.firstWhere((t) => t.id == extrinsicId);
     final paramsMap = {for (var p in extrinsicType.type.params) p.name: p.type};
 
@@ -339,7 +343,8 @@ class $ExtrinsicMetadataCodecV14 implements Codec<ExtrinsicMetadataV14> {
   ExtrinsicMetadataV14 decode(Input input, {types = List<PortableType>}) {
     final type = TypeIdCodec.codec.decode(input);
     final version = U8Codec.codec.decode(input);
-    final signedExtensions = SequenceCodec(SignedExtensionMetadata.codec).decode(input);
+    final signedExtensions =
+        SequenceCodec(SignedExtensionMetadata.codec).decode(input);
     final extrinsicPartTypeIds = extractExtrinsicParts(type, types);
 
     return ExtrinsicMetadataV14(
@@ -364,14 +369,16 @@ class $ExtrinsicMetadataCodecV14 implements Codec<ExtrinsicMetadataV14> {
   void encodeTo(ExtrinsicMetadataV14 metadata, Output output) {
     TypeIdCodec.codec.encodeTo(metadata.type, output);
     U8Codec.codec.encodeTo(metadata.version, output);
-    SequenceCodec(SignedExtensionMetadata.codec).encodeTo(metadata.signedExtensions, output);
+    SequenceCodec(SignedExtensionMetadata.codec)
+        .encodeTo(metadata.signedExtensions, output);
   }
 
   @override
   int sizeHint(ExtrinsicMetadataV14 metadata) {
     int size = TypeIdCodec.codec.sizeHint(metadata.type);
     size += U8Codec.codec.sizeHint(metadata.version);
-    size += SequenceCodec(SignedExtensionMetadata.codec).sizeHint(metadata.signedExtensions);
+    size += SequenceCodec(SignedExtensionMetadata.codec)
+        .sizeHint(metadata.signedExtensions);
     return size;
   }
 }

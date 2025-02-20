@@ -14,7 +14,8 @@ void main() {
 
   final metadataV14 = metatadaJson['v14'];
   group('Constants Decode/Encode Test', () {
-    final DecodedMetadata metadata = MetadataDecoder.instance.decode(metadataV14);
+    final DecodedMetadata metadata =
+        MetadataDecoder.instance.decode(metadataV14);
 
     final ChainInfo chainInfo = ChainInfo.fromMetadata(metadata);
 

@@ -24,7 +24,8 @@ class Transfers {
 
     final ByteOutput output = ByteOutput();
 
-    chainInfo.scaleCodec.registry.codecs['Call']!.encodeTo(transferArgument, output);
+    chainInfo.scaleCodec.registry.codecs['Call']!
+        .encodeTo(transferArgument, output);
     return output.toBytes();
   }
 }

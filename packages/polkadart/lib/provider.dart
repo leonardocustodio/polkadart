@@ -3,7 +3,8 @@ import 'dart:convert' show jsonEncode, jsonDecode;
 
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/status.dart' as status;
-import 'package:web_socket_channel/web_socket_channel.dart' show WebSocketChannel;
+import 'package:web_socket_channel/web_socket_channel.dart'
+    show WebSocketChannel;
 
 class RpcResponse<R, T> {
   final int id;
@@ -25,7 +26,8 @@ class SubscriptionMessage<R> {
   final String subscription;
   final R result;
 
-  SubscriptionMessage({required this.method, required this.subscription, required this.result});
+  SubscriptionMessage(
+      {required this.method, required this.subscription, required this.result});
 }
 
 // Generic transport providers to handle the transport of method calls to and from Polkadot clients from applications interacting with it.
@@ -193,16 +195,19 @@ class WsProvider extends Provider {
         .where((message) =>
             !message.containsKey('id') &&
             message.containsKey('params') &&
-            (message['params'] as Map<String, dynamic>).containsKey('subscription'))
+            (message['params'] as Map<String, dynamic>)
+                .containsKey('subscription'))
         .map((message) {
       final method = message['method'] as String;
       final params = message['params'] as Map<String, dynamic>;
       final subscription = params['subscription'] as String;
       final result = params.containsKey('result') ? params['result'] : null;
 
-      return SubscriptionMessage(method: method, subscription: subscription, result: result);
+      return SubscriptionMessage(
+          method: method, subscription: subscription, result: result);
     }).listen((message) {
-      final StreamController? controller = getSubscriptionController(message.subscription);
+      final StreamController? controller =
+          getSubscriptionController(message.subscription);
       controller?.add(message);
     });
 
@@ -263,7 +268,8 @@ class WsProvider extends Provider {
     );
   }
 
-  StreamController<SubscriptionMessage>? getSubscriptionController(String subscriptionId) {
+  StreamController<SubscriptionMessage>? getSubscriptionController(
+      String subscriptionId) {
     if (subscriptions.containsKey(subscriptionId)) {
       return subscriptions[subscriptionId]!;
     } else {
@@ -272,12 +278,14 @@ class WsProvider extends Provider {
   }
 
   // Returns an existing StreamController, or create a new one if it doesn't exist
-  StreamController<SubscriptionMessage> getOrCreateSubscriptionController(String subscription,
+  StreamController<SubscriptionMessage> getOrCreateSubscriptionController(
+      String subscription,
       [FutureOr<void> Function(String subscription)? onCancel]) {
     if (subscriptions.containsKey(subscription)) {
       return subscriptions[subscription]!;
     } else {
-      final controller = StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
+      final controller =
+          StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
         if (onCancel != null) {
           await onCancel(subscription);
         }

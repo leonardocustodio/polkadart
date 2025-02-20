@@ -21,7 +21,8 @@ class ChainApi<P extends Provider> {
       throw Exception(response.error.toString());
     }
 
-    return Uint8List.fromList(hex.decode((response.result as String).substring(2)));
+    return Uint8List.fromList(
+        hex.decode((response.result as String).substring(2)));
   }
 
   /// Get the latest block number or specific block number by BlockHash.

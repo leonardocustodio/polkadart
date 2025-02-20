@@ -10,7 +10,8 @@ Uint8List intToUint8List(int? value,
 
   BigInt valueBn = BigInt.from(value);
 
-  final int byteLength = bitLength == -1 ? (valueBn.bitLength + 7) >> 3 : ((bitLength + 7) >> 3);
+  final int byteLength =
+      bitLength == -1 ? (valueBn.bitLength + 7) >> 3 : ((bitLength + 7) >> 3);
 
   final Uint8List output = Uint8List(byteLength);
   if (isNegative) {
@@ -54,7 +55,8 @@ List<int> bigIntToBytes(BigInt number, int size, bool isLittleEndian) {
   final List<int> result = List.filled(size, 0);
   int i = 0;
   while (number > BigInt.zero && i < size) {
-    result[isLittleEndian ? i : (size - i - 1)] = (number & BigInt.from(0xff)).toInt();
+    result[isLittleEndian ? i : (size - i - 1)] =
+        (number & BigInt.from(0xff)).toInt();
     number = number >> 8;
     i++;
   }

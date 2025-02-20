@@ -12,7 +12,8 @@ void main() {
     for (final version in versions) {
       test('Decode/Encode version: $version', () {
         // metadata file path for v9 - v14
-        final String metadataFilePath = '../../chain/metadata/metadata_v$version.json';
+        final String metadataFilePath =
+            '../../chain/metadata/metadata_v$version.json';
 
         // reading the file
         final String fileContents = File(metadataFilePath).readAsStringSync();
@@ -25,7 +26,8 @@ void main() {
         //
 
         // decoding
-        final decodedMetadataJson = MetadataDecoder.instance.decode(metadataHex);
+        final decodedMetadataJson =
+            MetadataDecoder.instance.decode(metadataHex);
 
         //
         // Here we are creating Metadata Object from the decoded metadata
@@ -35,9 +37,11 @@ void main() {
         // Here we are creating the json from the metadata object
         //
         // Hence checking testing the toJson() method
-        final Map<String, dynamic> metadataJsonFromObject = Metadata.toJson(metadataObject);
+        final Map<String, dynamic> metadataJsonFromObject =
+            Metadata.toJson(metadataObject);
 
-        expect(metadataJsonFromObject.toString(), decodedMetadataJson.metadata.toString());
+        expect(metadataJsonFromObject.toString(),
+            decodedMetadataJson.metadata.toString());
       });
     }
   });

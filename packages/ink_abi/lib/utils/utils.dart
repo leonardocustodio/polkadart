@@ -6,6 +6,8 @@ class Utils {
   }
 
   static String bin2hex(final String input) {
-    return input.codeUnits.map((final byte) => byte.toRadixString(16).padLeft(2, '0')).join();
+    return input.codeUnits
+        .map((final byte) => byte.toRadixString(16).padLeft(2, '0'))
+        .join();
   }
 }

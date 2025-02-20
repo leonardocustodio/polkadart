@@ -10,7 +10,8 @@ void main() {
     test('init spec version file', () {
       //
       // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
-      final LegacyTypesBundle typesDefinitions = LegacyTypesBundle.fromJson(polkadotTypesBundle);
+      final LegacyTypesBundle typesDefinitions =
+          LegacyTypesBundle.fromJson(polkadotTypesBundle);
 
       //
       // Initiate chain constructor with chain specific types-definition

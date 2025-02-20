@@ -189,7 +189,11 @@ final kusamaTypesBundle = <String, dynamic>{
     },
     {
       'minmax': [2023, 2024],
-      'types': {..._sharedTypes, ..._addrAccountIdTypes, 'RefCount': 'RefCountTo259'}
+      'types': {
+        ..._sharedTypes,
+        ..._addrAccountIdTypes,
+        'RefCount': 'RefCountTo259'
+      }
     },
     {
       'minmax': [2025, 2027],

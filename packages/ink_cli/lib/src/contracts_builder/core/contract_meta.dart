@@ -28,7 +28,8 @@ class ContractMeta {
 
     final StateApi stateApi = StateApi(provider);
     final RuntimeMetadata runtimeMetadata = await stateApi.getMetadata();
-    final RuntimeVersion stateRuntimeVersion = await stateApi.getRuntimeVersion();
+    final RuntimeVersion stateRuntimeVersion =
+        await stateApi.getRuntimeVersion();
 
     return ContractMeta(
       blockNumber: blockNumber,

@@ -17,7 +17,8 @@ class Signature {
       recovery = bytes[64];
       bytes = bytes.sublist(0, 64);
     }
-    bytes = Utilities.matchLength(bytes, 64); // compact repr is (32b r)||(32b s)
+    bytes =
+        Utilities.matchLength(bytes, 64); // compact repr is (32b r)||(32b s)
     return Signature(
         recovery: recovery,
         r: Utilities.sliceBytes(bytes, 0, fLen),
@@ -48,7 +49,8 @@ class Signature {
       throw Exception('recovery id invalid');
     }
     // Truncate hash
-    final BigInt h = Utilities.bits2int_modN(Utilities.matchLength(message, 32));
+    final BigInt h =
+        Utilities.bits2int_modN(Utilities.matchLength(message, 32));
     final BigInt radj = recovery == 2 || recovery == 3 ? r + N : r;
     // If rec was 2 or 3, q.x is bigger than n
     if (radj >= P) {

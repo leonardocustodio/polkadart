@@ -18,7 +18,8 @@ abstract class TypeDescriptor {
     return codecInstance(from).property('encodeTo').call([obj, output]);
   }
 
-  Expression decode(BasePath from, [Expression input = const Reference('input')]) {
+  Expression decode(BasePath from,
+      [Expression input = const Reference('input')]) {
     return codecInstance(from).property('decode').call([input]);
   }
 
@@ -54,7 +55,8 @@ class GeneratedOutput {
     languageVersion: DartFormatter.latestShortStyleLanguageVersion,
   );
 
-  const GeneratedOutput({required this.classes, required this.enums, required this.typedefs});
+  const GeneratedOutput(
+      {required this.classes, required this.enums, required this.typedefs});
 
   String build() {
     final library3 = Library((b) => b
@@ -63,7 +65,8 @@ class GeneratedOutput {
       ..body.addAll(classes));
 
     final code = library3
-        .accept(DartEmitter.scoped(useNullSafetySyntax: true, orderDirectives: true))
+        .accept(DartEmitter.scoped(
+            useNullSafetySyntax: true, orderDirectives: true))
         .toString();
     try {
       return _dartfmt.format(code);
@@ -106,7 +109,11 @@ class Field {
   /// The name of the type of the field as it appears in the source code.
   late String? rustTypeName;
 
-  Field({required this.originalName, required this.codec, required this.docs, this.rustTypeName}) {
+  Field(
+      {required this.originalName,
+      required this.codec,
+      required this.docs,
+      this.rustTypeName}) {
     // TODO: detect collisions
     // ex: 'foo_bar' and `fooBar` will collide
     if (originalName != null) {
@@ -128,7 +135,8 @@ class Field {
     List<String> docs = const [],
     String? rustTypeName,
   }) {
-    final field = Field._lazy(name: name, docs: docs, rustTypeName: rustTypeName);
+    final field =
+        Field._lazy(name: name, docs: docs, rustTypeName: rustTypeName);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       field.codec = register[codec]!;
     });
@@ -154,7 +162,8 @@ class TypeBuilderContext {
 
   TypeReference jsonTypeFrom(TypeDescriptor descriptor) {
     if (_isCircular) {
-      throw Exception('Circular reference detected, cannot call TypeBuilderContext.jsonTypeFrom');
+      throw Exception(
+          'Circular reference detected, cannot call TypeBuilderContext.jsonTypeFrom');
     }
 
     _isCircular = _visited.contains(descriptor);
@@ -290,22 +299,27 @@ class LiteralValue<E extends Expression> extends Expression {
   Expression lessThan(Expression other) => _expression.lessThan(other);
 
   @override
-  Expression greaterOrEqualTo(Expression other) => _expression.greaterOrEqualTo(other);
+  Expression greaterOrEqualTo(Expression other) =>
+      _expression.greaterOrEqualTo(other);
 
   @override
-  Expression lessOrEqualTo(Expression other) => _expression.lessOrEqualTo(other);
+  Expression lessOrEqualTo(Expression other) =>
+      _expression.lessOrEqualTo(other);
 
   @override
   Expression operatorAdd(Expression other) => _expression.operatorAdd(other);
 
   @override
-  Expression operatorSubtract(Expression other) => _expression.operatorSubtract(other);
+  Expression operatorSubtract(Expression other) =>
+      _expression.operatorSubtract(other);
 
   @override
-  Expression operatorDivide(Expression other) => _expression.operatorDivide(other);
+  Expression operatorDivide(Expression other) =>
+      _expression.operatorDivide(other);
 
   @override
-  Expression operatorMultiply(Expression other) => _expression.operatorMultiply(other);
+  Expression operatorMultiply(Expression other) =>
+      _expression.operatorMultiply(other);
 
   @override
   Expression operatorEuclideanModulo(Expression other) =>
@@ -325,7 +339,8 @@ class LiteralValue<E extends Expression> extends Expression {
   Expression ifNullThen(Expression other) => _expression.ifNullThen(other);
 
   @override
-  Expression assignNullAware(Expression other) => _expression.assignNullAware(other);
+  Expression assignNullAware(Expression other) =>
+      _expression.assignNullAware(other);
 
   @override
   Expression call(
@@ -342,7 +357,8 @@ class LiteralValue<E extends Expression> extends Expression {
   Expression cascade(String name) => _expression.cascade(name);
 
   @override
-  Expression nullSafeProperty(String name) => _expression.nullSafeProperty(name);
+  Expression nullSafeProperty(String name) =>
+      _expression.nullSafeProperty(name);
 
   @override
   Expression get nullChecked => _expression.nullChecked;

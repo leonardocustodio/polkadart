@@ -48,31 +48,39 @@ class PolkadartGenerator {
 
   Class createPolkadartRegistry() => Class(
         (classBuilder) {
-          final String signedExtensionTypes = metadata.extrinsic.signedExtensions
-              .where((extension) {
-                final typeID = extension.type;
-                final typeDef = metadata.typeById(typeID).type.typeDef;
-                return (typeDef is m.TypeDefTuple && typeDef.fields.isNotEmpty) ||
-                    (typeDef is m.TypeDefComposite && typeDef.fields.isNotEmpty) ||
-                    (typeDef is! m.TypeDefComposite && typeDef is! m.TypeDefTuple);
-              })
-              .toList()
-              .map((extension) => "'${extension.identifier}'")
-              .toList()
-              .join(', ');
+          final String signedExtensionTypes =
+              metadata.extrinsic.signedExtensions
+                  .where((extension) {
+                    final typeID = extension.type;
+                    final typeDef = metadata.typeById(typeID).type.typeDef;
+                    return (typeDef is m.TypeDefTuple &&
+                            typeDef.fields.isNotEmpty) ||
+                        (typeDef is m.TypeDefComposite &&
+                            typeDef.fields.isNotEmpty) ||
+                        (typeDef is! m.TypeDefComposite &&
+                            typeDef is! m.TypeDefTuple);
+                  })
+                  .toList()
+                  .map((extension) => "'${extension.identifier}'")
+                  .toList()
+                  .join(', ');
 
-          final String signedExtensionExtra = metadata.extrinsic.signedExtensions
-              .where((extension) {
-                final typeID = extension.additionalSigned;
-                final typeDef = metadata.typeById(typeID).type.typeDef;
-                return (typeDef is m.TypeDefTuple && typeDef.fields.isNotEmpty) ||
-                    (typeDef is m.TypeDefComposite && typeDef.fields.isNotEmpty) ||
-                    (typeDef is! m.TypeDefComposite && typeDef is! m.TypeDefTuple);
-              })
-              .toList()
-              .map((extension) => "'${extension.identifier}'")
-              .toList()
-              .join(', ');
+          final String signedExtensionExtra =
+              metadata.extrinsic.signedExtensions
+                  .where((extension) {
+                    final typeID = extension.additionalSigned;
+                    final typeDef = metadata.typeById(typeID).type.typeDef;
+                    return (typeDef is m.TypeDefTuple &&
+                            typeDef.fields.isNotEmpty) ||
+                        (typeDef is m.TypeDefComposite &&
+                            typeDef.fields.isNotEmpty) ||
+                        (typeDef is! m.TypeDefComposite &&
+                            typeDef is! m.TypeDefTuple);
+                  })
+                  .toList()
+                  .map((extension) => "'${extension.identifier}'")
+                  .toList()
+                  .join(', ');
 
           // specVersion + transactionVersion + genesisHash + blockHash;
 
@@ -94,13 +102,15 @@ class PolkadartGenerator {
                   (b) => b
                     ..name = 'getSignedExtensionTypes'
                     ..returns = refs.list()
-                    ..body = Block.of([refer('[$signedExtensionTypes]').returned.statement]),
+                    ..body = Block.of(
+                        [refer('[$signedExtensionTypes]').returned.statement]),
                 ),
                 Method(
                   (b) => b
                     ..name = 'getSignedExtensionExtra'
                     ..returns = refs.list()
-                    ..body = Block.of([refer('[$signedExtensionExtra]').returned.statement]),
+                    ..body = Block.of(
+                        [refer('[$signedExtensionExtra]').returned.statement]),
                 )
               ],
             );
@@ -160,7 +170,8 @@ class PolkadartGenerator {
                         ..name = sanitize(pallet.name)
                         ..type = pallet.constantsType(dirname)
                         ..modifier = FieldModifier.final$
-                        ..assignment = pallet.constantsType(dirname).newInstance([]).code,
+                        ..assignment =
+                            pallet.constantsType(dirname).newInstance([]).code,
                     ),
                   ),
             );
@@ -225,7 +236,8 @@ class PolkadartGenerator {
                         ..name = sanitize(pallet.name)
                         ..type = pallet.exts(dirname)
                         ..modifier = FieldModifier.final$
-                        ..assignment = pallet.exts(dirname).newInstance([]).code,
+                        ..assignment =
+                            pallet.exts(dirname).newInstance([]).code,
                     ),
                   ),
             );
@@ -285,14 +297,17 @@ class PolkadartGenerator {
                               refer('Rpc').newInstance(
                                 [],
                                 {
-                                  'state': refs.stateApi.newInstance([refer('provider')]),
-                                  'system': refs.systemApi.newInstance([refer('provider')]),
+                                  'state': refs.stateApi
+                                      .newInstance([refer('provider')]),
+                                  'system': refs.systemApi
+                                      .newInstance([refer('provider')]),
                                 },
                               ),
                             )
                             .statement,
                         refer(name)
-                            .newInstanceNamed('_', [refer('provider'), refer('rpc')])
+                            .newInstanceNamed(
+                                '_', [refer('provider'), refer('rpc')])
                             .returned
                             .statement,
                       ],
@@ -314,9 +329,13 @@ class PolkadartGenerator {
                     ..body = Block.of(
                       [
                         declareFinal('provider')
-                            .assign(refs.provider.newInstanceNamed('fromUri', [refer('url')]))
+                            .assign(refs.provider
+                                .newInstanceNamed('fromUri', [refer('url')]))
                             .statement,
-                        refer(name).newInstance([refer('provider')]).returned.statement,
+                        refer(name)
+                            .newInstance([refer('provider')])
+                            .returned
+                            .statement,
                       ],
                     ),
                 ),
@@ -357,8 +376,12 @@ class PolkadartGenerator {
                     ..name = 'connect'
                     ..returns = refs.future()
                     ..modifier = MethodModifier.async
-                    ..body =
-                        refer('_provider').property('connect').call([]).awaited.returned.statement,
+                    ..body = refer('_provider')
+                        .property('connect')
+                        .call([])
+                        .awaited
+                        .returned
+                        .statement,
                 ),
                 Method(
                   (b) => b

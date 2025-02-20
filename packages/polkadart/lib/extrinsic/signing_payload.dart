@@ -37,10 +37,13 @@ class SigningPayload extends Payload {
     return {
       'method': method,
       'specVersion': encodeHex(U32Codec.codec.encode(specVersion)),
-      'transactionVersion': encodeHex(U32Codec.codec.encode(transactionVersion)),
+      'transactionVersion':
+          encodeHex(U32Codec.codec.encode(transactionVersion)),
       'genesisHash': genesisHash.replaceAll('0x', ''),
       'blockHash': blockHash.replaceAll('0x', ''),
-      'era': eraPeriod == 0 ? '00' : Era.codec.encodeMortal(blockNumber, eraPeriod),
+      'era': eraPeriod == 0
+          ? '00'
+          : Era.codec.encodeMortal(blockNumber, eraPeriod),
       'nonce': encodeHex(CompactCodec.codec.encode(nonce)),
       /* 'assetId': maybeAssetIdEncoded(registry), */
       'tip': tip is int
@@ -51,7 +54,9 @@ class SigningPayload extends Payload {
       'mode': metadataHash == '00' ? '00' : '01',
       // This is for the `CheckMetadataHash` additional signed extensions.
       // we sign the `Option<MetadataHash>::None` by setting it to '00'.
-      'metadataHash': metadataHash == '00' ? '00' : '01${metadataHash.replaceAll('0x', '')}',
+      'metadataHash': metadataHash == '00'
+          ? '00'
+          : '01${metadataHash.replaceAll('0x', '')}',
     };
   }
 
@@ -84,17 +89,22 @@ class SigningPayload extends Payload {
       if (registry.getSignedExtensionTypes() is Map) {
         // Usage here for the Registry from the polkadart_scale_codec
         signedExtensionKeys =
-            (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>).keys.toList();
+            (registry.getSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+                .keys
+                .toList();
       } else {
         // Usage here for the generated lib from the polkadart_cli
-        signedExtensionKeys = (registry.getSignedExtensionTypes() as List<dynamic>).cast<String>();
+        signedExtensionKeys =
+            (registry.getSignedExtensionTypes() as List<dynamic>)
+                .cast<String>();
       }
     }
 
     //
     // Traverse through the signedExtension keys and encode the payload
     for (final extension in signedExtensionKeys) {
-      final (payload, found) = signedExtensions.signedExtension(extension, encodedMap);
+      final (payload, found) =
+          signedExtensions.signedExtension(extension, encodedMap);
       if (found) {
         if (payload.isNotEmpty) {
           tempOutput.write(hex.decode(payload));
@@ -110,12 +120,15 @@ class SigningPayload extends Payload {
         print(signedExtensionMap);
         if (signedExtensionMap[extension] != null &&
             signedExtensionMap[extension] is! NullCodec &&
-            signedExtensionMap[extension].hashCode != NullCodec.codec.hashCode) {
+            signedExtensionMap[extension].hashCode !=
+                NullCodec.codec.hashCode) {
           if (customSignedExtensions.containsKey(extension) == false) {
             // throw exception as this is encodable key and we need this key to be present in customSignedExtensions
-            throw Exception('Key `$extension` is missing in customSignedExtensions.');
+            throw Exception(
+                'Key `$extension` is missing in customSignedExtensions.');
           }
-          signedExtensionMap[extension].encodeTo(customSignedExtensions[extension], tempOutput);
+          signedExtensionMap[extension]
+              .encodeTo(customSignedExtensions[extension], tempOutput);
         }
       }
     }
@@ -127,20 +140,23 @@ class SigningPayload extends Payload {
       if (registry.getSignedExtensionTypes() is Map) {
         // Usage here for the Registry from the polkadart_scale_codec
         additionalSignedExtensionKeys =
-            (registry.getAdditionalSignedExtensionTypes() as Map<String, Codec<dynamic>>)
+            (registry.getAdditionalSignedExtensionTypes()
+                    as Map<String, Codec<dynamic>>)
                 .keys
                 .toList();
       } else {
         // Usage here for the generated lib from the polkadart_cli
         additionalSignedExtensionKeys =
-            (registry.getSignedExtensionExtra() as List<dynamic>).cast<String>();
+            (registry.getSignedExtensionExtra() as List<dynamic>)
+                .cast<String>();
       }
     }
 
     //
     // Traverse through the additionalSignedExtension keys and encode the payload
     for (final extension in additionalSignedExtensionKeys) {
-      final (payload, found) = signedExtensions.additionalSignedExtension(extension, encodedMap);
+      final (payload, found) =
+          signedExtensions.additionalSignedExtension(extension, encodedMap);
       if (found) {
         if (payload.isNotEmpty) {
           tempOutput.write(hex.decode(payload));
@@ -152,13 +168,16 @@ class SigningPayload extends Payload {
           // This method call is from polkadot cli and not from the Registry of the polkadart_scale_codec.
           continue;
         }
-        final additionalSignedExtensionMap = registry.getAdditionalSignedExtensionTypes();
+        final additionalSignedExtensionMap =
+            registry.getAdditionalSignedExtensionTypes();
         if (additionalSignedExtensionMap[extension] != null &&
             additionalSignedExtensionMap[extension] is! NullCodec &&
-            additionalSignedExtensionMap[extension].hashCode != NullCodec.codec.hashCode) {
+            additionalSignedExtensionMap[extension].hashCode !=
+                NullCodec.codec.hashCode) {
           if (customSignedExtensions.containsKey(extension) == false) {
             // throw exception as this is encodable key and we need this key to be present in customSignedExtensions
-            throw Exception('Key `$extension` is missing in customSignedExtensions.');
+            throw Exception(
+                'Key `$extension` is missing in customSignedExtensions.');
           }
           additionalSignedExtensionMap[extension]
               .encodeTo(customSignedExtensions[extension], tempOutput);
@@ -170,6 +189,8 @@ class SigningPayload extends Payload {
     final payloadEncoded = output.toBytes();
 
     // See rust code: https://github.com/paritytech/polkadot-sdk/blob/e349fc9ef8354eea1bafc1040c20d6fe3189e1ec/substrate/primitives/runtime/src/generic/unchecked_extrinsic.rs#L253
-    return payloadEncoded.length > 256 ? Blake2bHasher(32).hash(payloadEncoded) : payloadEncoded;
+    return payloadEncoded.length > 256
+        ? Blake2bHasher(32).hash(payloadEncoded)
+        : payloadEncoded;
   }
 }

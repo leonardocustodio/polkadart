@@ -46,7 +46,8 @@ class Field {
   static const $FieldCodec codec = $FieldCodec._();
 
   /// Creates a new field.
-  const Field({required this.type, this.name, this.typeName, required this.docs});
+  const Field(
+      {required this.type, this.name, this.typeName, required this.docs});
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};

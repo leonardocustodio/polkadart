@@ -14,7 +14,10 @@ class ResultDescriptor extends TypeDescriptor {
   ResultDescriptor._lazy(this._id);
 
   factory ResultDescriptor.lazy(
-      {required int id, required LazyLoader loader, required int ok, required int err}) {
+      {required int id,
+      required LazyLoader loader,
+      required int ok,
+      required int err}) {
     final generator = ResultDescriptor._lazy(id);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.ok = register[ok]!;
@@ -45,13 +48,15 @@ class ResultDescriptor extends TypeDescriptor {
     } else {
       value = err.valueFrom(from, input);
     }
-    return primitive(from).newInstanceNamed(isOk ? 'ok' : 'err', [value]).asLiteralValue(
-        isConstant: constant && value.isConstant);
+    return primitive(from)
+        .newInstanceNamed(isOk ? 'ok' : 'err', [value]).asLiteralValue(
+            isConstant: constant && value.isConstant);
   }
 
   @override
   Expression codecInstance(String from) {
-    return codec(from).constInstance([ok.codecInstance(from), err.codecInstance(from)]);
+    return codec(from)
+        .constInstance([ok.codecInstance(from), err.codecInstance(from)]);
   }
 
   @override

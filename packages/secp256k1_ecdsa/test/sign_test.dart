@@ -8,12 +8,14 @@ import 'helpers/models.dart';
 import 'helpers/utils.dart';
 
 void main() {
-  final Ecdsa ecdsa = getJsonFor('test/test_resources/ecdsa.json', ModelsType.ecdsa) as Ecdsa;
+  final Ecdsa ecdsa =
+      getJsonFor('test/test_resources/ecdsa.json', ModelsType.ecdsa) as Ecdsa;
   group('Sign Test', () {
     test('fromCompactHex() roundtrip', () {
       final (r, s) = (getRandomBigInt(), getRandomBigInt());
       final sig = Signature(r: r, s: s);
-      expect(Signature.fromCompactHex(sig.toCompactHex()).toString(), sig.toString());
+      expect(Signature.fromCompactHex(sig.toCompactHex()).toString(),
+          sig.toString());
     });
 
     test('.fromDERHex() roundtrip', () {
@@ -61,8 +63,8 @@ void main() {
         ],
       ];
 
-      final privateKey =
-          PrivateKey.fromHex('0101010101010101010101010101010101010101010101010101010101010101');
+      final privateKey = PrivateKey.fromHex(
+          '0101010101010101010101010101010101010101010101010101010101010101');
 
       for (final value in CASES) {
         final (msg, exp) = (value[0], value[1]);
@@ -74,11 +76,16 @@ void main() {
     });
 
     test('handle {extraData} option', () {
-      const ent1 = '0000000000000000000000000000000000000000000000000000000000000000';
-      const ent2 = '0000000000000000000000000000000000000000000000000000000000000001';
-      const ent3 = '6e723d3fd94ed5d2b6bdd4f123364b0f3ca52af829988a63f8afe91d29db1c33';
-      const ent4 = 'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141';
-      const ent5 = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+      const ent1 =
+          '0000000000000000000000000000000000000000000000000000000000000000';
+      const ent2 =
+          '0000000000000000000000000000000000000000000000000000000000000001';
+      const ent3 =
+          '6e723d3fd94ed5d2b6bdd4f123364b0f3ca52af829988a63f8afe91d29db1c33';
+      const ent4 =
+          'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141';
+      const ent5 =
+          'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
       for (final e in ecdsa.extraEntropy) {
         String signature([Uint8List? extraEntropy]) {

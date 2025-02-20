@@ -4,7 +4,8 @@ class TupleBuilder extends TypeBuilder {
   final int _id;
   List<TypeDescriptor> generators;
 
-  TupleBuilder({required int id, required String filePath, required this.generators})
+  TupleBuilder(
+      {required int id, required String filePath, required this.generators})
       : _id = id,
         super(filePath);
 
@@ -48,17 +49,21 @@ class TupleBuilder extends TypeBuilder {
 
   @override
   Expression codecInstance(BasePath from) {
-    return codec(from).constInstance(generators.map((type) => type.codecInstance(from)));
+    return codec(from)
+        .constInstance(generators.map((type) => type.codecInstance(from)));
   }
 
   @override
   LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     final values = <LiteralValue>[
-      for (final generator in generators) generator.valueFrom(from, input, constant: constant)
+      for (final generator in generators)
+        generator.valueFrom(from, input, constant: constant)
     ];
 
     if (constant && values.every((value) => value.isConstant)) {
-      return primitive(from).constInstance(values).asLiteralValue(isConstant: true);
+      return primitive(from)
+          .constInstance(values)
+          .asLiteralValue(isConstant: true);
     }
     return primitive(from).newInstance(values).asLiteralValue();
   }
@@ -73,7 +78,8 @@ class TupleBuilder extends TypeBuilder {
       return refs.list(ref: refs.dynamic);
     }
     // Check if all fields are of the same type, otherwise use dynamic
-    final type = findCommonType(generators.map((generator) => context.jsonTypeFrom(generator)));
+    final type = findCommonType(
+        generators.map((generator) => context.jsonTypeFrom(generator)));
     return refs.list(ref: type);
   }
 
@@ -89,6 +95,7 @@ class TupleBuilder extends TypeBuilder {
   GeneratedOutput build() {
     final tupleClass = classbuilder.createTupleClass(generators.length);
     final tupleCodec = classbuilder.createTupleCodec(generators.length);
-    return GeneratedOutput(classes: [tupleClass, tupleCodec], enums: [], typedefs: []);
+    return GeneratedOutput(
+        classes: [tupleClass, tupleCodec], enums: [], typedefs: []);
   }
 }

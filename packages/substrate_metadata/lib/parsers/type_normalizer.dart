@@ -13,7 +13,8 @@ class TypeNormalizer {
   /// Constructor
   const TypeNormalizer({required this.types, required this.typesAlias});
 
-  static final Map<String, RegistryType> _cachedTypes = <String, RegistryType>{};
+  static final Map<String, RegistryType> _cachedTypes =
+      <String, RegistryType>{};
 
   ///
   /// Normalize the type expression
@@ -154,7 +155,8 @@ class TypeNormalizer {
       case 'BTreeSet':
       case 'BoundedBTreeSet':
         return _normalizeType(
-            RegistryNamedType(name: 'Vec', params: [_assertOneParam(type)]), pallet);
+            RegistryNamedType(name: 'Vec', params: [_assertOneParam(type)]),
+            pallet);
       case 'RawAddress':
         return _normalizeType(
             RegistryNamedType(
@@ -180,7 +182,8 @@ class TypeNormalizer {
 
   RegistryType _assertOneParam(RegistryNamedType type) {
     if (type.params.isEmpty) {
-      throw Exception('Invalid type ${type.toString()}: one type parameter expected');
+      throw Exception(
+          'Invalid type ${type.toString()}: one type parameter expected');
     }
     final param = type.params[0];
     if (param is int) {
@@ -192,7 +195,8 @@ class TypeNormalizer {
 
   List<RegistryType> _assertTwoParams(RegistryNamedType type) {
     if (type.params.length < 2) {
-      throw Exception('Invalid type ${type.toString()}: two type parameters expected');
+      throw Exception(
+          'Invalid type ${type.toString()}: two type parameters expected');
     }
     final param1 = type.params[0];
     if (param1 is int) {
@@ -214,9 +218,11 @@ class TypeNormalizer {
     }
   }
 
-  String _convertGenericIntegerToPrimitive(String kind, RegistryNamedType type) {
+  String _convertGenericIntegerToPrimitive(
+      String kind, RegistryNamedType type) {
     if (type.params.isEmpty) {
-      throw Exception('Invalid type ${type.toString()}: bit size is not specified');
+      throw Exception(
+          'Invalid type ${type.toString()}: bit size is not specified');
     }
     final size = type.params[0];
     if (size is! int) {
@@ -232,7 +238,8 @@ class TypeNormalizer {
       case 256:
         return '$kind$size';
       default:
-        throw Exception('Invalid type ${type.toString()}: invalid bit size $size');
+        throw Exception(
+            'Invalid type ${type.toString()}: invalid bit size $size');
     }
   }
 

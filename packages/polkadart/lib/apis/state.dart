@@ -12,7 +12,8 @@ class StateApi<P extends Provider> {
   late RuntimeMetadata latestRuntimeMetadata;
 
   /// Call a contract at a block's state.
-  Future<Uint8List> call(String method, Uint8List bytes, {BlockHash? at}) async {
+  Future<Uint8List> call(String method, Uint8List bytes,
+      {BlockHash? at}) async {
     final List<String> params = [method, '0x${hex.encode(bytes)}'];
     if (at != null) {
       params.add('0x${hex.encode(at)}');
@@ -40,7 +41,10 @@ class StateApi<P extends Provider> {
   /// Up to `count` keys will be returned.
   /// If `startKey` is passed, return next keys in storage in lexicographic order.
   Future<List<StorageKey>> getKeysPaged(
-      {required StorageKey key, required int count, StorageKey? startKey, BlockHash? at}) async {
+      {required StorageKey key,
+      required int count,
+      StorageKey? startKey,
+      BlockHash? at}) async {
     final List<dynamic> params = ['0x${hex.encode(key)}', count];
     if (startKey != null) {
       params.add('0x${hex.encode(startKey)}');
@@ -66,7 +70,9 @@ class StateApi<P extends Provider> {
     }
     final response = await _provider.send('state_getStorage', params);
     final data = response.result as String?;
-    return data == null ? null : Uint8List.fromList(hex.decode(data.substring(2)));
+    return data == null
+        ? null
+        : Uint8List.fromList(hex.decode(data.substring(2)));
   }
 
   /// Returns the hash of a storage entry at a block's state.
@@ -77,7 +83,9 @@ class StateApi<P extends Provider> {
     }
     final response = await _provider.send('state_getStorageHash', params);
     final data = response.result as String?;
-    return data == null ? null : Uint8List.fromList(hex.decode(data.substring(2)));
+    return data == null
+        ? null
+        : Uint8List.fromList(hex.decode(data.substring(2)));
   }
 
   /// Returns the size of a storage entry at a block's state.
@@ -95,7 +103,8 @@ class StateApi<P extends Provider> {
   ///
   /// NOTE This first returned result contains the initial state of storage for all keys.
   /// Subsequent values in the vector represent changes to the previous state (diffs).
-  Future<List<StorageChangeSet>> queryStorage(List<StorageKey> keys, BlockHash fromBlock,
+  Future<List<StorageChangeSet>> queryStorage(
+      List<StorageKey> keys, BlockHash fromBlock,
       {BlockHash? toBlock}) async {
     final List<dynamic> params = [
       keys.map((key) => '0x${hex.encode(key)}').toList(),
@@ -112,8 +121,11 @@ class StateApi<P extends Provider> {
   }
 
   /// Query storage entries (by key) starting at block hash given as the second parameter.
-  Future<List<StorageChangeSet>> queryStorageAt(List<StorageKey> keys, {BlockHash? at}) async {
-    final List<dynamic> params = [keys.map((key) => '0x${hex.encode(key)}').toList()];
+  Future<List<StorageChangeSet>> queryStorageAt(List<StorageKey> keys,
+      {BlockHash? at}) async {
+    final List<dynamic> params = [
+      keys.map((key) => '0x${hex.encode(key)}').toList()
+    ];
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
@@ -126,7 +138,9 @@ class StateApi<P extends Provider> {
 
   /// Returns proof of storage entries at a specific block's state.
   Future<ReadProof> getReadProof(List<StorageKey> keys, {BlockHash? at}) async {
-    final List<dynamic> params = [keys.map((key) => '0x${hex.encode(key)}').toList()];
+    final List<dynamic> params = [
+      keys.map((key) => '0x${hex.encode(key)}').toList()
+    ];
     if (at != null) {
       params.add('0x${hex.encode(at)}');
     }
@@ -158,8 +172,9 @@ class StateApi<P extends Provider> {
   /// Retrieves the runtime version via subscription
   Future<StreamSubscription<RuntimeVersion>> subscribeRuntimeVersion(
       Function(RuntimeVersion) onData) async {
-    final subscription = await _provider.subscribe('state_subscribeRuntimeVersion', const [],
-        onCancel: (subscription) async {
+    final subscription = await _provider
+        .subscribe('state_subscribeRuntimeVersion', const [],
+            onCancel: (subscription) async {
       await _provider.send('state_unsubscribeRuntimeVersion', [subscription]);
     });
 
@@ -168,7 +183,8 @@ class StateApi<P extends Provider> {
         .listen(onData);
   }
 
-  Future<StreamSubscription<Events>> subscribeEvents(BlockHash at, Function(Events) onData) async {
+  Future<StreamSubscription<Events>> subscribeEvents(
+      BlockHash at, Function(Events) onData) async {
     latestRuntimeMetadata = await getMetadata();
     final subscription = await _provider.subscribe('state_subscribeStorage', [
       ['0x${hex.encode(at)}']
@@ -184,8 +200,8 @@ class StateApi<P extends Provider> {
   Future<StreamSubscription<StorageChangeSet>> subscribeStorage(
       List<Uint8List> storageKeys, Function(StorageChangeSet) onData) async {
     final hexKeys = storageKeys.map((key) => '0x${hex.encode(key)}').toList();
-    final subscription = await _provider.subscribe('state_subscribeStorage', [hexKeys],
-        onCancel: (subscription) async {
+    final subscription = await _provider.subscribe(
+        'state_subscribeStorage', [hexKeys], onCancel: (subscription) async {
       await _provider.send('state_unsubscribeStorage', [subscription]);
     });
 

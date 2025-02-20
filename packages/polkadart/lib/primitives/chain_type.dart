@@ -113,7 +113,8 @@ class $ChainTypeCodec with Codec<ChainType> {
         (value as Custom).encodeTo(output);
         break;
       default:
-        throw Exception('ChainType: Unsupported "$value" of type "${value.runtimeType}"');
+        throw Exception(
+            'ChainType: Unsupported "$value" of type "${value.runtimeType}"');
     }
   }
 
@@ -127,7 +128,8 @@ class $ChainTypeCodec with Codec<ChainType> {
       case const (Custom):
         return (value as Custom)._sizeHint();
       default:
-        throw Exception('ChainType: Unsupported "$value" of type "${value.runtimeType}"');
+        throw Exception(
+            'ChainType: Unsupported "$value" of type "${value.runtimeType}"');
     }
   }
 }
@@ -205,7 +207,9 @@ class Custom extends ChainType {
 
   @override
   bool operator ==(Object other) =>
-      other is Custom && other.runtimeType == runtimeType && other.value == value;
+      other is Custom &&
+      other.runtimeType == runtimeType &&
+      other.value == value;
 
   @override
   int get hashCode => value.hashCode;

@@ -1,10 +1,11 @@
 enum SecretStringError {
   /// The overall format was invalid (e.g. the seed phrase contained symbols).
-  invalidFormat(
-      'Invalid format', 'The overall format was invalid (e.g. the seed phrase contained symbols).'),
+  invalidFormat('Invalid format',
+      'The overall format was invalid (e.g. the seed phrase contained symbols).'),
 
   /// The seed phrase provided is not a valid BIP39 phrase.
-  invalidPhrase('Invalid phrase', 'The seed phrase provided is not a valid BIP39 phrase.'),
+  invalidPhrase('Invalid phrase',
+      'The seed phrase provided is not a valid BIP39 phrase.'),
 
   /// The supplied password was invalid.
   invalidPassword('Invalid password', 'The supplied password was invalid.'),
@@ -20,8 +21,8 @@ enum SecretStringError {
       'The derivation path was invalid (e.g. contains soft junctions when they are not supported).'),
 
   /// The entropy byte length was invalid
-  invalidEntropy(
-      'Invalid Entropy', 'entropy byte length must be between 16 and 32 and multiple of 4');
+  invalidEntropy('Invalid Entropy',
+      'entropy byte length must be between 16 and 32 and multiple of 4');
 
   const SecretStringError(this.message, this.description);
 

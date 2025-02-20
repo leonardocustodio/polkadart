@@ -3,7 +3,8 @@ part of ink_cli;
 class TypeHasher extends HasherAbstract {
   final DCGHasher<CodecInterface> _dcg;
 
-  TypeHasher(List<CodecInterface> types) : _dcg = DCGHasher(types, _computeHash);
+  TypeHasher(List<CodecInterface> types)
+      : _dcg = DCGHasher(types, _computeHash);
 
   @override
   String getHash(int nodeIndex) {
@@ -18,7 +19,8 @@ Map<String, dynamic> _computeHash(
     // Primitive
     case TypeKind.primitive:
       return <String, dynamic>{
-        'primitive': toStringPrimitive((type as PrimitiveCodecInterface).primitive.name),
+        'primitive':
+            toStringPrimitive((type as PrimitiveCodecInterface).primitive.name),
       };
     //
     // Compact
@@ -26,7 +28,8 @@ Map<String, dynamic> _computeHash(
       final primitive = types[(type as CompactCodecInterface).type];
       assert(primitive.kind == TypeKind.primitive);
       return <String, dynamic>{
-        'primitive': toStringPrimitive((type as PrimitiveCodecInterface).primitive.name),
+        'primitive':
+            toStringPrimitive((type as PrimitiveCodecInterface).primitive.name),
       };
     //
     // Bit Sequence
@@ -49,7 +52,8 @@ Map<String, dynamic> _computeHash(
     case TypeKind.tuple:
       final tuple = type as TupleCodecInterface;
       return <String, dynamic>{
-        'tuple': tuple.tuple.map((typeIndex) => hasher.getHash(typeIndex)).toList(),
+        'tuple':
+            tuple.tuple.map((typeIndex) => hasher.getHash(typeIndex)).toList(),
       };
     //
     // Composite
@@ -57,7 +61,9 @@ Map<String, dynamic> _computeHash(
       final composite = type as CompositeCodecInterface;
       if (composite.fields.isEmpty || composite.fields[0].name == null) {
         return <String, dynamic>{
-          'tuple': composite.fields.map((field) => hasher.getHash(field.type)).toList(),
+          'tuple': composite.fields
+              .map((field) => hasher.getHash(field.type))
+              .toList(),
         };
       } else {
         final List<interfaces_base.Field> fields = composite.fields.toList();

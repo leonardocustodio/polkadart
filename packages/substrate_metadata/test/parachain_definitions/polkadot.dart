@@ -52,7 +52,11 @@ final polkadotTypesBundle = <String, dynamic>{
     },
     {
       'minmax': [23, 24],
-      'types': {..._sharedTypes, ..._addrAccountIdTypes, 'RefCount': 'RefCountTo259'}
+      'types': {
+        ..._sharedTypes,
+        ..._addrAccountIdTypes,
+        'RefCount': 'RefCountTo259'
+      }
     },
     {
       'minmax': [25, 27],

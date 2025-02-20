@@ -219,7 +219,8 @@ class Point {
       // (z * z^-1) must be 1, otherwise bad math
       throw Exception('invalid inverse');
     }
-    return AffinePoint(Utilities.mod(x * iz), Utilities.mod(y * iz)); // x = x*z^-1; y = y*z^-1
+    return AffinePoint(
+        Utilities.mod(x * iz), Utilities.mod(y * iz)); // x = x*z^-1; y = y*z^-1
   }
 
   /// Checks if the point is valid and on-curve
@@ -250,9 +251,12 @@ class Point {
     final affinePointValue = affinePoint();
     final (BigInt x, BigInt y) = (affinePointValue.x, affinePointValue.y);
     // 0x02, 0x03, 0x04 prefix
-    final head = isCompressed ? ((y & BigInt.one) == BigInt.zero ? '02' : '03') : '04';
+    final head =
+        isCompressed ? ((y & BigInt.one) == BigInt.zero ? '02' : '03') : '04';
     // prefix||x and ||y
-    return head + Utilities.bigIntToHex(x) + (isCompressed ? '' : Utilities.bigIntToHex(y));
+    return head +
+        Utilities.bigIntToHex(x) +
+        (isCompressed ? '' : Utilities.bigIntToHex(y));
   }
 
   /// Encode point to Uint8Array.

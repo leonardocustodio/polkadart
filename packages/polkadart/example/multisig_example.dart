@@ -19,7 +19,8 @@ void main() async {
   final teslaR = await keyring.KeyPair.sr25519.fromUri('//TeslaR');
   teslaR.ss58Format = 42;
 
-  final provider = Provider.fromUri(Uri.parse('wss://westend.api.onfinality.io/public-ws'));
+  final provider =
+      Provider.fromUri(Uri.parse('wss://westend.api.onfinality.io/public-ws'));
 
   ///
   /// Create and Fund Multisig

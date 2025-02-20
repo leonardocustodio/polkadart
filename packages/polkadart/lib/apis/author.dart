@@ -26,8 +26,9 @@ class AuthorApi<P extends Provider> {
       Uint8List extrinsic, Function(ExtrinsicStatus) onData) async {
     final List<dynamic> params = ['0x${hex.encode(extrinsic)}'];
 
-    final subscription = await _provider.subscribe('author_submitAndWatchExtrinsic', params,
-        onCancel: (subscription) async {
+    final subscription = await _provider
+        .subscribe('author_submitAndWatchExtrinsic', params,
+            onCancel: (subscription) async {
       await _provider.send(
         'author_unwatchExtrinsic',
         [subscription],

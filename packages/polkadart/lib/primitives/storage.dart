@@ -41,7 +41,9 @@ class KeyValue {
     final String? value = json[1] as String?;
     return KeyValue(
       key: Uint8List.fromList(hex.decode(key.substring(2))),
-      value: value == null ? null : Uint8List.fromList(hex.decode(value.substring(2))),
+      value: value == null
+          ? null
+          : Uint8List.fromList(hex.decode(value.substring(2))),
     );
   }
 }

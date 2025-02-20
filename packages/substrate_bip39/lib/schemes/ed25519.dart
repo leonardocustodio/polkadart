@@ -13,7 +13,8 @@ class Ed25519 extends CryptoScheme {
   ///
   /// Reference: https://github.com/paritytech/substrate/blob/polkadot-v0.9.43/primitives/core/src/ed25519.rs#L385-L399
   @override
-  Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path, {Uint8List? output}) {
+  Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path,
+      {Uint8List? output}) {
     output ??= Uint8List.fromList(seed);
     for (final junction in path) {
       if (junction.isSoft) {
@@ -26,7 +27,8 @@ class Ed25519 extends CryptoScheme {
   }
 
   /// Derive a single hard junction.
-  Uint8List deriveHardJunction(List<int> seed, List<int> junction, {Uint8List? output}) {
+  Uint8List deriveHardJunction(List<int> seed, List<int> junction,
+      {Uint8List? output}) {
     final bytes = ByteOutput();
     StrCodec.codec.encodeTo('Ed25519HDKD', bytes);
     U8ArrayCodec(super.seedSize).encodeTo(seed, bytes);

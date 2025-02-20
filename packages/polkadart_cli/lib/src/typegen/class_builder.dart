@@ -40,7 +40,8 @@ String classToCodecName(String className) {
   return '\$${className}Codec';
 }
 
-Method overrideEqualsMethod(Reference classType, List<generators.Field> fields) {
+Method overrideEqualsMethod(
+    Reference classType, List<generators.Field> fields) {
   Expression body = refer('other').isA(classType);
 
   for (final field in fields) {
@@ -50,7 +51,8 @@ Method overrideEqualsMethod(Reference classType, List<generators.Field> fields) 
         : field.codec;
 
     // Compare two lists using quiver
-    if (codec is generators.SequenceDescriptor || codec is generators.ArrayDescriptor) {
+    if (codec is generators.SequenceDescriptor ||
+        codec is generators.ArrayDescriptor) {
       body = body.and(refs.quiverListsEqual.call([
         refer('other').property(fieldname),
         refer(fieldname == 'other' ? 'this.other' : fieldname),
@@ -100,23 +102,28 @@ Method overrideHashCodeMethod(List<generators.Field> fields) {
       builder.body = refer('runtimeType.hashCode').code;
     } else if (fields.length == 1) {
       // Object.hash expect at least 2 arguments
-      builder.body = refer(fields.first.sanitizedName).property('hashCode').code;
+      builder.body =
+          refer(fields.first.sanitizedName).property('hashCode').code;
     } else if (fields.length <= 20) {
       // Object.hash function only supports up to 20 arguments
-      builder.body =
-          refs.object.property('hash').call(fields.map((field) => refer(field.sanitizedName))).code;
+      builder.body = refs.object
+          .property('hash')
+          .call(fields.map((field) => refer(field.sanitizedName)))
+          .code;
     } else {
       // if the object has more than 20 properties, use Object.hashAll instead
-      builder.body = refs.object
-          .property('hashAll')
-          .call([literalList(fields.map((field) => refer(field.sanitizedName)))]).code;
+      builder.body = refs.object.property('hashAll').call([
+        literalList(fields.map((field) => refer(field.sanitizedName)))
+      ]).code;
     }
   });
 }
 
-Class createCompositeClass(generators.CompositeBuilder compositeGenerator) => Class((classBuilder) {
+Class createCompositeClass(generators.CompositeBuilder compositeGenerator) =>
+    Class((classBuilder) {
       final dirname = p.dirname(compositeGenerator.filePath);
-      final classType = TypeReference((b) => b..symbol = compositeGenerator.name);
+      final classType =
+          TypeReference((b) => b..symbol = compositeGenerator.name);
       final codecType = refer(classToCodecName(compositeGenerator.name));
       final builderContext = generators.TypeBuilderContext(from: dirname);
 
@@ -154,12 +161,15 @@ Class createCompositeClass(generators.CompositeBuilder compositeGenerator) => Cl
           ..name = 'toJson'
           ..returns = builderContext.jsonTypeFrom(compositeGenerator)
           ..body = compositeGenerator.toJson(dirname).code))
-        ..methods.add(overrideEqualsMethod(classType, compositeGenerator.fields))
+        ..methods
+            .add(overrideEqualsMethod(classType, compositeGenerator.fields))
         ..methods.add(overrideHashCodeMethod(compositeGenerator.fields))
         ..fields.addAll(compositeGenerator.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
           ..type = field.codec.primitive(dirname)
-          ..docs.addAll(field.rustTypeName != null ? sanitizeDocs([field.rustTypeName!]) : [])
+          ..docs.addAll(field.rustTypeName != null
+              ? sanitizeDocs([field.rustTypeName!])
+              : [])
           ..docs.addAll(sanitizeDocs(field.docs))
           ..modifier = FieldModifier.final$)))
         ..fields.add(Field((b) => b
@@ -189,8 +199,9 @@ Class createCompositeCodec(generators.CompositeBuilder compositeGenerator) {
             ..type = refs.output
             ..name = 'output'),
         ])
-        ..body = Block.of(compositeGenerator.fields.map((field) =>
-            field.codec.encode(dirname, refer('obj').property(field.sanitizedName)).statement))))
+        ..body = Block.of(compositeGenerator.fields.map((field) => field.codec
+            .encode(dirname, refer('obj').property(field.sanitizedName))
+            .statement))))
       ..methods.add(Method((b) => b
         ..name = 'decode'
         ..returns = classType
@@ -205,8 +216,8 @@ Class createCompositeCodec(generators.CompositeBuilder compositeGenerator) {
                       .where((field) => field.originalName == null)
                       .map((field) => field.codec.decode(dirname)),
                   {
-                    for (var field
-                        in compositeGenerator.fields.where((field) => field.originalName != null))
+                    for (var field in compositeGenerator.fields
+                        .where((field) => field.originalName != null))
                       field.sanitizedName: field.codec.decode(dirname)
                   })
               .returned
@@ -222,12 +233,13 @@ Class createCompositeCodec(generators.CompositeBuilder compositeGenerator) {
         )
         ..body = Block((b) => b
           ..statements.add(Code('int size = 0;'))
-          ..statements.addAll(compositeGenerator.fields.map((field) => refer('size')
-              .assign(refer('size').operatorAdd(field.codec
-                  .codecInstance(dirname)
-                  .property('sizeHint')
-                  .call([refer('obj').property(field.sanitizedName)])))
-              .statement))
+          ..statements.addAll(compositeGenerator.fields.map((field) =>
+              refer('size')
+                  .assign(refer('size').operatorAdd(field.codec
+                      .codecInstance(dirname)
+                      .property('sizeHint')
+                      .call([refer('obj').property(field.sanitizedName)])))
+                  .statement))
           ..statements.add(refer('size').returned.statement))));
   });
 }
@@ -271,7 +283,8 @@ Class createVariantBaseClass(
           ..name = 'encode'
           ..returns = refs.uint8List
           ..body = Block.of([
-            Code.scope((a) => 'final output = ${a(refs.byteOutput)}(codec.sizeHint(this));'),
+            Code.scope((a) =>
+                'final output = ${a(refs.byteOutput)}(codec.sizeHint(this));'),
             Code('codec.encodeTo(this, output);'),
             Code('return output.toBytes();'),
           ])))
@@ -293,37 +306,41 @@ Class createVariantValuesClass(
       classBuilder
         ..name = '\$${variantGenerator.name}'
         ..constructors.add(Constructor((b) => b..constant = true))
-        ..methods.addAll(variantGenerator.variants.map((variant) => Method((b) => b
-          ..returns = refer(variant.name)
-          ..name = generators.Field.toFieldName(variant.name)
-          ..body = refer(variant.name)
-              .call(
-                  variant.fields
-                      .where((field) => field.originalName == null)
-                      .map((field) => refer(field.sanitizedName)),
-                  {
-                    for (final field in variant.fields.where((field) => field.originalName != null))
-                      field.sanitizedName: refer(field.sanitizedName)
-                  })
-              .returned
-              .statement
-          ..requiredParameters.addAll(variant.fields
-              .where((field) => field.originalName == null)
-              .map((field) => Parameter((b) => b
-                ..required = false
-                ..named = false
-                ..type = field.codec.primitive(dirname)
-                ..name = field.sanitizedName)))
-          ..optionalParameters.addAll(variant.fields
-              .where((field) => field.originalName != null)
-              .map((field) => Parameter((b) => b
-                ..required = field.codec.primitive(dirname).isNullable != true
-                ..named = true
-                ..type = field.codec.primitive(dirname)
-                ..name = field.sanitizedName))))));
+        ..methods.addAll(variantGenerator.variants.map((variant) => Method(
+            (b) => b
+              ..returns = refer(variant.name)
+              ..name = generators.Field.toFieldName(variant.name)
+              ..body = refer(variant.name)
+                  .call(
+                      variant.fields
+                          .where((field) => field.originalName == null)
+                          .map((field) => refer(field.sanitizedName)),
+                      {
+                        for (final field in variant.fields
+                            .where((field) => field.originalName != null))
+                          field.sanitizedName: refer(field.sanitizedName)
+                      })
+                  .returned
+                  .statement
+              ..requiredParameters.addAll(variant.fields
+                  .where((field) => field.originalName == null)
+                  .map((field) => Parameter((b) => b
+                    ..required = false
+                    ..named = false
+                    ..type = field.codec.primitive(dirname)
+                    ..name = field.sanitizedName)))
+              ..optionalParameters.addAll(variant.fields
+                  .where((field) => field.originalName != null)
+                  .map((field) => Parameter((b) => b
+                    ..required =
+                        field.codec.primitive(dirname).isNullable != true
+                    ..named = true
+                    ..type = field.codec.primitive(dirname)
+                    ..name = field.sanitizedName))))));
     });
 
-Class createVariantCodec(generators.VariantBuilder variantGenerator) => Class((classBuilder) {
+Class createVariantCodec(generators.VariantBuilder variantGenerator) =>
+    Class((classBuilder) {
       final dirname = p.dirname(variantGenerator.filePath);
       final Reference classType = refer(variantGenerator.name);
 
@@ -434,7 +451,9 @@ Class createVariantClass(
         ..fields.addAll(variant.fields.map((field) => Field((b) => b
           ..name = field.sanitizedName
           ..type = field.codec.primitive(dirname)
-          ..docs.addAll(field.rustTypeName != null ? sanitizeDocs([field.rustTypeName!]) : [])
+          ..docs.addAll(field.rustTypeName != null
+              ? sanitizeDocs([field.rustTypeName!])
+              : [])
           ..docs.addAll(sanitizeDocs(field.docs))
           ..modifier = FieldModifier.final$)));
 
@@ -453,8 +472,8 @@ Class createVariantClass(
                         .where((field) => field.originalName == null)
                         .map((field) => field.codec.decode(dirname)),
                     {
-                      for (final field
-                          in variant.fields.where((field) => field.originalName != null))
+                      for (final field in variant.fields
+                          .where((field) => field.originalName != null))
                         field.sanitizedName: field.codec.decode(dirname)
                     })
                 .returned
@@ -465,8 +484,10 @@ Class createVariantClass(
             ..body = Block((b) => b
               ..statements.add(Code('int size = 1;'))
               ..statements.addAll(variant.fields.map((field) => refer('size')
-                  .assign(refer('size')
-                      .operatorAdd(field.codec.codecInstance(dirname).property('sizeHint').call([
+                  .assign(refer('size').operatorAdd(field.codec
+                      .codecInstance(dirname)
+                      .property('sizeHint')
+                      .call([
                     field.sanitizedName == 'size'
                         ? refer('this').property(field.sanitizedName)
                         : refer(field.sanitizedName)
@@ -502,7 +523,8 @@ Class createVariantClass(
       ]);
     });
 
-Enum createSimpleVariantEnum(generators.VariantBuilder variant) => Enum((enumBuilder) {
+Enum createSimpleVariantEnum(generators.VariantBuilder variant) =>
+    Enum((enumBuilder) {
       final dirname = p.dirname(variant.filePath);
       final Reference typeRef = refer(variant.name);
       final Reference codecRef = refer(classToCodecName(variant.name));
@@ -551,7 +573,10 @@ Enum createSimpleVariantEnum(generators.VariantBuilder variant) => Enum((enumBui
         ..values.addAll(variant.variants.map((variant) => EnumValue((b) => b
           ..name = generators.Field.toFieldName(variant.name)
           ..docs.addAll(sanitizeDocs(variant.docs))
-          ..arguments.addAll([literalString(variant.originalName), literalNum(variant.index)]))))
+          ..arguments.addAll([
+            literalString(variant.originalName),
+            literalNum(variant.index)
+          ]))))
         ..methods.add(Method((b) => b
           ..name = 'encode'
           ..returns = refs.uint8List
@@ -581,10 +606,12 @@ Class createSimpleVariantCodec(
                 .assign(generators.PrimitiveDescriptor.u8(1).decode(dirname))
                 .statement)
             ..statements.add(Code('switch (index) {'))
-            ..statements.add(Block.of(variant.variants.map((variant) => Block.of([
-                  Code('case ${variant.index}:'),
-                  Code('return ${className.symbol}.${generators.Field.toFieldName(variant.name)};')
-                ]))))
+            ..statements
+                .add(Block.of(variant.variants.map((variant) => Block.of([
+                      Code('case ${variant.index}:'),
+                      Code(
+                          'return ${className.symbol}.${generators.Field.toFieldName(variant.name)};')
+                    ]))))
             ..statements.add(Code(
                 'default: throw Exception(\'${className.symbol}: Invalid variant index: "\$index"\');'))
             ..statements.add(Code('}')))))
@@ -668,7 +695,9 @@ Class createTupleCodec(
           ])
           ..body = Block((b) => b
             ..statements.addAll(List.generate(
-                size, (index) => Code('codec$index.encodeTo(tuple.value$index, output);'))))))
+                size,
+                (index) => Code(
+                    'codec$index.encodeTo(tuple.value$index, output);'))))))
         ..methods.add(Method((b) => b
           ..name = 'decode'
           ..annotations.add(refer('override'))
@@ -680,7 +709,8 @@ Class createTupleCodec(
           ])
           ..body = Block((b) => b
             ..statements.add(Code('return Tuple$size('))
-            ..statements.addAll(List.generate(size, (index) => Code('codec$index.decode(input),')))
+            ..statements.addAll(List.generate(
+                size, (index) => Code('codec$index.decode(input),')))
             ..statements.add(Code(');')))))
         ..methods.add(Method((b) => b
           ..name = 'sizeHint'
@@ -694,6 +724,8 @@ Class createTupleCodec(
           ..body = Block((b) => b
             ..statements.add(Code('int size = 0;'))
             ..statements.addAll(List.generate(
-                size, (index) => Code('size += codec$index.sizeHint(tuple.value$index);')))
+                size,
+                (index) =>
+                    Code('size += codec$index.sizeHint(tuple.value$index);')))
             ..statements.add(Code('return size;')))));
     });

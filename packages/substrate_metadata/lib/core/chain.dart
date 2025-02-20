@@ -49,20 +49,25 @@ class Chain {
     }
     VersionDescription? vd;
 
-    if (blockNumberList.isNotEmpty && next != 0 && next < blockNumberList.length) {
+    if (blockNumberList.isNotEmpty &&
+        next != 0 &&
+        next < blockNumberList.length) {
       // get the blocknumber from the index
-      final int resultBlockNumber =
-          next < 0 ? blockNumberList[blockNumberList.length - 1] : blockNumberList[next - 1];
+      final int resultBlockNumber = next < 0
+          ? blockNumberList[blockNumberList.length - 1]
+          : blockNumberList[next - 1];
 
       vd = _versionDescriptionMap[resultBlockNumber];
     }
     return vd;
   }
 
-  DecodedBlockExtrinsics decodeExtrinsics(RawBlockExtrinsics rawBlockExtrinsics) {
+  DecodedBlockExtrinsics decodeExtrinsics(
+      RawBlockExtrinsics rawBlockExtrinsics) {
     final blockNumber = rawBlockExtrinsics.blockNumber;
 
-    final VersionDescription? versionDescription = getVersionDescription(blockNumber);
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
@@ -74,39 +79,47 @@ class Chain {
 
     for (var extrinsic in rawBlockExtrinsics.extrinsics) {
       final extrinsicInput = Input.fromHex(extrinsic);
-      final value = ExtrinsicsCodec(chainInfo: versionDescription.chainInfo).decode(extrinsicInput);
+      final value = ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
+          .decode(extrinsicInput);
 
       // Check if the extrinsic is fully consumed
       extrinsicInput.assertEndOfDataReached(' At block: $blockNumber');
       extrinsics.add(value);
     }
 
-    return DecodedBlockExtrinsics(blockNumber: blockNumber, extrinsics: extrinsics);
+    return DecodedBlockExtrinsics(
+        blockNumber: blockNumber, extrinsics: extrinsics);
   }
 
-  RawBlockExtrinsics encodeExtrinsics(DecodedBlockExtrinsics decodedBlockExtrinsics) {
+  RawBlockExtrinsics encodeExtrinsics(
+      DecodedBlockExtrinsics decodedBlockExtrinsics) {
     final blockNumber = decodedBlockExtrinsics.blockNumber;
 
-    final VersionDescription? versionDescription = getVersionDescription(blockNumber);
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
       throw BlockNotFoundException(blockNumber);
     }
 
-    final List<String> encodedExtrinsicsHex = decodedBlockExtrinsics.extrinsics.map((extrinsic) {
+    final List<String> encodedExtrinsicsHex =
+        decodedBlockExtrinsics.extrinsics.map((extrinsic) {
       final output = HexOutput();
-      ExtrinsicsCodec(chainInfo: versionDescription.chainInfo).encodeTo(extrinsic, output);
+      ExtrinsicsCodec(chainInfo: versionDescription.chainInfo)
+          .encodeTo(extrinsic, output);
       return output.toString();
     }).toList(growable: false);
 
-    return RawBlockExtrinsics(blockNumber: blockNumber, extrinsics: encodedExtrinsicsHex);
+    return RawBlockExtrinsics(
+        blockNumber: blockNumber, extrinsics: encodedExtrinsicsHex);
   }
 
   DecodedBlockEvents decodeEvents(RawBlockEvents rawBlockEvents) {
     final blockNumber = rawBlockEvents.blockNumber;
 
-    final VersionDescription? versionDescription = getVersionDescription(blockNumber);
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
@@ -132,7 +145,8 @@ class Chain {
   RawBlockEvents encodeEvents(DecodedBlockEvents decodedBlockEvents) {
     final blockNumber = decodedBlockEvents.blockNumber;
 
-    final VersionDescription? versionDescription = getVersionDescription(blockNumber);
+    final VersionDescription? versionDescription =
+        getVersionDescription(blockNumber);
 
     // Check if this is not empty, throw Exception if it is.
     if (versionDescription == null) {
@@ -183,16 +197,19 @@ class Chain {
   }
 
   ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
-    final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode(specVersion.metadata);
+    final DecodedMetadata decodedMetadata =
+        MetadataDecoder.instance.decode(specVersion.metadata);
 
     LegacyTypes? types;
 
     // Pre checking helps to avoid extra computation for processing LegacyTypesBundle.
     if (decodedMetadata.isPreV14 && typesBundleDefinition != null) {
-      types = getLegacyTypesFromBundle(typesBundleDefinition!, specVersion.specVersion);
+      types = getLegacyTypesFromBundle(
+          typesBundleDefinition!, specVersion.specVersion);
     }
 
-    final ChainInfo description = ChainInfo.fromMetadata(decodedMetadata, types);
+    final ChainInfo description =
+        ChainInfo.fromMetadata(decodedMetadata, types);
 
     return description;
   }

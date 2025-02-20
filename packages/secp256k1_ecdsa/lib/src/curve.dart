@@ -17,5 +17,6 @@ class Curve {
     required this.gy,
   });
 
-  static final secp256k1 = Curve(p: P, n: N, a: BigInt.zero, b: BigInt.from(7), gx: Gx, gy: Gy);
+  static final secp256k1 =
+      Curve(p: P, n: N, a: BigInt.zero, b: BigInt.from(7), gx: Gx, gy: Gy);
 }

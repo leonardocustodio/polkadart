@@ -15,12 +15,14 @@ const SPEC_VERSION_SCHEMA = <String, dynamic>{
       'type': 'integer',
     },
     'blockNumber': {
-      'description': 'The height of the block where the given spec version was first introduced',
+      'description':
+          'The height of the block where the given spec version was first introduced',
       'type': 'integer',
       'minimum': 0
     },
     'blockHash': {
-      'description': 'The hash of the block where the given spec version was first introduced',
+      'description':
+          'The hash of the block where the given spec version was first introduced',
       'type': 'string',
       'pattern': '^0x([a-fA-F0-9])+\$'
     },
@@ -30,5 +32,11 @@ const SPEC_VERSION_SCHEMA = <String, dynamic>{
       'pattern': '^0x([a-fA-F0-9])+\$'
     }
   },
-  'required': ['specName', 'specVersion', 'blockNumber', 'blockHash', 'metadata']
+  'required': [
+    'specName',
+    'specVersion',
+    'blockNumber',
+    'blockHash',
+    'metadata'
+  ]
 };

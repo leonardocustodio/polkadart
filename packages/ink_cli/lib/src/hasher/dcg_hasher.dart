@@ -117,7 +117,8 @@ class DCGHasher<T> implements HasherAbstract {
         return node.hash;
       }
       // Means we discovered it in a previous traversal; check component
-      assert(node.component != null, 'Node has no component set but was visited before.');
+      assert(node.component != null,
+          'Node has no component set but was visited before.');
       if (node.component != parent.component) {
         // We are entering a strongly connected component. Return cached hash if available
         final existingHash = cache[ni];
@@ -180,6 +181,7 @@ class DCGHasher<T> implements HasherAbstract {
 Hash sha(Map<String, dynamic> obj) {
   final content = jsonEncode(obj);
   final digest = sha256.convert(utf8.encode(content));
-  final fullHex = digest.bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+  final fullHex =
+      digest.bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
   return fullHex.substring(0, 32);
 }

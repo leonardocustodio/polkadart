@@ -21,7 +21,10 @@ class DER {
       throw Exception('Invalid signature integer: unnecessary leading zero');
     }
     // d is data, l is left
-    return (Utilities.bytesToBigInt(Uint8List.fromList(res)), data.sublist(len + 2));
+    return (
+      Utilities.bytesToBigInt(Uint8List.fromList(res)),
+      data.sublist(len + 2)
+    );
   }
 
   static Signature toSigFromHex(String hex) {

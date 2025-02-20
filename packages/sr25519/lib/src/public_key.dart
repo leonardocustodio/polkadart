@@ -76,7 +76,8 @@ class PublicKey implements DerivableKey {
   }
 
   /// deriveScalarAndChaincode derives a new scalar and chain code from an existing public key and chain code
-  (r255.Scalar, List<int>) deriveScalarAndChaincode(merlin.Transcript t, List<int> cc) {
+  (r255.Scalar, List<int>) deriveScalarAndChaincode(
+      merlin.Transcript t, List<int> cc) {
     t.appendMessage(utf8.encode('chain-code'), cc);
     final pkenc = encode();
     t.appendMessage(utf8.encode('public-key'), pkenc);
@@ -112,12 +113,14 @@ class PublicKey implements DerivableKey {
     k.fromUniformBytes(kb);
 
     final rp = r255.Element.newElement()
-      ..varTimeDoubleScalarBaseMult(k, r255.Element.newElement()..negate(key), s.s);
+      ..varTimeDoubleScalarBaseMult(
+          k, r255.Element.newElement()..negate(key), s.s);
 
     return (rp.equal(s.r) == 1, null);
   }
 
-  bool verifySimplePreAuditDeprecated(String context, List<int> msg, Uint8List sigature) {
+  bool verifySimplePreAuditDeprecated(
+      String context, List<int> msg, Uint8List sigature) {
     merlin.Transcript t = Sr25519.newSigningContext(utf8.encode(context), msg);
 
     late final Signature signature;
@@ -142,7 +145,8 @@ class PublicKey implements DerivableKey {
     k.fromUniformBytes(kb);
 
     final rp = r255.Element.newElement()
-      ..varTimeDoubleScalarBaseMult(k, r255.Element.newElement()..negate(key), signature.s);
+      ..varTimeDoubleScalarBaseMult(
+          k, r255.Element.newElement()..negate(key), signature.s);
 
     return (rp.equal(signature.r) == 1);
   }
@@ -175,7 +179,8 @@ class PublicKey implements DerivableKey {
 
     // hr = proof.c * p.output + proof.s * p.input
     final hr = r255.Element.newElement()
-      ..varTimeMultiScalarMult(<r255.Scalar>[proof.c, proof.s], <r255.Element>[p.output, p.input]);
+      ..varTimeMultiScalarMult(
+          <r255.Scalar>[proof.c, proof.s], <r255.Element>[p.output, p.input]);
     t.appendMessage(utf8.encode('vrf:h^r'), hr.encode());
     if (kusamaVRF) {
       t.appendMessage(utf8.encode('vrf:pk'), key.encode());

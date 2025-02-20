@@ -33,6 +33,7 @@ List<dynamic> readLines(String filePath) {
   // As File exists, now start reading line by line.
   //
   // mapping lines to jsonDecode so as to convert `stringified` lines to `List<HashMap>`.
-  final result = File(filePath).readAsLinesSync().map(jsonDecode).toList(growable: false);
+  final result =
+      File(filePath).readAsLinesSync().map(jsonDecode).toList(growable: false);
   return result;
 }

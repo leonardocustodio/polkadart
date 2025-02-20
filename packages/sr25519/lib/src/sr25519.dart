@@ -41,7 +41,8 @@ class Sr25519 {
   /// final (verified, exception) = publicKey.verify(signature, transcript);
   ///
   /// ```
-  static (bool, Exception?) verify(PublicKey publicKey, Signature sig, Uint8List msg) {
+  static (bool, Exception?) verify(
+      PublicKey publicKey, Signature sig, Uint8List msg) {
     final transcript = newSigningContext(utf8.encode('substrate'), msg);
     return publicKey.verify(sig, transcript);
   }

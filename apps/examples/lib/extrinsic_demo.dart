@@ -4,7 +4,13 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:polkadart/apis/apis.dart';
 import 'package:polkadart/polkadart.dart'
-    show AuthorApi, ExtrinsicPayload, Provider, SignatureType, SigningPayload, StateApi;
+    show
+        AuthorApi,
+        ExtrinsicPayload,
+        Provider,
+        SignatureType,
+        SigningPayload,
+        StateApi;
 import 'package:polkadart_example/generated/polkadot/types/sp_runtime/multiaddress/multi_address.dart'
     as polkadot;
 import 'package:polkadart_example/generated/paseo/types/sp_runtime/multiaddress/multi_address.dart'
@@ -12,7 +18,8 @@ import 'package:polkadart_example/generated/paseo/types/sp_runtime/multiaddress/
 import 'package:polkadart_example/generated/assethub/types/sp_runtime/multiaddress/multi_address.dart'
     as assethub;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale_codec;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    as scale_codec;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:ss58/ss58.dart';
 
@@ -25,7 +32,9 @@ Future<void> main(List<String> arguments) async {
   final bob = await KeyPair.sr25519.fromUri('//Bob');
   final bobMultiAddress = polkadot.$MultiAddress().id(bob.publicKey.bytes);
 
-  final encodedTx = api.tx.balances.transferAll(dest: bobMultiAddress, keepAlive: false).encode();
+  final encodedTx = api.tx.balances
+      .transferAll(dest: bobMultiAddress, keepAlive: false)
+      .encode();
   print(encodeHex(encodedTx));
 
   // Create sr25519 wallet
@@ -39,7 +48,8 @@ Future<void> main(List<String> arguments) async {
   print('Ecdsa Wallet: ${ecdsaWallet.address}');
 
   {
-    final paseoProvider = Provider.fromUri(Uri.parse('wss://paseo-rpc.dwellir.com'));
+    final paseoProvider =
+        Provider.fromUri(Uri.parse('wss://paseo-rpc.dwellir.com'));
     final paseoApi = Paseo(paseoProvider);
 
     // Get info necessary to build an extrinsic
@@ -51,10 +61,12 @@ Future<void> main(List<String> arguments) async {
     final blockNumber = int.parse(block.result['block']['header']['number']);
     print('Block Number: $blockNumber');
 
-    final blockHash =
-        (await paseoProvider.send('chain_getBlockHash', [])).result.replaceAll('0x', '');
-    final genesisHash =
-        (await paseoProvider.send('chain_getBlockHash', [0])).result.replaceAll('0x', '');
+    final blockHash = (await paseoProvider.send('chain_getBlockHash', []))
+        .result
+        .replaceAll('0x', '');
+    final genesisHash = (await paseoProvider.send('chain_getBlockHash', [0]))
+        .result
+        .replaceAll('0x', '');
 
     // Initiate Author Api
     final author = AuthorApi(paseoProvider);
@@ -71,10 +83,12 @@ Future<void> main(List<String> arguments) async {
       print('Destination: $dest');
 
       // Encode call
-      final runtimeCall = paseoApi.tx.balances.transferAll(dest: multiDest, keepAlive: false);
+      final runtimeCall =
+          paseoApi.tx.balances.transferAll(dest: multiDest, keepAlive: false);
       final encodedCall = runtimeCall.encode();
 
-      final nonce1 = await SystemApi(paseoProvider).accountNextIndex(sr25519Wallet.address);
+      final nonce1 = await SystemApi(paseoProvider)
+          .accountNextIndex(sr25519Wallet.address);
 
       final sr25519_payloadToSign = SigningPayload(
         method: encodedCall,
@@ -126,10 +140,12 @@ Future<void> main(List<String> arguments) async {
       print('Destination: $dest');
 
       // Encode call
-      final runtimeCall = paseoApi.tx.balances.transferAll(dest: multiDest, keepAlive: false);
+      final runtimeCall =
+          paseoApi.tx.balances.transferAll(dest: multiDest, keepAlive: false);
       final encodedCall = runtimeCall.encode();
 
-      final nonce1 = await SystemApi(paseoProvider).accountNextIndex(ecdsaWallet.address);
+      final nonce1 =
+          await SystemApi(paseoProvider).accountNextIndex(ecdsaWallet.address);
 
       final ecdsa_payloadToSign = SigningPayload(
         method: encodedCall,
@@ -171,14 +187,16 @@ Future<void> main(List<String> arguments) async {
   //
   // Custom RPC call
   {
-    final astarProvider = Provider.fromUri(Uri.parse('wss://rpc.astar.network'));
+    final astarProvider =
+        Provider.fromUri(Uri.parse('wss://rpc.astar.network'));
     final gasPrice = await astarProvider.send('eth_gasPrice', []);
     print('Gas Price: ${gasPrice.result}');
   }
 
   // Custom Signed Extension with TypeRegistry
   {
-    final assetProvider = Provider.fromUri(Uri.parse('wss://westend-asset-hub-rpc.polkadot.io'));
+    final assetProvider =
+        Provider.fromUri(Uri.parse('wss://westend-asset-hub-rpc.polkadot.io'));
     final assetApi = Assethub(assetProvider);
     final assetState = StateApi(assetProvider);
 
@@ -186,15 +204,21 @@ Future<void> main(List<String> arguments) async {
     final assetSpecVersion = assetRuntimeVersion.specVersion;
     final assetTransactionVersion = assetRuntimeVersion.transactionVersion;
     final assetBlock = await assetProvider.send('chain_getBlock', []);
-    final assetBlockNumber = int.parse(assetBlock.result['block']['header']['number']);
-    final assetBlockHash =
-        (await assetProvider.send('chain_getBlockHash', [])).result.replaceAll('0x', '');
+    final assetBlockNumber =
+        int.parse(assetBlock.result['block']['header']['number']);
+    final assetBlockHash = (await assetProvider.send('chain_getBlockHash', []))
+        .result
+        .replaceAll('0x', '');
     final assetGenesisHash =
-        (await assetProvider.send('chain_getBlockHash', [0])).result.replaceAll('0x', '');
+        (await assetProvider.send('chain_getBlockHash', [0]))
+            .result
+            .replaceAll('0x', '');
 
-    final customDest = assethub.$MultiAddress().id(Address.decode(ecdsaWallet.address).pubkey);
+    final customDest =
+        assethub.$MultiAddress().id(Address.decode(ecdsaWallet.address).pubkey);
     print('Custom Destination: $customDest');
-    final customCall = assetApi.tx.balances.transferAll(dest: customDest, keepAlive: false);
+    final customCall =
+        assetApi.tx.balances.transferAll(dest: customDest, keepAlive: false);
     final customEncodedCall = customCall.encode();
     print('Custom Encoded Call: ${hex.encode(customEncodedCall)}');
 
@@ -202,13 +226,15 @@ Future<void> main(List<String> arguments) async {
     final customMetadata = await assetState.getMetadata();
 
     // Get Registry
-    final scale_codec.Registry registry = customMetadata.chainInfo.scaleCodec.registry;
+    final scale_codec.Registry registry =
+        customMetadata.chainInfo.scaleCodec.registry;
 
     // Get SignedExtensions mapped with codecs Map<String, Codec<dynamic>>
     final Map<String, scale_codec.Codec<dynamic>> signedExtensions =
         registry.getSignedExtensionTypes();
     print('Signed Extensions Keys: ${signedExtensions.keys.toList()}');
-    final nonce1 = await SystemApi(assetProvider).accountNextIndex(sr25519Wallet.address);
+    final nonce1 =
+        await SystemApi(assetProvider).accountNextIndex(sr25519Wallet.address);
     print('sr25519 assethub address: ${sr25519Wallet.address}');
     print('Nonce: $nonce1');
 

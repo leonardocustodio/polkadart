@@ -44,7 +44,9 @@ class LegacyParser {
         final index = module['index'] ?? callModuleIndex;
 
         final callEnumCodec = <int, MapEntry<String, Codec>>{};
-        for (var callIndex = 0; callIndex < module['calls'].length; callIndex++) {
+        for (var callIndex = 0;
+            callIndex < module['calls'].length;
+            callIndex++) {
           final call = module['calls'][callIndex];
 
           final List<dynamic> args = call['args'];
@@ -76,7 +78,8 @@ class LegacyParser {
           }
           callEnumCodec[callIndex] = MapEntry(call['name'], argsCodec);
         }
-        genericCallsCodec[index] = MapEntry(module['name'], ComplexEnumCodec.sparse(callEnumCodec));
+        genericCallsCodec[index] =
+            MapEntry(module['name'], ComplexEnumCodec.sparse(callEnumCodec));
       }
 
       if (module['events'] != null) {
@@ -85,7 +88,9 @@ class LegacyParser {
         final index = module['index'] ?? eventModuleIndex;
 
         final eventEnumCodec = <int, MapEntry<String, Codec>>{};
-        for (var eventIndex = 0; eventIndex < module['events'].length; eventIndex++) {
+        for (var eventIndex = 0;
+            eventIndex < module['events'].length;
+            eventIndex++) {
           final event = module['events'][eventIndex];
 
           final List<dynamic> args = event['args'];
@@ -132,12 +137,14 @@ class LegacyParser {
 
     //
     // Register the Generic Event
-    _resultingRegistry.addCodec('GenericEvent', ComplexEnumCodec.sparse(genericEventsCodec));
+    _resultingRegistry.addCodec(
+        'GenericEvent', ComplexEnumCodec.sparse(genericEventsCodec));
 
     {
       //
       // Configure the events codec
-      final eventCodec = _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'EventRecord');
+      final eventCodec = _resultingRegistry.parseSpecificCodec(
+          legacyTypes.types, 'EventRecord');
 
       _resultingRegistry
         ..addCodec('EventRecord', eventCodec)
@@ -154,7 +161,8 @@ class LegacyParser {
   }
 
   Codec _getCodecFromType(String type, String? moduleName) {
-    final String parsedType = _typeNormalizer.normalize(type, moduleName).toString();
+    final String parsedType =
+        _typeNormalizer.normalize(type, moduleName).toString();
 
     return _resultingRegistry.parseSpecificCodec(legacyTypes.types, parsedType);
   }
@@ -164,14 +172,17 @@ class LegacyParser {
     // Configure the Extrinsic Signature Codec
     final eraCodec = EraExtrinsic.codec;
 
-    final nonceCodec = _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'Compact<Index>');
+    final nonceCodec = _resultingRegistry.parseSpecificCodec(
+        legacyTypes.types, 'Compact<Index>');
 
-    final tipCodec = _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'Compact<Balance>');
+    final tipCodec = _resultingRegistry.parseSpecificCodec(
+        legacyTypes.types, 'Compact<Balance>');
 
-    final addressCodec = _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'Address');
+    final addressCodec =
+        _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'Address');
 
-    final signatureCodec =
-        _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'ExtrinsicSignature');
+    final signatureCodec = _resultingRegistry.parseSpecificCodec(
+        legacyTypes.types, 'ExtrinsicSignature');
 
     final extrinsicCodec = CompositeCodec({
       'address': addressCodec,
@@ -213,10 +224,11 @@ class LegacyParser {
     enums[0xfc] = MapEntry('IdxU16', U16Codec.codec);
     enums[0xfd] = MapEntry('IdxU32', U32Codec.codec);
     enums[0xfe] = MapEntry('IdxU64', U64Codec.codec);
-    enums[0xff] = MapEntry(
-        'AccountId', _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'AccountId'));
+    enums[0xff] = MapEntry('AccountId',
+        _resultingRegistry.parseSpecificCodec(legacyTypes.types, 'AccountId'));
 
-    _resultingRegistry.addCodec('GenericLookupSource', ComplexEnumCodec.sparse(enums));
+    _resultingRegistry.addCodec(
+        'GenericLookupSource', ComplexEnumCodec.sparse(enums));
   }
 
   void _forEachPallet({

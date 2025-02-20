@@ -1,4 +1,5 @@
-import 'package:polkadart/polkadart.dart' show SystemApi, ChainType, Health, PeerInfo, SyncState;
+import 'package:polkadart/polkadart.dart'
+    show SystemApi, ChainType, Health, PeerInfo, SyncState;
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
 import './mock_provider.dart' show MockProvider;
@@ -8,14 +9,16 @@ void main() {
     test('name', () {
       final provider = MockProvider(null);
       final api = SystemApi(provider);
-      provider.setMethodCallback('system_name', (params, state) => 'Parity Polkadot');
+      provider.setMethodCallback(
+          'system_name', (params, state) => 'Parity Polkadot');
       expect(api.name(), completion('Parity Polkadot'));
     });
 
     test('version', () {
       final provider = MockProvider(null);
       final api = SystemApi(provider);
-      provider.setMethodCallback('system_version', (params, state) => '0.9.43-ba42b9ce51d');
+      provider.setMethodCallback(
+          'system_version', (params, state) => '0.9.43-ba42b9ce51d');
       expect(api.version(), completion('0.9.43-ba42b9ce51d'));
     });
 
@@ -29,34 +32,45 @@ void main() {
     test('chainType', () {
       final provider = MockProvider(null);
       final api = SystemApi(provider);
-      provider.setMethodCallback('system_chainType', (params, state) => 'Development');
+      provider.setMethodCallback(
+          'system_chainType', (params, state) => 'Development');
       expect(api.chainType(), completion(ChainType.values.development()));
 
       provider.setMethodCallback('system_chainType', (params, state) => 'Live');
       expect(api.chainType(), completion(ChainType.values.live()));
 
-      provider.setMethodCallback('system_chainType', (params, state) => 'Local');
+      provider.setMethodCallback(
+          'system_chainType', (params, state) => 'Local');
       expect(api.chainType(), completion(ChainType.values.local()));
 
       provider.setMethodCallback(
           'system_chainType', (params, state) => {'Custom': 'polkadart 1337'});
-      expect(api.chainType(), completion(ChainType.values.custom('polkadart 1337')));
+      expect(api.chainType(),
+          completion(ChainType.values.custom('polkadart 1337')));
     });
 
     test('health', () {
       final provider = MockProvider(null);
       final api = SystemApi(provider);
-      provider.setMethodCallback('system_health',
-          (params, state) => {'peers': 22, 'isSyncing': false, 'shouldHavePeers': true});
-      expect(api.health(), completion(Health(peers: 22, isSyncing: false, shouldHavePeers: true)));
+      provider.setMethodCallback(
+          'system_health',
+          (params, state) =>
+              {'peers': 22, 'isSyncing': false, 'shouldHavePeers': true});
+      expect(
+          api.health(),
+          completion(
+              Health(peers: 22, isSyncing: false, shouldHavePeers: true)));
     });
 
     test('localPeerId', () {
       final provider = MockProvider(null);
       final api = SystemApi(provider);
-      provider.setMethodCallback('system_localPeerId',
-          (params, state) => '12D3KooWBDg7u6dBEo82fJe4kyDJT3L2C8kYNYGNvuBkEPVryKby');
-      expect(api.localPeerId(), completion('12D3KooWBDg7u6dBEo82fJe4kyDJT3L2C8kYNYGNvuBkEPVryKby'));
+      provider.setMethodCallback(
+          'system_localPeerId',
+          (params, state) =>
+              '12D3KooWBDg7u6dBEo82fJe4kyDJT3L2C8kYNYGNvuBkEPVryKby');
+      expect(api.localPeerId(),
+          completion('12D3KooWBDg7u6dBEo82fJe4kyDJT3L2C8kYNYGNvuBkEPVryKby'));
     });
 
     test('localListenAddresses', () {
@@ -91,9 +105,11 @@ void main() {
           'system_peers',
           (params, state) => [
                 {
-                  'peerId': '12D3KooWBDg7u6dBEo82fJe4kyDJT3L2C8kYNYGNvuBkEPVryKby',
+                  'peerId':
+                      '12D3KooWBDg7u6dBEo82fJe4kyDJT3L2C8kYNYGNvuBkEPVryKby',
                   'roles': 'Full',
-                  'bestHash': '0x1a162f9495422abd65e48fc4768bccfd3d19c9ad71009975738bd4c0dd5bfdb3',
+                  'bestHash':
+                      '0x1a162f9495422abd65e48fc4768bccfd3d19c9ad71009975738bd4c0dd5bfdb3',
                   'bestNumber': 1000
                 }
               ]);
@@ -103,7 +119,8 @@ void main() {
             PeerInfo(
                 peerId: '12D3KooWBDg7u6dBEo82fJe4kyDJT3L2C8kYNYGNvuBkEPVryKby',
                 roles: 'Full',
-                bestHash: '0x1a162f9495422abd65e48fc4768bccfd3d19c9ad71009975738bd4c0dd5bfdb3',
+                bestHash:
+                    '0x1a162f9495422abd65e48fc4768bccfd3d19c9ad71009975738bd4c0dd5bfdb3',
                 bestNumber: 1000)
           ]));
     });
@@ -116,7 +133,9 @@ void main() {
         assert(params[0] == '15kUt2i86LHRWCkE3D9Bg1HZAoc2smhn1fwPzDERTb1BXAkX');
         return 258938;
       });
-      expect(api.accountNextIndex('15kUt2i86LHRWCkE3D9Bg1HZAoc2smhn1fwPzDERTb1BXAkX'),
+      expect(
+          api.accountNextIndex(
+              '15kUt2i86LHRWCkE3D9Bg1HZAoc2smhn1fwPzDERTb1BXAkX'),
           completion(258938));
     });
 
@@ -125,12 +144,17 @@ void main() {
       final api = SystemApi(provider);
       provider.setMethodCallback(
           'system_syncState',
-          (params, state) =>
-              {'startingBlock': 16299243, 'currentBlock': 16313588, 'highestBlock': 16313589});
+          (params, state) => {
+                'startingBlock': 16299243,
+                'currentBlock': 16313588,
+                'highestBlock': 16313589
+              });
       expect(
           api.syncState(),
-          completion(
-              SyncState(startingBlock: 16299243, currentBlock: 16313588, highestBlock: 16313589)));
+          completion(SyncState(
+              startingBlock: 16299243,
+              currentBlock: 16313588,
+              highestBlock: 16313589)));
     });
   });
 }

@@ -36,7 +36,8 @@ String legacyTypeSimplifier(String type) {
   type = type.replaceAll('<Lookup as StaticLookup>::Source', 'Address');
 
   type = type.replaceAll('EquivocationProof<Header>', 'EquivocationProof');
-  type = type.replaceAll('EquivocationProof<Hash, BlockNumber>', 'EquivocationProof');
+  type = type.replaceAll(
+      'EquivocationProof<Hash, BlockNumber>', 'EquivocationProof');
 
   type = type.replaceAll('VestingInfo<BalanceOf, BlockNumber>', 'VestingInfo');
 
@@ -57,7 +58,8 @@ String legacyTypeSimplifier(String type) {
 
   type = type.replaceAll('RawSolution<SolutionOf>', 'RawSolution');
   type = type.replaceAll('TaskAddress<BlockNumber>', 'TaskAddress');
-  type = type.replaceAll('sp_std::marker::PhantomData<(AccountId, Event)>', 'PhantomData');
+  type = type.replaceAll(
+      'sp_std::marker::PhantomData<(AccountId, Event)>', 'PhantomData');
 
   type = type.replaceAll('NewBidder<AccountId>', 'NewBidder');
 

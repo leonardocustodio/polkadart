@@ -10,7 +10,8 @@ void main() {
   group('Kusama Events Test', () {
     //
     // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
-    final LegacyTypesBundle typesDefinitions = LegacyTypesBundle.fromJson(kusamaTypesBundle);
+    final LegacyTypesBundle typesDefinitions =
+        LegacyTypesBundle.fromJson(kusamaTypesBundle);
 
     //
     // Initiate chain constructor with chain specific types-definition
@@ -47,7 +48,9 @@ void main() {
       }
     }
 
-    parseEventList(RawBlockEvents.readEventsFromPath('../../chain/kusama/events.part1.jsonl'));
-    parseEventList(RawBlockEvents.readEventsFromPath('../../chain/kusama/events.part2.jsonl'));
+    parseEventList(RawBlockEvents.readEventsFromPath(
+        '../../chain/kusama/events.part1.jsonl'));
+    parseEventList(RawBlockEvents.readEventsFromPath(
+        '../../chain/kusama/events.part2.jsonl'));
   });
 }

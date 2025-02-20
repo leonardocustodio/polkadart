@@ -78,7 +78,11 @@ class XXHash64Sink extends BlockHashSink {
     if (messageLength < 32) {
       hash = (BigInt.from(seed) + prime64_5) & _u_64;
     } else {
-      hash = (_rotl(_acc1, 1) + _rotl(_acc2, 7) + _rotl(_acc3, 12) + _rotl(_acc4, 18)) & _u_64;
+      hash = (_rotl(_acc1, 1) +
+              _rotl(_acc2, 7) +
+              _rotl(_acc3, 12) +
+              _rotl(_acc4, 18)) &
+          _u_64;
 
       hash = _merge(hash, _acc1);
       hash = _merge(hash, _acc2);

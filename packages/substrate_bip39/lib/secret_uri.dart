@@ -1,6 +1,8 @@
 import 'dart:typed_data' show Uint8List;
-import 'package:collection/collection.dart' show ListEquality, DeepCollectionEquality;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show U64Codec, StrCodec;
+import 'package:collection/collection.dart'
+    show ListEquality, DeepCollectionEquality;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    show U64Codec, StrCodec;
 import 'package:pointycastle/digests/blake2b.dart' show Blake2bDigest;
 import './exceptions.dart' show SubstrateBip39Exception;
 
@@ -51,7 +53,9 @@ class DeriveJunction {
 
     final n = BigInt.tryParse(code, radix: 10);
     final Uint8List bytes;
-    if (n != null && n >= BigInt.zero && n < BigInt.parse('18446744073709551616')) {
+    if (n != null &&
+        n >= BigInt.zero &&
+        n < BigInt.parse('18446744073709551616')) {
       // number
       bytes = U64Codec.codec.encode(n);
     } else {
@@ -115,10 +119,11 @@ class SecretUri {
   final List<DeriveJunction> junctions;
 
   /// The root phrase for our publicly known keys.
-  static const devPhrase = 'bottom drive obey lake curtain smoke basket hold race lonely fit walk';
+  static const devPhrase =
+      'bottom drive obey lake curtain smoke basket hold race lonely fit walk';
 
-  static final RegExp _secretPhraseRegex =
-      RegExp(r'^(?<phrase>[\d\w ]+)?(?<path>(//?[^/]+)*)(///(?<password>.*))?$');
+  static final RegExp _secretPhraseRegex = RegExp(
+      r'^(?<phrase>[\d\w ]+)?(?<path>(//?[^/]+)*)(///(?<password>.*))?$');
   static final RegExp _junctionRegex = RegExp(r'/(/?[^/]+)');
 
   SecretUri(this.phrase, this.password, this.junctions);
@@ -130,7 +135,8 @@ class SecretUri {
     }
     final match = matches.first;
 
-    final junctions = _junctionRegex.allMatches(match.namedGroup('path')!).map((junction) {
+    final junctions =
+        _junctionRegex.allMatches(match.namedGroup('path')!).map((junction) {
       return DeriveJunction.fromStr(junction.group(1)!);
     }).toList();
 

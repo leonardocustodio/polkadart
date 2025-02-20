@@ -1,12 +1,13 @@
 part of sr25519;
 
 /// VerifyBatch batch verifies the given signatures
-bool verifyBatch(
-    List<merlin.Transcript> transcripts, List<Signature> signatures, List<PublicKey> pubkeys) {
+bool verifyBatch(List<merlin.Transcript> transcripts,
+    List<Signature> signatures, List<PublicKey> pubkeys) {
   if (transcripts.length != signatures.length ||
       signatures.length != pubkeys.length ||
       pubkeys.length != transcripts.length) {
-    throw ArgumentError('the number of transcripts, signatures, and public keys must be equal');
+    throw ArgumentError(
+        'the number of transcripts, signatures, and public keys must be equal');
   }
 
   if (transcripts.isEmpty) {
@@ -15,7 +16,8 @@ bool verifyBatch(
 
   //var err error
   final zero = r255.Element.newElement()..zero();
-  final zs = List<r255.Scalar>.generate(transcripts.length, (_) => r255.Scalar());
+  final zs =
+      List<r255.Scalar>.generate(transcripts.length, (_) => r255.Scalar());
   for (int i = 0; i < transcripts.length; i++) {
     try {
       zs[i] = newRandomScalar();
@@ -25,8 +27,10 @@ bool verifyBatch(
   }
 
   // compute H(R_i || P_i || m_i)
-  final hs = List<r255.Scalar>.generate(transcripts.length, (_) => r255.Scalar());
-  final s = List<r255.Scalar>.generate(transcripts.length, (_) => r255.Scalar());
+  final hs =
+      List<r255.Scalar>.generate(transcripts.length, (_) => r255.Scalar());
+  final s =
+      List<r255.Scalar>.generate(transcripts.length, (_) => r255.Scalar());
   for (int i = 0; i < transcripts.length; i++) {
     final t = transcripts[i];
 
@@ -42,7 +46,8 @@ bool verifyBatch(
   }
 
   // compute ∑ z_i P_i H(R_i || P_i || m_i)
-  final ps = List<r255.Element>.generate(pubkeys.length, (_) => r255.Element.newElement());
+  final ps = List<r255.Element>.generate(
+      pubkeys.length, (_) => r255.Element.newElement());
   for (int i = 0; i < pubkeys.length; i++) {
     final p = pubkeys[i];
 

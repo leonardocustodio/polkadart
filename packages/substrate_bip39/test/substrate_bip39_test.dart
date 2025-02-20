@@ -1,5 +1,6 @@
 import 'package:convert/convert.dart' show hex;
-import 'package:substrate_bip39/substrate_bip39.dart' show SubstrateBip39, Mnemonic, Language;
+import 'package:substrate_bip39/substrate_bip39.dart'
+    show SubstrateBip39, Mnemonic, Language;
 import 'package:test/test.dart';
 
 void main() {
@@ -137,10 +138,12 @@ void main() {
       final expectedSeed = hex.decode(vector[2]);
 
       final entropy = Mnemonic.fromSentence(phrase, Language.english).entropy;
-      final seed = await SubstrateBip39.seedFromEntropy(entropy, password: 'Substrate');
-      final seedFromPhrase =
-          await SubstrateBip39.ed25519.seedFromUri(phrase, password: 'Substrate');
-      final secret = await SubstrateBip39.miniSecretFromEntropy(entropy, password: 'Substrate');
+      final seed =
+          await SubstrateBip39.seedFromEntropy(entropy, password: 'Substrate');
+      final seedFromPhrase = await SubstrateBip39.ed25519
+          .seedFromUri(phrase, password: 'Substrate');
+      final secret = await SubstrateBip39.miniSecretFromEntropy(entropy,
+          password: 'Substrate');
 
       expect(entropy, expectedEntropy);
       expect(seed, expectedSeed);
@@ -223,15 +226,18 @@ void main() {
   });
 
   test('seedFromUri', () async {
-    final entropy = hex.decode('59d1d7b63fbc9a343360a7dabc035f66d7504c549696d2b0b1ae56862911a821');
+    final entropy = hex.decode(
+        '59d1d7b63fbc9a343360a7dabc035f66d7504c549696d2b0b1ae56862911a821');
     final seed = await SubstrateBip39.seedFromEntropy(entropy);
     expect(hex.encode(seed),
         '38b35a8cfbad9e9ca3ed4260be142b8237494aea83dee55d24f6228d4014b5736f40f51ebb8ddab08c31da0da394a0e0f68cb0e06402497e31908e942bf79d78');
   });
 
   test('miniSecretFromEntropy', () async {
-    final entropy = hex.decode('59d1d7b63fbc9a343360a7dabc035f66d7504c549696d2b0b1ae56862911a821');
+    final entropy = hex.decode(
+        '59d1d7b63fbc9a343360a7dabc035f66d7504c549696d2b0b1ae56862911a821');
     final seed = await SubstrateBip39.miniSecretFromEntropy(entropy);
-    expect(hex.encode(seed), '38b35a8cfbad9e9ca3ed4260be142b8237494aea83dee55d24f6228d4014b573');
+    expect(hex.encode(seed),
+        '38b35a8cfbad9e9ca3ed4260be142b8237494aea83dee55d24f6228d4014b573');
   });
 }

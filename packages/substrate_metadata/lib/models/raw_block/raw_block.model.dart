@@ -18,7 +18,8 @@ class RpcBlockHeader implements Equatable {
   final String number;
   final String parentHash;
   final RpcBlockDigest digest;
-  const RpcBlockHeader({required this.number, required this.parentHash, required this.digest});
+  const RpcBlockHeader(
+      {required this.number, required this.parentHash, required this.digest});
 
   static RpcBlockHeader fromJson(Map<String, dynamic> map) => RpcBlockHeader(
       number: map['number'],
@@ -41,11 +42,15 @@ abstract class RpcBlock {
 
 class RawBlockExtrinsics extends RpcBlock implements Equatable {
   final int blockNumber;
-  const RawBlockExtrinsics({required this.blockNumber, super.header, required super.extrinsics});
+  const RawBlockExtrinsics(
+      {required this.blockNumber, super.header, required super.extrinsics});
 
-  static RawBlockExtrinsics fromJson(Map<String, dynamic> map) => RawBlockExtrinsics(
+  static RawBlockExtrinsics fromJson(Map<String, dynamic> map) =>
+      RawBlockExtrinsics(
         blockNumber: map['blockNumber'],
-        header: map['header'] == null ? null : RpcBlockHeader.fromJson(map['header']),
+        header: map['header'] == null
+            ? null
+            : RpcBlockHeader.fromJson(map['header']),
         extrinsics: (map['extrinsics'] as List).cast<String>(),
       );
 

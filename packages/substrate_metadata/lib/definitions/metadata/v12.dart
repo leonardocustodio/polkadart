@@ -12,7 +12,10 @@ const V12 = <String, dynamic>{
   'ExtrinsicMetadataV12': 'ExtrinsicMetadataV11',
   'FunctionArgumentMetadataV12': 'FunctionArgumentMetadataV11',
   'FunctionMetadataV12': 'FunctionMetadataV11',
-  'MetadataV12': {'modules': 'Vec<ModuleMetadataV12>', 'extrinsic': 'ExtrinsicMetadataV12'},
+  'MetadataV12': {
+    'modules': 'Vec<ModuleMetadataV12>',
+    'extrinsic': 'ExtrinsicMetadataV12'
+  },
   'ModuleConstantMetadataV12': 'ModuleConstantMetadataV11',
   'ModuleMetadataV12': {
     'name': 'Text',

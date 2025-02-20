@@ -25,5 +25,6 @@ class Signatory {
   }
 
   @override
-  int get hashCode => signatoryBytes.toList(growable: false).toString().hashCode;
+  int get hashCode =>
+      signatoryBytes.toList(growable: false).toString().hashCode;
 }

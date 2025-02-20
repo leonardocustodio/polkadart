@@ -35,6 +35,7 @@ class DecodedMetadata {
     if (version == 14) {
       return false;
     }
-    throw UnsupportedMetadataException('Unsupported metadata version: $version');
+    throw UnsupportedMetadataException(
+        'Unsupported metadata version: $version');
   }
 }
