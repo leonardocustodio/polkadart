@@ -55,9 +55,7 @@ class MultisigStorage {
       deposit: map['deposit'],
       depositor: Uint8List.fromList(map['depositor']),
       // approvals = List<List<int>>
-      approvals: (map['approvals'] as List<List<int>>)
-          .map((e) => Uint8List.fromList(e))
-          .toList(),
+      approvals: (map['approvals'] as List<List<int>>).map((e) => Uint8List.fromList(e)).toList(),
     );
   }
 

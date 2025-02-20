@@ -51,8 +51,7 @@ class HashDigest extends Object {
   /// If [endian] is [Endian.little], it will treat the digest bytes as a little
   /// endian number; Otherwise, if [endian] is [Endian.big], it will treat the
   /// digest bytes as a big endian number.
-  BigInt bigInt({Endian endian = Endian.little}) =>
-      toBigInt(bytes, msbFirst: endian == Endian.big);
+  BigInt bigInt({Endian endian = Endian.little}) => toBigInt(bytes, msbFirst: endian == Endian.big);
 
   /// Gets 64-bit unsiged integer from the message digest.
   ///

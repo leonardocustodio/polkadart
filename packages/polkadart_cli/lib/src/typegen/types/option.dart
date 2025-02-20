@@ -8,8 +8,7 @@ class OptionDescriptor extends TypeDescriptor {
 
   OptionDescriptor._lazy(int id) : _id = id;
 
-  factory OptionDescriptor.lazy(
-      {required int id, required LazyLoader loader, required int codec}) {
+  factory OptionDescriptor.lazy({required int id, required LazyLoader loader, required int codec}) {
     final generator = OptionDescriptor._lazy(id);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.inner = register[codec]!;

@@ -5,17 +5,14 @@ class PortableRegistryV14 {
   const PortableRegistryV14({required this.types});
 
   /// Creates Class Object from `Json`
-  static PortableRegistryV14 fromJson(Map<String, dynamic> map) =>
-      PortableRegistryV14(
-          types: (map['types'] as List)
-              .map((value) => PortableTypeV14.fromJson(value))
-              .toList(growable: false));
+  static PortableRegistryV14 fromJson(Map<String, dynamic> map) => PortableRegistryV14(
+      types: (map['types'] as List)
+          .map((value) => PortableTypeV14.fromJson(value))
+          .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
-        'types': types
-            .map((PortableTypeV14 value) => value.toJson())
-            .toList(growable: false),
+        'types': types.map((PortableTypeV14 value) => value.toJson()).toList(growable: false),
       };
 }
 

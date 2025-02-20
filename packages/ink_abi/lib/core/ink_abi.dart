@@ -28,8 +28,7 @@ class InkAbi {
     return scaleCodec[type]!;
   }
 
-  Uint8List encodeConstructorInput(
-      final String selector, final List<dynamic> args) {
+  Uint8List encodeConstructorInput(final String selector, final List<dynamic> args) {
     final constructor = getConstructor(selector);
     final ByteOutput output = ByteOutput();
     output.write(decodeHex(selector));
@@ -40,8 +39,7 @@ class InkAbi {
     return output.toBytes();
   }
 
-  Uint8List encodeMessageInput(
-      final String selector, final List<dynamic> args) {
+  Uint8List encodeMessageInput(final String selector, final List<dynamic> args) {
     final message = getMessage(selector);
     final ByteOutput output = ByteOutput();
     output.write(decodeHex(selector));
@@ -117,8 +115,7 @@ class InkAbi {
     }
 
     final int amountOfTopics = topics.length;
-    final List<InkAbiEvent> potentialEvents =
-        _events.where((final InkAbiEvent event) {
+    final List<InkAbiEvent> potentialEvents = _events.where((final InkAbiEvent event) {
       if (event.signatureTopic != null) {
         return false;
       }
@@ -139,8 +136,7 @@ class InkAbi {
   }
 
   dynamic decodeConstructor(final String data) {
-    final ByteInput input =
-        SelectorByteInput.fromHex(data, _constructorSelectors);
+    final ByteInput input = SelectorByteInput.fromHex(data, _constructorSelectors);
     return getCodec(_constructors).decode(input);
   }
 

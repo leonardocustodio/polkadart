@@ -1,6 +1,5 @@
 import 'dart:async' show Future, FutureOr;
-import 'package:polkadart/polkadart.dart'
-    show Provider, RpcResponse, SubscriptionResponse;
+import 'package:polkadart/polkadart.dart' show Provider, RpcResponse, SubscriptionResponse;
 
 /// The Mock Provider allows mock requests.
 class MockProvider<S> extends Provider {
@@ -15,16 +14,14 @@ class MockProvider<S> extends Provider {
   // Sequence used to generate unique query ids
   int _sequence = 0;
 
-  void setMethodCallback(
-      String method, dynamic Function(List<dynamic>, S) callback) {
+  void setMethodCallback(String method, dynamic Function(List<dynamic>, S) callback) {
     _callbacks[method] = callback;
   }
 
   @override
   Future<RpcResponse> send(String method, List<dynamic> params) async {
     if (_callbacks[method] == null) {
-      throw Exception(
-          'MockProvider: The callback for the method "$method" isn\'t defined');
+      throw Exception('MockProvider: The callback for the method "$method" isn\'t defined');
     }
 
     final response = _callbacks[method]!(params, _state);

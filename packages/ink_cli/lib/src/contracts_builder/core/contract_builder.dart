@@ -23,15 +23,13 @@ class ContractBuilder {
       }
     } */
     bool? checkMetadataHash;
-    final signedExtensions =
-        meta.runtimeMetadata.metadata['extrinsic']?['signedExtensions'];
+    final signedExtensions = meta.runtimeMetadata.metadata['extrinsic']?['signedExtensions'];
     if (signedExtensions != null && signedExtensions is List) {
       for (final extension in signedExtensions) {
         if (extension is Map &&
             extension['identifier'] != null &&
             extension['identifier'] is String &&
-            (extension['identifier'] as String).toLowerCase() ==
-                'checkmetadatahash') {
+            (extension['identifier'] as String).toLowerCase() == 'checkmetadatahash') {
           checkMetadataHash = false;
           break;
         }
@@ -46,8 +44,7 @@ class ContractBuilder {
       checkMetadataHash: checkMetadataHash,
     );
 
-    final Uint8List payloadSignature =
-        ContractSigningPayload.sign(signer, unsignedPayload);
+    final Uint8List payloadSignature = ContractSigningPayload.sign(signer, unsignedPayload);
 
     final Uint8List signedContractTx = ContractExtrinsicPayload.encode(
       version: 132,

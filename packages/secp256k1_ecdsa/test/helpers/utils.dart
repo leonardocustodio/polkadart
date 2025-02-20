@@ -12,8 +12,8 @@ BigInt hexToBigInt(String hex) {
   return BigInt.parse('0x$hex');
 }
 
-BigInt getRandomBigInt() => Utilities.generateRandomBigInt(
-    BigInt.one + BigInt.one, Curve.secp256k1.n - BigInt.one);
+BigInt getRandomBigInt() =>
+    Utilities.generateRandomBigInt(BigInt.one + BigInt.one, Curve.secp256k1.n - BigInt.one);
 
 dynamic getJsonFor<T>(String filePath, type) {
   final file = File(filePath);

@@ -32,15 +32,8 @@ const V14 = <String, dynamic>{
     ...Si1Variant,
     'args': 'Vec<Type>',
   },
-  'FunctionArgumentMetadataV14': {
-    'name': 'Text',
-    'type': 'Type',
-    'typeName': 'Option<Type>'
-  },
-  'FunctionMetadataV14': {
-    ...Si1Variant,
-    'args': 'Vec<FunctionArgumentMetadataV14>'
-  },
+  'FunctionArgumentMetadataV14': {'name': 'Text', 'type': 'Type', 'typeName': 'Option<Type>'},
+  'FunctionMetadataV14': {...Si1Variant, 'args': 'Vec<FunctionArgumentMetadataV14>'},
 
   // V14
   'ExtrinsicMetadataV14': {

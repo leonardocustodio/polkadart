@@ -22,11 +22,7 @@ const ScaleInfoTypes = <String, dynamic>{
   },
   'Si0LookupTypeId': 'U32',
   'Si0Path': 'Vec<Text>',
-  'Si0Type': {
-    'path': 'Si0Path',
-    'params': 'Vec<Si0LookupTypeId>',
-    'def': 'Si0TypeDef'
-  },
+  'Si0Type': {'path': 'Si0Path', 'params': 'Vec<Si0LookupTypeId>', 'def': 'Si0TypeDef'},
   'Si0TypeDef': {
     '_enum': {
       'Composite': 'Si0TypeDefComposite',
@@ -44,10 +40,7 @@ const ScaleInfoTypes = <String, dynamic>{
     'len': 'U32',
     'type': 'Si0LookupTypeId',
   },
-  'Si0TypeDefBitSequence': {
-    'bitStoreType': 'Si0LookupTypeId',
-    'bitOrderType': 'Si0LookupTypeId'
-  },
+  'Si0TypeDefBitSequence': {'bitStoreType': 'Si0LookupTypeId', 'bitOrderType': 'Si0LookupTypeId'},
   'Si0TypeDefCompact': {
     'type': 'Si0LookupTypeId',
   },
@@ -122,10 +115,7 @@ const ScaleInfoTypes = <String, dynamic>{
     'len': 'U32',
     'type': 'Si1LookupTypeId',
   },
-  'Si1TypeDefBitSequence': {
-    'bitStoreType': 'Si1LookupTypeId',
-    'bitOrderType': 'Si1LookupTypeId'
-  },
+  'Si1TypeDefBitSequence': {'bitStoreType': 'Si1LookupTypeId', 'bitOrderType': 'Si1LookupTypeId'},
   'Si1TypeDefCompact': {
     'type': 'Si1LookupTypeId',
   },

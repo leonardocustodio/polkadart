@@ -38,7 +38,7 @@ Currently, `ink_abi` supports metadata versions: **v3, v4, v5**.
 
 ## Example Usage
 
-Below is an example demonstrating how to load and parse an ink! contract metadata file:
+Below is an example demonstrating how to load and parse the metadata for a Flipper smart contract:
 
 ```dart
 import 'dart:convert';
@@ -46,16 +46,12 @@ import 'dart:io';
 import 'package:ink_abi/ink_abi_base.dart';
 
 void main() {
-  // Define the path to the metadata JSON file
-  final String dir = Directory.current.absolute.path;
-  final String jsonFilePath = '$dir/your_metadata_json_file.json';
+  // Read and parse the Flipper contract metadata
+  final json = jsonDecode(File('flipper.json').readAsStringSync());
 
-  // Read and parse JSON metadata
-  final json = jsonDecode(File(jsonFilePath).readAsStringSync());
-  
-  // Initialize InkAbi with parsed metadata
+  // Initialize InkAbi with Flipper metadata
   final InkAbi inkAbi = InkAbi(json);
 }
 ```
 
-This initializes an `InkAbi` instance using metadata from a JSON file, allowing interaction with the contract in a structured manner.
+This initializes an `InkAbi` instance using metadata from the Flipper contract JSON file, allowing interaction with the Flipper contract's flip and get methods in a structured manner.

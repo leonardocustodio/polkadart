@@ -21,19 +21,12 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:polkadart/apis/apis.dart';
 import 'package:polkadart/polkadart.dart'
-    show
-        AuthorApi,
-        ExtrinsicPayload,
-        Provider,
-        SignatureType,
-        SigningPayload,
-        StateApi;
+    show AuthorApi, ExtrinsicPayload, Provider, SignatureType, SigningPayload, StateApi;
 import 'package:polkadart_example/generated/encointer/encointer.dart';
 import 'package:polkadart_example/generated/encointer/types/sp_runtime/multiaddress/multi_address.dart'
     as encointer;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
-    as scale_codec;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale_codec;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 
 import 'package:polkadart_example/generated/encointer/types/encointer_primitives/communities/community_identifier.dart'
@@ -49,49 +42,40 @@ Future<void> main(List<String> arguments) async {
     print('Public Key: $alicePublicKey');
     final bobMultiAddress = encointer.$MultiAddress().id(bob.publicKey.bytes);
 
-    final encointerProvider =
-        Provider.fromUri(Uri.parse('wss://encointer-kusama.dotters.network'));
+    final encointerProvider = Provider.fromUri(Uri.parse('wss://encointer-kusama.dotters.network'));
     final encointerApi = Encointer(encointerProvider);
     final encointerState = StateApi(encointerProvider);
 
     final encointerRuntimeVersion = await encointerState.getRuntimeVersion();
     final encointerSpecVersion = encointerRuntimeVersion.specVersion;
-    final encointerTransactionVersion =
-        encointerRuntimeVersion.transactionVersion;
+    final encointerTransactionVersion = encointerRuntimeVersion.transactionVersion;
     final encointerBlock = await encointerProvider.send('chain_getBlock', []);
-    final encointerBlockNumber =
-        int.parse(encointerBlock.result['block']['header']['number']);
+    final encointerBlockNumber = int.parse(encointerBlock.result['block']['header']['number']);
     final encointerBlockHash =
-        (await encointerProvider.send('chain_getBlockHash', []))
-            .result
-            .replaceAll('0x', '');
+        (await encointerProvider.send('chain_getBlockHash', [])).result.replaceAll('0x', '');
     final encointerGenesisHash =
-        (await encointerProvider.send('chain_getBlockHash', [0]))
-            .result
-            .replaceAll('0x', '');
+        (await encointerProvider.send('chain_getBlockHash', [0])).result.replaceAll('0x', '');
 
-    final customCall = encointerApi.tx.balances.transferKeepAlive(
-        dest: bobMultiAddress, value: BigInt.from(1000000000000));
+    final customCall = encointerApi.tx.balances
+        .transferKeepAlive(dest: bobMultiAddress, value: BigInt.from(1000000000000));
     final customEncodedCall = customCall.encode();
     print('Custom Encoded Call: ${hex.encode(customEncodedCall)}');
 
     // Get Metadata
     final customMetadata = await encointerState.getMetadata();
     // Get Registry
-    final scale_codec.Registry registry =
-        customMetadata.chainInfo.scaleCodec.registry;
+    final scale_codec.Registry registry = customMetadata.chainInfo.scaleCodec.registry;
 
     // Get SignedExtensions mapped with codecs Map<String, Codec<dynamic>>
     final Map<String, scale_codec.Codec<dynamic>> signedExtensions =
         registry.getSignedExtensionTypes();
     print('Signed Extensions Keys: ${signedExtensions.keys.toList()}');
-    final nonce1 =
-        await SystemApi(encointerProvider).accountNextIndex(alice.address);
+    final nonce1 = await SystemApi(encointerProvider).accountNextIndex(alice.address);
     print('Alice address: ${alice.address}');
     print('Nonce: $nonce1');
 
-    final paymentAsset = CommunityIdentifier(
-        geohash: utf8.encode('sqm1v'), digest: hex.decode('f08c911c'));
+    final paymentAsset =
+        CommunityIdentifier(geohash: utf8.encode('sqm1v'), digest: hex.decode('f08c911c'));
 
     final payloadWithExtension = SigningPayload(
       method: customEncodedCall,

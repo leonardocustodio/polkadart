@@ -1,13 +1,10 @@
 import 'dart:io' show Directory;
-import 'package:polkadart/polkadart.dart'
-    show Provider, StateApi, RuntimeVersion;
+import 'package:polkadart/polkadart.dart' show Provider, StateApi, RuntimeVersion;
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
 import 'package:recase/recase.dart' show ReCase;
-import 'package:polkadart_cli/polkadart_cli.dart'
-    show ChainGenerator, PubspecConfig;
-import 'package:substrate_metadata/substrate_metadata.dart'
-    show RuntimeMetadata;
+import 'package:polkadart_cli/polkadart_cli.dart' show ChainGenerator, PubspecConfig;
+import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadata;
 
 class ChainProperties {
   final RuntimeMetadata metadata;
@@ -56,19 +53,15 @@ void main(List<String> args) async {
     final chain = entry.value;
 
     // Get chain properties
-    final ChainProperties properties =
-        await ChainProperties.fromURL(chain.metadataUri);
+    final ChainProperties properties = await ChainProperties.fromURL(chain.metadataUri);
 
     // Create chain directory
-    final chainDirectory =
-        Directory(path.join(basePath.path, ReCase(chainName).snakeCase));
+    final chainDirectory = Directory(path.join(basePath.path, ReCase(chainName).snakeCase));
     await chainDirectory.create(recursive: false);
 
     // Extract metadata
     final generator = ChainGenerator.fromMetadata(
-        chainName: chainName,
-        basePath: chainDirectory,
-        metadata: properties.metadata);
+        chainName: chainName, basePath: chainDirectory, metadata: properties.metadata);
 
     // Generate files
     await generator.build(verbose: verbose);

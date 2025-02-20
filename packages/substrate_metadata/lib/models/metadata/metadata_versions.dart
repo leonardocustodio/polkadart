@@ -115,8 +115,7 @@ class MetadataV9 {
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules':
-            modules.map((value) => value.toJson()).toList(growable: false),
+        'modules': modules.map((value) => value.toJson()).toList(growable: false),
       };
 }
 
@@ -132,8 +131,7 @@ class MetadataV10 {
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules':
-            modules.map((value) => value.toJson()).toList(growable: false),
+        'modules': modules.map((value) => value.toJson()).toList(growable: false),
       };
 }
 
@@ -151,8 +149,7 @@ class MetadataV11 {
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules':
-            modules.map((value) => value.toJson()).toList(growable: false),
+        'modules': modules.map((value) => value.toJson()).toList(growable: false),
         'extrinsic': extrinsic.toJson(),
       };
 }
@@ -171,8 +168,7 @@ class MetadataV12 {
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules':
-            modules.map((value) => value.toJson()).toList(growable: false),
+        'modules': modules.map((value) => value.toJson()).toList(growable: false),
         'extrinsic': extrinsic.toJson(),
       };
 }
@@ -191,8 +187,7 @@ class MetadataV13 {
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'modules':
-            modules.map((value) => value.toJson()).toList(growable: false),
+        'modules': modules.map((value) => value.toJson()).toList(growable: false),
         'extrinsic': extrinsic.toJson(),
       };
 }

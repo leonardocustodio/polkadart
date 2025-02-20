@@ -5,8 +5,7 @@ class RuntimeMetadata {
   final Map<String, dynamic> metadata;
   final ChainInfo chainInfo;
 
-  RuntimeMetadata(
-      {required this.version, required this.metadata, required this.chainInfo});
+  RuntimeMetadata({required this.version, required this.metadata, required this.chainInfo});
 
   factory RuntimeMetadata.fromHex(String hex) {
     final decodedMetadata = MetadataDecoder.instance.decode(hex);

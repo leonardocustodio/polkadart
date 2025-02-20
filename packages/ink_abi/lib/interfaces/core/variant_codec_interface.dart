@@ -14,8 +14,7 @@ class VariantCodecInterface extends CodecInterface {
 
   static VariantCodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['type'] == null || json['id'] == null) {
-      throw Exception(
-          'Exception as didn\'t found the type for this json: $json');
+      throw Exception('Exception as didn\'t found the type for this json: $json');
     }
     final int id = json['id'];
     final Map<String, dynamic> typeObject = json['type'];
@@ -29,10 +28,7 @@ class VariantCodecInterface extends CodecInterface {
     return VariantCodecInterface(
       id: id,
       variants: variants,
-      params: typeObject['params']
-          ?.map((final e) => Params.fromJson(e))
-          ?.toList()
-          ?.cast<Params>(),
+      params: typeObject['params']?.map((final e) => Params.fromJson(e))?.toList()?.cast<Params>(),
       path: typeObject['path']?.cast<String>(),
       docs: typeObject['docs']?.cast<String>(),
     );
@@ -45,14 +41,10 @@ class VariantCodecInterface extends CodecInterface {
       'type': {
         'def': {
           'Variant': {
-            'variants': variants
-                .map((final Variants variant) => variant.toJson())
-                .toList(),
+            'variants': variants.map((final Variants variant) => variant.toJson()).toList(),
           }
         },
-        if (params != null)
-          'params':
-              params!.map((final Params param) => param.toJson()).toList(),
+        if (params != null) 'params': params!.map((final Params param) => param.toJson()).toList(),
         'path': super.path ?? <String>[],
         'docs': super.docs ?? <String>[],
       }
@@ -75,8 +67,7 @@ class Variants {
 
   static Variants fromJson(final Map<String, dynamic> json) {
     if (json['name'] == null || json['index'] == null) {
-      throw Exception(
-          'Exception as didn\'t found the name neither the index for this json: $json');
+      throw Exception('Exception as didn\'t found the name neither the index for this json: $json');
     }
     final String name = json['name'];
     final int index = json['index'];

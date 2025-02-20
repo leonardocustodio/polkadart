@@ -7,8 +7,7 @@ extension ToJson<T> on T {
       return _encodeJson(this) as T;
     }
     if (this is List<T>) {
-      return (this as List<T>).map((T e) => e.toJson()).toList(growable: false)
-          as T;
+      return (this as List<T>).map((T e) => e.toJson()).toList(growable: false) as T;
     }
     if (this is List<dynamic>) {
       return (this as List<dynamic>)

@@ -72,8 +72,7 @@ class SecretKey implements DerivableKey {
 
     // todo: need transcript RNG to match rust-schnorrkel
     // see: https://github.com/w3f/schnorrkel/blob/798ab3e0813aa478b520c5cf6dc6e02fd4e07f0a/src/derive.rs#L186
-    final List<int> nonce =
-        List<int>.generate(32, (_) => (random ?? Random.secure()).nextInt(256));
+    final List<int> nonce = List<int>.generate(32, (_) => (random ?? Random.secure()).nextInt(256));
 
     final dsk = scalarFromBytes(key);
 
@@ -94,8 +93,7 @@ class SecretKey implements DerivableKey {
   }
 
   /// hardDeriveMiniSecretKey implements BIP-32 like 'hard' derivation of a mini secret from a secret key
-  (MiniSecretKey, List<int>) hardDeriveMiniSecretKey(
-      List<int> i, List<int> cc) {
+  (MiniSecretKey, List<int>) hardDeriveMiniSecretKey(List<int> i, List<int> cc) {
     final t = merlin.Transcript('SchnorrRistrettoHDKD');
     t
       ..appendMessage(utf8.encode('sign-bytes'), i)
@@ -196,8 +194,7 @@ class SecretKey implements DerivableKey {
     t.appendMessage(utf8.encode('vrf:R=g^r'), R.encode());
 
     // create hr := HashToElement(input)
-    final List<int> hr =
-        (r255.Element.newElement()..scalarMult(r, p.input)).encode();
+    final List<int> hr = (r255.Element.newElement()..scalarMult(r, p.input)).encode();
     t.appendMessage(utf8.encode('vrf:h^r'), hr);
 
     if (kusamaVRF) {

@@ -4,8 +4,7 @@ class InstantiateRequest {
   final List<int> _contractAddress;
   final dynamic _result;
 
-  const InstantiateRequest(this._contractAddress, this._result)
-      : assert(_result != null);
+  const InstantiateRequest(this._contractAddress, this._result) : assert(_result != null);
 
   List<int> get contractAddress => _contractAddress;
 
@@ -13,16 +12,14 @@ class InstantiateRequest {
 
   String getTransactionHash() {
     if (_result is! String) {
-      throw Exception(
-          'result is InstantiateRequest not a String, Try calling getInBlockHash()');
+      throw Exception('result is InstantiateRequest not a String, Try calling getInBlockHash()');
     }
     return _result;
   }
 
   String getInBlockHash() {
     if (_result is! Map) {
-      throw Exception(
-          'result is transaction-hash, Try calling getTransactionHash()');
+      throw Exception('result is transaction-hash, Try calling getTransactionHash()');
     }
     if (_result['params']?['result']?['inBlock'] == null) {
       throw Exception('inBlock is not available in the result');

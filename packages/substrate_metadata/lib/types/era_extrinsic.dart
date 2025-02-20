@@ -53,8 +53,7 @@ class EraExtrinsic with Codec<Map<String, int>> {
     }
 
     final quantizeFactor = max(period >> 12, 1);
-    final encoded = min(15, max(1, _trailingZeros(period) - 1)) |
-        (phase ~/ quantizeFactor << 4);
+    final encoded = min(15, max(1, _trailingZeros(period) - 1)) | (phase ~/ quantizeFactor << 4);
 
     return _littleIntToUint8List(encoded, 2);
   }
@@ -83,9 +82,7 @@ class EraExtrinsic with Codec<Map<String, int>> {
   List<int> _littleIntToUint8List(int value, int length) {
     final String val = value.toRadixString(2).padLeft(length * 8, '0');
     final String flippedBits = _flipBits(val);
-    final gmp = BigInt.parse(flippedBits, radix: 2)
-        .toRadixString(16)
-        .padLeft(length * 2, '0');
+    final gmp = BigInt.parse(flippedBits, radix: 2).toRadixString(16).padLeft(length * 2, '0');
     return decodeHex(gmp).toList(growable: false);
   }
 
