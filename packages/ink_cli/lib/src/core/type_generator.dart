@@ -101,7 +101,6 @@ class TypeGenerator {
     fileOutput.line("import 'package:ink_cli/ink_cli.dart';");
     fileOutput.line("import 'package:polkadart/polkadart.dart';");
     fileOutput.line("import 'dart:typed_data';");
-    fileOutput.line("import 'dart:convert';");
     fileOutput.line();
 
     // Then, we might embed the original ABI JSON
@@ -175,12 +174,14 @@ class TypeGenerator {
       cb: () {
         fileOutput.line('final Provider provider;');
         fileOutput.line('final Uint8List address;');
+        fileOutput.line('final Uint8List contractAddress;');
         fileOutput.line('final Uint8List? blockHash;');
         fileOutput.line();
         fileOutput.block(
           start: 'const Contract({',
           cb: () {
             fileOutput.line('required this.provider,');
+            fileOutput.line('required this.contractAddress,');
             fileOutput.line('required this.address,');
             fileOutput.line('this.blockHash,');
           },
@@ -204,7 +205,8 @@ class TypeGenerator {
             <String>[
               'required final Uint8List code',
               'required final KeyPair keyPair',
-              'final Map<String, dynamic> extraOptions = const <String, dynamic>{}',
+              'required final ContractDeployer deployer,'
+                  'final Map<String, dynamic> extraOptions = const <String, dynamic>{}',
               'final BigInt? storageDepositLimit',
               'final Uint8List? salt',
               'final GasLimit? gasLimit',
@@ -218,7 +220,7 @@ class TypeGenerator {
           final docs = (m['docs'] as List).cast<String>();
           fileOutput.blockComment(docs);
           fileOutput.block(
-            start: 'Future<InstantiateRequest> ${methodName}_contract({',
+            start: 'static Future<InstantiateRequest> ${methodName}_contract({',
             cb: () {
               for (final String arg in args) {
                 fileOutput.line('$arg,');
@@ -230,8 +232,6 @@ class TypeGenerator {
           fileOutput.block(
             start: '}) async {',
             cb: () {
-              fileOutput.line('final deployer = await ContractDeployer.from(provider: provider);');
-
               fileOutput.block(
                 start: 'return await deployer.deployContract(',
                 cb: () {
@@ -259,9 +259,25 @@ class TypeGenerator {
         final messages = _project['spec']['messages'] as List;
         for (final m in messages) {
           // build signature
-          final args = (m['args'] as List)
-              .map((arg) => 'final ${ifs.use(arg['type']['type'])} ${arg['label']}')
-              .join(', ');
+          List<String> argsList = <String>[];
+          if (m['mutates'] == true) {
+            argsList = <String>[
+              'required final KeyPair keyPair',
+              'required final ContractMutator mutator',
+              'BigInt? storageDepositLimit',
+              'GasLimit? gasLimit',
+              'final dynamic tip = 0',
+              'final int eraPeriod = 0',
+            ];
+          }
+          argsList.addAll((m['args'] as List)
+              .map((arg) => 'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .toList());
+
+          String args = argsList.join(', ');
+          if (args.isNotEmpty) {
+            args = '{$args}';
+          }
           //final returnType = m['returnType']?['type'];
           /* if (returnType == null) {
               continue;
@@ -277,26 +293,85 @@ class TypeGenerator {
             start: 'Future<dynamic> $methodName($args) async {',
             cb: () {
               final callArgs = (m['args'] as List).map((arg) => arg['label']).join(', ');
-              // /* Investigate it when optimizing polkadart_scale_codec: <${returnType == null ? 'dynamic' : ifs.use(returnType)}> */
-              fileOutput.line("return _stateCall('${m['selector']}', [$callArgs]);");
+
+              if (m['mutates'] == false) {
+                fileOutput.line("return _stateCall('${m['selector']}', [$callArgs]);");
+              } else {
+                fileOutput.line('''
+                return _contractCall(
+                  selector: '${m['selector']}',
+                  keypair: keyPair,
+                  args: [$callArgs],
+                  mutator: mutator,
+                  storageDepositLimit: storageDepositLimit,
+                  gasLimit: gasLimit,
+                  tip: tip,
+                  eraPeriod: eraPeriod,
+                );''');
+              }
             },
             end: '}',
           );
         }
 
-        // The private helper method
+        // Create a `_contractCall` method
+        fileOutput.line();
+        fileOutput.block(
+          start: '''Future<dynamic> _contractCall({
+                required final String selector,
+                required final KeyPair keypair,
+                required final List<dynamic> args,
+                required final ContractMutator mutator,
+                BigInt? storageDepositLimit,
+                GasLimit? gasLimit,
+                final dynamic tip = 0,
+                final int eraPeriod = 0,
+              }) async {''',
+          cb: () {
+            fileOutput.line('final input = _abi.encodeMessageInput(selector, args);');
+            fileOutput.line('final result = await _baseCall(input, args);');
+            fileOutput.line(
+              '''final value = await mutator.mutate(
+                keypair: keypair,
+                input: input,
+                result: result,
+                contractAddress: contractAddress,
+                storageDepositLimit: storageDepositLimit,
+                gasLimit: gasLimit,
+                tip: tip,
+                eraPeriod: eraPeriod,
+              );''',
+            );
+            fileOutput.line('return value;');
+          },
+          end: '}',
+        );
+
+        // Create a `_stateCall` method
         fileOutput.line();
         fileOutput.block(
           start:
-              'Future<dynamic> _stateCall(final String selector, final List<dynamic> args) async {',
+              'Future<dynamic> _stateCall(final String selector, final List<dynamic> args,) async {',
           cb: () {
             fileOutput.line('final input = _abi.encodeMessageInput(selector, args);');
-            fileOutput.line('final data = encodeCall(address, input);');
+            fileOutput.line('final baseResult = await _baseCall(input, args);');
+            fileOutput.line('final decodedResult = decodeResult(baseResult);');
+            fileOutput.line('return _abi.decodeMessageOutput(selector, decodedResult);');
+          },
+          end: '}',
+        );
+
+        // Create a `_baseCall` method
+        fileOutput.line();
+        fileOutput.block(
+          start:
+              'Future<Uint8List> _baseCall(final Uint8List input, final List<dynamic> args) async {',
+          cb: () {
+            fileOutput.line('final data = encodeCall(address, input, contractAddress);');
             fileOutput.line('final api = StateApi(provider);');
             fileOutput
                 .line('final result = await api.call(\'ContractsApi_call\', data, at: blockHash);');
-            fileOutput.line('final decodedResult = decodeResult(result);');
-            fileOutput.line('return _abi.decodeMessageOutput(selector, decodedResult);');
+            fileOutput.line('return result;');
           },
           end: '}',
         );

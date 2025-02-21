@@ -61,11 +61,13 @@ class ContractDeployer {
       salt: salt,
     );
 
+    final Uint8List methodCall =
+        ContractsMethod.instantiateWithCode(args: args).encode(codec.registry);
+
     final extrinsic = await ContractBuilder.signAndBuildExtrinsic(
       provider: provider,
       signer: keypair,
-      methodArgs: args,
-      registry: codec.registry,
+      methodCall: methodCall,
       tip: tip,
       eraPeriod: eraPeriod,
     );
