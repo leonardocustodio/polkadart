@@ -50,8 +50,7 @@ class TypeGenerator {
     // Possibly alias event argument types, etc.
     void addArgAlias(Map<String, dynamic> arg) {
       final typeSpec = arg['type'];
-      if (typeSpec?['displayName'] is List &&
-          typeSpec['displayName'].isNotEmpty) {
+      if (typeSpec?['displayName'] is List && typeSpec['displayName'].isNotEmpty) {
         final displayList = List<String>.from(typeSpec['displayName']);
         final aliasName = displayList.last;
         names.alias(typeSpec['type'], aliasName);
@@ -97,8 +96,7 @@ class TypeGenerator {
     // For example, we might print some imports:
     fileOutput.line("// ignore_for_file: non_constant_identifier_names");
     fileOutput.line();
-    fileOutput
-        .line("import 'package:polkadart_keyring/polkadart_keyring.dart';");
+    fileOutput.line("import 'package:polkadart_keyring/polkadart_keyring.dart';");
     fileOutput.line("import 'package:ink_abi/ink_abi_base.dart';");
     fileOutput.line("import 'package:ink_cli/ink_cli.dart';");
     fileOutput.line("import 'package:polkadart/polkadart.dart';");
@@ -128,8 +126,7 @@ class TypeGenerator {
     fileOutput.line();
     if (_project['version'] == 5) {
       fileOutput.block(
-        start:
-            'dynamic decodeEvent(final String hex, [final List<String>? topics]) {',
+        start: 'dynamic decodeEvent(final String hex, [final List<String>? topics]) {',
         cb: () {
           /* final eventType = ifs.use(_description.event());
           out.line('final $eventType event = _abi.decodeEvent(hex, topics);'); */
@@ -196,8 +193,7 @@ class TypeGenerator {
         for (final m in constructors) {
           // build signature
           final args = (m['args'] as List)
-              .map((arg) =>
-                  'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .map((arg) => 'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
               .toList();
           final returnType = m['returnType']?['type'];
           if (returnType == null) {
@@ -249,8 +245,7 @@ class TypeGenerator {
                   fileOutput.line('gasLimit: gasLimit,');
                   fileOutput.line('tip: tip,');
                   fileOutput.line('eraPeriod: eraPeriod,');
-                  final callArgs =
-                      (m['args'] as List).map((arg) => arg['label']).join(', ');
+                  final callArgs = (m['args'] as List).map((arg) => arg['label']).join(', ');
                   fileOutput.line("constructorArgs: [$callArgs],");
                 },
                 end: ');',
@@ -276,8 +271,7 @@ class TypeGenerator {
             ];
           }
           argsList.addAll((m['args'] as List)
-              .map((arg) =>
-                  'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+              .map((arg) => 'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
               .toList());
 
           String args = argsList.join(', ');
@@ -298,12 +292,10 @@ class TypeGenerator {
             // Investigate it when optimizing polkadart_scale_codec: ${returnType == null ? 'dynamic' : ifs.use(returnType)}
             start: 'Future<dynamic> $methodName($args) async {',
             cb: () {
-              final callArgs =
-                  (m['args'] as List).map((arg) => arg['label']).join(', ');
+              final callArgs = (m['args'] as List).map((arg) => arg['label']).join(', ');
 
               if (m['mutates'] == false) {
-                fileOutput.line(
-                    "return _stateCall('${m['selector']}', [$callArgs]);");
+                fileOutput.line("return _stateCall('${m['selector']}', [$callArgs]);");
               } else {
                 fileOutput.line('''
                 return _contractCall(
@@ -336,8 +328,7 @@ class TypeGenerator {
                 final int eraPeriod = 0,
               }) async {''',
           cb: () {
-            fileOutput
-                .line('final input = _abi.encodeMessageInput(selector, args);');
+            fileOutput.line('final input = _abi.encodeMessageInput(selector, args);');
             fileOutput.line('final result = await _baseCall(input, args);');
             fileOutput.line(
               '''final value = await mutator.mutate(
@@ -362,12 +353,10 @@ class TypeGenerator {
           start:
               'Future<dynamic> _stateCall(final String selector, final List<dynamic> args,) async {',
           cb: () {
-            fileOutput
-                .line('final input = _abi.encodeMessageInput(selector, args);');
+            fileOutput.line('final input = _abi.encodeMessageInput(selector, args);');
             fileOutput.line('final baseResult = await _baseCall(input, args);');
             fileOutput.line('final decodedResult = decodeResult(baseResult);');
-            fileOutput.line(
-                'return _abi.decodeMessageOutput(selector, decodedResult);');
+            fileOutput.line('return _abi.decodeMessageOutput(selector, decodedResult);');
           },
           end: '}',
         );
@@ -378,11 +367,10 @@ class TypeGenerator {
           start:
               'Future<Uint8List> _baseCall(final Uint8List input, final List<dynamic> args) async {',
           cb: () {
-            fileOutput.line(
-                'final data = encodeCall(address, input, contractAddress);');
+            fileOutput.line('final data = encodeCall(address, input, contractAddress);');
             fileOutput.line('final api = StateApi(provider);');
-            fileOutput.line(
-                'final result = await api.call(\'ContractsApi_call\', data, at: blockHash);');
+            fileOutput
+                .line('final result = await api.call(\'ContractsApi_call\', data, at: blockHash);');
             fileOutput.line('return result;');
           },
           end: '}',

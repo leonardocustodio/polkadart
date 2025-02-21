@@ -1,12 +1,9 @@
 part of descriptors;
 
 /// Transform a list of [TypeMetadata] into a [Map] of [TypeDescriptor]
-Map<int, TypeDescriptor> parseTypes(
-    List<metadata.PortableType> registry, String typesPath) {
+Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String typesPath) {
   // Type Definitions
-  final Map<int, metadata.PortableType> types = {
-    for (var type in registry) type.id: type
-  };
+  final Map<int, metadata.PortableType> types = {for (var type in registry) type.id: type};
 
   // Create all Generators
   final Map<int, TypeDescriptor> generators = {};
@@ -21,8 +18,7 @@ Map<int, TypeDescriptor> parseTypes(
     // Create Primitive Generator
     if (type.typeDef is metadata.TypeDefPrimitive) {
       final primitiveTypeDef = type.typeDef as metadata.TypeDefPrimitive;
-      generators[typeID] = PrimitiveDescriptor(
-          id: typeID, primitive: primitiveTypeDef.primitive);
+      generators[typeID] = PrimitiveDescriptor(id: typeID, primitive: primitiveTypeDef.primitive);
       continue;
     }
 
@@ -36,8 +32,8 @@ Map<int, TypeDescriptor> parseTypes(
     // Create Sequences Generator
     if (type.typeDef is metadata.TypeDefSequence) {
       final sequence = type.typeDef as metadata.TypeDefSequence;
-      generators[typeID] = SequenceDescriptor.lazy(
-          id: typeID, loader: lazyLoader, codec: sequence.type);
+      generators[typeID] =
+          SequenceDescriptor.lazy(id: typeID, loader: lazyLoader, codec: sequence.type);
       continue;
     }
 
@@ -45,10 +41,7 @@ Map<int, TypeDescriptor> parseTypes(
     if (type.typeDef is metadata.TypeDefArray) {
       final array = type.typeDef as metadata.TypeDefArray;
       generators[typeID] = ArrayDescriptor.lazy(
-          id: typeID,
-          loader: lazyLoader,
-          codec: array.type,
-          length: array.length);
+          id: typeID, loader: lazyLoader, codec: array.type, length: array.length);
       continue;
     }
 
@@ -88,16 +81,14 @@ Map<int, TypeDescriptor> parseTypes(
       final storeType = types[bitSequence.bitStoreType]!.type;
       final orderType = types[bitSequence.bitOrderType]!.type;
 
-      final BitOrder bitOrder =
-          orderType.path.last == 'Lsb0' ? BitOrder.LSB : BitOrder.MSB;
+      final BitOrder bitOrder = orderType.path.last == 'Lsb0' ? BitOrder.LSB : BitOrder.MSB;
       if (storeType.typeDef is metadata.TypeDefPrimitive) {
         final primitiveTypeDef = storeType.typeDef as metadata.TypeDefPrimitive;
         generators[typeID] = BitSequenceDescriptor.fromPrimitive(
             id: typeID, primitive: primitiveTypeDef.primitive, order: bitOrder);
         continue;
       }
-      generators[typeID] = BitSequenceDescriptor(
-          id: typeID, store: BitStore.U8, order: bitOrder);
+      generators[typeID] = BitSequenceDescriptor(id: typeID, store: BitStore.U8, order: bitOrder);
       continue;
     }
 
@@ -148,13 +139,11 @@ Map<int, TypeDescriptor> parseTypes(
       if (composite.fields.length == 1 && composite.fields[0].name == null) {
         // Use the inner generator (ex: BoundedVec == Vec)
         if (type.path.isNotEmpty &&
-            (type.path.last == 'BoundedVec' ||
-                type.path.last == 'WeakBoundedVec')) {
+            (type.path.last == 'BoundedVec' || type.path.last == 'WeakBoundedVec')) {
           final sequenceTypeID = composite.fields.first.type;
           final sequenceType = types[sequenceTypeID]!.type;
           if (sequenceType.typeDef is metadata.TypeDefSequence) {
-            final sequenceTypeDef =
-                sequenceType.typeDef as metadata.TypeDefSequence;
+            final sequenceTypeDef = sequenceType.typeDef as metadata.TypeDefSequence;
             generators[typeID] = SequenceDescriptor.lazy(
                 id: typeID, loader: lazyLoader, codec: sequenceTypeDef.type);
             continue;
@@ -166,20 +155,16 @@ Map<int, TypeDescriptor> parseTypes(
           final btreemapTypeID = composite.fields.first.type;
           final btreemapType = types[btreemapTypeID]!.type;
           if (btreemapType is metadata.TypeDefComposite) {
-            final btreemapTypeDef =
-                btreemapType.typeDef as metadata.TypeDefComposite;
-            if (btreemapTypeDef.fields.length == 1 &&
-                btreemapTypeDef.fields.first.name == null) {
+            final btreemapTypeDef = btreemapType.typeDef as metadata.TypeDefComposite;
+            if (btreemapTypeDef.fields.length == 1 && btreemapTypeDef.fields.first.name == null) {
               final sequenceTypeID = btreemapTypeDef.fields.first.type;
               final sequenceType = types[sequenceTypeID]!.type;
               if (sequenceType.typeDef is metadata.TypeDefSequence) {
-                final sequenceTypeDef =
-                    sequenceType.typeDef as metadata.TypeDefSequence;
+                final sequenceTypeDef = sequenceType.typeDef as metadata.TypeDefSequence;
                 final tupleTypeID = sequenceTypeDef.type;
                 final tupleType = types[tupleTypeID]!.type;
                 if (tupleType.typeDef is metadata.TypeDefTuple) {
-                  final tupleTypeDef =
-                      tupleType.typeDef as metadata.TypeDefTuple;
+                  final tupleTypeDef = tupleType.typeDef as metadata.TypeDefTuple;
                   if (tupleTypeDef.fields.length == 2) {
                     generators[typeID] = BTreeMapDescriptor.lazy(
                         id: typeID,
@@ -199,20 +184,17 @@ Map<int, TypeDescriptor> parseTypes(
           final boundedVecTypeID = composite.fields.first.type;
           final boundedVecType = types[boundedVecTypeID]!.type;
           if (boundedVecType.typeDef is metadata.TypeDefComposite) {
-            final boundedVecTypeDef =
-                boundedVecType.typeDef as metadata.TypeDefComposite;
+            final boundedVecTypeDef = boundedVecType.typeDef as metadata.TypeDefComposite;
             if (boundedVecTypeDef.fields.length == 1 &&
                 boundedVecTypeDef.fields.first.name == null) {
               final sequenceTypeID = boundedVecTypeDef.fields.first.type;
               final sequenceType = types[sequenceTypeID]!.type;
               if (sequenceType.typeDef is metadata.TypeDefSequence) {
-                final sequenceTypeDef =
-                    sequenceType.typeDef as metadata.TypeDefSequence;
+                final sequenceTypeDef = sequenceType.typeDef as metadata.TypeDefSequence;
                 final primitiveTypeID = sequenceTypeDef.type;
                 final primitiveType = types[primitiveTypeID]!.type;
                 if (primitiveType.typeDef is metadata.TypeDefPrimitive) {
-                  final primitiveTypeDef =
-                      primitiveType as metadata.TypeDefPrimitive;
+                  final primitiveTypeDef = primitiveType as metadata.TypeDefPrimitive;
                   if (primitiveTypeDef.primitive == metadata.Primitive.U8) {
                     generators[typeID] = PrimitiveDescriptor.str(typeID);
                     continue;
@@ -221,13 +203,11 @@ Map<int, TypeDescriptor> parseTypes(
               }
             }
           } else if (boundedVecType.typeDef is metadata.TypeDefSequence) {
-            final boundedVecTypeDef =
-                boundedVecType.typeDef as metadata.TypeDefSequence;
+            final boundedVecTypeDef = boundedVecType.typeDef as metadata.TypeDefSequence;
             final primitiveTypeID = boundedVecTypeDef.type;
             final primitiveType = types[primitiveTypeID]!.type;
             if (primitiveType.typeDef is metadata.TypeDefPrimitive) {
-              final primitiveTypeDef =
-                  primitiveType as metadata.TypeDefPrimitive;
+              final primitiveTypeDef = primitiveType as metadata.TypeDefPrimitive;
               if (primitiveTypeDef.primitive == metadata.Primitive.U8) {
                 generators[typeID] = PrimitiveDescriptor.str(typeID);
                 continue;
@@ -293,9 +273,7 @@ Map<int, TypeDescriptor> parseTypes(
           variant.variants[1].fields.length == 1 &&
           variant.variants[1].name == 'Some') {
         generators[typeID] = OptionDescriptor.lazy(
-            id: typeID,
-            loader: lazyLoader,
-            codec: variant.variants[1].fields[0].type);
+            id: typeID, loader: lazyLoader, codec: variant.variants[1].fields[0].type);
         continue;
       }
 
@@ -317,8 +295,7 @@ Map<int, TypeDescriptor> parseTypes(
       }
 
       // Create Variant Generator
-      final enumName =
-          sanitizeClassName(type.path.last, prefix: 'Enum', suffix: 'Enum');
+      final enumName = sanitizeClassName(type.path.last, prefix: 'Enum', suffix: 'Enum');
       generators[typeID] = VariantBuilder(
           id: typeID,
           filePath: listToFilePath([typesPath, ...type.path]),
@@ -326,8 +303,8 @@ Map<int, TypeDescriptor> parseTypes(
           originalName: type.path.last,
           docs: type.docs,
           variants: variant.variants.map((variant) {
-            String variantName = sanitizeClassName(variant.name,
-                prefix: 'Variant', suffix: 'Variant');
+            String variantName =
+                sanitizeClassName(variant.name, prefix: 'Variant', suffix: 'Variant');
             if (variantName == enumName) {
               variantName = '${variantName}Variant';
             }

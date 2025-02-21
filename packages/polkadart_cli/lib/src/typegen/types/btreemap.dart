@@ -14,10 +14,7 @@ class BTreeMapDescriptor extends TypeDescriptor {
   BTreeMapDescriptor._lazy(int id) : _id = id;
 
   factory BTreeMapDescriptor.lazy(
-      {required int id,
-      required LazyLoader loader,
-      required int key,
-      required int value}) {
+      {required int id, required LazyLoader loader, required int key, required int value}) {
     final generator = BTreeMapDescriptor._lazy(id);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.key = register[key]!;
@@ -61,8 +58,7 @@ class BTreeMapDescriptor extends TypeDescriptor {
       return literalConstMap(map, key.primitive(from), value.primitive(from))
           .asLiteralValue(isConstant: true);
     }
-    return literalMap(map, key.primitive(from), value.primitive(from))
-        .asLiteralValue();
+    return literalMap(map, key.primitive(from), value.primitive(from)).asLiteralValue();
   }
 
   @override

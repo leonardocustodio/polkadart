@@ -1,6 +1,5 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/definitions/metadata/metadata.dart'
-    as metadata_definitions;
+import 'package:substrate_metadata/definitions/metadata/metadata.dart' as metadata_definitions;
 import 'package:substrate_metadata/models/models.dart';
 
 class MetadataDecoder {
@@ -23,8 +22,7 @@ class MetadataDecoder {
 
     //
     // assert that the magic number is 0x6174656d
-    assertion(magic == 0x6174656d,
-        'Expected magic number 0x6174656d, but got $magic');
+    assertion(magic == 0x6174656d, 'Expected magic number 0x6174656d, but got $magic');
 
     // decode the version information
     final version = U8Codec.codec.decode(source);
@@ -37,8 +35,8 @@ class MetadataDecoder {
     // See https://github.com/polkadot-js/api/commit/a9211690be6b68ad6c6dad7852f1665cadcfa5b2
     // for why try-catch and version decoding stuff is here
     try {
-      final metadata = ScaleCodec(RegistryCreator.instance[version])
-          .decode('MetadataV$version', source);
+      final metadata =
+          ScaleCodec(RegistryCreator.instance[version]).decode('MetadataV$version', source);
 
       return DecodedMetadata(metadata: metadata, version: version);
     } catch (e) {
@@ -51,8 +49,8 @@ class MetadataDecoder {
         U32Codec.codec.decode(clonnedSource);
         U8Codec.codec.decode(clonnedSource);
 
-        final metadata = ScaleCodec(RegistryCreator.instance[10])
-            .decode('MetadataV10', clonnedSource);
+        final metadata =
+            ScaleCodec(RegistryCreator.instance[10]).decode('MetadataV10', clonnedSource);
         return DecodedMetadata(metadata: metadata, version: 10);
       } catch (unknownError) {
         rethrow;
@@ -67,13 +65,11 @@ class MetadataDecoder {
 
     //
     // encode version
-    U8Codec.codec
-        .encodeTo(metadata.version == 10 ? 9 : metadata.version, output);
+    U8Codec.codec.encodeTo(metadata.version == 10 ? 9 : metadata.version, output);
 
     final typeRegistry = RegistryCreator.instance[metadata.version];
 
-    ScaleCodec(typeRegistry)
-        .encodeTo('MetadataV${metadata.version}', metadata.metadata, output);
+    ScaleCodec(typeRegistry).encodeTo('MetadataV${metadata.version}', metadata.metadata, output);
   }
 }
 
@@ -97,14 +93,12 @@ class RegistryCreator {
       throw Exception(
           'Expected version between 9 and 15, but got $version, Only V9 - V15 are supported');
     }
-    return Registry.from(
-        (_registry[version - 9] ?? _createRegistry(version)).codecs);
+    return Registry.from((_registry[version - 9] ?? _createRegistry(version)).codecs);
   }
 
   Registry _createRegistry(int version) {
     _registry[version - 9] ??= Registry()
-      ..parseSpecificCodec(
-          metadata_definitions.metadataTypes.types, 'MetadataV$version');
+      ..parseSpecificCodec(metadata_definitions.metadataTypes.types, 'MetadataV$version');
 
     return _registry[version - 9]!;
   }

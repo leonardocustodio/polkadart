@@ -361,8 +361,7 @@ enum StorageEntryModifier {
   /// The storage entry returns `T::Default` if the key is not present.
   default_;
 
-  static const $StorageEntryModifierCodec codec =
-      $StorageEntryModifierCodec._();
+  static const $StorageEntryModifierCodec codec = $StorageEntryModifierCodec._();
 
   factory StorageEntryModifier.fromString(String str) {
     switch (str) {
@@ -435,8 +434,7 @@ class StorageEntryMetadata {
   /// Storage entry documentation.
   final List<String> docs;
 
-  static const $StorageEntryMetadataCodec codec =
-      $StorageEntryMetadataCodec._();
+  static const $StorageEntryMetadataCodec codec = $StorageEntryMetadataCodec._();
 
   const StorageEntryMetadata(
       {required this.name,
@@ -557,8 +555,7 @@ class PalletStorageMetadata {
   /// Metadata for all storage entries.
   final List<StorageEntryMetadata> entries;
 
-  static const $PalletStorageMetadataCodec codec =
-      $PalletStorageMetadataCodec._();
+  static const $PalletStorageMetadataCodec codec = $PalletStorageMetadataCodec._();
 
   const PalletStorageMetadata({required this.prefix, required this.entries});
 
@@ -604,15 +601,13 @@ class $PalletStorageMetadataCodec implements Codec<PalletStorageMetadata> {
   @override
   void encodeTo(PalletStorageMetadata metadata, Output output) {
     StrCodec.codec.encodeTo(metadata.prefix, output);
-    SequenceCodec(StorageEntryMetadata.codec)
-        .encodeTo(metadata.entries, output);
+    SequenceCodec(StorageEntryMetadata.codec).encodeTo(metadata.entries, output);
   }
 
   @override
   int sizeHint(PalletStorageMetadata metadata) {
     int size = StrCodec.codec.sizeHint(metadata.prefix);
-    size +=
-        SequenceCodec(StorageEntryMetadata.codec).sizeHint(metadata.entries);
+    size += SequenceCodec(StorageEntryMetadata.codec).sizeHint(metadata.entries);
     return size;
   }
 }
@@ -631,8 +626,7 @@ class PalletConstantMetadata {
   /// Documentation of the constant.
   final List<String> docs;
 
-  static const $PalletConstantMetadataCodec codec =
-      $PalletConstantMetadataCodec._();
+  static const $PalletConstantMetadataCodec codec = $PalletConstantMetadataCodec._();
 
   const PalletConstantMetadata({
     required this.name,
@@ -704,8 +698,7 @@ class MethodInputEntryType {
   final String name;
   final TypeId type;
 
-  static const $MethodInputEntryTypeCodec codec =
-      $MethodInputEntryTypeCodec._();
+  static const $MethodInputEntryTypeCodec codec = $MethodInputEntryTypeCodec._();
 
   MethodInputEntryType({required this.name, required this.type});
 
@@ -973,8 +966,7 @@ class $PalletMetadataCodec implements Codec<PalletMetadata> {
     OptionCodec(PalletStorageMetadata.codec).encodeTo(metadata.storage, output);
     OptionCodec(PalletCallMetadata.codec).encodeTo(metadata.calls, output);
     OptionCodec(PalletEventMetadata.codec).encodeTo(metadata.event, output);
-    SequenceCodec(PalletConstantMetadata.codec)
-        .encodeTo(metadata.constants, output);
+    SequenceCodec(PalletConstantMetadata.codec).encodeTo(metadata.constants, output);
     OptionCodec(PalletErrorMetadata.codec).encodeTo(metadata.error, output);
     U8Codec.codec.encodeTo(metadata.index, output);
     SequenceCodec(StrCodec.codec).encodeTo(metadata.docs, output);
@@ -986,8 +978,7 @@ class $PalletMetadataCodec implements Codec<PalletMetadata> {
     size += OptionCodec(PalletStorageMetadata.codec).sizeHint(metadata.storage);
     size += OptionCodec(PalletCallMetadata.codec).sizeHint(metadata.calls);
     size += OptionCodec(PalletEventMetadata.codec).sizeHint(metadata.event);
-    size += SequenceCodec(PalletConstantMetadata.codec)
-        .sizeHint(metadata.constants);
+    size += SequenceCodec(PalletConstantMetadata.codec).sizeHint(metadata.constants);
     size += OptionCodec(PalletErrorMetadata.codec).sizeHint(metadata.error);
     size += U8Codec.codec.sizeHint(metadata.index);
     size += SequenceCodec(StrCodec.codec).sizeHint(metadata.docs);
@@ -1084,8 +1075,7 @@ class SignedExtensionMetadata {
   /// The type of the additional signed data, with the data to be included in the signed payload
   final TypeId additionalSigned;
 
-  static const $SignedExtensionMetadataCodec codec =
-      $SignedExtensionMetadataCodec._();
+  static const $SignedExtensionMetadataCodec codec = $SignedExtensionMetadataCodec._();
 
   SignedExtensionMetadata({
     required this.identifier,
@@ -1213,8 +1203,7 @@ class $ExtrinsicMetadataCodec implements Codec<ExtrinsicMetadata> {
     final callType = TypeIdCodec.codec.decode(input);
     final signatureType = TypeIdCodec.codec.decode(input);
     final extraType = TypeIdCodec.codec.decode(input);
-    final signedExtensions =
-        SequenceCodec(SignedExtensionMetadata.codec).decode(input);
+    final signedExtensions = SequenceCodec(SignedExtensionMetadata.codec).decode(input);
     return ExtrinsicMetadata(
       version: version,
       addressType: addressType,
@@ -1239,8 +1228,7 @@ class $ExtrinsicMetadataCodec implements Codec<ExtrinsicMetadata> {
     TypeIdCodec.codec.encodeTo(metadata.callType, output);
     TypeIdCodec.codec.encodeTo(metadata.signatureType, output);
     TypeIdCodec.codec.encodeTo(metadata.extraType, output);
-    SequenceCodec(SignedExtensionMetadata.codec)
-        .encodeTo(metadata.signedExtensions, output);
+    SequenceCodec(SignedExtensionMetadata.codec).encodeTo(metadata.signedExtensions, output);
   }
 
   @override
@@ -1250,8 +1238,7 @@ class $ExtrinsicMetadataCodec implements Codec<ExtrinsicMetadata> {
     size += TypeIdCodec.codec.sizeHint(metadata.callType);
     size += TypeIdCodec.codec.sizeHint(metadata.signatureType);
     size += TypeIdCodec.codec.sizeHint(metadata.extraType);
-    size += SequenceCodec(SignedExtensionMetadata.codec)
-        .sizeHint(metadata.signedExtensions);
+    size += SequenceCodec(SignedExtensionMetadata.codec).sizeHint(metadata.signedExtensions);
     return size;
   }
 }
@@ -1333,8 +1320,7 @@ class CustomMetadata {
   });
 
   factory CustomMetadata.fromJson(Map<String, dynamic> json) {
-    return CustomMetadata(
-        map: json['map'].map((json) => CustomMetadataEntry.fromJson(json)));
+    return CustomMetadata(map: json['map'].map((json) => CustomMetadataEntry.fromJson(json)));
   }
 
   Map<String, dynamic> toJson() => {
@@ -1347,8 +1333,7 @@ class $CustomMetadataCodec implements Codec<CustomMetadata> {
 
   @override
   CustomMetadata decode(Input input) {
-    final map = BTreeMapCodec(
-            keyCodec: StrCodec.codec, valueCodec: CustomMetadataEntry.codec)
+    final map = BTreeMapCodec(keyCodec: StrCodec.codec, valueCodec: CustomMetadataEntry.codec)
         .decode(input);
     return CustomMetadata(
       map: map,
@@ -1364,15 +1349,13 @@ class $CustomMetadataCodec implements Codec<CustomMetadata> {
 
   @override
   void encodeTo(CustomMetadata metadata, Output output) {
-    BTreeMapCodec(
-            keyCodec: StrCodec.codec, valueCodec: CustomMetadataEntry.codec)
+    BTreeMapCodec(keyCodec: StrCodec.codec, valueCodec: CustomMetadataEntry.codec)
         .encodeTo(metadata.map, output);
   }
 
   @override
   int sizeHint(CustomMetadata metadata) {
-    return BTreeMapCodec(
-            keyCodec: StrCodec.codec, valueCodec: CustomMetadataEntry.codec)
+    return BTreeMapCodec(keyCodec: StrCodec.codec, valueCodec: CustomMetadataEntry.codec)
         .sizeHint(metadata.map);
   }
 }

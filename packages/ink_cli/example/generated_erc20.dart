@@ -8,18 +8,14 @@ import 'dart:typed_data';
 
 final _metadataJson = {
   "source": {
-    "hash":
-        "0xf43f22075f6c49ffa9f861c680f895f71cd04767ee539708c8371b7a063e8c46",
+    "hash": "0xf43f22075f6c49ffa9f861c680f895f71cd04767ee539708c8371b7a063e8c46",
     "language": "ink! 4.0.0-rc",
     "compiler": "rustc 1.67.0",
     "build_info": {
       "build_mode": "Debug",
       "cargo_contract_version": "2.0.0-rc",
       "rust_toolchain": "stable-aarch64-apple-darwin",
-      "wasm_opt_settings": {
-        "keep_debug_symbols": false,
-        "optimization_passes": "Z"
-      }
+      "wasm_opt_settings": {"keep_debug_symbols": false, "optimization_passes": "Z"}
     }
   },
   "contract": {
@@ -206,9 +202,7 @@ final _metadataJson = {
             }
           }
         ],
-        "docs": [
-          " Transfers tokens on the behalf of the `from` account to the `to account"
-        ],
+        "docs": [" Transfers tokens on the behalf of the `from` account to the `to account"],
         "label": "transfer_from",
         "mutates": true,
         "payable": false,
@@ -663,8 +657,7 @@ class Contract {
   }
 
   Future<dynamic> allowance(
-      {required final AccountId owner,
-      required final AccountId spender}) async {
+      {required final AccountId owner, required final AccountId spender}) async {
     return _stateCall('0x6a00165e', [owner, spender]);
   }
 
@@ -703,8 +696,7 @@ class Contract {
     return _abi.decodeMessageOutput(selector, decodedResult);
   }
 
-  Future<Uint8List> _baseCall(
-      final Uint8List input, final List<dynamic> args) async {
+  Future<Uint8List> _baseCall(final Uint8List input, final List<dynamic> args) async {
     final data = encodeCall(address, input, contractAddress);
     final api = StateApi(provider);
     final result = await api.call('ContractsApi_call', data, at: blockHash);

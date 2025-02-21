@@ -19,10 +19,7 @@ class Variant {
 
   /// Creates a new variant.
   const Variant(
-      {required this.index,
-      required this.name,
-      required this.fields,
-      required this.docs});
+      {required this.index, required this.name, required this.fields, required this.docs});
 
   Set<int> typeDependencies() {
     return fields.map((field) => field.type).toSet();

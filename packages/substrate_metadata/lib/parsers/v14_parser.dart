@@ -11,8 +11,7 @@ class V14Parser {
 
     //
     // Expand the V14 compressed types and then map the siTypes id to the type names.
-    _metadataExpander =
-        MetadataV14Expander(decodedMetadata.metadataJson['lookup']['types']);
+    _metadataExpander = MetadataV14Expander(decodedMetadata.metadataJson['lookup']['types']);
   }
 
   ChainInfo getChainInfo() {
@@ -53,8 +52,7 @@ class V14Parser {
       // calls
       final calls = <int, MapEntry<String, Map<String, dynamic>>>{};
       if (pallet['calls'] != null) {
-        final variants =
-            rawMetadata['lookup']['types'][pallet['calls']['type']];
+        final variants = rawMetadata['lookup']['types'][pallet['calls']['type']];
         for (final variant in variants['type']['def']['Variant']['variants']) {
           // fill args
           final args = <Map<String, dynamic>>[];
@@ -79,8 +77,7 @@ class V14Parser {
       // events
       final events = <Map<String, dynamic>>[];
       if (pallet['events'] != null) {
-        final variants =
-            rawMetadata['lookup']['types'][pallet['events']['type']];
+        final variants = rawMetadata['lookup']['types'][pallet['events']['type']];
         for (final variant in variants['type']['def']['Variant']['variants']) {
           // fill args
           final args = <Map<String, dynamic>>[];
@@ -107,12 +104,10 @@ class V14Parser {
         final callEnumCodec = <int, MapEntry<String, Codec>>{};
         for (final callEntry in calls.entries) {
           final int callIndex = callEntry.key;
-          final MapEntry<String, Map<String, dynamic>> callValue =
-              callEntry.value;
+          final MapEntry<String, Map<String, dynamic>> callValue = callEntry.value;
 
           final List<Map<String, dynamic>> callArgs =
-              (callValue.value['args'] as List<dynamic>)
-                  .cast<Map<String, dynamic>>();
+              (callValue.value['args'] as List<dynamic>).cast<Map<String, dynamic>>();
 
           final Map<String, Codec> codecs = <String, Codec>{};
           final List<Codec> codecList = <Codec>[];
@@ -135,8 +130,7 @@ class V14Parser {
           }
           callEnumCodec[callIndex] = MapEntry(callValue.key, argsCodec);
         }
-        callsCodec[palletIndex] =
-            MapEntry(palletName, ComplexEnumCodec.sparse(callEnumCodec));
+        callsCodec[palletIndex] = MapEntry(palletName, ComplexEnumCodec.sparse(callEnumCodec));
       }
 
       {
@@ -170,8 +164,7 @@ class V14Parser {
           }
           eventEnumCodec[eventIndex] = MapEntry(event['name'], argsCodec);
         }
-        eventsCodec[palletIndex] =
-            MapEntry(palletName, ComplexEnumCodec.sparse(eventEnumCodec));
+        eventsCodec[palletIndex] = MapEntry(palletName, ComplexEnumCodec.sparse(eventEnumCodec));
       }
     }
 
@@ -185,8 +178,7 @@ class V14Parser {
 
     //
     // Register the Generic Event
-    _resultingRegistry.addCodec(
-        'GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
+    _resultingRegistry.addCodec('GenericEvent', ComplexEnumCodec.sparse(eventsCodec));
 
     {
       //
@@ -203,8 +195,7 @@ class V14Parser {
         },
         'EventRecord': {
           'phase': 'Phase',
-          'event':
-              'GenericEvent', // GenericEvent is already registered in line: 244
+          'event': 'GenericEvent', // GenericEvent is already registered in line: 244
           'topics': 'Vec<Str>'
         },
         'EventCodec': 'Vec<EventRecord>',
@@ -245,53 +236,44 @@ class V14Parser {
         final signedExtensionsCompositeCodec = <String, Codec>{};
 
         // Set the extrinsic version which would be helpful further in extrinsic and signing payload.
-        _resultingRegistry.extrinsicVersion =
-            rawMetadata['extrinsic']['version']!;
+        _resultingRegistry.extrinsicVersion = rawMetadata['extrinsic']['version']!;
 
         // clear the signedExtensions in the registry
         _resultingRegistry.signedExtensions.clear();
 
-        for (final signedExtensions in rawMetadata['extrinsic']
-            ['signedExtensions']) {
+        for (final signedExtensions in rawMetadata['extrinsic']['signedExtensions']) {
           final type = siTypes[signedExtensions['type']];
-          final additionalSignedType =
-              siTypes[signedExtensions['additionalSigned']];
+          final additionalSignedType = siTypes[signedExtensions['additionalSigned']];
           final identifier = signedExtensions['identifier'].toString();
 
           // put a NullCodec which does nothing
           _resultingRegistry.signedExtensions[identifier] = NullCodec.codec;
 
           // put a NullCodec which does nothing
-          _resultingRegistry.additionalSignedExtensions[identifier] =
-              NullCodec.codec;
+          _resultingRegistry.additionalSignedExtensions[identifier] = NullCodec.codec;
 
           if (type == null || type.toLowerCase() == 'null') {
             continue;
           }
-          final typeCodec = _resultingRegistry.parseSpecificCodec(
-              _metadataExpander.customCodecRegister, type);
+          final typeCodec =
+              _resultingRegistry.parseSpecificCodec(_metadataExpander.customCodecRegister, type);
 
           // overwrite the codec here.
           _resultingRegistry.signedExtensions[identifier] = typeCodec;
 
-          if (additionalSignedType != null ||
-              additionalSignedType?.toLowerCase() != 'null') {
-            final additionalSignedTypeCodec =
-                _resultingRegistry.parseSpecificCodec(
-                    _metadataExpander.customCodecRegister,
-                    additionalSignedType!);
+          if (additionalSignedType != null || additionalSignedType?.toLowerCase() != 'null') {
+            final additionalSignedTypeCodec = _resultingRegistry.parseSpecificCodec(
+                _metadataExpander.customCodecRegister, additionalSignedType!);
 
             // overwrite the additional signed codec here.
-            _resultingRegistry.additionalSignedExtensions[identifier] =
-                additionalSignedTypeCodec;
+            _resultingRegistry.additionalSignedExtensions[identifier] = additionalSignedTypeCodec;
           }
 
           String newIdentifier = identifier.replaceAll('Check', '');
           switch (newIdentifier) {
             case 'Mortality':
-              signedExtensionsCompositeCodec['era'] =
-                  _resultingRegistry.parseSpecificCodec(
-                      _metadataExpander.customCodecRegister, 'Era');
+              signedExtensionsCompositeCodec['era'] = _resultingRegistry.parseSpecificCodec(
+                  _metadataExpander.customCodecRegister, 'Era');
               continue;
             case 'ChargeTransactionPayment':
               newIdentifier = 'tip';
@@ -327,10 +309,8 @@ class V14Parser {
 
         final String type = _metadataExpander.registeredSiType[constant.type]!;
 
-        constants[pallet.name]![constant.name] = Constant(
-            type: _getCodecFromType(type),
-            bytes: constant.value,
-            docs: constant.docs);
+        constants[pallet.name]![constant.name] =
+            Constant(type: _getCodecFromType(type), bytes: constant.value, docs: constant.docs);
 
         // parse the codec for the constant and register it
       }
@@ -339,7 +319,6 @@ class V14Parser {
   }
 
   Codec _getCodecFromType(String type) {
-    return _resultingRegistry.parseSpecificCodec(
-        _metadataExpander.customCodecRegister, type);
+    return _resultingRegistry.parseSpecificCodec(_metadataExpander.customCodecRegister, type);
   }
 }

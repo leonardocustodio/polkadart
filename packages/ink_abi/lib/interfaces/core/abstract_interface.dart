@@ -15,8 +15,7 @@ abstract class CodecInterface {
 
   static CodecInterface fromJson(final Map<String, dynamic> json) {
     if (json['id'] == null || json['type'] == null) {
-      throw Exception(
-          'Exception as didn\'t found the id neither the type for this json: $json');
+      throw Exception('Exception as didn\'t found the id neither the type for this json: $json');
     }
 
     MapEntry? defType;

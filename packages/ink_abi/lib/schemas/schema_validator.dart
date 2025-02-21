@@ -6,13 +6,11 @@ class SchemaValidator {
   static final JsonSchema validatorV5 = JsonSchema.create(inkV5Schema);
 
   static bool isAbiV4(final dynamic inkAbi) {
-    return inkAbi is Map<String, dynamic> &&
-        inkAbi['version'].toString() == '4';
+    return inkAbi is Map<String, dynamic> && inkAbi['version'].toString() == '4';
   }
 
   static bool isAbiV5(final dynamic inkAbi) {
-    return inkAbi is Map<String, dynamic> &&
-        inkAbi['version'].toString() == '5';
+    return inkAbi is Map<String, dynamic> && inkAbi['version'].toString() == '5';
   }
 
   static Map<String, dynamic> getInkProject(final dynamic inkAbi) {
@@ -21,16 +19,14 @@ class SchemaValidator {
       if (validationResult.isValid) {
         return Map<String, dynamic>.from(inkAbi);
       } else {
-        throw Exception(
-            'Unable to validate Ink V5 metadata: ${validationResult.errors}');
+        throw Exception('Unable to validate Ink V5 metadata: ${validationResult.errors}');
       }
     } else if (isAbiV4(inkAbi)) {
       final ValidationResults validationResult = validatorV4.validate(inkAbi);
       if (validationResult.isValid) {
         return Map<String, dynamic>.from(inkAbi);
       } else {
-        throw Exception(
-            'Unable to validate Ink V4 metadata: ${validationResult.errors}');
+        throw Exception('Unable to validate Ink V4 metadata: ${validationResult.errors}');
       }
     } else {
       final ValidationResults validationResult = validatorV3.validate(inkAbi);
@@ -41,8 +37,7 @@ class SchemaValidator {
           throw Exception('Ink metadata below V3 is not supported');
         }
       } else {
-        throw Exception(
-            'Unable to validate Ink V3 metadata: ${validationResult.errors}');
+        throw Exception('Unable to validate Ink V3 metadata: ${validationResult.errors}');
       }
     }
   }

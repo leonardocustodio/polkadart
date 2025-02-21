@@ -4,13 +4,10 @@ class Ecdsa {
   List<ExtraEntropy> extraEntropy;
 
   Ecdsa.fromJson(Map<String, dynamic> json)
-      : valid = (json['valid'] as List)
-            .map((value) => Valid.fromJson(value))
-            .toList(),
+      : valid = (json['valid'] as List).map((value) => Valid.fromJson(value)).toList(),
         invalid = InValid.fromJson(json['invalid']),
-        extraEntropy = (json['extraEntropy'] as List)
-            .map((value) => ExtraEntropy.fromJson(value))
-            .toList();
+        extraEntropy =
+            (json['extraEntropy'] as List).map((value) => ExtraEntropy.fromJson(value)).toList();
 }
 
 class ExtraEntropy {
@@ -41,14 +38,10 @@ class InValid {
   InValid.fromJson(Map<String, dynamic> json)
       : sign = json['sign'] == null
             ? <Sign>[]
-            : (json['sign'] as List)
-                .map((value) => Sign.fromJson(value))
-                .toList(),
+            : (json['sign'] as List).map((value) => Sign.fromJson(value)).toList(),
         verify = json['verify'] == null
             ? <Verify>[]
-            : (json['verify'] as List)
-                .map((value) => Verify.fromJson(value))
-                .toList();
+            : (json['verify'] as List).map((value) => Verify.fromJson(value)).toList();
 }
 
 class Valid {

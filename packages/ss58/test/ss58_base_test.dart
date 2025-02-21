@@ -9,14 +9,13 @@ void main() {
       final String address = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
       final int prefix = 42;
 
-      final List<int> expectedBytes = hex.decode(
-          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
+      final List<int> expectedBytes =
+          hex.decode('d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
 
       expect(Codec(prefix).decode(address), expectedBytes);
     });
 
-    test('Should throw when given prefix does not match with decoded prefix',
-        () {
+    test('Should throw when given prefix does not match with decoded prefix', () {
       final String address = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
       final int prefix = 2;
 
@@ -39,8 +38,8 @@ void main() {
       final String address = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
       final int prefix = 42;
 
-      final List<int> bytes = hex.decode(
-          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
+      final List<int> bytes =
+          hex.decode('d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
 
       expect(Codec(prefix).encode(bytes), address);
     });
@@ -49,8 +48,8 @@ void main() {
       final String address = '15oF4uVJwmo4TdGW7VfQxNLavjCXviqxT9S1MgbjMNHr6Sp5';
       final int prefix = 0;
 
-      final List<int> bytes = hex.decode(
-          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
+      final List<int> bytes =
+          hex.decode('d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
 
       expect(Codec(prefix).encode(bytes), address);
     });
@@ -58,8 +57,8 @@ void main() {
     test('Should throw when given prefix is negative', () {
       final int prefix = -42;
 
-      final List<int> bytes = hex.decode(
-          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
+      final List<int> bytes =
+          hex.decode('d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
 
       final String expectedErrorMessage = 'Invalid SS58 prefix: -42.';
 
@@ -67,8 +66,7 @@ void main() {
         () => Codec(prefix).encode(bytes),
         throwsA(
           predicate((exception) =>
-              exception is InvalidPrefixException &&
-              exception.toString() == expectedErrorMessage),
+              exception is InvalidPrefixException && exception.toString() == expectedErrorMessage),
         ),
       );
     });
@@ -76,8 +74,8 @@ void main() {
     test('Should throw when given prefix is greater than 16383', () {
       final int prefix = 16384;
 
-      final List<int> bytes = hex.decode(
-          'd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
+      final List<int> bytes =
+          hex.decode('d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d');
 
       final String expectedErrorMessage = 'Invalid SS58 prefix: 16384.';
 
@@ -85,8 +83,7 @@ void main() {
         () => Codec(prefix).encode(bytes),
         throwsA(
           predicate((exception) =>
-              exception is InvalidPrefixException &&
-              exception.toString() == expectedErrorMessage),
+              exception is InvalidPrefixException && exception.toString() == expectedErrorMessage),
         ),
       );
     });

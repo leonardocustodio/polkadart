@@ -7,12 +7,11 @@ class StorageMetadataV9 {
   const StorageMetadataV9({required this.prefix, required this.items});
 
   /// Creates Class Object from `Json`
-  static StorageMetadataV9 fromJson(Map<String, dynamic> map) =>
-      StorageMetadataV9(
-          prefix: map['prefix'],
-          items: (map['items'] as List)
-              .map((val) => StorageEntryMetadataV9.fromJson(val))
-              .toList(growable: false));
+  static StorageMetadataV9 fromJson(Map<String, dynamic> map) => StorageMetadataV9(
+      prefix: map['prefix'],
+      items: (map['items'] as List)
+          .map((val) => StorageEntryMetadataV9.fromJson(val))
+          .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
@@ -27,12 +26,11 @@ class StorageMetadataV10 {
   const StorageMetadataV10({required this.prefix, required this.items});
 
   /// Creates Class Object from `Json`
-  static StorageMetadataV10 fromJson(Map<String, dynamic> map) =>
-      StorageMetadataV10(
-          prefix: map['prefix'],
-          items: (map['items'] as List)
-              .map((val) => StorageEntryMetadataV10.fromJson(val))
-              .toList(growable: false));
+  static StorageMetadataV10 fromJson(Map<String, dynamic> map) => StorageMetadataV10(
+      prefix: map['prefix'],
+      items: (map['items'] as List)
+          .map((val) => StorageEntryMetadataV10.fromJson(val))
+          .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
@@ -47,12 +45,11 @@ class StorageMetadataV11 {
   const StorageMetadataV11({required this.prefix, required this.items});
 
   /// Creates Class Object from `Json`
-  static StorageMetadataV11 fromJson(Map<String, dynamic> map) =>
-      StorageMetadataV11(
-          prefix: map['prefix'],
-          items: (map['items'] as List)
-              .map((val) => StorageEntryMetadataV11.fromJson(val))
-              .toList(growable: false));
+  static StorageMetadataV11 fromJson(Map<String, dynamic> map) => StorageMetadataV11(
+      prefix: map['prefix'],
+      items: (map['items'] as List)
+          .map((val) => StorageEntryMetadataV11.fromJson(val))
+          .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
@@ -68,12 +65,11 @@ class StorageMetadataV13 {
   const StorageMetadataV13({required this.prefix, required this.items});
 
   /// Creates Class Object from `Json`
-  static StorageMetadataV13 fromJson(Map<String, dynamic> map) =>
-      StorageMetadataV13(
-          prefix: map['prefix'],
-          items: (map['items'] as List)
-              .map((val) => StorageEntryMetadataV13.fromJson(val))
-              .toList(growable: false));
+  static StorageMetadataV13 fromJson(Map<String, dynamic> map) => StorageMetadataV13(
+      prefix: map['prefix'],
+      items: (map['items'] as List)
+          .map((val) => StorageEntryMetadataV13.fromJson(val))
+          .toList(growable: false));
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {

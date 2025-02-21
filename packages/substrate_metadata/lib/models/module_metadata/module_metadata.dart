@@ -10,11 +10,7 @@ abstract class AnyLegacyModule {
   final List<ErrorMetadataV9> errors;
 
   AnyLegacyModule(
-      {required this.name,
-      this.calls,
-      this.events,
-      required this.constants,
-      required this.errors});
+      {required this.name, this.calls, this.events, required this.constants, required this.errors});
 
   /// Creates Map from Class Object
   Map<String, dynamic> toJson();
@@ -49,9 +45,7 @@ class ModuleMetadataV9 extends AnyLegacyModule {
       obj.storage = StorageMetadataV9.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null &&
-        map['calls'] is Option &&
-        (map['calls'] as Option).value != null) {
+    if (map['calls'] != null && map['calls'] is Option && (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList(growable: false);
@@ -117,9 +111,7 @@ class ModuleMetadataV10 extends AnyLegacyModule {
       obj.storage = StorageMetadataV10.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null &&
-        map['calls'] is Option &&
-        (map['calls'] as Option).value != null) {
+    if (map['calls'] != null && map['calls'] is Option && (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList(growable: false);
@@ -185,9 +177,7 @@ class ModuleMetadataV11 extends AnyLegacyModule {
       obj.storage = StorageMetadataV11.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null &&
-        map['calls'] is Option &&
-        (map['calls'] as Option).value != null) {
+    if (map['calls'] != null && map['calls'] is Option && (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList(growable: false);
@@ -256,9 +246,7 @@ class ModuleMetadataV12 extends AnyLegacyModule {
       obj.storage = StorageMetadataV11.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null &&
-        map['calls'] is Option &&
-        (map['calls'] as Option).value != null) {
+    if (map['calls'] != null && map['calls'] is Option && (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList(growable: false);
@@ -329,9 +317,7 @@ class ModuleMetadataV13 extends AnyLegacyModule {
       obj.storage = StorageMetadataV13.fromJson(map['storage'].value);
     }
 
-    if (map['calls'] != null &&
-        map['calls'] is Option &&
-        (map['calls'] as Option).value != null) {
+    if (map['calls'] != null && map['calls'] is Option && (map['calls'] as Option).value != null) {
       obj.calls = (map['calls'].value as List)
           .map((val) => FunctionMetadataV9.fromJson(val))
           .toList(growable: false);
@@ -384,8 +370,7 @@ class ModuleConstantMetadataV9 {
   });
 
   /// Creates Class Object from `Json`
-  static ModuleConstantMetadataV9 fromJson(Map<String, dynamic> map) =>
-      ModuleConstantMetadataV9(
+  static ModuleConstantMetadataV9 fromJson(Map<String, dynamic> map) => ModuleConstantMetadataV9(
         name: map['name'],
         type: map['type'],
         value: Uint8List.fromList((map['value'] as List<dynamic>).cast<int>()),

@@ -11,10 +11,8 @@ class ContractMutator {
     required final Provider provider,
   }) async {
     final runtimeMetadata = await StateApi(provider).getMetadata();
-    runtimeMetadata.chainInfo.scaleCodec.registry
-        .registerCustomCodec(_contractDefinitions);
-    return ContractMutator._(
-        provider, runtimeMetadata, runtimeMetadata.chainInfo.scaleCodec);
+    runtimeMetadata.chainInfo.scaleCodec.registry.registerCustomCodec(_contractDefinitions);
+    return ContractMutator._(provider, runtimeMetadata, runtimeMetadata.chainInfo.scaleCodec);
   }
 
   Future<dynamic> mutate({
@@ -32,8 +30,7 @@ class ContractMutator {
       result: result,
     );
     if (execResult.result.ok == null) {
-      throw Exception(
-          'Exception occurend when instantiating request: ${execResult.result.err}');
+      throw Exception('Exception occurend when instantiating request: ${execResult.result.err}');
     }
 
     gasLimit ??= GasLimit.from(execResult.gasRequired);
@@ -46,8 +43,7 @@ class ContractMutator {
       data: input,
     );
 
-    final methodCall =
-        ContractsMethod.methodCall(args: args).encode(codec.registry);
+    final methodCall = ContractsMethod.methodCall(args: args).encode(codec.registry);
 
     final extrinsic = await ContractBuilder.signAndBuildExtrinsic(
       provider: provider,
@@ -58,8 +54,7 @@ class ContractMutator {
     );
 
     final Uint8List expectedTxHash = Hasher.blake2b256.hash(extrinsic);
-    final Uint8List actualHash =
-        await ContractBuilder.submitExtrinsic(provider, extrinsic);
+    final Uint8List actualHash = await ContractBuilder.submitExtrinsic(provider, extrinsic);
 
     final bool isMatched = encodeHex(expectedTxHash) == encodeHex(actualHash);
     assertion(isMatched,

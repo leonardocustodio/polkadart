@@ -16,8 +16,7 @@ class Signatories {
     final List<Signatory> signatories =
         addresses.toSet().map((e) => Signatory.fromAddress(e)).toList();
 
-    signatories
-        .sort((a, b) => uint8ListCompare(a.signatoryBytes, b.signatoryBytes));
+    signatories.sort((a, b) => uint8ListCompare(a.signatoryBytes, b.signatoryBytes));
     return Signatories._(
       signatories,
       _createMultiSigBytes(signatories, threshold),
@@ -42,24 +41,18 @@ class Signatories {
     return sortedSignatoriesBytes
         .where((e) =>
             e.toList(growable: false).toString() !=
-            Address.decode(signatoryAddress)
-                .pubkey
-                .toList(growable: false)
-                .toString())
+            Address.decode(signatoryAddress).pubkey.toList(growable: false).toString())
         .toList(growable: false);
   }
 
   Uint8List get mutiSigBytes => Uint8List.fromList(_multiSigBytes);
 
-  static Uint8List _createMultiSigBytes(
-      List<Signatory> sortedSignatories, int threshold) {
+  static Uint8List _createMultiSigBytes(List<Signatory> sortedSignatories, int threshold) {
     if (sortedSignatories.length < 2 || sortedSignatories.length > 100) {
-      throw ArgumentError(
-          'The total number of signatories can only be in range of [2, 100].');
+      throw ArgumentError('The total number of signatories can only be in range of [2, 100].');
     }
     if (threshold > sortedSignatories.length) {
-      throw ArgumentError(
-          'The threshold should not exceed the number of signatories.');
+      throw ArgumentError('The threshold should not exceed the number of signatories.');
     }
     if (threshold < 2) {
       throw ArgumentError('The threshold should be at least 2.');

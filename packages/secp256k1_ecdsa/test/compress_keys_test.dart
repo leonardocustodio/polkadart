@@ -5,8 +5,7 @@ void main() {
   group('Compress Keys', () {
     test('should return the already compressed key as is', () {
       expect(
-          Point.fromHex(
-                  '03b9dc646dd71118e5f7fda681ad9eca36eb3ee96f344f582fbe7b5bcdebb13077')
+          Point.fromHex('03b9dc646dd71118e5f7fda681ad9eca36eb3ee96f344f582fbe7b5bcdebb13077')
               .toHex(),
           '03b9dc646dd71118e5f7fda681ad9eca36eb3ee96f344f582fbe7b5bcdebb13077');
     });

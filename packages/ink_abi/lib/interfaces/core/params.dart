@@ -11,8 +11,7 @@ class Params {
 
   static Params fromJson(final Map<String, dynamic> json) {
     if (json['name'] == null || json['type'] == null) {
-      throw Exception(
-          'Exception as didn\'t found the name neither the type for this json: $json');
+      throw Exception('Exception as didn\'t found the name neither the type for this json: $json');
     }
     return Params(
       name: json['name'],

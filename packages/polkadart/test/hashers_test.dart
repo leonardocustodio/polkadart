@@ -40,8 +40,7 @@ void main() {
         '': hex.decode('99e9d85137db46ef4bbea33613baafd5'),
         'System': hex.decode('26aa394eea5630e07c48ae0c9558cef7'),
         'CurrentPhase': hex.decode('d9764401941df7f707a47ba7db64a6ea'),
-        'EndorsementTicketsPerBootstrapper':
-            hex.decode('5c03954ec993845da1c7ff36c91390da'),
+        'EndorsementTicketsPerBootstrapper': hex.decode('5c03954ec993845da1c7ff36c91390da'),
       };
 
       for (final entry in testCases.entries) {

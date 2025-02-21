@@ -21,8 +21,7 @@ void main() {
 
     late bool verified;
 
-    expect(() => (verified, _) = public.verify(signature, transcript2),
-        returnsNormally);
+    expect(() => (verified, _) = public.verify(signature, transcript2), returnsNormally);
     expect(verified, true);
   });
 
@@ -39,8 +38,7 @@ void main() {
     final merlin.Transcript transcript2 = merlin.Transcript('hello');
 
     late bool verified;
-    expect(() => (verified, _) = public.verify(signature, transcript2),
-        returnsNormally);
+    expect(() => (verified, _) = public.verify(signature, transcript2), returnsNormally);
     expect(verified, true);
   });
 
@@ -54,14 +52,12 @@ void main() {
 
     final merlin.Transcript transcript2 = merlin.Transcript('hello');
     late bool verified;
-    expect(() => (verified, _) = public.verify(signature, transcript2),
-        returnsNormally);
+    expect(() => (verified, _) = public.verify(signature, transcript2), returnsNormally);
     expect(verified, true);
 
     final merlin.Transcript transcript3 = merlin.Transcript('hello');
     late bool verified2;
-    expect(() => (verified2, _) = public.verify(signature, transcript3),
-        returnsNormally);
+    expect(() => (verified2, _) = public.verify(signature, transcript3), returnsNormally);
     expect(verified2, true);
   });
 
@@ -76,14 +72,12 @@ void main() {
 
     final merlin.Transcript transcript2 = merlin.Transcript('hello');
     late bool verified;
-    expect(() => (verified, _) = kp.verify(signature, transcript2),
-        returnsNormally);
+    expect(() => (verified, _) = kp.verify(signature, transcript2), returnsNormally);
     expect(verified, true);
 
     final merlin.Transcript transcript3 = merlin.Transcript('hello');
     late bool verified2;
-    expect(() => (verified2, _) = kp.verify(signature, transcript3),
-        returnsNormally);
+    expect(() => (verified2, _) = kp.verify(signature, transcript3), returnsNormally);
     expect(verified2, true);
   });
 
@@ -110,8 +104,8 @@ void main() {
   });
 
   test('Test verify rust', () {
-    final List<int> publicBytes = hex.decode(
-        '46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a');
+    final List<int> publicBytes =
+        hex.decode('46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a');
 
     final PublicKey pub = PublicKey();
     pub.decode(publicBytes);
@@ -144,13 +138,12 @@ void main() {
     final (verified, exception) = publicKey.verify(signature, transcript2);
     expect(exception, isNotNull);
     expect(verified, false);
-    expect(
-        exception.toString(), 'Exception: public key is the point at infinity');
+    expect(exception.toString(), 'Exception: public key is the point at infinity');
   });
 
   test('Test verify rust preaudit deprecated', () {
-    final List<int> publicBytes = hex.decode(
-        'b4bfa1f7a5166695eb75299fd1c4c03ea212871c342f2c5dfea0902b2c246918');
+    final List<int> publicBytes =
+        hex.decode('b4bfa1f7a5166695eb75299fd1c4c03ea212871c342f2c5dfea0902b2c246918');
 
     final PublicKey pub = PublicKey();
     pub.decode(publicBytes);
@@ -163,8 +156,8 @@ void main() {
 
     late bool verified;
     expect(
-        () => verified = pub.verifySimplePreAuditDeprecated(
-            'substrate', message, Uint8List.fromList(sig)),
+        () => verified =
+            pub.verifySimplePreAuditDeprecated('substrate', message, Uint8List.fromList(sig)),
         returnsNormally);
     expect(verified, true);
   });

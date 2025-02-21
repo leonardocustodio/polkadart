@@ -8,18 +8,14 @@ import 'dart:typed_data';
 
 final _metadataJson = {
   "source": {
-    "hash":
-        "0xc1c8f7908a009379743280998a998580c8c7415919cb873cb320756b972a7d3a",
+    "hash": "0xc1c8f7908a009379743280998a998580c8c7415919cb873cb320756b972a7d3a",
     "language": "ink! 4.0.0-rc",
     "compiler": "rustc 1.67.0",
     "build_info": {
       "build_mode": "Debug",
       "cargo_contract_version": "2.0.0-rc",
       "rust_toolchain": "stable-aarch64-apple-darwin",
-      "wasm_opt_settings": {
-        "keep_debug_symbols": false,
-        "optimization_passes": "Z"
-      }
+      "wasm_opt_settings": {"keep_debug_symbols": false, "optimization_passes": "Z"}
     }
   },
   "contract": {
@@ -39,9 +35,7 @@ final _metadataJson = {
             }
           }
         ],
-        "docs": [
-          "Creates a new flipper smart contract initialized with the given value."
-        ],
+        "docs": ["Creates a new flipper smart contract initialized with the given value."],
         "label": "new",
         "payable": false,
         "returnType": {
@@ -52,9 +46,7 @@ final _metadataJson = {
       },
       {
         "args": [],
-        "docs": [
-          "Creates a new flipper smart contract initialized to `false`."
-        ],
+        "docs": ["Creates a new flipper smart contract initialized to `false`."],
         "label": "new_default",
         "payable": false,
         "returnType": {
@@ -351,8 +343,7 @@ class Contract {
     return _abi.decodeMessageOutput(selector, decodedResult);
   }
 
-  Future<Uint8List> _baseCall(
-      final Uint8List input, final List<dynamic> args) async {
+  Future<Uint8List> _baseCall(final Uint8List input, final List<dynamic> args) async {
     final data = encodeCall(address, input, contractAddress);
     final api = StateApi(provider);
     final result = await api.call('ContractsApi_call', data, at: blockHash);

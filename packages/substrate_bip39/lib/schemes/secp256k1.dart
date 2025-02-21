@@ -11,8 +11,7 @@ class Secp256k1 extends CryptoScheme {
 
   /// Derive a child key from a series of given junctions.
   @override
-  Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path,
-      {Uint8List? output}) {
+  Future<Uint8List> derive(List<int> seed, Iterable<DeriveJunction> path, {Uint8List? output}) {
     output ??= Uint8List.fromList(seed);
     for (final junction in path) {
       if (junction.isSoft) {
@@ -25,8 +24,7 @@ class Secp256k1 extends CryptoScheme {
   }
 
   /// Derive a single hard junction.
-  Uint8List deriveHardJunction(List<int> seed, List<int> junction,
-      {Uint8List? output}) {
+  Uint8List deriveHardJunction(List<int> seed, List<int> junction, {Uint8List? output}) {
     final bytes = ByteOutput();
     StrCodec.codec.encodeTo('Secp256k1HDKD', bytes);
     U8ArrayCodec(super.seedSize).encodeTo(seed, bytes);

@@ -57,14 +57,12 @@ class TypeDefBuilder extends TypeBuilder {
   }
 
   @override
-  Expression encode(String from, Expression obj,
-      [Expression output = const Reference('output')]) {
+  Expression encode(String from, Expression obj, [Expression output = const Reference('output')]) {
     return generator.encode(from, obj, output);
   }
 
   @override
-  Expression decode(String from,
-      [Expression input = const Reference('input')]) {
+  Expression decode(String from, [Expression input = const Reference('input')]) {
     return generator.decode(from, input);
   }
 
@@ -82,8 +80,7 @@ class TypeDefBuilder extends TypeBuilder {
   GeneratedOutput build() {
     final typeDef = createTypeDef();
     final typeDefCodec = createTypeDefCodec();
-    return GeneratedOutput(
-        classes: [typeDefCodec], enums: [], typedefs: [typeDef]);
+    return GeneratedOutput(classes: [typeDefCodec], enums: [], typedefs: [typeDef]);
   }
 
   TypeDef createTypeDef() => TypeDef((b) => b

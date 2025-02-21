@@ -12,9 +12,7 @@ void main() {
     final SecretKey priv = KeyPair.generateKeypair().secretKey;
 
     late final merlin.Transcript transcript;
-    expect(
-        () => transcript =
-            Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot')),
+    expect(() => transcript = Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot')),
         returnsNormally);
     final msg = utf8.encode('hello');
     final cc = DartBlake2b().hashSync(msg).bytes;
@@ -63,10 +61,8 @@ void main() {
     final vector = TestingVector(
       keyPair:
           '4c1250e05afcd79e74f6c035aee10248841090e009b6fd7ba6a98d5dc743250cafa4b32c608e3ee2ba624850b3f14c75841af84b16798bf1ee4a3875aa37a2cee661e416406384fe1ca091980958576d2bff7c461636e9f22c895f444905ea1f',
-      chainCode:
-          '0c666f6f00000000000000000000000000000000000000000000000000000000',
-      public:
-          'b21e5aabeeb35d6a1bf76226a6c65cd897016df09ef208243e59eed2401f5357',
+      chainCode: '0c666f6f00000000000000000000000000000000000000000000000000000000',
+      public: 'b21e5aabeeb35d6a1bf76226a6c65cd897016df09ef208243e59eed2401f5357',
       hard: false,
     );
 
@@ -79,10 +75,8 @@ void main() {
     final vector = TestingVector(
       keyPair:
           '4c1250e05afcd79e74f6c035aee10248841090e009b6fd7ba6a98d5dc743250cafa4b32c608e3ee2ba624850b3f14c75841af84b16798bf1ee4a3875aa37a2cee661e416406384fe1ca091980958576d2bff7c461636e9f22c895f444905ea1f',
-      chainCode:
-          '14416c6963650000000000000000000000000000000000000000000000000000',
-      public:
-          'd8db757f04521a940f0237c8a1e44dfbe0b3e39af929eb2e9e257ba61b9a0a1a',
+      chainCode: '14416c6963650000000000000000000000000000000000000000000000000000',
+      public: 'd8db757f04521a940f0237c8a1e44dfbe0b3e39af929eb2e9e257ba61b9a0a1a',
       hard: true,
     );
 

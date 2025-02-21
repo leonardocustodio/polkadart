@@ -12,18 +12,15 @@ import 'flipper.dart';
 void main() async {
   final String dir = Directory.current.absolute.path;
   final fileOutput = FileOutput('$dir/example/flipper.dart');
-  final generator = TypeGenerator(
-      abiFilePath: './example/flipper.json', fileOutput: fileOutput);
+  final generator = TypeGenerator(abiFilePath: './example/flipper.json', fileOutput: fileOutput);
   generator.generate();
   fileOutput.write();
 
-  final polkadart =
-      Provider.fromUri(Uri.parse('wss://shibuya-rpc.dwellir.com'));
-  final keyPair = KeyPair.sr25519.fromSeed(decodeHex(
-      '0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a'));
+  final polkadart = Provider.fromUri(Uri.parse('wss://shibuya-rpc.dwellir.com'));
+  final keyPair = KeyPair.sr25519
+      .fromSeed(decodeHex('0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a'));
 
-  final flipperContract =
-      '0xfe6d6f70ff2940ae47bfb3fac7cbb5189a1e1e46ee1852acadb0490625d064ec';
+  final flipperContract = '0xfe6d6f70ff2940ae47bfb3fac7cbb5189a1e1e46ee1852acadb0490625d064ec';
 
   final contract = Contract(
     provider: polkadart,

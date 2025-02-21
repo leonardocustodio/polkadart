@@ -8,18 +8,14 @@ import 'dart:typed_data';
 
 final _metadataJson = {
   "source": {
-    "hash":
-        "0xe2c7d139a0e643e2cc621cfdba430ce101d615115dba61bdf9e3265267c8192f",
+    "hash": "0xe2c7d139a0e643e2cc621cfdba430ce101d615115dba61bdf9e3265267c8192f",
     "language": "ink! 5.0.0",
     "compiler": "rustc 1.76.0",
     "build_info": {
       "build_mode": "Release",
       "cargo_contract_version": "4.1.1",
       "rust_toolchain": "stable-aarch64-apple-darwin",
-      "wasm_opt_settings": {
-        "keep_debug_symbols": false,
-        "optimization_passes": "Z"
-      }
+      "wasm_opt_settings": {"keep_debug_symbols": false, "optimization_passes": "Z"}
     }
   },
   "contract": {
@@ -41,9 +37,7 @@ final _metadataJson = {
           }
         ],
         "default": false,
-        "docs": [
-          "Creates a new ERC-20 contract with the specified initial supply."
-        ],
+        "docs": ["Creates a new ERC-20 contract with the specified initial supply."],
         "label": "new",
         "payable": false,
         "returnType": {
@@ -154,8 +148,7 @@ final _metadataJson = {
         ],
         "label": "Approval",
         "module_path": "erc20::erc20",
-        "signature_topic":
-            "0x1a35e726f5feffda199144f6097b2ba23713e549bfcbe090c0981e3bcdfbcc1d"
+        "signature_topic": "0x1a35e726f5feffda199144f6097b2ba23713e549bfcbe090c0981e3bcdfbcc1d"
       }
     ],
     "lang_error": {
@@ -833,8 +826,7 @@ class Contract {
   ///
   ///  Returns `0` if no allowance has been set.
   Future<dynamic> allowance(
-      {required final AccountId owner,
-      required final AccountId spender}) async {
+      {required final AccountId owner, required final AccountId spender}) async {
     return _stateCall('0x6a00165e', [owner, spender]);
   }
 
@@ -969,8 +961,7 @@ class Contract {
     return _abi.decodeMessageOutput(selector, decodedResult);
   }
 
-  Future<Uint8List> _baseCall(
-      final Uint8List input, final List<dynamic> args) async {
+  Future<Uint8List> _baseCall(final Uint8List input, final List<dynamic> args) async {
     final data = encodeCall(address, input, contractAddress);
     final api = StateApi(provider);
     final result = await api.call('ContractsApi_call', data, at: blockHash);

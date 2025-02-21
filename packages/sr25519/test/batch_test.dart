@@ -17,8 +17,7 @@ void main() {
 
       expect(() => sigs.add(priv.sign(transcript)), returnsNormally);
 
-      expect(() => transcripts.add(merlin.Transcript('hello_$i')),
-          returnsNormally);
+      expect(() => transcripts.add(merlin.Transcript('hello_$i')), returnsNormally);
 
       expect(() => pubkeys.add(pub), returnsNormally);
     }
@@ -65,8 +64,7 @@ void main() {
 
       expect(() => sigs.add(priv.sign(transcript)), returnsNormally);
 
-      expect(() => transcripts.add(merlin.Transcript('hello_$i')),
-          returnsNormally);
+      expect(() => transcripts.add(merlin.Transcript('hello_$i')), returnsNormally);
 
       expect(() => pubkeys.add(pub), returnsNormally);
     }
@@ -78,7 +76,6 @@ void main() {
     transcripts[6] = merlin.Transcript('hello_999');
     final verified = verifyBatch(transcripts, sigs, pubkeys);
     expect(verified, false,
-        reason:
-            'should have failed to batch verify signatures, as we altered 1 transcript.');
+        reason: 'should have failed to batch verify signatures, as we altered 1 transcript.');
   });
 }

@@ -11,8 +11,7 @@ class Interfaces {
   /// Tracks which names we have already used for top-level type definitions.
   final Set<String> generatedNames = <String>{};
 
-  Interfaces(this.sink)
-      : generated = List.filled(sink.types.length, '', growable: false);
+  Interfaces(this.sink) : generated = List.filled(sink.types.length, '', growable: false);
 
   /// Returns (and possibly generates) the "type expression" for a given type index.
   String use(int ti) {
@@ -109,8 +108,7 @@ class Interfaces {
         // Attempt to interpret as an "Option"
         final opt = asOptionType(variant);
         if (opt != null) {
-          final someT =
-              (opt['some'] == null) ? 'void' : use(opt['some'] as int);
+          final someT = (opt['some'] == null) ? 'void' : use(opt['some'] as int);
           return 'Option<$someT>';
         }
 

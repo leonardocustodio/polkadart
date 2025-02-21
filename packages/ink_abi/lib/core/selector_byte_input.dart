@@ -6,16 +6,14 @@ class SelectorByteInput extends ByteInput {
   int? index;
   SelectorByteInput._(super.buffer);
 
-  static SelectorByteInput fromHex(
-      final String hex, final SelectorsMap selectors) {
+  static SelectorByteInput fromHex(final String hex, final SelectorsMap selectors) {
     final Uint8List buffer = decodeHex(hex);
     final String key = encodeHex(buffer.sublist(0, 4));
     final int? index = selectors['0x$key'];
     if (index == null) {
       throw Exception('Unknown selector: $key');
     }
-    final SelectorByteInput selectorByteInput =
-        SelectorByteInput._(buffer.sublist(4));
+    final SelectorByteInput selectorByteInput = SelectorByteInput._(buffer.sublist(4));
     selectorByteInput.index = index;
     return selectorByteInput;
   }

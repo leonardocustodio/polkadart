@@ -52,27 +52,23 @@ class ExtendedKey {
 
   ///
   /// deriveKeyHard derives a Hard subkey identified by the byte array i and chain code
-  factory ExtendedKey.deriveKeyHard(
-      DerivableKey key, List<int> i, List<int> cc) {
+  factory ExtendedKey.deriveKeyHard(DerivableKey key, List<int> i, List<int> cc) {
     if (key is SecretKey) {
       final (msk, resCC) = key.hardDeriveMiniSecretKey(i, cc);
       return ExtendedKey(msk.expandEd25519(), resCC);
     }
-    throw Exception(
-        'cannot derive hard key type, DerivableKey must be of type SecretKey');
+    throw Exception('cannot derive hard key type, DerivableKey must be of type SecretKey');
   }
 
   ///
   /// derviveKeySoft is an alias for DervieKeySimple() used to derive a Soft subkey identified by the byte array i and chain code
-  factory ExtendedKey.deriveKeySoft(
-      DerivableKey key, List<int> i, List<int> cc) {
+  factory ExtendedKey.deriveKeySoft(DerivableKey key, List<int> i, List<int> cc) {
     return ExtendedKey.deriveKeySimple(key, i, cc);
   }
 
   ///
   /// deriveKeySimple derives a Soft subkey identified by byte array i and chain code.
-  factory ExtendedKey.deriveKeySimple(
-      DerivableKey key, List<int> i, List<int> cc) {
+  factory ExtendedKey.deriveKeySimple(DerivableKey key, List<int> i, List<int> cc) {
     final t = merlin.Transcript('SchnorrRistrettoHDKD');
     t.appendMessage(utf8.encode('sign-bytes'), i);
     return key.deriveKey(t, cc);

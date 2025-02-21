@@ -3,8 +3,7 @@ part of ink_abi;
 const inkV4Schema = {
   '\$schema': 'http://json-schema.org/draft-07/schema#',
   'title': 'InkProject',
-  'description':
-      'An entire ink! project for metadata file generation purposes.',
+  'description': 'An entire ink! project for metadata file generation purposes.',
   'type': 'object',
   'required': ['contract', 'source', 'spec', 'storage', 'types', 'version'],
   'properties': {
@@ -25,14 +24,12 @@ const inkV4Schema = {
   },
   'definitions': {
     'ArrayLayout_for_PortableForm': {
-      'description':
-          'A layout for an array of associated cells with the same encoding.',
+      'description': 'A layout for an array of associated cells with the same encoding.',
       'type': 'object',
       'required': ['layout', 'len', 'offset'],
       'properties': {
         'layout': {
-          'description':
-              'The layout of the elements stored in the array layout.',
+          'description': 'The layout of the elements stored in the array layout.',
           'allOf': [
             {'\$ref': '#/definitions/Layout_for_PortableForm'}
           ]
@@ -73,8 +70,7 @@ const inkV4Schema = {
           'type': 'string'
         },
         'payable': {
-          'description':
-              'If the constructor accepts any `value` from the caller.',
+          'description': 'If the constructor accepts any `value` from the caller.',
           'type': 'boolean'
         },
         'returnType': {
@@ -118,18 +114,12 @@ const inkV4Schema = {
           'description': 'The license of the smart contract.',
           'type': ['string', 'null']
         },
-        'name': {
-          'description': 'The name of the smart contract.',
-          'type': 'string'
-        },
+        'name': {'description': 'The name of the smart contract.', 'type': 'string'},
         'repository': {
           'description': 'Link to the code repository of the smart contract.',
           'type': ['string', 'null']
         },
-        'version': {
-          'description': 'The version of the smart contract.',
-          'type': 'string'
-        }
+        'version': {'description': 'The version of the smart contract.', 'type': 'string'}
       }
     },
     'ContractSpec_for_PortableForm': {
@@ -169,8 +159,7 @@ const inkV4Schema = {
       'description': 'One of the supported crypto hashers.',
       'oneOf': [
         {
-          'description':
-              'The BLAKE-2 crypto hasher with an output of 256 bits.',
+          'description': 'The BLAKE-2 crypto hasher with an output of 256 bits.',
           'type': 'string',
           'enum': ['Blake2x256']
         },
@@ -192,8 +181,7 @@ const inkV4Schema = {
       'required': ['dispatchKey', 'name', 'variants'],
       'properties': {
         'dispatchKey': {
-          'description':
-              'The key where the discriminant is stored to dispatch the variants.',
+          'description': 'The key where the discriminant is stored to dispatch the variants.',
           'allOf': [
             {'\$ref': '#/definitions/LayoutKey'}
           ]
@@ -202,9 +190,7 @@ const inkV4Schema = {
         'variants': {
           'description': 'The variants of the enum.',
           'type': 'object',
-          'additionalProperties': {
-            '\$ref': '#/definitions/StructLayout_for_PortableForm'
-          }
+          'additionalProperties': {'\$ref': '#/definitions/StructLayout_for_PortableForm'}
         }
       }
     },
@@ -218,14 +204,8 @@ const inkV4Schema = {
           'type': 'array',
           'items': {'type': 'string'}
         },
-        'indexed': {
-          'description': 'If the event parameter is indexed.',
-          'type': 'boolean'
-        },
-        'label': {
-          'description': 'The label of the parameter.',
-          'type': 'string'
-        },
+        'indexed': {'description': 'If the event parameter is indexed.', 'type': 'boolean'},
+        'label': {'description': 'The label of the parameter.', 'type': 'string'},
         'type': {
           'description': 'The type of the parameter.',
           'allOf': [
@@ -289,8 +269,7 @@ const inkV4Schema = {
           'minimum': 0.0
         },
         'typeName': {
-          'description':
-              'The name of the type of the field as it appears in the source code.',
+          'description': 'The name of the type of the field as it appears in the source code.',
           'type': ['string', 'null']
         }
       }
@@ -314,8 +293,7 @@ const inkV4Schema = {
           ]
         },
         'strategy': {
-          'description':
-              'The hashing strategy to layout the underlying elements.',
+          'description': 'The hashing strategy to layout the underlying elements.',
           'allOf': [
             {'\$ref': '#/definitions/HashingStrategy'}
           ]
@@ -348,8 +326,7 @@ const inkV4Schema = {
     },
     'LayoutKey': {'type': 'string'},
     'Layout_for_PortableForm': {
-      'description':
-          'Represents the static storage layout of an ink! smart contract.',
+      'description': 'Represents the static storage layout of an ink! smart contract.',
       'oneOf': [
         {
           'description':
@@ -362,8 +339,7 @@ const inkV4Schema = {
           'additionalProperties': false
         },
         {
-          'description':
-              'The root cell defines the storage key for all sub-trees.',
+          'description': 'The root cell defines the storage key for all sub-trees.',
           'type': 'object',
           'required': ['root'],
           'properties': {
@@ -400,8 +376,7 @@ const inkV4Schema = {
           'additionalProperties': false
         },
         {
-          'description':
-              'An enum layout with a discriminant telling which variant is layed out.',
+          'description': 'An enum layout with a discriminant telling which variant is layed out.',
           'type': 'object',
           'required': ['enum'],
           'properties': {
@@ -435,10 +410,7 @@ const inkV4Schema = {
       'type': 'object',
       'required': ['label', 'type'],
       'properties': {
-        'label': {
-          'description': 'The label of the parameter.',
-          'type': 'string'
-        },
+        'label': {'description': 'The label of the parameter.', 'type': 'string'},
         'type': {
           'description': 'The type of the parameter.',
           'allOf': [
@@ -468,8 +440,7 @@ const inkV4Schema = {
           'type': 'string'
         },
         'mutates': {
-          'description':
-              'If the message is allowed to mutate the contract state.',
+          'description': 'If the message is allowed to mutate the contract state.',
           'type': 'boolean'
         },
         'payable': {
@@ -526,8 +497,7 @@ const inkV4Schema = {
       }
     },
     'Selector': {
-      'description':
-          'The 4 byte selector to identify constructors and messages',
+      'description': 'The 4 byte selector to identify constructors and messages',
       'type': 'string'
     },
     'Source': {
@@ -541,18 +511,9 @@ const inkV4Schema = {
           'type': ['object', 'null'],
           'additionalProperties': true
         },
-        'compiler': {
-          'description': 'The compiler used to compile the contract.',
-          'type': 'string'
-        },
-        'hash': {
-          'description': 'The hash of the contract\'s Wasm code.',
-          'type': 'string'
-        },
-        'language': {
-          'description': 'The language used to write the contract.',
-          'type': 'string'
-        },
+        'compiler': {'description': 'The compiler used to compile the contract.', 'type': 'string'},
+        'hash': {'description': 'The hash of the contract\'s Wasm code.', 'type': 'string'},
+        'language': {'description': 'The language used to write the contract.', 'type': 'string'},
         'wasm': {
           'description':
               'The actual Wasm code of the contract, for optionally bundling the code with the metadata.',
@@ -569,8 +530,7 @@ const inkV4Schema = {
       'items': {'type': 'integer', 'format': 'uint8', 'minimum': 0.0}
     },
     'StructLayout_for_PortableForm': {
-      'description':
-          'A struct layout with consecutive fields of different layout.',
+      'description': 'A struct layout with consecutive fields of different layout.',
       'type': 'object',
       'required': ['fields', 'name'],
       'properties': {
@@ -627,8 +587,7 @@ const inkV4Schema = {
       'required': ['type'],
       'properties': {
         'type': {
-          'description':
-              'The type wrapped in [`Compact`], i.e. the `T` in `Compact<T>`.',
+          'description': 'The type wrapped in [`Compact`], i.e. the `T` in `Compact<T>`.',
           'type': 'integer',
           'format': 'uint32',
           'minimum': 0.0
@@ -729,8 +688,7 @@ const inkV4Schema = {
       ]
     },
     'TypeDefSequence_for_PortableForm': {
-      'description':
-          'A type to refer to a sequence of elements of the same type.',
+      'description': 'A type to refer to a sequence of elements of the same type.',
       'type': 'object',
       'required': ['type'],
       'properties': {
@@ -763,9 +721,7 @@ const inkV4Schema = {
           'type': 'object',
           'required': ['composite'],
           'properties': {
-            'composite': {
-              '\$ref': '#/definitions/TypeDefComposite_for_PortableForm'
-            }
+            'composite': {'\$ref': '#/definitions/TypeDefComposite_for_PortableForm'}
           },
           'additionalProperties': false
         },
@@ -774,9 +730,7 @@ const inkV4Schema = {
           'type': 'object',
           'required': ['variant'],
           'properties': {
-            'variant': {
-              '\$ref': '#/definitions/TypeDefVariant_for_PortableForm'
-            }
+            'variant': {'\$ref': '#/definitions/TypeDefVariant_for_PortableForm'}
           },
           'additionalProperties': false
         },
@@ -785,9 +739,7 @@ const inkV4Schema = {
           'type': 'object',
           'required': ['sequence'],
           'properties': {
-            'sequence': {
-              '\$ref': '#/definitions/TypeDefSequence_for_PortableForm'
-            }
+            'sequence': {'\$ref': '#/definitions/TypeDefSequence_for_PortableForm'}
           },
           'additionalProperties': false
         },
@@ -826,9 +778,7 @@ const inkV4Schema = {
           'type': 'object',
           'required': ['compact'],
           'properties': {
-            'compact': {
-              '\$ref': '#/definitions/TypeDefCompact_for_PortableForm'
-            }
+            'compact': {'\$ref': '#/definitions/TypeDefCompact_for_PortableForm'}
           },
           'additionalProperties': false
         },
@@ -837,9 +787,7 @@ const inkV4Schema = {
           'type': 'object',
           'required': ['bitsequence'],
           'properties': {
-            'bitsequence': {
-              '\$ref': '#/definitions/TypeDefBitSequence_for_PortableForm'
-            }
+            'bitsequence': {'\$ref': '#/definitions/TypeDefBitSequence_for_PortableForm'}
           },
           'additionalProperties': false
         }
@@ -870,8 +818,7 @@ const inkV4Schema = {
       'required': ['displayName', 'type'],
       'properties': {
         'displayName': {
-          'description':
-              'The compile-time known displayed representation of the type.',
+          'description': 'The compile-time known displayed representation of the type.',
           'type': 'array',
           'items': {'type': 'string'}
         },
@@ -906,8 +853,7 @@ const inkV4Schema = {
           'items': {'\$ref': '#/definitions/TypeParameter_for_PortableForm'}
         },
         'path': {
-          'description':
-              'The unique path to the type. Can be empty for built-in types',
+          'description': 'The unique path to the type. Can be empty for built-in types',
           'type': 'array',
           'items': {'type': 'string'}
         }

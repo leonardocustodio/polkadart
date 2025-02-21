@@ -18,10 +18,7 @@ class TypeMetadata {
 
   /// Create a [`Type`].
   const TypeMetadata(
-      {required this.path,
-      required this.params,
-      required this.typeDef,
-      required this.docs});
+      {required this.path, required this.params, required this.typeDef, required this.docs});
 
   @override
   String toString() {
