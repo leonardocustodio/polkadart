@@ -1,3 +1,6 @@
+## 0.2.3
+- Improves state mutation for ink smart contracts
+
 ## 0.2.2
 - General fixes for ink_cli
 

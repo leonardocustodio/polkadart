@@ -1,3 +1,6 @@
+## 0.2.3
+- Improves state mutation for ink smart contracts
+
 ## 0.2.2
 - Upgrade `ink_abi` to work with the new version of `ink_cli`
 
