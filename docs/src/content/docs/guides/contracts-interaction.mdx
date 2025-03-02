@@ -71,16 +71,15 @@ Future<void> main() async {
   final provider = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
   final alice = await KeyPair.sr25519.fromUri('//Alice');
 
-  // Deploy contract
-  final contract = Contract(
-    provider: provider,
-    address: Uint8List.fromList(alice.publicKey.bytes),
-  );
+  // Create a contract deployer object
+  final deployer = await ContractDeployer.from(provider: provider);
 
-  final result = await contract.new_contract(
+  // Deploy contract
+  final InstantiateRequest result = await Contract.new_contract(
     init_value: true,
-    code: await File('flipper.wasm').readAsBytes(),
     keyPair: alice,
+    code: await File('flipper.wasm').readAsBytes(),
+    deployer: deployer,
   );
 
   final contractAddress = result.contractAddress;
@@ -89,7 +88,8 @@ Future<void> main() async {
   // Initialize contract instance
   final deployedContract = Contract(
     provider: provider,
-    address: Uint8List.fromList(result.contractAddress),
+    address: Uint8List.fromList(alice.publicKey.bytes.toList()),
+    contractAddress: Uint8List.fromList(result.contractAddress),
   );
 
   await Future.delayed(Duration(seconds: 1));
