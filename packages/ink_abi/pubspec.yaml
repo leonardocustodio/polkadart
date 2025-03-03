@@ -9,7 +9,7 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
-  json_schema: ^5.2.0
+  json_schema: ^5.2.1
   polkadart: ^0.6.1
   polkadart_scale_codec: ^1.4.0
   substrate_metadata: ^1.4.0

@@ -354,10 +354,10 @@ packages:
     dependency: transitive
     description:
       name: json_schema
-      sha256: b183ba828374365a89b81246c06a9a636935897d509cd846998bbc0d9bd0a2cf
+      sha256: fc8c3e280c7647ed8e94f2565ba107ef4aff94b096764b8460a7e1ae39f20382
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.2.1"
   lints:
     dependency: transitive
     description:
