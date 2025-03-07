@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "hastscript": "^9.0.1",
-    "prettier": "^3.5.1",
+    "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "sass-embedded": "^1.85.1",
