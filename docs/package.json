@@ -17,7 +17,7 @@
     "@astrojs/sitemap": "^3.3.0",
     "@astrojs/starlight": "^0.32.5",
     "@astrojs/starlight-docsearch": "^0.6.0",
-    "@astrojs/starlight-tailwind": "^3.0.0",
+    "@astrojs/starlight-tailwind": "^3.0.1",
     "@tailwindcss/vite": "^4.0.17",
     "astro": "^5.5.5",
     "astro-icon": "^1.1.5",
