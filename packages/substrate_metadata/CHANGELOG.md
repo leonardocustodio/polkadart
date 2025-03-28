@@ -1,3 +1,6 @@
+## 1.4.2
+- Removed `dart:io` for wasm support
+
 ## 1.4.1
 - Packages were bumped for new publish workflow
 
