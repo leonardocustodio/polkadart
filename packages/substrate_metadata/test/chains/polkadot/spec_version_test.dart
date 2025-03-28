@@ -7,7 +7,7 @@ import '../../parachain_definitions/polkadot.dart';
 
 void main() {
   group('Spec Versions Test', () {
-    test('init spec version file', () {
+    test('init spec version file', () async {
       //
       // Chain Types Definition to support decoding of pre-V14 metadata in spec-version
       final LegacyTypesBundle typesDefinitions = LegacyTypesBundle.fromJson(polkadotTypesBundle);
@@ -18,7 +18,7 @@ void main() {
 
       //
       // Populating with the metadata for block-numbers available for this chain....
-      chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
+      await chain.initSpecVersionFromFile('../../chain/polkadot/versions.jsonl');
 
       expect(chain.versioDescriptionList.length, 34);
 

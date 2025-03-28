@@ -16,6 +16,7 @@ dependencies:
   polkadart: ^0.6.1
   polkadart_scale_codec: ^1.4.0
   utility: ^1.0.3
+  cross_file: ^0.3.4+2 # BSD-3-Clause
 
 dev_dependencies:
   lints: ^5.1.1
