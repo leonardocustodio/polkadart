@@ -25,8 +25,8 @@ class Chain {
   /// Initialize the SpecVersions from a Json file path containing spec-versions
   ///
   /// After reading Spec Versions then it calls `addSpecVersion(spec)` with spec being the parsed Spec from file.
-  void initSpecVersionFromFile(String filePath) {
-    final list = readSpecVersionsFromFilePath(filePath);
+  Future<void> initSpecVersionFromFile(String filePath) async {
+    final list = await readSpecVersionsFromFilePath(filePath);
     for (var spec in list) {
       addSpecVersion(spec);
     }

@@ -26,13 +26,23 @@ bool isNotEmpty(dynamic value) {
 // read lines
 List<dynamic> readLines(String filePath) {
   // check if the file exists
-  if (File(filePath).existsSync() == false) {
-    // return with empty list
-    return <dynamic>[];
-  }
-  // As File exists, now start reading line by line.
-  //
-  // mapping lines to jsonDecode so as to convert `stringified` lines to `List<HashMap>`.
-  final result = File(filePath).readAsLinesSync().map(jsonDecode).toList(growable: false);
-  return result;
+  final XFile file = XFile(filePath);
+
+  file.readAsString().then((v) {
+    if (v.isEmpty) {
+      // return with empty list
+      return <dynamic>[];
+    }
+
+    // As File exists, now start reading line by line.
+    //
+    // mapping lines to jsonDecode so as to convert `stringfy` lines to `List<HashMap>`.
+    final LineSplitter ls = LineSplitter();
+    final List<String> content = ls.convert(v);
+    final result = content.map(jsonDecode).toList(growable: false);
+
+    return result;
+  });
+
+  return <dynamic>[];
 }
