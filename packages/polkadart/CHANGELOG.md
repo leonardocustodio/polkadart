@@ -1,3 +1,6 @@
+## 0.6.2
+- Bumps `substrate_metadata` dependency for wasm support
+
 ## 0.6.1
 - Fixes `multisig_meta` and adds 'CheckMetadataHash' extension functionality
 

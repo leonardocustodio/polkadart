@@ -275,6 +275,6 @@
 ## Resources
 
 - [substrate.dev](https://substrate.dev/docs/en/knowledgebase/advanced/codec)
-- [Parity-scale-codec](https://github.com/paritytech/parity-scale-codec)
-- [Polkadot.js](http://polkadot.js.org/)
-- [Squid](https://github.com/subsquid/squid)
+- [parity-scale-codec](https://github.com/paritytech/parity-scale-codec)
+- [Polkadot.JS](https://polkadot.js.org/)
+- [Subsquid](https://github.com/subsquid/squid)
