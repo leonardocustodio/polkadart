@@ -1,5 +1,5 @@
 name: substrate_metadata
-description: Metadata types for Substrate runtimes
+description: A package able to provide metadata types, encode and decode storage entries, extrinsics, events, and constants for Substrate runtimes.
 version: 1.4.2
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/substrate_metadata
 repository: https://github.com/leonardocustodio/polkadart
