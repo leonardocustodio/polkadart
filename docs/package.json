@@ -15,7 +15,7 @@
     "@astrojs/check": "^0.9.4",
     "@astrojs/partytown": "^2.1.4",
     "@astrojs/sitemap": "^3.3.0",
-    "@astrojs/starlight": "^0.32.5",
+    "@astrojs/starlight": "^0.33.2",
     "@astrojs/starlight-docsearch": "^0.6.0",
     "@astrojs/starlight-tailwind": "^3.0.1",
     "@tailwindcss/vite": "^4.1.3",
