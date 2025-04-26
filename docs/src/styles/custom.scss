@@ -2,9 +2,22 @@
 @use '../scss/solid';
 @use '../scss/brands';
 
+:root {
+	--sl-content-width: 50rem;
+}
+
 .package-badge {
-    font-size: 10px!important;
-    border: 0;
-    border-radius: 0.25rem;
-    background-color: #1967d2;
+	font-size: 10px !important;
+	border: 0;
+	border-radius: 0.25rem;
+	background-color: #1967d2;
+}
+
+
+iframe[src^="https://code.polkadart.dev"]:not(#try-dart-pad) {
+	border: 1px solid #ccc;
+	margin: 0;
+	min-height: 400px;
+	resize: vertical;
+	width: 100%;
 }

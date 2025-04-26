@@ -1,9 +1,10 @@
 import 'dart:io' show Directory;
-import 'package:polkadart/polkadart.dart' show Provider, StateApi, RuntimeVersion;
+
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' as path;
-import 'package:recase/recase.dart' show ReCase;
+import 'package:polkadart/polkadart.dart' show Provider, StateApi, RuntimeVersion;
 import 'package:polkadart_cli/polkadart_cli.dart' show ChainGenerator, PubspecConfig;
+import 'package:recase/recase.dart' show ReCase;
 import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadata;
 
 class ChainProperties {
@@ -15,7 +16,7 @@ class ChainProperties {
   static Future<ChainProperties> fromURL(Uri uri) async {
     final provider = Provider.fromUri(uri);
     final api = StateApi(provider);
-    final decodedMetadata = await api.getTypedMetadata();
+    final decodedMetadata = await api.getMetadata();
     final version = await api.getRuntimeVersion();
 
     await provider.disconnect();
