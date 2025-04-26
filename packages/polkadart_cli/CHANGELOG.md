@@ -1,3 +1,6 @@
+## 0.6.2
+- Downgrade `substrate_metadata` to 1.4.1
+
 ## 0.6.1
 - Packages were bumped for new publish workflow
 

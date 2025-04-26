@@ -1,5 +1,5 @@
-@use "mixins";
-@use "variables";
+@use 'mixins';
+@use 'variables';
 
 // screen-reader utilities
 // -------------------------
@@ -7,11 +7,11 @@
 // only display content to screen readers
 .sr-only,
 .#{variables.$fa-css-prefix}-sr-only {
-  @include mixins.fa-sr-only;
+	@include mixins.fa-sr-only;
 }
 
 // use in conjunction with .sr-only to only display content when it's focused
 .sr-only-focusable,
 .#{variables.$fa-css-prefix}-sr-only-focusable {
-  @include mixins.fa-sr-only-focusable;
+	@include mixins.fa-sr-only-focusable;
 }

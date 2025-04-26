@@ -20,10 +20,11 @@ hero:
       icon: github
       variant: secondary
 ---
+
 import { CardGrid } from '@astrojs/starlight/components';
 import Card from '../components/landing/Card.astro';
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
-import { ContributorList } from "starlight-contributor-list";
+import { ContributorList } from 'starlight-contributor-list';
 
 <StarlightPage frontmatter={frontmatter}>
 	<CardGrid>
@@ -32,21 +33,21 @@ import { ContributorList } from "starlight-contributor-list";
 			with the chain using Dart/Flutter with full type safety.
 		</Card>
 
-		<Card title="Multiplatform" icon="laptop">
-			Our library is designed to work on both Dart and Flutter projects. You can use it to build any
-			kind of application, from mobile to web.
-		</Card>
+    	<Card title="Multiplatform" icon="laptop">
+    		Our library is designed to work on both Dart and Flutter projects. You can use it to build any
+    		kind of application, from mobile to web.
+    	</Card>
 
-		<Card title="Lightweight" icon="rocket">
-			We aim to keep the library as lightweight as possible, so you can use it without worrying
-			about performance issues or bloated code.
-		</Card>
+    	<Card title="Lightweight" icon="rocket">
+    		We aim to keep the library as lightweight as possible, so you can use it without worrying
+    		about performance issues or bloated code.
+    	</Card>
 
-		<Card title="Native code" icon="seti:dart">
-			There are no platform channels or native code involved. Everything is written in Dart, so you
-			can use it on any platform without any extra configuration.
-		</Card>
-	</CardGrid>
+    	<Card title="Native code" icon="seti:dart">
+    		There are no platform channels or native code involved. Everything is written in Dart, so you
+    		can use it on any platform without any extra configuration.
+    	</Card>
+    </CardGrid>
 
 <div style="text-align: center; padding-top: 4rem;">
 	<h2>Thanks goes to these wonderful people</h2>
