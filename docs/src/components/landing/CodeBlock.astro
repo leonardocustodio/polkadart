@@ -1,0 +1,67 @@
+---
+import { createHighlighter } from 'shiki'
+
+interface Props {
+	code: string;
+	lang: string;
+	title?: string;
+}
+
+const { code, lang, title } = Astro.props;
+
+// Initialize the shiki highlighter
+const highlighter = await createHighlighter({
+	themes: ['github-dark'],
+	langs: ['typescript', 'dart'],
+});
+
+// Highlight the code
+const html = highlighter.codeToHtml(code, {
+	lang: 'dart',
+	theme: 'github-dark',
+});
+---
+
+<div class="code-block">
+	{title && (
+		<div class="code-title">
+			{title}
+		</div>
+	)}
+	<div class="code-content" set:html={html} />
+</div>
+
+<style>
+	.code-block {
+		margin: 1.5rem 0;
+		border-radius: 0.5rem;
+		overflow: hidden;
+		background-color: var(--color-code-background);
+		border: 1px solid var(--color-border);
+	}
+
+	.code-title {
+		padding: 0.75rem 1rem;
+		font-size: 0.875rem;
+		color: var(--color-text-secondary);
+		background-color: rgba(255, 255, 255, 0.05);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.code-content {
+		padding: 1rem;
+		overflow-x: auto;
+	}
+
+	.code-content :global(pre) {
+		margin: 0;
+		padding: 0;
+		background-color: transparent !important;
+	}
+
+	.code-content :global(code) {
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+		font-size: 0.875rem;
+		line-height: 1.7;
+	}
+</style>

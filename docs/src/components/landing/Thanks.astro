@@ -1,0 +1,99 @@
+---
+interface Contributor {
+	login: string;
+	name: string;
+	avatar_url: string;
+	profile: string;
+	contributions: string[];
+}
+
+interface ContributorsData {
+	files: string[];
+	imageSize: number;
+	commit: boolean;
+	commitType: string;
+	commitConvention: string;
+	contributors: Contributor[];
+	contributorsPerLine: number;
+	skipCi: boolean;
+	repoType: string;
+	repoHost: string;
+	projectName: string;
+	projectOwner: string;
+}
+
+const response = await fetch(
+	'https://raw.githubusercontent.com/leonardocustodio/polkadart/refs/heads/main/.all-contributorsrc'
+);
+const data: ContributorsData = await response.json();
+---
+
+<section class="thanks">
+	<div class="container">
+		<h2>Thanks goes to these wonderful people</h2>
+		<div class="contributors">
+	<div class="contributor-grid">
+		{
+			data.contributors.map((contributor: Contributor) => (
+				<img src={contributor.avatar_url} alt={contributor.name} loading="lazy" />
+			))
+		}
+	</div>
+		</div>
+	</div>
+</section>
+
+
+<style>
+	.thanks {
+		padding: 4rem 0;
+		background-color: rgba(59, 130, 246, 0.03);
+		border-top: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--color-border);
+		text-align: center;
+	}
+
+	h2 {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin-bottom: 3rem;
+		color: var(--color-text-primary);
+	}
+
+	.contributor-grid {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1rem;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.contributor-grid img {
+		width: 64px;
+		height: 64px;
+		border-radius: 50%;
+		object-fit: cover;
+		transition: transform 0.2s ease;
+	}
+
+	.contributor-grid img:hover {
+		transform: scale(1.1);
+	}
+
+	@media (max-width: 768px) {
+		.thanks {
+			padding: 3rem 0;
+		}
+
+		h2 {
+			font-size: 2rem;
+			margin-bottom: 2rem;
+		}
+
+		.contributor-grid img {
+			width: 48px;
+			height: 48px;
+		}
+	}
+</style>
