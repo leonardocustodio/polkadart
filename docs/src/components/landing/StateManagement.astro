@@ -5,8 +5,8 @@ let stateExample = '';
 let keyringExample = '';
 
 try {
-	stateExample = await import(`../../snippets/storage.dart?raw`).then(module => module.default);
-	keyringExample = await import(`../../snippets/keypair.dart?raw`).then(module => module.default);
+	stateExample = await import(`../../assets/snippet/storage.dart?raw`).then(module => module.default);
+	keyringExample = await import(`../../assets/snippet/keypair.dart?raw`).then(module => module.default);
 } catch (error) {
 	stateExample = `// Error: Could not load snippet`;
 	keyringExample = `// Error: Could not load snippet`;
