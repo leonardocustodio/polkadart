@@ -1,21 +1,20 @@
 ---
 import DartPad from '../dartpad/DartPad.astro';
+import { Image } from 'astro:assets';
+import logo from '../../assets/logo.svg';
 ---
 <section class="hero">
 	<div class="container">
 		<div class="hero-grid">
 			<div class="hero-content">
 				<div class="hero-logo">
-					<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M24 48C37.2548 48 48 37.2548 48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24C0 37.2548 10.7452 48 24 48Z" fill="#E91E63"/>
-						<path d="M24 12L12 24L24 36L36 24L24 12Z" fill="white"/>
-					</svg>
+					<Image src={logo} alt="Polkadart Logo" height="70px"/>
 					<h1>Polkadart</h1>
 				</div>
 				<h2 class="hero-subtitle">Everything you need to make hybrid applications with Polkadot</h2>
 				<div class="hero-buttons">
 					<a href="/intro" class="button primary">Get Started</a>
-					<a href="https://github.com/polkadart/polkadart" target="_blank" rel="noopener noreferrer" class="button secondary">
+					<a href="https://github.com/leonardocustodio/polkadart" target="_blank" rel="noopener noreferrer" class="button secondary">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 							<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
 						</svg>
