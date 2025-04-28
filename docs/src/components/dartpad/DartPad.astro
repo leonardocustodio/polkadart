@@ -2,7 +2,7 @@
 const { file } = Astro.props;
 let codeBlock = '';
 try {
-	codeBlock = await import(`../../snippets/${file}.dart?raw`).then(module => module.default);
+	codeBlock = await import(`../../snippets/${file}?raw`).then(module => module.default);
 } catch (error) {
 	console.error(`Error importing file: ${error}`);
 	codeBlock = `// Error: Could not load snippet '${file}'`;
@@ -11,5 +11,5 @@ try {
 <script is:inline defer src="/js/inject_dartpad.js"></script>
 
 <pre>
-	<code class="language-dart" data-dartpad="true" data-theme="light" data-url='code.polkadart.dev'>{ codeBlock }</code>
+	<code class="language-dart" data-dartpad="true" data-theme="dark" data-url="code.polkadart.dev" data-width="100%" data-height="100%">{ codeBlock }</code>
 </pre>

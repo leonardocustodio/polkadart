@@ -1,0 +1,128 @@
+---
+---
+
+<section class="features">
+	<div class="container">
+		<h2 class="section-title">Why Polkadart?</h2>
+
+		<div class="features-grid">
+			<div class="feature-card">
+				<div class="feature-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"></path>
+					</svg>
+				</div>
+				<h3>Fully typed APIs</h3>
+				<p>Polkadart generates fully typed APIs for any Polkadot based chain. This means you can interact with the chain using Dart/Flutter with full type safety.</p>
+			</div>
+
+			<div class="feature-card">
+				<div class="feature-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"></path>
+						<path d="M2 20h20"></path>
+						<path d="M14 12v.01"></path>
+					</svg>
+				</div>
+				<h3>Multiplatform</h3>
+				<p>Our library is designed to work on both Dart and Flutter projects. You can use it to build any kind of application, from mobile to web.</p>
+			</div>
+
+			<div class="feature-card">
+				<div class="feature-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M12 21a9 9 0 0 1-9-9 9 9 0 0 1 9-9 9 9 0 0 1 9 9 9 9 0 0 1-9 9z"></path>
+						<path d="M12 7v5l3 3"></path>
+					</svg>
+				</div>
+				<h3>Lightweight</h3>
+				<p>We aim to keep the library as lightweight as possible, so you can use it without worrying about performance issues or bloated code.</p>
+			</div>
+
+			<div class="feature-card">
+				<div class="feature-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<rect x="4" y="4" width="16" height="16" rx="2"></rect>
+						<rect x="9" y="9" width="6" height="6"></rect>
+						<path d="M15 4v16"></path>
+						<path d="M4 15h16"></path>
+					</svg>
+				</div>
+				<h3>Native code</h3>
+				<p>There are no platform channels or native code involved. Everything is written in Dart, so you can use it on any platform without any extra configuration.</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.features {
+		padding: 4rem 0;
+		background-color: rgba(59, 130, 246, 0.03);
+		border-top: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.section-title {
+		text-align: center;
+		font-size: 2rem;
+		font-weight: 700;
+		margin-bottom: 3rem;
+		color: var(--color-text-primary);
+	}
+
+	.features-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 2rem;
+	}
+
+	.feature-card {
+		background-color: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 0.5rem;
+		padding: 1.5rem;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	.feature-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+	}
+
+	.feature-icon {
+		background-color: rgba(59, 130, 246, 0.1);
+		width: 48px;
+		height: 48px;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 1rem;
+		color: var(--color-primary);
+	}
+
+	h3 {
+		font-size: 1.25rem;
+		font-weight: 600;
+		margin-bottom: 0.75rem;
+		color: var(--color-text-primary);
+	}
+
+	p {
+		color: var(--color-text-secondary);
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	@media (max-width: 768px) {
+		.features {
+			padding: 3rem 0;
+		}
+
+		.section-title {
+			font-size: 1.5rem;
+			margin-bottom: 2rem;
+		}
+	}
+</style>
