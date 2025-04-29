@@ -171,15 +171,6 @@ export default defineConfig({
 					],
 				},
 			],
-			customCss: [
-				// './src/styles/custom.css'
-				'./src/styles/code-demo.css',
-				'./src/styles/features.css',
-				'./src/styles/header.css',
-				'./src/styles/hero.css',
-				'./src/styles/main.css',
-				'./src/styles/responsive.css',
-			],
 			plugins: [
 				starlightDocSearch({
 					appId: ALGOLIA_APP_ID,

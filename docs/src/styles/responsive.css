@@ -135,9 +135,9 @@
     text-align: center;
   }
 
-  .code-demo {
-    display: none;
-  }
+  /*.code-demo {*/
+  /*  display: none;*/
+  /*}*/
 }
 
 /* Small mobile devices */

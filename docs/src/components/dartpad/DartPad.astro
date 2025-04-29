@@ -2,8 +2,4 @@
 const { fileName } = Astro.props;
 const data = await import((`../../assets/snippets/${fileName}.txt?raw`)).then(module => module.default);
 ---
-<script is:inline defer src="/js/inject_dartpad.js"></script>
-
-<pre>
-	<code class="language-dart" data-dartpad="true" data-theme="dark" data-url="code.polkadart.dev" data-width="100%" data-height="100%">{ data }</code>
-</pre>
+<pre><code class="language-dart" data-dartpad="true" data-theme="dark" data-url="code.polkadart.dev">{ data }</code></pre>

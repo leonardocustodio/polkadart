@@ -84,6 +84,13 @@ a:hover {
   color: var(--color-primary-dark);
 }
 
+iframe[src^="https://code.polkadart.dev"] {
+  min-height: 400px;
+  width: 100%;
+  resize: vertical;
+  margin: 0;
+}
+
 .container {
   width: 100%;
   max-width: var(--container-width);
@@ -157,7 +164,7 @@ section {
   background-color: var(--color-background);
 }
 
-.types-content, .compatibility-content, .responsive-content {
+.types-content, .compatibility-content {
   display: flex;
   align-items: center;
   gap: var(--spacing-xxl);
@@ -220,13 +227,13 @@ section {
 .code-window pre {
   margin: 0;
   padding: var(--spacing-md);
-  overflow-x: auto;
 }
 
 .code-window code {
   font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 0.875rem;
   line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 /* Responsive section specific styles */

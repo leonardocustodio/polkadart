@@ -68,7 +68,7 @@ const data: ContributorsData = await response.json();
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Polkadart - Hybrid Applications with Polkadot</title>
+	<title>Polkadart | The Dart & Flutter library for Polkadot Blockchain Interaction</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -79,33 +79,25 @@ const data: ContributorsData = await response.json();
 		<div class="logo">
 			<Image src={logo} alt="Polkadart Logo" />
 		</div>
-		<div class="search-bar">
-			<button class="search-button">
-				<Image src={searchImage} alt="Search" />
-				<span>Search</span>
-			</button>
-			<span class="keyboard-shortcut">K</span>
-		</div>
 	</div>
 </header>
 
 <section class="hero">
 	<div class="container">
 		<div class="hero-content">
-			<div class="hero-text">
-				<Image src={logoLarge} alt="Polkadart" class="hero-logo" />
-				<h1>Everything you need to make hybrid applications with Polkadot</h1>
-				<div class="hero-buttons">
-					<a href="#" class="button primary">Get Started</a>
-					<a href="#" class="button secondary">
-						<Image src={githubImage} alt="GitHub" />
-						GitHub
-					</a>
+			<div class="hero-content">
+				<div class="hero-text">
+					<p class="welcome-text">Welcome to&nbsp;<span class="brand">Polkadart</span></p>
+					<h1>Everything you need to make hybrid applications with Polkadot</h1>
+					<div class="hero-buttons">
+						<a href="/intro" class="button primary">Get Started</a>
+						<a href="https://github.com/leonardocustodio/polkadart" target="_blank" class="button secondary">
+							<Image src={githubImage} alt="GitHub" />
+							GitHub
+						</a>
+					</div>
 				</div>
-			</div>
-			<div class="code-demo">
 				<DartPad fileName="home" />
-			</div>
 		</div>
 	</div>
 </section>
@@ -178,12 +170,10 @@ const data: ContributorsData = await response.json();
 				<h2>Build for any screen</h2>
 				<p>Create responsive applications that adapt seamlessly across mobile, tablet, and desktop. Our framework provides built-in utilities to help you create the perfect layout for every device.</p>
 			</div>
-			<div class="code-window">
-					<DartPad fileName="wallets" />
+			<DartPad fileName="wallets" />
 		</div>
-		</div>
-		</div>
-		</section>
+	</div>
+</section>
 
 <section class="contributors-section">
 	<div class="container">
@@ -196,59 +186,59 @@ const data: ContributorsData = await response.json();
 			}
 		</div>
 	</div>
-		</section>
+</section>
 
-		<footer class="footer">
-			<div class="container">
-				<div class="footer-content">
-					<div class="footer-brand">
-						<div class="logo">
-							<Image src={logo} alt="Polkadart Logo" />
-						</div>
-					</div>
-
-					<div class="footer-links">
-						<div class="footer-column">
-							<h3>Documentation</h3>
-							<ul>
-								<li><a href="#">Getting Started</a></li>
-								<li><a href="#">API Reference</a></li>
-								<li><a href="#">Examples</a></li>
-							</ul>
-						</div>
-
-						<div class="footer-column">
-							<h3>Community</h3>
-							<ul>
-								<li><a href="#">GitHub</a></li>
-								<li><a href="#">Matrix</a></li>
-								<li><a href="#">Forum</a></li>
-							</ul>
-						</div>
-
-						<div class="footer-column">
-							<h3>Resources</h3>
-							<ul>
-								<li><a href="#">FAQ</a></li>
-								<li><a href="#">Changelog</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-
-				<div class="footer-bottom">
-					<p>© 2025 Polkadart. All rights reserved.</p>
-					<div class="social-links">
-						<a href="#" class="social-link">
-							<Image src={githubImage} alt="GitHub" />
-						</a>
-						<a href="#" class="social-link">
-							<Image src={matrixImage} alt="Matrix" />
-						</a>
-					</div>
+<footer class="footer">
+	<div class="container">
+		<div class="footer-content">
+			<div class="footer-brand">
+				<div class="logo">
+					<Image src={logo} alt="Polkadart Logo" />
 				</div>
 			</div>
-		</footer>
 
-		</body>
-		</html>
+			<div class="footer-links">
+				<div class="footer-column">
+					<h3>Documentation</h3>
+					<ul>
+						<li><a href="/getting-started/installation">Getting Started</a></li>
+						<li><a href="/guides/overview">Examples</a></li>
+					</ul>
+				</div>
+
+				<div class="footer-column">
+					<h3>Community</h3>
+					<ul>
+						<li><a href="https://github.com/leonardocustodio/polkadart">GitHub</a></li>
+						<li><a href="https://matrix.to/#/#polkadart:matrix.org" target="_blank">Matrix</a></li>
+						<li><a href="https://forum.polkadot.network" target="_blank">Forum</a></li>
+					</ul>
+				</div>
+
+				<div class="footer-column">
+					<h3>Resources</h3>
+					<ul>
+						<li><a href="#">FAQ</a></li>
+						<li><a href="#">Changelog</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="footer-bottom">
+			<p>© 2025 Polkadart. All rights reserved.</p>
+			<div class="social-links">
+				<a href="https://github.com/leonardocustodio/polkadart" target="_blank" class="social-link">
+					<Image src={githubImage} alt="GitHub" />
+				</a>
+				<a href="https://matrix.to/#/#polkadart:matrix.org" target="_blank" class="social-link">
+					<Image src={matrixImage} alt="Matrix" />
+				</a>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script is:inline defer src="/js/inject_dartpad.js"></script>
+</body>
+</html>
