@@ -3,7 +3,6 @@ import starlight from '@astrojs/starlight';
 import partytown from '@astrojs/partytown';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
-import tailwindcss from '@tailwindcss/vite';
 import starlightDocSearch from '@astrojs/starlight-docsearch';
 import { loadEnv } from 'vite';
 
@@ -14,10 +13,10 @@ const { ALGOLIA_APP_ID, ALGOLIA_API_KEY, ALGOLIA_INDEX_NAME } = loadEnv(
 );
 
 export default defineConfig({
-	site: 'https://polkadart.dev',
-	vite: {
-		plugins: [tailwindcss()],
+	server: {
+		allowedHosts: ['41a74fcd29ea.ngrok.app']
 	},
+	site: 'https://polkadart.dev',
 	prefetch: {
 		prefetchAll: true,
 	},
@@ -172,11 +171,15 @@ export default defineConfig({
 					],
 				},
 			],
-			components: {
-				Head: './src/components/starlight/Head.astro',
-				Footer: './src/components/starlight/Footer.astro',
-			},
-			customCss: ['./src/styles/custom.scss', './src/styles/landing.css'],
+			customCss: [
+				// './src/styles/custom.css'
+				'./src/styles/code-demo.css',
+				'./src/styles/features.css',
+				'./src/styles/header.css',
+				'./src/styles/hero.css',
+				'./src/styles/main.css',
+				'./src/styles/responsive.css',
+			],
 			plugins: [
 				starlightDocSearch({
 					appId: ALGOLIA_APP_ID,

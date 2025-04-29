@@ -22,37 +22,19 @@ const html = highlighter.codeToHtml(code, {
 });
 ---
 
-<div class="code-block">
-	{title && (
-		<div class="code-title">
-			{title}
+<div class="code-window">
+	<div class="code-header">
+		<div class="window-controls">
+			<span class="control red"></span>
+			<span class="control yellow"></span>
+			<span class="control green"></span>
 		</div>
-	)}
-	<div class="code-content" set:html={html} />
+		<span class="filename">get_runtime.dart</span>
+	</div>
+	<pre class="code-content" set:html={html}></pre>
 </div>
 
 <style>
-	.code-block {
-		margin: 1.5rem 0;
-		border-radius: 0.5rem;
-		overflow: hidden;
-		background-color: var(--color-code-background);
-		border: 1px solid var(--color-border);
-	}
-
-	.code-title {
-		padding: 0.75rem 1rem;
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
-		background-color: rgba(255, 255, 255, 0.05);
-		border-bottom: 1px solid var(--color-border);
-	}
-
-	.code-content {
-		padding: 1rem;
-		overflow-x: auto;
-	}
-
 	.code-content :global(pre) {
 		margin: 0;
 		padding: 0;

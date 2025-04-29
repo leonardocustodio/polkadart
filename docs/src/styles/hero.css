@@ -1,0 +1,104 @@
+/* Hero section styles */
+.hero {
+  padding: var(--spacing-xl) 0 var(--spacing-xxl);
+  overflow: hidden;
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xxl);
+}
+
+.hero-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.hero-logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: var(--spacing-md);
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
+}
+
+.hero-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+/* Code demo section within hero */
+.code-demo {
+  flex: 1;
+  position: relative;
+  background-color: var(--color-code-background);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: float 6s ease-in-out infinite;
+  min-height: 400px;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.run-prompt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.run-prompt p {
+  color: white;
+  opacity: 0.9;
+}
+
+.arrow-down {
+  width: 24px;
+  height: 24px;
+  margin-top: var(--spacing-xs);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+iframe[src^="https://code.polkadart.dev"]:not(#try-dart-pad) {
+  margin: 0;
+  resize: vertical;
+}
