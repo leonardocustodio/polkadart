@@ -1,0 +1,58 @@
+---
+import { createHighlighter } from 'shiki'
+
+// Create a singleton highlighter instance
+let sharedHighlighter;
+async function getHighlighter() {
+  if (!sharedHighlighter) {
+    sharedHighlighter = await createHighlighter({
+      themes: ['github-dark'],
+      langs: ['typescript', 'dart'],
+    });
+  }
+  return sharedHighlighter;
+}
+
+interface Props {
+	code: string;
+	lang: string;
+	title?: string;
+}
+
+const { code, lang, title } = Astro.props;
+
+// Get the shared highlighter instance
+const highlighter = await getHighlighter();
+
+// Highlight the code
+const html = highlighter.codeToHtml(code, {
+	lang: 'dart',
+	theme: 'github-dark',
+});
+---
+
+<div class="code-window">
+	<div class="code-header">
+		<div class="window-controls">
+			<span class="control red"></span>
+			<span class="control yellow"></span>
+			<span class="control green"></span>
+		</div>
+		<span class="filename">&nbsp;</span>
+	</div>
+	<pre class="code-content" set:html={html}></pre>
+</div>
+
+<style>
+	.code-content :global(pre) {
+		margin: 0;
+		padding: 0;
+		background-color: transparent !important;
+	}
+
+	.code-content :global(code) {
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+		font-size: 0.875rem;
+		line-height: 1.7;
+	}
+</style>
