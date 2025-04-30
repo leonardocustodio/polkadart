@@ -21,6 +21,7 @@ This guide demonstrates how to interact with ink! smart contracts using Polkadar
 ## Overview
 
 In this guide you will:
+
 - Set up your ink! development environment.
 - Create, build, and deploy a smart contract.
 - Generate Dart bindings for your contract using the `ink_cli` package.
@@ -70,6 +71,7 @@ This command installs all dependencies needed to proceed with generating contrac
 To enable communication with your smart contract, you need to generate Dart bindings from your contract’s ABI.
 
 ## Step 1: Create the Binding Generation Script
+
 Create a Dart file named `generate_contract.dart` and add the following code:
 
 ```dart
@@ -91,12 +93,15 @@ Execute the following command to generate the bindings:
 ```bash
 dart run generate_contract.dart
 ```
+
 Once the script completes, you will have a new file (generated_flipper.dart) ready for interacting with your contract.
 
 # Deploying the Contract
+
 After generating the bindings, the next step is to deploy your contract to a local Substrate node and interact with it.
 
 ## Necessary imports
+
 ```dart
 import 'dart:io';
 import 'dart:typed_data';
@@ -111,7 +116,7 @@ import 'generated_flipper.dart';
 Future<void> main() async {
   // Connect to the local Substrate node
   final provider = Provider.fromUri(Uri.parse('ws://127.0.0.1:9944'));
-  
+
   // Load the account (e.g., Alice) to sign transactions
   final alice = await KeyPair.sr25519.fromUri('//Alice');
 
@@ -121,12 +126,14 @@ Future<void> main() async {
 ```
 
 ## Create contract deployable object
+
 ```dart
   // Create a deployer object to handle contract deployment
   final contractDeployer = await ContractDeployer.from(provider: provider);
 ```
 
 ## Deploy the contract with the help of generated constructors
+
 ```dart
   // Deploy the contract using the Wasm file and initial parameter (init_value)
   final InstantiateRequest result = await Contract.new_contract(
@@ -142,6 +149,7 @@ Future<void> main() async {
 ```
 
 ## Create a contract object from the returned contract - address
+
 ```dart
   // Initialize the contract instance with the deployed contract address
   final deployedContract = Contract(
@@ -152,7 +160,9 @@ Future<void> main() async {
 ```
 
 # Interacting with the contract
+
 ## Read the state of the contract - Get the value of the flipper contract
+
 ```dart
   // Allow time for the deployment to process
   await Future.delayed(Duration(seconds: 1));
@@ -163,12 +173,14 @@ Future<void> main() async {
 ```
 
 # Mutating the state
+
 ```dart
   // Contract mutator object
   final mutator = await ContractMutator.fromProvider(provider: provider);
 ```
 
 ## Mutate the value of the contract
+
 ```dart
   final executionResult = await deployedContract.flip(
     keyPair: alice,
@@ -183,21 +195,26 @@ Future<void> main() async {
 ```
 
 # Understanding the Script
-  - **Connecting to the Node:**
-    - The Provider.fromUri method connects to a local Substrate node running at ws://127.0.0.1:9944.
 
-  - **Account Management:**
-    - The script loads Alice’s key pair using KeyPair.sr25519.fromUri('//Alice'). This account is used to sign the transaction for deploying the contract.
+- **Connecting to the Node:**
 
-  - **Contract Deployment:**
-    - A deployer object is created and used with the Contract.new_contract method. This method takes the Wasm bytecode from flipper.wasm, an initial parameter (init_value), and the key pair to deploy the contract.
+  - The Provider.fromUri method connects to a local Substrate node running at ws://127.0.0.1:9944.
 
-  - **Contract Interaction:**
-    - After deployment, the script creates a contract instance with the generated address and queries the contract’s initial state using the get() method.
+- **Account Management:**
+
+  - The script loads Alice’s key pair using KeyPair.sr25519.fromUri('//Alice'). This account is used to sign the transaction for deploying the contract.
+
+- **Contract Deployment:**
+
+  - A deployer object is created and used with the Contract.new_contract method. This method takes the Wasm bytecode from flipper.wasm, an initial parameter (init_value), and the key pair to deploy the contract.
+
+- **Contract Interaction:**
+  - After deployment, the script creates a contract instance with the generated address and queries the contract’s initial state using the get() method.
 
 # Conclusion
 
 ## In this guide, we covered how to interact with ink! smart contracts using Polkadart by:
+
 - Getting up your development environment.
 - Installing the required Dart dependencies.
 - Generating Dart bindings from your contract’s ABI.

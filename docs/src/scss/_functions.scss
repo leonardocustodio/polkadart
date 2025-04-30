@@ -1,11 +1,11 @@
-@use "sass:math";
-@use "sass:string";
+@use 'sass:math';
+@use 'sass:string';
 // functions
 // --------------------------
 
 // fa-content: convenience function used to set content property
 @function fa-content($fa-var) {
-  @return string.unquote("\"#{ $fa-var }\"");
+	@return string.unquote('"#{ $fa-var }"');
 }
 
 // fa-divide: Originally obtained from the Bootstrap https://github.com/twbs/bootstrap
@@ -34,26 +34,26 @@
 // THE SOFTWARE.
 
 @function fa-divide($dividend, $divisor, $precision: 10) {
-  $sign: if($dividend > 0 and $divisor > 0, 1, -1);
-  $dividend: math.abs($dividend);
-  $divisor: math.abs($divisor);
-  $quotient: 0;
-  $remainder: $dividend;
-  @if $dividend == 0 {
-    @return 0;
-  }
-  @if $divisor == 0 {
-    @error "Cannot divide by 0";
-  }
-  @if $divisor == 1 {
-    @return $dividend;
-  }
-  @while $remainder >= $divisor {
-    $quotient: $quotient + 1;
-    $remainder: $remainder - $divisor;
-  }
-  @if $remainder > 0 and $precision > 0 {
-    $remainder: fa-divide($remainder * 10, $divisor, $precision - 1) * .1;
-  }
-  @return ($quotient + $remainder) * $sign;
+	$sign: if($dividend > 0 and $divisor > 0, 1, -1);
+	$dividend: math.abs($dividend);
+	$divisor: math.abs($divisor);
+	$quotient: 0;
+	$remainder: $dividend;
+	@if $dividend == 0 {
+		@return 0;
+	}
+	@if $divisor == 0 {
+		@error "Cannot divide by 0";
+	}
+	@if $divisor == 1 {
+		@return $dividend;
+	}
+	@while $remainder >= $divisor {
+		$quotient: $quotient + 1;
+		$remainder: $remainder - $divisor;
+	}
+	@if $remainder > 0 and $precision > 0 {
+		$remainder: fa-divide($remainder * 10, $divisor, $precision - 1) * 0.1;
+	}
+	@return ($quotient + $remainder) * $sign;
 }

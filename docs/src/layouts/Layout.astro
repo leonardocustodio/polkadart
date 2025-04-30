@@ -1,0 +1,92 @@
+---
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<meta name="generator" content={Astro.generator} />
+	<title>{title}</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+	<slot />
+</div>
+</body>
+</html>
+
+<style is:global>
+	iframe[src^="https://code.polkadart.dev"]:not(#try-dart-pad) {
+		border: 1px solid #ccc;
+		margin: 0;
+		resize: vertical;
+		position: absolute;
+		height: 100%;
+		width: 100%;
+	}
+
+	:root {
+		--color-background: #FFF5F9;
+		--color-surface: #FFFFFF;
+		--color-surface-hover: #F9F9F9;
+		--color-border: #E5E7EB;
+		--color-primary: #E91E63;
+		--color-primary-hover: #D81B60;
+		--color-text-primary: #111827;
+		--color-text-secondary: #4B5563;
+		--color-code-background: #1E1E1E;
+	}
+
+	html, body {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		background-color: var(--color-background);
+		color: var(--color-text-primary);
+		overflow-x: hidden;
+	}
+
+	.app {
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+	}
+
+	a {
+		color: var(--color-primary);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	a:hover {
+		color: var(--color-primary-hover);
+	}
+
+	button {
+		font-family: 'Inter', sans-serif;
+	}
+
+	.container {
+		width: 100%;
+		max-width: 1600px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+	}
+
+	@media (prefers-reduced-motion) {
+		* {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+</style>
