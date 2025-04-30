@@ -2,7 +2,7 @@
 import { createHighlighter } from 'shiki'
 
 // Create a singleton highlighter instance
-let sharedHighlighter;
+let sharedHighlighter: Awaited<ReturnType<typeof createHighlighter>>;
 async function getHighlighter() {
   if (!sharedHighlighter) {
     sharedHighlighter = await createHighlighter({
