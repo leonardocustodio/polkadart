@@ -14,7 +14,7 @@ dependencies:
   polkadart_scale_codec: ^1.4.2
   ss58: ^1.3.1
   substrate_bip39: ^0.6.1
-  substrate_metadata: 1.4.1
+  substrate_metadata: ^1.4.2
 
   # Generated files depend on quiver
   quiver: ^3.2.1

@@ -51,6 +51,7 @@ export default defineConfig({
 				maxHeadingLevel: 4,
 			},
 			lastUpdated: true,
+			customCss: ['./src/styles/custom.css'],
 			sidebar: [
 				{
 					label: 'Introduction',
