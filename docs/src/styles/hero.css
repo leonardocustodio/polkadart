@@ -53,6 +53,14 @@
   margin-bottom: var(--spacing-lg);
 }
 
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--color-text-light);
+  line-height: 1.5;
+  margin-bottom: var(--spacing-lg);
+  max-width: 600px;
+}
+
 .hero-buttons {
   display: flex;
   gap: var(--spacing-md);
