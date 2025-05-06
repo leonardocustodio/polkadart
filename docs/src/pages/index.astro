@@ -8,35 +8,37 @@ import '../styles/main.css'
 import '../styles/responsive.css'
 import { Image } from 'astro:assets';
 import logo from '../assets/logo_black.svg'
-import logoLarge from '../assets/logo.svg'
 import githubImage from '../assets/github-icon.svg'
 import matrixImage from '../assets/matrix.svg'
-import infoImage from '../assets/info-icon.svg'
 import codeImage from '../assets/code-icon.svg'
-import playImage from '../assets/play-icon.svg'
-import expandImage from '../assets/expand-icon.svg'
-import arrowDownImage from '../assets/arrow-down.svg'
 import apiImage from '../assets/api-icon.svg'
 import platformImage from '../assets/platform-icon.svg'
 import lightImage from '../assets/lightweight-icon.svg'
 import codeFeatureImage from '../assets/code-icon-feature.svg'
 import searchImage from '../assets/search-icon.svg'
 import w3fLogo from '../assets/w3f-logo.svg'
+import algoliaLogo from '../assets/algolia-logo.svg'
 import DartPad from '../components/dartpad/DartPad.astro';
 import CodeBlock from '../components/landing/CodeBlock.astro';
 
 let stateExample = '';
 let keyringExample = '';
 let startedExample = '';
+let inkExample = '';
+let multichainExample = '';
 
 try {
 	stateExample = await import(`../components/snippet/storage.dart?raw`).then(module => module.default);
 	keyringExample = await import(`../components/snippet/keypair.dart?raw`).then(module => module.default);
 	startedExample = await import(`../components/snippet/started.dart?raw`).then(module => module.default);
+	inkExample = await import(`../components/snippet/ink.dart?raw`).then(module => module.default);
+	multichainExample = await import(`../components/snippet/multichain.dart?raw`).then(module => module.default);
 } catch (error) {
 	stateExample = `// Error: Could not load snippet`;
 	keyringExample = `// Error: Could not load snippet`;
 	startedExample = `// Error: Could not load snippet`;
+	inkExample = `// Error: Could not load snippet`;
+	multichainExample = `// Error: Could not load snippet`;
 }
 
 interface Contributor {
@@ -241,33 +243,13 @@ const data: ContributorsData = await response.json();
 			<div class="integration-card">
 				<h3>Compatibility Overview</h3>
 				<p>Polkadart functions flawlessly with Polkadot, Kusama, and any blockchain developed using the Polkadot-SDK, adapting to chain-specific functionalities while maintaining a cohesive interface.</p>
-				<div class="code-window">
-					<div class="code-header">
-						<div class="window-controls">
-							<span class="control red"></span>
-							<span class="control yellow"></span>
-							<span class="control green"></span>
-						</div>
-						<span class="filename">chain_connection.dart</span>
-					</div>
-					<pre class="code-content"><code>import</code></pre>
-				</div>
+				<CodeBlock code={multichainExample} lang="dart" />
 			</div>
 
 			<div class="integration-card">
 				<h3>Using Smart Contracts</h3>
 				<p>Learn how to deploy and interact with ink! smart contracts through Polkadart, enhancing the capabilities of your decentralized applications.</p>
-				<div class="code-window">
-					<div class="code-header">
-						<div class="window-controls">
-							<span class="control red"></span>
-							<span class="control yellow"></span>
-							<span class="control green"></span>
-						</div>
-						<span class="filename">smart_contract.dart</span>
-					</div>
-					<pre class="code-content"><code>import</code></pre>
-				</div>
+				<CodeBlock code={inkExample} lang="dart" />
 			</div>
 		</div>
 	</div>
@@ -299,10 +281,13 @@ const data: ContributorsData = await response.json();
 		<p class="join-text">Join our contributors and help shape the future of Polkadart.</p>
 		<div class="funding-container">
 			<h3>Supported By</h3>
-			<p class="funding-text">Polkadart development is made possible through the support of leading blockchain organizations</p>
+			<p class="funding-text">Polkadart development is made possible through the support of leading organizations</p>
 			<div class="funding-logos">
 				<a href="https://web3.foundation" target="_blank" rel="noopener noreferrer" class="funding-logo">
 					<Image src={w3fLogo} alt="Web3 Foundation" class="foundation-logo"/>
+				</a>
+				<a href="https://algolia.com" target="_blank" rel="noopener noreferrer" class="funding-logo">
+					<Image src={algoliaLogo} alt="Alogolia" class="algolia-logo"/>
 				</a>
 			</div>
 		</div>
