@@ -357,10 +357,15 @@ section {
   opacity: 0.8;
 }
 
+.algolia-logo {
+  margin-top: var(--spacing-xl);
+  height: 62px;
+  width: auto;
+}
 
 .foundation-logo {
   margin-top: var(--spacing-xl);
-  height: 120px;
+  height: 80px;
   width: auto;
 }
 
