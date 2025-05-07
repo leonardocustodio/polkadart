@@ -1,6 +1,6 @@
 name: sr25519
 description: A sr25519 cryptography library in pure Dart
-version: 0.6.1
+version: 0.7.0
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/sr25519
 repository: https://github.com/leonardocustodio/polkadart
 resolution: workspace
