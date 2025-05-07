@@ -1,3 +1,6 @@
+## 0.7.0
+- Websocket provider now supports auto-reconnect
+
 ## 0.6.2
 - Bumps `substrate_metadata` dependency for wasm support
 
