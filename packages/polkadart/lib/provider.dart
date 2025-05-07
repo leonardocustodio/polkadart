@@ -2,8 +2,7 @@ import 'dart:async' show Future, Completer, StreamController, FutureOr;
 import 'dart:convert' show jsonEncode, jsonDecode;
 
 import 'package:http/http.dart' as http;
-import 'package:web_socket_channel/status.dart' as status;
-import 'package:web_socket_channel/web_socket_channel.dart' show WebSocketChannel;
+import 'package:web_socket_client/web_socket_client.dart';
 
 class RpcResponse<R, T> {
   final int id;
@@ -114,6 +113,13 @@ class HttpProvider extends Provider {
   }
 }
 
+class PendingQuery {
+  final String message;
+  final Completer<RpcResponse> completer;
+
+  PendingQuery({required this.message, required this.completer});
+}
+
 /// The WebSocket Provider allows sending requests using WebSocket to a WebSocket RPC server TCP port. Unlike the [[HttpProvider]],
 /// it does support subscriptions and allows listening to events such as new blocks or balance changes.
 class WsProvider extends Provider {
@@ -128,38 +134,44 @@ class WsProvider extends Provider {
   final Uri url;
 
   /// Maps the query id to the completer that will resolve the query
-  final Map<int, Completer<RpcResponse>> queries = {};
+  final Map<int, PendingQuery> queries = {};
 
   /// Maps the subscription id to the stream controller that will emit the subscription data
   final Map<String, StreamController<SubscriptionMessage>> subscriptions = {};
 
   /// WebSocket connection
-  WebSocketChannel? channel;
+  WebSocket? socket;
 
   /// Sequence used to generate unique query ids
   int _sequence = 0;
 
-  bool get isOpen => channel != null;
+  bool get isOpen => socket != null;
 
   /// Promise that resolves the first time we are connected and loaded
-  Future<bool> ready() async {
-    if (channel != null) {
-      await channel!.ready;
-      return true;
-    }
-    return false;
+  Future<void> isReady() async {
+    await socket?.connection.firstWhere((state) => state is Connected || state is Reconnected);
   }
 
   /// Open websocket channel
   @override
   Future connect() async {
-    if (this.channel != null) {
+    if (this.socket != null) {
       throw Exception('Already connected');
     }
 
     _sequence = 0;
-    final WebSocketChannel channel = WebSocketChannel.connect(url);
-    final jsonStream = channel.stream.map((response) {
+
+    final WebSocket socket = WebSocket(url);
+
+    socket.connection.listen((state) {
+      if (state is Reconnected) {
+        for (final query in queries.values) {
+          socket.send(query.message);
+        }
+      }
+    });
+
+    final jsonStream = socket.messages.map((response) {
       if (response == null) {
         throw Exception('Invalid jsonrpc field in decoded object');
       }
@@ -185,7 +197,7 @@ class WsProvider extends Provider {
       final error = message.containsKey('error') ? message['error'] : null;
       return RpcResponse(id: id, result: result, error: error);
     }).listen((message) {
-      queries.remove(message.id)!.complete(message);
+      queries.remove(message.id)!.completer.complete(message);
     });
 
     // Subscriptions
@@ -206,41 +218,42 @@ class WsProvider extends Provider {
       controller?.add(message);
     });
 
-    this.channel = channel;
-    await channel.ready;
+    this.socket = socket;
+    await isReady();
   }
 
   // Close websocket channel
   @override
   Future disconnect() async {
-    if (channel == null) {
+    if (socket == null) {
       throw Exception('Channel is already close');
     }
     for (final controller in subscriptions.values) {
       await controller.close();
     }
     subscriptions.clear();
-    await channel!.sink.close(status.goingAway);
-    channel = null;
+    socket!.close();
+    socket = null;
   }
 
   @override
   Future<RpcResponse> send(String method, List<dynamic> params) async {
-    if (channel == null) {
+    if (socket == null) {
       throw Exception('WebsocketChannel is closed');
     }
-    await channel!.ready;
+    await isReady();
 
     final id = _sequence++;
     final completer = Completer<RpcResponse>();
-    queries[id] = completer;
-
-    channel!.sink.add(jsonEncode({
+    final message = jsonEncode({
       'id': id,
       'jsonrpc': '2.0',
       'method': method,
       'params': params,
-    }));
+    });
+
+    queries[id] = PendingQuery(message: message, completer: completer);
+    socket!.send(message);
 
     return completer.future;
   }
@@ -292,6 +305,6 @@ class WsProvider extends Provider {
 
   @override
   bool isConnected() {
-    return channel != null && channel!.closeCode == null;
+    return socket != null;
   }
 }

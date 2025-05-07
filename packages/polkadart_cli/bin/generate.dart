@@ -16,7 +16,7 @@ class ChainProperties {
   static Future<ChainProperties> fromURL(Uri uri) async {
     final provider = Provider.fromUri(uri);
     final api = StateApi(provider);
-    final decodedMetadata = await api.getMetadata();
+    final decodedMetadata = await api.getTypedMetadata();
     final version = await api.getRuntimeVersion();
 
     await provider.disconnect();
