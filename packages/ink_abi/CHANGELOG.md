@@ -1,3 +1,7 @@
+## 0.3.0
+
+ - Bump polkadart version to 0.7.0
+
 ## 0.2.3
 - Improves state mutation for ink smart contracts
 
