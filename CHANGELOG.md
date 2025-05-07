@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`polkadart` - `v0.7.1`](#polkadart---v071)
+
+---
+
+#### `polkadart` - `v0.7.1`
+
+ - Bumps all dependencies
+
+
+## 2025-05-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`polkadart_keyring` - `v0.7.0`](#polkadart_keyring---v070)
 
 ---
