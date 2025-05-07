@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-05-07
+
+### Changes
+
 ---
 
-To be done when all packages reaches their first stable version.
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`polkadart` - `v0.7.0`](#polkadart---v070)
+
+---
+
+#### `polkadart` - `v0.7.0`
+
+ - Websocket provider now supports auto-reconnect
+
+
+---
