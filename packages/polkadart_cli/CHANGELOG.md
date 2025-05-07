@@ -1,3 +1,7 @@
+## 0.7.0
+
+ - Bump polkadart version to 0.7.0
+
 ## 0.6.2
 - Downgrade `substrate_metadata` to 1.4.1
 
