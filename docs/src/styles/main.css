@@ -293,7 +293,7 @@ section {
 .contributors-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-sm);
   justify-content: center;
   max-width: 800px;
   margin: 0 auto;
@@ -395,7 +395,7 @@ section {
 
 /* Start Building section styles */
 .start-building-section {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  background: url("../assets/callout-bg.png");
   padding: var(--spacing-xxl) 0;
   text-align: center;
   color: white;
@@ -436,8 +436,8 @@ section {
 }
 
 .start-building-buttons .button.primary {
-  background-color: white;
-  color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: white;
 }
 
 .start-building-buttons .button.primary:hover {

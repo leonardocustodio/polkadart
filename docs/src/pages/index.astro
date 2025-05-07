@@ -26,6 +26,7 @@ let keyringExample = '';
 let startedExample = '';
 let inkExample = '';
 let multichainExample = '';
+let dotCli = '';
 
 try {
 	stateExample = await import(`../components/snippet/storage.dart?raw`).then(module => module.default);
@@ -33,12 +34,14 @@ try {
 	startedExample = await import(`../components/snippet/started.dart?raw`).then(module => module.default);
 	inkExample = await import(`../components/snippet/ink.dart?raw`).then(module => module.default);
 	multichainExample = await import(`../components/snippet/multichain.dart?raw`).then(module => module.default);
+	dotCli = await import(`../components/snippet/dotcli.yaml?raw`).then(module => module.default);
 } catch (error) {
 	stateExample = `// Error: Could not load snippet`;
 	keyringExample = `// Error: Could not load snippet`;
 	startedExample = `// Error: Could not load snippet`;
 	inkExample = `// Error: Could not load snippet`;
 	multichainExample = `// Error: Could not load snippet`;
+	dotCli = `// Error: Could not load snippet`;
 }
 
 interface Contributor {
@@ -198,26 +201,17 @@ const data: ContributorsData = await response.json();
 					<div class="step">
 						<div class="step-number">01</div>
 						<h3>Install Dependencies</h3>
-						<div class="code-snippet">
-							<pre><code>dart pub add polkadart polkadart_cli</code></pre>
-						</div>
+						<CodeBlock code="dart pub add polkadart polkadart_cli" lang="bash" statusBar={false} />
 					</div>
 					<div class="step">
 						<div class="step-number">02</div>
 						<h3>Choose Your Blockchain</h3>
-						<div class="code-snippet">
-                <pre><code>polkadart:
-  output_dir: lib/generated
-  chains:
-    polkadot: wss://rpc.polkadot.io</code></pre>
-						</div>
+						<CodeBlock code={dotCli} lang="yaml" statusBar={false} />
 					</div>
 					<div class="step">
 						<div class="step-number">03</div>
 						<h3>Generate Blockchain Code</h3>
-						<div class="code-snippet">
-							<pre><code>dart run polkadart_cli:generate -v</code></pre>
-						</div>
+						<CodeBlock code="dart run polkadart_cli:generate -v" lang="bash" statusBar={false} />
 					</div>
 				</div>
 			</div>
@@ -301,7 +295,7 @@ const data: ContributorsData = await response.json();
 		<div class="start-building-buttons">
 			<a href="/intro" class="button primary">Get Started Now</a>
 		</div>
-		<p class="start-building-links">Dive into the official <a href="#">documentation</a> or visit our <a href="#">GitHub</a> to contribute.</p>
+		<p class="start-building-links">Dive into the official <a href="/intro">documentation</a> or visit our <a href="https://github.com/leonardocustodio/polkadart" target="_blank">GitHub</a> to contribute.</p>
 	</div>
 </section>
 

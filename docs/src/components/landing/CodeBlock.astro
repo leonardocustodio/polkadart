@@ -7,7 +7,7 @@ async function getHighlighter() {
   if (!sharedHighlighter) {
     sharedHighlighter = await createHighlighter({
       themes: ['github-dark'],
-      langs: ['typescript', 'dart'],
+      langs: ['dart', 'bash', 'yaml'],
     });
   }
   return sharedHighlighter;
@@ -17,29 +17,32 @@ interface Props {
 	code: string;
 	lang: string;
 	title?: string;
+	statusBar?: boolean;
 }
 
-const { code, lang, title } = Astro.props;
+const { code, lang, title, statusBar } = Astro.props;
 
 // Get the shared highlighter instance
 const highlighter = await getHighlighter();
 
 // Highlight the code
 const html = highlighter.codeToHtml(code, {
-	lang: 'dart',
+	lang: lang,
 	theme: 'github-dark',
 });
 ---
 
 <div class="code-window">
-	<div class="code-header">
-		<div class="window-controls">
-			<span class="control red"></span>
-			<span class="control yellow"></span>
-			<span class="control green"></span>
+	{statusBar !== false && (
+		<div class="code-header">
+			<div class="window-controls">
+				<span class="control red"></span>
+				<span class="control yellow"></span>
+				<span class="control green"></span>
+			</div>
+			<span class="filename">{'\u00A0'}</span>
 		</div>
-		<span class="filename">&nbsp;</span>
-	</div>
+	)}
 	<pre class="code-content" set:html={html}></pre>
 </div>
 
