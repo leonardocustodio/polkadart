@@ -1,3 +1,7 @@
+## 0.7.1
+
+ - Bumps all dependencies
+
 ## 0.7.0
 - Websocket provider now supports auto-reconnect
 

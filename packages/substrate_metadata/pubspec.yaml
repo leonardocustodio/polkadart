@@ -13,7 +13,7 @@ dependencies:
   equatable: ^2.0.5
   json_schema: ^5.2.1
   pointycastle: ^3.6.2 # BSD-3-Clause
-  polkadart: ^0.7.0
+  polkadart: ^0.7.1
   polkadart_scale_codec: ^1.5.0
   utility: ^1.0.3
   cross_file: ^0.3.4+2 # BSD-3-Clause
