@@ -1,0 +1,4 @@
+polkadart:
+  output_dir: lib/generated
+  chains:
+    polkadot: wss://rpc.polkadot.io
