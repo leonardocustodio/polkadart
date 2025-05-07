@@ -2,7 +2,7 @@ name: Publish polkadart_scale_codec
 on:
   push:
     tags:
-      - 'polkadart_scale_codec-[0-9]+.[0-9]+.[0-9]+'
+      - 'polkadart_scale_codec-v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:
