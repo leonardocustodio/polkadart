@@ -12,7 +12,7 @@ dependencies:
   json_schema: ^5.2.1
   polkadart: ^0.7.0
   polkadart_scale_codec: ^1.4.0
-  substrate_metadata: ^1.4.0
+  substrate_metadata: ^1.5.0
   utility: ^1.0.3
 
 dev_dependencies:

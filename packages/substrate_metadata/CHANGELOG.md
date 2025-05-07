@@ -1,3 +1,7 @@
+## 1.5.0
+
+ - Bump polkadart version to 0.7.0
+
 ## 1.4.2
 - Removed `dart:io` for wasm support
 

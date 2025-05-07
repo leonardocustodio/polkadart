@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`substrate_metadata` - `v1.5.0`](#substrate_metadata---v150)
+
+---
+
+#### `substrate_metadata` - `v1.5.0`
+
+ - Bump polkadart version to 0.7.0
+
+
+## 2025-05-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`polkadart_cli` - `v0.7.0`](#polkadart_cli---v070)
 
 ---
