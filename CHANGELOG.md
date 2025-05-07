@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`ink_cli` - `v0.3.0`](#ink_cli---v030)
+
+---
+
+#### `ink_cli` - `v0.3.0`
+
+ - Bump polkadart version to 0.7.0
+
+
+## 2025-05-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`ink_abi` - `v0.3.0`](#ink_abi---v030)
 
 ---
