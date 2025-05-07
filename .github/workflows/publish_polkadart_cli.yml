@@ -2,7 +2,7 @@ name: Publish polkadart_cli
 on:
   push:
     tags:
-      - 'polkadart_cli-[0-9]+.[0-9]+.[0-9]+'
+      - 'polkadart_cli-v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:

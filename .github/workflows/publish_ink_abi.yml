@@ -2,7 +2,7 @@ name: Publish ink_abi
 on:
   push:
     tags:
-      - 'ink_abi-[0-9]+.[0-9]+.[0-9]+'
+      - 'ink_abi-v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish:
