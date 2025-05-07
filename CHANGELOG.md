@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`sr25519` - `v0.7.0`](#sr25519---v070)
+
+---
+
+#### `sr25519` - `v0.7.0`
+
+ - Bump polkadart version to 0.7.0
+
+
+## 2025-05-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`substrate_bip39` - `v0.7.0`](#substrate_bip39---v070)
 
 ---
