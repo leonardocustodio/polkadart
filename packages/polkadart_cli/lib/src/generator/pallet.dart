@@ -1,4 +1,5 @@
 import 'dart:typed_data' show Uint8List;
+
 import 'package:code_builder/code_builder.dart'
     show
         Block,
@@ -20,6 +21,9 @@ import 'package:code_builder/code_builder.dart'
 import 'package:path/path.dart' as p;
 import 'package:polkadart/scale_codec.dart' as scale_codec;
 import 'package:recase/recase.dart' show ReCase;
+import 'package:substrate_metadata/substrate_metadata.dart' as metadata;
+
+import '../typegen/references.dart' as refs;
 import '../typegen/typegen.dart' as typegen
     show
         TypeDescriptor,
@@ -31,8 +35,6 @@ import '../typegen/typegen.dart' as typegen
         Variant,
         TypeDefBuilder,
         EmptyDescriptor;
-import 'package:substrate_metadata/substrate_metadata.dart' as metadata;
-import '../typegen/references.dart' as refs;
 import '../utils/utils.dart' show sanitize, sanitizeDocs;
 
 enum StorageHasherType {
@@ -471,6 +473,71 @@ Class createPalletQueries(
                           .statement)
                   ..statements.add(storage.isNullable ? Code('') : Code('/* Default */')));
             })))
+        ..methods.addAll(generator.storages
+            // We don't support multi queries with multiple keys yet.
+            .where((storage) => storage.hashers.isNotEmpty && storage.hashers.length < 2)
+            .map((storage) => Method((builder) {
+                  final storageName = ReCase(storage.name).camelCase;
+                  final Reference primitive;
+                  if (storage.isNullable) {
+                    primitive = storage.valueCodec.primitive(dirname).asNullable();
+                  } else {
+                    primitive = storage.valueCodec.primitive(dirname);
+                  }
+                  builder
+                    ..name = sanitize('multi${ReCase(storageName).pascalCase}', recase: false)
+                    ..docs.addAll(sanitizeDocs(storage.docs))
+                    ..returns = refs.future(refs.list(ref: primitive))
+                    ..modifier = MethodModifier.async
+                    ..optionalParameters.add(Parameter((b) => b
+                      ..type = refs.blockHash.asNullable()
+                      ..named = true
+                      ..name = 'at'))
+                    ..requiredParameters.addAll(storage.hashers.map((hasher) => Parameter((b) => b
+                      ..type = refs.list(ref: hasher.codec.primitive(dirname))
+                      ..name = 'keys')))
+                    ..body = Block((b) => b
+                      ..statements.add(declareFinal('hashedKeys')
+                          .assign(refer('keys').property('map').call([
+                            Method((b) => b
+                              ..lambda = true
+                              ..requiredParameters.add(Parameter((p) => p..name = 'key'))
+                              ..body = refer('_$storageName')
+                                  .property('hashedKeyFor')
+                                  .call([refer('key')]).code).closure
+                          ]))
+                          .property('toList()')
+                          .statement)
+                      ..statements.add(declareFinal('bytes')
+                          .assign(refer('__api')
+                              .property('queryStorageAt')
+                              .call([refer('hashedKeys')], {'at': refer('at')}).awaited)
+                          .statement)
+                      ..statements.add(Code('if (bytes.isNotEmpty) {'))
+                      ..statements.add(Code(
+                          '  return bytes.first.changes.map((v) => _$storageName.decodeValue(v.key)).toList();'))
+                      ..statements.add(Code('}'))
+                      ..statements.add(storage.isNullable
+                          ? Code('return []; /* Nullable */')
+                          : refer('keys')
+                              .property('map')
+                              .call([
+                                Method((b) => b
+                                  ..lambda = true
+                                  ..requiredParameters.add(Parameter((p) => p..name = 'key'))
+                                  ..body = storage.valueCodec
+                                      .valueFrom(
+                                          dirname,
+                                          scale_codec.ByteInput(
+                                              Uint8List.fromList(storage.defaultValue)))
+                                      .code).closure
+                              ])
+                              .property('toList()')
+                              .asA(refs.list(ref: storage.valueCodec.primitive(dirname)))
+                              .returned
+                              .statement)
+                      ..statements.add(storage.isNullable ? Code('') : Code('/* Default */')));
+                })))
         ..methods.addAll(generator.storages.map((storage) => Method((builder) {
               final storageName = ReCase(storage.name).camelCase;
               builder
