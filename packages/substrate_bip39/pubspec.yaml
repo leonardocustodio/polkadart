@@ -9,7 +9,7 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
-  bip39_mnemonic: ^3.0.9
+  bip39_mnemonic: ^3.0.10
   convert: ^3.1.1
   collection: ^1.17.2
   cryptography: ^2.5.0
