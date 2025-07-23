@@ -757,10 +757,10 @@ packages:
     dependency: transitive
     description:
       name: web_socket_client
-      sha256: "22264cb5143e9bb55c943d6b051d207fdd6470ffb77ee45778c9a7a0fda100bc"
+      sha256: "394789177aa3bc1b7b071622a1dbf52a4631d7ce23c555c39bb2523e92316b07"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.2.1"
   webkit_inspection_protocol:
     dependency: transitive
     description:
