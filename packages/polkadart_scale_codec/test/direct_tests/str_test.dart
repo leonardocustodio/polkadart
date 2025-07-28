@@ -8,7 +8,7 @@ void main() {
       const testString = 'Hello, World!';
       final encoded = StrCodec.codec.encode(testString);
       final decoded = StrCodec.codec.decode(ByteInput(encoded));
-      
+
       expect(decoded, equals(testString));
     });
 
@@ -16,7 +16,7 @@ void main() {
       const testString = '';
       final encoded = StrCodec.codec.encode(testString);
       final decoded = StrCodec.codec.decode(ByteInput(encoded));
-      
+
       expect(decoded, equals(testString));
     });
 
@@ -24,7 +24,7 @@ void main() {
       const testString = '🚀 Polkadart 🎯';
       final encoded = StrCodec.codec.encode(testString);
       final decoded = StrCodec.codec.decode(ByteInput(encoded));
-      
+
       expect(decoded, equals(testString));
     });
 
@@ -36,8 +36,9 @@ void main() {
         114, 111, 111, 116, // "root"
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // 12 null bytes
       ];
-      
-      final decoded = StrCodec.codec.decode(ByteInput(Uint8List.fromList(bytes)));
+
+      final decoded =
+          StrCodec.codec.decode(ByteInput(Uint8List.fromList(bytes)));
       expect(decoded, equals('root'));
       expect(decoded.length, equals(4));
     });
@@ -50,9 +51,10 @@ void main() {
         0, // null byte
         100, 97, 116, 97 // "data"
       ];
-      
-      final decoded = StrCodec.codec.decode(ByteInput(Uint8List.fromList(bytes)));
-      expect(decoded, equals('test'));  // Should stop at first null
+
+      final decoded =
+          StrCodec.codec.decode(ByteInput(Uint8List.fromList(bytes)));
+      expect(decoded, equals('test')); // Should stop at first null
       expect(decoded.length, equals(4));
     });
 
@@ -61,10 +63,12 @@ void main() {
       final testString = 'whitelisted_caller';
       final encoded = [
         72, // compact encoding of length 18
-        119, 104, 105, 116, 101, 108, 105, 115, 116, 101, 100, 95, 99, 97, 108, 108, 101, 114
+        119, 104, 105, 116, 101, 108, 105, 115, 116, 101, 100, 95, 99, 97, 108,
+        108, 101, 114
       ];
-      
-      final decoded = StrCodec.codec.decode(ByteInput(Uint8List.fromList(encoded)));
+
+      final decoded =
+          StrCodec.codec.decode(ByteInput(Uint8List.fromList(encoded)));
       expect(decoded, equals(testString));
     });
 
@@ -72,7 +76,7 @@ void main() {
       const testString = 'Hello';
       final sizeHint = StrCodec.codec.sizeHint(testString);
       final encoded = StrCodec.codec.encode(testString);
-      
+
       expect(sizeHint, equals(encoded.length));
     });
   });
