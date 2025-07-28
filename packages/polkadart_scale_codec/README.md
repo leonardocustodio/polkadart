@@ -306,7 +306,7 @@ var decoded = CompactCodec.codec.decode(input);
 
 ## Resources
 
-- [substrate.dev](https://substrate.dev/docs/en/knowledgebase/advanced/codec)
+- [Polkadot Docs](https://docs.polkadot.com/polkadot-protocol/basics/data-encoding/)
 - [Parity-scale-codec](https://github.com/paritytech/parity-scale-codec)
 - [Polkadot.js](http://polkadot.js.org/)
 - [Squid](https://github.com/subsquid/squid)

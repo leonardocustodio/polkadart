@@ -72,7 +72,7 @@ Contributions of any kind are always welcome! ❤️
 
 ## Contributors
 
-A heartfelt thank you to all the contributors for enriching the Polkadart project! [emojis](https://allcontributors.org/docs/en/emoji-key)
+A heartfelt thank you to all the contributors for enriching the Polkadart project! [emojis](https://github.com/all-contributors/all-contributors/blob/master/docs/emoji-key.md)
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
