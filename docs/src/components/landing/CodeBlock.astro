@@ -20,7 +20,7 @@ interface Props {
 	statusBar?: boolean;
 }
 
-const { code, lang, title, statusBar } = Astro.props;
+const { code, lang, statusBar } = Astro.props;
 
 // Get the shared highlighter instance
 const highlighter = await getHighlighter();
