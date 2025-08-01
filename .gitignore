@@ -59,3 +59,6 @@ lib/generated_plugin_registrant.dart
 # - https://fvm.app/docs/getting_started/configuration/
 # - https://seanconnolly.dev/flutter-version-management
 .fvm/flutter_sdk
+
+# Melos generated files (no longer needed with Dart 3.6+ workspaces)
+pubspec_overrides.yaml
