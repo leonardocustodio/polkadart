@@ -16,7 +16,10 @@ class StrCodec with Codec<String> {
   String decode(Input input) {
     final size = CompactCodec.codec.decode(input);
     final bytes = input.readBytes(size);
-    return utf8.decode(bytes);
+    final decoded = utf8.decode(bytes);
+    // Strip trailing null bytes that may exist in fixed-length string fields
+    final nullIndex = decoded.indexOf('\x00');
+    return nullIndex == -1 ? decoded : decoded.substring(0, nullIndex);
   }
 
   @override

@@ -274,7 +274,7 @@
 
 ## Resources
 
-- [substrate.dev](https://substrate.dev/docs/en/knowledgebase/advanced/codec)
+- [Polkadot Docs](https://docs.polkadot.com/polkadot-protocol/basics/data-encoding/)
 - [parity-scale-codec](https://github.com/paritytech/parity-scale-codec)
 - [Polkadot.JS](https://polkadot.js.org/)
 - [Subsquid](https://github.com/subsquid/squid)
