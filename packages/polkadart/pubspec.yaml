@@ -12,7 +12,7 @@ dependencies:
   convert: ^3.1.1 # BSD-3-Clause
   http: ^1.4.0 # BSD-3-Clause
   pointycastle: ^4.0.0 # MIT
-  web_socket_client: ^0.2.0 # MIT
+  web_socket_client: ^0.2.1 # MIT
   polkadart_scale_codec: ^1.5.0 # Apache 2.0
   substrate_metadata: ^1.5.0 # Apache 2.0
   hashlib_codecs: ^2.2.0 # BSD-3-Clause
