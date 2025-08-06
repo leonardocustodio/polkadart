@@ -61,10 +61,10 @@ packages:
     dependency: transitive
     description:
       name: bip39_mnemonic
-      sha256: e36c1f1fecd938d433b8f7a1e74d5bc721e16816b59dbac5b31307f079d3b3bc
+      sha256: aa3057ec72fe9e5fd13ecdc0322127b6630298d0d63eea95932ba81b5671d5d0
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.9"
+    version: "4.0.0"
   boolean_selector:
     dependency: transitive
     description:
