@@ -19,5 +19,5 @@ dependencies:
   cross_file: ^0.3.4+2 # BSD-3-Clause
 
 dev_dependencies:
-  lints: ^5.1.1
+  lints: ^6.0.0
   test: ^1.26.3
