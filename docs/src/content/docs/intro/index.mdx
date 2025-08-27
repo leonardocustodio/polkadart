@@ -1,30 +1,55 @@
 ---
 title: Introduction
+description: Polkadart is a comprehensive Dart/Flutter SDK for building decentralized applications on Polkadot and Substrate-based blockchains
 lastUpdated: false
 editUrl: false
+sidebar:
+  order: 1
 ---
 
 import Contributors from '../../../components/polkadart/Contributors.astro';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-The Polkadart library provides a clean wrapper around all the methods exposed by a Polkadot network client and defines all the types exposed by a node, this API provides developers the ability to query a node and interact with the Polkadot chains using Dart.
+## Welcome to Polkadart
+
+Polkadart is a powerful and type-safe Dart/Flutter SDK that provides developers with everything needed to build decentralized applications on Polkadot, Substrate, and other compatible blockchain networks. With comprehensive APIs, automatic code generation, and Flutter-first design, it's the most developer-friendly way to integrate blockchain functionality into your Dart applications.
 
 All Polkadart packages are available on [GitHub](https://github.com/leonardocustodio/polkadart) with a [permissive Apache 2.0 license](https://github.com/leonardocustodio/polkadart/blob/main/LICENSE).
 
-## Packages
+## 📦 Package Ecosystem
 
-Our ecosystem consists of multiple packages that can be used independently. Here is a list of all current packages:
+Polkadart is a modular ecosystem where each package serves a specific purpose. You can use them independently or together based on your needs.
 
-| Package                                                                                                           | Description                    | Link                                                                                                                     |
-|-------------------------------------------------------------------------------------------------------------------|--------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| [polkadart](https://github.com/leonardocustodio/polkadart/tree/master/packages/polkadart)                         | Core Dart APIs                 | [![pub package](https://img.shields.io/pub/v/polkadart.svg)](https://pub.dev/packages/polkadart)                         |
-| [polkadart_cli](https://github.com/leonardocustodio/polkadart/tree/master/packages/polkadart_cli)                 | Type generator                 | [![pub package](https://img.shields.io/pub/v/polkadart_cli.svg)](https://pub.dev/packages/polkadart_cli)                 |
-| [polkadart_keyring](https://github.com/leonardocustodio/polkadart/tree/master/packages/polkadart_keyring)         | Keychain management            | [![pub package](https://img.shields.io/pub/v/polkadart_keyring.svg)](https://pub.dev/packages/polkadart_keyring)         |
-| [polkadart_scale_codec](https://github.com/leonardocustodio/polkadart/tree/master/packages/polkadart_scale_codec) | SCALE encoder/decoder          | [![pub package](https://img.shields.io/pub/v/polkadart_scale_codec.svg)](https://pub.dev/packages/polkadart_scale_codec) |
-| [secp256k1_ecdsa](https://github.com/leonardocustodio/polkadart/tree/master/packages/secp256k1_ecdsa)             | SECP256k1 signing              | [![pub package](https://img.shields.io/pub/v/secp256k1_ecdsa.svg)](https://pub.dev/packages/secp256k1_ecdsa)             |
-| [sr25519](https://github.com/leonardocustodio/polkadart/tree/master/packages/sr25519)                             | SR25519 signing                | [![pub package](https://img.shields.io/pub/v/sr25519.svg)](https://pub.dev/packages/sr25519)                             |
-| [ss58](https://github.com/leonardocustodio/polkadart/tree/master/packages/ss58)                                   | SS58 addresses encoder/decoder | [![pub package](https://img.shields.io/pub/v/ss58.svg)](https://pub.dev/packages/ss58)                                   |
-| [substrate_bip39](https://github.com/leonardocustodio/polkadart/tree/master/packages/substrate_bip39)             | BIP39 key generator            | [![pub package](https://img.shields.io/pub/v/substrate_bip39.svg)](https://pub.dev/packages/substrate_bip39)             |
-| [substrate_metadata](https://github.com/leonardocustodio/polkadart/tree/master/packages/substrate_metadata)       | Substrate metadata decoder     | [![pub package](https://img.shields.io/pub/v/substrate_metadata.svg)](https://pub.dev/packages/substrate_metadata)       |
+### Core Packages
+
+| Package | Description | Version |
+|---------|-------------|---------|
+| [**polkadart**](https://pub.dev/packages/polkadart) | Main SDK for blockchain interaction - provides APIs for connecting to nodes, querying state, and sending transactions | [![pub](https://img.shields.io/pub/v/polkadart.svg)](https://pub.dev/packages/polkadart) |
+| [**polkadart_keyring**](https://pub.dev/packages/polkadart_keyring) | Secure key management and account handling - create wallets, manage keypairs, and sign transactions | [![pub](https://img.shields.io/pub/v/polkadart_keyring.svg)](https://pub.dev/packages/polkadart_keyring) |
+| [**polkadart_cli**](https://pub.dev/packages/polkadart_cli) | Command-line tool for generating typed APIs from chain metadata | [![pub](https://img.shields.io/pub/v/polkadart_cli.svg)](https://pub.dev/packages/polkadart_cli) |
+
+### Encoding & Cryptography
+
+| Package | Description | Version |
+|---------|-------------|---------|
+| [**polkadart_scale_codec**](https://pub.dev/packages/polkadart_scale_codec) | SCALE (Simple Concatenated Aggregate Little-Endian) codec implementation | [![pub](https://img.shields.io/pub/v/polkadart_scale_codec.svg)](https://pub.dev/packages/polkadart_scale_codec) |
+| [**substrate_metadata**](https://pub.dev/packages/substrate_metadata) | Runtime metadata decoder for parsing chain metadata | [![pub](https://img.shields.io/pub/v/substrate_metadata.svg)](https://pub.dev/packages/substrate_metadata) |
+| [**ss58**](https://pub.dev/packages/ss58) | SS58 address format encoder/decoder for Substrate addresses | [![pub](https://img.shields.io/pub/v/ss58.svg)](https://pub.dev/packages/ss58) |
+
+### Cryptographic Primitives
+
+| Package | Description | Version |
+|---------|-------------|---------|
+| [**sr25519**](https://pub.dev/packages/sr25519) | Schnorrkel/Ristretto SR25519 signature scheme (Polkadot's default) | [![pub](https://img.shields.io/pub/v/sr25519.svg)](https://pub.dev/packages/sr25519) |
+| [**secp256k1_ecdsa**](https://pub.dev/packages/secp256k1_ecdsa) | SECP256k1 elliptic curve for ECDSA signatures (Ethereum compatibility) | [![pub](https://img.shields.io/pub/v/secp256k1_ecdsa.svg)](https://pub.dev/packages/secp256k1_ecdsa) |
+| [**substrate_bip39**](https://pub.dev/packages/substrate_bip39) | BIP39 mnemonic phrase generation for HD wallets | [![pub](https://img.shields.io/pub/v/substrate_bip39.svg)](https://pub.dev/packages/substrate_bip39) |
+
+### Smart Contracts
+
+| Package | Description | Version |
+|---------|-------------|---------|
+| [**ink_abi**](https://pub.dev/packages/ink_abi) | ink! smart contract ABI encoder/decoder | [![pub](https://img.shields.io/pub/v/ink_abi.svg)](https://pub.dev/packages/ink_abi) |
+| [**ink_cli**](https://pub.dev/packages/ink_cli) | CLI tool for generating typed interfaces from ink! contract metadata | [![pub](https://img.shields.io/pub/v/ink_cli.svg)](https://pub.dev/packages/ink_cli) |
 
 ## Contributing
 

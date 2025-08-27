@@ -1,26 +1,35 @@
 ---
 title: State API
+description: Query blockchain state, storage, metadata, and runtime information
+sidebar:
+  order: 3
 ---
 
-The State API provides a way to query the state of the blockchain. It allows you to query the runtime version, metadata, storage, and subscribe to storage changes.
-This API is available through the `StateApi` class from the `polkadart` package.
+import { Tabs, TabItem, Aside, Code } from '@astrojs/starlight/components';
 
-### Sample usage
+The State API is your gateway to querying blockchain state, including storage data, metadata, and runtime information. This API provides low-level access to the blockchain's state trie and is available through the `StateApi` class.
 
-```dart
+## Quick Example
+
+```dart title="Query Runtime Version"
 import 'package:polkadart/apis/apis.dart';
 import 'package:polkadart/polkadart.dart' show Provider, StateApi;
 
 void main() async {
   final provider = Provider.fromUri(Uri.parse('wss://rpc.polkadot.io'));
   final stateApi = StateApi(provider);
+  
+  // Get current runtime version
   final runtimeVersion = await stateApi.getRuntimeVersion();
-
   print(runtimeVersion.toJson());
+  
+  // Get metadata
+  final metadata = await stateApi.getMetadata();
+  print('Metadata version: ${metadata.version}');
 }
 ```
 
-You will get the following output:
+### Expected Output
 
 ```dart
 {
@@ -35,122 +44,219 @@ You will get the following output:
 }
 ```
 
-## Methods
+## Core Methods
 
-There are several methods available in the `StateApi` class that allow you to query the state of the blockchain. Here are some of the most commonly used methods:
+<Aside type="tip">
+  All methods are asynchronous and return `Future` types. Most methods accept an optional `BlockHash at` parameter to query historical state.
+</Aside>
 
-### call
+The `StateApi` class provides comprehensive methods for querying blockchain state:
 
+### Runtime Calls
+
+#### call
 ```dart
 Future<Uint8List> call(String method, Uint8List bytes, {BlockHash? at})
 ```
+Execute a runtime API call at a specific block's state.
 
-Call a contract at a block's state
+**Use case:** Call runtime APIs for specialized queries not exposed through standard RPC.
 
-### getPairs
+### Storage Queries
 
+#### getPairs
 ```dart
 Future<List<KeyValue>> getPairs(StorageKey prefix, {BlockHash? at})
 ```
+Retrieve all key-value pairs matching a prefix.
 
-Returns the keys with prefix, leave empty to get all the keys
-
-### getKeysPaged
-
+**Example:**
 ```dart
-Future<List<StorageKey>> getKeysPaged({required StorageKey key, required int count, StorageKey? startKey, BlockHash? at})
+// Get all account balances
+final pairs = await stateApi.getPairs(
+  hex.decode('26aa394eea5630e07c48ae0c9558cef7'), // System.Account prefix
+);
 ```
 
-Returns the keys with prefix with pagination support.
-Up to `count` keys will be returned.
-If `startKey` is passed, return next keys in storage in lexicographic order.
+#### getKeysPaged
+```dart
+Future<List<StorageKey>> getKeysPaged({
+  required StorageKey key,
+  required int count,
+  StorageKey? startKey,
+  BlockHash? at
+})
+```
+Query storage keys with pagination support.
 
-### getStorage
+**Example:**
+```dart
+// Get first 100 account keys
+final keys = await stateApi.getKeysPaged(
+  key: accountPrefix,
+  count: 100,
+);
 
+// Get next 100 keys
+final nextKeys = await stateApi.getKeysPaged(
+  key: accountPrefix,
+  count: 100,
+  startKey: keys.last,
+);
+```
+
+#### getStorage
 ```dart
 Future<StorageData?> getStorage(StorageKey key, {BlockHash? at})
 ```
+Retrieve raw storage data for a specific key.
 
-Returns a storage entry at a specific block's state.
+**Returns:** Raw SCALE-encoded data or `null` if the key doesn't exist.
 
-### getStorageHash
-
+#### getStorageHash & getStorageSize
 ```dart
 Future<BlockHash?> getStorageHash(StorageKey key, {BlockHash? at})
-```
-
-Returns the hash of a storage entry at a block's state.
-
-### getStorageSize
-
-```dart
 Future<int?> getStorageSize(StorageKey key, {BlockHash? at})
 ```
+Get the hash or size of storage data without fetching the full value.
 
-Returns the size of a storage entry at a block's state.
+**Use case:** Efficiently check if storage has changed or estimate data size.
 
-### queryStorage
+### Historical Queries
 
+#### queryStorage
 ```dart
-Future<List<StorageChangeSet>> queryStorage(List<StorageKey> keys, BlockHash fromBlock,{BlockHash? toBlock})
+Future<List<StorageChangeSet>> queryStorage(
+  List<StorageKey> keys,
+  BlockHash fromBlock,
+  {BlockHash? toBlock}
+)
+```
+Query storage changes over a block range.
+
+<Aside type="caution">
+  The first result contains the initial state. Subsequent results show only changes (diffs).
+</Aside>
+
+**Example:**
+```dart
+// Track balance changes over 100 blocks
+final changes = await stateApi.queryStorage(
+  [balanceStorageKey],
+  fromBlockHash,
+  toBlock: toBlockHash,
+);
 ```
 
-Query historical storage entries (by key) starting from a block given as the second
-parameter.
-
-NOTE This first returned result contains the initial state of storage for all keys.
-Subsequent values in the vector represent changes to the previous state (diffs).
-
-### queryStorageAt
-
+#### queryStorageAt
 ```dart
-Future<List<StorageChangeSet>> queryStorageAt(List<StorageKey> keys, {BlockHash? at})
+Future<List<StorageChangeSet>> queryStorageAt(
+  List<StorageKey> keys,
+  {BlockHash? at}
+)
 ```
+Query multiple storage entries at a specific block.
 
-Query storage entries (by key) starting at block hash given as the second parameter.
-
-### getReadProof
-
+#### getReadProof
 ```dart
 Future<ReadProof> getReadProof(List<StorageKey> keys, {BlockHash? at})
 ```
+Generate a merkle proof for storage entries.
 
-Returns proof of storage entries at a specific block's state.
+**Use case:** Prove storage values to light clients or cross-chain bridges.
 
-### getMetadata
+### Metadata & Runtime
 
+#### getMetadata
 ```dart
 Future<RuntimeMetadata> getMetadata({BlockHash? at})
 ```
+Fetch the complete runtime metadata.
 
-Returns the runtime metadata
+**Contains:**
+- All pallets and their functions
+- Storage layouts
+- Types registry
+- Runtime APIs
 
-### getRuntimeVersion
-
+#### getRuntimeVersion
 ```dart
 Future<RuntimeVersion> getRuntimeVersion({BlockHash? at})
 ```
+Get runtime version information.
 
-Get the runtime version.
+**Includes:**
+- `specVersion`: Runtime specification version
+- `specName`: Chain identifier (e.g., "polkadot")
+- `implVersion`: Implementation version
+- `apis`: Available runtime APIs
 
-### subscribeRuntimeVersion
+### Real-time Subscriptions
 
+#### subscribeRuntimeVersion
 ```dart
-Future<StreamSubscription<RuntimeVersion>> subscribeRuntimeVersion(Function(RuntimeVersion) onData)
+Future<StreamSubscription<RuntimeVersion>> subscribeRuntimeVersion(
+  Function(RuntimeVersion) onData
+)
+```
+Subscribe to runtime version updates.
+
+**Example:**
+```dart
+final subscription = await stateApi.subscribeRuntimeVersion((version) {
+  print('Runtime upgraded to version ${version.specVersion}');
+});
+
+// Don't forget to cancel when done
+await subscription.cancel();
 ```
 
-Retrieves the runtime version via subscription
-
-### subscribeEvents
-
+#### subscribeStorage
 ```dart
-Future<StreamSubscription<Events>> subscribeEvents(BlockHash at, Function(Events) onData)
+Future<StreamSubscription<StorageChangeSet>> subscribeStorage(
+  List<Uint8List> storageKeys,
+  Function(StorageChangeSet) onData
+)
+```
+Monitor storage changes in real-time.
+
+**Example:**
+```dart
+// Watch balance changes for multiple accounts
+final subscription = await stateApi.subscribeStorage(
+  [aliceBalanceKey, bobBalanceKey],
+  (changes) {
+    print('Storage updated at block ${changes.block}');
+    for (final change in changes.changes) {
+      print('Key: ${hex.encode(change.$1)}');
+      print('New value: ${change.$2 != null ? hex.encode(change.$2!) : "deleted"}');
+    }
+  },
+);
 ```
 
-### subscribeStorage
+## Best Practices
 
-```dart
-Future<StreamSubscription<StorageChangeSet>> subscribeStorage(List<Uint8List> storageKeys, Function(StorageChangeSet) onData)
-```
+<Tabs>
+  <TabItem label="Efficient Queries">
+    - Use `getKeysPaged` for large datasets to avoid timeouts
+    - Query specific blocks for consistent reads across multiple calls
+    - Use `getStorageHash` to detect changes before fetching full data
+  </TabItem>
+  <TabItem label="Subscriptions">
+    - Always cancel subscriptions when done to prevent memory leaks
+    - Handle reconnection logic for long-running subscriptions
+    - Use error handlers for subscription failures
+  </TabItem>
+  <TabItem label="Historical Data">
+    - Limit block ranges in `queryStorage` to avoid overwhelming responses
+    - Cache metadata for specific block heights when querying historical data
+    - Consider using archive nodes for deep historical queries
+  </TabItem>
+</Tabs>
 
-Subscribes to storage changes for the provided keys
+## Next Steps
+
+- Learn about [type-safe storage queries](/metadata/overview)
+- Explore [transaction building](/api/author)
+- Understand [chain synchronization](/api/chain)
