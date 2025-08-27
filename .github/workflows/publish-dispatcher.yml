@@ -1,0 +1,97 @@
+name: Dispatch Publish Packages
+
+on:
+  push:
+    tags:
+      - '*-v[0-9]+.[0-9]+.[0-9]+'
+      - '*-v[0-9]+.[0-9]+.[0-9]+-*'
+
+jobs:
+  determine-package:
+    runs-on: ubuntu-latest
+    outputs:
+      package: ${{ steps.extract.outputs.package }}
+      directory: ${{ steps.extract.outputs.directory }}
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Extract package info from tag
+        id: extract
+        run: |
+          TAG="${{ github.ref_name }}"
+          # Remove version suffix to get package name
+          PACKAGE="${TAG%-v*}"
+          
+          # Map package names to directories
+          case "$PACKAGE" in
+            "ink_abi"|"ink_cli"|"polkadart"|"polkadart_cli"|"polkadart_keyring"|"polkadart_scale_codec"|"substrate_metadata"|"substrate_bip39"|"ss58"|"sr25519"|"secp256k1_ecdsa")
+              DIRECTORY="packages/$PACKAGE"
+              ;;
+            *)
+              echo "❌ Unknown package: $PACKAGE"
+              exit 1
+              ;;
+          esac
+          
+          echo "📦 Package: $PACKAGE"
+          echo "📁 Directory: $DIRECTORY"
+          echo "package=$PACKAGE" >> $GITHUB_OUTPUT
+          echo "directory=$DIRECTORY" >> $GITHUB_OUTPUT
+  
+  publish:
+    needs: determine-package
+    uses: ./.github/workflows/publish-reusable.yml
+    with:
+      package: ${{ needs.determine-package.outputs.package }}
+      working-directory: ${{ needs.determine-package.outputs.directory }}
+    secrets: inherit
+
+  create-release:
+    needs: [determine-package, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Extract changelog
+        id: changelog
+        working-directory: ${{ needs.determine-package.outputs.directory }}
+        run: |
+          # Try to extract changelog for this version
+          VERSION="${{ github.ref_name }}"
+          VERSION="${VERSION#*-v}"
+          
+          # Look for CHANGELOG.md
+          if [ -f "CHANGELOG.md" ]; then
+            # Extract section for this version
+            awk "/^## \[$VERSION\]/,/^## \[/" CHANGELOG.md | head -n -1 > /tmp/changelog.txt
+          else
+            echo "No specific changelog found" > /tmp/changelog.txt
+          fi
+          
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/changelog.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "${{ needs.determine-package.outputs.package }} v${{ github.ref_name }}"
+          body: |
+            ## 📦 Package: ${{ needs.determine-package.outputs.package }}
+            
+            ### 📋 Changelog
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ### 📚 Documentation
+            - [pub.dev](https://pub.dev/packages/${{ needs.determine-package.outputs.package }})
+            - [API Reference](https://pub.dev/documentation/${{ needs.determine-package.outputs.package }}/latest/)
+            
+            ### 🚀 Installation
+            ```yaml
+            dependencies:
+              ${{ needs.determine-package.outputs.package }}: ^${{ github.ref_name }}
+            ```
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}

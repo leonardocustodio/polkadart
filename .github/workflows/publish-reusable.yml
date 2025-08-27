@@ -1,0 +1,53 @@
+name: Publish Package
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+        description: 'Package name to publish'
+      working-directory:
+        required: true
+        type: string
+        description: 'Working directory for the package'
+    secrets:
+      PUB_DEV_TOKEN:
+        required: false
+        description: 'Optional pub.dev token for authentication'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+      
+      - name: Extract version
+        id: extract
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          VERSION=$(grep "^version:" pubspec.yaml | cut -d' ' -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Publishing ${{ inputs.package }} v$VERSION"
+      
+      - name: Validate version tag
+        run: |
+          TAG="${{ github.ref_name }}"
+          EXPECTED="${{ inputs.package }}-v${{ steps.extract.outputs.version }}"
+          if [ "$TAG" != "$EXPECTED" ]; then
+            echo "❌ Tag mismatch: expected $EXPECTED, got $TAG"
+            exit 1
+          fi
+          echo "✅ Version tag validated"
+
+  publish:
+    needs: validate
+    permissions:
+      id-token: write
+      contents: read
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      environment: pub.dev
+      working-directory: ${{ inputs.working-directory }}
