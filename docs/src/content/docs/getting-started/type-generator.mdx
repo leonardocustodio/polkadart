@@ -1,27 +1,112 @@
 ---
-title: Type generator
+title: Type Generator
+description: Generate type-safe APIs from blockchain metadata for any Polkadot or Substrate-based chain
+sidebar:
+  order: 2
 ---
 
-Type generation is a crucial part of working with Polkadot and Polkadot based chains.
-Each network has its own set of types, APIs, extrinsics and Polkadart provides a way to generate these types for you.
-This makes it easier to work with any chains with the security of type-safety and auto-completion.
+import { Code, Aside, Steps } from '@astrojs/starlight/components';
 
-#### Generating types
+Type generation is a crucial part of working with Polkadot and Substrate-based chains. Each network has its own unique set of types, APIs, and extrinsics. Polkadart's CLI tool automatically generates these types from chain metadata, providing:
 
-We will use Polkadart CLI to generate the types for us, add the following configuration at the end of your pubspec file.
+- ✅ **Type safety** - Catch errors at compile time
+- 💡 **Auto-completion** - IDE support for all chain-specific APIs
+- 🔄 **Always up-to-date** - Regenerate when chains upgrade
+- 🎯 **Chain-specific** - Accurate types for each network
+
+## Configuration
+
+### Setting Up Type Generation
+
+Add the following configuration to your `pubspec.yaml` file:
+
+```yaml title="pubspec.yaml" {1-5}
+polkadart:
+  output_dir: lib/generated      # Where to generate the code
+  chains:
+    polkadot: wss://rpc.polkadot.io           # Polkadot mainnet
+    kusama: wss://kusama-rpc.polkadot.io      # Kusama canary network
+    # Add more chains as needed:
+    # moonbeam: wss://wss.api.moonbeam.network
+    # acala: wss://acala-rpc.dwellir.com
+```
+
+<Aside type="tip">
+  You can add any Substrate-based chain by providing its WebSocket RPC endpoint.
+</Aside>
+
+## Generating Types
+
+<Steps>
+
+1. **Run the generator command:**
+   ```bash
+   dart run polkadart_cli:generate -v
+   ```
+   
+   The `-v` flag enables verbose output to see the generation progress.
+
+2. **Check the generated files:**
+   
+   A `lib/generated` folder will be created with a subfolder for each chain:
+   ```
+   lib/
+   └── generated/
+       ├── polkadot/
+       │   ├── polkadot.dart        # Main entry point
+       │   ├── types/               # Chain-specific types
+       │   ├── pallets/             # Pallet APIs
+       │   └── extrinsics/          # Transaction builders
+       └── kusama/
+           └── ...                 # Similar structure
+   ```
+
+3. **Import and use the generated code:**
+   ```dart
+   import 'package:your_app/generated/polkadot/polkadot.dart';
+   ```
+
+</Steps>
+
+## Advanced Configuration
+
+### Custom Output Directory
+
+```yaml title="pubspec.yaml"
+polkadart:
+  output_dir: lib/blockchain  # Custom output path
+```
+
+### Using Environment Variables
+
+For security, you can use environment variables for RPC endpoints:
 
 ```yaml title="pubspec.yaml"
 polkadart:
   output_dir: lib/generated
   chains:
-    polkadot: wss://rpc.polkadot.io
-    kusama: wss://kusama-rpc.polkadot.io
+    polkadot: ${POLKADOT_RPC_URL}
+    kusama: ${KUSAMA_RPC_URL}
 ```
 
-Now let's generate the types:
+## Updating Generated Types
+
+When a chain performs a runtime upgrade, regenerate the types:
 
 ```bash
+# Clean old generated files
+rm -rf lib/generated
+
+# Regenerate with latest metadata
 dart run polkadart_cli:generate -v
 ```
 
-You will see that a folder `lib/generated` was created for you with everything you need to start working with Polkadot and Kusama.
+<Aside type="caution">
+  Always regenerate types after chain runtime upgrades to ensure compatibility.
+</Aside>
+
+## Next Steps
+
+- [Connect to a network →](/getting-started/connecting)
+- [Learn about the generated APIs →](/api/overview)
+- [Explore example guides →](/guides/overview)
