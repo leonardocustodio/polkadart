@@ -38,16 +38,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('docs/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: |
-          cd docs
-          pnpm install --frozen-lockfile
+        working-directory: ./docs
+        run: pnpm install --frozen-lockfile
 
       - name: Build application
+        working-directory: ./docs
         run: |
-          cd docs && cp .env.example .env
+          cp .env.example .env
           pnpm build

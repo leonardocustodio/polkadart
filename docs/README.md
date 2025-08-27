@@ -6,8 +6,8 @@ Welcome to the Polkadart documentation website! This site is built with [Astro](
 
 ### Prerequisites
 
-- **Node.js**: Version 18.14.1 or higher
-- **pnpm**: Version 8 or higher (install with `npm install -g pnpm`)
+- **Node.js**: LTS 22.x or higher
+- **pnpm**: Version 9.x or higher (install with `npm install -g pnpm`)
 - **Git**: For version control
 
 ### Installation
