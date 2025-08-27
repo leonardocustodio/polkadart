@@ -1,13 +1,19 @@
 ---
-title: Overview
+title: Guides Overview
+description: Step-by-step tutorials for common blockchain development tasks with Polkadart
 sidebar:
   order: 1
 ---
 
-import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard, Aside } from '@astrojs/starlight/components';
 
-The guide section focus on providing a step-by-step guide to help you get started with Polkadart. The guides are designed to be easy to follow and provide a hands-on experience to help you understand our library.
-The examples chosen here are based on scenarios that you will likely find in any real-world application.
+Welcome to the Polkadart guides! These tutorials walk you through common blockchain development tasks with practical, real-world examples. Each guide is designed to be standalone, so you can jump directly to the topics that interest you.
+
+<Aside type="tip">
+  **New to Polkadart?** Start with [Installation](/getting-started/installation) and [Type Generator](/getting-started/type-generator) first.
+</Aside>
+
+## Available Guides
 
 <CardGrid>
 	<LinkCard
@@ -16,18 +22,57 @@ The examples chosen here are based on scenarios that you will likely find in any
 		description="Listen to blocks being created in the chain in real-time"
 	></LinkCard>
 	<LinkCard
-		title="Listen balance changes"
-		href="/guides/listen-blocks"
-		description="Listen to wallet balance changes in real-time"
+		title="Listen to Balance Changes"
+		href="/guides/listen-balances"
+		description="Monitor wallet balance changes in real-time"
 	></LinkCard>
 	<LinkCard
-		title="Read storage"
-		href="/guides/listen-blocks"
-		description="Reads and decodes any data stored in the chain"
+		title="Read Storage Data"
+		href="/guides/read-storage"
+		description="Query and decode any data stored on the blockchain"
 	></LinkCard>
 	<LinkCard
-		title="Make a transfer"
-		href="/guides/listen-blocks"
-		description="Makes a simple transfer from one wallet to another"
+		title="Make a Transfer"
+		href="/guides/make-transfer"
+		description="Send tokens from one wallet to another"
+	></LinkCard>
+	<LinkCard
+		title="Smart Contract Interaction"
+		href="/guides/contracts-interaction"
+		description="Deploy and interact with ink! smart contracts"
+	></LinkCard>
+	<LinkCard
+		title="Use Metadata Hash"
+		href="/guides/use-metadata-hash"
+		description="Verify chain metadata integrity and compatibility"
 	></LinkCard>
 </CardGrid>
+
+## What You'll Learn
+
+Through these guides, you'll learn how to:
+
+- 🔗 **Connect** to any Substrate-based blockchain
+- 📦 **Query** and decode storage data
+- 💸 **Send** transactions and transfers
+- 👀 **Subscribe** to real-time blockchain events
+- 📝 **Interact** with smart contracts
+- 🔐 **Sign** and verify messages
+
+## Prerequisites
+
+Before starting these guides, make sure you have:
+
+1. Dart SDK installed (version 3.0 or higher)
+2. Polkadart packages added to your project
+3. Generated types for your target blockchain
+
+Need help with setup? Check our [Getting Started](/getting-started/installation) section.
+
+## Getting Help
+
+If you run into issues:
+
+- Check our [API documentation](/api/overview)
+- Visit our [GitHub repository](https://github.com/leonardocustodio/polkadart)
+- Join the community on [Matrix](https://matrix.to/#/#polkadart:matrix.org)

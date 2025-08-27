@@ -1,7 +1,6 @@
 ---
 import '../styles/features.css'
 import '../styles/code-demo.css'
-import '../styles/features.css'
 import '../styles/header.css'
 import '../styles/hero.css'
 import '../styles/main.css'
@@ -77,10 +76,32 @@ const data: ContributorsData = await response.json();
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Polkadart: Empowering Developers to Build Decentralized Apps on Polkadot</title>
+	<title>Polkadart - Dart/Flutter SDK for Polkadot Blockchain Development</title>
+	<meta name="description" content="Build cross-platform blockchain applications with Polkadart, the comprehensive Dart/Flutter SDK for Polkadot and Substrate-based chains. Type-safe, performant, and developer-friendly.">
+	<meta name="keywords" content="polkadart, dart, flutter, polkadot, blockchain, web3, substrate, sdk, cryptocurrency, defi, smart contracts">
+	
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://polkadart.dev/">
+	<meta property="og:title" content="Polkadart - Dart/Flutter SDK for Polkadot">
+	<meta property="og:description" content="Build cross-platform blockchain applications with the comprehensive Dart/Flutter SDK for Polkadot.">
+	<meta property="og:image" content="https://polkadart.dev/og-image.png">
+	
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image">
+	<meta property="twitter:url" content="https://polkadart.dev/">
+	<meta property="twitter:title" content="Polkadart - Dart/Flutter SDK for Polkadot">
+	<meta property="twitter:description" content="Build cross-platform blockchain applications with the comprehensive Dart/Flutter SDK for Polkadot.">
+	<meta property="twitter:image" content="https://polkadart.dev/og-image.png">
+	
+	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	
+	<!-- Favicon -->
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="canonical" href="https://polkadart.dev/">
 </head>
 <body>
 <header class="header">
@@ -94,71 +115,80 @@ const data: ContributorsData = await response.json();
 <section class="hero">
 	<div class="container">
 		<div class="hero-content">
-			<div class="hero-content">
-				<div class="hero-text">
-					<p class="welcome-text">Welcome to&nbsp;<span class="brand">Polkadart</span></p>
-					<h1>Build High-Performance Decentralized Applications with Polkadot</h1>
-					<p class="hero-subtitle">Seamlessly develop multiplatform blockchain apps using Dart and Flutter for the innovative Polkadot ecosystem.</p>
-					<div class="hero-buttons">
-						<a href="/intro" class="button primary">Get Started</a>
-						<a href="https://github.com/leonardocustodio/polkadart" target="_blank" class="button secondary">
-							<Image src={githubImage} alt="GitHub" />
-							GitHub
-						</a>
-					</div>
+			<div class="hero-text">
+				<div class="hero-badges" style="display: flex; gap: 8px; margin-bottom: 16px;">
+					<img src="https://img.shields.io/github/stars/leonardocustodio/polkadart?style=social" alt="GitHub Stars" />
+					<img src="https://img.shields.io/badge/Flutter-Compatible-blue" alt="Flutter Compatible" />
+					<img src="https://img.shields.io/badge/Dart-3.0%2B-blue" alt="Dart 3.0+" />
 				</div>
-				<DartPad fileName="home" />
+				<p class="welcome-text">The Complete&nbsp;<span class="brand">Dart/Flutter SDK</span></p>
+				<h1>Build Cross-Platform Blockchain Apps with Polkadot</h1>
+				<p class="hero-subtitle">Type-safe, performant, and production-ready SDK for building decentralized applications on Polkadot and Substrate-based chains. One codebase for mobile, web, and desktop.</p>
+				<div class="hero-buttons">
+					<a href="/getting-started/installation" class="button primary">Start Building →</a>
+					<a href="https://github.com/leonardocustodio/polkadart" target="_blank" rel="noopener noreferrer" class="button secondary">
+						<Image src={githubImage} alt="GitHub" />
+						Star on GitHub
+					</a>
+				</div>
+				<div class="hero-stats" style="display: flex; gap: 32px; margin-top: 24px; font-size: 14px; color: #666;">
+					<div><strong style="color: #333;">11</strong> Packages</div>
+					<div><strong style="color: #333;">13+</strong> Contributors</div>
+					<div><strong style="color: #333;">100%</strong> Dart Native</div>
+					<div><strong style="color: #333;">Web3</strong> Foundation Grant</div>
+				</div>
+			</div>
+			<DartPad fileName="home" />
 		</div>
-	</div>
 	</div>
 </section>
 
 <section class="features">
 	<div class="container">
-		<h2>What is Polkadart?</h2>
-		<p class="features-description">Polkadart is a powerful Dart library designed for developers looking to build decentralized applications (dApps) on Polkadot. It leverages the capabilities of Dart and the robust architecture of Polkadot for seamless development of blockchain applications.</p>
+		<h2>Why Developers Choose Polkadart</h2>
+		<p class="features-description">Polkadart is a comprehensive Dart/Flutter SDK for Polkadot, providing everything you need to build robust blockchain applications with type safety and excellent developer experience.</p>
 		<div class="feature-cards">
 			<div class="feature-card">
 				<div class="feature-icon">
 					<Image src={apiImage} alt="GitHub" />
 				</div>
-				<h3>Streamlined Development Process</h3>
-				<p>Concentrate on what truly counts with user-friendly tools that simplify the development lifecycle.</p>
+				<h3>Developer-First Design</h3>
+				<p>Built by developers for developers, with intuitive APIs, excellent documentation, and comprehensive examples.</p>
 			</div>
 			<div class="feature-card">
 				<div class="feature-icon">
 					<Image src={platformImage} alt="GitHub" />
 				</div>
-				<h3>Complete Typed APIs</h3>
-				<p>Eliminate type-related issues with type-secure APIs that ensure stability and precision in your projects.</p>
+				<h3>100% Type-Safe</h3>
+				<p>Auto-generated types from chain metadata ensure compile-time safety and eliminate runtime errors.</p>
 			</div>
 			<div class="feature-card">
 				<div class="feature-icon">
 					<Image src={lightImage} alt="GitHub" />
 				</div>
-				<h3>Cross-Platform Compatibility</h3>
-				<p>Develop applications that operate smoothly across mobile, web, and desktop platforms utilizing a singular codebase.</p>
+				<h3>True Cross-Platform</h3>
+				<p>Write once, deploy everywhere. Native performance on iOS, Android, Web, macOS, Windows, and Linux.</p>
 			</div>
 			<div class="feature-card">
 				<div class="feature-icon">
 					<Image src={codeImage} alt="GitHub" />
 				</div>
-				<h3>Efficient Performance</h3>
-				<p>Experience improved performance without excessive load, making it ideal for environments with limited resources.</p>
+				<h3>Lightning Fast</h3>
+				<p>Native Dart compilation and optimized SCALE codec deliver exceptional performance on all platforms.</p>
 			</div>
 			<div class="feature-card">
 				<div class="feature-icon">
 					<Image src={codeFeatureImage} alt="GitHub" />
 				</div>
-				<h3>ink! Integration</h3>
-				<p>Effortlessly deploy and interact with ink! smart contracts, enhancing the functionality of your dApps.</p>
+				<h3>Smart Contract Ready</h3>
+				<p>Full support for ink! smart contracts with type-safe contract calls and event handling.</p>
 			</div>
 			<div class="feature-card">
 				<div class="feature-icon">
 					<Image src={searchImage} alt="GitHub" />
 				</div>
-				<h3>Extensive Documentation</h3>
-				<p>Access thorough guides, tutorials, and API documentation to empower you in your development journey.</p>
+				<h3>Well-Maintained</h3>
+				<p>Actively developed with comprehensive test coverage, regular updates, and responsive community support.</p>
 			</div>
 		</div>
 	</div>
@@ -166,13 +196,13 @@ const data: ContributorsData = await response.json();
 
 <section class="types-section">
 	<div class="container">
-		<h2 class="section-title">Why Choose Polkadart for Dapps?</h2>
-		<p class="section-subtitle">Advantages of Using Dart and Polkadot</p>
-		<p class="section-description">By combining Dart's straightforward syntax and Polkadot's innovative features, developers can create high-performance dapps that stand out in the blockchain ecosystem.</p>
+		<h2 class="section-title">Type Safety Meets Blockchain</h2>
+		<p class="section-subtitle">Never Ship Runtime Errors Again</p>
+		<p class="section-description">Polkadart generates strongly-typed APIs from chain metadata, ensuring your code is always in sync with the blockchain runtime. Catch errors at compile-time, not in production.</p>
 		<div class="types-content">
 			<div class="types-text">
-				<h2>Development Efficiency</h2>
-				<p>Polkadart is designed with a developer-centric philosophy, providing robust tools and utilities that enhance productivity and streamline the workflow.</p>
+				<h2>Auto-Generated Types</h2>
+				<p>Every pallet, extrinsic, and storage item is type-safe. IDE auto-completion guides you through the entire API, making blockchain development as easy as traditional app development.</p>
 			</div>
 			<CodeBlock code={stateExample} lang="dart" />
 		</div>
@@ -184,8 +214,8 @@ const data: ContributorsData = await response.json();
 		<div class="compatibility-content">
 			<CodeBlock code={keyringExample} lang="dart" />
 			<div class="compatibility-text">
-				<h2>Safety and Security</h2>
-				<p>Polkadart ensures your application remains aligned with runtime modifications, featuring auto-generated types and compile-time error detection for intelligent debugging.</p>
+				<h2>Secure by Design</h2>
+				<p>Built with security best practices, including secure key management, proper signature verification, and protection against common blockchain vulnerabilities.</p>
 			</div>
 		</div>
 	</div>
@@ -220,7 +250,7 @@ const data: ContributorsData = await response.json();
 					<div class="step-number">04</div>
 					<div class="step-header">
 						<h3>Start Building</h3>
-						<a href="#" class="button primary view-guide-button">View Full Guide</a>
+						<a href="/getting-started/installation" class="button primary view-guide-button">View Full Guide</a>
 					</div>
 					<CodeBlock code={startedExample} lang="dart" />
 				</div>
@@ -232,17 +262,17 @@ const data: ContributorsData = await response.json();
 
 <section class="integration-section">
 	<div class="container">
-		<h2>Integrate with any Polkadot-based blockchain</h2>
+		<h2>Works with Every Substrate Chain</h2>
 		<div class="integration-content">
 			<div class="integration-card">
-				<h3>Compatibility Overview</h3>
-				<p>Polkadart functions flawlessly with Polkadot, Kusama, and any blockchain developed using the Polkadot-SDK, adapting to chain-specific functionalities while maintaining a cohesive interface.</p>
+				<h3>Universal Compatibility</h3>
+				<p>Connect to Polkadot, Kusama, or any Substrate-based parachain. Auto-generate types specific to each chain's runtime for perfect compatibility.</p>
 				<CodeBlock code={multichainExample} lang="dart" />
 			</div>
 
 			<div class="integration-card">
-				<h3>Using Smart Contracts</h3>
-				<p>Learn how to deploy and interact with ink! smart contracts through Polkadart, enhancing the capabilities of your decentralized applications.</p>
+				<h3>Smart Contract Development</h3>
+				<p>Deploy, call, and listen to events from ink! smart contracts with full type safety and automatic ABI parsing.</p>
 				<CodeBlock code={inkExample} lang="dart" />
 			</div>
 		</div>
@@ -254,7 +284,7 @@ const data: ContributorsData = await response.json();
 		<div class="responsive-content">
 			<div class="responsive-text">
 				<h2>Build for Any Screen</h2>
-				<p>Create responsive applications that adapt seamlessly across mobile, tablet, and desktop. Our framework provides built-in utilities to help you create the perfect layout for every device.</p>
+				<p>Create responsive applications that adapt seamlessly across mobile, tablet, and desktop. With Flutter's powerful UI framework and Polkadart's blockchain capabilities, deploy everywhere your users are.</p>
 			</div>
 			<DartPad fileName="wallets" />
 		</div>
@@ -263,16 +293,18 @@ const data: ContributorsData = await response.json();
 
 <section class="contributors-section">
 	<div class="container">
-		<h2>Thanks to Our Contributors</h2>
-		<p class="contributors-text">Polkadart is a collaborative project shaped by a global community of developers</p>
+		<h2>Built by the Community</h2>
+		<p class="contributors-text">Polkadart is open source and shaped by a passionate global community of blockchain developers</p>
 		<div class="contributors-grid">
 			{
 				data.contributors.map((contributor: Contributor) => (
-					<img src={contributor.avatar_url} alt={contributor.name} class="contributor-avatar" loading="lazy" />
+					<a href={contributor.profile} target="_blank" rel="noopener noreferrer" title={contributor.name || contributor.login}>
+						<img src={contributor.avatar_url} alt={contributor.name || contributor.login} class="contributor-avatar" loading="lazy" />
+					</a>
 				))
 			}
 		</div>
-		<p class="join-text">Join our contributors and help shape the future of Polkadart.</p>
+		<p class="join-text">Join our growing community of contributors building the future of blockchain development with Dart.</p>
 		<div class="funding-container">
 			<h3>Supported By</h3>
 			<p class="funding-text">Polkadart development is made possible through the support of leading organizations</p>
@@ -290,12 +322,18 @@ const data: ContributorsData = await response.json();
 
 <section class="start-building-section">
 	<div class="container">
-		<h2>Start Building Today</h2>
-		<p class="start-building-text">Kickstart your development journey with Polkadart and explore the benefits of building dApps on Polkadot</p>
+		<h2>Ready to Build Your Next Blockchain App?</h2>
+		<p class="start-building-text">Join thousands of developers using Polkadart to build the next generation of decentralized applications</p>
 		<div class="start-building-buttons">
-			<a href="/intro" class="button primary">Get Started Now</a>
+			<a href="/getting-started/installation" class="button primary">Get Started in 5 Minutes →</a>
+			<a href="/guides/overview" class="button secondary" style="margin-left: 16px;">Browse Examples</a>
 		</div>
-		<p class="start-building-links">Dive into the official <a href="/intro">documentation</a> or visit our <a href="https://github.com/leonardocustodio/polkadart" target="_blank">GitHub</a> to contribute.</p>
+		<p class="start-building-links">
+			Read the <a href="/intro">documentation</a> • 
+			Explore <a href="/guides/overview">tutorials</a> • 
+			Join our <a href="https://matrix.to/#/#polkadart:matrix.org" target="_blank">community</a> • 
+			Contribute on <a href="https://github.com/leonardocustodio/polkadart" target="_blank">GitHub</a>
+		</p>
 	</div>
 </section>
 
@@ -314,30 +352,34 @@ const data: ContributorsData = await response.json();
 					<ul>
 						<li><a href="/getting-started/installation">Getting Started</a></li>
 						<li><a href="/guides/overview">Examples</a></li>
+						<li><a href="/api/overview">API Reference</a></li>
+						<li><a href="/intro/why-polkadart">Why Polkadart</a></li>
 					</ul>
 				</div>
 
 				<div class="footer-column">
 					<h3>Community</h3>
 					<ul>
-						<li><a href="https://github.com/leonardocustodio/polkadart">GitHub</a></li>
-						<li><a href="https://matrix.to/#/#polkadart:matrix.org" target="_blank">Matrix</a></li>
+						<li><a href="https://github.com/leonardocustodio/polkadart" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+						<li><a href="https://matrix.to/#/#polkadart:matrix.org" target="_blank" rel="noopener noreferrer">Matrix Chat</a></li>
+						<li><a href="https://pub.dev/packages/polkadart" target="_blank" rel="noopener noreferrer">Pub.dev</a></li>
 					</ul>
 				</div>
 
 				<div class="footer-column">
 					<h3>Resources</h3>
 					<ul>
-						<li><a href="https://substrate.stackexchange.com/" target="_blank">StackExchange</a></li>
-						<li><a href="https://forum.polkadot.network" target="_blank">Polkadot Forum</a></li>
-						<li><a href="https://docs.polkadot.com" target="_blank">Polkadot Docs</a></li>
+						<li><a href="https://substrate.stackexchange.com/" target="_blank" rel="noopener noreferrer">StackExchange</a></li>
+						<li><a href="https://forum.polkadot.network" target="_blank" rel="noopener noreferrer">Polkadot Forum</a></li>
+						<li><a href="https://docs.polkadot.com" target="_blank" rel="noopener noreferrer">Polkadot Docs</a></li>
+						<li><a href="https://use.ink/" target="_blank" rel="noopener noreferrer">ink! Docs</a></li>
 					</ul>
 				</div>
 			</div>
 		</div>
 
 		<div class="footer-bottom">
-			<p>© 2025 Polkadart. All rights reserved.</p>
+			<p>© 2025 Polkadart • Open Source Apache 2.0 License • Made with ❤️ for the Polkadot ecosystem</p>
 			<div class="social-links">
 				<a href="https://github.com/leonardocustodio/polkadart" target="_blank" class="social-link">
 					<Image src={githubImage} alt="GitHub" />
