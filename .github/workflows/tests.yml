@@ -19,6 +19,7 @@ concurrency:
 jobs:
   # Detect which packages have changes
   changes:
+    name: Changes
     runs-on: ubuntu-latest
     outputs:
       packages: ${{ steps.filter.outputs.changes }}
