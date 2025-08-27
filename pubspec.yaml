@@ -19,4 +19,4 @@ workspace:
 
 dev_dependencies:
   coverage: ^1.15.0
-  melos: ^7.0.0
+  melos: ^7.1.0
