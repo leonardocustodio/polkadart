@@ -1,6 +1,6 @@
 import 'dart:convert' show utf8;
 import 'dart:typed_data' show Uint8List;
-import 'package:bip39_mnemonic/bip39_mnemonic.dart' show Mnemonic, Language;
+import 'package:bip39_mnemonic/bip39_mnemonic.dart' show Mnemonic, Language, MnemonicLength;
 import 'package:convert/convert.dart' show hex;
 import 'package:cryptography/cryptography.dart' show Pbkdf2, Hmac, SecretKey;
 import 'package:substrate_bip39/schemes/secp256k1.dart';
@@ -25,18 +25,18 @@ abstract class CryptoScheme {
   /// Substrate-BIP39 also only supports english wordlist.
   static Mnemonic generate({int words = 12}) {
     final wordsToEntropy = {
-      12: 128,
-      15: 160,
-      18: 192,
-      21: 224,
-      24: 256,
+      12: MnemonicLength.words12,
+      15: MnemonicLength.words15,
+      18: MnemonicLength.words18,
+      21: MnemonicLength.words21,
+      24: MnemonicLength.words24,
     };
     final entropy = wordsToEntropy[words];
     if (entropy == null) {
       throw SubstrateBip39Exception.invalidEntropy(
           'Invalid number of words given for phrase, must be 12/15/18/21/24');
     }
-    return Mnemonic.generate(Language.english, entropyLength: entropy);
+    return Mnemonic.generate(Language.english, length: entropy);
   }
 
   /// `entropy` should be a byte array from a correctly recovered and checksumed BIP39.
