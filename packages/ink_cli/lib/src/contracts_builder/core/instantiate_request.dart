@@ -8,7 +8,7 @@ class InstantiateRequest {
 
   List<int> get contractAddress => _contractAddress;
 
-  get result => _result;
+  dynamic get result => _result;
 
   String getTransactionHash() {
     if (_result is! String) {

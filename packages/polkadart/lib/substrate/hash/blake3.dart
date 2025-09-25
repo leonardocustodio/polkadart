@@ -268,7 +268,7 @@ class _HashContext {
   int _cvStackLength = 0;
   int _flags;
 
-  _HashContext._(key, flags)
+  _HashContext._(Uint32List key, int flags)
       : _key = Uint32List.fromList(key),
         chunk = _ChunkState(key, 0, flags),
         _flags = flags;
@@ -289,7 +289,7 @@ class _HashContext {
     return _cVStack[--_cvStackLength]!;
   }
 
-  _addChunkCv(Uint32List newCv, int totalChunks) {
+  void _addChunkCv(Uint32List newCv, int totalChunks) {
     while (totalChunks & 1 == 0) {
       newCv = _parentCv(_popCv(), newCv, _key, _flags);
       totalChunks >>= 1;
@@ -297,7 +297,7 @@ class _HashContext {
     _pushCv(newCv);
   }
 
-  update(Uint8List input) {
+  void update(Uint8List input) {
     var taken = 0;
 
     while (taken < input.length) {
@@ -314,7 +314,7 @@ class _HashContext {
     }
   }
 
-  finalize(Uint8List output) {
+  Uint8List finalize(Uint8List output) {
     final outputData = output.buffer.asByteData();
 
     _Output o = _chunkOutput(chunk);
