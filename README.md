@@ -293,8 +293,7 @@ Ready to build your next blockchain application? Here's where to go:
 ---
 
 <p align="center">
-  <strong>Build the future of Web3 with Dart & Flutter 🚀</strong><br>
-  <em>Making Polkadot development accessible to millions of developers worldwide</em>
+  <strong>Build the future of Web3 with Dart & Flutter 🚀</strong>
 </p>
 
 <!-- Package Links -->
