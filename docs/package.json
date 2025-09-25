@@ -29,7 +29,7 @@
     "sharp": "^0.34.3",
     "shiki": "^3.13.0",
     "starlight-contributor-list": "^0.3.0",
-    "tailwindcss": "^4.1.12",
+    "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2"
   },
   "devDependencies": {
