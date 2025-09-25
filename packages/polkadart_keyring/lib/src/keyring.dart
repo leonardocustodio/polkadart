@@ -20,15 +20,15 @@ class Keyring {
 
   ///
   /// Create a new `Keyring` instance for ed25519.
-  static get ed25519 => Keyring._(KeyPairType.ed25519);
+  static Keyring get ed25519 => Keyring._(KeyPairType.ed25519);
 
   ///
   /// Create a new `Keyring` instance for sr25519.
-  static get sr25519 => Keyring._(KeyPairType.sr25519);
+  static Keyring get sr25519 => Keyring._(KeyPairType.sr25519);
 
   ///
   /// Create a new `Keyring` instance for sr25519.
-  static get ecdsa => Keyring._(KeyPairType.ecdsa);
+  static Keyring get ecdsa => Keyring._(KeyPairType.ecdsa);
 
   /// Create a new [KeyPair] from a BIP39 mnemonic and optionally add it to the keyring.
   ///

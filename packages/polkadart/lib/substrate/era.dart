@@ -58,7 +58,7 @@ class Era {
     return (phase, period);
   }
 
-  encode(int phase, int period) {
+  String encode(int phase, int period) {
     if (phase == 0 && period == 0) {
       return '00';
     }
@@ -69,7 +69,7 @@ class Era {
     return hex.encode(_littleIntToUint8List(encoded, 2));
   }
 
-  encodeMortal(int current, int period) {
+  String encodeMortal(int current, int period) {
     final calPeriod = pow(2, (log(period) / log(2)).ceil());
     final phase = current % min(max(calPeriod, 4), 1 << 16);
     final quantizeFactor = max(1, period >> 12);
