@@ -1,3 +1,5 @@
+## 0.7.2
+
 ## 0.7.1
 - Adds support for multi-queries for single storage keys
 

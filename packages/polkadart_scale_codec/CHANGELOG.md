@@ -1,3 +1,7 @@
+## 1.6.0
+
+ - Update dependencies
+
 ## 1.5.1
 
 - Fixes an issue where `StrCodec` would preserve null bytes from fixed-length strings in blockchain metadata, causing invalid string literals in generated code. The decoder now strips trailing null bytes from decoded strings.

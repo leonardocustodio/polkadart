@@ -1,3 +1,7 @@
+## 0.7.1
+
+ - Update dependencies
+
 ## 0.7.0
 
  - Bump polkadart version to 0.7.0

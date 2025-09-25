@@ -1,3 +1,5 @@
+## 0.3.1
+
 ## 0.3.0
 
  - Bump polkadart version to 0.7.0
