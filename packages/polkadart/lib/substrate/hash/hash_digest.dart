@@ -87,7 +87,7 @@ class HashDigest extends Object {
   /// This function will return True if all bytes in the [other] matches with
   /// the [bytes] of this object. If the length does not match, or the type of
   /// [other] is not supported, it returns False immediately.
-  bool isEqual(other) {
+  bool isEqual(dynamic other) {
     if (other is HashDigest) {
       return isEqual(other.bytes);
     } else if (other is ByteBuffer) {

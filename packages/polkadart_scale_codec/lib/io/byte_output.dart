@@ -15,7 +15,7 @@ class ByteOutput with Output {
   /// to it will not change.
   ByteOutput([int initialLength = 1024]) : _buffer = Uint8Buffer(initialLength);
 
-  Uint8List toBytes({copy = true}) {
+  Uint8List toBytes({bool copy = true}) {
     final bytes = _buffer.buffer.asUint8List(0, cursor);
     if (copy) {
       return bytes.sublist(0);

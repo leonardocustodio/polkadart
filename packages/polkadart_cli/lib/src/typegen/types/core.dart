@@ -369,7 +369,7 @@ extension LiteralValueExtension on Expression {
     return LiteralValue(this, isConstant: true);
   }
 
-  LiteralValue asLiteralValue({isConstant = false}) {
+  LiteralValue asLiteralValue({bool isConstant = false}) {
     return LiteralValue(this, isConstant: isConstant);
   }
 }
