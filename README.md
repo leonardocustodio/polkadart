@@ -111,115 +111,31 @@ print('Transaction hash: $hash');
 This repository is a monorepo containing the complete Polkadart ecosystem:
 
 ### Core Packages
-
-<table width="100%">
-<thead>
-<tr>
-<th align="left">Package</th>
-<th align="left">Description</th>
-<th align="left">Version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://pub.dev/packages/polkadart">polkadart</a></td>
-<td>Main SDK for Substrate/Polkadot interaction</td>
-<td><a href="https://pub.dev/packages/polkadart"><img src="https://img.shields.io/pub/v/polkadart.svg" alt="version"></a></td>
-</tr>
-<tr>
-<td><a href="https://pub.dev/packages/polkadart_keyring">polkadart_keyring</a></td>
-<td>Key management and account handling</td>
-<td><a href="https://pub.dev/packages/polkadart_keyring"><img src="https://img.shields.io/pub/v/polkadart_keyring.svg" alt="version"></a></td>
-</tr>
-</tbody>
-</table>
+| Package | Description | Version |
+|:--------|:------------|:--------|
+| [polkadart][pkg:polkadart] | Main SDK for Substrate/Polkadot interaction | [![version][pkg:polkadart:version]][pkg:polkadart] |
+| [polkadart_keyring][pkg:polkadart_keyring] | Key management and account handling | [![version][pkg:polkadart_keyring:version]][pkg:polkadart_keyring] |
 
 ### Developer Tools
-
-<table width="100%">
-<thead>
-<tr>
-<th align="left">Package</th>
-<th align="left">Description</th>
-<th align="left">Version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://pub.dev/packages/polkadart_cli">polkadart_cli</a></td>
-<td>Generate typed APIs from chain metadata</td>
-<td><a href="https://pub.dev/packages/polkadart_cli"><img src="https://img.shields.io/pub/v/polkadart_cli.svg" alt="version"></a></td>
-</tr>
-<tr>
-<td><a href="https://pub.dev/packages/ink_cli">ink_cli</a></td>
-<td>Generate typed interfaces for smart contracts</td>
-<td><a href="https://pub.dev/packages/ink_cli"><img src="https://img.shields.io/pub/v/ink_cli.svg" alt="version"></a></td>
-</tr>
-</tbody>
-</table>
+| Package | Description | Version |
+|:--------|:------------|:--------|
+| [polkadart_cli][pkg:polkadart_cli] | Generate typed APIs from chain metadata | [![version][pkg:polkadart_cli:version]][pkg:polkadart_cli] |
+| [ink_cli][pkg:ink_cli] | Generate typed interfaces for smart contracts | [![version][pkg:ink_cli:version]][pkg:ink_cli] |
 
 ### Low-Level Primitives
-
-<table width="100%">
-<thead>
-<tr>
-<th align="left">Package</th>
-<th align="left">Description</th>
-<th align="left">Version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://pub.dev/packages/polkadart_scale_codec">polkadart_scale_codec</a></td>
-<td>SCALE codec implementation</td>
-<td><a href="https://pub.dev/packages/polkadart_scale_codec"><img src="https://img.shields.io/pub/v/polkadart_scale_codec.svg" alt="version"></a></td>
-</tr>
-<tr>
-<td><a href="https://pub.dev/packages/substrate_metadata">substrate_metadata</a></td>
-<td>Runtime metadata parsing</td>
-<td><a href="https://pub.dev/packages/substrate_metadata"><img src="https://img.shields.io/pub/v/substrate_metadata.svg" alt="version"></a></td>
-</tr>
-<tr>
-<td><a href="https://pub.dev/packages/ink_abi">ink_abi</a></td>
-<td>ink! ABI encoding/decoding</td>
-<td><a href="https://pub.dev/packages/ink_abi"><img src="https://img.shields.io/pub/v/ink_abi.svg" alt="version"></a></td>
-</tr>
-</tbody>
-</table>
+| Package | Description | Version |
+|:--------|:------------|:--------|
+| [polkadart_scale_codec][pkg:polkadart_scale_codec] | SCALE codec implementation | [![version][pkg:polkadart_scale_codec:version]][pkg:polkadart_scale_codec] |
+| [substrate_metadata][pkg:substrate_metadata] | Runtime metadata parsing | [![version][pkg:substrate_metadata:version]][pkg:substrate_metadata] |
+| [ink_abi][pkg:ink_abi] | ink! ABI encoding/decoding | [![version][pkg:ink_abi:version]][pkg:ink_abi] |
 
 ### Cryptography
-
-<table width="100%">
-<thead>
-<tr>
-<th align="left">Package</th>
-<th align="left">Description</th>
-<th align="left">Version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://pub.dev/packages/sr25519">sr25519</a></td>
-<td>Schnorrkel signature scheme</td>
-<td><a href="https://pub.dev/packages/sr25519"><img src="https://img.shields.io/pub/v/sr25519.svg" alt="version"></a></td>
-</tr>
-<tr>
-<td><a href="https://pub.dev/packages/secp256k1_ecdsa">secp256k1_ecdsa</a></td>
-<td>ECDSA operations</td>
-<td><a href="https://pub.dev/packages/secp256k1_ecdsa"><img src="https://img.shields.io/pub/v/secp256k1_ecdsa.svg" alt="version"></a></td>
-</tr>
-<tr>
-<td><a href="https://pub.dev/packages/ss58">ss58</a></td>
-<td>SS58 address encoding</td>
-<td><a href="https://pub.dev/packages/ss58"><img src="https://img.shields.io/pub/v/ss58.svg" alt="version"></a></td>
-</tr>
-<tr>
-<td><a href="https://pub.dev/packages/substrate_bip39">substrate_bip39</a></td>
-<td>BIP39 mnemonic generation</td>
-<td><a href="https://pub.dev/packages/substrate_bip39"><img src="https://img.shields.io/pub/v/substrate_bip39.svg" alt="version"></a></td>
-</tr>
-</tbody>
-</table>
+| Package | Description | Version |
+|:--------|:------------|:--------|
+| [sr25519][pkg:sr25519] | Schnorrkel signature scheme | [![version][pkg:sr25519:version]][pkg:sr25519] |
+| [secp256k1_ecdsa][pkg:secp256k1_ecdsa] | ECDSA operations | [![version][pkg:secp256k1_ecdsa:version]][pkg:secp256k1_ecdsa] |
+| [ss58][pkg:ss58] | SS58 address encoding | [![version][pkg:ss58:version]][pkg:ss58] |
+| [substrate_bip39][pkg:substrate_bip39] | BIP39 mnemonic generation | [![version][pkg:substrate_bip39:version]][pkg:substrate_bip39] |
 
 ## 📚 Documentation
 
@@ -381,3 +297,47 @@ Ready to build your next blockchain application? Here's where to go:
   <em>Making Polkadot development accessible to millions of developers worldwide</em>
 </p>
 
+<!-- Package Links -->
+[pkg:polkadart]: https://pub.dartlang.org/packages/polkadart
+[pkg:polkadart:version]: https://img.shields.io/pub/v/polkadart?label=polkadart&link=https%3A%2F%2Fpub.dev%2Fpolkadart
+[pkg:polkadart:source]: ./packages/polkadart
+
+[pkg:polkadart_cli]: https://pub.dartlang.org/packages/polkadart_cli
+[pkg:polkadart_cli:version]: https://img.shields.io/pub/v/polkadart_cli?label=polkadart_cli
+[pkg:polkadart_cli:source]: ./packages/polkadart_cli
+
+[pkg:polkadart_keyring]: https://pub.dartlang.org/packages/polkadart_keyring
+[pkg:polkadart_keyring:version]: https://img.shields.io/pub/v/polkadart_keyring?label=polkadart_keyring
+[pkg:polkadart_keyring:source]: ./packages/polkadart_keyring
+
+[pkg:polkadart_scale_codec]: https://pub.dartlang.org/packages/polkadart_scale_codec
+[pkg:polkadart_scale_codec:version]: https://img.shields.io/pub/v/polkadart_scale_codec?label=polkadart_scale_codec
+[pkg:polkadart_scale_codec:source]: ./packages/polkadart_scale_codec
+
+[pkg:secp256k1_ecdsa]: https://pub.dartlang.org/packages/secp256k1_ecdsa
+[pkg:secp256k1_ecdsa:version]: https://img.shields.io/pub/v/secp256k1_ecdsa?label=secp256k1_ecdsa
+[pkg:secp256k1_ecdsa:source]: ./packages/secp256k1_ecdsa
+
+[pkg:sr25519]: https://pub.dartlang.org/packages/sr25519
+[pkg:sr25519:version]: https://img.shields.io/pub/v/sr25519?label=sr25519
+[pkg:sr25519:source]: ./packages/sr25519
+
+[pkg:ss58]: https://pub.dartlang.org/packages/ss58
+[pkg:ss58:version]: https://img.shields.io/pub/v/ss58?label=ss58
+[pkg:ss58:source]: ./packages/ss58
+
+[pkg:substrate_bip39]: https://pub.dartlang.org/packages/substrate_bip39
+[pkg:substrate_bip39:version]: https://img.shields.io/pub/v/substrate_bip39?label=substrate_bip39
+[pkg:substrate_bip39:source]: ./packages/substrate_bip39
+
+[pkg:substrate_metadata]: https://pub.dartlang.org/packages/substrate_metadata
+[pkg:substrate_metadata:version]: https://img.shields.io/pub/v/substrate_metadata?label=substrate_metadata
+[pkg:substrate_metadata:source]: ./packages/substrate_metadata
+
+[pkg:ink_abi]: https://pub.dartlang.org/packages/ink_abi
+[pkg:ink_abi:version]: https://img.shields.io/pub/v/ink_abi?label=ink_abi
+[pkg:ink_abi:source]: ./packages/ink_abi
+
+[pkg:ink_cli]: https://pub.dartlang.org/packages/ink_cli
+[pkg:ink_cli:version]: https://img.shields.io/pub/v/ink_cli?label=ink_cli
+[pkg:ink_cli:source]: ./packages/ink_cli
