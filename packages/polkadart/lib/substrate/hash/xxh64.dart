@@ -61,8 +61,7 @@ class XXHash64Sink extends BlockHashSink {
   static int _rotl(int x, int n) => (x << n) | (x >>> (64 - n));
 
   @pragma('vm:prefer-inline')
-  static int _accumulate(int x, int y) =>
-      _rotl((x + y * prime64_2), 31) * prime64_1;
+  static int _accumulate(int x, int y) => _rotl((x + y * prime64_2), 31) * prime64_1;
 
   @override
   void $update([List<int>? block, int offset = 0, bool last = false]) {
@@ -73,8 +72,7 @@ class XXHash64Sink extends BlockHashSink {
   }
 
   @pragma('vm:prefer-inline')
-  static int _merge(int h, int a) =>
-      (h ^ _accumulate(0, a)) * prime64_1 + prime64_4;
+  static int _merge(int h, int a) => (h ^ _accumulate(0, a)) * prime64_1 + prime64_4;
 
   @override
   Uint8List $finalize() {
