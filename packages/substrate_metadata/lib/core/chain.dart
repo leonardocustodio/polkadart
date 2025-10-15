@@ -1,16 +1,13 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/core/metadata_decoder.dart';
 
-import '../definitions/types_bundle.dart';
 import '../exceptions/exceptions.dart';
-import '../models/legacy_types.dart';
 import '../models/models.dart';
 import '../types/metadata_types.dart';
 import '../utils/utils.dart';
 
 class Chain {
-  final LegacyTypesBundle? typesBundleDefinition;
-  Chain([this.typesBundleDefinition]);
+  Chain();
 
   ///
   /// To hold the parsed spec versions and metadata related information
@@ -185,14 +182,7 @@ class Chain {
   ChainInfo getChainInfoFromSpecVersion(SpecVersion specVersion) {
     final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode(specVersion.metadata);
 
-    LegacyTypes? types;
-
-    // Pre checking helps to avoid extra computation for processing LegacyTypesBundle.
-    if (decodedMetadata.isPreV14 && typesBundleDefinition != null) {
-      types = getLegacyTypesFromBundle(typesBundleDefinition!, specVersion.specVersion);
-    }
-
-    final ChainInfo description = ChainInfo.fromMetadata(decodedMetadata, types);
+    final ChainInfo description = ChainInfo.fromMetadata(decodedMetadata);
 
     return description;
   }

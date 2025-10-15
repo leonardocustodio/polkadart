@@ -1,144 +1,11 @@
 part of models;
 
-/// Storage Entry Metadata [V9]
-class StorageEntryMetadataV9 {
-  final String name;
-  final StorageEntryModifierV9 modifier;
-  final StorageEntryTypeV9 type;
-  final Uint8List fallback;
-  final List<String> docs;
-
-  const StorageEntryMetadataV9(
-      {required this.name,
-      required this.modifier,
-      required this.type,
-      required this.fallback,
-      required this.docs});
-
-  /// Creates Class Object from `Json`
-  static StorageEntryMetadataV9 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV9(
-        name: map['name'],
-        modifier: StorageEntryModifierV9.fromKey(map['modifier']),
-        type: StorageEntryTypeV9.fromJson(map['type']),
-        fallback: Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
-        docs: (map['docs'] as List).cast<String>(),
-      );
-
-  /// Creates `Map` from Class Object
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'modifier': modifier.kind,
-        'type': StorageEntryTypeV9.toJson(type),
-        'fallback': fallback.toList(growable: false),
-        'docs': docs,
-      };
-}
-
-/// Storage Entry Metadata [V10]
-class StorageEntryMetadataV10 {
-  final String name;
-  final StorageEntryModifierV9 modifier;
-  final StorageEntryTypeV10 type;
-  final Uint8List fallback;
-  final List<String> docs;
-
-  const StorageEntryMetadataV10(
-      {required this.name,
-      required this.modifier,
-      required this.type,
-      required this.fallback,
-      required this.docs});
-
-  /// Creates Class Object from `Json`
-  static StorageEntryMetadataV10 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV10(
-        name: map['name'],
-        modifier: StorageEntryModifierV9.fromKey(map['modifier']),
-        type: StorageEntryTypeV10.fromJson(map['type']),
-        fallback: Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
-        docs: (map['docs'] as List).cast<String>(),
-      );
-
-  /// Creates `Map` from Class Object
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'modifier': modifier.kind,
-        'type': StorageEntryTypeV10.toJson(type),
-        'fallback': fallback.toList(growable: false),
-        'docs': docs,
-      };
-}
-
-/// Storage Entry Metadata [V11]
-class StorageEntryMetadataV11 {
-  final String name;
-  final StorageEntryModifierV9 modifier;
-  final StorageEntryTypeV11 type;
-  final Uint8List fallback;
-  final List<String> docs;
-
-  const StorageEntryMetadataV11(
-      {required this.name,
-      required this.modifier,
-      required this.type,
-      required this.fallback,
-      required this.docs});
-
-  /// Creates Class Object from `Json`
-  static StorageEntryMetadataV11 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV11(
-        name: map['name'],
-        modifier: StorageEntryModifierV9.fromKey(map['modifier']),
-        type: StorageEntryTypeV11.fromJson(map['type']),
-        fallback: Uint8List.fromList((map['fallback'] as List).cast<int>()),
-        docs: (map['docs'] as List).cast<String>(),
-      );
-
-  /// Creates `Map` from Class Object
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'modifier': modifier.kind,
-        'type': StorageEntryTypeV11.toJson(type),
-        'fallback': fallback.toList(growable: false),
-        'docs': docs,
-      };
-}
-
-/// Storage Entry Metadata [V13]
-class StorageEntryMetadataV13 {
-  final String name;
-  final StorageEntryModifierV9 modifier;
-  final StorageEntryTypeV13 type;
-  final Uint8List fallback;
-  final List<String> docs;
-
-  const StorageEntryMetadataV13(
-      {required this.name,
-      required this.modifier,
-      required this.type,
-      required this.fallback,
-      required this.docs});
-
-  /// Creates Class Object from `Json`
-  static StorageEntryMetadataV13 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV13(
-        name: map['name'],
-        modifier: StorageEntryModifierV9.fromKey(map['modifier']),
-        type: StorageEntryTypeV13.fromJson(map['type']),
-        fallback: Uint8List.fromList((map['fallback'] as List).cast<int>()),
-        docs: (map['docs'] as List).cast<String>(),
-      );
-
-  /// Creates `Map` from Class Object
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'modifier': modifier.kind,
-        'type': StorageEntryTypeV13.toJson(type),
-        'fallback': fallback.toList(growable: false),
-        'docs': docs,
-      };
-}
+// This class is deprecated - V14+ uses StorageEntryMetadata from runtime.dart instead
+// Kept for backwards compatibility with existing code
 
 class StorageEntryMetadataV14 {
   final String name;
-  final StorageEntryModifierV9 modifier;
+  final String modifier; // Changed from StorageEntryModifierV9 to String
   final StorageEntryTypeV14 type;
   final Uint8List fallback;
   final List<String> docs;
@@ -153,16 +20,16 @@ class StorageEntryMetadataV14 {
   /// Creates Class Object from `Json`
   static StorageEntryMetadataV14 fromJson(Map<String, dynamic> map) => StorageEntryMetadataV14(
         name: map['name'],
-        modifier: StorageEntryModifierV9.fromKey(map['modifier']),
+        modifier: map['modifier'] as String, // Direct string access
         type: StorageEntryTypeV14.fromJson(map['type']),
-        fallback: Uint8List.fromList((map['fallback'] as List).cast<int>()),
+        fallback: Uint8List.fromList((map['fallback'] as List<dynamic>).cast<int>()),
         docs: (map['docs'] as List).cast<String>(),
       );
 
   /// Creates `Map` from Class Object
   Map<String, dynamic> toJson() => {
         'name': name,
-        'modifier': modifier.kind,
+        'modifier': modifier,
         'type': type.toJson(),
         'fallback': fallback.toList(growable: false),
         'docs': docs,

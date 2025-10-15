@@ -25,16 +25,4 @@ class DecodedMetadata {
   ///
   /// Metadata Json object.
   Metadata get metadataObject => Metadata.fromVersion(metadata, version);
-
-  ///
-  /// Returns true if the metadata is for a pre v14 chain.
-  bool get isPreV14 {
-    if (version < 14) {
-      return true;
-    }
-    if (version == 14) {
-      return false;
-    }
-    throw UnsupportedMetadataException('Unsupported metadata version: $version');
-  }
 }

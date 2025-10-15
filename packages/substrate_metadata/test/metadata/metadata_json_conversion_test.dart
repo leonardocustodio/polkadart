@@ -5,13 +5,13 @@ import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 import 'package:test/test.dart';
 
-const versions = [9, 10, 11, 12, 13, 14];
+const versions = [14];
 
 void main() {
   group('Metadata Json Conversion Test:', () {
     for (final version in versions) {
       test('Decode/Encode version: $version', () {
-        // metadata file path for v9 - v14
+        // metadata file path for v14
         final String metadataFilePath = '../../chain/metadata/metadata_v$version.json';
 
         // reading the file
