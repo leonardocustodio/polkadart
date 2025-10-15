@@ -11,10 +11,13 @@ class ChainInfo {
     required this.constants,
   });
 
-  static ChainInfo fromMetadata(DecodedMetadata metadata, [LegacyTypes? legacyTypes]) {
-    if (metadata.isPreV14) {
-      assertion(legacyTypes != null, 'Legacy types are required for metadata versions below 14');
-      return LegacyParser(metadata, legacyTypes!).getChainInfo();
+  static ChainInfo fromMetadata(DecodedMetadata metadata) {
+    if (metadata.version < 14) {
+      throw UnsupportedError(
+        'Metadata version ${metadata.version} is not supported. '
+        'Only v14 and v15 are supported. '
+        'Use substrate_metadata v1.x for legacy version support.'
+      );
     }
     return V14Parser(metadata).getChainInfo();
   }

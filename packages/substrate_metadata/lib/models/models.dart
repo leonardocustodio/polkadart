@@ -7,8 +7,6 @@ import 'package:substrate_metadata/exceptions/exceptions.dart';
 import 'package:substrate_metadata/parsers/parsers.dart';
 import 'package:substrate_metadata/utils/utils.dart';
 
-import 'legacy_types.dart';
-
 part './error_metadata/error_metadata.dart';
 part './events/events.dart';
 part './function/function.dart';

@@ -1,17 +1,11 @@
 part of metadata;
 
-final metadataTypes = LegacyTypes(
-  types: <String, dynamic>{
-    'Type': 'Str',
-    'Bytes': 'Vec<U8>',
-    'H256': '[u8; 32]',
-    ...ScaleInfoTypes,
-    ...V9,
-    ...V10,
-    ...V11,
-    ...V12,
-    ...V13,
-    ...V14,
-    ...V15,
-  },
-);
+// Metadata type definitions for v14 and v15
+final metadataTypes = <String, dynamic>{
+  'Type': 'Str',
+  'Bytes': 'Vec<U8>',
+  'H256': '[u8; 32]',
+  ...ScaleInfoTypes,
+  ...V14,
+  ...V15,
+};

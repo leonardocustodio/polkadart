@@ -26,36 +26,27 @@ class MetadataDecoder {
 
     // decode the version information
     final version = U8Codec.codec.decode(source);
-    assertion(9 <= version,
-        'Expected version greater then 9, but got $version. Versions below 9 are not supported by this lib');
-    assertion(16 > version,
-        'Expected version less then 16, but got $version. Versions above 16 are not supported by this lib');
 
-    // Kusama Hack :o
-    // See https://github.com/polkadot-js/api/commit/a9211690be6b68ad6c6dad7852f1665cadcfa5b2
-    // for why try-catch and version decoding stuff is here
-    try {
-      final metadata =
-          ScaleCodec(RegistryCreator.instance[version]).decode('MetadataV$version', source);
-
-      return DecodedMetadata(metadata: metadata, version: version);
-    } catch (e) {
-      if (version != 9) {
-        rethrow;
-      }
-      try {
-        final clonnedSource = Input.fromHex(metadataHex);
-
-        U32Codec.codec.decode(clonnedSource);
-        U8Codec.codec.decode(clonnedSource);
-
-        final metadata =
-            ScaleCodec(RegistryCreator.instance[10]).decode('MetadataV10', clonnedSource);
-        return DecodedMetadata(metadata: metadata, version: 10);
-      } catch (unknownError) {
-        rethrow;
-      }
+    // Only V14 and V15 are supported
+    if (version < 14) {
+      throw UnsupportedError(
+        'Metadata version $version is not supported. '
+        'Only v14 and v15 are supported. '
+        'Use substrate_metadata v1.x for legacy version support.'
+      );
     }
+
+    if (version > 15) {
+      throw UnsupportedError(
+        'Metadata version $version is not yet supported. '
+        'Maximum supported version is v15.'
+      );
+    }
+
+    final metadata =
+        ScaleCodec(RegistryCreator.instance[version]).decode('MetadataV$version', source);
+
+    return DecodedMetadata(metadata: metadata, version: version);
   }
 
   void encode(DecodedMetadata metadata, Output output) {
@@ -64,8 +55,8 @@ class MetadataDecoder {
     U32Codec.codec.encodeTo(0x6174656d, output);
 
     //
-    // encode version
-    U8Codec.codec.encodeTo(metadata.version == 10 ? 9 : metadata.version, output);
+    // encode version (only V14 and V15 supported)
+    U8Codec.codec.encodeTo(metadata.version, output);
 
     final typeRegistry = RegistryCreator.instance[metadata.version];
 
@@ -73,7 +64,7 @@ class MetadataDecoder {
   }
 }
 
-/// Singleton class to create and parse Registry for V9-V14 only once and use it again and again.
+/// Singleton class to create and parse Registry for V14-V15 only once and use it again and again.
 class RegistryCreator {
   static final RegistryCreator _singleton = RegistryCreator._internal();
 
@@ -85,21 +76,23 @@ class RegistryCreator {
 
   RegistryCreator._internal();
 
-  final _registry = <Registry?>[]..length = 7;
+  // Only store V14 and V15 (indices 0 and 1)
+  final _registry = <Registry?>[]..length = 2;
 
   // create [] operator
   Registry operator [](int version) {
-    if (version < 9 || version > 15) {
-      throw Exception(
-          'Expected version between 9 and 15, but got $version, Only V9 - V15 are supported');
+    if (version < 14 || version > 15) {
+      throw UnsupportedError(
+          'Metadata version $version is not supported. Only V14 and V15 are supported.');
     }
-    return Registry.from((_registry[version - 9] ?? _createRegistry(version)).codecs);
+    // Convert version 14->0, 15->1
+    return Registry.from((_registry[version - 14] ?? _createRegistry(version)).codecs);
   }
 
   Registry _createRegistry(int version) {
-    _registry[version - 9] ??= Registry()
-      ..parseSpecificCodec(metadata_definitions.metadataTypes.types, 'MetadataV$version');
+    _registry[version - 14] ??= Registry()
+      ..parseSpecificCodec(metadata_definitions.metadataTypes, 'MetadataV$version');
 
-    return _registry[version - 9]!;
+    return _registry[version - 14]!;
   }
 }
