@@ -2,37 +2,6 @@
 
 part of models;
 
-class StorageEntryModifierV9 {
-  final String kind;
-  const StorageEntryModifierV9({required this.kind});
-
-  /// Creates Class Object from `Json`
-  static StorageEntryModifierV9 fromKey(String key) {
-    switch (key) {
-      case 'Optional':
-        return StorageEntryModifierV9_Optional();
-      case 'Default':
-        return StorageEntryModifierV9_Default();
-      case 'Requried':
-        return StorageEntryModifierV9_Required();
-      default:
-        throw UnexpectedTypeException('Unexpected type: $key');
-    }
-  }
-}
-
-class StorageEntryModifierV9_Optional extends StorageEntryModifierV9 {
-  const StorageEntryModifierV9_Optional() : super(kind: 'Optional');
-}
-
-class StorageEntryModifierV9_Default extends StorageEntryModifierV9 {
-  const StorageEntryModifierV9_Default() : super(kind: 'Default');
-}
-
-class StorageEntryModifierV9_Required extends StorageEntryModifierV9 {
-  const StorageEntryModifierV9_Required() : super(kind: 'Requried');
-}
-
 class StorageEntryTypeV14 {
   final String kind;
   final int value;
