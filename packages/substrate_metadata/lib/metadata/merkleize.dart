@@ -1,3 +1,5 @@
+// ignore_for_file: strict_top_level_inference
+
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:polkadart/scale_codec.dart';

@@ -88,10 +88,10 @@ class $SignedExtensionMetadataCodec with Codec<SignedExtensionMetadata> {
   }
 
   @override
-  int sizeHint(SignedExtensionMetadata metadata) {
-    int size = StrCodec.codec.sizeHint(metadata.identifier);
-    size += CompactCodec.codec.sizeHint(metadata.type);
-    size += CompactCodec.codec.sizeHint(metadata.additionalSigned);
+  int sizeHint(SignedExtensionMetadata value) {
+    int size = StrCodec.codec.sizeHint(value.identifier);
+    size += CompactCodec.codec.sizeHint(value.type);
+    size += CompactCodec.codec.sizeHint(value.additionalSigned);
     return size;
   }
 }
