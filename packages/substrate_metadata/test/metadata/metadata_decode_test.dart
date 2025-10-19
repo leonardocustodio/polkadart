@@ -1,4 +1,5 @@
-/* import 'dart:io';
+import 'dart:io';
+import 'package:path/path.dart' as p;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/metadata/merkleize.dart';
 import 'package:substrate_metadata/metadata/metadata.dart';
@@ -10,8 +11,8 @@ void main() {
   late final MetadataMerkleizer merkleizedMetadata;
 
   setUpAll(() {
-    final ksmData = Uri.directory(Directory.current.path).resolve('test/metadata/ksm.bin');
-    final ksmMetadata = File(ksmData.path).readAsBytesSync();
+    final ksmDataPath = p.join(Directory.current.path, 'test', 'metadata', 'ksm.bin');
+    final ksmMetadata = File(ksmDataPath).readAsBytesSync();
     runtimeMetadata = RuntimeMetadataPrefixed.fromBytes(ksmMetadata).metadata;
     merkleizedMetadata = MetadataMerkleizer.fromMetadata(
       runtimeMetadata,
@@ -69,4 +70,3 @@ void main() {
     });
   });
 }
- */

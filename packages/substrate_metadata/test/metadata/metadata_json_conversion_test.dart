@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show HexOutput, Input;
+import 'dart:typed_data' show Uint8List;
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' show Input;
 import 'package:substrate_metadata/substrate_metadata.dart';
+import 'package:substrate_metadata/utils/utils.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -26,7 +28,7 @@ void main() {
       expect(prefixed.metadata.version, 14);
 
       // Extract the v14 metadata
-      final runtimeMetadataV14 = (prefixed.metadata as RuntimeMetadataV14Variant).metadata;
+      final runtimeMetadataV14 = prefixed.metadata;
 
       // Verify we can convert to JSON
       final metadataJson = runtimeMetadataV14.toJson();
@@ -40,9 +42,8 @@ void main() {
       expect(metadataJson['type'], isNotNull);
 
       // Verify we can encode back to hex
-      final output = HexOutput();
-      RuntimeMetadataPrefixed.codec.encodeTo(prefixed, output);
-      final encodedHex = output.toString();
+      final Uint8List output = RuntimeMetadataPrefixed.codec.encode(prefixed);
+      final encodedHex = output.toHexString();
 
       // Verify encoded hex is a valid hex string with the same prefix
       expect(encodedHex, startsWith('0x6d657461')); // Should start with magic number "meta"
