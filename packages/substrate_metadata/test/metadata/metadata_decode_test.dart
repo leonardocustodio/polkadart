@@ -10,8 +10,8 @@ void main() {
   late final MetadataMerkleizer merkleizedMetadata;
 
   setUpAll(() {
-    final ksmDataPath = './test/metadata/ksm.bin';
-    final ksmMetadata = File(ksmDataPath).readAsBytesSync();
+    final ksmData = './test/metadata/ksm.bin';
+    final ksmMetadata = File(ksmData).readAsBytesSync();
     runtimeMetadata = RuntimeMetadataPrefixed.fromBytes(ksmMetadata).metadata;
     merkleizedMetadata = MetadataMerkleizer.fromMetadata(
       runtimeMetadata,
