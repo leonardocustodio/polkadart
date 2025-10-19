@@ -3,16 +3,15 @@ part of metadata;
 /// BitSequence type
 ///
 /// Represents a bit sequence with specific storage and ordering.
-class TypeDefBitSequence extends TypeDefVariant {
+class TypeDefBitSequence extends TypeDef {
   final int bitStoreType;
   final int bitOrderType;
-
   const TypeDefBitSequence({
     required this.bitStoreType,
     required this.bitOrderType,
   });
 
-  static const $TypeDefVariant codec = TypeDefVariant.codec;
+  static const $TypeDef codec = TypeDef.codec;
 
   @override
   Set<int> typeDependencies() {

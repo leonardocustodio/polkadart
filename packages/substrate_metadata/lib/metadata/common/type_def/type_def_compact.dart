@@ -3,11 +3,11 @@ part of metadata;
 /// Compact encoded type
 ///
 /// Represents a type that uses compact/compressed encoding.
-class TypeDefCompact extends TypeDefVariant {
+class TypeDefCompact extends TypeDef {
   final int type;
   const TypeDefCompact({required this.type});
 
-  static const $TypeDefVariant codec = TypeDefVariant.codec;
+  static const $TypeDef codec = TypeDef.codec;
 
   @override
   Set<int> typeDependencies() {

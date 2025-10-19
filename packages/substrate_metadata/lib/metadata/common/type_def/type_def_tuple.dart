@@ -3,11 +3,11 @@ part of metadata;
 /// Tuple type
 ///
 /// Represents a tuple like (u32, bool, AccountId).
-class TypeDefTuple extends TypeDefVariant {
+class TypeDefTuple extends TypeDef {
   final List<int> fields;
   const TypeDefTuple({required this.fields});
 
-  static const $TypeDefVariant codec = TypeDefVariant.codec;
+  static const $TypeDef codec = TypeDef.codec;
 
   @override
   Set<int> typeDependencies() {

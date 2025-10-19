@@ -1,19 +1,12 @@
 part of metadata;
 
 /// Main metadata container for a Substrate runtime (Version 15)
-///
-/// V15 introduced several improvements over V14:
-/// - Runtime APIs metadata
-/// - Outer enums (RuntimeCall, RuntimeEvent, RuntimeError) as dedicated field
-/// - Documentation for pallets
-/// - Transaction extensions replacing signed extensions
-class RuntimeMetadataV15 {
-  /// Registry of all types used in the runtime
+class RuntimeMetadataV15 extends RuntimeMetadata {
+  /// List of all registered types
   ///
-  /// The PortableRegistry contains definitions for all types that appear
-  /// in the runtime, allowing clients to decode data without prior knowledge
-  /// of the types.
-  final PortableRegistry types;
+  /// Each type has a unique ID (its index in this list) and a complete
+  /// definition including its structure and documentation.
+  final List<PortableType> types;
 
   /// List of all pallets (modules) in the runtime
   ///
@@ -56,8 +49,17 @@ class RuntimeMetadataV15 {
   /// Codec instance for RuntimeMetadataV15
   static const $RuntimeMetadataV15 codec = $RuntimeMetadataV15._();
 
+  @override
+  int get version => 14;
+
+  @override
+  PortableType typeById(int id) {
+    return types.firstWhere((type) => type.id == id);
+  }
+
+  @override
   Map<String, dynamic> toJson() => {
-        'types': types.toJson(),
+        'types': types.map((final PortableType value) => value.toJson()).toList(growable: false),
         'pallets': pallets.map((p) => p.toJson()).toList(),
         'extrinsic': extrinsic.toJson(),
         'type': type,
@@ -76,8 +78,7 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
 
   @override
   RuntimeMetadataV15 decode(Input input) {
-    // Decode the portable type registry
-    final registry = PortableRegistry.codec.decode(input);
+    final types = SequenceCodec(PortableType.codec).decode(input);
 
     // Decode all pallets
     final pallets = SequenceCodec(PalletMetadataV15.codec).decode(input);
@@ -95,7 +96,7 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
     final outerEnums = OuterEnumsV15.codec.decode(input);
 
     return RuntimeMetadataV15(
-      types: registry,
+      types: types,
       pallets: pallets,
       extrinsic: extrinsic,
       type: type,
@@ -106,8 +107,7 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
 
   @override
   void encodeTo(RuntimeMetadataV15 metadata, Output output) {
-    // Encode the portable type registry
-    PortableRegistry.codec.encodeTo(metadata.types, output);
+    SequenceCodec(PortableType.codec).encodeTo(metadata.types, output);
 
     // Encode all pallets
     SequenceCodec(PalletMetadataV15.codec).encodeTo(metadata.pallets, output);
@@ -128,7 +128,7 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
   @override
   int sizeHint(RuntimeMetadataV15 value) {
     var size = 0;
-    size += PortableRegistry.codec.sizeHint(value.types);
+    size += SequenceCodec(PortableType.codec).sizeHint(value.types);
     size += SequenceCodec(PalletMetadataV15.codec).sizeHint(value.pallets);
     size += ExtrinsicMetadataV15.codec.sizeHint(value.extrinsic);
     size += CompactCodec.codec.sizeHint(value.type);

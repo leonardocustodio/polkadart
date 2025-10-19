@@ -3,11 +3,11 @@ part of metadata;
 /// Variant type (enum-like)
 ///
 /// Represents an enum with multiple variants, each potentially having fields.
-class TypeDefVariantType extends TypeDefVariant {
+class TypeDefVariant extends TypeDef {
   final List<VariantDef> variants;
-  const TypeDefVariantType({required this.variants});
+  const TypeDefVariant({required this.variants});
 
-  static const $TypeDefVariant codec = TypeDefVariant.codec;
+  static const $TypeDef codec = TypeDef.codec;
 
   @override
   Set<int> typeDependencies() {
@@ -28,22 +28,22 @@ class TypeDefVariantType extends TypeDefVariant {
   }
 }
 
-class $TypeDefVariantType with Codec<TypeDefVariantType> {
-  const $TypeDefVariantType._();
+class $TypeDefVariant with Codec<TypeDefVariant> {
+  const $TypeDefVariant._();
 
   @override
-  TypeDefVariantType decode(Input input) {
+  TypeDefVariant decode(Input input) {
     final variants = SequenceCodec(VariantDef.codec).decode(input);
-    return TypeDefVariantType(variants: variants);
+    return TypeDefVariant(variants: variants);
   }
 
   @override
-  void encodeTo(TypeDefVariantType value, Output output) {
+  void encodeTo(TypeDefVariant value, Output output) {
     SequenceCodec(VariantDef.codec).encodeTo(value.variants, output);
   }
 
   @override
-  int sizeHint(TypeDefVariantType value) {
+  int sizeHint(TypeDefVariant value) {
     return SequenceCodec(VariantDef.codec).sizeHint(value.variants);
   }
 }

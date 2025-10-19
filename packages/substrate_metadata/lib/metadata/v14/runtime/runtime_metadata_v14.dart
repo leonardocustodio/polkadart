@@ -4,13 +4,12 @@ part of metadata;
 ///
 /// This is the root structure that contains all metadata information about
 /// a Substrate blockchain runtime, including type registry, pallets, and extrinsic format.
-class RuntimeMetadataV14 {
-  /// Registry of all types used in the runtime
+class RuntimeMetadataV14 extends RuntimeMetadata {
+  /// List of all registered types
   ///
-  /// The PortableRegistry contains definitions for all types that appear
-  /// in the runtime, allowing clients to decode data without prior knowledge
-  /// of the types.
-  final PortableRegistry types;
+  /// Each type has a unique ID (its index in this list) and a complete
+  /// definition including its structure and documentation.
+  final List<PortableType> types;
 
   /// List of all pallets (modules) in the runtime
   ///
@@ -40,8 +39,17 @@ class RuntimeMetadataV14 {
   /// Codec instance for RuntimeMetadataV14
   static const $RuntimeMetadataV14 codec = $RuntimeMetadataV14._();
 
+  @override
+  int get version => 14;
+
+  @override
+  PortableType typeById(int id) {
+    return types.firstWhere((type) => type.id == id);
+  }
+
+  @override
   Map<String, dynamic> toJson() => {
-        'types': types.toJson(),
+        'types': types.map((final PortableType value) => value.toJson()).toList(growable: false),
         'pallets': pallets.map((pallet) => pallet.toJson()).toList(),
         'extrinsic': extrinsic.toJson(),
         'type': type,
@@ -57,20 +65,19 @@ class $RuntimeMetadataV14 with Codec<RuntimeMetadataV14> {
 
   @override
   RuntimeMetadataV14 decode(Input input) {
-    // Decode the portable type registry
-    final registry = PortableRegistry.codec.decode(input);
+    final types = SequenceCodec(PortableType.codec).decode(input);
 
     // Decode all pallets
     final pallets = SequenceCodec(PalletMetadataV14.codec).decode(input);
 
     // Decode extrinsic metadata
-    final extrinsic = ExtrinsicMetadataV14.codec.decode(input);
+    final extrinsic = ExtrinsicMetadataV14.codec.decode(input, types: types);
 
     // Decode runtime type ID
     final type = CompactCodec.codec.decode(input);
 
     return RuntimeMetadataV14(
-      types: registry,
+      types: types,
       pallets: pallets,
       extrinsic: extrinsic,
       type: type,
@@ -79,8 +86,7 @@ class $RuntimeMetadataV14 with Codec<RuntimeMetadataV14> {
 
   @override
   void encodeTo(RuntimeMetadataV14 metadata, Output output) {
-    // Encode the portable type registry
-    PortableRegistry.codec.encodeTo(metadata.types, output);
+    SequenceCodec(PortableType.codec).encodeTo(metadata.types, output);
 
     // Encode all pallets
     SequenceCodec(PalletMetadataV14.codec).encodeTo(metadata.pallets, output);
@@ -95,7 +101,7 @@ class $RuntimeMetadataV14 with Codec<RuntimeMetadataV14> {
   @override
   int sizeHint(RuntimeMetadataV14 value) {
     var size = 0;
-    size += PortableRegistry.codec.sizeHint(value.types);
+    size += SequenceCodec(PortableType.codec).sizeHint(value.types);
     size += SequenceCodec(PalletMetadataV14.codec).sizeHint(value.pallets);
     size += ExtrinsicMetadataV14.codec.sizeHint(value.extrinsic);
     size += CompactCodec.codec.sizeHint(value.type);

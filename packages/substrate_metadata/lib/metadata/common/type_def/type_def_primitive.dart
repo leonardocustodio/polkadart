@@ -42,14 +42,12 @@ class $Primitive with Codec<Primitive> {
 }
 
 /// A primitive Rust type.
-class TypeDefPrimitive extends TypeDefVariant {
+class TypeDefPrimitive extends TypeDef {
   /// The primitive type.
   final Primitive primitive;
-
-  /// Creates a new primitive type.
   const TypeDefPrimitive(this.primitive);
 
-  static const $TypeDefVariant codec = TypeDefVariant.codec;
+  static const $TypeDef codec = TypeDef.codec;
 
   factory TypeDefPrimitive.fromString(String primitive) {
     switch (primitive) {

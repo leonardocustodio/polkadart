@@ -4,7 +4,7 @@ part of metadata;
 ///
 /// Contains the complete information about a type including its path,
 /// generic parameters, actual definition, and documentation.
-class TypeDef {
+class PortableTypeDef {
   /// Type path as a list of segments (e.g., ['pallet_balances', 'AccountData'])
   ///
   /// Represents the fully qualified path of the type in the source code.
@@ -13,29 +13,29 @@ class TypeDef {
 
   /// Type parameters (for generic types)
   ///
-  /// For example, Option<T> would have one parameter "T".
+  /// For example, Option<TypeParameter> would have one parameter "T".
   final List<TypeParameter> params;
 
   /// The actual type definition variant
   ///
   /// This determines whether the type is a composite, variant, sequence, etc.
-  final TypeDefVariant def;
+  final TypeDef typeDef;
 
   /// Documentation for this type
   final List<String> docs;
 
-  const TypeDef({
+  const PortableTypeDef({
     required this.path,
     required this.params,
-    required this.def,
+    required this.typeDef,
     this.docs = const [],
   });
 
-  /// Codec instance for TypeDef
-  static const $TypeDef codec = $TypeDef._();
+  /// Codec instance for PortableTypeDef
+  static const $PortableTypeDef codec = $PortableTypeDef._();
 
   Set<int> typeDependencies() {
-    return def.typeDependencies();
+    return typeDef.typeDependencies();
   }
 
   Map<String, dynamic> toJson() {
@@ -46,7 +46,7 @@ class TypeDef {
     if (params.isNotEmpty) {
       json['params'] = params.map((final TypeParameter param) => param.toJson()).toList();
     }
-    json['def'] = def.toJson();
+    json['def'] = typeDef.toJson();
     if (docs.isNotEmpty) {
       json['docs'] = docs;
     }
@@ -61,11 +61,11 @@ class TypeDef {
 ///
 /// Handles encoding and decoding of type definitions.
 /// Path is stored as a sequence of strings to preserve exact structure.
-class $TypeDef with Codec<TypeDef> {
-  const $TypeDef._();
+class $PortableTypeDef with Codec<PortableTypeDef> {
+  const $PortableTypeDef._();
 
   @override
-  TypeDef decode(Input input) {
+  PortableTypeDef decode(Input input) {
     // Decode path as sequence of strings (not joined with ::)
     final path = SequenceCodec(StrCodec.codec).decode(input);
 
@@ -73,33 +73,33 @@ class $TypeDef with Codec<TypeDef> {
     final params = SequenceCodec(TypeParameter.codec).decode(input);
 
     // Decode type definition variant
-    final def = TypeDefVariant.codec.decode(input);
+    final typeDef = TypeDef.codec.decode(input);
 
     // Decode documentation
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return TypeDef(
+    return PortableTypeDef(
       path: path,
       params: params,
-      def: def,
+      typeDef: typeDef,
       docs: docs,
     );
   }
 
   @override
-  void encodeTo(TypeDef value, Output output) {
+  void encodeTo(PortableTypeDef value, Output output) {
     SequenceCodec(StrCodec.codec).encodeTo(value.path, output);
     SequenceCodec(TypeParameter.codec).encodeTo(value.params, output);
-    TypeDefVariant.codec.encodeTo(value.def, output);
+    TypeDef.codec.encodeTo(value.typeDef, output);
     SequenceCodec(StrCodec.codec).encodeTo(value.docs, output);
   }
 
   @override
-  int sizeHint(TypeDef value) {
+  int sizeHint(PortableTypeDef value) {
     var size = 0;
     size += SequenceCodec(StrCodec.codec).sizeHint(value.path);
     size += SequenceCodec(TypeParameter.codec).sizeHint(value.params);
-    size += TypeDefVariant.codec.sizeHint(value.def);
+    size += TypeDef.codec.sizeHint(value.typeDef);
     size += SequenceCodec(StrCodec.codec).sizeHint(value.docs);
     return size;
   }

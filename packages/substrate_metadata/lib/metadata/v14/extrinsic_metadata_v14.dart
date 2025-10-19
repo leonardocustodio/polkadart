@@ -1,60 +1,88 @@
 part of metadata;
 
-/// Metadata about extrinsics (transactions) in MetadataV14
+/// Metadata of the extrinsic used by the runtime (Version 14)
 ///
-/// Describes the structure and format of extrinsics (transactions)
-/// including what signed extensions are applied.
-class ExtrinsicMetadataV14 {
-  /// Type ID of the extrinsic type
+/// In V14, the extrinsic metadata contains a single type ID that points to
+/// the complete extrinsic type (usually UncheckedExtrinsic<Address, Call, Signature, Extra>).
+/// The individual component types (Address, Call, Signature, Extra) must be extracted
+/// from this type's parameters.
+class ExtrinsicMetadataV14 extends ExtrinsicMetadata {
+  /// The type ID of the complete extrinsic type
   ///
-  /// References the complete extrinsic structure in the type registry.
+  /// This typically points to a type like:
+  /// `UncheckedExtrinsic<Address, Call, Signature, Extra>`
+  ///
+  /// The individual component types are extracted from this type's generic parameters.
   final int type;
-
-  /// Version of the extrinsic format
-  ///
-  /// Typically 4 for modern Substrate chains.
-  final int version;
-
-  /// List of signed extensions applied to extrinsics
-  ///
-  /// Signed extensions add additional data and validation to transactions,
-  /// such as nonce checks, mortality, and tip payments.
-  /// The order matters as they are applied in sequence.
-  final List<SignedExtensionMetadataV14> signedExtensions;
 
   const ExtrinsicMetadataV14({
     required this.type,
-    required this.version,
-    required this.signedExtensions,
+    required super.version,
+    required super.addressType,
+    required super.callType,
+    required super.signatureType,
+    required super.extraType,
+    required super.signedExtensions,
   });
 
   /// Codec instance for ExtrinsicMetadataV14
   static const $ExtrinsicMetadataV14 codec = $ExtrinsicMetadataV14._();
 
+  @override
   Map<String, dynamic> toJson() => {
         'type': type,
-        'version': version,
-        'signed_extensions': signedExtensions.map((e) => e.toJson()).toList(),
+        ...super.toJson(),
       };
 }
 
-/// Codec for ExtrinsicMetadataV14
 class $ExtrinsicMetadataV14 with Codec<ExtrinsicMetadataV14> {
   const $ExtrinsicMetadataV14._();
 
+  (int address, int call, int signature, int extra) extractExtrinsicPartTypes(
+    int extrinsicTypeId,
+    List<PortableType> types,
+  ) {
+    try {
+      final extrinsicType = types.firstWhere((t) => t.id == extrinsicTypeId);
+      final paramsMap = <String, int>{};
+
+      for (var param in extrinsicType.type.params) {
+        if (param.type != null) {
+          paramsMap[param.name] = param.type!;
+        }
+      }
+      return (
+        paramsMap['Address'] ?? 0,
+        paramsMap['Call'] ?? 0,
+        paramsMap['Signature'] ?? 0,
+        paramsMap['Extra'] ?? 0,
+      );
+    } catch (e) {
+      return (0, 0, 0, 0);
+    }
+  }
+
+  /// Decodes ExtrinsicMetadataV14 with type extraction
   @override
-  ExtrinsicMetadataV14 decode(Input input) {
+  ExtrinsicMetadataV14 decode(Input input, {List<PortableType> types = const <PortableType>[]}) {
+    // Decode type ID (Compact<u32>)
     final type = CompactCodec.codec.decode(input);
 
-    // Decode extrinsic version
+    // Decode version (u8)
     final version = U8Codec.codec.decode(input);
 
     // Decode signed extensions
-    final signedExtensions = SequenceCodec(SignedExtensionMetadataV14.codec).decode(input);
+    final signedExtensions = SequenceCodec(SignedExtensionMetadata.codec).decode(input);
+
+    final (address, call, signature, extra) = extractExtrinsicPartTypes(type, types);
 
     return ExtrinsicMetadataV14(
       type: type,
       version: version,
+      addressType: address,
+      callType: call,
+      signatureType: signature,
+      extraType: extra,
       signedExtensions: signedExtensions,
     );
   }
@@ -68,7 +96,7 @@ class $ExtrinsicMetadataV14 with Codec<ExtrinsicMetadataV14> {
     U8Codec.codec.encodeTo(value.version, output);
 
     // Encode signed extensions
-    SequenceCodec(SignedExtensionMetadataV14.codec).encodeTo(value.signedExtensions, output);
+    SequenceCodec(SignedExtensionMetadata.codec).encodeTo(value.signedExtensions, output);
   }
 
   @override
@@ -76,7 +104,7 @@ class $ExtrinsicMetadataV14 with Codec<ExtrinsicMetadataV14> {
     var size = 0;
     size += CompactCodec.codec.sizeHint(value.type);
     size += U8Codec.codec.sizeHint(value.version);
-    size += SequenceCodec(SignedExtensionMetadataV14.codec).sizeHint(value.signedExtensions);
+    size += SequenceCodec(SignedExtensionMetadata.codec).sizeHint(value.signedExtensions);
     return size;
   }
 }

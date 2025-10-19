@@ -1,11 +1,11 @@
 part of metadata;
 
 /// Composite type (struct-like)
-class TypeDefComposite extends TypeDefVariant {
+class TypeDefComposite extends TypeDef {
   final List<Field> fields;
   const TypeDefComposite({required this.fields});
 
-  static const $TypeDefVariant codec = TypeDefVariant.codec;
+  static const $TypeDef codec = TypeDef.codec;
 
   @override
   Set<int> typeDependencies() {

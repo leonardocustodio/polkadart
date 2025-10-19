@@ -3,13 +3,12 @@ part of metadata;
 /// Array type (fixed-size)
 ///
 /// Represents a [T; N] fixed-length array.
-class TypeDefArray extends TypeDefVariant {
-  final int len;
+class TypeDefArray extends TypeDef {
+  final int length;
   final int type;
+  const TypeDefArray({required this.length, required this.type});
 
-  const TypeDefArray({required this.len, required this.type});
-
-  static const $TypeDefVariant codec = TypeDefVariant.codec;
+  static const $TypeDef codec = TypeDef.codec;
 
   @override
   Set<int> typeDependencies() {
@@ -19,7 +18,7 @@ class TypeDefArray extends TypeDefVariant {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'len': len,
+      'len': length,
       'type': type,
     };
   }
@@ -32,17 +31,17 @@ class $TypeDefArray with Codec<TypeDefArray> {
   TypeDefArray decode(Input input) {
     final len = U32Codec.codec.decode(input);
     final type = CompactCodec.codec.decode(input);
-    return TypeDefArray(len: len, type: type);
+    return TypeDefArray(length: len, type: type);
   }
 
   @override
   void encodeTo(TypeDefArray value, Output output) {
-    U32Codec.codec.encodeTo(value.len, output);
+    U32Codec.codec.encodeTo(value.length, output);
     CompactCodec.codec.encodeTo(value.type, output);
   }
 
   @override
   int sizeHint(TypeDefArray value) {
-    return CompactCodec.codec.sizeHint(value.len) + CompactCodec.codec.sizeHint(value.type);
+    return CompactCodec.codec.sizeHint(value.length) + CompactCodec.codec.sizeHint(value.type);
   }
 }

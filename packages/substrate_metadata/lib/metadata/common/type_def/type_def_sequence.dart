@@ -3,11 +3,11 @@ part of metadata;
 /// Sequence type (vector/array-like with dynamic length)
 ///
 /// Represents a Vec<T> or similar dynamic-length collection.
-class TypeDefSequence extends TypeDefVariant {
+class TypeDefSequence extends TypeDef {
   final int type;
   const TypeDefSequence({required this.type});
 
-  static const $TypeDefVariant codec = TypeDefVariant.codec;
+  static const $TypeDef codec = TypeDef.codec;
 
   @override
   Set<int> typeDependencies() {

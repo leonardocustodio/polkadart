@@ -13,10 +13,7 @@ class TypeParameter {
   /// If null, the parameter is still generic.
   final int? type;
 
-  const TypeParameter({
-    required this.name,
-    this.type,
-  });
+  const TypeParameter({required this.name, this.type});
 
   /// Codec instance for TypeParameter
   static const $TypeParameter codec = $TypeParameter._();
@@ -36,10 +33,7 @@ class $TypeParameter with Codec<TypeParameter> {
     // Decode optional type ID
     final type = OptionCodec(CompactCodec.codec).decode(input);
 
-    return TypeParameter(
-      name: name,
-      type: type,
-    );
+    return TypeParameter(name: name, type: type);
   }
 
   @override

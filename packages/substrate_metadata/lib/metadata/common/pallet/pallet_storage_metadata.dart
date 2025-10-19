@@ -1,9 +1,9 @@
 part of metadata;
 
-/// Storage metadata for a pallet in MetadataV14
+/// Storage metadata for a pallet
 ///
 /// Contains information about all storage items in a pallet.
-class PalletStorageMetadataV14 {
+class PalletStorageMetadata {
   /// Storage prefix used in the key generation
   ///
   /// This is typically the pallet name and is used to create unique
@@ -11,15 +11,15 @@ class PalletStorageMetadataV14 {
   final String prefix;
 
   /// List of all storage entries in this pallet
-  final List<StorageEntryMetadataV14> entries;
+  final List<StorageEntryMetadata> entries;
 
-  const PalletStorageMetadataV14({
+  const PalletStorageMetadata({
     required this.prefix,
     required this.entries,
   });
 
-  /// Codec instance for PalletStorageMetadataV14
-  static const $PalletStorageMetadataV14 codec = $PalletStorageMetadataV14._();
+  /// Codec instance for PalletStorageMetadata
+  static const $PalletStorageMetadata codec = $PalletStorageMetadata._();
 
   Map<String, dynamic> toJson() => {
         'prefix': prefix,
@@ -27,38 +27,38 @@ class PalletStorageMetadataV14 {
       };
 }
 
-/// Codec for PalletStorageMetadataV14
-class $PalletStorageMetadataV14 with Codec<PalletStorageMetadataV14> {
-  const $PalletStorageMetadataV14._();
+/// Codec for PalletStorageMetadata
+class $PalletStorageMetadata with Codec<PalletStorageMetadata> {
+  const $PalletStorageMetadata._();
 
   @override
-  PalletStorageMetadataV14 decode(Input input) {
+  PalletStorageMetadata decode(Input input) {
     // Decode storage prefix
     final prefix = StrCodec.codec.decode(input);
 
     // Decode all storage entries
-    final entries = SequenceCodec(StorageEntryMetadataV14.codec).decode(input);
+    final entries = SequenceCodec(StorageEntryMetadata.codec).decode(input);
 
-    return PalletStorageMetadataV14(
+    return PalletStorageMetadata(
       prefix: prefix,
       entries: entries,
     );
   }
 
   @override
-  void encodeTo(PalletStorageMetadataV14 value, Output output) {
+  void encodeTo(PalletStorageMetadata value, Output output) {
     // Encode storage prefix
     StrCodec.codec.encodeTo(value.prefix, output);
 
     // Encode all storage entries
-    SequenceCodec(StorageEntryMetadataV14.codec).encodeTo(value.entries, output);
+    SequenceCodec(StorageEntryMetadata.codec).encodeTo(value.entries, output);
   }
 
   @override
-  int sizeHint(PalletStorageMetadataV14 value) {
+  int sizeHint(PalletStorageMetadata value) {
     var size = 0;
     size += StrCodec.codec.sizeHint(value.prefix);
-    size += SequenceCodec(StorageEntryMetadataV14.codec).sizeHint(value.entries);
+    size += SequenceCodec(StorageEntryMetadata.codec).sizeHint(value.entries);
     return size;
   }
 }

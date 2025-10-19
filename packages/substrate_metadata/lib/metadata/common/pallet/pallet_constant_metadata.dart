@@ -1,10 +1,10 @@
 part of metadata;
 
-/// Metadata about a pallet constant (MetadataV14)
+/// Metadata about a pallet constant
 ///
 /// Constants are compile-time values configured in the runtime.
 /// They cannot be changed without a runtime upgrade.
-class PalletConstantMetadataV14 {
+class PalletConstantMetadata {
   /// Name of the constant
   final String name;
 
@@ -24,15 +24,15 @@ class PalletConstantMetadataV14 {
   /// Contains the documentation comments from the source code.
   final List<String> docs;
 
-  const PalletConstantMetadataV14({
+  const PalletConstantMetadata({
     required this.name,
     required this.type,
     required this.value,
     this.docs = const [],
   });
 
-  /// Codec instance for PalletConstantMetadataV14
-  static const $PalletConstantMetadataV14 codec = $PalletConstantMetadataV14._();
+  /// Codec instance for PalletConstantMetadata
+  static const $PalletConstantMetadata codec = $PalletConstantMetadata._();
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -42,12 +42,12 @@ class PalletConstantMetadataV14 {
       };
 }
 
-/// Codec for PalletConstantMetadataV14
-class $PalletConstantMetadataV14 with Codec<PalletConstantMetadataV14> {
-  const $PalletConstantMetadataV14._();
+/// Codec for PalletConstantMetadata
+class $PalletConstantMetadata with Codec<PalletConstantMetadata> {
+  const $PalletConstantMetadata._();
 
   @override
-  PalletConstantMetadataV14 decode(Input input) {
+  PalletConstantMetadata decode(Input input) {
     // Decode constant name
     final name = StrCodec.codec.decode(input);
 
@@ -60,7 +60,7 @@ class $PalletConstantMetadataV14 with Codec<PalletConstantMetadataV14> {
     // Decode documentation
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return PalletConstantMetadataV14(
+    return PalletConstantMetadata(
       name: name,
       type: type,
       value: value,
@@ -69,7 +69,7 @@ class $PalletConstantMetadataV14 with Codec<PalletConstantMetadataV14> {
   }
 
   @override
-  void encodeTo(PalletConstantMetadataV14 value, Output output) {
+  void encodeTo(PalletConstantMetadata value, Output output) {
     // Encode constant name
     StrCodec.codec.encodeTo(value.name, output);
 
@@ -84,7 +84,7 @@ class $PalletConstantMetadataV14 with Codec<PalletConstantMetadataV14> {
   }
 
   @override
-  int sizeHint(PalletConstantMetadataV14 value) {
+  int sizeHint(PalletConstantMetadata value) {
     var size = 0;
     size += StrCodec.codec.sizeHint(value.name);
     size += CompactCodec.codec.sizeHint(value.type);

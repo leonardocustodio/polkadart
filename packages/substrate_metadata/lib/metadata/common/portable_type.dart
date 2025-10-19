@@ -6,7 +6,7 @@ class PortableType {
   final int id;
 
   /// The actual type definition
-  final TypeDef type;
+  final PortableTypeDef type;
 
   const PortableType({
     required this.id,
@@ -29,25 +29,22 @@ class $PortableType with Codec<PortableType> {
     final id = CompactCodec.codec.decode(input);
 
     // Decode type definition
-    final type = TypeDef.codec.decode(input);
+    final type = PortableTypeDef.codec.decode(input);
 
-    return PortableType(
-      id: id,
-      type: type,
-    );
+    return PortableType(id: id, type: type);
   }
 
   @override
   void encodeTo(PortableType value, Output output) {
     CompactCodec.codec.encodeTo(value.id, output);
-    TypeDef.codec.encodeTo(value.type, output);
+    PortableTypeDef.codec.encodeTo(value.type, output);
   }
 
   @override
   int sizeHint(PortableType value) {
     var size = 0;
     size += CompactCodec.codec.sizeHint(value.id);
-    size += TypeDef.codec.sizeHint(value.type);
+    size += PortableTypeDef.codec.sizeHint(value.type);
     return size;
   }
 }

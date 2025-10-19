@@ -4,24 +4,24 @@ part of metadata;
 ///
 /// Represents the different kinds of types that can exist in the type system.
 /// This is a sealed class hierarchy for type-safe pattern matching.
-sealed class TypeDefVariant {
-  /// Codec instance for TypeDefVariant
-  static const $TypeDefVariant codec = $TypeDefVariant._();
-  const TypeDefVariant();
+sealed class TypeDef {
+  /// Codec instance for TypeDef
+  static const $TypeDef codec = $TypeDef._();
+  const TypeDef();
 
   Set<int> typeDependencies();
   Map<String, dynamic> toJson();
 }
 
-/// Codec for TypeDefVariant
+/// Codec for TypeDef
 ///
 /// Handles encoding and decoding of the different type definition variants.
 /// Uses an enum-style encoding with an index byte followed by variant data.
-class $TypeDefVariant with Codec<TypeDefVariant> {
-  const $TypeDefVariant._();
+class $TypeDef with Codec<TypeDef> {
+  const $TypeDef._();
 
   @override
-  TypeDefVariant decode(Input input) {
+  TypeDef decode(Input input) {
     final index = input.read();
 
     switch (index) {
@@ -29,7 +29,7 @@ class $TypeDefVariant with Codec<TypeDefVariant> {
         return $TypeDefComposite._().decode(input);
 
       case 1: // Variant
-        return $TypeDefVariantType._().decode(input);
+        return $TypeDefVariant._().decode(input);
 
       case 2: // Sequence
         return $TypeDefSequence._().decode(input);
@@ -55,16 +55,16 @@ class $TypeDefVariant with Codec<TypeDefVariant> {
   }
 
   @override
-  void encodeTo(TypeDefVariant value, Output output) {
+  void encodeTo(TypeDef value, Output output) {
     switch (value) {
       case final TypeDefComposite typeDefComposite:
         U8Codec.codec.encodeTo(0, output);
         $TypeDefComposite._().encodeTo(typeDefComposite, output);
         return;
 
-      case final TypeDefVariantType typeDefVariant:
+      case final TypeDefVariant typeDefVariant:
         U8Codec.codec.encodeTo(1, output);
-        $TypeDefVariantType._().encodeTo(typeDefVariant, output);
+        $TypeDefVariant._().encodeTo(typeDefVariant, output);
         break;
 
       case final TypeDefSequence typeDefSequence:
@@ -100,15 +100,15 @@ class $TypeDefVariant with Codec<TypeDefVariant> {
   }
 
   @override
-  int sizeHint(TypeDefVariant value) {
+  int sizeHint(TypeDef value) {
     int size = 1;
 
     switch (value) {
       case final TypeDefComposite typeDefComposite:
         size += $TypeDefComposite._().sizeHint(typeDefComposite);
 
-      case final TypeDefVariantType typeDefVariant:
-        size += $TypeDefVariantType._().sizeHint(typeDefVariant);
+      case final TypeDefVariant typeDefVariant:
+        size += $TypeDefVariant._().sizeHint(typeDefVariant);
 
       case final TypeDefSequence typeDefSequence:
         size += $TypeDefSequence._().sizeHint(typeDefSequence);

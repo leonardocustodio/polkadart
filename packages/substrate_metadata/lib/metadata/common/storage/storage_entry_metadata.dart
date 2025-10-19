@@ -1,45 +1,9 @@
 part of metadata;
 
-/// Modifier indicating whether a storage entry is optional
-enum StorageEntryModifier {
-  /// The storage entry returns an Option<T>, None if key not present
-  optional,
-
-  /// The storage entry returns T, using default value if key not present
-  defaultModifier;
-
-  static const $StorageEntryModifier codec = $StorageEntryModifier._();
-}
-
-class $StorageEntryModifier with Codec<StorageEntryModifier> {
-  const $StorageEntryModifier._();
-
-  @override
-  StorageEntryModifier decode(Input input) {
-    final index = input.read();
-    switch (index) {
-      case 0:
-        return StorageEntryModifier.optional;
-      case 1:
-        return StorageEntryModifier.defaultModifier;
-      default:
-        throw Exception('Unknown storage modifier variant index $index');
-    }
-  }
-
-  @override
-  void encodeTo(StorageEntryModifier value, Output output) {
-    output.pushByte(value.index);
-  }
-
-  @override
-  int sizeHint(StorageEntryModifier value) => 1;
-}
-
-/// Metadata about a single storage entry in MetadataV14
+/// Metadata about a single storage entry in Metadata
 ///
 /// Storage entries represent persistent data stored on-chain.
-class StorageEntryMetadataV14 {
+class StorageEntryMetadata {
   /// Name of the storage entry
   final String name;
 
@@ -55,7 +19,7 @@ class StorageEntryMetadataV14 {
   /// Documentation for this storage entry
   final List<String> docs;
 
-  const StorageEntryMetadataV14({
+  const StorageEntryMetadata({
     required this.name,
     required this.modifier,
     required this.type,
@@ -63,8 +27,8 @@ class StorageEntryMetadataV14 {
     this.docs = const [],
   });
 
-  /// Codec instance for StorageEntryMetadataV14
-  static const $StorageEntryMetadataV14 codec = $StorageEntryMetadataV14._();
+  /// Codec instance for StorageEntryMetadata
+  static const $StorageEntryMetadata codec = $StorageEntryMetadata._();
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -75,12 +39,12 @@ class StorageEntryMetadataV14 {
       };
 }
 
-/// Codec for StorageEntryMetadataV14
-class $StorageEntryMetadataV14 with Codec<StorageEntryMetadataV14> {
-  const $StorageEntryMetadataV14._();
+/// Codec for StorageEntryMetadata
+class $StorageEntryMetadata with Codec<StorageEntryMetadata> {
+  const $StorageEntryMetadata._();
 
   @override
-  StorageEntryMetadataV14 decode(Input input) {
+  StorageEntryMetadata decode(Input input) {
     // Decode entry name
     final name = StrCodec.codec.decode(input);
 
@@ -96,7 +60,7 @@ class $StorageEntryMetadataV14 with Codec<StorageEntryMetadataV14> {
     // Decode documentation
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return StorageEntryMetadataV14(
+    return StorageEntryMetadata(
       name: name,
       modifier: modifier,
       type: type,
@@ -106,7 +70,7 @@ class $StorageEntryMetadataV14 with Codec<StorageEntryMetadataV14> {
   }
 
   @override
-  void encodeTo(StorageEntryMetadataV14 value, Output output) {
+  void encodeTo(StorageEntryMetadata value, Output output) {
     // Encode entry name
     StrCodec.codec.encodeTo(value.name, output);
 
@@ -124,7 +88,7 @@ class $StorageEntryMetadataV14 with Codec<StorageEntryMetadataV14> {
   }
 
   @override
-  int sizeHint(StorageEntryMetadataV14 value) {
+  int sizeHint(StorageEntryMetadata value) {
     var size = 0;
     size += StrCodec.codec.sizeHint(value.name);
     size += StorageEntryModifier.codec.sizeHint(value.modifier);
