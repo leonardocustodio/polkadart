@@ -52,7 +52,6 @@ part 'common/type_def/type_def_bit_sequence.dart';
 part 'v14/pallet/pallet_metadata_v14.dart';
 // V14 -> Runtime
 part 'runtime_metadata_prefixed.dart';
-part '../extensions/runtime_metadata_extensions.dart';
 part 'v14/runtime/runtime_metadata_v14.dart';
 // V14 -> Extrinsic
 part 'v14/extrinsic_metadata_v14.dart';

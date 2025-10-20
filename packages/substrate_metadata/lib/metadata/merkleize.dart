@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart/substrate/substrate.dart';
+import 'package:substrate_metadata/extensions/runtime_metadata_extensions.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 
 extension ListIntExtension on List<int> {
