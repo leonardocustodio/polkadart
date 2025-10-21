@@ -33,7 +33,7 @@ class RuntimeEvent {
         'palletIndex': palletIndex,
         'event': eventName,
         'eventIndex': eventIndex,
-        'data': ToJson(data).toJson(),
+        'data': data.toJson(),
       };
 
   @override
