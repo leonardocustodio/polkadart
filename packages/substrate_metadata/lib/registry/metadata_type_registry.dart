@@ -297,7 +297,7 @@ class MetadataTypeRegistry {
     }
 
     // Resolve bit order type
-    BitOrder order = BitOrder.LSB; // Default (Lsb0 is most common)
+    BitOrder order = BitOrder.LSB; // Default (Lsb is most common)
     final orderType = types.getType(bitOrderType);
     if (orderType != null) {
       final orderPath = orderType.type.pathString;

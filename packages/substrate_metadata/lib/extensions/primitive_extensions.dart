@@ -8,7 +8,7 @@ extension PrimitiveExtension on Primitive {
       Primitive.Char => U32Codec.codec, // Char is u32 in Rust
       Primitive.Str => StrCodec.codec,
       Primitive.U8 => U8Codec.codec,
-      Primitive.U16 => U32Codec.codec, // U16 is encoded as U32
+      Primitive.U16 => U16Codec.codec,
       Primitive.U32 => U32Codec.codec,
       Primitive.U64 => U64Codec.codec,
       Primitive.U128 => U128Codec.codec,
