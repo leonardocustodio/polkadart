@@ -11,9 +11,9 @@ import 'package:test/scaffolding.dart';
 void main() {
   final metadataFile = File('../../chain/metadata/metadata_v14.json');
 
-  final metatadaJson = jsonDecode(metadataFile.readAsStringSync());
+  final metadataJson = jsonDecode(metadataFile.readAsStringSync());
 
-  final metadataV14 = metatadaJson['v14'];
+  final metadataV14 = metadataJson['v14'];
   group('Events Decode/Encode: ', () {
     test('Decode Test', () {
       final inputBytes = decodeHex(metadataV14);
@@ -54,10 +54,9 @@ void main() {
       // Decode first
       final decodedEventRecord = eventsCodec.decode(Input.fromHex(_encodedEventsHex));
 
-      final EventsRecordCodec eventsCodec2 = EventsRecordCodec(registry);
       // Then encode
       final output = HexOutput();
-      eventsCodec2.encodeTo(decodedEventRecord, output);
+      eventsCodec.encodeTo(decodedEventRecord, output);
       final roundTripEncodedHex = output.toString();
 
       expect(roundTripEncodedHex, _encodedEventsHex);
