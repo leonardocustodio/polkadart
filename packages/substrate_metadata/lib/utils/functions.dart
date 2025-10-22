@@ -46,3 +46,16 @@ List<dynamic> readLines(String filePath) {
 
   return <dynamic>[];
 }
+
+extension ListExtension on Uint8List {
+  // Convert Uint8List to Hexadecimal String
+  String toHexString() {
+    return '0x${hex.encode(this)}';
+  }
+}
+
+extension ListIntExtension on List<int> {
+  String toHexString() {
+    return '0x${hex.encode(this)}';
+  }
+}
