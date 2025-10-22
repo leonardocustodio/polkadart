@@ -1,5 +1,3 @@
-// metadata_type_registry.dart
-
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/extensions/primitive_extensions.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
