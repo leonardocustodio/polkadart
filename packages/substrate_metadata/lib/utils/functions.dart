@@ -19,7 +19,7 @@ bool isNotEmpty(dynamic value) {
   } else if (value is List) {
     return value.isNotEmpty;
   }
-  throw throw Exception(
+  throw Exception(
       'Expected: `String`, `num`, `List`, `Map`, `bool`, found ${value.runtimeType.toString()}');
 }
 
