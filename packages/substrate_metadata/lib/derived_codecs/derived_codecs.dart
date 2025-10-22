@@ -8,8 +8,13 @@ import 'package:polkadart_scale_codec/extended_codecs/extended_codecs.dart'
 import 'package:polkadart_scale_codec/io/io.dart' show Input, Output, SizeTracker;
 import 'package:polkadart_scale_codec/primitives/primitives.dart'
     show CompactCodec, SequenceCodec, U32Codec, U8ArrayCodec;
+import 'package:substrate_metadata/extensions/runtime_metadata_extensions.dart';
 import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
+
+// Constants
+part 'constants/constants_codec.dart';
+part 'constants/lazy_constants_codec.dart';
 
 // Events
 part 'events/events_codec.dart';
