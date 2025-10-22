@@ -101,7 +101,7 @@ class RuntimeEventCodec with Codec<RuntimeEvent> {
   // ======================================================================
 
   // ======================================================================
-  // Fina Pallet From Input ----------- Start -----------
+  // Find Pallet From Input ----------- Start -----------
   // ======================================================================
   PalletMetadata _findPalletV14FromInput(Input input) {
     // Read pallet index
