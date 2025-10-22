@@ -1,5 +1,3 @@
-// metadata_type_registry.dart
-
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/extensions/primitive_extensions.dart';
 import 'package:substrate_metadata/models/models.dart';
@@ -298,7 +296,7 @@ class MetadataTypeRegistry {
     }
 
     // Resolve bit order type
-    BitOrder order = BitOrder.LSB; // Default (Lsb0 is most common)
+    BitOrder order = BitOrder.LSB; // Default (LSB is most common)
     final orderType = types.getType(bitOrderType);
     if (orderType != null) {
       final orderPath = orderType.type.pathString;

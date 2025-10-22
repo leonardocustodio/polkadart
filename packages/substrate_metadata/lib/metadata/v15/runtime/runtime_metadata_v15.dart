@@ -50,7 +50,7 @@ class RuntimeMetadataV15 extends RuntimeMetadata {
   static const $RuntimeMetadataV15 codec = $RuntimeMetadataV15._();
 
   @override
-  int get version => 14;
+  int get version => 15;
 
   @override
   PortableType typeById(int id) {
