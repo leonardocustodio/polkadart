@@ -2,7 +2,7 @@ part of metadata;
 
 /// Main metadata container for a Substrate runtime (Version 16)
 ///
-/// V16 adds:
+/// V16:
 /// - Associated types from Config traits
 /// - Deprecation information
 /// - Support for multiple extrinsic versions

@@ -2,7 +2,7 @@ part of metadata;
 
 /// Metadata about a single pallet (module) in MetadataV16
 /// 
-/// V16 adds:
+/// V16:
 /// - Associated types from Config traits
 /// - Deprecation information
 class PalletMetadataV16 extends PalletMetadataV15 {
