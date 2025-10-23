@@ -7,6 +7,7 @@ extension RuntimeMetadataExtensions on RuntimeMetadata {
     return switch (this) {
       final RuntimeMetadataV14 v14 => v14.pallets,
       final RuntimeMetadataV15 v15 => v15.pallets,
+      final RuntimeMetadataV16 v16 => v16.pallets,
     };
   }
 
@@ -14,6 +15,7 @@ extension RuntimeMetadataExtensions on RuntimeMetadata {
     return switch (this) {
       final RuntimeMetadataV14 v14 => v14.extrinsic,
       final RuntimeMetadataV15 v15 => v15.extrinsic,
+      final RuntimeMetadataV16 v16 => v16.extrinsic,
     };
   }
 
@@ -21,6 +23,7 @@ extension RuntimeMetadataExtensions on RuntimeMetadata {
     return switch (this) {
       final RuntimeMetadataV14 v14 => v14.types,
       final RuntimeMetadataV15 v15 => v15.types,
+      final RuntimeMetadataV16 v16 => v16.types,
     };
   }
 }
