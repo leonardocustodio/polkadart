@@ -1,5 +1,6 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/extensions/primitive_extensions.dart';
+import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 
 /// Type registry that works directly with Substrate metadata
@@ -616,20 +617,4 @@ class MetadataException implements Exception {
 
   @override
   String toString() => 'MetadataException: $message';
-}
-
-/// Portable registry wrapper for cleaner API
-class PortableRegistry {
-  final List<PortableType> types;
-
-  PortableRegistry(this.types);
-
-  PortableType? getType(int id) {
-    for (final type in types) {
-      if (type.id == id) {
-        return type;
-      }
-    }
-    return null;
-  }
 }
