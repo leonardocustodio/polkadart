@@ -16,6 +16,8 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         U8SequenceCodec,
         U32Codec,
         ByteInput;
+import 'package:polkadart_scale_codec/primitives/primitives.dart' show BTreeMapCodec;
+import 'package:substrate_metadata/utils/utils.dart';
 
 // Common
 part 'common/extrinsic_metadata.dart';
@@ -64,3 +66,4 @@ part 'v15/runtime/runtime_api_metadata_v15.dart';
 part 'v15/runtime/runtime_metadata_v15.dart';
 // V15 -> Extrinsic
 part 'v15/extrinsic_metadata_v15.dart';
+part 'v15/custom_metadata_v15.dart';
