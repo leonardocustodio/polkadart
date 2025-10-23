@@ -88,6 +88,12 @@ class $RuntimeMetadataPrefixed with Codec<RuntimeMetadataPrefixed> {
           metadata: RuntimeMetadataV15.codec.decode(input),
         );
 
+      case 16:
+        return RuntimeMetadataPrefixed(
+          magicNumber: magicNumber,
+          metadata: RuntimeMetadataV16.codec.decode(input),
+        );
+
       default:
         throw Exception('Unsupported metadata version: $version');
     }
@@ -107,6 +113,10 @@ class $RuntimeMetadataPrefixed with Codec<RuntimeMetadataPrefixed> {
       case final RuntimeMetadataV15 v15:
         U8Codec.codec.encodeTo(15, output);
         RuntimeMetadataV15.codec.encodeTo(v15, output);
+
+      case final RuntimeMetadataV16 v16:
+        U8Codec.codec.encodeTo(16, output);
+        RuntimeMetadataV16.codec.encodeTo(v16, output);
     }
   }
 
@@ -122,6 +132,9 @@ class $RuntimeMetadataPrefixed with Codec<RuntimeMetadataPrefixed> {
 
       case final RuntimeMetadataV15 v15:
         size += RuntimeMetadataV15.codec.sizeHint(v15);
+
+      case final RuntimeMetadataV16 v16:
+        size += RuntimeMetadataV16.codec.sizeHint(v16);
     }
 
     return size;

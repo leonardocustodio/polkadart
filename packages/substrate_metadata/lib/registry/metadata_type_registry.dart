@@ -68,6 +68,7 @@ class MetadataTypeRegistry {
     return switch (prefixed.metadata) {
       RuntimeMetadataV14(:final types) => PortableRegistry(types),
       RuntimeMetadataV15(:final types) => PortableRegistry(types),
+      RuntimeMetadataV16(:final types) => PortableRegistry(types),
     };
   }
 
@@ -79,6 +80,7 @@ class MetadataTypeRegistry {
     final pallets = switch (prefixed.metadata) {
       RuntimeMetadataV14(:final pallets) => pallets,
       RuntimeMetadataV15(:final pallets) => pallets,
+      RuntimeMetadataV16(:final pallets) => pallets,
     };
 
     for (final pallet in pallets) {
@@ -493,6 +495,7 @@ class MetadataTypeRegistry {
     return switch (prefixed.metadata) {
       RuntimeMetadataV14(:final extrinsic) => extrinsic,
       RuntimeMetadataV15(:final extrinsic) => extrinsic,
+      RuntimeMetadataV16(:final extrinsic) => extrinsic,
     };
   }
 

@@ -16,7 +16,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         U8SequenceCodec,
         U32Codec,
         ByteInput;
-import 'package:polkadart_scale_codec/primitives/primitives.dart' show BTreeMapCodec;
+import 'package:polkadart_scale_codec/primitives/primitives.dart' show BTreeMapCodec, BoolCodec;
 import 'package:substrate_metadata/utils/utils.dart';
 
 // Common
@@ -67,3 +67,14 @@ part 'v15/runtime/runtime_metadata_v15.dart';
 // V15 -> Extrinsic
 part 'v15/extrinsic_metadata_v15.dart';
 part 'v15/custom_metadata_v15.dart';
+
+// V16
+// V16 -> Pallet
+part 'v16/pallet/pallet_metadata_v16.dart';
+part 'v16/pallet/pallet_associated_type_metadata.dart';
+// V16 -> Runtime
+part 'v16/runtime/runtime_metadata_v16.dart';
+part 'v16/runtime/runtime_api_metadata_v16.dart';
+// V16 -> Extrinsics
+part 'v16/extrinsic_metadata_v16.dart';
+part 'v16/deprecation_info.dart';
