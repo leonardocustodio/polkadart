@@ -37,6 +37,13 @@ class RuntimeMetadataV15 extends RuntimeMetadata {
   /// all calls, events, and errors from all pallets.
   final OuterEnumsV15 outerEnums;
 
+  /// Custom metadata fields
+  ///
+  /// New in V15: Allows runtimes to include arbitrary custom metadata
+  /// that isn't part of the standard specification. This enables chains
+  /// to add chain-specific metadata without modifying the core format.
+  final CustomMetadataV15 customMetadata;
+
   const RuntimeMetadataV15({
     required this.types,
     required this.pallets,
@@ -44,6 +51,7 @@ class RuntimeMetadataV15 extends RuntimeMetadata {
     required this.type,
     required this.apis,
     required this.outerEnums,
+    required this.customMetadata,
   });
 
   /// Codec instance for RuntimeMetadataV15
@@ -95,6 +103,9 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
     // Decode outer enums (new in V15)
     final outerEnums = OuterEnumsV15.codec.decode(input);
 
+    // Decode custom metadata
+    final customMetadata = CustomMetadataV15.codec.decode(input);
+
     return RuntimeMetadataV15(
       types: types,
       pallets: pallets,
@@ -102,6 +113,7 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
       type: type,
       apis: apis,
       outerEnums: outerEnums,
+      customMetadata: customMetadata,
     );
   }
 
@@ -123,6 +135,9 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
 
     // Encode outer enums
     OuterEnumsV15.codec.encodeTo(metadata.outerEnums, output);
+
+    // Encode custom metadata
+    CustomMetadataV15.codec.encodeTo(metadata.customMetadata, output);
   }
 
   @override
@@ -134,6 +149,7 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
     size += CompactCodec.codec.sizeHint(value.type);
     size += SequenceCodec(RuntimeApiMetadataV15.codec).sizeHint(value.apis);
     size += OuterEnumsV15.codec.sizeHint(value.outerEnums);
+    size += CustomMetadataV15.codec.sizeHint(value.customMetadata);
     return size;
   }
 }
