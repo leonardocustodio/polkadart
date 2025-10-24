@@ -1,4 +1,8 @@
-part of extended_codecs;
+import 'package:polkadart_scale_codec/core/core.dart' show Codec;
+import 'package:polkadart_scale_codec/io/io.dart'
+    show Input, Output, ByteOutput;
+import 'package:polkadart_scale_codec/primitives/primitives.dart'
+    show CompactCodec;
 
 /// Generic codec wrapper that adds length prefix to any codec
 ///
