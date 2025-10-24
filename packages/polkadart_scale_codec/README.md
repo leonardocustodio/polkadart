@@ -268,40 +268,38 @@ var decoded = CompactCodec.codec.decode(input);
 ### Result<Ok, Err>
 
 ```dart
-  // Creates the registry for parsing the types
-  final registry = Registry();
-
-  // register the customCodec of your choice
-  registry.registerCustomCodec(<String, dynamic>{'A':'Result<u8, bool>'});
-  
-  // Initialize the scale codec
-  final codec = ScaleCodec(registry);
-
+  final codec = ResultCodec(U8Codec.codec, BoolCodec.codec);
   final output = HexOutput();
   
-  codec.encodeTo('A', MapEntry('Ok', 42), output);
-  
+  codec.encodeTo(Result.ok(42), output);
+
   // 0x002a
   final encodedHex = output.toString();
   
   final input = Input.fromHex(encodedHex);
 
-  // MapEntry('Ok', 42)
-  var decoded = codec.decode('A', input);
+  // result.ok = 42
+  // result.error = null
+  final Result<int, bool> result = codec.decode(input);
 
 
   // or
   //
   // For Err field
-  //
-  final value = MapEntry('Err', false);
 
-  codec.encodeTo('A', value, output);
+  final codec = ResultCodec(U8Codec.codec, BoolCodec.codec);
+  final output = HexOutput();
+  
+  codec.encodeTo(Result.err(false), output);
+
   // 0x0100
   final encodedHex = output.toString();
+  
+  final input = Input.fromHex(encodedHex);
 
-  // MapEntry('Err', false)
-  var decoded = codec.decode('A', input);
+  // result.ok = null
+  // result.error = false
+  final Result<int, bool> result = codec.decode(input);
 ```
 
 ## Resources
