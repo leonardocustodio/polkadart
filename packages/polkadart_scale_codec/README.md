@@ -278,8 +278,8 @@ var decoded = CompactCodec.codec.decode(input);
   
   final input = Input.fromHex(encodedHex);
 
-  // result.ok = 42
-  // result.error = null
+  // result.okValue = 42
+  // result.errValue = null
   final Result<int, bool> result = codec.decode(input);
 
 
@@ -297,8 +297,8 @@ var decoded = CompactCodec.codec.decode(input);
   
   final input = Input.fromHex(encodedHex);
 
-  // result.ok = null
-  // result.error = false
+  // result.okValue = null
+  // result.errValue = false
   final Result<int, bool> result = codec.decode(input);
 ```
 
