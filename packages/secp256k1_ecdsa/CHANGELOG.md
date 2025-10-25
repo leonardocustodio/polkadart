@@ -1,3 +1,6 @@
+## 0.6.2
+- Package was bumped to use new Polkadart version
+
 ## 0.6.1
 - Packages were bumped for new publish workflow
  
