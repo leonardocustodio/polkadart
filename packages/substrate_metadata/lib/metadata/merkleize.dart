@@ -1,7 +1,10 @@
+// ignore_for_file: strict_top_level_inference
+
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:polkadart/scale_codec.dart';
 import 'package:polkadart/substrate/substrate.dart';
+import 'package:substrate_metadata/extensions/runtime_metadata_extensions.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 
 extension ListIntExtension on List<int> {
@@ -156,7 +159,7 @@ class LookupTypeDef {
           value: (tag: def.primitive.name.toLowerCase(), value: null),
         ),
       final TypeDefCompact def => LookupTypeDef(tag: 'compact', value: def.type),
-      _ => throw Exception('Unknown type definition runtime type ${typeDef.runtimeType}'),
+      // _ => throw Exception('Unknown type definition runtime type ${typeDef.runtimeType}'),
     };
   }
 
