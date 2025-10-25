@@ -3,7 +3,7 @@ library derived_codecs;
 import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:polkadart_scale_codec/core/core.dart' show Codec;
-import 'package:polkadart_scale_codec/extended_codecs/extended_codecs.dart'
+import 'package:polkadart_scale_codec/extended_codecs/length_prefixed_codec.dart'
     show LengthPrefixedCodec;
 import 'package:polkadart_scale_codec/io/io.dart' show Input, Output, SizeTracker;
 import 'package:polkadart_scale_codec/primitives/primitives.dart'
