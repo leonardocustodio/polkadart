@@ -17,6 +17,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         U32Codec,
         ByteInput;
 import 'package:polkadart_scale_codec/primitives/primitives.dart' show BTreeMapCodec;
+import 'package:substrate_metadata/extensions/hex_extension.dart';
 import 'package:substrate_metadata/utils/utils.dart';
 
 // Common

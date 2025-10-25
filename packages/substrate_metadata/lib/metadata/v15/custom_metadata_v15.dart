@@ -43,7 +43,10 @@ class CustomMetadataV15Value {
 
   static const $CustomMetadataV15Value codec = $CustomMetadataV15Value._();
 
-  Map<String, dynamic> toJson() => {'type': type, 'value': value};
+  Map<String, dynamic> toJson() => {
+        'type': type,
+        'value': value.toHexString(),
+      };
 }
 
 class $CustomMetadataV15Value with Codec<CustomMetadataV15Value> {
