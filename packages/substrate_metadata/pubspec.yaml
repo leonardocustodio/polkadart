@@ -16,7 +16,7 @@ dependencies:
   json_schema: ^5.2.1
   pointycastle: ^4.0.0 # BSD-3-Clause
   polkadart: ^0.7.2
-  # TODO: Change to new version when after poldart_scale_codec is published
+  # TODO: Change to new version when after polkadart_scale_codec is published
   polkadart_scale_codec: 
     path: ../polkadart_scale_codec
   utility: ^1.0.3
