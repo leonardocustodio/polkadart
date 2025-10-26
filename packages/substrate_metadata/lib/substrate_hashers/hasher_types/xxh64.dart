@@ -3,9 +3,7 @@
 // This code is part of hashlib 1.12.0
 // https://pub.dev/packages/hashlib
 
-import 'dart:typed_data';
-
-import 'block_hash.dart';
+part of substrate_hashers;
 
 /// This implementation is derived from
 /// https://github.com/easyaspi314/xxhash-clean/blob/master/xxhash64-ref.c

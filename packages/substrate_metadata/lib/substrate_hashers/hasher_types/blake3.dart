@@ -2,8 +2,7 @@
 // Copyright 2022, Michael P. Nitowski <mike@nitow.ski>. All rights reserved.
 // https://github.com/mnito/thirds/blob/main/lib/blake3.dart
 
-import 'dart:math';
-import 'dart:typed_data';
+part of substrate_hashers;
 
 String asHexString(List<int> bytes) {
   final sb = StringBuffer();

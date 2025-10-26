@@ -37,12 +37,7 @@ class RuntimeMetadataPrefixed {
   static const $RuntimeMetadataPrefixed codec = $RuntimeMetadataPrefixed._();
 
   factory RuntimeMetadataPrefixed.fromHex(String hexString) {
-    List<int> rawData;
-    if (hexString.startsWith('0x')) {
-      rawData = hex.decode(hexString.substring(2));
-    } else {
-      rawData = hex.decode(hexString);
-    }
+    final List<int> rawData = decodeHex(hexString);
     final input = ByteInput.fromBytes(rawData);
     return codec.decode(input);
   }

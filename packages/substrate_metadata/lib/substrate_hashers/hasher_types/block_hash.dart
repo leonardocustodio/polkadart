@@ -3,10 +3,7 @@
 // This code is part of hashlib 1.12.0
 // https://pub.dev/packages/hashlib
 
-import 'dart:typed_data';
-
-import 'hash_base.dart';
-import 'hash_digest.dart';
+part of substrate_hashers;
 
 // Maximum length of message allowed (considering both the JS and Dart VM)
 const int _maxMessageLength = 0x3FFFFFFFFFFFF; // (1 << 50) - 1

@@ -1,11 +1,5 @@
 part of metadata;
 
-extension ListIntExtension on List<int> {
-  Input toInput() {
-    return Input.fromBytes(this);
-  }
-}
-
 typedef Lookup = List<LookupEntry>;
 
 class TypeRef {

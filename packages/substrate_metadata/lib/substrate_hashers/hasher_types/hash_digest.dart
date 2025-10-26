@@ -3,10 +3,11 @@
 // This code is part of hashlib 1.12.0
 // https://pub.dev/packages/hashlib
 
-import 'dart:convert' as cvt;
+part of substrate_hashers;
+/* import 'dart:convert' as cvt;
 import 'dart:typed_data';
 
-import 'package:hashlib_codecs/hashlib_codecs.dart';
+import 'package:hashlib_codecs/hashlib_codecs.dart'; */
 
 class HashDigest extends Object {
   final Uint8List bytes;

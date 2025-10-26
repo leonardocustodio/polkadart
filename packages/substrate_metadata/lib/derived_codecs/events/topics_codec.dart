@@ -21,7 +21,7 @@ class TopicsCodec with Codec<List<String>> {
     final byteArrays = _codec.decode(input);
 
     // Convert each byte array to hex string
-    return byteArrays.map((bytes) => '0x${hex.encode(bytes)}').toList();
+    return byteArrays.map((bytes) => '0x${encodeHex(bytes)}').toList();
   }
 
   /// Encode topics to output
@@ -44,7 +44,7 @@ class TopicsCodec with Codec<List<String>> {
       }
 
       // Convert to bytes
-      return Uint8List.fromList(hex.decode(cleanHash));
+      return Uint8List.fromList(decodeHex(cleanHash));
     }).toList();
 
     // Use SequenceCodec to encode

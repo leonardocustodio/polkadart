@@ -1,4 +1,4 @@
-import 'package:substrate_metadata/metadata/metadata.dart';
+part of utils;
 
 /// Extension methods to provide a common interface for RuntimeMetadata variants
 extension RuntimeMetadataExtensions on RuntimeMetadata {

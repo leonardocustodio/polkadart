@@ -3,10 +3,7 @@
 // This code is part of hashlib 1.12.0
 // https://pub.dev/packages/hashlib
 
-import 'dart:async';
-import 'dart:convert';
-
-import 'hash_digest.dart';
+part of substrate_hashers;
 
 /// This sink allows adding arbitrary length byte arrays
 /// and produces a [HashDigest] on [close].

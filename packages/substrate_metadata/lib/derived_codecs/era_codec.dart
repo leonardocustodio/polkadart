@@ -1,7 +1,4 @@
-import 'dart:math';
-
-import 'package:convert/convert.dart';
-import 'package:polkadart_scale_codec/utils/utils.dart';
+part of derived_codecs;
 
 class Era {
   const Era._();
@@ -42,7 +39,7 @@ class Era {
   }
 
   (int, int) decode(String value) {
-    final bytes = hex.decode(value);
+    final bytes = decodeHex(value);
 
     if (bytes.first == 0) {
       return (0, 0);
@@ -66,7 +63,7 @@ class Era {
     final quantizeFactor = max(period >> 12, 1);
     final encoded = min(15, max(1, _getTrailingZeros(period) - 1)) | (phase ~/ quantizeFactor << 4);
 
-    return hex.encode(_littleIntToUint8List(encoded, 2));
+    return encodeHex(_littleIntToUint8List(encoded, 2));
   }
 
   String encodeMortal(int current, int period) {

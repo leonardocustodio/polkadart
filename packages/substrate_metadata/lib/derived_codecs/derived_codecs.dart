@@ -1,16 +1,42 @@
 library derived_codecs;
 
+import 'dart:math' show log, max, min, pow;
 import 'dart:typed_data';
-import 'package:convert/convert.dart';
-import 'package:polkadart_scale_codec/core/core.dart' show Codec;
-import 'package:polkadart_scale_codec/extended_codecs/length_prefixed_codec.dart'
-    show LengthPrefixedCodec;
-import 'package:polkadart_scale_codec/io/io.dart' show Input, Output, SizeTracker;
-import 'package:polkadart_scale_codec/primitives/primitives.dart'
-    show CompactCodec, SequenceCodec, U32Codec, U8ArrayCodec;
-import 'package:substrate_metadata/extensions/runtime_metadata_extensions.dart';
-import 'package:substrate_metadata/models/models.dart';
-import 'package:substrate_metadata/substrate_metadata.dart';
+import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
+    show
+        Codec,
+        LengthPrefixedCodec,
+        CompactCodec,
+        SequenceCodec,
+        U32Codec,
+        U8ArrayCodec,
+        Input,
+        Output,
+        SizeTracker,
+        decodeHex,
+        encodeHex;
+import 'package:substrate_metadata/metadata/metadata.dart'
+    show
+        PalletConstantMetadata,
+        PalletMetadata,
+        SignedExtensionMetadata,
+        TypeDefVariant,
+        VariantDef;
+import 'package:substrate_metadata/models/models.dart'
+    show
+        ConstantInfo,
+        EventInfo,
+        EventRecord,
+        ExtrinsicSignature,
+        FieldInfo,
+        Phase,
+        PhaseType,
+        RuntimeCall,
+        RuntimeEvent,
+        UncheckedExtrinsic;
+import 'package:substrate_metadata/registry/metadata_type_registry.dart'
+    show MetadataException, MetadataTypeRegistry;
+import 'package:substrate_metadata/utils/utils.dart';
 
 // Constants
 part 'constants/constants_codec.dart';
@@ -28,3 +54,5 @@ part 'extrinsics/extrinsics_codec.dart';
 part 'extrinsics/runtime_call_codec.dart';
 part 'extrinsics/signed_extensions_codec.dart';
 part 'extrinsics/unchecked_extrinsic_codec.dart';
+
+part 'era_codec.dart';

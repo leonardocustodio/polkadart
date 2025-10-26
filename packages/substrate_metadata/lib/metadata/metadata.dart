@@ -3,10 +3,7 @@ library metadata;
 import 'dart:math';
 import 'dart:typed_data' show Uint8List;
 
-import 'package:convert/convert.dart' show hex;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/extensions/hex_extension.dart';
-import 'package:substrate_metadata/extensions/runtime_metadata_extensions.dart';
 import 'package:substrate_metadata/substrate_hashers/substrate_hashers.dart';
 import 'package:substrate_metadata/utils/utils.dart';
 
