@@ -1,11 +1,4 @@
-// ignore_for_file: strict_top_level_inference
-
-import 'dart:math';
-import 'dart:typed_data';
-import 'package:polkadart/scale_codec.dart';
-import 'package:polkadart/substrate/substrate.dart';
-import 'package:substrate_metadata/extensions/runtime_metadata_extensions.dart';
-import 'package:substrate_metadata/substrate_metadata.dart';
+part of metadata;
 
 extension ListIntExtension on List<int> {
   Input toInput() {
@@ -576,7 +569,7 @@ class MetadataMerkleizer {
     };
   }
 
-  getPrimitive(Map<int, LookupValue> definitions, int frameId) {
+  dynamic getPrimitive(Map<int, LookupValue> definitions, int frameId) {
     final def = definitions[frameId]!.def;
 
     if (def.tag == 'primitive') {
@@ -882,7 +875,7 @@ class MetadataMerkleizer {
     );
   }
 
-  versionDecoder(Input extrinsic) {
+  ({bool signed, int version}) versionDecoder(Input extrinsic) {
     final value = extrinsic.readBytes(1).first;
 
     return (
@@ -969,7 +962,7 @@ class MetadataMerkleizer {
     }
   }
 
-  innerDecodeAndCollect(
+  void innerDecodeAndCollect(
       Input input, TypeRef typeRef, Map<int, List<int>> idToLookups, Set<int> collected) {
     if (typeRef.tag != 'perId') {
       skipTypeRef(typeRef, input);
@@ -1073,7 +1066,8 @@ class MetadataMerkleizer {
     return jsShift(from + 1, nLevels) - 1;
   }
 
-  getProofData(List<int> knownLeavesIdxs) {
+  ({List<int> leafIndexes, List<Uint8List> leaves, List<int> proofIndexes}) getProofData(
+      List<int> knownLeavesIdxs) {
     final knownLeaves = knownLeavesIdxs.map((idx) => lookupEncoded[idx]).toList();
 
     final startingIdx = lookupEncoded.length - 1;
