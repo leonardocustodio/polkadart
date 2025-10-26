@@ -1,6 +1,6 @@
 part of primitives;
 
-enum Primitives {
+enum PrimitivesEnum {
   Str,
   Bool,
   I8,

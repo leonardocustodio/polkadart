@@ -2,9 +2,8 @@ library utils;
 
 import 'dart:typed_data';
 import 'package:convert/convert.dart';
-import 'dart:core' as core;
 import 'dart:core';
-import 'package:polkadart_scale_codec/io/io.dart';
+import 'package:polkadart_scale_codec/io/io.dart' show GeneratorOutput, Output;
 
 part 'exceptions.dart';
 part 'functions.dart';

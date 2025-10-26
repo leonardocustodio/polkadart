@@ -12,7 +12,7 @@ class SetCodec with Codec<List<String>> {
     assertion(bitLength > 0, 'bitLength should be greater than 0.');
     assertion(bitLength <= 256, 'bitLength should be less than 256.');
 
-    final codec = Primitives.fromString('U$bitLength');
+    final codec = PrimitivesEnum.fromString('U$bitLength');
     final setIndex = codec.decode(input);
     final value = <String>[];
 
@@ -35,7 +35,7 @@ class SetCodec with Codec<List<String>> {
     assertion(bitLength > 0, 'bitLength should be greater than 0.');
     assertion(bitLength <= 256, 'bitLength should be less than 256.');
 
-    final codec = Primitives.fromString('U$bitLength');
+    final codec = PrimitivesEnum.fromString('U$bitLength');
     var setIndex = 0;
     for (var index = 0; index < values.length; index++) {
       final item = values[index];
