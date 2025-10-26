@@ -3,9 +3,8 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
 import 'package:polkadart/scale_codec.dart';
-import 'package:polkadart/substrate/era.dart';
-
-import '../polkadart.dart';
+import 'package:substrate_metadata/substrate_hashers/era_codec.dart' show Era;
+import 'package:substrate_metadata/substrate_hashers/substrate_hashers.dart' show Blake2bHasher;
 import 'abstract_payload.dart';
 
 class SigningPayload extends Payload {

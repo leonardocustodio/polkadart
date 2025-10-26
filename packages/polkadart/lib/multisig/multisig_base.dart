@@ -10,6 +10,7 @@ import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:ss58/ss58.dart';
 import 'package:substrate_metadata/models/models.dart';
+import 'package:substrate_metadata/substrate_hashers/substrate_hashers.dart' show Hasher;
 
 part './multisig_meta.dart';
 part './signatories.dart';
