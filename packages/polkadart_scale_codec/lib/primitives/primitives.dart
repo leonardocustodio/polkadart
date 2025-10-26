@@ -53,3 +53,4 @@ part 'null_codec.dart';
 part 'set.dart';
 part 'result.dart';
 part 'proxy.dart';
+part 'primitives_codec.dart';

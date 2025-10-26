@@ -4,8 +4,6 @@ version: 1.6.0
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/substrate_metadata
 repository: https://github.com/leonardocustodio/polkadart
 resolution: workspace
-# TODO: Change publish_to when ready to publish as polkadart_scale_codec is yet to be published and used new version here.
-publish_to: none
 
 environment:
   sdk: ^3.6.0
@@ -16,9 +14,7 @@ dependencies:
   json_schema: ^5.2.2
   pointycastle: ^4.0.0 # BSD-3-Clause
   polkadart: ^0.7.2
-  # TODO: Change to new version when after polkadart_scale_codec is published
-  polkadart_scale_codec: 
-    path: ../polkadart_scale_codec
+  polkadart_scale_codec: ^1.6.0
   utility: ^1.0.3
   cross_file: ^0.3.4+2 # BSD-3-Clause
 

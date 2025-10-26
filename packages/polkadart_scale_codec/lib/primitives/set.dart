@@ -12,11 +12,8 @@ class SetCodec with Codec<List<String>> {
     assertion(bitLength > 0, 'bitLength should be greater than 0.');
     assertion(bitLength <= 256, 'bitLength should be less than 256.');
 
-    final codec = Registry.getSimpleCodecs('U$bitLength');
-    assertion(codec != null, 'codec should not be null.');
-
-    final setIndex = codec!.decode(input);
-
+    final codec = Primitives.fromString('U$bitLength');
+    final setIndex = codec.decode(input);
     final value = <String>[];
 
     /// Simplify above code with dart's bit operation
@@ -38,9 +35,7 @@ class SetCodec with Codec<List<String>> {
     assertion(bitLength > 0, 'bitLength should be greater than 0.');
     assertion(bitLength <= 256, 'bitLength should be less than 256.');
 
-    final codec = Registry.getSimpleCodecs('U$bitLength');
-    assertion(codec != null, 'codec should not be null.');
-
+    final codec = Primitives.fromString('U$bitLength');
     var setIndex = 0;
     for (var index = 0; index < values.length; index++) {
       final item = values[index];
@@ -48,6 +43,6 @@ class SetCodec with Codec<List<String>> {
         setIndex += 1 << index;
       }
     }
-    codec!.encodeTo(setIndex, output);
+    codec.encodeTo(setIndex, output);
   }
 }
