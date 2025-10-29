@@ -1,6 +1,7 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/models/models.dart';
-import 'package:substrate_metadata/substrate_metadata.dart';
+import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
+import 'package:substrate_metadata/metadata/metadata.dart';
+import 'package:substrate_metadata/models/models.dart' show PortableRegistry;
 import 'package:substrate_metadata/utils/utils.dart';
 
 /// Type registry that works directly with Substrate metadata
@@ -62,6 +63,8 @@ class MetadataTypeRegistry {
 
     _buildPalletIndices();
   }
+
+  ChainInfo buildChainInfo() => ChainInfo(this);
 
   /// Extract PortableRegistry from versioned metadata
   static PortableRegistry _extractTypes(RuntimeMetadataPrefixed prefixed) {

@@ -47,6 +47,8 @@ class RuntimeMetadataPrefixed {
     return codec.decode(input);
   }
 
+  MetadataTypeRegistry buildRegistry() => MetadataTypeRegistry(this);
+
   /// Check if the magic number is valid
   bool get isValidMagicNumber => magicNumber == metaReserved;
 
