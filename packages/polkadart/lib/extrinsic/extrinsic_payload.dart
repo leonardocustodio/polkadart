@@ -5,7 +5,7 @@ import 'package:polkadart/extrinsic/signature_type.dart';
 import 'package:polkadart/extrinsic/signed_extensions/signed_extensions_abstract.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart' as keyring;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/substrate_hashers/era_codec.dart' show Era;
+import 'package:substrate_metadata/derived_codecs/derived_codecs.dart' show Era;
 
 import 'abstract_payload.dart';
 

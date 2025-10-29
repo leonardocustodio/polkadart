@@ -4,12 +4,9 @@ part of apis;
 class StateApi<P extends Provider> {
   final P _provider;
 
-  /// Metadata used to decode events.
-  RuntimeMetadata? runtimeMetadata;
-
   StateApi(this._provider);
 
-  late RuntimeMetadata latestRuntimeMetadata;
+  late final RuntimeMetadataPrefixed latestRuntimeMetadataPrefixed;
 
   /// Call a contract at a block's state.
   Future<Uint8List> call(String method, Uint8List bytes, {BlockHash? at}) async {
@@ -134,15 +131,8 @@ class StateApi<P extends Provider> {
     return ReadProof.fromJson(response.result);
   }
 
-  /// Returns the runtime metadata
-  Future<RuntimeMetadata> getMetadata({BlockHash? at}) async {
-    final List<String> params = at != null ? ['0x${hex.encode(at)}'] : const [];
-    final response = await _provider.send('state_getMetadata', params);
-    return RuntimeMetadata.fromHex(response.result);
-  }
-
   /// Returns typed runtime metadata
-  Future<RuntimeMetadataPrefixed> getTypedMetadata({BlockHash? at}) async {
+  Future<RuntimeMetadataPrefixed> getMetadata({BlockHash? at}) async {
     final List<String> params = at != null ? ['0x${hex.encode(at)}'] : const [];
     final response = await _provider.send('state_getMetadata', params);
     return RuntimeMetadataPrefixed.fromHex(response.result);
@@ -169,14 +159,16 @@ class StateApi<P extends Provider> {
   }
 
   Future<StreamSubscription<Events>> subscribeEvents(BlockHash at, Function(Events) onData) async {
-    latestRuntimeMetadata = await getMetadata();
+    latestRuntimeMetadataPrefixed = await getMetadata();
+    final ChainInfo chainInfo =
+        ChainInfo.fromRuntimeMetadataPrefixed(latestRuntimeMetadataPrefixed);
     final subscription = await _provider.subscribe('state_subscribeStorage', [
       ['0x${hex.encode(at)}']
     ], onCancel: (subscription) async {
       await _provider.send('state_unsubscribeStorage', [subscription]);
     });
     return subscription.stream.map((response) {
-      return Events.fromJson(response.result, latestRuntimeMetadata.chainInfo);
+      return Events.fromJson(response.result, chainInfo);
     }).listen(onData);
   }
 

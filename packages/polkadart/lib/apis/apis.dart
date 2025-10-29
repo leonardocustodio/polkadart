@@ -14,12 +14,12 @@ import 'package:polkadart/polkadart.dart'
         PeerInfo,
         Provider,
         ReadProof,
-        RuntimeMetadata,
         RuntimeVersion,
         StorageChangeSet,
         StorageData,
         StorageKey,
         SyncState;
+import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
 import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadataPrefixed;
 
 part './author.dart';

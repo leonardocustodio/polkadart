@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/models/models.dart';
+import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
 
 class Transfers {
   final String method;

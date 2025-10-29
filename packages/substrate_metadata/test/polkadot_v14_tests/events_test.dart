@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/derived_codecs/derived_codecs.dart';
-import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';

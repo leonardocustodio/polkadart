@@ -9,6 +9,7 @@ import 'package:polkadart/primitives/transfers.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:ss58/ss58.dart';
+import 'package:substrate_metadata/metadata/metadata.dart' show RuntimeMetadataPrefixed;
 import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/substrate_hashers/substrate_hashers.dart' show Hasher;
 
