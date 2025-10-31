@@ -39,6 +39,12 @@ class SimpleEnumCodec<A> with Codec<A> {
 
     return value;
   }
+
+  @override
+  bool isSizeZero() {
+    // SimpleEnum always encodes at least 1 byte for the index
+    return false;
+  }
 }
 
 class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
@@ -97,5 +103,11 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
     final palletName = _keyedName[index]!;
 
     return MapEntry(palletName, map[palletName]!.decode(input));
+  }
+
+  @override
+  bool isSizeZero() {
+    // ComplexEnum always encodes at least 1 byte for the index
+    return false;
   }
 }

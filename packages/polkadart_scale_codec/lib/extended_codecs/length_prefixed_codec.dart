@@ -39,4 +39,11 @@ class LengthPrefixedCodec<T> with Codec<T> {
     final innerSize = inner.sizeHint(value);
     return CompactCodec.codec.sizeHint(innerSize) + innerSize;
   }
+
+  @override
+  bool isSizeZero() {
+    // A length-prefixed codec always has at least the compact-encoded length prefix,
+    // even if the inner codec produces zero bytes (length 0 = 0x00, which is 1 byte)
+    return false;
+  }
 }

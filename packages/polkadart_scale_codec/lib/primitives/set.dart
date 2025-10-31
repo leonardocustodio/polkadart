@@ -45,4 +45,10 @@ class SetCodec with Codec<List<String>> {
     }
     codec.encodeTo(setIndex, output);
   }
+
+  @override
+  bool isSizeZero() {
+    // SetCodec always encodes to a fixed size UX integer based on bitLength
+    return false;
+  }
 }

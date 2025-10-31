@@ -23,6 +23,12 @@ class U64Codec with Codec<BigInt> {
   int sizeHint(BigInt value) {
     return 8;
   }
+
+  @override
+  bool isSizeZero() {
+    // U64 always encodes to 8 bytes
+    return false;
+  }
 }
 
 class U64SequenceCodec with Codec<List<BigInt>> {
@@ -51,6 +57,12 @@ class U64SequenceCodec with Codec<List<BigInt>> {
   @override
   int sizeHint(List<BigInt> value) {
     return CompactCodec.codec.sizeHint(value.length) + value.length * 8;
+  }
+
+  @override
+  bool isSizeZero() {
+    // U64Sequence always has a length prefix (compact-encoded)
+    return false;
   }
 }
 
@@ -81,5 +93,11 @@ class U64ArrayCodec with Codec<List<BigInt>> {
   @override
   int sizeHint(List<BigInt> value) {
     return length * 8;
+  }
+
+  @override
+  bool isSizeZero() {
+    // U64Array is size zero only if length is 0
+    return length == 0;
   }
 }
