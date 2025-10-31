@@ -57,4 +57,7 @@ class TopicsCodec with Codec<List<String>> {
     final byteArrays = List.generate(value.length, (_) => Uint8List(HASH_SIZE));
     return _codec.sizeHint(byteArrays);
   }
+
+  @override
+  bool isSizeZero() => _codec.isSizeZero();
 }

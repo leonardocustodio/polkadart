@@ -97,4 +97,13 @@ class $StorageEntryMetadata with Codec<StorageEntryMetadata> {
     size += SequenceCodec(StrCodec.codec).sizeHint(value.docs);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() &&
+        StorageEntryModifier.codec.isSizeZero() &&
+        StorageEntryType.codec.isSizeZero() &&
+        U8SequenceCodec.codec.isSizeZero() &&
+        SequenceCodec(StrCodec.codec).isSizeZero();
+  }
 }

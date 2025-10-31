@@ -91,4 +91,12 @@ class $VariantDef with Codec<VariantDef> {
     size += SequenceCodec(StrCodec.codec).sizeHint(value.docs);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() &&
+        SequenceCodec(Field.codec).isSizeZero() &&
+        U8Codec.codec.isSizeZero() &&
+        SequenceCodec(StrCodec.codec).isSizeZero();
+  }
 }

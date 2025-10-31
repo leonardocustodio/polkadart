@@ -71,4 +71,10 @@ class UncheckedExtrinsicCodec with Codec<UncheckedExtrinsic> {
     size += _callCodec.sizeHint(value.call);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // This class directly encodes a version byte
+    return false;
+  }
 }

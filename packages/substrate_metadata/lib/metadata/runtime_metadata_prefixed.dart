@@ -123,4 +123,10 @@ class $RuntimeMetadataPrefixed with Codec<RuntimeMetadataPrefixed> {
 
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // This class directly encodes magic number (U32) + version byte (U8)
+    return false;
+  }
 }

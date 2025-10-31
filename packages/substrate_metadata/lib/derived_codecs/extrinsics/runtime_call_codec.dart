@@ -112,4 +112,10 @@ class RuntimeCallCodec with Codec<RuntimeCall> {
 
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // This class directly encodes pallet index + call index
+    return false;
+  }
 }

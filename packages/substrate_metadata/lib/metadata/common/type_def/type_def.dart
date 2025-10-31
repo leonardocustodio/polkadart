@@ -131,4 +131,7 @@ class $TypeDef with Codec<TypeDef> {
 
     return size;
   }
+
+  @override
+  bool isSizeZero() => false; // Always encodes variant index byte
 }

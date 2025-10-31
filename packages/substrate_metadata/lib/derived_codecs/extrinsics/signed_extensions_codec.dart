@@ -50,4 +50,7 @@ class SignedExtensionsCodec with Codec<Map<String, dynamic>> {
 
     return size;
   }
+
+  @override
+  bool isSizeZero() => codecs.every((codec) => codec.isSizeZero());
 }

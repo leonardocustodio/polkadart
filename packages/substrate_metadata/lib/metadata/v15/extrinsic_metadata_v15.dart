@@ -63,4 +63,11 @@ class $ExtrinsicMetadataV15 with Codec<ExtrinsicMetadataV15> {
     size += SequenceCodec(SignedExtensionMetadata.codec).sizeHint(value.signedExtensions);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return U8Codec.codec.isSizeZero() &&
+        CompactCodec.codec.isSizeZero() &&
+        SequenceCodec(SignedExtensionMetadata.codec).isSizeZero();
+  }
 }

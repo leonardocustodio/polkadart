@@ -53,4 +53,7 @@ class $StorageHasherEnum with Codec<StorageHasherEnum> {
 
   @override
   int sizeHint(StorageHasherEnum value) => 1;
+
+  @override
+  bool isSizeZero() => false; // Always encodes 1 byte
 }

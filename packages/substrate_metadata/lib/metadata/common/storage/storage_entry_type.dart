@@ -85,6 +85,9 @@ class $StorageEntryType with Codec<StorageEntryType> {
 
     return size;
   }
+
+  @override
+  bool isSizeZero() => false; // Always encodes variant index byte
 }
 
 /// Plain storage value (single value, no key)

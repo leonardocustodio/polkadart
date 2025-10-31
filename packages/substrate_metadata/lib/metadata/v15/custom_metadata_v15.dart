@@ -34,6 +34,11 @@ class $CustomMetadataV15 with Codec<CustomMetadataV15> {
     return BTreeMapCodec(keyCodec: StrCodec.codec, valueCodec: CustomMetadataV15Value.codec)
         .sizeHint(value.map);
   }
+
+  @override
+  bool isSizeZero() =>
+      BTreeMapCodec(keyCodec: StrCodec.codec, valueCodec: CustomMetadataV15Value.codec)
+          .isSizeZero();
 }
 
 class CustomMetadataV15Value {
@@ -75,4 +80,7 @@ class $CustomMetadataV15Value with Codec<CustomMetadataV15Value> {
     size += U8SequenceCodec.codec.sizeHint(value.value);
     return size;
   }
+
+  @override
+  bool isSizeZero() => CompactCodec.codec.isSizeZero() && U8SequenceCodec.codec.isSizeZero();
 }

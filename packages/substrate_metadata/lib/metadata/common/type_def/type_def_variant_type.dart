@@ -46,4 +46,7 @@ class $TypeDefVariant with Codec<TypeDefVariant> {
   int sizeHint(TypeDefVariant value) {
     return SequenceCodec(VariantDef.codec).sizeHint(value.variants);
   }
+
+  @override
+  bool isSizeZero() => SequenceCodec(VariantDef.codec).isSizeZero();
 }

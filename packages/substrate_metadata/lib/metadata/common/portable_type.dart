@@ -47,4 +47,7 @@ class $PortableType with Codec<PortableType> {
     size += PortableTypeDef.codec.sizeHint(value.type);
     return size;
   }
+
+  @override
+  bool isSizeZero() => CompactCodec.codec.isSizeZero() && PortableTypeDef.codec.isSizeZero();
 }

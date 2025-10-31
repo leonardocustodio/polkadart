@@ -92,4 +92,12 @@ class $PalletConstantMetadata with Codec<PalletConstantMetadata> {
     size += SequenceCodec(StrCodec.codec).sizeHint(value.docs);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() &&
+        CompactCodec.codec.isSizeZero() &&
+        U8SequenceCodec.codec.isSizeZero() &&
+        SequenceCodec(StrCodec.codec).isSizeZero();
+  }
 }

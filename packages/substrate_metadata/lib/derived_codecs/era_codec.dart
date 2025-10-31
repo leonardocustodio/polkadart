@@ -56,22 +56,29 @@ class Era {
   }
 
   String encode(int phase, int period) {
+    return encodeHex(encodeToBytes(phase, period));
+  }
+
+  Uint8List encodeToBytes(int phase, int period) {
     if (phase == 0 && period == 0) {
-      return '00';
+      return Uint8List.fromList([0x00]);
     }
 
     final quantizeFactor = max(period >> 12, 1);
     final encoded = min(15, max(1, _getTrailingZeros(period) - 1)) | (phase ~/ quantizeFactor << 4);
 
-    return encodeHex(_littleIntToUint8List(encoded, 2));
+    return Uint8List.fromList(_littleIntToUint8List(encoded, 2));
   }
 
-  String encodeMortal(int current, int period) {
+  Uint8List encodeMortalToBytes(final int current, final int period) {
     final calPeriod = pow(2, (log(period) / log(2)).ceil());
     final phase = current % min(max(calPeriod, 4), 1 << 16);
     final quantizeFactor = max(1, period >> 12);
     final quantizedPhase = phase / quantizeFactor * quantizeFactor;
+    return encodeToBytes(quantizedPhase.toInt(), calPeriod as int);
+  }
 
-    return encode(quantizedPhase.toInt(), calPeriod as int);
+  String encodeMortal(int current, int period) {
+    return encodeHex(encodeMortalToBytes(current, period));
   }
 }

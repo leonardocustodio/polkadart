@@ -94,4 +94,9 @@ class $SignedExtensionMetadataCodec with Codec<SignedExtensionMetadata> {
     size += CompactCodec.codec.sizeHint(value.additionalSigned);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() && CompactCodec.codec.isSizeZero();
+  }
 }

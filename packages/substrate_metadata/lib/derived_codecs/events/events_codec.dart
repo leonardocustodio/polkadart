@@ -69,6 +69,13 @@ class EventsRecordCodec with Codec<List<EventRecord>> {
     return size;
   }
 
+  @override
+  bool isSizeZero() {
+    // This class directly encodes a compact length prefix
+    // So it's never zero-size
+    return false;
+  }
+
   /// Decode a single EventRecord
   EventRecord _decodeEventRecord(Input input) {
     // EventRecord structure:

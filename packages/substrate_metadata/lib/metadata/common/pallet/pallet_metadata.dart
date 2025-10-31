@@ -125,4 +125,15 @@ class $PalletMetadata with Codec<PalletMetadata> {
     size += U8Codec.codec.sizeHint(value.index);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() &&
+        OptionCodec(PalletStorageMetadata.codec).isSizeZero() &&
+        OptionCodec(PalletCallMetadata.codec).isSizeZero() &&
+        OptionCodec(PalletEventMetadata.codec).isSizeZero() &&
+        SequenceCodec(PalletConstantMetadata.codec).isSizeZero() &&
+        OptionCodec(PalletErrorMetadata.codec).isSizeZero() &&
+        U8Codec.codec.isSizeZero();
+  }
 }

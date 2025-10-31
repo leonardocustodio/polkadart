@@ -17,4 +17,7 @@ class ExtrinsicsCodec with Codec<List<UncheckedExtrinsic>> {
 
   @override
   int sizeHint(final List<UncheckedExtrinsic> value) => _codec.sizeHint(value);
+
+  @override
+  bool isSizeZero() => _codec.isSizeZero();
 }
