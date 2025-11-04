@@ -88,4 +88,9 @@ class $HealthCodec with Codec<Health> {
     size += BoolCodec.codec.sizeHint(value.shouldHavePeers);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return U32Codec.codec.isSizeZero() && BoolCodec.codec.isSizeZero();
+  }
 }

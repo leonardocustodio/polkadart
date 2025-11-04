@@ -98,4 +98,9 @@ class PeerInfoCodec<H, N> with Codec<PeerInfo<H, N>> {
     size += numberCodec.sizeHint(value.bestNumber);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() && hashCodec.isSizeZero() && numberCodec.isSizeZero();
+  }
 }

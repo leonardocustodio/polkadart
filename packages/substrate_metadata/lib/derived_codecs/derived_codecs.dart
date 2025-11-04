@@ -15,6 +15,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         SizeTracker,
         decodeHex,
         encodeHex;
+import 'package:polkadart_scale_codec/primitives/primitives.dart' show NullCodec;
 import 'package:substrate_metadata/metadata/metadata.dart'
     show
         PalletConstantMetadata,

@@ -130,6 +130,12 @@ class $ChainTypeCodec with Codec<ChainType> {
         throw Exception('ChainType: Unsupported "$value" of type "${value.runtimeType}"');
     }
   }
+
+  @override
+  bool isSizeZero() {
+    // ChainType always encodes with a variant index (U8), so size is never zero
+    return false;
+  }
 }
 
 /// A development chain that runs mainly on one node.

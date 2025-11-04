@@ -5,7 +5,7 @@ class Era {
 
   static const Era codec = Era._();
 
-  int _getTrailingZeros(int number) {
+  int _getTrailingZeros(final int number) {
     final binary = number.toRadixString(2);
     int index = 0;
 
@@ -16,14 +16,14 @@ class Era {
     return index;
   }
 
-  String _flipBits(String bitString) {
+  String _flipBits(final String bitString) {
     final length = bitString.length;
 
     if (length % 8 != 0) {
       throw Exception('Bit string length must be a multiple of 8');
     }
 
-    var newString = '';
+    String newString = '';
     for (var i = length; i >= 0; i -= 8) {
       newString += bitString.substring(i, (i + 8).clamp(0, length));
     }
@@ -31,16 +31,14 @@ class Era {
     return newString;
   }
 
-  List<int> _littleIntToUint8List(int value, int length) {
+  List<int> _littleIntToUint8List(final int value, final int length) {
     final String val = value.toRadixString(2).padLeft(length * 8, '0');
     final String flippedBits = _flipBits(val);
     final gmp = BigInt.parse(flippedBits, radix: 2).toRadixString(16).padLeft(length * 2, '0');
     return decodeHex(gmp).toList(growable: false);
   }
 
-  (int, int) decode(String value) {
-    final bytes = decodeHex(value);
-
+  (int, int) decode(final Uint8List bytes) {
     if (bytes.first == 0) {
       return (0, 0);
     }
@@ -51,34 +49,32 @@ class Era {
     final period = 2 << (encoded % (1 << 4));
     final quantizeFactor = max(period >> 12, 1);
     final phase = (encoded >> 4) * quantizeFactor;
-
     return (phase, period);
   }
 
-  String encode(int phase, int period) {
+  String encode(final int phase, final int period) {
     return encodeHex(encodeToBytes(phase, period));
   }
 
-  Uint8List encodeToBytes(int phase, int period) {
+  Uint8List encodeToBytes(final int phase, final int period) {
     if (phase == 0 && period == 0) {
       return Uint8List.fromList([0x00]);
     }
 
     final quantizeFactor = max(period >> 12, 1);
     final encoded = min(15, max(1, _getTrailingZeros(period) - 1)) | (phase ~/ quantizeFactor << 4);
-
     return Uint8List.fromList(_littleIntToUint8List(encoded, 2));
   }
 
-  Uint8List encodeMortalToBytes(final int current, final int period) {
-    final calPeriod = pow(2, (log(period) / log(2)).ceil());
+  num getCalPeriod(final int period) {
+    return pow(2, (log(period) / log(2)).ceil());
+  }
+
+  Uint8List encodeMortal(final int current, final int period) {
+    final calPeriod = getCalPeriod(period);
     final phase = current % min(max(calPeriod, 4), 1 << 16);
     final quantizeFactor = max(1, period >> 12);
     final quantizedPhase = phase / quantizeFactor * quantizeFactor;
     return encodeToBytes(quantizedPhase.toInt(), calPeriod as int);
-  }
-
-  String encodeMortal(int current, int period) {
-    return encodeHex(encodeMortalToBytes(current, period));
   }
 }
