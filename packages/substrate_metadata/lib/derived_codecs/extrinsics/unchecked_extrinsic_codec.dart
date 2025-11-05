@@ -45,7 +45,10 @@ class UncheckedExtrinsicCodec with Codec<UncheckedExtrinsic> {
   @override
   void encodeTo(UncheckedExtrinsic value, Output output) {
     final int extrinsicVersion = value.version;
-    final int versionByte = extrinsicVersion | 128;
+    // Only set the signed bit (0x80) if there's a signature
+    final int versionByte = value.signature != null
+        ? (extrinsicVersion | 0x80)
+        : extrinsicVersion;
 
     output.pushByte(versionByte);
 
