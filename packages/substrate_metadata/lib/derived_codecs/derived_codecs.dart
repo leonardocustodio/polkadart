@@ -16,28 +16,7 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart'
         decodeHex,
         encodeHex;
 import 'package:polkadart_scale_codec/primitives/primitives.dart' show NullCodec;
-import 'package:substrate_metadata/metadata/metadata.dart'
-    show
-        PalletConstantMetadata,
-        PalletMetadata,
-        SignedExtensionMetadata,
-        TypeDefVariant,
-        VariantDef;
-import 'package:substrate_metadata/models/models.dart'
-    show
-        ConstantInfo,
-        EventInfo,
-        EventRecord,
-        ExtrinsicSignature,
-        FieldInfo,
-        Phase,
-        PhaseType,
-        RuntimeCall,
-        RuntimeEvent,
-        UncheckedExtrinsic;
-import 'package:substrate_metadata/registry/metadata_type_registry.dart'
-    show MetadataException, MetadataTypeRegistry;
-import 'package:substrate_metadata/utils/utils.dart';
+import 'package:substrate_metadata/substrate_metadata.dart';
 
 // Constants
 part 'constants/constants_codec.dart';
