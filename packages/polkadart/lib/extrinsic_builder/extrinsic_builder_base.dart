@@ -1,14 +1,18 @@
 library extrinsic_builder;
 
+import 'dart:async' show StreamSubscription;
 import 'dart:typed_data' show Uint8List;
 
 import 'package:equatable/equatable.dart' show Equatable;
-import 'package:polkadart/apis/apis.dart' show ChainDataFetcher, SystemApi;
+import 'package:polkadart/apis/apis.dart'
+    show AuthorApi, ChainDataFetcher, ExtrinsicListener, SystemApi;
+import 'package:polkadart/models/models.dart' show ChainData;
+import 'package:polkadart/primitives/primitives.dart' show ExtrinsicStatus;
 import 'package:polkadart/provider.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart' show KeyPair;
 import 'package:polkadart_scale_codec/io/io.dart' show ByteOutput, Input, Output;
 import 'package:polkadart_scale_codec/primitives/primitives.dart' show CompactCodec, NullCodec;
-import 'package:polkadart_scale_codec/utils/utils.dart' show decodeHex;
+import 'package:polkadart_scale_codec/utils/utils.dart' show decodeHex, encodeHex;
 import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
 import 'package:substrate_metadata/derived_codecs/derived_codecs.dart' show Era;
 import 'package:substrate_metadata/metadata/metadata.dart'

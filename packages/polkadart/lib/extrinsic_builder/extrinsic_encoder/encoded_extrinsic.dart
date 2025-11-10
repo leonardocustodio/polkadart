@@ -1,7 +1,7 @@
 part of extrinsic_builder;
 
 /// Result of encoding an extrinsic
-class EncodedExtrinsic {
+class EncodedExtrinsic extends Equatable {
   /// The complete extrinsic bytes (with length prefix)
   final Uint8List bytes;
 
@@ -18,19 +18,26 @@ class EncodedExtrinsic {
   });
 
   /// Get hex representation
-  String toHex() => '0x${bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}';
+  String toHex() => '0x${encodeHex(bytes)}';
 
   /// Get hash as hex
-  String get hashHex => '0x${hash.map((b) => b.toRadixString(16).padLeft(2, '0')).join()}';
+  String get hashHex => '0x${encodeHex(hash)}';
 
   /// Submit this extrinsic to a node
-  Future<String> submit(dynamic provider) async {
-    // This would be implemented to call author_submitExtrinsic RPC
-    return await provider.send('author_submitExtrinsic', [toHex()]);
+  Future<String> submit(final Provider provider) async {
+    final authorApi = AuthorApi(provider);
+    final result = await authorApi.submitExtrinsic(bytes);
+    return '0x${encodeHex(result)}';
+  }
+
+  Future<StreamSubscription<ExtrinsicStatus>> submitAndWatch(
+      final Provider provider, final ExtrinsicListener onStatusChange) async {
+    final authorApi = AuthorApi(provider);
+    return await authorApi.submitAndWatchExtrinsic(bytes, onStatusChange);
   }
 
   /// Create from SignedData
-  static EncodedExtrinsic fromSignedData(ChainInfo chainInfo, SignedData signedData) {
+  static EncodedExtrinsic fromSignedData(final ChainInfo chainInfo, final SignedData signedData) {
     final encoder = ExtrinsicEncoder(chainInfo);
     final bytes = encoder.encode(signedData);
     final hash = Hasher.blake2b256.hash(bytes);
@@ -42,4 +49,7 @@ class EncodedExtrinsic {
       info: info,
     );
   }
+
+  @override
+  List<Object> get props => [bytes, hash, info];
 }

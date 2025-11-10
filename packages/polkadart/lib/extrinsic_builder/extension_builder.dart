@@ -135,19 +135,17 @@ class ExtensionBuilder {
         case 'CheckEra':
         case 'CheckMortality':
           // Both value and additional signed
+          // Note: Era is a special type that uses custom encoding, not standard SCALE enum
+          // We store the pre-encoded bytes here, and the extrinsic encoder will write them directly
           if (_eraPeriod == 0) {
-            // Immortal era
-            extensions[identifier] = MapEntry('Immortal', 0);
+            // Immortal era - single 0x00 byte
+            extensions[identifier] = Era.codec.encodeToBytes(0, 0);
             if (_genesisHash != null) {
               additionalSigned[identifier] = _genesisHash;
             }
           } else if (_blockNumber != null && _blockHash != null) {
-            // Mortal era
-            final period = Era.codec.getCalPeriod(_eraPeriod);
-            final encoded = Era.codec.encodeMortal(_blockNumber!, _eraPeriod);
-
-            // The value structure matches the enum variant
-            extensions[identifier] = MapEntry('Mortal$period', encoded);
+            // Mortal era - 2 bytes using Era's special encoding
+            extensions[identifier] = Era.codec.encodeMortal(_blockNumber!, _eraPeriod);
             additionalSigned[identifier] = _blockHash;
           }
           break;
@@ -371,18 +369,16 @@ class ExtensionBuilder {
 
     if (extName == null) return;
 
+    // Era is a special type that uses custom encoding, not standard SCALE enum
     if (_eraPeriod == 0) {
-      // Immortal
-      extensions[extName] = MapEntry('Immortal', 0);
+      // Immortal - single 0x00 byte
+      extensions[extName] = Era.codec.encodeToBytes(0, 0);
       if (_genesisHash != null) {
         additionalSigned[extName] = _genesisHash;
       }
     } else if (_blockNumber != null && _blockHash != null) {
-      // Mortal
-      final period = Era.codec.getCalPeriod(_eraPeriod);
-      final encoded = Era.codec.encodeMortal(_blockNumber!, _eraPeriod);
-
-      extensions[extName] = MapEntry('Mortal$period', encoded);
+      // Mortal - 2 bytes using Era's special encoding
+      extensions[extName] = Era.codec.encodeMortal(_blockNumber!, _eraPeriod);
       additionalSigned[extName] = _blockHash;
     }
   }

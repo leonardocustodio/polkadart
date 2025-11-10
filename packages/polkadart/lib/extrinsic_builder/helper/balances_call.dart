@@ -32,22 +32,22 @@ abstract class BalancesCallBuilder extends CallBuilder {
 /// Balances.transfer_allow_death call (commonly just "transfer")
 class BalancesTransfer extends BalancesCallBuilder {
   final MultiAddress dest; // Will be encoded as MultiAddress
-  final BigInt value;
+  final BigInt amount;
 
   BalancesTransfer({
     required this.dest,
-    required this.value,
+    required this.amount,
   });
 
   /// Create with AccountId32 as destination
   factory BalancesTransfer.toAccountId({
-    required Uint8List accountId,
-    required BigInt value,
+    required Uint8List receiverAccountId,
+    required BigInt amount,
   }) {
     // MultiAddress::Id variant (index 0)
     return BalancesTransfer(
-      dest: MultiAddress.id(accountId),
-      value: value,
+      dest: MultiAddress.id(receiverAccountId),
+      amount: amount,
     );
   }
 
@@ -57,27 +57,27 @@ class BalancesTransfer extends BalancesCallBuilder {
   @override
   Map<String, dynamic> buildArgs() => {
         'dest': dest.toJson(),
-        'value': value,
+        'value': amount,
       };
 }
 
 /// Balances.transfer_keep_alive call
 class BalancesTransferKeepAlive extends BalancesCallBuilder {
   final MultiAddress dest;
-  final BigInt value;
+  final BigInt amount;
 
   BalancesTransferKeepAlive({
     required this.dest,
-    required this.value,
+    required this.amount,
   });
 
   factory BalancesTransferKeepAlive.toAccountId({
-    required Uint8List accountId,
-    required BigInt value,
+    required Uint8List receiverAccountId,
+    required BigInt amount,
   }) {
     return BalancesTransferKeepAlive(
-      dest: MultiAddress.id(accountId),
-      value: value,
+      dest: MultiAddress.id(receiverAccountId),
+      amount: amount,
     );
   }
 
@@ -87,7 +87,7 @@ class BalancesTransferKeepAlive extends BalancesCallBuilder {
   @override
   Map<String, dynamic> buildArgs() => {
         'dest': dest.toJson(),
-        'value': value,
+        'value': amount,
       };
 }
 
@@ -102,11 +102,11 @@ class BalancesTransferAll extends BalancesCallBuilder {
   });
 
   factory BalancesTransferAll.toAccountId({
-    required Uint8List accountId,
+    required Uint8List receiverAccountId,
     required bool keepAlive,
   }) {
     return BalancesTransferAll(
-      dest: MultiAddress.id(accountId),
+      dest: MultiAddress.id(receiverAccountId),
       keepAlive: keepAlive,
     );
   }
@@ -125,12 +125,12 @@ class BalancesTransferAll extends BalancesCallBuilder {
 class BalancesForceTransfer extends BalancesCallBuilder {
   final dynamic source;
   final MultiAddress dest;
-  final BigInt value;
+  final BigInt amount;
 
   BalancesForceTransfer({
     required this.source,
     required this.dest,
-    required this.value,
+    required this.amount,
   });
 
   @override
@@ -140,7 +140,7 @@ class BalancesForceTransfer extends BalancesCallBuilder {
   Map<String, dynamic> buildArgs() => {
         'source': source,
         'dest': dest.toJson(),
-        'value': value,
+        'value': amount,
       };
 }
 

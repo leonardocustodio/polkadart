@@ -3,7 +3,7 @@ library apis;
 import 'dart:typed_data' show Uint8List;
 import 'dart:async' show Future, StreamSubscription;
 import 'package:convert/convert.dart' show hex;
-import 'package:polkadart/models/models.dart' show BlockHeader;
+import 'package:polkadart/models/models.dart' show BlockHeader, ChainData;
 import 'package:polkadart/primitives/primitives.dart'
     show
         BlockHash,

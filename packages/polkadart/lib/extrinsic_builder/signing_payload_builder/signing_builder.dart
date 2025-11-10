@@ -76,7 +76,20 @@ class SigningBuilder {
       }
 
       try {
-        codec.encodeTo(value, output);
+        // Special handling for CheckMortality/CheckEra
+        // Era uses custom encoding (1 or 2 bytes), not standard SCALE enum
+        if (ext.identifier == 'CheckMortality' || ext.identifier == 'CheckEra') {
+          if (value is Uint8List) {
+            // Pre-encoded era bytes from Era.codec
+            output.write(value);
+          } else {
+            throw SigningError(
+                'CheckMortality/CheckEra value must be Uint8List (pre-encoded era bytes)');
+          }
+        } else {
+          // Use standard codec for other extensions
+          codec.encodeTo(value, output);
+        }
       } catch (e) {
         throw SigningError('Failed to encode extension ${ext.identifier}: $e\n'
             'Value: $value\n'

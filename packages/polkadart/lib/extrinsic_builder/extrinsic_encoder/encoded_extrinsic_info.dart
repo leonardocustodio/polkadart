@@ -1,7 +1,7 @@
 part of extrinsic_builder;
 
 /// Information about an encoded extrinsic
-class EncodedExtrinsicInfo {
+class EncodedExtrinsicInfo extends Equatable {
   final int totalSize;
   final int lengthPrefixSize;
   final int versionByteSize;
@@ -45,4 +45,18 @@ class EncodedExtrinsicInfo {
       'isSigned': isSigned,
     };
   }
+
+  @override
+  List<Object> get props => [
+        totalSize,
+        lengthPrefixSize,
+        versionByteSize,
+        addressSize,
+        signatureSize,
+        extensionSize,
+        callDataSize,
+        hash,
+        signatureType,
+        isSigned,
+      ];
 }

@@ -1,258 +1,142 @@
 part of extrinsic_builder;
 
-/// Main builder for constructing extrinsics
-///
-/// This is the primary API for creating and signing blockchain transactions.
-/// It orchestrshow ChainDataFetcher, SystemApi, SigningBuilder, and ExtrinsicEncoder
-/// to provide a clean, fluent interface for extrinsic construction.
+// Type for signing callback
+typedef SigningCallback = Future<Uint8List> Function(Uint8List payload);
+
 class ExtrinsicBuilder {
   final ChainInfo chainInfo;
   final Uint8List callData;
-  final Provider? provider; // Optional for auto-fetching
-  final String? signerAddress; // For fetching nonce
+  final Uint8List _blockHash;
+  final int _blockNumber;
+  final int _eraPeriod;
+  final BigInt _tip;
+
+  // Extension builder for all config
   final ExtensionBuilder _extensionBuilder;
 
-  // Track what user has explicitly set
-  final Set<String> _userOverrides = {};
+  // Track if nonce was set
+  bool _nonceSet = false;
 
-  ExtrinsicBuilder._({
+  ExtrinsicBuilder({
     required this.chainInfo,
     required this.callData,
-    this.provider,
-    this.signerAddress,
-  }) : _extensionBuilder = ExtensionBuilder(chainInfo);
-
-  // ===== Factory Constructors =====
-
-  /// Create builder with automatic chain data fetching
-  ///
-  /// This is the simplest way to build an extrinsic. It automatically:
-  /// - Fetches chain metadata (if not provided)
-  /// - Fetches genesis hash, latest block, runtime version
-  /// - Fetches nonce (if signer address provided)
-  ///
-  /// Example:
-  /// ```dart
-  /// final extrinsic = await ExtrinsicBuilder.auto(
-  ///   provider: provider,
-  ///   callData: callBytes,
-  ///   signerAddress: alice.address,
-  /// ).signAndBuild(alice);
-  /// ```
-  static Future<ExtrinsicBuilder> auto({
-    required Provider provider,
-    required Uint8List callData,
-    String? signerAddress,
-    ChainInfo? chainInfo,
-  }) async {
-    // Fetch chain info if not provided
-    chainInfo ??= await _fetchChainInfo(provider);
-
-    final builder = ExtrinsicBuilder._(
-      chainInfo: chainInfo,
-      callData: callData,
-      provider: provider,
-      signerAddress: signerAddress,
-    );
-
-    // Pre-fetch standard values
-    await builder._fetchStandardValues();
-
-    return builder;
-  }
-
-  /// Create builder for offline signing
-  ///
-  /// Use this when you have all required values and don't need to fetch
-  /// anything from the chain. Useful for air-gapped signing.
-  ///
-  /// Example:
-  /// ```dart
-  /// final extrinsic = ExtrinsicBuilder.offline(
-  ///   chainInfo: chainInfo,
-  ///   callData: callBytes,
-  ///   specVersion: 1234,
-  ///   transactionVersion: 5,
-  ///   genesisHash: genesis,
-  ///   blockHash: block,
-  ///   blockNumber: 100000,
-  ///   nonce: 5,
-  /// ).signAndBuild(keypair);
-  /// ```
-  factory ExtrinsicBuilder.offline({
-    required ChainInfo chainInfo,
-    required Uint8List callData,
-    required int specVersion,
-    required int transactionVersion,
-    required Uint8List genesisHash,
-    required Uint8List blockHash,
-    required int blockNumber,
-    required int nonce,
-    BigInt? tip,
+    required final int specVersion,
+    required final int transactionVersion,
+    required final Uint8List genesisHash,
+    required final Uint8List blockHash,
+    required final int blockNumber,
     int eraPeriod = 64,
-    dynamic assetId,
-    bool enableMetadataHash = false,
-    Uint8List? metadataHash,
-  }) {
-    final builder = ExtrinsicBuilder._(
-      chainInfo: chainInfo,
-      callData: callData,
-      provider: null, // No provider for offline
-    );
-
-    // Set all values manually
-    builder._extensionBuilder.setStandardExtensions(
+    BigInt? tip,
+    int? nonce,
+  })  : _blockHash = blockHash,
+        _blockNumber = blockNumber,
+        _eraPeriod = eraPeriod,
+        _tip = tip ?? BigInt.zero,
+        _extensionBuilder = ExtensionBuilder(chainInfo) {
+    // Initialize with provided values
+    _extensionBuilder.setStandardExtensions(
       specVersion: specVersion,
       transactionVersion: transactionVersion,
       genesisHash: genesisHash,
       blockHash: blockHash,
       blockNumber: blockNumber,
-      nonce: nonce,
-      tip: tip ?? BigInt.zero,
-      eraPeriod: eraPeriod,
-      assetId: assetId,
-      enableMetadataHash: enableMetadataHash,
-      metadataHash: metadataHash,
+      nonce: nonce ?? 0, // Will be fetched later if needed
+      eraPeriod: _eraPeriod, // Default mortal
+      tip: _tip,
     );
-
-    return builder;
+    _nonceSet = nonce != null;
   }
 
-  /// Create builder from a method call
-  ///
-  /// Convenience factory that encodes a pallet method call.
-  ///
-  /// Example:
-  /// ```dart
-  /// final extrinsic = await ExtrinsicBuilder.method(
-  ///   provider: provider,
-  ///   chainInfo: chainInfo,
-  ///   pallet: 'Balances',
-  ///   method: 'transfer_keep_alive',
-  ///   args: {'dest': destAccount, 'value': amount},
-  /// ).signAndBuild(keypair);
-  /// ```
-  static Future<ExtrinsicBuilder> method({
-    required Provider provider,
-    required ChainInfo chainInfo,
-    required String pallet,
-    required String method,
-    required Map<String, dynamic> args,
-    String? signerAddress,
-  }) async {
-    // Encode the method call
-    final callData = _encodeMethodCall(chainInfo, pallet, method, args);
-
-    return auto(
-      provider: provider,
+  // From ChainData helper
+  factory ExtrinsicBuilder.fromChainData({
+    required final ChainInfo chainInfo,
+    required final Uint8List callData,
+    required final ChainData chainData,
+    int eraPeriod = 64,
+    BigInt? tip,
+  }) {
+    return ExtrinsicBuilder(
       chainInfo: chainInfo,
       callData: callData,
-      signerAddress: signerAddress,
+      specVersion: chainData.specVersion!,
+      transactionVersion: chainData.transactionVersion!,
+      genesisHash: chainData.genesisHash!,
+      blockHash: chainData.blockHash!,
+      blockNumber: chainData.blockNumber!,
+      eraPeriod: eraPeriod,
+      nonce: chainData.nonce,
+      tip: tip,
     );
   }
 
-  // ===== Configuration Methods =====
-
-  /// Set the nonce value
-  ExtrinsicBuilder nonce(int nonce) {
-    _userOverrides.add('nonce');
+  ExtrinsicBuilder nonce(final int nonce) {
     _extensionBuilder.nonce(nonce);
+    _nonceSet = true;
     return this;
   }
 
-  /// Set the tip amount
-  ExtrinsicBuilder tip(BigInt tip) {
-    _userOverrides.add('tip');
+  ExtrinsicBuilder tip(final BigInt tip) {
     _extensionBuilder.tip(tip);
     return this;
   }
 
-  /// Set mortal era with period
-  ExtrinsicBuilder era({required int period, Uint8List? blockHash}) {
-    _userOverrides.add('era');
-    _extensionBuilder.era(period: period, blockHash: blockHash);
+  ExtrinsicBuilder era({required final int period, final Uint8List? blockHash}) {
+    _extensionBuilder.era(
+      period: period,
+      blockHash: blockHash ?? _blockHash,
+      blockNumber: _blockNumber,
+    );
     return this;
   }
 
-  /// Make the transaction immortal
   ExtrinsicBuilder immortal() {
-    _userOverrides.add('era');
     _extensionBuilder.immortal();
     return this;
   }
 
-  /// Set spec version
-  ExtrinsicBuilder specVersion(int version) {
-    _userOverrides.add('runtime');
+  ExtrinsicBuilder specVersion(final int version) {
     _extensionBuilder.specVersion(version);
     return this;
   }
 
-  /// Set transaction version
-  ExtrinsicBuilder transactionVersion(int version) {
-    _userOverrides.add('runtime');
+  ExtrinsicBuilder transactionVersion(final int version) {
     _extensionBuilder.transactionVersion(version);
     return this;
   }
 
-  /// Set genesis hash
-  ExtrinsicBuilder genesisHash(Uint8List hash) {
-    _userOverrides.add('genesis');
-    _extensionBuilder.genesisHash(hash);
-    return this;
-  }
-
-  /// Set block hash for era
-  ExtrinsicBuilder blockHash(Uint8List hash) {
-    _userOverrides.add('block');
+  ExtrinsicBuilder blockHash(final Uint8List hash) {
     _extensionBuilder.blockHash(hash);
     return this;
   }
 
-  /// Set asset for payment (for chains with asset payment)
-  ExtrinsicBuilder assetId(dynamic assetId) {
-    _userOverrides.add('asset');
+  ExtrinsicBuilder assetId(final dynamic assetId) {
     _extensionBuilder.assetId(assetId);
     return this;
   }
 
-  /// Enable metadata hash with optional hash value
-  ExtrinsicBuilder metadataHash({bool enabled = true, Uint8List? hash}) {
-    _userOverrides.add('metadataHash');
+  ExtrinsicBuilder metadataHash({bool enabled = true, final Uint8List? hash}) {
     _extensionBuilder.metadataHash(enabled: enabled, hash: hash);
     return this;
   }
 
-  /// Set a custom extension
-  ExtrinsicBuilder customExtension(String identifier, dynamic value, {dynamic additional}) {
-    _userOverrides.add('custom_$identifier');
+  ExtrinsicBuilder customExtension(final String identifier, final dynamic value,
+      {final dynamic additional}) {
     _extensionBuilder.customExtension(identifier, value, additional: additional);
     return this;
   }
 
-  // ===== Building and Signing =====
-
-  /// Sign and build the extrinsic
-  ///
-  /// This is the main method that creates the final extrinsic.
-  /// It will:
-  /// 1. Fetch any missing values (like nonce if not set)
-  /// 2. Validate all extensions are present
-  /// 3. Create and sign the payload
-  /// 4. Encode the final extrinsic
-  ///
-  /// Returns an EncodedExtrinsic ready for submission
-  Future<EncodedExtrinsic> signAndBuild(KeyPair signer) async {
-    // Fetch nonce if we have provider but didn't have address earlier
-    if (provider != null && signerAddress == null && !_userOverrides.contains('nonce')) {
-      try {
-        final systemApi = SystemApi(provider!);
-        final nonce = await systemApi.accountNextIndex(signer.address);
-        _extensionBuilder.nonce(nonce);
-      } catch (e) {
-        throw BuilderError('Failed to fetch nonce for ${signer.address}: $e');
-      }
-    }
+  /// Sign and build with a callback (for external signing)
+  Future<EncodedExtrinsic> signAndBuild({
+    required final Uint8List signerPublicKey,
+    required final SigningCallback signingCallback,
+    final Provider? provider,
+    final String? signerAddress,
+  }) async {
+    // Fetch nonce if needed
+    await _fetchNonceIfNeeded(
+      provider: provider,
+      address: signerAddress,
+    );
 
     // Create signing builder
     final signingBuilder = SigningBuilder(
@@ -260,151 +144,127 @@ class ExtrinsicBuilder {
       extensionBuilder: _extensionBuilder,
     );
 
-    // Sign the extrinsic
-    final signedData = signingBuilder.createSignedExtrinsic(
+    // Get the payload to sign
+    final payloadToSign = signingBuilder.createPayloadToSign(callData);
+
+    // Call the external signing callback
+    final signature = await signingCallback(payloadToSign);
+
+    // Create signed data manually
+    final signedData = SignedData(
+      signer: signerPublicKey,
+      signature: signature,
+      extensions: Map<String, dynamic>.from(_extensionBuilder.extensions),
+      additionalSigned: Map<String, dynamic>.from(_extensionBuilder.additionalSigned),
       callData: callData,
-      signer: signer,
+      signingPayload: payloadToSign,
     );
 
     // Encode the extrinsic
     return EncodedExtrinsic.fromSignedData(chainInfo, signedData);
   }
 
-  /// Sign, build, and submit the extrinsic
-  ///
-  /// Convenience method that combines signing and submission.
-  /// Requires a provider to be set.
-  Future<String> signBuildAndSubmit(KeyPair signer) async {
-    if (provider == null) {
-      throw BuilderError('Cannot submit without provider');
-    }
-
-    final extrinsic = await signAndBuild(signer);
+  /// Sign, build and submit with callback
+  Future<String> signBuildAndSubmit({
+    required final Uint8List signerPublicKey,
+    required final SigningCallback signingCallback,
+    required final Provider provider,
+    final String? signerAddress,
+  }) async {
+    final extrinsic = await signAndBuild(
+      signerPublicKey: signerPublicKey,
+      signingCallback: signingCallback,
+      provider: provider,
+      signerAddress: signerAddress,
+    );
     return extrinsic.submit(provider);
   }
 
-  /// Build unsigned extrinsic (for inherents)
-  EncodedExtrinsic buildUnsigned() {
-    final encoder = ExtrinsicEncoder(chainInfo);
-    final bytes = encoder.encodeUnsigned(callData);
-    final hash = Hasher.blake2b256.hash(bytes);
+  /// Sign, build and submit with callback
+  Future<StreamSubscription<ExtrinsicStatus>> signBuildAndSubmitWatch({
+    required final Uint8List signerPublicKey,
+    required final SigningCallback signingCallback,
+    required final Provider provider,
+    required final ExtrinsicListener onStatusChange,
+    final String? signerAddress,
+  }) async {
+    final extrinsic = await signAndBuild(
+      signerPublicKey: signerPublicKey,
+      signingCallback: signingCallback,
+      provider: provider,
+      signerAddress: signerAddress,
+    );
 
-    return EncodedExtrinsic(
-      bytes: bytes,
-      hash: hash,
-      info: EncodedExtrinsicInfo(
-        totalSize: bytes.length,
-        lengthPrefixSize: _calculateCompactSize(bytes.length - 1), // Subtract version byte
-        versionByteSize: 1,
-        addressSize: 0,
-        signatureSize: 0,
-        extensionSize: 0,
-        callDataSize: callData.length,
-        hash: hash,
-        signatureType: SignatureType.unknown,
-        isSigned: false,
-      ),
+    return await extrinsic.submitAndWatch(provider, onStatusChange);
+  }
+
+  /// Get the payload that would be signed (useful for debugging or external signing)
+  Uint8List getSigningPayload() {
+    final signingBuilder = SigningBuilder(
+      chainInfo: chainInfo,
+      extensionBuilder: _extensionBuilder,
+    );
+    return signingBuilder.createPayloadToSign(callData);
+  }
+
+  /// Quick send with external signing
+  static Future<String> quickSend({
+    required final Provider provider,
+    required final ChainInfo chainInfo,
+    required final Uint8List callData,
+    required final Uint8List signerPublicKey,
+    required final SigningCallback signingCallback,
+    final String? signerAddress,
+    final int? eraPeriod,
+    final BigInt? tip,
+    bool immortal = false,
+  }) async {
+    // An Immortal transaction so expect eraPeriod to be null.
+    assert(immortal && eraPeriod == null,
+        'Either eraPeriod should not be null or immortal should be set to true.');
+
+    // Not an Immortal transaction so expect eraPeriod to non-null.
+    assert(immortal == false && eraPeriod != null,
+        'Either eraPeriod should not be null or immortal should be set to true.');
+    // Fetch chain data
+    final fetcher = ChainDataFetcher(provider);
+    final chainData = await fetcher.fetchStandardData(
+      accountAddress: signerAddress,
+    );
+
+    // Build and submit
+    ExtrinsicBuilder builder = ExtrinsicBuilder.fromChainData(
+      chainInfo: chainInfo,
+      callData: callData,
+      chainData: chainData,
+    );
+
+    if (tip != null) builder = builder.tip(tip);
+    if (immortal) builder = builder.immortal();
+
+    return builder.signBuildAndSubmit(
+      signerPublicKey: signerPublicKey,
+      signingCallback: signingCallback,
+      provider: provider,
+      signerAddress: signerAddress,
     );
   }
 
-  /// Fetch chain info from provider
-  static Future<ChainInfo> _fetchChainInfo(Provider provider) async {
-    try {
-      // This would typically fetch metadata and create ChainInfo
-      // For now, return a placeholder
-      throw UnimplementedError('ChainInfo.fromProvider not yet implemented');
-    } catch (e) {
-      throw BuilderError('Failed to fetch chain info: $e');
+  // ===== Private Helpers =====
+
+  Future<void> _fetchNonceIfNeeded({
+    final Provider? provider,
+    final String? address,
+  }) async {
+    if (_nonceSet) return;
+    if (provider == null || address == null) {
+      throw Exception(
+          'Cannot fetch nonce: Both the provider & address is needed to fetch nonce for the sender or please set nonce manually.');
     }
+
+    final fetcher = SystemApi(provider);
+    final nonce = await fetcher.accountNextIndex(address);
+    _extensionBuilder.nonce(nonce);
+    _nonceSet = true;
   }
-
-  /// Fetch standard values from the chain
-  Future<void> _fetchStandardValues() async {
-    if (provider == null) return;
-
-    try {
-      final fetcher = ChainDataFetcher(provider!);
-
-      // Fetch all standard values in parallel
-      final chainData = await fetcher.fetchStandardData(
-        accountAddress: signerAddress,
-        skipFlags: _userOverrides,
-      );
-
-      // Apply fetched values (only if not overridden)
-      _extensionBuilder.setAutoFetchedValues(
-        specVersion: chainData.specVersion,
-        transactionVersion: chainData.transactionVersion,
-        genesisHash: chainData.genesisHash,
-        blockHash: chainData.blockHash,
-        blockNumber: chainData.blockNumber,
-        nonce: chainData.nonce,
-        userOverrides: _userOverrides,
-      );
-    } catch (e) {
-      throw BuilderError('Failed to fetch chain data: $e');
-    }
-  }
-
-  /// Encode a method call
-  static Uint8List _encodeMethodCall(
-    ChainInfo chainInfo,
-    String pallet,
-    String method,
-    Map<String, dynamic> args,
-  ) {
-    // This would use the RuntimeCallCodec to encode the call
-    // For now, throw unimplemented
-    throw UnimplementedError('Method call encoding not yet implemented. Use raw callData instead.');
-  }
-
-  /// Calculate compact encoding size
-  static int _calculateCompactSize(int value) {
-    if (value < 64) return 1;
-    if (value < 16384) return 2;
-    if (value < 1073741824) return 4;
-    return 5; // For larger values
-  }
-}
-
-/// Information about what will be built
-class BuildInfo {
-  final ChainInfo chainInfo;
-  final int callDataSize;
-  final Map<String, dynamic> extensions;
-  final Map<String, dynamic> additionalSigned;
-  final Set<String> userOverrides;
-  final bool hasProvider;
-
-  const BuildInfo({
-    required this.chainInfo,
-    required this.callDataSize,
-    required this.extensions,
-    required this.additionalSigned,
-    required this.userOverrides,
-    required this.hasProvider,
-  });
-
-  /// Get a summary of the build configuration
-  Map<String, dynamic> summary() {
-    return {
-      'callDataSize': '$callDataSize bytes',
-      'extensionCount': extensions.length,
-      'additionalSignedCount': additionalSigned.length,
-      'userOverrides': userOverrides.toList(),
-      'hasProvider': hasProvider,
-      'extensions': extensions.keys.toList(),
-      'additionalSigned': additionalSigned.keys.toList(),
-    };
-  }
-}
-
-/// Error thrown by the builder
-class BuilderError implements Exception {
-  final String message;
-
-  BuilderError(this.message);
-
-  @override
-  String toString() => 'BuilderError: $message';
 }
