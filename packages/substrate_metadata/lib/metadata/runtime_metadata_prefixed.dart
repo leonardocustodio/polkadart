@@ -49,6 +49,8 @@ class RuntimeMetadataPrefixed {
 
   MetadataTypeRegistry buildRegistry() => MetadataTypeRegistry(this);
 
+  ChainInfo buildChainInfo() => ChainInfo.fromRuntimeMetadataPrefixed(this);
+
   /// Check if the magic number is valid
   bool get isValidMagicNumber => magicNumber == metaReserved;
 

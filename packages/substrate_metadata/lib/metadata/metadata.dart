@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:typed_data' show Uint8List;
 
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
+import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
 import 'package:substrate_metadata/registry/metadata_type_registry.dart' show MetadataTypeRegistry;
 import 'package:substrate_metadata/substrate_hashers/substrate_hashers.dart' show Blake3Hasher;
 import 'package:substrate_metadata/utils/utils.dart';
