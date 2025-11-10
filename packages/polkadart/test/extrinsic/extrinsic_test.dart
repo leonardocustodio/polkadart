@@ -4,7 +4,7 @@ import 'package:polkadart_keyring/polkadart_keyring.dart' as keyring show KeyPai
 import 'package:polkadart_scale_codec/utils/utils.dart' show encodeHex;
 import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
 import 'package:substrate_metadata/metadata/metadata.dart' show RuntimeMetadataPrefixed;
-import 'package:test/scaffolding.dart';
+import 'package:test/scaffolding.dart' show Timeout;
 import 'package:test/test.dart'
     show
         expect,
