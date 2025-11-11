@@ -38,4 +38,7 @@ class $PalletErrorMetadata with Codec<PalletErrorMetadata> {
   int sizeHint(PalletErrorMetadata value) {
     return CompactCodec.codec.sizeHint(value.type);
   }
+
+  @override
+  bool isSizeZero() => CompactCodec.codec.isSizeZero();
 }

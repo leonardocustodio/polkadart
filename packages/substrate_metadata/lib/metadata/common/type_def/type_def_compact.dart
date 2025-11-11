@@ -38,4 +38,7 @@ class $TypeDefCompact with Codec<TypeDefCompact> {
   int sizeHint(TypeDefCompact value) {
     return CompactCodec.codec.sizeHint(value.type);
   }
+
+  @override
+  bool isSizeZero() => CompactCodec.codec.isSizeZero();
 }

@@ -29,4 +29,10 @@ class StrCodec with Codec<String> {
     size += bytes.length;
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // Str always has a length prefix (compact-encoded)
+    return false;
+  }
 }

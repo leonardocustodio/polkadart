@@ -49,4 +49,7 @@ class $TypeParameter with Codec<TypeParameter> {
     size += OptionCodec(CompactCodec.codec).sizeHint(value.type);
     return size;
   }
+
+  @override
+  bool isSizeZero() => StrCodec.codec.isSizeZero() && OptionCodec(CompactCodec.codec).isSizeZero();
 }

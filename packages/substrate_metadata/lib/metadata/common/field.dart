@@ -85,4 +85,12 @@ class $Field with Codec<Field> {
     size += SequenceCodec(StrCodec.codec).sizeHint(value.docs);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // This class just delegates to inner codecs
+    return OptionCodec(StrCodec.codec).isSizeZero() &&
+        CompactCodec.codec.isSizeZero() &&
+        SequenceCodec(StrCodec.codec).isSizeZero();
+  }
 }

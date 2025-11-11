@@ -240,4 +240,12 @@ class $RuntimeVersionCodec with Codec<RuntimeVersion> {
     }
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() &&
+        U32Codec.codec.isSizeZero() &&
+        const SequenceCodec<ApiVersion>(ApiVersion.codec).isSizeZero() &&
+        U8Codec.codec.isSizeZero();
+  }
 }

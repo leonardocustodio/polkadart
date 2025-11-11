@@ -23,4 +23,10 @@ class I128Codec with Codec<BigInt> {
   int sizeHint(BigInt value) {
     return 16;
   }
+
+  @override
+  bool isSizeZero() {
+    // I128 always encodes to 16 bytes
+    return false;
+  }
 }

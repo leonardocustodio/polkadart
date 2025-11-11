@@ -41,4 +41,10 @@ class BTreeMapCodec<K, V> with Codec<Map<K, V>> {
     }
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // BTreeMap always has a length prefix (compact-encoded), so it can never be size zero
+    return false;
+  }
 }

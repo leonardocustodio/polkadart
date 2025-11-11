@@ -48,4 +48,10 @@ class ProxyCodec with Codec<dynamic> {
   void encodeTo(dynamic value, Output output) {
     _codec.encodeTo(value, output);
   }
+
+  @override
+  bool isSizeZero() {
+    // ProxyCodec delegates to the inner codec
+    return _codec.isSizeZero();
+  }
 }

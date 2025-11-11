@@ -107,4 +107,12 @@ class $RuntimeMetadataV14 with Codec<RuntimeMetadataV14> {
     size += CompactCodec.codec.sizeHint(value.type);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return SequenceCodec(PortableType.codec).isSizeZero() &&
+        SequenceCodec(PalletMetadataV14.codec).isSizeZero() &&
+        ExtrinsicMetadataV14.codec.isSizeZero() &&
+        CompactCodec.codec.isSizeZero();
+  }
 }

@@ -63,6 +63,13 @@ class $RuntimeApiMetadataV15 with Codec<RuntimeApiMetadataV15> {
         SequenceCodec(RuntimeApiMethodMetadataV15.codec).sizeHint(value.methods) +
         SequenceCodec(StrCodec.codec).sizeHint(value.docs);
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() &&
+        SequenceCodec(RuntimeApiMethodMetadataV15.codec).isSizeZero() &&
+        SequenceCodec(StrCodec.codec).isSizeZero();
+  }
 }
 
 /// Metadata about a runtime API method (V15)
@@ -133,6 +140,14 @@ class $RuntimeApiMethodMetadataV15 with Codec<RuntimeApiMethodMetadataV15> {
         CompactCodec.codec.sizeHint(value.output) +
         SequenceCodec(StrCodec.codec).sizeHint(value.docs);
   }
+
+  @override
+  bool isSizeZero() {
+    return StrCodec.codec.isSizeZero() &&
+        SequenceCodec(RuntimeApiMethodParamMetadataV15.codec).isSizeZero() &&
+        CompactCodec.codec.isSizeZero() &&
+        SequenceCodec(StrCodec.codec).isSizeZero();
+  }
 }
 
 /// Metadata about a runtime API method parameter (V15)
@@ -186,4 +201,7 @@ class $RuntimeApiMethodParamMetadataV15 with Codec<RuntimeApiMethodParamMetadata
   int sizeHint(RuntimeApiMethodParamMetadataV15 value) {
     return StrCodec.codec.sizeHint(value.name) + CompactCodec.codec.sizeHint(value.typeId);
   }
+
+  @override
+  bool isSizeZero() => StrCodec.codec.isSizeZero() && CompactCodec.codec.isSizeZero();
 }

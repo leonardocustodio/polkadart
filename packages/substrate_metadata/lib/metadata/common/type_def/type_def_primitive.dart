@@ -39,6 +39,9 @@ class $Primitive with Codec<Primitive> {
 
   @override
   int sizeHint(final Primitive value) => 1;
+
+  @override
+  bool isSizeZero() => false; // Always encodes 1 byte
 }
 
 /// A primitive Rust type.
@@ -112,4 +115,7 @@ class $TypeDefPrimitive with Codec<TypeDefPrimitive> {
   int sizeHint(TypeDefPrimitive value) {
     return Primitive.codec.sizeHint(value.primitive);
   }
+
+  @override
+  bool isSizeZero() => Primitive.codec.isSizeZero();
 }

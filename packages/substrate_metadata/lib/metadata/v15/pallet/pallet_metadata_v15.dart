@@ -62,4 +62,8 @@ class $PalletMetadataV15 with Codec<PalletMetadataV15> {
     size += SequenceCodec(StrCodec.codec).sizeHint(value.docs); // New in V15
     return size;
   }
+
+  @override
+  bool isSizeZero() =>
+      PalletMetadata.codec.isSizeZero() && SequenceCodec(StrCodec.codec).isSizeZero();
 }

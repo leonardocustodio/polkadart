@@ -1,11 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data' show Uint8List;
-
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/derived_codecs/derived_codecs.dart';
-import 'package:substrate_metadata/extensions/runtime_metadata_extensions.dart';
-import 'package:substrate_metadata/models/models.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
@@ -69,7 +65,7 @@ void main() {
             reason: 'Pallet name mismatch at index $i');
         expect(actual['typeId'], expected['typeId'],
             reason: 'TypeId mismatch for ${actual['name']}');
-        expect(actual['value'], expected['value'],
+        expect(actual['value'], '0x${expected['value']}',
             reason: 'Value mismatch for ${actual['palletName']}.${actual['name']}');
         expect(actual['type'], expected['type'],
             reason: 'Type string mismatch for ${actual['name']}');

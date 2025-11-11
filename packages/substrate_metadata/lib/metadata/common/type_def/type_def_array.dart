@@ -44,4 +44,9 @@ class $TypeDefArray with Codec<TypeDefArray> {
   int sizeHint(TypeDefArray value) {
     return CompactCodec.codec.sizeHint(value.length) + CompactCodec.codec.sizeHint(value.type);
   }
+
+  @override
+  bool isSizeZero() {
+    return U32Codec.codec.isSizeZero() && CompactCodec.codec.isSizeZero();
+  }
 }

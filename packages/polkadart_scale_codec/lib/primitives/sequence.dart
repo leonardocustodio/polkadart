@@ -27,4 +27,10 @@ class SequenceCodec<A> with Codec<List<A>> {
     }
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // Sequence always has a length prefix (compact-encoded)
+    return false;
+  }
 }

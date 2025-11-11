@@ -13,7 +13,7 @@ part of utils;
 ///   print(output.toString()); // 0x00
 /// }
 /// ```
-extension EnumExtensions<T extends core.Enum> on T {
+extension EnumExtensions<T extends Enum> on T {
   ///
   /// Encodes value of Enum to the [HexOutput] / [ByteOutput]
   void encodeTo(Output output) {

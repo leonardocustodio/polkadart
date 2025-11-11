@@ -22,6 +22,12 @@ class I16Codec with Codec<int> {
   int sizeHint(int value) {
     return 2;
   }
+
+  @override
+  bool isSizeZero() {
+    // I16 always encodes to 2 bytes
+    return false;
+  }
 }
 
 class I16SequenceCodec with Codec<List<int>> {
@@ -50,6 +56,12 @@ class I16SequenceCodec with Codec<List<int>> {
   @override
   int sizeHint(List<int> value) {
     return CompactCodec.codec.sizeHint(value.length) + value.length * 2;
+  }
+
+  @override
+  bool isSizeZero() {
+    // I16Sequence always has a length prefix (compact-encoded)
+    return false;
   }
 }
 
@@ -80,5 +92,11 @@ class I16ArrayCodec with Codec<List<int>> {
   @override
   int sizeHint(List<int> value) {
     return length * 2;
+  }
+
+  @override
+  bool isSizeZero() {
+    // I16Array is size zero only if length is 0
+    return length == 0;
   }
 }

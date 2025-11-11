@@ -37,6 +37,12 @@ class ResultCodec<R, E> with Codec<Result<R, E>> {
     }
     return 1 + errCodec.sizeHint(value.errValue as E);
   }
+
+  @override
+  bool isSizeZero() {
+    // Result always has at least 1 byte for the Ok/Err flag
+    return false;
+  }
 }
 
 class Result<R, E> {

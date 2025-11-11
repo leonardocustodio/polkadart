@@ -14,4 +14,10 @@ class NullCodec with Codec<dynamic> {
 
   @override
   int sizeHint(dynamic value) => 0;
+
+  @override
+  bool isSizeZero() {
+    // NullCodec encodes nothing, always size zero
+    return true;
+  }
 }

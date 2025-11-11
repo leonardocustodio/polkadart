@@ -84,4 +84,9 @@ class SyncStateCodec with Codec<SyncState> {
     size = numberCodec.sizeHint(value.highestBlock);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return numberCodec.isSizeZero();
+  }
 }

@@ -61,4 +61,8 @@ class $PalletStorageMetadata with Codec<PalletStorageMetadata> {
     size += SequenceCodec(StorageEntryMetadata.codec).sizeHint(value.entries);
     return size;
   }
+
+  @override
+  bool isSizeZero() =>
+      StrCodec.codec.isSizeZero() && SequenceCodec(StorageEntryMetadata.codec).isSizeZero();
 }

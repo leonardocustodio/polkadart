@@ -1,14 +1,13 @@
 library io;
 
 import 'dart:typed_data' show Uint8List;
-
 import 'package:typed_data/typed_buffers.dart';
+import 'package:polkadart_scale_codec/utils/utils.dart'
+    show encodeHex, decodeHex;
 
-import '../utils/utils.dart' show encodeHex, decodeHex;
-
-part './byte_output.dart';
-part './generator_output.dart';
-part './hex_output.dart';
-part './input.dart';
-part './output.dart';
-part './size_tracker.dart';
+part 'byte_output.dart';
+part 'generator_output.dart';
+part 'hex_output.dart';
+part 'input.dart';
+part 'output.dart';
+part 'size_tracker.dart';

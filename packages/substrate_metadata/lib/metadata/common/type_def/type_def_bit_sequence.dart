@@ -51,4 +51,7 @@ class $TypeDefBitSequence with Codec<TypeDefBitSequence> {
     return CompactCodec.codec.sizeHint(value.bitStoreType) +
         CompactCodec.codec.sizeHint(value.bitOrderType);
   }
+
+  @override
+  bool isSizeZero() => CompactCodec.codec.isSizeZero();
 }

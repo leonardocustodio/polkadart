@@ -33,7 +33,7 @@ class ConstantInfo {
         'name': name,
         'type': typeString,
         'typeId': typeId,
-        'value': hex.encode(value),
+        'value': value.toHexString(),
         'docs': docs,
         'palletName': palletName,
       };

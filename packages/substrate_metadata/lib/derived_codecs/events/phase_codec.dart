@@ -65,4 +65,10 @@ class PhaseCodec with Codec<Phase> {
     }
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // This class directly encodes variant index byte
+    return false;
+  }
 }

@@ -38,4 +38,7 @@ class $TypeDefTuple with Codec<TypeDefTuple> {
   int sizeHint(TypeDefTuple value) {
     return SequenceCodec(CompactCodec.codec).sizeHint(value.fields);
   }
+
+  @override
+  bool isSizeZero() => SequenceCodec(CompactCodec.codec).isSizeZero();
 }

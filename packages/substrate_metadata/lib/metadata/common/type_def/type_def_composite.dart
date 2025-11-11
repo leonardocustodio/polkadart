@@ -40,4 +40,7 @@ class $TypeDefComposite with Codec<TypeDefComposite> {
   int sizeHint(TypeDefComposite value) {
     return SequenceCodec(Field.codec).sizeHint(value.fields);
   }
+
+  @override
+  bool isSizeZero() => SequenceCodec(Field.codec).isSizeZero();
 }

@@ -28,4 +28,10 @@ class ArrayCodec<A> with Codec<List<A>> {
     }
     return byteSize;
   }
+
+  @override
+  bool isSizeZero() {
+    // Array is size zero if it's empty OR if the inner codec is size zero
+    return size == 0 || codec.isSizeZero();
+  }
 }

@@ -26,4 +26,10 @@ class U256Codec with Codec<BigInt> {
   int sizeHint(BigInt value) {
     return 32;
   }
+
+  @override
+  bool isSizeZero() {
+    // U256 always encodes to 32 bytes
+    return false;
+  }
 }
