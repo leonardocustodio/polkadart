@@ -221,11 +221,11 @@ class ExtrinsicBuilder {
   }) async {
     // An Immortal transaction so expect eraPeriod to be null.
     assert(immortal && eraPeriod == null,
-        'Either eraPeriod should not be null or immortal should be set to true.');
+        'For immortal transactions, eraPeriod must be null and immortal must be true.');
 
     // Not an Immortal transaction so expect eraPeriod to non-null.
     assert(immortal == false && eraPeriod != null,
-        'Either eraPeriod should not be null or immortal should be set to true.');
+        'For mortal transactions, eraPeriod must not be null and immortal must be false.');
     // Fetch chain data
     final fetcher = ChainDataFetcher(provider);
     final chainData = await fetcher.fetchStandardData(

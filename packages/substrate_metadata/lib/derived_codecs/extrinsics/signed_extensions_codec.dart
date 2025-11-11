@@ -36,7 +36,7 @@ class SignedExtensionsCodec with Codec<Map<String, dynamic>> {
       try {
         codecs[i].encodeTo(val, output);
       } catch (_) {
-        print('exception here at key:$key, value:$value, codec=${codecs[i]}');
+        throw Exception('exception here at key:$key, value:$value, codec=${codecs[i]}');
       }
     }
   }
