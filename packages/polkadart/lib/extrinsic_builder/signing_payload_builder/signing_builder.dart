@@ -3,13 +3,13 @@ part of extrinsic_builder;
 /// Builder for creating and signing transaction payloads
 ///
 /// This class handles the creation of signing payloads from extension values,
-/// signs them with a keypair, and returns a signed result ready for encoding
+/// signs them with the signing callback method call, and returns a signed result ready for encoding
 /// into an extrinsic.
 class SigningBuilder {
   final ChainInfo chainInfo;
   final ExtensionBuilder extensionBuilder;
 
-  SigningBuilder({
+  const SigningBuilder({
     required this.chainInfo,
     required this.extensionBuilder,
   });
@@ -19,11 +19,12 @@ class SigningBuilder {
   /// This method:
   /// 1. Validates all required extensions are present
   /// 2. Creates the signing payload
-  /// 3. Signs it with the provided keypair
+  /// 3. Signs it with the signing callback
   /// 4. Returns a SignedData result
   SignedData createSignedExtrinsic({
-    required Uint8List callData,
-    required KeyPair signer,
+    required final Uint8List callData,
+    required final SigningCallback signingCallback,
+    required final Uint8List signer,
   }) {
     // 1. Validate we have all required extensions
     extensionBuilder.validate();
@@ -32,11 +33,11 @@ class SigningBuilder {
     final signingPayload = _createSigningPayload(callData);
 
     // 3. Sign the payload
-    final signature = signer.sign(signingPayload);
+    final signature = signingCallback(signingPayload);
 
     // 4. Return signed data
     return SignedData(
-      signer: Uint8List.fromList(signer.publicKey.bytes),
+      signer: signer,
       signature: signature,
       extensions: Map.from(extensionBuilder.extensions),
       additionalSigned: Map.from(extensionBuilder.additionalSigned),

@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:polkadart/apis/apis.dart';
-import 'package:polkadart/polkadart.dart' show Provider, StateApi;
 
 void main() async {
   final polkadart = Provider.fromUri(Uri.parse('wss://rpc.matrix.canary.enjin.io'));

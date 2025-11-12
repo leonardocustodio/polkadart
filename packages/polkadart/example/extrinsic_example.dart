@@ -1,10 +1,9 @@
 import 'dart:async' show Completer;
 import 'dart:typed_data' show Uint8List;
-import 'package:polkadart/apis/apis.dart' show StateApi, ChainDataFetcher;
-import 'package:polkadart/extrinsic_builder/extrinsic_builder_base.dart'
-    show ExtrinsicBuilder, BalancesTransferKeepAlive;
+import 'package:polkadart/apis/apis.dart' show StateApi, ChainDataFetcher, Provider;
+import 'package:polkadart/balances/balances_base.dart';
+import 'package:polkadart/extrinsic_builder/extrinsic_builder_base.dart' show ExtrinsicBuilder;
 import 'package:polkadart/primitives/primitives.dart' show ExtrinsicStatus;
-import 'package:polkadart/provider.dart' show Provider;
 import 'package:polkadart_keyring/polkadart_keyring.dart' as keyring show KeyPair;
 import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
 import 'package:substrate_metadata/metadata/metadata.dart' show RuntimeMetadataPrefixed;
@@ -33,18 +32,17 @@ Future<void> main() async {
       await ChainDataFetcher(provider).fetchStandardData(accountAddress: sender.address);
 
   print('\n📊 Chain data:');
-  print('  - Genesis hash: 0x${hex.encode(chainData.genesisHash!)}');
-  print('  - Block hash: 0x${hex.encode(chainData.blockHash!)}');
+  print('  - Genesis hash: 0x${hex.encode(chainData.genesisHash)}');
+  print('  - Block hash: 0x${hex.encode(chainData.blockHash)}');
   print('  - Spec version: ${chainData.specVersion}');
   print('  - Transaction version: ${chainData.transactionVersion}');
   print('  - Nonce: ${chainData.nonce}');
 
-  final call = BalancesTransferKeepAlive.toAccountId(
-      receiverAccountId: Uint8List.fromList(receiver.publicKey.bytes), amount: transferAmount);
-
+  final call = Balances.transferKeepAlive.toAccountId(
+    destination: Uint8List.fromList(receiver.publicKey.bytes),
+    amount: transferAmount,
+  );
   final Uint8List encodedCall = call.encode(chainInfo);
-  print('\n📋 Call details:');
-  print('  - Method: 0x${hex.encode(encodedCall)}');
 
   final extrinsicBuilder = ExtrinsicBuilder.fromChainData(
     chainInfo: chainInfo,
@@ -56,7 +54,7 @@ Future<void> main() async {
 
   extrinsicBuilder.signBuildAndSubmitWatch(
     signerPublicKey: Uint8List.fromList(sender.publicKey.bytes),
-    signingCallback: (final Uint8List payload) async {
+    signingCallback: (final Uint8List payload) {
       print('\n🔏 Signing payload: 0x${hex.encode(payload)}');
       final signature = sender.sign(payload);
       print('✍️  Signature: 0x${hex.encode(signature)}');

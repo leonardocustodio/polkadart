@@ -1,7 +1,7 @@
 part of extrinsic_builder;
 
 // Type for signing callback
-typedef SigningCallback = Future<Uint8List> Function(Uint8List payload);
+typedef SigningCallback = Uint8List Function(Uint8List payload);
 
 class ExtrinsicBuilder {
   final ChainInfo chainInfo;
@@ -58,11 +58,11 @@ class ExtrinsicBuilder {
     return ExtrinsicBuilder(
       chainInfo: chainInfo,
       callData: callData,
-      specVersion: chainData.specVersion!,
-      transactionVersion: chainData.transactionVersion!,
-      genesisHash: chainData.genesisHash!,
-      blockHash: chainData.blockHash!,
-      blockNumber: chainData.blockNumber!,
+      specVersion: chainData.specVersion,
+      transactionVersion: chainData.transactionVersion,
+      genesisHash: chainData.genesisHash,
+      blockHash: chainData.blockHash,
+      blockNumber: chainData.blockNumber,
       eraPeriod: eraPeriod,
       nonce: chainData.nonce,
       tip: tip,
@@ -148,7 +148,7 @@ class ExtrinsicBuilder {
     final payloadToSign = signingBuilder.createPayloadToSign(callData);
 
     // Call the external signing callback
-    final signature = await signingCallback(payloadToSign);
+    final signature = signingCallback(payloadToSign);
 
     // Create signed data manually
     final signedData = SignedData(
