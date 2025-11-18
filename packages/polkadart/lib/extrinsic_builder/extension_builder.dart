@@ -180,12 +180,13 @@ class ExtensionBuilder {
           if (_metadataHashMode == 0) {
             // Disabled
             extensions[identifier] = <String, dynamic>{'mode': MapEntry('Disabled', 0)};
-            additionalSigned[identifier] = MapEntry('None', 0);
+            additionalSigned[identifier] = null; /* MapEntry('None', 0); */
           } else if (_metadataHashMode == 1 && _metadataHash != null) {
             // Enabled with hash
             extensions[identifier] = <String, dynamic>{'mode': MapEntry('Enabled', 1)};
             // Additional signed uses Option encoding
-            additionalSigned[identifier] = MapEntry('Some', [0x01, ..._metadataHash!]);
+            additionalSigned[identifier] = _metadataHash;
+            //MapEntry('Some', [0x01, ..._metadataHash!]);
           }
           break;
 
@@ -229,8 +230,11 @@ class ExtensionBuilder {
   }
 
   /// Set mortal era
-  ExtensionBuilder era(
-      {required final int period, final int? blockNumber, final Uint8List? blockHash}) {
+  ExtensionBuilder era({
+    required final int period,
+    final int? blockNumber,
+    final Uint8List? blockHash,
+  }) {
     _userOverrides.add('era');
     _eraPeriod = period;
 
@@ -413,24 +417,25 @@ class ExtensionBuilder {
 
       // Check extension value
       if (!(valueCodec is NullCodec || valueCodec.isSizeZero())) {
-        if (!extensions.containsKey(ext.identifier) || extensions[ext.identifier] == null) {
+        if (!extensions.containsKey(ext.identifier)) {
           missing.add('${ext.identifier} (value)');
         }
       }
 
       // Check additional signed
       if (!(additionalCodec is NullCodec || additionalCodec.isSizeZero())) {
-        if (!additionalSigned.containsKey(ext.identifier) ||
-            additionalSigned[ext.identifier] == null) {
+        if (!additionalSigned.containsKey(ext.identifier)) {
           missing.add('${ext.identifier} (additional)');
         }
       }
     }
 
     if (missing.isNotEmpty) {
-      throw ExtensionValidationError('Missing required extensions: ${missing.join(', ')}\n'
-          'Tip: Use ExtrinsicBuilder.auto() for automatic fetching, '
-          'or provide missing values manually.');
+      throw ExtensionValidationError(
+        'Missing required extensions: ${missing.join(', ')}\n'
+        'Tip: Use ExtrinsicBuilder.auto() for automatic fetching, '
+        'or provide missing values manually.',
+      );
     }
   }
 

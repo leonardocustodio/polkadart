@@ -11,6 +11,7 @@ import 'package:polkadart/primitives/primitives.dart' show ExtrinsicStatus;
 import 'package:polkadart_scale_codec/io/io.dart' show ByteOutput, Output;
 import 'package:polkadart_scale_codec/primitives/primitives.dart' show CompactCodec, NullCodec;
 import 'package:polkadart_scale_codec/utils/utils.dart' show encodeHex;
+import 'package:ss58/ss58.dart' show Address;
 import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
 import 'package:substrate_metadata/derived_codecs/derived_codecs.dart' show Era;
 import 'package:substrate_metadata/metadata/metadata.dart' show SignedExtensionMetadata;

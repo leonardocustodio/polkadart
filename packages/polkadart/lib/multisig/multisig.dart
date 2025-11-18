@@ -1,116 +1,21 @@
 part of multisig;
 
-/// Main entry point for multisig operations
-///
-/// This class provides convenient static methods for common multisig operations
-/// and helper functions to simplify the workflow.
-///
-/// Example:
-/// ```dart
-/// // Quick multisig creation
-/// final multisig = Multisig.create(
-///   addresses: [alice.adshow ExtrinsicBuilder, SigningCallbackharlie.address],
-///   threshold: 2,
-/// );
-///
-/// // Create and fund in one go
-/// final tx = await Multisig.createAndFund(
-///   provider: provider,
-///   depositor: alice.address,
-///   signatories: [alice.address, bob.address, charlie.address],
-///   threshold: 2,
-///   amount: BigInt.from(1000000000000),
-///   signCallback: (payload) => alice.sign(payload),
-///   chainInfo: chainInfo,
-/// );
-/// ```
 class Multisig {
-  // Private constructor to prevent instantiation
-  Multisig._();
+  const Multisig._();
 
-  /// Create a multisig configuration
-  ///
-  /// This is the simplest way to create a multisig address.
-  ///
-  /// Parameters:
-  /// - [addresses]: List of signatory addresses
-  /// - [threshold]: Number of approvals required
-  /// - [ss58Format]: Address format (default: 42)
-  ///
-  /// Returns: Signatories configuration with the multisig address
-  ///
-  /// Example:
-  /// ```dart
-  /// final multisig = Multisig.create(
-  ///   addresses: [alice.address, bob.address, charlie.address],
-  ///   threshold: 2,
-  /// );
-  ///
-  /// print('Multisig address: ${multisig.multisigAddress}');
-  /// print('Send funds to this address before creating transactions');
-  /// ```
-  static Signatories create({
-    required List<String> addresses,
-    required int threshold,
-    final int ss58Format = 42,
-  }) {
-    return Signatories(
-      addresses: addresses,
-      threshold: threshold,
-      ss58Format: ss58Format,
-    );
-  }
-
-  /// Create and fund a multisig account
-  ///
-  /// This helper creates a multisig and funds it in one transaction.
-  /// The depositor sends funds to the multisig address.
-  ///
-  /// Parameters:
-  /// - [provider]: Chain connection
-  /// - [depositor]: Address funding the multisig
-  /// - [signatories]: List of all signatory addresses
-  /// - [threshold]: Number of approvals required
-  /// - [amount]: Amount to fund the multisig with
-  /// - [depositorSignCallback]: Callback to sign the funding transaction
-  /// - [chainInfo]: Chain metadata
-  ///
-  /// Returns: Signatories configuration after funding
-  ///
-  /// Example:
-  /// ```dart
-  /// final multisig = await Multisig.createAndFund(
-  ///   provider: provider,
-  ///   chainInfo: chainInfo,
-  ///   depositor: alice.address,
-  ///   signatories: [alice.address, bob.address, charlie.address],
-  ///   threshold: 2,
-  ///   amount: BigInt.from(10000000000000), // 10 tokens
-  ///   signCallback: (payload) => aliceWallet.sign(payload),
-  /// );
-  /// ```
-  static Future<Signatories> createAndFundMultisig({
+  static Future<void> createAndFundMultisig({
     required final Provider provider,
     required final ChainInfo chainInfo,
-    required final List<String> signatories,
-    required final int threshold,
-    required final String depositor,
-    required final SigningCallback depositorSignCallback,
-    required final BigInt amount,
-    final int ss58Format = 42,
+    required final MultisigAccount multisigAccount,
+    required final String depositorAddress,
+    required final BigInt fundingAmount,
+    required final SigningCallback depositorSigningCallback,
     final int eraPeriod = 64,
     final BigInt? tip,
   }) async {
-    final multisig = create(
-      addresses: <String>[depositor, ...signatories],
-      threshold: threshold,
-      ss58Format: ss58Format,
-    );
-
     final RuntimeCall fundingCall = Balances.transferKeepAlive
-        .toAccountId(amount: amount, destination: multisig.multisigPublicKey)
+        .toAccountId(amount: fundingAmount, destination: multisigAccount.multisigPubkey)
         .toRuntimeCall(chainInfo);
-
     final Uint8List fundingCallData = chainInfo.callsCodec.encode(fundingCall);
 
     final chainData = await ChainDataFetcher(provider).fetchStandardData();
@@ -123,197 +28,366 @@ class Multisig {
       tip: tip,
     );
 
-    final depositorPubkey = Address.decode(depositor).pubkey;
-    await extrinsicBuilder.signBuildAndSubmit(
-      signerPublicKey: depositorPubkey,
-      signingCallback: depositorSignCallback,
+    final _ = await extrinsicBuilder.signBuildAndSubmit(
+      signingCallback: depositorSigningCallback,
       provider: provider,
-      signerAddress: depositor,
-    );
-
-    return multisig;
-  }
-
-  /// Quick transfer from multisig
-  ///
-  /// Convenience method for creating a transfer transaction from a multisig.
-  ///
-  /// Parameters:
-  /// - [signatories]: The multisig configuration
-  /// - [to]: Destination address
-  /// - [amount]: Amount to transfer
-  /// - [chainInfo]: Chain metadata
-  ///
-  /// Returns: MultisigTransaction ready to be approved
-  ///
-  /// Example:
-  /// ```dart
-  /// final tx = Multisig.transfer(
-  ///   signatories: multisig,
-  ///   to: dave.address,
-  ///   amount: BigInt.from(1000000000),
-  ///   chainInfo: chainInfo,
-  /// );
-  ///
-  /// await tx.approve(
-  ///   provider: provider,
-  ///   signer: alice.address,
-  ///   signCallback: (payload) => alice.sign(payload),
-  /// );
-  /// ```
-  static MultisigTransaction transfer({
-    required final ChainInfo chainInfo,
-    required final Signatories signatories,
-    required final Uint8List to,
-    required final BigInt amount,
-    final bool keepAlive = true,
-    final Weight? maxWeight,
-  }) {
-    late final RuntimeCall call;
-    if (keepAlive) {
-      call = Balances.transferKeepAlive
-          .toAccountId(amount: amount, destination: to)
-          .toRuntimeCall(chainInfo);
-    } else {
-      call =
-          Balances.transfer.toAccountId(amount: amount, destination: to).toRuntimeCall(chainInfo);
-    }
-
-    return MultisigTransaction.fromCall(
-      signatories: signatories,
-      call: call,
-      chainInfo: chainInfo,
-      maxWeight: maxWeight,
+      signerAddress: depositorAddress,
     );
   }
 
-  /// Check if a multisig transaction is pending
-  ///
-  /// Useful for checking before creating a new transaction.
-  ///
-  /// Parameters:
-  /// - [provider]: Chain connection
-  /// - [multisigAddress]: The multisig account address
-  /// - [callHash]: Hash of the call to check
-  /// - [chainInfo]: Chain metadata
-  ///
-  /// Returns: Storage data if pending, null otherwise
-  ///
-  /// Example:
-  /// ```dart
-  /// final isPending = await Multisig.isPending(
-  ///   provider: provider,
-  ///   chainInfo: chainInfo,
-  ///   multisigAddress: multisig.multisigAddress,
-  ///   callHash: callHash,
-  /// );
-  ///
-  /// if (isPending != null) {
-  ///   print('Transaction already pending with ${isPending.approvals.length} approvals');
-  /// }
-  /// ```
-  static Future<MultisigStorage?> isPending({
+  static Future<MultisigResponse> initiateTransfer({
     required final Provider provider,
     required final ChainInfo chainInfo,
-    required final String multisigAddress,
-    required final Uint8List callHash,
+    required final MultisigAccount multisigAccount,
+    required final String senderAddress,
+    required final SigningCallback senderSigningCallback,
+    required final String recipientAddress,
+    required final BigInt transferAmount,
+    final bool keepAlive = true,
+    final int eraPeriod = 64,
+    final BigInt? tip,
+    final int? nonce,
+    Weight? maxWeight,
   }) async {
-    return await MultisigStorage.fetch(
+    late final RuntimeCall call;
+    final recipient = Address.decode(recipientAddress).pubkey;
+    if (keepAlive) {
+      call = Balances.transferKeepAlive
+          .toAccountId(amount: transferAmount, destination: recipient)
+          .toRuntimeCall(chainInfo);
+    } else {
+      call = Balances.transfer
+          .toAccountId(amount: transferAmount, destination: recipient)
+          .toRuntimeCall(chainInfo);
+    }
+    final callData = chainInfo.callsCodec.encode(call);
+
+    await approveAsMulti(
       provider: provider,
-      multisigAddress: multisigAddress,
+      chainInfo: chainInfo,
+      multisigAccount: multisigAccount,
+      approverAddress: senderAddress,
+      approverSigningCallback: senderSigningCallback,
+      callData: callData,
+      eraPeriod: eraPeriod,
+      tip: tip,
+      nonce: nonce,
+      maxWeight: maxWeight,
+    );
+
+    return MultisigResponse(multisigAccount: multisigAccount, callData: callData);
+  }
+
+  static Future<void> approveAsMulti({
+    required final Provider provider,
+    required final ChainInfo chainInfo,
+    required final MultisigAccount multisigAccount,
+    required final String approverAddress,
+    required final SigningCallback approverSigningCallback,
+    required final Uint8List callData,
+    final int eraPeriod = 64,
+    final BigInt? tip,
+    final int? nonce,
+    Weight? maxWeight,
+  }) async {
+    maxWeight ??= Weight(
+      refTime: BigInt.from(1000000000), // 1 second of execution time
+      proofSize: BigInt.from(10000), // 10KB proof size
+    );
+
+    if (!multisigAccount.containsAddress(approverAddress)) {
+      throw ArgumentError('$approverAddress is not a signatory of this multisig');
+    }
+
+    final callHash = Hasher.blake2b256.hash(callData);
+    // Fetch current storage state
+    final storage = await MultisigStorage.fetch(
+      provider: provider,
+      multisigPubkey: multisigAccount.multisigPubkey,
       callHash: callHash,
       registry: chainInfo.registry,
     );
-  }
 
-  /// Compute multisig address without creating full Signatories
-  ///
-  /// Useful for quickly checking what a multisig address would be.
-  ///
-  /// Parameters:
-  /// - [addresses]: List of signatory addresses
-  /// - [threshold]: Number of approvals required
-  /// - [ss58Format]: Address format
-  ///
-  /// Returns: The multisig address
-  ///
-  /// Example:
-  /// ```dart
-  /// final address = Multisig.computeAddress(
-  ///   addresses: [alice.address, bob.address],
-  ///   threshold: 2,
-  /// );
-  /// print('Multisig would be: $address');
-  /// ```
-  static String computeAddress({
-    required final List<String> addresses,
-    required final int threshold,
-    final int ss58Format = 42,
-  }) {
-    final signatories = create(
-      addresses: addresses,
-      threshold: threshold,
-      ss58Format: ss58Format,
-    );
+    if (storage != null) {
+      if (storage.hasApproved(approverAddress)) {
+        throw StateError('Address $approverAddress has already approved this transaction');
+      }
 
-    return signatories.multisigAddress;
-  }
-
-  /// Validate multisig parameters
-  ///
-  /// Checks if the given parameters would create a valid multisig.
-  /// Useful for UI validation before attempting to create.
-  ///
-  /// Parameters:
-  /// - [addresses]: List of signatory addresses
-  /// - [threshold]: Number of approvals required
-  ///
-  /// Returns: Validation result with error message if invalid
-  ///
-  /// Example:
-  /// ```dart
-  /// final validation = Multisig.validate(
-  ///   addresses: addresses,
-  ///   threshold: threshold,
-  /// );
-  ///
-  /// if (!validation.isValid) {
-  ///   showError(validation.error!);
-  /// }
-  /// ```
-  static ({bool isValid, String? error}) validate({
-    required final List<String> addresses,
-    required final int threshold,
-  }) {
-    // Check threshold
-    if (threshold < 2) {
-      return (isValid: false, error: 'Threshold must be at least 2');
-    }
-
-    // Remove duplicates for counting
-    final unique = addresses.toSet();
-
-    if (unique.length < 2) {
-      return (isValid: false, error: 'At least 2 unique signatories required');
-    }
-
-    if (unique.length > 100) {
-      return (isValid: false, error: 'Maximum 100 signatories allowed');
-    }
-
-    if (threshold > unique.length) {
-      return (isValid: false, error: 'Threshold cannot exceed number of signatories');
-    }
-
-    // Validate addresses
-    for (final address in addresses) {
-      try {
-        Address.decode(address);
-      } catch (e) {
-        return (isValid: false, error: 'Invalid address: $address');
+      if (storage.isComplete(multisigAccount.threshold)) {
+        throw StateError(
+          'Transaction is already complete with ${storage.approvals.length} approvals',
+        );
+      }
+      if (storage.isFinalApproval(multisigAccount.threshold)) {
+        throw StateError(
+          'Can\'t call `approveAsMulti`. Final approval required for this transaction, use `asMulti` to approve this transaction.',
+        );
       }
     }
 
-    return (isValid: true, error: null);
+    // First/Middle approval - use approveAsMulti
+    // approvals-till-now = (storage?.approvals.length ?? 0)
+    // Adding approval ${approvals-till-now + 1} / ${signatories.threshold}
+    final RuntimeCall approvalCall = _createApproveAsMultiRuntimeCall(
+      chainInfo: chainInfo,
+      multisigAccount: multisigAccount,
+      signerAddress: approverAddress,
+      maybeTimepoint: storage?.when,
+      callHash: callHash,
+      maxWeight: maxWeight,
+    );
+
+    await _submitCall(
+      provider: provider,
+      chainInfo: chainInfo,
+      call: approvalCall,
+      signerAddress: approverAddress,
+      signCallback: approverSigningCallback,
+      nonce: nonce,
+      tip: tip,
+      eraPeriod: eraPeriod,
+    );
+  }
+
+  static Future<void> asMulti({
+    required final Provider provider,
+    required final ChainInfo chainInfo,
+    required final MultisigAccount multisigAccount,
+    required final String approverAddress,
+    required final SigningCallback approverSigningCallback,
+    required final Uint8List callData,
+    final int eraPeriod = 64,
+    final BigInt? tip,
+    final int? nonce,
+    Weight? maxWeight,
+  }) async {
+    maxWeight ??= Weight(
+      refTime: BigInt.from(1000000000), // 1 second of execution time
+      proofSize: BigInt.from(10000), // 10KB proof size
+    );
+
+    if (!multisigAccount.containsAddress(approverAddress)) {
+      throw ArgumentError('$approverAddress is not a signatory of this multisig');
+    }
+
+    final callHash = Hasher.blake2b256.hash(callData);
+
+    final storage = await MultisigStorage.fetch(
+      provider: provider,
+      multisigPubkey: multisigAccount.multisigPubkey,
+      callHash: callHash,
+      registry: chainInfo.registry,
+    );
+
+    if (storage == null) {
+      throw StateError(
+        'Multisig Storage is null, indicating that the first-approval is not yet done',
+      );
+    } else {
+      if (storage.hasApproved(approverAddress)) {
+        throw StateError('Address $approverAddress has already approved this transaction');
+      }
+      if (storage.isComplete(multisigAccount.threshold)) {
+        throw StateError(
+          'Transaction is already complete with ${storage.approvals.length} approvals',
+        );
+      }
+      if (storage.isFinalApproval(multisigAccount.threshold) == false) {
+        throw StateError(
+          'Transaction is already complete with ${storage.approvals.length} approvals',
+        );
+      }
+    }
+    // This will be the final approval - use asMulti to execute
+    // Creating final approval to execute transaction
+    final RuntimeCall approvalCall = _createAsMultiRuntimeCall(
+      chainInfo: chainInfo,
+      multisigAccount: multisigAccount,
+      signerAddress: approverAddress,
+      maybeTimepoint: storage.when,
+      callData: callData,
+      maxWeight: maxWeight,
+    );
+
+    await _submitCall(
+      provider: provider,
+      chainInfo: chainInfo,
+      call: approvalCall,
+      signerAddress: approverAddress,
+      signCallback: approverSigningCallback,
+      nonce: nonce,
+      eraPeriod: eraPeriod,
+      tip: tip,
+    );
+  }
+
+  static Future<Uint8List> cancel({
+    required final Provider provider,
+    required final ChainInfo chainInfo,
+    required final MultisigAccount multisigAccount,
+    required final String signerAddress,
+    required final SigningCallback signerSignerCallback,
+    required final Uint8List callHash,
+    final int eraPeriod = 64,
+    final int? nonce,
+  }) async {
+    final storage = await MultisigStorage.fetch(
+      provider: provider,
+      multisigPubkey: multisigAccount.multisigPubkey,
+      callHash: callHash,
+      registry: chainInfo.registry,
+    );
+
+    if (storage == null) {
+      throw StateError('No pending transaction to cancel');
+    }
+
+    if (!storage.isDepositor(signerAddress)) {
+      throw StateError('Only the depositor (${storage.depositor}) can cancel');
+    }
+
+    final cancelCall = _createCancelAsMultiRuntimeCall(
+      chainInfo: chainInfo,
+      multisigAccount: multisigAccount,
+      signerAddress: signerAddress,
+      maybeTimepoint: storage.when,
+      callHash: callHash,
+    );
+
+    return await _submitCall(
+      provider: provider,
+      chainInfo: chainInfo,
+      call: cancelCall,
+      signerAddress: signerAddress,
+      signCallback: signerSignerCallback,
+      eraPeriod: eraPeriod,
+      nonce: nonce,
+    );
+  }
+
+  /// Create cancelAsMulti call
+  static RuntimeCall _createCancelAsMultiRuntimeCall({
+    required final MultisigAccount multisigAccount,
+    required final ChainInfo chainInfo,
+    required final String signerAddress,
+    required final TimePoint maybeTimepoint,
+    required final Uint8List callHash,
+  }) {
+    return _createRuntimeCall(
+      palletName: 'Multisig',
+      callName: 'cancel_as_multi',
+      multisigAccount: multisigAccount,
+      chainInfo: chainInfo,
+      signerAddress: signerAddress,
+      maybeTimepoint: maybeTimepoint,
+    );
+  }
+
+  /// Create approveAsMulti call
+  static RuntimeCall _createApproveAsMultiRuntimeCall({
+    required final MultisigAccount multisigAccount,
+    required final ChainInfo chainInfo,
+    required final String signerAddress,
+    required final Weight maxWeight,
+    required final Uint8List callHash,
+    final TimePoint? maybeTimepoint,
+  }) {
+    return _createRuntimeCall(
+      palletName: 'Multisig',
+      callName: 'approve_as_multi',
+      multisigAccount: multisigAccount,
+      chainInfo: chainInfo,
+      signerAddress: signerAddress,
+      maybeTimepoint: maybeTimepoint,
+      extras: {'call_hash': callHash, 'max_weight': maxWeight.toJson()},
+    );
+  }
+
+  /// Create asMulti call
+  static RuntimeCall _createAsMultiRuntimeCall({
+    required final MultisigAccount multisigAccount,
+    required final ChainInfo chainInfo,
+    required final String signerAddress,
+    required final Uint8List callData,
+    required final TimePoint maybeTimepoint,
+    required final Weight maxWeight,
+  }) {
+    final decodedCall = chainInfo.callsCodec.decode(Input.fromBytes(callData));
+
+    return _createRuntimeCall(
+      palletName: 'Multisig',
+      callName: 'as_multi',
+      multisigAccount: multisigAccount,
+      chainInfo: chainInfo,
+      signerAddress: signerAddress,
+      maybeTimepoint: maybeTimepoint,
+      extras: {'call': decodedCall, 'max_weight': maxWeight.toJson()},
+    );
+  }
+
+  static RuntimeCall _createRuntimeCall({
+    required final String palletName,
+    required final String callName,
+    required final MultisigAccount multisigAccount,
+    required final ChainInfo chainInfo,
+    required final String signerAddress,
+    required final TimePoint? maybeTimepoint,
+    final Map<String, dynamic>? extras,
+  }) {
+    final otherSignatories = multisigAccount.otherSignatoriesForAddress(signerAddress);
+
+    final indices = CallIndicesLookup(
+      chainInfo,
+    ).getPalletAndCallIndex(palletName: palletName, callName: callName);
+
+    return RuntimeCall(
+      palletName: palletName,
+      palletIndex: indices.palletIndex,
+      callName: callName,
+      callIndex: indices.callIndex,
+      args: {
+        'threshold': multisigAccount.threshold,
+        'other_signatories': otherSignatories,
+        'maybe_timepoint': maybeTimepoint?.toJson(),
+        ...?extras,
+      },
+    );
+  }
+
+  /// Submit a call to the chain
+  static Future<Uint8List> _submitCall({
+    required final Provider provider,
+    required final ChainInfo chainInfo,
+    required final RuntimeCall call,
+    required final String signerAddress,
+    required final SigningCallback signCallback,
+    required final int? nonce,
+    final int eraPeriod = 64,
+    final BigInt? tip,
+  }) async {
+    final output = ByteOutput();
+    final codec = chainInfo.callsCodec;
+    codec.encodeTo(call, output);
+    final callData = output.toBytes();
+
+    final chainData = await ChainDataFetcher(provider).fetchStandardData();
+
+    final extrinsic = ExtrinsicBuilder.fromChainData(
+      chainInfo: chainInfo,
+      callData: callData,
+      chainData: chainData,
+      eraPeriod: eraPeriod,
+      tip: tip,
+    );
+
+    if (nonce != null) {
+      extrinsic.nonce(nonce);
+    }
+
+    return await extrinsic.signBuildAndSubmit(
+      signingCallback: signCallback,
+      provider: provider,
+      signerAddress: signerAddress,
+    );
   }
 }

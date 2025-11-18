@@ -11,9 +11,9 @@ class ChainDataFetcher {
   final SystemApi _systemApi;
   final StateApi _stateApi;
   ChainDataFetcher(this.provider)
-      : _chainApi = ChainApi(provider),
-        _systemApi = SystemApi(provider),
-        _stateApi = StateApi(provider);
+    : _chainApi = ChainApi(provider),
+      _systemApi = SystemApi(provider),
+      _stateApi = StateApi(provider);
 
   /// Fetch all standard chain data in parallel
   ///
@@ -54,10 +54,7 @@ class ChainDataFetcher {
       final latestBlockNumber = await _chainApi.getChainHeader();
       final latestBlockHash = await _chainApi.getBlockHash(blockNumber: latestBlockNumber);
 
-      return BlockHeader(
-        hash: latestBlockHash,
-        number: latestBlockNumber,
-      );
+      return BlockHeader(hash: latestBlockHash, number: latestBlockNumber);
     } catch (e) {
       throw FetchError('Failed to fetch latest header: $e');
     }

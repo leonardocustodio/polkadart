@@ -11,9 +11,9 @@ class Weight extends Equatable {
   const Weight({required this.refTime, required this.proofSize});
 
   Map<String, dynamic> toJson() => {
-        'ref_time': refTime.toString(),
-        'proof_size': proofSize.toString(),
-      };
+    'ref_time': refTime.toString(),
+    'proof_size': proofSize.toString(),
+  };
 
   factory Weight.fromJson(final Map<String, dynamic> json) {
     return Weight(

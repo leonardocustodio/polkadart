@@ -28,11 +28,11 @@ class ExtrinsicBuilder {
     int eraPeriod = 64,
     BigInt? tip,
     int? nonce,
-  })  : _blockHash = blockHash,
-        _blockNumber = blockNumber,
-        _eraPeriod = eraPeriod,
-        _tip = tip ?? BigInt.zero,
-        _extensionBuilder = ExtensionBuilder(chainInfo) {
+  }) : _blockHash = blockHash,
+       _blockNumber = blockNumber,
+       _eraPeriod = eraPeriod,
+       _tip = tip ?? BigInt.zero,
+       _extensionBuilder = ExtensionBuilder(chainInfo) {
     // Initialize with provided values
     _extensionBuilder.setStandardExtensions(
       specVersion: specVersion,
@@ -119,24 +119,23 @@ class ExtrinsicBuilder {
     return this;
   }
 
-  ExtrinsicBuilder customExtension(final String identifier, final dynamic value,
-      {final dynamic additional}) {
+  ExtrinsicBuilder customExtension(
+    final String identifier,
+    final dynamic value, {
+    final dynamic additional,
+  }) {
     _extensionBuilder.customExtension(identifier, value, additional: additional);
     return this;
   }
 
   /// Sign and build with a callback (for external signing)
   Future<EncodedExtrinsic> signAndBuild({
-    required final Uint8List signerPublicKey,
+    required final Provider provider,
+    required final String signerAddress,
     required final SigningCallback signingCallback,
-    final Provider? provider,
-    final String? signerAddress,
   }) async {
     // Fetch nonce if needed
-    await _fetchNonceIfNeeded(
-      provider: provider,
-      address: signerAddress,
-    );
+    await _fetchNonceIfNeeded(provider: provider, address: signerAddress);
 
     // Create signing builder
     final signingBuilder = SigningBuilder(
@@ -150,6 +149,7 @@ class ExtrinsicBuilder {
     // Call the external signing callback
     final signature = signingCallback(payloadToSign);
 
+    final signerPublicKey = Address.decode(signerAddress).pubkey;
     // Create signed data manually
     final signedData = SignedData(
       signer: signerPublicKey,
@@ -165,34 +165,30 @@ class ExtrinsicBuilder {
   }
 
   /// Sign, build and submit with callback
-  Future<String> signBuildAndSubmit({
-    required final Uint8List signerPublicKey,
-    required final SigningCallback signingCallback,
+  Future<Uint8List> signBuildAndSubmit({
     required final Provider provider,
-    final String? signerAddress,
+    required final String signerAddress,
+    required final SigningCallback signingCallback,
   }) async {
     final extrinsic = await signAndBuild(
-      signerPublicKey: signerPublicKey,
-      signingCallback: signingCallback,
       provider: provider,
       signerAddress: signerAddress,
+      signingCallback: signingCallback,
     );
     return extrinsic.submit(provider);
   }
 
   /// Sign, build and submit with callback
   Future<StreamSubscription<ExtrinsicStatus>> signBuildAndSubmitWatch({
-    required final Uint8List signerPublicKey,
-    required final SigningCallback signingCallback,
     required final Provider provider,
+    required final String signerAddress,
+    required final SigningCallback signingCallback,
     required final ExtrinsicListener onStatusChange,
-    final String? signerAddress,
   }) async {
     final extrinsic = await signAndBuild(
-      signerPublicKey: signerPublicKey,
+      signerAddress: signerAddress,
       signingCallback: signingCallback,
       provider: provider,
-      signerAddress: signerAddress,
     );
 
     return await extrinsic.submitAndWatch(provider, onStatusChange);
@@ -208,29 +204,30 @@ class ExtrinsicBuilder {
   }
 
   /// Quick send with external signing
-  static Future<String> quickSend({
+  static Future<Uint8List> quickSend({
     required final Provider provider,
     required final ChainInfo chainInfo,
     required final Uint8List callData,
-    required final Uint8List signerPublicKey,
+    required final String signerAddress,
     required final SigningCallback signingCallback,
-    final String? signerAddress,
     final int? eraPeriod,
     final BigInt? tip,
     bool immortal = false,
   }) async {
     // An Immortal transaction so expect eraPeriod to be null.
-    assert(immortal && eraPeriod == null,
-        'For immortal transactions, eraPeriod must be null and immortal must be true.');
+    assert(
+      immortal && eraPeriod == null,
+      'For immortal transactions, eraPeriod must be null and immortal must be true.',
+    );
 
     // Not an Immortal transaction so expect eraPeriod to non-null.
-    assert(immortal == false && eraPeriod != null,
-        'For mortal transactions, eraPeriod must not be null and immortal must be false.');
+    assert(
+      immortal == false && eraPeriod != null,
+      'For mortal transactions, eraPeriod must not be null and immortal must be false.',
+    );
     // Fetch chain data
     final fetcher = ChainDataFetcher(provider);
-    final chainData = await fetcher.fetchStandardData(
-      accountAddress: signerAddress,
-    );
+    final chainData = await fetcher.fetchStandardData(accountAddress: signerAddress);
 
     // Build and submit
     ExtrinsicBuilder builder = ExtrinsicBuilder.fromChainData(
@@ -243,23 +240,20 @@ class ExtrinsicBuilder {
     if (immortal) builder = builder.immortal();
 
     return builder.signBuildAndSubmit(
-      signerPublicKey: signerPublicKey,
-      signingCallback: signingCallback,
       provider: provider,
+      signingCallback: signingCallback,
       signerAddress: signerAddress,
     );
   }
 
   // ===== Private Helpers =====
 
-  Future<void> _fetchNonceIfNeeded({
-    final Provider? provider,
-    final String? address,
-  }) async {
+  Future<void> _fetchNonceIfNeeded({final Provider? provider, final String? address}) async {
     if (_nonceSet) return;
     if (provider == null || address == null) {
       throw Exception(
-          'Cannot fetch nonce: Both the provider & address is needed to fetch nonce for the sender or please set nonce manually.');
+        'Cannot fetch nonce: Both the provider & address is needed to fetch nonce for the sender or please set nonce manually.',
+      );
     }
 
     final fetcher = SystemApi(provider);

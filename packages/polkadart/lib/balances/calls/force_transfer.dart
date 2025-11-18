@@ -6,23 +6,23 @@ class _BalancesForceTransferHelper {
     required String source,
     required String destination,
     required BigInt amount,
-  }) =>
-      BalancesForceTransfer.to(source: source, destination: destination, amount: amount);
+  }) => BalancesForceTransfer.to(source: source, destination: destination, amount: amount);
 
   BalancesForceTransfer toAccountId({
     required Uint8List source,
     required Uint8List destination,
     required BigInt amount,
-  }) =>
-      BalancesForceTransfer.toAccountId(source: source, destination: destination, amount: amount);
+  }) => BalancesForceTransfer.toAccountId(source: source, destination: destination, amount: amount);
 
   BalancesForceTransfer toMultiAddress({
     required MultiAddress source,
     required MultiAddress destination,
     required BigInt amount,
-  }) =>
-      BalancesForceTransfer.toMultiAddress(
-          source: source, destination: destination, amount: amount);
+  }) => BalancesForceTransfer.toMultiAddress(
+    source: source,
+    destination: destination,
+    amount: amount,
+  );
 }
 
 /// Balances.force_transfer call (requires root/sudo)
@@ -50,33 +50,33 @@ class BalancesForceTransfer extends BalancesCallBuilder {
     required String source,
     required String destination,
     required BigInt amount,
-  }) =>
-      BalancesForceTransfer._(
-          _ss58ToMultiAddress(source), _ss58ToMultiAddress(destination), amount);
+  }) => BalancesForceTransfer._(
+    _ss58ToMultiAddress(source),
+    _ss58ToMultiAddress(destination),
+    amount,
+  );
 
   /// Create force_transfer using raw account IDs
   factory BalancesForceTransfer.toAccountId({
     required Uint8List source,
     required Uint8List destination,
     required BigInt amount,
-  }) =>
-      BalancesForceTransfer._(MultiAddress.id(source), MultiAddress.id(destination), amount);
+  }) => BalancesForceTransfer._(MultiAddress.id(source), MultiAddress.id(destination), amount);
 
   /// Create force_transfer using MultiAddress
   factory BalancesForceTransfer.toMultiAddress({
     required MultiAddress source,
     required MultiAddress destination,
     required BigInt amount,
-  }) =>
-      BalancesForceTransfer._(source, destination, amount);
+  }) => BalancesForceTransfer._(source, destination, amount);
 
   @override
   String get callName => 'force_transfer';
 
   @override
   Map<String, dynamic> buildArgs() => {
-        'source': source.toJson(),
-        'dest': dest.toJson(),
-        'value': amount,
-      };
+    'source': source.toJson(),
+    'dest': dest.toJson(),
+    'value': amount,
+  };
 }

@@ -1,4 +1,4 @@
-part of multisig;
+/* part of multisig;
 
 /// Represents a multisig transaction that can be approved or executed
 ///
@@ -152,7 +152,7 @@ class MultisigTransaction {
   /// );
   /// print('Transaction: $txHash');
   /// ```
-  Future<String> approve({
+  Future<Uint8List> approve({
     required final Provider provider,
     required final String signer,
     required final SigningCallback signCallback,
@@ -167,7 +167,7 @@ class MultisigTransaction {
     // Fetch current storage state
     final storage = await MultisigStorage.fetch(
       provider: provider,
-      multisigAddress: signatories.multisigAddress,
+      multisigPubkey: signatories.multisigPubkey,
       callHash: callHash,
       registry: chainInfo.registry,
     );
@@ -212,7 +212,6 @@ class MultisigTransaction {
       }
     }
 
-    // Submit the call
     return await _submitCall(
       provider: provider,
       call: approvalCall,
@@ -246,7 +245,7 @@ class MultisigTransaction {
   ///   signCallback: (payload) => alice.sign(payload),
   /// );
   /// ```
-  Future<String> cancel({
+  Future<Uint8List> cancel({
     required final Provider provider,
     required final String signer,
     required final SigningCallback signCallback,
@@ -256,7 +255,7 @@ class MultisigTransaction {
   }) async {
     final storage = await MultisigStorage.fetch(
       provider: provider,
-      multisigAddress: signatories.multisigAddress,
+      multisigPubkey: signatories.multisigPubkey,
       callHash: callHash,
       registry: chainInfo.registry,
     );
@@ -299,7 +298,7 @@ class MultisigTransaction {
   Future<MultisigStorage?> getStatus(Provider provider) async {
     return await MultisigStorage.fetch(
       provider: provider,
-      multisigAddress: signatories.multisigAddress,
+      multisigPubkey: signatories.multisigPubkey,
       callHash: callHash,
       registry: chainInfo.registry,
     );
@@ -420,7 +419,7 @@ class MultisigTransaction {
   }
 
   /// Submit a call to the chain
-  Future<String> _submitCall({
+  Future<Uint8List> _submitCall({
     required final Provider provider,
     required final RuntimeCall call,
     required final String signerAddress,
@@ -456,3 +455,4 @@ class MultisigTransaction {
     );
   }
 }
+ */

@@ -13,17 +13,11 @@ class TimePoint extends Equatable {
   const TimePoint({required this.height, required this.index});
 
   /// Convert to JSON
-  Map<String, dynamic> toJson() => {
-        'height': height,
-        'index': index,
-      };
+  Map<String, dynamic> toJson() => {'height': height, 'index': index};
 
   /// Create from JSON
   factory TimePoint.fromJson(final Map<String, dynamic> json) {
-    return TimePoint(
-      height: json['height'] as int,
-      index: json['index'] as int,
-    );
+    return TimePoint(height: json['height'] as int, index: json['index'] as int);
   }
 
   @override

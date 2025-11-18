@@ -1,33 +1,26 @@
-/* part of multisig;
+part of multisig;
 
-/// Manages signatories for a multisig account
-///
-/// This class handles the creation of multisig addresses and manages
-/// the signatories list for multisig operations.
-///
-/// Example:
-/// ```dart
-/// final signatories = Signatories(
-///   addresses: [alice.address, bob.address, charlie.address],
-///   threshold: 2,
-/// );
-///
-/// print('Multisig address: ${signatories.multisigAddress}');
-/// ```
-class Signatories extends Equatable {
+@JsonSerializable(explicitToJson: true, constructor: '_')
+class MultisigAccount extends Equatable {
   /// Number of approvals required for execution
   final int threshold;
 
-  /// Sorted list of signatory addresses
-  final List<String> addresses;
-
   /// Sorted list of signatory public keys (32 bytes each)
+  @Uint8ListListConverter()
   final List<Uint8List> publicKeys;
 
   /// The multisig account public key (32 bytes)
+  @Uint8ListConverter()
   final Uint8List multisigPubkey;
 
-  /// Creates a new Signatories instance
+  /// Private constructor
+  const MultisigAccount._({
+    required this.threshold,
+    required this.publicKeys,
+    required this.multisigPubkey,
+  });
+
+  /// Creates a new MultisigAccount instance
   ///
   /// Parameters:
   /// - [addresses]: List of signatory addresses (will be deduplicated and sorted)
@@ -35,22 +28,19 @@ class Signatories extends Equatable {
   ///
   /// Example:
   /// ```dart
-  /// final signatories = Signatories(
+  /// final signatories = MultisigAccount(
   ///   addresses: [alice.address, bob.address, charlie.address],
   ///   threshold: 2,
   /// );
   /// ```
-  factory Signatories({
-    required final List<String> addresses,
-    required final int threshold,
-  }) {
+  factory MultisigAccount({required final List<String> addresses, required final int threshold}) {
     // Validate threshold
     if (threshold < 2) {
       throw ArgumentError('Threshold must be at least 2, got $threshold');
     }
 
     // Remove duplicates
-    final uniqueAddresses = addresses.toSet().toList();
+    final uniqueAddresses = addresses.toSet().toList(growable: false);
 
     // Validate count
     if (uniqueAddresses.length < 2) {
@@ -63,46 +53,34 @@ class Signatories extends Equatable {
 
     if (threshold > uniqueAddresses.length) {
       throw ArgumentError(
-          'Threshold ($threshold) cannot exceed signatories (${uniqueAddresses.length})');
+        'Threshold ($threshold) cannot exceed signatories (${uniqueAddresses.length})',
+      );
     }
 
     // Convert to public keys and sort
-    final pubkeysWithAddresses = <(Uint8List, String)>[];
+    final pubkeysWithAddresses = <Uint8List>[];
 
     for (final address in uniqueAddresses) {
       try {
         final pubkey = Address.decode(address).pubkey;
-        pubkeysWithAddresses.add((pubkey, address));
+        pubkeysWithAddresses.add(pubkey);
       } catch (e) {
         throw ArgumentError('Invalid address: $address');
       }
     }
 
     // Sort by public key bytes
-    pubkeysWithAddresses.sort((final a, final b) => _compareBytes(a.$1, b.$1));
-
-    // Extract sorted data
-    final sortedPubkeys = pubkeysWithAddresses.map((final e) => e.$1).toList();
-    final sortedAddresses = pubkeysWithAddresses.map((final e) => e.$2).toList();
+    pubkeysWithAddresses.sort((final a, final b) => _compareBytes(a, b));
 
     // Generate multisig address
-    final multisigPubkey = _deriveMultisigAddress(sortedPubkeys, threshold);
+    final multisigPubkey = _deriveMultisigAddress(pubkeysWithAddresses, threshold);
 
-    return Signatories._(
+    return MultisigAccount._(
       threshold: threshold,
-      addresses: sortedAddresses,
-      publicKeys: sortedPubkeys,
+      publicKeys: pubkeysWithAddresses,
       multisigPubkey: multisigPubkey,
     );
   }
-
-  /// Private constructor
-  const Signatories._({
-    required this.threshold,
-    required this.addresses,
-    required this.publicKeys,
-    required this.multisigPubkey,
-  });
 
   /// Get other signatories excluding the signer
   ///
@@ -119,23 +97,45 @@ class Signatories extends Equatable {
   /// Example:
   /// ```dart
   /// // Alice is signing
-  /// final others = signatories.otherSignatoriesFor(alice.address);
+  /// final others = signatories.otherSignatoriesForAddress(alice.address);
   /// // Returns public keys of Bob and Charlie
   /// ```
-  List<Uint8List> otherSignatoriesFor(final String signerAddress) {
-    Uint8List signerPubkey;
+  List<Uint8List> otherSignatoriesForAddress(final String signerAddress) {
+    late final Uint8List signerPubkey;
     try {
       signerPubkey = Address.decode(signerAddress).pubkey;
     } catch (e) {
       throw ArgumentError('Invalid signer address: $signerAddress');
     }
 
+    return otherSignatoriesForPubkey(signerPubkey);
+  }
+
+  /// Get other signatories excluding the signer
+  ///
+  /// Used when creating multisig transactions. The current signer
+  /// must be excluded from the "other_signatories" field.
+  ///
+  /// Parameters:
+  /// - [signerPubkey]: The Pubkey of the current signer
+  ///
+  /// Returns: List of other signatories' public keys
+  ///
+  /// Throws: [ArgumentError] if signer is not a signatory
+  ///
+  /// Example:
+  /// ```dart
+  /// // Alice is signing
+  /// final others = signatories.otherSignatoriesForPubkey(alice.pubKey);
+  /// // Returns public keys of Bob and Charlie
+  /// ```
+  List<Uint8List> otherSignatoriesForPubkey(final Uint8List signerPubkey) {
     // Find and exclude the signer
     final others = <Uint8List>[];
     bool foundSigner = false;
 
     for (final pubkey in publicKeys) {
-      if (_compareBytes(pubkey, signerPubkey) == 0) {
+      if (_matchesPubkey(pubkey, signerPubkey)) {
         foundSigner = true;
       } else {
         others.add(pubkey);
@@ -143,7 +143,7 @@ class Signatories extends Equatable {
     }
 
     if (!foundSigner) {
-      throw ArgumentError('Address $signerAddress is not a signatory of this multisig');
+      throw ArgumentError('Address $signerPubkey is not a signatory of this multisig');
     }
 
     return others;
@@ -157,38 +157,24 @@ class Signatories extends Equatable {
   ///   throw Exception('Alice cannot sign this transaction');
   /// }
   /// ```
-  bool contains(final String address) {
-    try {
-      final pubkey = Address.decode(address).pubkey;
-      return publicKeys.any((final p) => _compareBytes(p, pubkey) == 0);
-    } catch (_) {
-      return false;
-    }
+  bool containsAddress(final String address) {
+    final searchPubkey = Address.decode(address).pubkey;
+    return publicKeys.any((final key) => _matchesPubkey(key, searchPubkey));
   }
 
-  /// Create shareable JSON representation
+  /// Check if an Pubkey is a signatory
   ///
   /// Example:
   /// ```dart
-  /// final json = signatories.toJson();
-  /// // Share with other signatories
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'signatories': addresses,
-        'threshold': threshold,
-      };
+  /// if (!signatories.containsPubkey(alice.pubKey)) {
+  ///   throw Exception('Alice cannot sign this transaction');
+  /// }
+  bool containsPubkey(final Uint8List pubkey) {
+    return publicKeys.any((final key) => _matchesPubkey(key, pubkey));
+  }
 
-  /// Reconstruct from JSON
-  ///
-  /// Example:
-  /// ```dart
-  /// final signatories = Signatories.fromJson(json);
-  /// ```
-  factory Signatories.fromJson(final Map<String, dynamic> json) {
-    return Signatories(
-      addresses: List<String>.from(json['signatories']),
-      threshold: json['threshold'] as int,
-    );
+  static bool _matchesPubkey(final Uint8List first, final Uint8List second) {
+    return _compareBytes(first, second) == 0;
   }
 
   /// Derive multisig address using Substrate's algorithm
@@ -238,12 +224,13 @@ class Signatories extends Equatable {
     return 0;
   }
 
+  /// Create from JSON
+  factory MultisigAccount.fromJson(final Map<String, dynamic> json) =>
+      _$MultisigAccountFromJson(json);
+
+  /// Convert to JSON
+  Map<String, dynamic> toJson() => _$MultisigAccountToJson(this);
+
   @override
-  List<Object> get props => [
-        threshold,
-        addresses,
-        publicKeys,
-        multisigPubkey,
-      ];
+  List<Object> get props => [threshold, publicKeys, multisigPubkey];
 }
- */

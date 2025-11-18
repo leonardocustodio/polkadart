@@ -28,31 +28,31 @@ class MultisigStorageStatus extends Equatable {
   });
 
   Map<String, dynamic> toJson() => {
-        'approvalCount': approvalCount,
-        'threshold': threshold,
-        'isComplete': isComplete,
-        'isWaitingForFinalApproval': isWaitingForFinalApproval,
-        'depositor': depositor,
-        'deposit': deposit.toString(),
-        'when': when.toJson(),
-        'approvals': approvals,
-        'hasApproved': hasApproved,
-        'canApprove': canApprove,
-        'canCancel': canCancel,
-      };
+    'approvalCount': approvalCount,
+    'threshold': threshold,
+    'isComplete': isComplete,
+    'isWaitingForFinalApproval': isWaitingForFinalApproval,
+    'depositor': depositor,
+    'deposit': deposit.toString(),
+    'when': when.toJson(),
+    'approvals': approvals,
+    'hasApproved': hasApproved,
+    'canApprove': canApprove,
+    'canCancel': canCancel,
+  };
 
   @override
   List<Object?> get props => [
-        approvalCount,
-        threshold,
-        isComplete,
-        isWaitingForFinalApproval,
-        depositor,
-        deposit,
-        when,
-        approvals,
-        hasApproved,
-        canApprove,
-        canCancel,
-      ];
+    approvalCount,
+    threshold,
+    isComplete,
+    isWaitingForFinalApproval,
+    depositor,
+    deposit,
+    when,
+    approvals,
+    hasApproved,
+    canApprove,
+    canCancel,
+  ];
 }

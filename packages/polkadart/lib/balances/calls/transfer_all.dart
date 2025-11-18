@@ -2,23 +2,16 @@ part of balances_calls;
 
 class _BalancesTransferAllHelper {
   const _BalancesTransferAllHelper();
-  BalancesTransferAll to({
-    required String destination,
-    required bool keepAlive,
-  }) =>
+  BalancesTransferAll to({required String destination, required bool keepAlive}) =>
       BalancesTransferAll.to(destination: destination, keepAlive: keepAlive);
 
-  BalancesTransferAll toAccountId({
-    required Uint8List destination,
-    required bool keepAlive,
-  }) =>
+  BalancesTransferAll toAccountId({required Uint8List destination, required bool keepAlive}) =>
       BalancesTransferAll.toAccountId(destination: destination, keepAlive: keepAlive);
 
   BalancesTransferAll toMultiAddress({
     required MultiAddress destination,
     required bool keepAlive,
-  }) =>
-      BalancesTransferAll.toMultiAddress(destination: destination, keepAlive: keepAlive);
+  }) => BalancesTransferAll.toMultiAddress(destination: destination, keepAlive: keepAlive);
 }
 
 /// Balances.transfer_all call
@@ -48,25 +41,20 @@ class BalancesTransferAll extends BalancesCallBuilder {
   const BalancesTransferAll._(this.dest, this.keepAlive);
 
   /// Create transfer_all using SS58 address
-  factory BalancesTransferAll.to({
-    required String destination,
-    required bool keepAlive,
-  }) =>
+  factory BalancesTransferAll.to({required String destination, required bool keepAlive}) =>
       BalancesTransferAll._(_ss58ToMultiAddress(destination), keepAlive);
 
   /// Create transfer_all using raw account ID
   factory BalancesTransferAll.toAccountId({
     required Uint8List destination,
     required bool keepAlive,
-  }) =>
-      BalancesTransferAll._(MultiAddress.id(destination), keepAlive);
+  }) => BalancesTransferAll._(MultiAddress.id(destination), keepAlive);
 
   /// Create transfer_all using MultiAddress
   factory BalancesTransferAll.toMultiAddress({
     required MultiAddress destination,
     required bool keepAlive,
-  }) =>
-      BalancesTransferAll._(destination, keepAlive);
+  }) => BalancesTransferAll._(destination, keepAlive);
 
   @override
   String get callName => 'transfer_all';

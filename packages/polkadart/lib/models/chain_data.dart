@@ -32,11 +32,11 @@ class ChainData extends Equatable {
 
   @override
   List<Object?> get props => [
-        genesisHash,
-        blockHash,
-        blockNumber,
-        specVersion,
-        transactionVersion,
-        nonce,
-      ];
+    genesisHash,
+    blockHash,
+    blockNumber,
+    specVersion,
+    transactionVersion,
+    nonce,
+  ];
 }

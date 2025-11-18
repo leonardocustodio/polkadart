@@ -9,10 +9,7 @@ class SigningBuilder {
   final ChainInfo chainInfo;
   final ExtensionBuilder extensionBuilder;
 
-  const SigningBuilder({
-    required this.chainInfo,
-    required this.extensionBuilder,
-  });
+  const SigningBuilder({required this.chainInfo, required this.extensionBuilder});
 
   /// Create and sign an extrinsic
   ///
@@ -70,11 +67,11 @@ class SigningBuilder {
       }
 
       final value = extensionBuilder.extensions[ext.identifier];
-      if (value == null) {
+      /* if (value == null) {
         // This shouldn't happen if validate() passed
         throw StateError('Missing extension value for ${ext.identifier} during signing. '
             'This should have been caught during validation.');
-      }
+      } */
 
       try {
         // Special handling for CheckMortality/CheckEra
@@ -85,16 +82,19 @@ class SigningBuilder {
             output.write(value);
           } else {
             throw SigningError(
-                'CheckMortality/CheckEra value must be Uint8List (pre-encoded era bytes)');
+              'CheckMortality/CheckEra value must be Uint8List (pre-encoded era bytes)',
+            );
           }
         } else {
           // Use standard codec for other extensions
           codec.encodeTo(value, output);
         }
       } catch (e) {
-        throw SigningError('Failed to encode extension ${ext.identifier}: $e\n'
-            'Value: $value\n'
-            'Codec: ${codec.runtimeType}');
+        throw SigningError(
+          'Failed to encode extension ${ext.identifier}: $e\n'
+          'Value: $value\n'
+          'Codec: ${codec.runtimeType}',
+        );
       }
     }
 
@@ -108,18 +108,20 @@ class SigningBuilder {
       }
 
       final value = extensionBuilder.additionalSigned[ext.identifier];
-      if (value == null) {
+      /* if (value == null) {
         // This shouldn't happen if validate() passed
         throw StateError('Missing additional signed for ${ext.identifier} during signing. '
             'This should have been caught during validation.');
-      }
+      } */
 
       try {
         codec.encodeTo(value, output);
       } catch (e) {
-        throw SigningError('Failed to encode additional signed ${ext.identifier}: $e\n'
-            'Value: $value\n'
-            'Codec: ${codec.runtimeType}');
+        throw SigningError(
+          'Failed to encode additional signed ${ext.identifier}: $e\n'
+          'Value: $value\n'
+          'Codec: ${codec.runtimeType}',
+        );
       }
     }
 

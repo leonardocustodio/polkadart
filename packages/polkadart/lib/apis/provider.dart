@@ -50,8 +50,11 @@ abstract class Provider {
   Future<RpcResponse> send(String method, List<dynamic> params);
 
   /// Send subscribe message to RPC node
-  Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
-      {FutureOr<void> Function(String subscription)? onCancel});
+  Future<SubscriptionResponse> subscribe(
+    String method,
+    List<dynamic> params, {
+    FutureOr<void> Function(String subscription)? onCancel,
+  });
 }
 
 /// The HTTP Provider allows sending requests using HTTP to a HTTP RPC server TCP port.
@@ -68,16 +71,16 @@ class HttpProvider extends Provider {
 
   @override
   Future<RpcResponse> send(String method, List<dynamic> params) async {
-    final response = await http.post(url,
-        body: jsonEncode(
-          {
-            'id': (++_sequence).toString(),
-            'jsonrpc': '2.0',
-            'method': method,
-            'params': params,
-          },
-        ),
-        headers: {'Content-Type': 'application/json'});
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'id': (++_sequence).toString(),
+        'jsonrpc': '2.0',
+        'method': method,
+        'params': params,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
     final data = jsonDecode(response.body);
 
     return RpcResponse(
@@ -88,8 +91,11 @@ class HttpProvider extends Provider {
   }
 
   @override
-  Future<SubscriptionResponse> subscribe(String method, List params,
-      {FutureOr<void> Function(String subscription)? onCancel}) {
+  Future<SubscriptionResponse> subscribe(
+    String method,
+    List params, {
+    FutureOr<void> Function(String subscription)? onCancel,
+  }) {
     throw Exception('HttpProvider does not support subscriptions');
   }
 
@@ -187,32 +193,38 @@ class WsProvider extends Provider {
     }).asBroadcastStream();
 
     // Commands
-    jsonStream.where((message) => message.containsKey('id')).map((message) {
-      final id = message['id'] as int;
-      final result = message.containsKey('result') ? message['result'] : null;
-      final error = message.containsKey('error') ? message['error'] : null;
-      return RpcResponse(id: id, result: result, error: error);
-    }).listen((message) {
-      queries.remove(message.id)!.completer.complete(message);
-    });
+    jsonStream
+        .where((message) => message.containsKey('id'))
+        .map((message) {
+          final id = message['id'] as int;
+          final result = message.containsKey('result') ? message['result'] : null;
+          final error = message.containsKey('error') ? message['error'] : null;
+          return RpcResponse(id: id, result: result, error: error);
+        })
+        .listen((message) {
+          queries.remove(message.id)!.completer.complete(message);
+        });
 
     // Subscriptions
     jsonStream
-        .where((message) =>
-            !message.containsKey('id') &&
-            message.containsKey('params') &&
-            (message['params'] as Map<String, dynamic>).containsKey('subscription'))
+        .where(
+          (message) =>
+              !message.containsKey('id') &&
+              message.containsKey('params') &&
+              (message['params'] as Map<String, dynamic>).containsKey('subscription'),
+        )
         .map((message) {
-      final method = message['method'] as String;
-      final params = message['params'] as Map<String, dynamic>;
-      final subscription = params['subscription'] as String;
-      final result = params.containsKey('result') ? params['result'] : null;
+          final method = message['method'] as String;
+          final params = message['params'] as Map<String, dynamic>;
+          final subscription = params['subscription'] as String;
+          final result = params.containsKey('result') ? params['result'] : null;
 
-      return SubscriptionMessage(method: method, subscription: subscription, result: result);
-    }).listen((message) {
-      final StreamController? controller = getSubscriptionController(message.subscription);
-      controller?.add(message);
-    });
+          return SubscriptionMessage(method: method, subscription: subscription, result: result);
+        })
+        .listen((message) {
+          final StreamController? controller = getSubscriptionController(message.subscription);
+          controller?.add(message);
+        });
 
     this.socket = socket;
     await isReady();
@@ -241,12 +253,7 @@ class WsProvider extends Provider {
 
     final id = _sequence++;
     final completer = Completer<RpcResponse>();
-    final message = jsonEncode({
-      'id': id,
-      'jsonrpc': '2.0',
-      'method': method,
-      'params': params,
-    });
+    final message = jsonEncode({'id': id, 'jsonrpc': '2.0', 'method': method, 'params': params});
 
     queries[id] = PendingQuery(message: message, completer: completer);
     socket!.send(message);
@@ -256,8 +263,11 @@ class WsProvider extends Provider {
 
   /// Send arbitrary message to RPC node
   @override
-  Future<SubscriptionResponse> subscribe(String method, List<dynamic> params,
-      {FutureOr<void> Function(String subscription)? onCancel}) async {
+  Future<SubscriptionResponse> subscribe(
+    String method,
+    List<dynamic> params, {
+    FutureOr<void> Function(String subscription)? onCancel,
+  }) async {
     final result = await send(method, params);
 
     if (result.error != null) {
@@ -266,10 +276,7 @@ class WsProvider extends Provider {
 
     final subscription = result.result as String;
     final controller = getOrCreateSubscriptionController(subscription);
-    return SubscriptionResponse(
-      id: subscription,
-      stream: controller.stream,
-    );
+    return SubscriptionResponse(id: subscription, stream: controller.stream);
   }
 
   StreamController<SubscriptionMessage>? getSubscriptionController(String subscriptionId) {
@@ -281,19 +288,23 @@ class WsProvider extends Provider {
   }
 
   // Returns an existing StreamController, or create a new one if it doesn't exist
-  StreamController<SubscriptionMessage> getOrCreateSubscriptionController(String subscription,
-      [FutureOr<void> Function(String subscription)? onCancel]) {
+  StreamController<SubscriptionMessage> getOrCreateSubscriptionController(
+    String subscription, [
+    FutureOr<void> Function(String subscription)? onCancel,
+  ]) {
     if (subscriptions.containsKey(subscription)) {
       return subscriptions[subscription]!;
     } else {
-      final controller = StreamController<SubscriptionMessage>.broadcast(onCancel: () async {
-        if (onCancel != null) {
-          await onCancel(subscription);
-        }
-        if (subscriptions.containsKey(subscription)) {
-          subscriptions.remove(subscription);
-        }
-      });
+      final controller = StreamController<SubscriptionMessage>.broadcast(
+        onCancel: () async {
+          if (onCancel != null) {
+            await onCancel(subscription);
+          }
+          if (subscriptions.containsKey(subscription)) {
+            subscriptions.remove(subscription);
+          }
+        },
+      );
       subscriptions[subscription] = controller;
       return controller;
     }

@@ -3,22 +3,13 @@ part of balances_calls;
 // Helper classes - compact forwarding to implementation classes
 class _BalancesTransferHelper {
   const _BalancesTransferHelper();
-  BalancesTransfer to({
-    required String destination,
-    required BigInt amount,
-  }) =>
+  BalancesTransfer to({required String destination, required BigInt amount}) =>
       BalancesTransfer.to(destination: destination, amount: amount);
 
-  BalancesTransfer toAccountId({
-    required Uint8List destination,
-    required BigInt amount,
-  }) =>
+  BalancesTransfer toAccountId({required Uint8List destination, required BigInt amount}) =>
       BalancesTransfer.toAccountId(destination: destination, amount: amount);
 
-  BalancesTransfer toMultiAddress({
-    required MultiAddress destination,
-    required BigInt amount,
-  }) =>
+  BalancesTransfer toMultiAddress({required MultiAddress destination, required BigInt amount}) =>
       BalancesTransfer.toMultiAddress(destination: destination, amount: amount);
 }
 
@@ -54,25 +45,18 @@ class BalancesTransfer extends BalancesCallBuilder {
   const BalancesTransfer._(this.dest, this.amount);
 
   /// Create transfer using SS58 address (e.g., "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY")
-  factory BalancesTransfer.to({
-    required String destination,
-    required BigInt amount,
-  }) =>
+  factory BalancesTransfer.to({required String destination, required BigInt amount}) =>
       BalancesTransfer._(_ss58ToMultiAddress(destination), amount);
 
   /// Create transfer using raw account ID (32-byte public key)
-  factory BalancesTransfer.toAccountId({
-    required Uint8List destination,
-    required BigInt amount,
-  }) =>
+  factory BalancesTransfer.toAccountId({required Uint8List destination, required BigInt amount}) =>
       BalancesTransfer._(MultiAddress.id(destination), amount);
 
   /// Create transfer using MultiAddress (for advanced use cases like account indices)
   factory BalancesTransfer.toMultiAddress({
     required MultiAddress destination,
     required BigInt amount,
-  }) =>
-      BalancesTransfer._(destination, amount);
+  }) => BalancesTransfer._(destination, amount);
 
   @override
   String get callName => 'transfer_allow_death';

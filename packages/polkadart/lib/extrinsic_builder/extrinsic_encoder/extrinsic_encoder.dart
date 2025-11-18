@@ -146,8 +146,10 @@ class ExtrinsicEncoder {
 
       final value = extensions[ext.identifier];
       if (value == null) {
-        throw EncodingError('Missing extension value for ${ext.identifier}. '
-            'This should have been set by ExtensionBuilder.');
+        throw EncodingError(
+          'Missing extension value for ${ext.identifier}. '
+          'This should have been set by ExtensionBuilder.',
+        );
       }
 
       try {
@@ -159,16 +161,19 @@ class ExtrinsicEncoder {
             output.write(value);
           } else {
             throw EncodingError(
-                'CheckMortality/CheckEra value must be Uint8List (pre-encoded era bytes)');
+              'CheckMortality/CheckEra value must be Uint8List (pre-encoded era bytes)',
+            );
           }
         } else {
           // Use standard codec for other extensions
           codec.encodeTo(value, output);
         }
       } catch (e) {
-        throw EncodingError('Failed to encode extension ${ext.identifier}: $e\n'
-            'Value: $value\n'
-            'Codec: ${codec.runtimeType}');
+        throw EncodingError(
+          'Failed to encode extension ${ext.identifier}: $e\n'
+          'Value: $value\n'
+          'Codec: ${codec.runtimeType}',
+        );
       }
     }
   }

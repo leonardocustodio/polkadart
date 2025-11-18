@@ -22,171 +22,160 @@ import 'package:test/test.dart'
         test;
 
 void main() {
-  group(
-    'Bidirectional Transfer Tests - Friday1 <-> Friday2',
-    () {
-      late Provider provider;
-      late ChainInfo chainInfo;
-      late keyring.KeyPair friday1;
-      late keyring.KeyPair friday2;
+  group('Bidirectional Transfer Tests - Friday1 <-> Friday2', () {
+    late Provider provider;
+    late ChainInfo chainInfo;
+    late keyring.KeyPair friday1;
+    late keyring.KeyPair friday2;
 
-      // Transfer amount: 0.1 WND (Westend has 12 decimals)
-      final transferAmount = BigInt.from(100_000_000_000);
+    // Transfer amount: 0.1 WND (Westend has 12 decimals)
+    final transferAmount = BigInt.from(100_000_000_000);
 
-      setUpAll(() async {
-        // Connect to Asset Hub Westend to test with ChargeAssetTxPayment
-        provider = Provider.fromUri(Uri.parse('wss://westend-rpc.polkadot.io'));
+    setUpAll(() async {
+      // Connect to Asset Hub Westend to test with ChargeAssetTxPayment
+      provider = Provider.fromUri(Uri.parse('wss://westend-rpc.polkadot.io'));
 
-        // Fetch metadata
-        final RuntimeMetadataPrefixed runtimeMetadataPrefixed =
-            await StateApi(provider).getMetadata();
-        chainInfo = ChainInfo.fromRuntimeMetadataPrefixed(runtimeMetadataPrefixed);
+      // Fetch metadata
+      final RuntimeMetadataPrefixed runtimeMetadataPrefixed = await StateApi(
+        provider,
+      ).getMetadata();
+      chainInfo = ChainInfo.fromRuntimeMetadataPrefixed(runtimeMetadataPrefixed);
 
-        // Create keypairs
-        friday1 = await keyring.KeyPair.sr25519.fromUri('//Friday1');
-        friday1.ss58Format = 42;
-        friday2 = await keyring.KeyPair.sr25519.fromUri('//Friday2');
-        friday2.ss58Format = 42;
+      // Create keypairs
+      friday1 = await keyring.KeyPair.sr25519.fromUri('//Friday1');
+      friday1.ss58Format = 42;
+      friday2 = await keyring.KeyPair.sr25519.fromUri('//Friday2');
+      friday2.ss58Format = 42;
 
-        expect(friday1.publicKey.bytes.length, 32);
-        expect(friday2.publicKey.bytes.length, 32);
-        expect(friday1.address, isNotEmpty);
-        expect(friday2.address, isNotEmpty);
-      });
+      expect(friday1.publicKey.bytes.length, 32);
+      expect(friday2.publicKey.bytes.length, 32);
+      expect(friday1.address, isNotEmpty);
+      expect(friday2.address, isNotEmpty);
+    });
 
-      tearDownAll(() async => await provider.disconnect());
+    tearDownAll(() async => await provider.disconnect());
 
-      test('Transfer 0.1 WND from Friday1 to Friday2', () async {
-        final nonce = await getAccountNonce(provider, friday1.address);
-        expect(nonce, greaterThanOrEqualTo(0), reason: 'Nonce should be non-negative');
+    test('Transfer 0.1 WND from Friday1 to Friday2', () async {
+      final nonce = await getAccountNonce(provider, friday1.address);
+      expect(nonce, greaterThanOrEqualTo(0), reason: 'Nonce should be non-negative');
 
-        final extrinsicData = await buildTransferExtrinsic(
-          provider: provider,
-          chainInfo: chainInfo,
-          sender: friday1,
-          receiver: friday2,
-          amount: transferAmount,
-          nonce: nonce,
-        );
+      final extrinsicData = await buildTransferExtrinsic(
+        provider: provider,
+        chainInfo: chainInfo,
+        sender: friday1,
+        receiver: friday2,
+        amount: transferAmount,
+        nonce: nonce,
+      );
 
-        // Verify all components
-        final encodedExtrinsic = extrinsicData['encodedExtrinsic'] as Uint8List;
-        final txHash = extrinsicData['txHash'] as Uint8List;
-        final callData = extrinsicData['callData'] as Uint8List;
+      // Verify all components
+      final encodedExtrinsic = extrinsicData['encodedExtrinsic'] as Uint8List;
+      final txHash = extrinsicData['txHash'] as Uint8List;
+      final callData = extrinsicData['callData'] as Uint8List;
 
-        expect(encodedExtrinsic.length, greaterThan(0));
-        expect(txHash.length, equals(32));
-        expect(callData.length, greaterThan(0));
+      expect(encodedExtrinsic.length, greaterThan(0));
+      expect(txHash.length, equals(32));
+      expect(callData.length, greaterThan(0));
 
-        // Submit and verify
-        await submitExtrinsic(
-          provider: provider,
-          encodedExtrinsic: encodedExtrinsic,
-          expectedTxHashHex: extrinsicData['txHashHex'] as String,
-        );
-      });
+      // Submit and verify
+      await submitExtrinsic(
+        provider: provider,
+        encodedExtrinsic: encodedExtrinsic,
+        expectedTxHashHex: extrinsicData['txHashHex'] as String,
+      );
+    });
 
-      test('Transfer 0.1 WND back from Friday2 to Friday1', () async {
-        final nonce = await getAccountNonce(provider, friday2.address);
-        expect(nonce, greaterThanOrEqualTo(0), reason: 'Nonce should be non-negative');
+    test('Transfer 0.1 WND back from Friday2 to Friday1', () async {
+      final nonce = await getAccountNonce(provider, friday2.address);
+      expect(nonce, greaterThanOrEqualTo(0), reason: 'Nonce should be non-negative');
 
-        final extrinsicData = await buildTransferExtrinsic(
-          provider: provider,
-          chainInfo: chainInfo,
-          sender: friday2,
-          receiver: friday1,
-          amount: transferAmount,
-          nonce: nonce,
-        );
+      final extrinsicData = await buildTransferExtrinsic(
+        provider: provider,
+        chainInfo: chainInfo,
+        sender: friday2,
+        receiver: friday1,
+        amount: transferAmount,
+        nonce: nonce,
+      );
 
-        // Verify all components
-        final encodedExtrinsic = extrinsicData['encodedExtrinsic'] as Uint8List;
-        final txHash = extrinsicData['txHash'] as Uint8List;
-        final callData = extrinsicData['callData'] as Uint8List;
+      // Verify all components
+      final encodedExtrinsic = extrinsicData['encodedExtrinsic'] as Uint8List;
+      final txHash = extrinsicData['txHash'] as Uint8List;
+      final callData = extrinsicData['callData'] as Uint8List;
 
-        expect(encodedExtrinsic.length, greaterThan(0));
-        expect(txHash.length, equals(32));
-        expect(callData.length, greaterThan(0));
+      expect(encodedExtrinsic.length, greaterThan(0));
+      expect(txHash.length, equals(32));
+      expect(callData.length, greaterThan(0));
 
-        // Submit and verify
-        await submitExtrinsic(
-          provider: provider,
-          encodedExtrinsic: encodedExtrinsic,
-          expectedTxHashHex: extrinsicData['txHashHex'] as String,
-        );
-      });
+      // Submit and verify
+      await submitExtrinsic(
+        provider: provider,
+        encodedExtrinsic: encodedExtrinsic,
+        expectedTxHashHex: extrinsicData['txHashHex'] as String,
+      );
+    });
 
-      // Alternative test using the fromChainData mode (optional - shows the simpler API)
-      test('Alternative: Transfer using fromChainData mode - Friday1 → Friday2', () async {
-        // Create and encode the call
-        final transferCall = Balances.transfer.toAccountId(
-          destination: Uint8List.fromList(friday2.publicKey.bytes),
-          amount: transferAmount,
-        );
-        final callData = transferCall.encode(chainInfo);
+    // Alternative test using the fromChainData mode (optional - shows the simpler API)
+    test('Alternative: Transfer using fromChainData mode - Friday1 → Friday2', () async {
+      // Create and encode the call
+      final transferCall = Balances.transfer.toAccountId(
+        destination: Uint8List.fromList(friday2.publicKey.bytes),
+        amount: transferAmount,
+      );
+      final callData = transferCall.encode(chainInfo);
 
-        final chainData =
-            await ChainDataFetcher(provider).fetchStandardData(accountAddress: friday1.address);
+      final chainData = await ChainDataFetcher(
+        provider,
+      ).fetchStandardData(accountAddress: friday1.address);
 
-        // Use the auto mode for simpler API
-        final extrinsicBuilder = ExtrinsicBuilder.fromChainData(
-          chainInfo: chainInfo,
-          callData: callData,
-          chainData: chainData,
-        );
+      // Use the auto mode for simpler API
+      final extrinsicBuilder = ExtrinsicBuilder.fromChainData(
+        chainInfo: chainInfo,
+        callData: callData,
+        chainData: chainData,
+      );
 
-        final EncodedExtrinsic encodedExtrinsic = await extrinsicBuilder
-            .tip(BigInt.zero)
-            .immortal()
-            .signAndBuild(
-                signerPublicKey: Uint8List.fromList(friday1.publicKey.bytes),
-                signingCallback: friday1.sign,
-                provider: provider,
-                signerAddress: friday1.address);
+      final EncodedExtrinsic encodedExtrinsic = await extrinsicBuilder.signAndBuild(
+        provider: provider,
+        signerAddress: friday1.address,
+        signingCallback: friday1.sign,
+      );
 
-        final expectedTxHash = encodedExtrinsic.hash;
+      final actualTxHash = await encodedExtrinsic.submit(provider);
 
-        final actualTxHash = await encodedExtrinsic.submit(provider);
+      expect('0x${encodeHex(actualTxHash)}', '0x${encodeHex(encodedExtrinsic.hash)}');
+    });
 
-        expect(actualTxHash, '0x${encodeHex(expectedTxHash)}');
-      });
+    test('Alternative: Transfer using fromChainData mode - Friday2 → Friday1', () async {
+      // Create and encode the call
+      final transferCall = Balances.transfer.toAccountId(
+        destination: Uint8List.fromList(friday1.publicKey.bytes),
+        amount: transferAmount,
+      );
+      final callData = transferCall.encode(chainInfo);
 
-      test('Alternative: Transfer using fromChainData mode - Friday2 → Friday1', () async {
-        // Create and encode the call
-        final transferCall = Balances.transfer.toAccountId(
-          destination: Uint8List.fromList(friday1.publicKey.bytes),
-          amount: transferAmount,
-        );
-        final callData = transferCall.encode(chainInfo);
+      final chainData = await ChainDataFetcher(
+        provider,
+      ).fetchStandardData(accountAddress: friday2.address);
 
-        final chainData =
-            await ChainDataFetcher(provider).fetchStandardData(accountAddress: friday2.address);
+      // Use the auto mode for simpler API
+      final extrinsicBuilder = ExtrinsicBuilder.fromChainData(
+        chainInfo: chainInfo,
+        callData: callData,
+        chainData: chainData,
+      );
 
-        // Use the auto mode for simpler API
-        final extrinsicBuilder = ExtrinsicBuilder.fromChainData(
-          chainInfo: chainInfo,
-          callData: callData,
-          chainData: chainData,
-        );
+      final EncodedExtrinsic encodedExtrinsic = await extrinsicBuilder.signAndBuild(
+        provider: provider,
+        signerAddress: friday2.address,
+        signingCallback: friday2.sign,
+      );
 
-        final EncodedExtrinsic encodedExtrinsic = await extrinsicBuilder
-            .tip(BigInt.zero)
-            .immortal()
-            .signAndBuild(
-                signerPublicKey: Uint8List.fromList(friday2.publicKey.bytes),
-                signingCallback: friday2.sign,
-                provider: provider,
-                signerAddress: friday2.address);
+      final actualTxHash = await encodedExtrinsic.submit(provider);
 
-        final expectedTxHash = encodedExtrinsic.hash;
-
-        final actualTxHash = await encodedExtrinsic.submit(provider);
-
-        expect(actualTxHash, '0x${encodeHex(expectedTxHash)}');
-      });
-    },
-    timeout: Timeout(Duration(seconds: 30)),
-  );
+      expect('0x${encodeHex(actualTxHash)}', '0x${encodeHex(encodedExtrinsic.hash)}');
+    });
+  }, timeout: Timeout(Duration(seconds: 30)));
 }
 
 /// Helper function to get account nonce
@@ -214,7 +203,7 @@ Future<Map<String, dynamic>> buildTransferExtrinsic({
   final runtimeVersion = await StateApi(provider).getRuntimeVersion();
 
   // Create and encode the call
-  final transferCall = Balances.transferKeepAlive.toAccountId(
+  final transferCall = Balances.transfer.toAccountId(
     destination: Uint8List.fromList(receiver.publicKey.bytes),
     amount: amount,
   );
@@ -232,12 +221,8 @@ Future<Map<String, dynamic>> buildTransferExtrinsic({
     nonce: nonce,
   );
 
-  // Build and sign the extrinsic
   final encodedExtrinsic = await extrinsicBuilder.signAndBuild(
-    signerPublicKey: Uint8List.fromList(sender.publicKey.bytes),
-    signingCallback: (final Uint8List payload) {
-      return sender.sign(payload);
-    },
+    signingCallback: sender.sign,
     provider: provider,
     signerAddress: sender.address,
   );
@@ -269,4 +254,5 @@ Future<void> submitExtrinsic({
   final hashHex = '0x${encodeHex(hashBytes)}';
 
   expect(hashHex, '0x$expectedTxHashHex', reason: 'Submitted tx hash should match calculated hash');
+  await Future.delayed(const Duration(seconds: 8));
 }

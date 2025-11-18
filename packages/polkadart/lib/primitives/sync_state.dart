@@ -26,10 +26,10 @@ class SyncState {
   final int highestBlock;
 
   Map<String, int> toJson() => {
-        'startingBlock': startingBlock,
-        'currentBlock': currentBlock,
-        'highestBlock': highestBlock,
-      };
+    'startingBlock': startingBlock,
+    'currentBlock': currentBlock,
+    'highestBlock': highestBlock,
+  };
 
   @override
   bool operator ==(Object other) =>
@@ -50,22 +50,10 @@ class SyncStateCodec with Codec<SyncState> {
   const SyncStateCodec({required this.numberCodec});
 
   @override
-  void encodeTo(
-    SyncState value,
-    Output output,
-  ) {
-    numberCodec.encodeTo(
-      value.startingBlock,
-      output,
-    );
-    numberCodec.encodeTo(
-      value.currentBlock,
-      output,
-    );
-    numberCodec.encodeTo(
-      value.highestBlock,
-      output,
-    );
+  void encodeTo(SyncState value, Output output) {
+    numberCodec.encodeTo(value.startingBlock, output);
+    numberCodec.encodeTo(value.currentBlock, output);
+    numberCodec.encodeTo(value.highestBlock, output);
   }
 
   @override

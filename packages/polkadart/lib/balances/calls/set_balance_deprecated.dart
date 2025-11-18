@@ -6,24 +6,27 @@ class _BalancesSetBalanceDeprecatedHelper {
     required String who,
     required BigInt newFree,
     required BigInt newReserved,
-  }) =>
-      BalancesSetBalanceDeprecated.to(who: who, newFree: newFree, newReserved: newReserved);
+  }) => BalancesSetBalanceDeprecated.to(who: who, newFree: newFree, newReserved: newReserved);
 
   BalancesSetBalanceDeprecated toAccountId({
     required Uint8List who,
     required BigInt newFree,
     required BigInt newReserved,
-  }) =>
-      BalancesSetBalanceDeprecated.toAccountId(
-          who: who, newFree: newFree, newReserved: newReserved);
+  }) => BalancesSetBalanceDeprecated.toAccountId(
+    who: who,
+    newFree: newFree,
+    newReserved: newReserved,
+  );
 
   BalancesSetBalanceDeprecated toMultiAddress({
     required MultiAddress who,
     required BigInt newFree,
     required BigInt newReserved,
-  }) =>
-      BalancesSetBalanceDeprecated.toMultiAddress(
-          who: who, newFree: newFree, newReserved: newReserved);
+  }) => BalancesSetBalanceDeprecated.toMultiAddress(
+    who: who,
+    newFree: newFree,
+    newReserved: newReserved,
+  );
 }
 
 // Shared helper to decode SS58 address to MultiAddress
@@ -54,29 +57,29 @@ class BalancesSetBalanceDeprecated extends BalancesCallBuilder {
     required String who,
     required BigInt newFree,
     required BigInt newReserved,
-  }) =>
-      BalancesSetBalanceDeprecated._(_ss58ToMultiAddress(who), newFree, newReserved);
+  }) => BalancesSetBalanceDeprecated._(_ss58ToMultiAddress(who), newFree, newReserved);
 
   /// Create set_balance_deprecated using raw account ID
   factory BalancesSetBalanceDeprecated.toAccountId({
     required Uint8List who,
     required BigInt newFree,
     required BigInt newReserved,
-  }) =>
-      BalancesSetBalanceDeprecated._(MultiAddress.id(who), newFree, newReserved);
+  }) => BalancesSetBalanceDeprecated._(MultiAddress.id(who), newFree, newReserved);
 
   /// Create set_balance_deprecated using MultiAddress
   factory BalancesSetBalanceDeprecated.toMultiAddress({
     required MultiAddress who,
     required BigInt newFree,
     required BigInt newReserved,
-  }) =>
-      BalancesSetBalanceDeprecated._(who, newFree, newReserved);
+  }) => BalancesSetBalanceDeprecated._(who, newFree, newReserved);
 
   @override
   String get callName => 'set_balance_deprecated';
 
   @override
-  Map<String, dynamic> buildArgs() =>
-      {'who': who.toJson(), 'new_free': newFree, 'new_reserved': newReserved};
+  Map<String, dynamic> buildArgs() => {
+    'who': who.toJson(),
+    'new_free': newFree,
+    'new_reserved': newReserved,
+  };
 }
