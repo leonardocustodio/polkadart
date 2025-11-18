@@ -149,7 +149,7 @@ class MetadataTypeRegistry {
         return _buildCompositeCodec(fields, type);
 
       case TypeDefVariant(:final variants):
-        return _buildVariantCodec(variants);
+        return _buildVariantCodec(variants, type);
 
       case TypeDefSequence(:final type):
         final elementCodec = codecFor(type);
@@ -184,6 +184,7 @@ class MetadataTypeRegistry {
     final path = type.type.pathString;
 
     // Handle Option<T>
+    // TODO: Consider removing it
     if (path == 'Option' && type.type.params.isNotEmpty) {
       final innerTypeId = type.type.params.first.type;
       if (innerTypeId != null) {
@@ -193,6 +194,7 @@ class MetadataTypeRegistry {
     }
 
     // Handle Result<T, E>
+    // TODO: Consider removing it
     if (path == 'Result' && type.type.params.length == 2) {
       final okTypeId = type.type.params[0].type;
       final errTypeId = type.type.params[1].type;
@@ -220,7 +222,19 @@ class MetadataTypeRegistry {
   }
 
   /// Build variant codec (enum)
-  Codec _buildVariantCodec(List<VariantDef> variants) {
+  Codec _buildVariantCodec(final List<VariantDef> variants, final PortableType type) {
+    if (variants.length == 2) {
+      final OptionCodec? optionCodec = _buildOptionCodec(variants, type);
+      if (optionCodec != null) {
+        return optionCodec;
+      }
+
+      final ResultCodec? resultCodec = _buildResultCodec(variants, type);
+      if (resultCodec != null) {
+        return resultCodec;
+      }
+    }
+
     final variantMap = <int, MapEntry<String, Codec>>{};
 
     for (final variant in variants) {
@@ -247,6 +261,64 @@ class MetadataTypeRegistry {
     }
 
     return ComplexEnumCodec.sparse(variantMap);
+  }
+
+  // Try to build the Option Codec
+  OptionCodec? _buildOptionCodec(final List<VariantDef> variants, final PortableType type) {
+    final path = type.type.pathString;
+
+    // Special handling for Option<T> as variant
+    if (path == 'Option') {
+      // Verify it has the correct structure: None (0) and Some (1)
+      final VariantDef noneVariant = variants.firstWhere(
+        (final v) => v.name == 'None' && v.index == 0,
+        orElse: () => variants[0],
+      );
+      final VariantDef someVariant = variants.firstWhere(
+        (final v) => v.name == 'Some' && v.index == 1,
+        orElse: () => variants[1],
+      );
+
+      if (noneVariant.name == 'None' &&
+          someVariant.name == 'Some' &&
+          someVariant.fields.length == 1) {
+        // Extract the inner type from Some variant
+        final innerTypeId = someVariant.fields.first.type;
+        final innerCodec = codecFor(innerTypeId);
+        return OptionCodec(innerCodec);
+      }
+    }
+    return null;
+  }
+
+  ResultCodec? _buildResultCodec(final List<VariantDef> variants, final PortableType type) {
+    final path = type.type.pathString;
+
+    // Special handling for Result<T, E> as variant
+    if (path == 'Result') {
+      // Verify it has the correct structure: Ok (0) and Err (1)
+      final okVariant = variants.firstWhere(
+        (final v) => v.name == 'Ok' && v.index == 0,
+        orElse: () => variants[0],
+      );
+      final errVariant = variants.firstWhere(
+        (final v) => v.name == 'Err' && v.index == 1,
+        orElse: () => variants[1],
+      );
+
+      if (okVariant.name == 'Ok' &&
+          errVariant.name == 'Err' &&
+          okVariant.fields.length == 1 &&
+          errVariant.fields.length == 1) {
+        // Extract the Ok and Err types
+        final okTypeId = okVariant.fields.first.type;
+        final errTypeId = errVariant.fields.first.type;
+        final okCodec = codecFor(okTypeId);
+        final errCodec = codecFor(errTypeId);
+        return ResultCodec(okCodec, errCodec);
+      }
+    }
+    return null;
   }
 
   /// Build compact codec based on underlying type
