@@ -29,15 +29,15 @@ class ScaleRawBytes extends Equatable {
   /// Creates a wrapper for raw SCALE-encoded bytes
   const ScaleRawBytes(this.bytes);
 
-  static const _$ScaleRawBytesCodec codec = _$ScaleRawBytesCodec._();
+  static const $ScaleRawBytesCodec codec = $ScaleRawBytesCodec._();
 
   @override
   List<Object> get props => [bytes];
 }
 
 /// Codec for ScaleRawBytes that writes the bytes directly without any encoding
-class _$ScaleRawBytesCodec with Codec<ScaleRawBytes> {
-  const _$ScaleRawBytesCodec._();
+class $ScaleRawBytesCodec with Codec<ScaleRawBytes> {
+  const $ScaleRawBytesCodec._();
 
   @override
   void encodeTo(final ScaleRawBytes value, final Output output) {
