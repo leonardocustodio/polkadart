@@ -19,7 +19,11 @@ import 'package:polkadart/primitives/primitives.dart'
         StorageData,
         StorageKey,
         SyncState;
-import 'package:polkadart/provider.dart' show Provider;
+import 'dart:async' show Future, Completer, StreamController, FutureOr;
+import 'dart:convert' show jsonEncode, jsonDecode;
+
+import 'package:http/http.dart' as http;
+import 'package:web_socket_client/web_socket_client.dart';
 import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
 import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadataPrefixed;
 
@@ -28,3 +32,4 @@ part 'chain_data_fetcher.dart';
 part 'chain.dart';
 part 'state.dart';
 part 'system.dart';
+part 'provider.dart';

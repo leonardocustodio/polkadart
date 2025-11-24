@@ -2,11 +2,7 @@ part of primitives;
 
 /// Health struct returned by the RPC
 class Health {
-  const Health({
-    required this.peers,
-    required this.isSyncing,
-    required this.shouldHavePeers,
-  });
+  const Health({required this.peers, required this.isSyncing, required this.shouldHavePeers});
 
   factory Health.decode(Input input) {
     return codec.decode(input);
@@ -53,22 +49,10 @@ class $HealthCodec with Codec<Health> {
   const $HealthCodec();
 
   @override
-  void encodeTo(
-    Health value,
-    Output output,
-  ) {
-    U32Codec.codec.encodeTo(
-      value.peers,
-      output,
-    );
-    BoolCodec.codec.encodeTo(
-      value.isSyncing,
-      output,
-    );
-    BoolCodec.codec.encodeTo(
-      value.shouldHavePeers,
-      output,
-    );
+  void encodeTo(Health value, Output output) {
+    U32Codec.codec.encodeTo(value.peers, output);
+    BoolCodec.codec.encodeTo(value.isSyncing, output);
+    BoolCodec.codec.encodeTo(value.shouldHavePeers, output);
   }
 
   @override

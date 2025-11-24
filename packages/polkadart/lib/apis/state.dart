@@ -36,8 +36,12 @@ class StateApi<P extends Provider> {
   /// Returns the keys with prefix with pagination support.
   /// Up to `count` keys will be returned.
   /// If `startKey` is passed, return next keys in storage in lexicographic order.
-  Future<List<StorageKey>> getKeysPaged(
-      {required StorageKey key, required int count, StorageKey? startKey, BlockHash? at}) async {
+  Future<List<StorageKey>> getKeysPaged({
+    required StorageKey key,
+    required int count,
+    StorageKey? startKey,
+    BlockHash? at,
+  }) async {
     final List<dynamic> params = ['0x${hex.encode(key)}', count];
     if (startKey != null) {
       params.add('0x${hex.encode(startKey)}');
@@ -92,11 +96,14 @@ class StateApi<P extends Provider> {
   ///
   /// NOTE This first returned result contains the initial state of storage for all keys.
   /// Subsequent values in the vector represent changes to the previous state (diffs).
-  Future<List<StorageChangeSet>> queryStorage(List<StorageKey> keys, BlockHash fromBlock,
-      {BlockHash? toBlock}) async {
+  Future<List<StorageChangeSet>> queryStorage(
+    List<StorageKey> keys,
+    BlockHash fromBlock, {
+    BlockHash? toBlock,
+  }) async {
     final List<dynamic> params = [
       keys.map((key) => '0x${hex.encode(key)}').toList(),
-      '0x${hex.encode(fromBlock)}'
+      '0x${hex.encode(fromBlock)}',
     ];
     if (toBlock != null) {
       params.add('0x${hex.encode(toBlock)}');
@@ -147,11 +154,15 @@ class StateApi<P extends Provider> {
 
   /// Retrieves the runtime version via subscription
   Future<StreamSubscription<RuntimeVersion>> subscribeRuntimeVersion(
-      Function(RuntimeVersion) onData) async {
-    final subscription = await _provider.subscribe('state_subscribeRuntimeVersion', const [],
-        onCancel: (subscription) async {
-      await _provider.send('state_unsubscribeRuntimeVersion', [subscription]);
-    });
+    Function(RuntimeVersion) onData,
+  ) async {
+    final subscription = await _provider.subscribe(
+      'state_subscribeRuntimeVersion',
+      const [],
+      onCancel: (subscription) async {
+        await _provider.send('state_unsubscribeRuntimeVersion', [subscription]);
+      },
+    );
 
     return subscription.stream
         .map((response) => RuntimeVersion.fromJson(response.result))
@@ -160,26 +171,38 @@ class StateApi<P extends Provider> {
 
   Future<StreamSubscription<Events>> subscribeEvents(BlockHash at, Function(Events) onData) async {
     latestRuntimeMetadataPrefixed = await getMetadata();
-    final ChainInfo chainInfo =
-        ChainInfo.fromRuntimeMetadataPrefixed(latestRuntimeMetadataPrefixed);
-    final subscription = await _provider.subscribe('state_subscribeStorage', [
-      ['0x${hex.encode(at)}']
-    ], onCancel: (subscription) async {
-      await _provider.send('state_unsubscribeStorage', [subscription]);
-    });
-    return subscription.stream.map((response) {
-      return Events.fromJson(response.result, chainInfo);
-    }).listen(onData);
+    final ChainInfo chainInfo = ChainInfo.fromRuntimeMetadataPrefixed(
+      latestRuntimeMetadataPrefixed,
+    );
+    final subscription = await _provider.subscribe(
+      'state_subscribeStorage',
+      [
+        ['0x${hex.encode(at)}'],
+      ],
+      onCancel: (subscription) async {
+        await _provider.send('state_unsubscribeStorage', [subscription]);
+      },
+    );
+    return subscription.stream
+        .map((response) {
+          return Events.fromJson(response.result, chainInfo);
+        })
+        .listen(onData);
   }
 
   /// Subscribes to storage changes for the provided keys
   Future<StreamSubscription<StorageChangeSet>> subscribeStorage(
-      List<Uint8List> storageKeys, Function(StorageChangeSet) onData) async {
+    List<Uint8List> storageKeys,
+    Function(StorageChangeSet) onData,
+  ) async {
     final hexKeys = storageKeys.map((key) => '0x${hex.encode(key)}').toList();
-    final subscription = await _provider.subscribe('state_subscribeStorage', [hexKeys],
-        onCancel: (subscription) async {
-      await _provider.send('state_unsubscribeStorage', [subscription]);
-    });
+    final subscription = await _provider.subscribe(
+      'state_subscribeStorage',
+      [hexKeys],
+      onCancel: (subscription) async {
+        await _provider.send('state_unsubscribeStorage', [subscription]);
+      },
+    );
 
     return subscription.stream
         .map((response) => StorageChangeSet.fromJson(response.result))

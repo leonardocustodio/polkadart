@@ -25,6 +25,10 @@ class RuntimeCall {
     required this.args,
   });
 
+  MapEntry<String, Object?> toEncodableJson() {
+    return MapEntry<String, Object?>(palletName, MapEntry<String, Object?>(callName, args));
+  }
+
   Map<String, dynamic> toJson() => {
         'pallet': palletName,
         'palletIndex': palletIndex,

@@ -15,7 +15,7 @@ part 'hasher_types/blake3.dart';
 part 'hasher_types/block_hash.dart';
 part 'hasher_types/hash_base.dart';
 part 'hasher_types/hash_digest.dart';
-part 'hasher_types/xxh64.dart';
+part 'hasher_types/xxh64_sink.dart';
 
 part 'hasher.dart';
 part 'storage.dart';

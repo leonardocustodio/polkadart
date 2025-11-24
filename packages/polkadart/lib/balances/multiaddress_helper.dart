@@ -1,4 +1,4 @@
-part of extrinsic_builder;
+part of balances_calls;
 
 /// Helper for creating MultiAddress variants
 ///

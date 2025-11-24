@@ -31,11 +31,11 @@ class PeerInfo<H, N> {
   final N bestNumber;
 
   Map<String, dynamic> toJson() => {
-        'peerId': peerId,
-        'roles': roles,
-        'bestHash': bestHash,
-        'bestNumber': bestNumber,
-      };
+    'peerId': peerId,
+    'roles': roles,
+    'bestHash': bestHash,
+    'bestNumber': bestNumber,
+  };
 
   @override
   bool operator ==(Object other) =>
@@ -57,26 +57,11 @@ class PeerInfoCodec<H, N> with Codec<PeerInfo<H, N>> {
   const PeerInfoCodec({required this.hashCodec, required this.numberCodec});
 
   @override
-  void encodeTo(
-    PeerInfo<H, N> value,
-    Output output,
-  ) {
-    StrCodec.codec.encodeTo(
-      value.peerId,
-      output,
-    );
-    StrCodec.codec.encodeTo(
-      value.roles,
-      output,
-    );
-    hashCodec.encodeTo(
-      value.bestHash,
-      output,
-    );
-    numberCodec.encodeTo(
-      value.bestNumber,
-      output,
-    );
+  void encodeTo(PeerInfo<H, N> value, Output output) {
+    StrCodec.codec.encodeTo(value.peerId, output);
+    StrCodec.codec.encodeTo(value.roles, output);
+    hashCodec.encodeTo(value.bestHash, output);
+    numberCodec.encodeTo(value.bestNumber, output);
   }
 
   @override
