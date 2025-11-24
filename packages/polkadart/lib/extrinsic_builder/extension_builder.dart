@@ -1,19 +1,60 @@
 part of extrinsic_builder;
 
-/// Builder for managing signed extension values and additional signed data
+/// Builder for managing signed extension values and additional signed data.
 ///
-/// This class handles the construction and management of extension values
-/// following the exact structure used in Substrate chains.
+/// This class handles the construction and management of signed extensions that are
+/// attached to extrinsics in Substrate-based blockchains. Signed extensions provide
+/// additional data and validation for transactions, such as:
+///
+/// - **CheckNonce**: Prevents replay attacks using account nonce
+/// - **CheckEra/CheckMortality**: Limits transaction validity period
+/// - **CheckSpecVersion/CheckTxVersion**: Ensures runtime compatibility
+/// - **CheckGenesis**: Verifies correct chain
+/// - **ChargeTransactionPayment**: Handles transaction fees and tips
+/// - **CheckMetadataHash**: Validates metadata version
+///
+/// Extensions have two components:
+/// 1. **Extension values**: Included in the extrinsic payload
+/// 2. **Additional signed**: Included in signing payload but not in extrinsic
+///
+/// ## Example Usage:
+///
+/// ```dart
+/// final builder = ExtensionBuilder(chainInfo);
+///
+/// // Set standard extensions
+/// builder.setStandardExtensions(
+///   specVersion: 1000,
+///   transactionVersion: 1,
+///   genesisHash: genesisHash,
+///   blockHash: currentBlockHash,
+///   blockNumber: currentBlockNumber,
+///   nonce: 5,
+///   eraPeriod: 64,
+/// );
+///
+/// // Override specific values
+/// builder.tip(BigInt.from(1000));
+/// builder.immortal();
+/// ```
 class ExtensionBuilder {
+  /// Chain metadata and configuration information.
   final ChainInfo chainInfo;
 
-  // Extension values (goes in the extrinsic)
+  /// Extension values that will be included in the extrinsic.
+  ///
+  /// These are SCALE-encoded and included in the final transaction.
   final Map<String, dynamic> extensions = <String, dynamic>{};
 
-  // Additional signed data (included in signing payload but not in extrinsic)
+  /// Additional signed data included in signing payload but not in extrinsic.
+  ///
+  /// This data is hashed together with the call data during signing but
+  /// not transmitted with the extrinsic.
   final Map<String, dynamic> additionalSigned = <String, dynamic>{};
 
-  // Track what user has explicitly set
+  /// Tracks which extensions the user has explicitly set.
+  ///
+  /// This prevents auto-fetched values from overriding user choices.
   final Set<String> _userOverrides = <String>{};
 
   // Internal state for smart defaults
@@ -29,9 +70,25 @@ class ExtensionBuilder {
   int _metadataHashMode = 0; // 0 = disabled, 1 = enabled
   Uint8List? _metadataHash;
 
+  /// Creates a new ExtensionBuilder for the given chain.
+  ///
+  /// Parameters:
+  /// - [chainInfo]: Chain metadata containing signed extension definitions
   ExtensionBuilder(this.chainInfo);
 
-  /// Set values that were auto-fetched from the chain
+  /// Sets values that were automatically fetched from the chain.
+  ///
+  /// This method respects user overrides - if a user has explicitly set a value,
+  /// it won't be overwritten by auto-fetched data.
+  ///
+  /// Parameters:
+  /// - [userOverrides]: Set of extension categories the user has explicitly configured
+  /// - [specVersion]: Runtime specification version
+  /// - [transactionVersion]: Transaction version
+  /// - [genesisHash]: Genesis block hash
+  /// - [blockHash]: Current block hash
+  /// - [blockNumber]: Current block number
+  /// - [nonce]: Account nonce
   void setAutoFetchedValues({
     required Set<String> userOverrides,
     int? specVersion,
@@ -64,7 +121,37 @@ class ExtensionBuilder {
     _applyStoredValues();
   }
 
-  /// Set all standard extensions at once (for offline mode)
+  /// Sets all standard extension values at once.
+  ///
+  /// This is the recommended method for configuring extensions when you have all
+  /// the required chain data available (e.g., from [ChainDataFetcher]).
+  ///
+  /// Parameters:
+  /// - [specVersion]: Runtime specification version
+  /// - [transactionVersion]: Transaction version
+  /// - [genesisHash]: Genesis block hash (32 bytes)
+  /// - [blockHash]: Current block hash (32 bytes)
+  /// - [blockNumber]: Current block number
+  /// - [nonce]: Account nonce
+  /// - [tip]: Optional tip for transaction prioritization (default: 0)
+  /// - [eraPeriod]: Era period in blocks (default: 64, 0 for immortal)
+  /// - [assetId]: Optional asset ID for chains with asset-based fees
+  /// - [enableMetadataHash]: Whether to enable metadata hash checking (default: false)
+  /// - [metadataHash]: Metadata hash if enabled
+  ///
+  /// Example:
+  /// ```dart
+  /// builder.setStandardExtensions(
+  ///   specVersion: 1000,
+  ///   transactionVersion: 1,
+  ///   genesisHash: genesisHash,
+  ///   blockHash: currentBlockHash,
+  ///   blockNumber: currentBlockNumber,
+  ///   nonce: 5,
+  ///   tip: BigInt.from(1000),
+  ///   eraPeriod: 64,
+  /// );
+  /// ```
   void setStandardExtensions({
     required int specVersion,
     required int transactionVersion,
@@ -169,10 +256,7 @@ class ExtensionBuilder {
 
         case 'ChargeAssetTxPayment':
           // Complex structure with tip and optional asset
-          extensions[identifier] = <String, dynamic>{
-            'tip': _tip,
-            'asset_id': _assetId == null ? MapEntry('None', null) : MapEntry('Some', _assetId),
-          };
+          extensions[identifier] = <String, dynamic>{'tip': _tip, 'asset_id': _assetId};
           break;
 
         case 'CheckMetadataHash':
@@ -198,7 +282,16 @@ class ExtensionBuilder {
 
   // ===== Manual setter methods =====
 
-  /// Set the nonce value
+  /// Sets the account nonce value.
+  ///
+  /// The nonce prevents replay attacks by ensuring each transaction from an
+  /// account is unique and ordered.
+  ///
+  /// Parameters:
+  /// - [nonce]: The account nonce (incrementing counter)
+  ///
+  /// Returns:
+  /// This builder instance for method chaining.
   ExtensionBuilder nonce(int nonce) {
     _userOverrides.add('nonce');
     _nonce = nonce;
@@ -211,17 +304,22 @@ class ExtensionBuilder {
     return this;
   }
 
-  /// Set the tip amount
+  /// Sets the transaction tip for prioritization.
+  ///
+  /// A higher tip incentivizes block producers to include the transaction sooner.
+  ///
+  /// Parameters:
+  /// - [tip]: The tip amount in smallest units
+  ///
+  /// Returns:
+  /// This builder instance for method chaining.
   ExtensionBuilder tip(BigInt tip) {
     _userOverrides.add('tip');
     _tip = tip;
 
     // Update the relevant payment extension
     if (_hasExtension('ChargeAssetTxPayment')) {
-      extensions['ChargeAssetTxPayment'] = <String, dynamic>{
-        'tip': tip,
-        'asset_id': _assetId == null ? MapEntry('None', null) : MapEntry('Some', _assetId),
-      };
+      extensions['ChargeAssetTxPayment'] = <String, dynamic>{'tip': tip, 'asset_id': _assetId};
     } else if (_hasExtension('ChargeTransactionPayment')) {
       extensions['ChargeTransactionPayment'] = tip;
     }
@@ -229,7 +327,18 @@ class ExtensionBuilder {
     return this;
   }
 
-  /// Set mortal era
+  /// Configures a mortal era for the transaction.
+  ///
+  /// Mortal transactions are only valid for a specific number of blocks,
+  /// preventing replay attacks across chain forks.
+  ///
+  /// Parameters:
+  /// - [period]: Number of blocks the transaction is valid for
+  /// - [blockNumber]: Optional block number (uses stored value if not provided)
+  /// - [blockHash]: Optional block hash (uses stored value if not provided)
+  ///
+  /// Returns:
+  /// This builder instance for method chaining.
   ExtensionBuilder era({
     required final int period,
     final int? blockNumber,
@@ -249,7 +358,13 @@ class ExtensionBuilder {
     return this;
   }
 
-  /// Make the transaction immortal
+  /// Makes the transaction immortal (valid indefinitely).
+  ///
+  /// Immortal transactions remain valid across all future blocks and forks.
+  /// Use with caution as this can enable replay attacks.
+  ///
+  /// Returns:
+  /// This builder instance for method chaining.
   ExtensionBuilder immortal() {
     _userOverrides.add('era');
     _eraPeriod = 0;
@@ -362,7 +477,10 @@ class ExtensionBuilder {
 
   // ===== Helper methods =====
 
-  /// Apply era settings to extensions
+  /// Applies current era settings to the extensions map.
+  ///
+  /// This internal method encodes the era (immortal or mortal) and updates
+  /// both the extension value and additional signed data appropriately.
   void _applyEra() {
     String? extName;
     if (_hasExtension('CheckMortality')) {
@@ -387,7 +505,16 @@ class ExtensionBuilder {
     }
   }
 
-  /// Check if an extension should be skipped entirely
+  /// Determines if an extension should be skipped entirely.
+  ///
+  /// Extensions are skipped if both their value and additional signed components
+  /// are zero-sized (have no data to encode).
+  ///
+  /// Parameters:
+  /// - [ext]: The extension metadata to check
+  ///
+  /// Returns:
+  /// `true` if the extension should be skipped, `false` otherwise.
   bool _shouldSkipExtension(SignedExtensionMetadata ext) {
     final valueCodec = chainInfo.registry.codecFor(ext.type);
     final additionalCodec = chainInfo.registry.codecFor(ext.additionalSigned);
@@ -397,12 +524,33 @@ class ExtensionBuilder {
         (additionalCodec is NullCodec || additionalCodec.isSizeZero());
   }
 
-  /// Check if chain has a specific extension
+  /// Checks if the chain supports a specific signed extension.
+  ///
+  /// Parameters:
+  /// - [identifier]: The extension identifier (e.g., 'CheckNonce')
+  ///
+  /// Returns:
+  /// `true` if the extension is defined in the chain metadata, `false` otherwise.
   bool _hasExtension(String identifier) {
     return chainInfo.registry.signedExtensions.any((ext) => ext.identifier == identifier);
   }
 
-  /// Validate that all required extensions have values
+  /// Validates that all required extension values are set.
+  ///
+  /// This method checks that every non-zero-sized extension has both its value
+  /// and additional signed components properly configured.
+  ///
+  /// Throws:
+  /// - [ExtensionValidationError] if any required extension values are missing
+  ///
+  /// Example:
+  /// ```dart
+  /// try {
+  ///   builder.validate();
+  /// } catch (e) {
+  ///   print('Missing extensions: $e');
+  /// }
+  /// ```
   void validate() {
     final missing = <String>[];
 
@@ -439,7 +587,23 @@ class ExtensionBuilder {
     }
   }
 
-  /// Get a summary of configured extensions
+  /// Returns a summary of the configured extensions for debugging.
+  ///
+  /// Returns:
+  /// A [Map] containing:
+  /// - `extensions`: List of configured extension identifiers
+  /// - `additionalSigned`: List of additional signed data identifiers
+  /// - `userOverrides`: List of user-overridden extension categories
+  /// - `era`: Description of the era configuration
+  /// - `nonce`: The current nonce value
+  /// - `tip`: The current tip amount
+  ///
+  /// Example:
+  /// ```dart
+  /// final summary = builder.summary();
+  /// print('Configured extensions: ${summary['extensions']}');
+  /// print('Era: ${summary['era']}');
+  /// ```
   Map<String, dynamic> summary() {
     return {
       'extensions': extensions.keys.toList(),
@@ -452,10 +616,30 @@ class ExtensionBuilder {
   }
 }
 
-/// Error thrown when extension validation fails
+/// Exception thrown when extension validation fails.
+///
+/// This error indicates that required signed extension values are missing
+/// and the extrinsic cannot be properly constructed.
+///
+/// Example:
+/// ```dart
+/// try {
+///   builder.validate();
+/// } catch (e) {
+///   if (e is ExtensionValidationError) {
+///     print('Validation failed: ${e.message}');
+///     // Handle missing extensions...
+///   }
+/// }
+/// ```
 class ExtensionValidationError implements Exception {
+  /// The error message describing which extensions are missing.
   final String message;
 
+  /// Creates a new ExtensionValidationError.
+  ///
+  /// Parameters:
+  /// - [message]: Description of the validation failure
   ExtensionValidationError(this.message);
 
   @override

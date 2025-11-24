@@ -28,8 +28,9 @@ Future<void> main() async {
 
   // Fetch chain data
   // Also fetches the nonce for the sender to use in the extrinsic
-  final chainData =
-      await ChainDataFetcher(provider).fetchStandardData(accountAddress: sender.address);
+  final chainData = await ChainDataFetcher(
+    provider,
+  ).fetchStandardData(accountAddress: sender.address);
 
   print('\n📊 Chain data:');
   print('  - Genesis hash: 0x${hex.encode(chainData.genesisHash)}');
@@ -53,7 +54,6 @@ Future<void> main() async {
   final completer = Completer<void>();
 
   extrinsicBuilder.signBuildAndSubmitWatch(
-    signerPublicKey: Uint8List.fromList(sender.publicKey.bytes),
     signingCallback: (final Uint8List payload) {
       print('\n🔏 Signing payload: 0x${hex.encode(payload)}');
       final signature = sender.sign(payload);

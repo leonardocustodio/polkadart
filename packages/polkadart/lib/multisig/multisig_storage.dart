@@ -32,26 +32,17 @@ class MultisigStorage extends Equatable {
   final BigInt deposit;
 
   /// Address of who initiated the transaction (gets deposit back)
-  final String depositor;
-
-  /// List of addresses that have approved so far
-  final List<String> approvals;
-
-  /// The raw depositor bytes for comparison
-  final Uint8List _depositorBytes;
+  final Uint8List depositor;
 
   /// The raw approval bytes for comparison
-  final List<Uint8List> _approvalBytes;
+  final List<Uint8List> approvals;
 
   const MultisigStorage._({
     required this.when,
     required this.deposit,
     required this.depositor,
     required this.approvals,
-    required final Uint8List depositorBytes,
-    required final List<Uint8List> approvalBytes,
-  }) : _depositorBytes = depositorBytes,
-       _approvalBytes = approvalBytes;
+  });
 
   /// Fetch multisig storage from chain
   ///
@@ -59,9 +50,8 @@ class MultisigStorage extends Equatable {
   ///
   /// Parameters:
   /// - [provider]: Chain connection
-  /// - [multisigAddress]: The multisig account address
+  /// - [multisigPubkey]: The multisig account address
   /// - [callHash]: Hash of the call being executed
-  /// - [registry]: Type registry for decoding
   ///
   /// Example:
   /// ```dart
@@ -80,7 +70,6 @@ class MultisigStorage extends Equatable {
     required final Provider provider,
     required final Uint8List multisigPubkey,
     required final Uint8List callHash,
-    required final MetadataTypeRegistry registry,
   }) async {
     // Create storage key
     final storageKey = _createStorageKey(multisigPubkey, callHash);
@@ -93,7 +82,7 @@ class MultisigStorage extends Equatable {
     }
 
     // Decode the storage
-    return _decode(storageData, registry);
+    return _decode(storageData);
   }
 
   /// Check if an address has already approved
@@ -113,7 +102,7 @@ class MultisigStorage extends Equatable {
   bool hasApproved(final String address) {
     try {
       final pubkey = Address.decode(address).pubkey;
-      return _approvalBytes.any((final approval) => _bytesEqual(approval, pubkey));
+      return approvals.any((final approval) => _bytesEqual(approval, pubkey));
     } catch (_) {
       return false;
     }
@@ -135,7 +124,7 @@ class MultisigStorage extends Equatable {
   bool isDepositor(final String address) {
     try {
       final pubkey = Address.decode(address).pubkey;
-      return _bytesEqual(_depositorBytes, pubkey);
+      return _bytesEqual(depositor, pubkey);
     } catch (_) {
       return false;
     }
@@ -210,14 +199,13 @@ class MultisigStorage extends Equatable {
   /// ```
   MultisigStorageStatus getStatus({required final int threshold, final String? signerAddress}) {
     return MultisigStorageStatus(
-      approvalCount: approvals.length,
       threshold: threshold,
       isComplete: isComplete(threshold),
       isWaitingForFinalApproval: isFinalApproval(threshold),
       depositor: depositor,
+      approvals: approvals,
       deposit: deposit,
       when: when,
-      approvals: approvals,
       hasApproved: signerAddress != null ? hasApproved(signerAddress) : null,
       canApprove: signerAddress != null
           ? !hasApproved(signerAddress) && !isComplete(threshold)
@@ -251,7 +239,7 @@ class MultisigStorage extends Equatable {
   }
 
   /// Decode storage data
-  static MultisigStorage _decode(final Uint8List data, final MetadataTypeRegistry registry) {
+  static MultisigStorage _decode(final Uint8List data) {
     final input = Input.fromBytes(data);
 
     // The storage structure is:
@@ -278,22 +266,13 @@ class MultisigStorage extends Equatable {
     final List<List<int>> approvalBytesRaw = SequenceCodec(
       ArrayCodec(U8Codec.codec, 32),
     ).decode(input);
-    final List<Uint8List> approvalBytes = approvalBytesRaw.map(Uint8List.fromList).toList();
-
-    // Convert to addresses (using generic SS58 format)
-    final String depositorAddress = Address(prefix: 42, pubkey: depositorBytes).encode();
-
-    final List<String> approvalAddresses = approvalBytes
-        .map((final bytes) => Address(prefix: 42, pubkey: bytes).encode())
-        .toList();
+    final List<Uint8List> approvals = approvalBytesRaw.map(Uint8List.fromList).toList();
 
     return MultisigStorage._(
       when: when,
       deposit: deposit,
-      depositor: depositorAddress,
-      approvals: approvalAddresses,
-      depositorBytes: depositorBytes,
-      approvalBytes: approvalBytes,
+      depositor: depositorBytes,
+      approvals: approvals,
     );
   }
 
@@ -311,5 +290,5 @@ class MultisigStorage extends Equatable {
   }
 
   @override
-  List<Object> get props => [when, deposit, depositor, approvals, _depositorBytes, _approvalBytes];
+  List<Object> get props => [when, deposit, depositor, approvals];
 }

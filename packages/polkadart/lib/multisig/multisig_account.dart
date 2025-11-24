@@ -1,37 +1,85 @@
 part of multisig;
 
-@JsonSerializable(explicitToJson: true, constructor: '_')
+/// Represents a multisig account configuration with signatories and approval threshold.
+///
+/// This class manages the creation and configuration of multisig accounts on Substrate-based
+/// blockchains. It handles signatory validation, automatic sorting of public keys, and
+/// derivation of the multisig account address using Substrate's standard algorithm.
+///
+/// The multisig address is deterministically derived from:
+/// - The sorted list of signatory public keys
+/// - The approval threshold
+///
+/// This ensures that all signatories derive the same multisig address regardless of the
+/// order in which addresses were provided.
+///
+/// Example:
+/// ```dart
+/// final multisigAccount = MultisigAccount(
+///   addresses: [alice.address, bob.address, charlie.address],
+///   threshold: 2,
+/// );
+/// print('Multisig address: ${Address.encode(multisigAccount.multisigPubkey)}');
+/// ```
+@JsonSerializable(constructor: '_', createToJson: true)
 class MultisigAccount extends Equatable {
-  /// Number of approvals required for execution
+  /// Number of approvals required for transaction execution.
+  ///
+  /// Must be at least 2 and cannot exceed the total number of signatories.
   final int threshold;
 
-  /// Sorted list of signatory public keys (32 bytes each)
+  /// Sorted list of signatory public keys (32 bytes each).
+  ///
+  /// This list is automatically sorted by public key bytes during construction
+  /// to ensure deterministic multisig address derivation.
   @Uint8ListListConverter()
   final List<Uint8List> publicKeys;
 
-  /// The multisig account public key (32 bytes)
+  /// The derived multisig account public key (32 bytes).
+  ///
+  /// This is deterministically derived using blake2b256 hash of:
+  /// "modlpy/utilisuba" + encode(sorted_signatories) + threshold
   @Uint8ListConverter()
   final Uint8List multisigPubkey;
 
-  /// Private constructor
+  /// Private constructor used internally after validation and derivation.
   const MultisigAccount._({
     required this.threshold,
     required this.publicKeys,
     required this.multisigPubkey,
   });
 
-  /// Creates a new MultisigAccount instance
+  /// Creates a new MultisigAccount instance with automatic address derivation.
+  ///
+  /// This factory constructor performs the following operations:
+  /// 1. Validates the threshold (must be ≥2 and ≤ number of signatories)
+  /// 2. Deduplicates the provided addresses
+  /// 3. Validates the signatory count (2-100 signatories)
+  /// 4. Converts addresses to public keys
+  /// 5. Sorts public keys deterministically
+  /// 6. Derives the multisig account address using Substrate's algorithm
   ///
   /// Parameters:
-  /// - [addresses]: List of signatory addresses (will be deduplicated and sorted)
-  /// - [threshold]: Number of approvals required (must be between 2 and number of signatories)
+  /// - [addresses]: List of signatory addresses (SS58 encoded). Duplicates are automatically removed.
+  /// - [threshold]: Number of approvals required for execution (must be between 2 and number of signatories)
+  ///
+  /// Returns:
+  /// A [MultisigAccount] instance with the derived multisig address.
+  ///
+  /// Throws:
+  /// - [ArgumentError] if threshold is less than 2
+  /// - [ArgumentError] if fewer than 2 unique addresses are provided
+  /// - [ArgumentError] if more than 100 addresses are provided
+  /// - [ArgumentError] if threshold exceeds the number of signatories
+  /// - [ArgumentError] if any address is invalid or cannot be decoded
   ///
   /// Example:
   /// ```dart
-  /// final signatories = MultisigAccount(
+  /// final multisigAccount = MultisigAccount(
   ///   addresses: [alice.address, bob.address, charlie.address],
   ///   threshold: 2,
   /// );
+  /// // Any 2 of the 3 signatories can approve transactions
   /// ```
   factory MultisigAccount({required final List<String> addresses, required final int threshold}) {
     // Validate threshold
@@ -70,7 +118,7 @@ class MultisigAccount extends Equatable {
     }
 
     // Sort by public key bytes
-    pubkeysWithAddresses.sort((final a, final b) => _compareBytes(a, b));
+    pubkeysWithAddresses.sort((final a, final b) => a.compareBytes(b));
 
     // Generate multisig address
     final multisigPubkey = _deriveMultisigAddress(pubkeysWithAddresses, threshold);
@@ -82,23 +130,27 @@ class MultisigAccount extends Equatable {
     );
   }
 
-  /// Get other signatories excluding the signer
+  /// Returns the list of other signatories excluding the current signer.
   ///
-  /// Used when creating multisig transactions. The current signer
-  /// must be excluded from the "other_signatories" field.
+  /// This method is essential for constructing multisig extrinsics, as Substrate requires
+  /// the "other_signatories" field to contain all signatories except the current signer.
+  /// The list maintains the same sorted order as the original public keys.
   ///
   /// Parameters:
-  /// - [signerAddress]: The address of the current signer
+  /// - [signerAddress]: The SS58-encoded address of the current signer
   ///
-  /// Returns: List of other signatories' public keys
+  /// Returns:
+  /// A [List<Uint8List>] containing the public keys of all other signatories in sorted order.
   ///
-  /// Throws: [ArgumentError] if signer is not a signatory
+  /// Throws:
+  /// - [ArgumentError] if the signer address is invalid or cannot be decoded
+  /// - [ArgumentError] if the signer is not a signatory of this multisig account
   ///
   /// Example:
   /// ```dart
-  /// // Alice is signing
-  /// final others = signatories.otherSignatoriesForAddress(alice.address);
-  /// // Returns public keys of Bob and Charlie
+  /// // Alice is signing a transaction
+  /// final others = multisigAccount.otherSignatoriesForAddress(alice.address);
+  /// // Returns public keys of Bob and Charlie (sorted)
   /// ```
   List<Uint8List> otherSignatoriesForAddress(final String signerAddress) {
     late final Uint8List signerPubkey;
@@ -111,23 +163,25 @@ class MultisigAccount extends Equatable {
     return otherSignatoriesForPubkey(signerPubkey);
   }
 
-  /// Get other signatories excluding the signer
+  /// Returns the list of other signatories excluding the current signer (using public key).
   ///
-  /// Used when creating multisig transactions. The current signer
-  /// must be excluded from the "other_signatories" field.
+  /// This is the public key variant of [otherSignatoriesForAddress]. Use this when you
+  /// already have the public key and want to avoid address decoding overhead.
   ///
   /// Parameters:
-  /// - [signerPubkey]: The Pubkey of the current signer
+  /// - [signerPubkey]: The 32-byte public key of the current signer
   ///
-  /// Returns: List of other signatories' public keys
+  /// Returns:
+  /// A [List<Uint8List>] containing the public keys of all other signatories in sorted order.
   ///
-  /// Throws: [ArgumentError] if signer is not a signatory
+  /// Throws:
+  /// - [ArgumentError] if the signer public key is not found in the signatories list
   ///
   /// Example:
   /// ```dart
-  /// // Alice is signing
-  /// final others = signatories.otherSignatoriesForPubkey(alice.pubKey);
-  /// // Returns public keys of Bob and Charlie
+  /// // Alice is signing, using her public key directly
+  /// final others = multisigAccount.otherSignatoriesForPubkey(alice.pubKey);
+  /// // Returns public keys of Bob and Charlie (sorted)
   /// ```
   List<Uint8List> otherSignatoriesForPubkey(final Uint8List signerPubkey) {
     // Find and exclude the signer
@@ -149,12 +203,24 @@ class MultisigAccount extends Equatable {
     return others;
   }
 
-  /// Check if an address is a signatory
+  /// Checks if an address is a signatory of this multisig account.
+  ///
+  /// This method validates whether a given address is authorized to participate
+  /// in multisig operations for this account.
+  ///
+  /// Parameters:
+  /// - [address]: The SS58-encoded address to check
+  ///
+  /// Returns:
+  /// `true` if the address is a signatory, `false` otherwise.
+  ///
+  /// Throws:
+  /// - [ArgumentError] if the address is invalid or cannot be decoded
   ///
   /// Example:
   /// ```dart
-  /// if (!signatories.contains(alice.address)) {
-  ///   throw Exception('Alice cannot sign this transaction');
+  /// if (!multisigAccount.containsAddress(alice.address)) {
+  ///   throw Exception('Alice is not authorized to sign this transaction');
   /// }
   /// ```
   bool containsAddress(final String address) {
@@ -162,24 +228,51 @@ class MultisigAccount extends Equatable {
     return publicKeys.any((final key) => _matchesPubkey(key, searchPubkey));
   }
 
-  /// Check if an Pubkey is a signatory
+  /// Checks if a public key is a signatory of this multisig account.
+  ///
+  /// This is the public key variant of [containsAddress]. Use this when you
+  /// already have the public key to avoid address decoding overhead.
+  ///
+  /// Parameters:
+  /// - [pubkey]: The 32-byte public key to check
+  ///
+  /// Returns:
+  /// `true` if the public key is a signatory, `false` otherwise.
   ///
   /// Example:
   /// ```dart
-  /// if (!signatories.containsPubkey(alice.pubKey)) {
-  ///   throw Exception('Alice cannot sign this transaction');
+  /// if (!multisigAccount.containsPubkey(alice.pubKey)) {
+  ///   throw Exception('Alice is not authorized to sign this transaction');
   /// }
+  /// ```
   bool containsPubkey(final Uint8List pubkey) {
     return publicKeys.any((final key) => _matchesPubkey(key, pubkey));
   }
 
+  /// Internal helper to compare two public keys for equality.
   static bool _matchesPubkey(final Uint8List first, final Uint8List second) {
-    return _compareBytes(first, second) == 0;
+    return first.equals(second);
   }
 
-  /// Derive multisig address using Substrate's algorithm
+  /// Derives the multisig account address using Substrate's standard algorithm.
   ///
-  /// Formula: blake2b256("modlpy/utilisuba" + encode(signatories) + threshold)
+  /// This internal method implements the deterministic multisig address derivation:
+  /// 1. Start with the module prefix: "modlpy/utilisuba"
+  /// 2. Append the compact-encoded count of signatories
+  /// 3. Append each public key in sorted order
+  /// 4. Append the threshold as a u16 (little-endian)
+  /// 5. Hash the entire payload with blake2b256
+  ///
+  /// The result is a 32-byte public key that serves as the multisig account address.
+  ///
+  /// Parameters:
+  /// - [sortedPubkeys]: The list of signatory public keys (must be pre-sorted)
+  /// - [threshold]: The approval threshold
+  ///
+  /// Returns:
+  /// A 32-byte [Uint8List] representing the multisig account public key.
+  ///
+  /// Formula: `blake2b256("modlpy/utilisuba" + encode(signatories) + threshold)`
   static Uint8List _deriveMultisigAddress(
     final List<Uint8List> sortedPubkeys,
     final int threshold,
@@ -207,29 +300,34 @@ class MultisigAccount extends Equatable {
     return Hasher.blake2b256.hash(output.toBytes());
   }
 
-  /// Compare byte arrays
-  static int _compareBytes(final Uint8List a, final Uint8List b) {
-    final minLength = a.length < b.length ? a.length : b.length;
-
-    for (int i = 0; i < minLength; i++) {
-      if (a[i] != b[i]) {
-        return a[i] < b[i] ? -1 : 1;
-      }
-    }
-
-    if (a.length != b.length) {
-      return a.length < b.length ? -1 : 1;
-    }
-
-    return 0;
-  }
-
-  /// Create from JSON
+  /// Creates a MultisigAccount from a JSON representation.
+  ///
+  /// This is useful for deserializing multisig configurations from storage or network.
+  ///
+  /// Parameters:
+  /// - [json]: The JSON map containing threshold, publicKeys, and multisigPubkey
+  ///
+  /// Returns:
+  /// A [MultisigAccount] instance reconstructed from the JSON data.
+  ///
+  /// Throws:
+  /// - [Exception] if the JSON is malformed or missing required fields
   factory MultisigAccount.fromJson(final Map<String, dynamic> json) =>
       _$MultisigAccountFromJson(json);
 
-  /// Convert to JSON
+  /// Converts this MultisigAccount to a JSON representation.
+  ///
+  /// This is useful for serializing multisig configurations for storage or transmission.
+  ///
+  /// Returns:
+  /// A [Map<String, dynamic>] containing the threshold, publicKeys, and multisigPubkey.
   Map<String, dynamic> toJson() => _$MultisigAccountToJson(this);
+
+  /// Static helper method for JSON serialization.
+  ///
+  /// This method is used by JsonSerializable for custom serialization logic.
+  static Map<String, dynamic> toJsonMethod(final MultisigAccount multisigAccount) =>
+      multisigAccount.toJson();
 
   @override
   List<Object> get props => [threshold, publicKeys, multisigPubkey];

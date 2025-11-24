@@ -56,3 +56,4 @@ part 'result.dart';
 part 'proxy.dart';
 part 'primitives_enum.dart';
 part 'primitives_codec.dart';
+part 'scale_raw_bytes.dart';
