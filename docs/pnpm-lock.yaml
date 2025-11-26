@@ -39,8 +39,8 @@ importers:
         specifier: ^0.8.4
         version: 0.8.4(prettier-plugin-astro@0.14.1)(prettier@3.6.2)(typescript@5.9.2)
       marked:
-        specifier: ^16.2.0
-        version: 16.2.0
+        specifier: ^17.0.1
+        version: 17.0.1
       rehype-autolink-headings:
         specifier: ^7.1.0
         version: 7.1.0
@@ -2136,8 +2136,8 @@ packages:
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
 
-  marked@16.2.0:
-    resolution: {integrity: sha512-LbbTuye+0dWRz2TS9KJ7wsnD4KAtpj0MVkWc90XvBa6AslXsT0hTBVH5k32pcSyHH1fst9XEFJunXHktVy0zlg==}
+  marked@17.0.1:
+    resolution: {integrity: sha512-boeBdiS0ghpWcSwoNm/jJBwdpFaMnZWRzjA6SkUMYb40SVaN1x7mmfGKp0jvexGcx+7y2La5zRZsYFZI6Qpypg==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -2919,6 +2919,7 @@ packages:
   sitemap@8.0.0:
     resolution: {integrity: sha512-+AbdxhM9kJsHtruUF39bwS/B0Fytw6Fr1o4ZAIAEqA6cke2xcoO2GleBw9Zw7nRzILVEgz7zBM5GiTJjie1G9A==}
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    deprecated: 'SECURITY: Multiple vulnerabilities fixed in 8.0.1 (XML injection, path traversal, command injection, protocol injection). Upgrade immediately: npm install sitemap@8.0.1'
     hasBin: true
 
   smol-toml@1.4.2:
@@ -5803,7 +5804,7 @@ snapshots:
 
   markdown-table@3.0.4: {}
 
-  marked@16.2.0: {}
+  marked@17.0.1: {}
 
   math-intrinsics@1.1.0: {}
 
