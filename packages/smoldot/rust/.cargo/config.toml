@@ -1,0 +1,30 @@
+# Cargo configuration for cross-compilation
+
+[build]
+# Target-specific configuration
+
+[target.aarch64-linux-android]
+linker = "aarch64-linux-android-clang"
+
+[target.armv7-linux-androideabi]
+linker = "armv7a-linux-androideabi-clang"
+
+[target.i686-linux-android]
+linker = "i686-linux-android-clang"
+
+[target.x86_64-linux-android]
+linker = "x86_64-linux-android-clang"
+
+[target.aarch64-apple-ios]
+linker = "clang"
+
+[target.x86_64-apple-ios]
+linker = "clang"
+
+# Optimization settings
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
