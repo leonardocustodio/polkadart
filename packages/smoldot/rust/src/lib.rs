@@ -16,11 +16,8 @@ use once_cell::sync::Lazy;
 
 mod error;
 mod ffi_types;
-mod callbacks;
 
-use error::{SmoldotError, SmoldotResult};
 use ffi_types::*;
-use callbacks::CallbackRegistry;
 
 /// Global registry of clients (handle-based for safety)
 static CLIENTS: Lazy<Mutex<HashMap<ClientHandle, Arc<SmoldotClientWrapper>>>> =
@@ -29,10 +26,6 @@ static CLIENTS: Lazy<Mutex<HashMap<ClientHandle, Arc<SmoldotClientWrapper>>>> =
 /// Global registry of chains (handle-based for safety)
 static CHAINS: Lazy<Mutex<HashMap<ChainHandle, Arc<SmoldotChainWrapper>>>> =
     Lazy::new(|| Mutex::new(HashMap::new()));
-
-/// Global callback registry
-static CALLBACKS: Lazy<Arc<CallbackRegistry>> =
-    Lazy::new(|| Arc::new(CallbackRegistry::new()));
 
 /// Wrapper around smoldot Client with interior mutability
 struct SmoldotClientWrapper {
