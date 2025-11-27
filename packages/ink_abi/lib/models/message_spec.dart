@@ -47,6 +47,8 @@ class MessageSpec extends Equatable {
   factory MessageSpec.fromJson(final Map<String, dynamic> json) => _$MessageSpecFromJson(json);
   Map<String, dynamic> toJson() => _$MessageSpecToJson(this);
 
+  int get codecTypeId => returnType.typeId;
+
   @override
   String toString() => 'MessageSpec(label: $label, selector: $selector, '
       'args: ${args.length}, mutates: $mutates, payable: $payable)';

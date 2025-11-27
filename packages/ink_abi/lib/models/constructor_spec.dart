@@ -44,6 +44,8 @@ class ConstructorSpec extends Equatable {
       _$ConstructorSpecFromJson(json);
   Map<String, dynamic> toJson() => _$ConstructorSpecToJson(this);
 
+  int get codecTypeId => returnType.typeId;
+
   @override
   String toString() => 'ConstructorSpec(label: $label, selector: $selector, '
       'args: ${args.length}, payable: $payable)';

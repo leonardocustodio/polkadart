@@ -8,9 +8,7 @@ part of 'type_spec.dart';
 
 TypeSpec _$TypeSpecFromJson(Map<String, dynamic> json) => TypeSpec(
       typeId: (json['type'] as num).toInt(),
-      displayName: (json['displayName'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      displayName: (json['displayName'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$TypeSpecToJson(TypeSpec instance) => <String, dynamic>{

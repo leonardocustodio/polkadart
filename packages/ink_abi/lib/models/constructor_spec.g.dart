@@ -6,8 +6,7 @@ part of 'constructor_spec.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ConstructorSpec _$ConstructorSpecFromJson(Map<String, dynamic> json) =>
-    ConstructorSpec(
+ConstructorSpec _$ConstructorSpecFromJson(Map<String, dynamic> json) => ConstructorSpec(
       label: json['label'] as String,
       selector: json['selector'] as String,
       args: (json['args'] as List<dynamic>)
@@ -18,8 +17,7 @@ ConstructorSpec _$ConstructorSpecFromJson(Map<String, dynamic> json) =>
       docs: (json['docs'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$ConstructorSpecToJson(ConstructorSpec instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ConstructorSpecToJson(ConstructorSpec instance) => <String, dynamic>{
       'label': instance.label,
       'selector': instance.selector,
       'args': instance.args.map((e) => e.toJson()).toList(),

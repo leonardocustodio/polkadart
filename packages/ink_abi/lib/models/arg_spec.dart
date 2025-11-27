@@ -23,6 +23,8 @@ class ArgSpec extends Equatable {
   factory ArgSpec.fromJson(final Map<String, dynamic> json) => _$ArgSpecFromJson(json);
   Map<String, dynamic> toJson() => _$ArgSpecToJson(this);
 
+  int get codecTypeId => type.typeId;
+
   @override
   String toString() => 'ArgSpec(label: $label, type: ${type.displayNameString})';
 
