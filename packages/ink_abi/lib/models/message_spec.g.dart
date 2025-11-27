@@ -18,7 +18,8 @@ MessageSpec _$MessageSpecFromJson(Map<String, dynamic> json) => MessageSpec(
       docs: (json['docs'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$MessageSpecToJson(MessageSpec instance) => <String, dynamic>{
+Map<String, dynamic> _$MessageSpecToJson(MessageSpec instance) =>
+    <String, dynamic>{
       'label': instance.label,
       'selector': instance.selector,
       'args': instance.args.map((e) => e.toJson()).toList(),

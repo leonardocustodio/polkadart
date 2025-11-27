@@ -23,7 +23,8 @@ class ConstructorSpec extends Equatable {
   final List<ArgSpec> args;
 
   /// Return type specification (typically a ConstructorResult)
-  final TypeSpec returnType;
+  /// Null for v3 metadata where constructors don't specify return types
+  final TypeSpec? returnType;
 
   /// Whether this constructor accepts payment
   final bool payable;
@@ -35,7 +36,7 @@ class ConstructorSpec extends Equatable {
     required this.label,
     required this.selector,
     required this.args,
-    required this.returnType,
+    this.returnType,
     required this.payable,
     this.docs,
   });
@@ -44,7 +45,9 @@ class ConstructorSpec extends Equatable {
       _$ConstructorSpecFromJson(json);
   Map<String, dynamic> toJson() => _$ConstructorSpecToJson(this);
 
-  int get codecTypeId => returnType.typeId;
+  /// Get codec type ID for the return type
+  /// Returns null if returnType is not specified (v3 metadata)
+  int? get codecTypeId => returnType?.typeId;
 
   @override
   String toString() => 'ConstructorSpec(label: $label, selector: $selector, '

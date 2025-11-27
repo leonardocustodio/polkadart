@@ -1,13 +1,4 @@
-import 'dart:typed_data';
-import 'package:ink_abi/ink_abi_base.dart' show SchemaValidator;
-import 'package:ink_abi/models/arg_spec.dart' show ArgSpec;
-import 'package:ink_abi/models/constructor_spec.dart' show ConstructorSpec;
-import 'package:ink_abi/models/message_spec.dart' show MessageSpec;
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import '../registry/ink_metadata_registry.dart';
-import '../exceptions/ink_abi_exception.dart';
-import '../exceptions/encoding_exception.dart';
-import '../exceptions/decoding_exception.dart';
+part of ink_abi;
 
 /// Main interface for working with ink! contract metadata.
 ///
@@ -31,6 +22,16 @@ class InkAbi {
   late final InkMetadataRegistry _registry;
   late final Map<String, dynamic> _project;
   late final int? version;
+  late final int constructorsIndex;
+  late final int messagesIndex;
+
+  /// Selector map for messages (selector -> index)
+  /// Used by SelectorByteInput for decoding full message input data
+  late final SelectorsMap messageSelectors = _buildMessageSelectors();
+
+  /// Selector map for constructors (selector -> index)
+  /// Used by SelectorByteInput for decoding full constructor input data
+  late final SelectorsMap constructorSelectors = _buildConstructorSelectors();
 
   /// Create InkAbi from ink! metadata JSON
   ///
@@ -38,8 +39,19 @@ class InkAbi {
   /// Throws [InkAbiException] if metadata is invalid.
   InkAbi(final Map<String, dynamic> inkAbiJson) {
     _project = SchemaValidator.getInkProject(inkAbiJson);
-    version = _project['version'] as int?;
-    _registry = InkMetadataRegistry(inkAbiJson);
+
+    // Determine version from the input or project
+    version = _project['version'] as int? ??
+        (inkAbiJson.containsKey('V3') ? 3 : (inkAbiJson.containsKey('V4') ? 4 : null));
+
+    // Add version to project if missing (for v3 metadata)
+    if (_project['version'] == null && version != null) {
+      _project['version'] = version;
+    }
+
+    _registry = InkMetadataRegistry(_project);
+    constructorsIndex = _registry.constructorIndex;
+    messagesIndex = _registry.messageIndex;
   }
 
   // ======================================================================
@@ -181,7 +193,7 @@ class InkAbi {
   dynamic decodeConstructorOutput(final String selector, final Uint8List value) {
     final ConstructorSpec constructor = getConstructorSpec(selector);
 
-    final codec = _registry.codecFor(constructor.codecTypeId);
+    final codec = _registry.codecFor(constructor.codecTypeId!);
     final ByteInput input = ByteInput(value);
 
     try {
@@ -197,6 +209,10 @@ class InkAbi {
   // ======================================================================
   // EVENT DECODING
   // ======================================================================
+
+  dynamic decodeEventFromHex(final String hexData, [final List<String>? topics]) {
+    return decodeEvent(decodeHex(hexData), topics);
+  }
 
   /// Decode event based on contract version
   ///
@@ -293,7 +309,7 @@ class InkAbi {
   /// final codec = inkAbi.getCodec(5);
   /// final encoded = codec.encode(value);
   /// ```
-  Codec getCodec(int type) => _registry.codecFor(type);
+  Codec getCodec(final int type) => _registry.codecFor(type);
 
   /// Returns a list of all messages
   List<MessageSpec> get messages => List.unmodifiable(_registry.messages);
@@ -306,4 +322,96 @@ class InkAbi {
   /// Provides direct access to the underlying [InkMetadataRegistry]
   /// for advanced type resolution and metadata access.
   InkMetadataRegistry get registry => _registry;
+
+  // ======================================================================
+  // INPUT DECODING (SELECTOR + ARGUMENTS)
+  // ======================================================================
+
+  /// Build selector map for messages
+  ///
+  /// Maps each message selector to its index in the messages list.
+  /// Used by [SelectorByteInput] for decoding full message input.
+  SelectorsMap _buildMessageSelectors() {
+    final SelectorsMap map = <String, int>{};
+    for (int i = 0; i < _registry.messages.length; i++) {
+      map[_registry.messages[i].selector] = i;
+    }
+    return map;
+  }
+
+  /// Build selector map for constructors
+  ///
+  /// Maps each constructor selector to its index in the constructors list.
+  /// Used by [SelectorByteInput] for decoding full constructor input.
+  SelectorsMap _buildConstructorSelectors() {
+    final SelectorsMap map = <String, int>{};
+    for (int i = 0; i < _registry.constructors.length; i++) {
+      map[_registry.constructors[i].selector] = i;
+    }
+    return map;
+  }
+
+  /// Decode constructor input data
+  ///
+  /// Takes full constructor input [data] (selector + SCALE-encoded arguments)
+  /// and decodes it into a list of argument values.
+  ///
+  /// The [data] must be a hex string starting with "0x" containing:
+  /// - 4 bytes: constructor selector
+  /// - Remaining bytes: SCALE-encoded arguments
+  ///
+  /// Throws [DecodingException] if:
+  /// - The selector is unknown
+  /// - The data is too short (< 4 bytes)
+  /// - Any argument fails to decode
+  ///
+  /// Example:
+  /// ```dart
+  /// // Decode constructor input: selector + arguments
+  /// final args = inkAbi.decodeConstructor('0x9bae9d5e00c817a804');
+  /// // Returns: [1000] (if constructor takes a single u128 argument)
+  /// ```
+  dynamic decodeConstructorData(final String data) {
+    try {
+      final input = SelectorByteInput.fromHex(data, constructorSelectors);
+      final codec = _registry.codecFor(constructorsIndex);
+      return codec.decode(input);
+    } on DecodingException {
+      rethrow;
+    } catch (e) {
+      throw DecodingException('Failed to decode constructor input: $e', context: {'data': data});
+    }
+  }
+
+  /// Decode message input data
+  ///
+  /// Takes full message input [data] (selector + SCALE-encoded arguments)
+  /// and decodes it into a list of argument values.
+  ///
+  /// The [data] must be a hex string starting with "0x" containing:
+  /// - 4 bytes: message selector
+  /// - Remaining bytes: SCALE-encoded arguments
+  ///
+  /// Throws [DecodingException] if:
+  /// - The selector is unknown
+  /// - The data is too short (< 4 bytes)
+  /// - Any argument fails to decode
+  ///
+  /// Example:
+  /// ```dart
+  /// // Decode message input: selector + arguments
+  /// final args = inkAbi.decodeMessage('0x633aa55164000000');
+  /// // Returns: [100] (if message takes a single u32 argument)
+  /// ```
+  dynamic decodeMessageData(final String data) {
+    try {
+      final input = SelectorByteInput.fromHex(data, messageSelectors);
+      final codec = _registry.codecFor(messagesIndex);
+      return codec.decode(input);
+    } on DecodingException {
+      rethrow;
+    } catch (e) {
+      throw DecodingException('Failed to decode message input: $e', context: {'data': data});
+    }
+  }
 }

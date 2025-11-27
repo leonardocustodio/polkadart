@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:ink_abi/ink_abi_base.dart';
+import 'package:ink_abi/ink_abi.dart' show InkAbi;
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/test.dart';
 
@@ -12,8 +11,9 @@ void main() {
 
   test('decode constructor', () {
     final String data = '0x9bae9d5e00000c6d51c8f7aa0600000000000000';
-    final decoded = inkAbi.decodeConstructor(data);
-    expect(decoded.value['totalSupply'].toString(),
+    final buffer = decodeHex(data);
+    final decoded = inkAbi.decodeConstructorData(data);
+    expect(decoded.value['total_supply'].toString(),
         BigInt.tryParse('123000000000000000000').toString());
   });
 
@@ -25,7 +25,8 @@ void main() {
       '0xda002226d93b2c422b95b780a2493e738716050ccad6ddbd7d58f1943bc6373d',
       '0xa69162c917081d15673558e13607b1b2261f2ae7b21ba911c3cd676767251266'
     ];
-    final decoded = inkAbi.decodeEventFromHex(data, topics);
+    final buffer = decodeHex(data);
+    final decoded = inkAbi.decodeEvent(buffer, topics);
     expect('0x${encodeHex(decoded['owner'].cast<int>())}',
         '0xda002226d93b2c422b95b780a2493e738716050ccad6ddbd7d58f1943bc6373d');
     expect('0x${encodeHex(decoded['spender'].cast<int>())}',
@@ -41,9 +42,9 @@ void main() {
       '0xa69162c917081d15673558e13607b1b2261f2ae7b21ba911c3cd676767251266'
     ];
     final decoded = inkAbi.decodeEventFromHex(data, topics);
-    expect(('0x${encodeHex(decoded['from'].value.cast<int>())}'),
+    expect(('0x${encodeHex(decoded['from'].cast<int>())}'),
         '0xda002226d93b2c422b95b780a2493e738716050ccad6ddbd7d58f1943bc6373d');
-    expect(('0x${encodeHex(decoded['to'].value.cast<int>())}'),
+    expect(('0x${encodeHex(decoded['to'].cast<int>())}'),
         '0xa69162c917081d15673558e13607b1b2261f2ae7b21ba911c3cd676767251266');
     expect(decoded['value'].toString(), BigInt.tryParse('100000000000000000').toString());
   });
@@ -51,7 +52,7 @@ void main() {
   test('decode message', () {
     final String data =
         '0x84a15da1a69162c917081d15673558e13607b1b2261f2ae7b21ba911c3cd67676725126600008a5d784563010000000000000000';
-    final decoded = inkAbi.decodeMessage(data);
+    final decoded = inkAbi.decodeMessageData(data);
     expect(('0x${encodeHex(decoded.value['to'].cast<int>())}'),
         '0xa69162c917081d15673558e13607b1b2261f2ae7b21ba911c3cd676767251266');
     expect(decoded.value['value'].toString(), BigInt.tryParse('100000000000000000').toString());
