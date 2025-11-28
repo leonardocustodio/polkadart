@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ink_abi/ink_abi.dart' show InkAbi;
+import 'package:ink_abi/ink_abi.dart';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:test/test.dart';
 

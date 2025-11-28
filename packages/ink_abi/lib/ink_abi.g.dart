@@ -8,9 +8,7 @@ part of 'ink_abi.dart';
 
 TypeSpec _$TypeSpecFromJson(Map<String, dynamic> json) => TypeSpec(
       typeId: (json['type'] as num).toInt(),
-      displayName: (json['displayName'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      displayName: (json['displayName'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$TypeSpecToJson(TypeSpec instance) => <String, dynamic>{
@@ -46,8 +44,7 @@ Map<String, dynamic> _$EventSpecToJson(EventSpec instance) => <String, dynamic>{
       'docs': instance.docs,
     };
 
-ConstructorSpec _$ConstructorSpecFromJson(Map<String, dynamic> json) =>
-    ConstructorSpec(
+ConstructorSpec _$ConstructorSpecFromJson(Map<String, dynamic> json) => ConstructorSpec(
       label: json['label'] as String,
       selector: json['selector'] as String,
       args: (json['args'] as List<dynamic>)
@@ -60,8 +57,7 @@ ConstructorSpec _$ConstructorSpecFromJson(Map<String, dynamic> json) =>
       docs: (json['docs'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$ConstructorSpecToJson(ConstructorSpec instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ConstructorSpecToJson(ConstructorSpec instance) => <String, dynamic>{
       'label': instance.label,
       'selector': instance.selector,
       'args': instance.args.map((e) => e.toJson()).toList(),
@@ -82,8 +78,7 @@ MessageSpec _$MessageSpecFromJson(Map<String, dynamic> json) => MessageSpec(
       docs: (json['docs'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$MessageSpecToJson(MessageSpec instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$MessageSpecToJson(MessageSpec instance) => <String, dynamic>{
       'label': instance.label,
       'selector': instance.selector,
       'args': instance.args.map((e) => e.toJson()).toList(),
