@@ -1,3 +1,5 @@
+part of ink_abi;
+
 /// Base exception for all ink! ABI-related errors
 ///
 /// This is the parent exception class for all ink! ABI operations.

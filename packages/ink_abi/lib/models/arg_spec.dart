@@ -1,9 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-import 'type_spec.dart';
-
-part 'arg_spec.g.dart';
+part of ink_abi;
 
 /// Represents an argument specification for messages and constructors
 ///

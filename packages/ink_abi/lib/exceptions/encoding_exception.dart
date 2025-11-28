@@ -1,4 +1,4 @@
-import 'ink_abi_exception.dart';
+part of ink_abi;
 
 /// Exception thrown when encoding ink! contract data fails
 ///

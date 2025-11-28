@@ -1,7 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-part 'event_spec.g.dart';
+part of ink_abi;
 
 /// Represents an ink! event specification
 ///

@@ -1,10 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-import 'arg_spec.dart';
-import 'type_spec.dart';
-
-part 'message_spec.g.dart';
+part of ink_abi;
 
 /// Represents an ink! message (function) specification
 ///

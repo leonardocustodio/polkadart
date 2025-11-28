@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'event_spec.dart';
+part of ink_abi;
 
 /// Represents decoded event data with metadata
 ///

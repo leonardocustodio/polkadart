@@ -1,7 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-part 'type_spec.g.dart';
+part of ink_abi;
 
 /// Represents a type specification from ink! metadata
 ///

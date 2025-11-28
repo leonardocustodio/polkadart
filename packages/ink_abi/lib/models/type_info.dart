@@ -1,4 +1,4 @@
-import 'package:substrate_metadata/substrate_metadata.dart';
+part of ink_abi;
 
 /// Type information helper class
 ///
