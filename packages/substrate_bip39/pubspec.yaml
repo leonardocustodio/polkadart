@@ -12,7 +12,7 @@ dependencies:
   bip39_mnemonic: ^4.0.1
   convert: ^3.1.1
   collection: ^1.17.2
-  cryptography: ^2.5.0
+  cryptography: ^2.9.0
   pointycastle: ^4.0.0
   polkadart_scale_codec: ^1.6.0
 
