@@ -1,0 +1,1420 @@
+{
+  "metadata": {
+    "source": "Polkadot v14 metadata",
+    "totalConstants": 122,
+    "pallets": 31
+  },
+  "constants": [
+    {
+      "name": "BlockWeights",
+      "type": "frame_system::limits::BlockWeights",
+      "typeId": 167,
+      "value": "387fae5c0100000000204aa9d1010000603b14050000000001a094cb9158010000010098f73e5d010000010000000000000000603b14050000000001a01c1efccc0100000100204aa9d1010000010088526a74000000603b140500000000000000",
+      "docs": [
+        " Block & extrinsics weights: base values and limits."
+      ],
+      "palletName": "System"
+    },
+    {
+      "name": "BlockLength",
+      "type": "frame_system::limits::BlockLength",
+      "typeId": 171,
+      "value": "00003c000000500000005000",
+      "docs": [
+        " The maximum length of a block (in bytes)."
+      ],
+      "palletName": "System"
+    },
+    {
+      "name": "BlockHashCount",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00100000",
+      "docs": [
+        " Maximum number of block number to block hash mappings to keep (oldest pruned first)."
+      ],
+      "palletName": "System"
+    },
+    {
+      "name": "DbWeight",
+      "type": "sp_weights::RuntimeDbWeight",
+      "typeId": 173,
+      "value": "38ca38010000000098aaf90400000000",
+      "docs": [
+        " The weight of runtime database operations the runtime can invoke."
+      ],
+      "palletName": "System"
+    },
+    {
+      "name": "Version",
+      "type": "sp_version::RuntimeVersion",
+      "typeId": 174,
+      "value": "20706f6c6b61646f743c7061726974792d706f6c6b61646f7400000000542400000000000040df6acb689907609b0400000037e397fc7c91f5e40100000040fe3ad401f8959a0600000017a6bc0d0062aeb301000000d2bc9897eed08f1503000000f78b278be53f454c02000000af2c0297a23e6d3d0200000049eaaf1b548a0cb00100000091d5df18b0d2cf5801000000ed99c5acb25eedf503000000cbca25e39f14238702000000687ad44ad37f03c201000000ab3c0572291feb8b01000000bc9d89904f5b923f0100000037c8bb1350a9a2a801000000f3ff14d5ab527059010000000f00000000",
+      "docs": [
+        " Get the chain's current version."
+      ],
+      "palletName": "System"
+    },
+    {
+      "name": "SS58Prefix",
+      "type": "Type#81",
+      "typeId": 81,
+      "value": "0000",
+      "docs": [
+        " The designated SS58 prefix of this chain.",
+        "",
+        " This replaces the \"ss58Format\" property declared in the chain spec. Reason is",
+        " that the runtime should know about the prefix in order to make use of it as",
+        " an identifier of the chain."
+      ],
+      "palletName": "System"
+    },
+    {
+      "name": "MaximumWeight",
+      "type": "sp_weights::weight_v2::Weight",
+      "typeId": 8,
+      "value": "00806e8774010000",
+      "docs": [
+        " The maximum weight that may be scheduled per block for any dispatchables of less",
+        " priority than `schedule::HARD_DEADLINE`."
+      ],
+      "palletName": "Scheduler"
+    },
+    {
+      "name": "MaxScheduledPerBlock",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "32000000",
+      "docs": [
+        " The maximum number of scheduled calls in the queue for a single block.",
+        " Not strictly enforced, but used for weight estimation."
+      ],
+      "palletName": "Scheduler"
+    },
+    {
+      "name": "EpochDuration",
+      "type": "Type#9",
+      "typeId": 9,
+      "value": "6009000000000000",
+      "docs": [
+        " The amount of time, in slots, that each epoch should last.",
+        " NOTE: Currently it is not possible to change the epoch duration after",
+        " the chain has started. Attempting to do so will brick block production."
+      ],
+      "palletName": "Babe"
+    },
+    {
+      "name": "ExpectedBlockTime",
+      "type": "Type#9",
+      "typeId": 9,
+      "value": "7017000000000000",
+      "docs": [
+        " The expected average block time at which BABE should be creating",
+        " blocks. Since BABE is probabilistic it is not trivial to figure out",
+        " what the expected average block time should be based on the slot",
+        " duration and the security parameter `c` (where `1 - c` represents",
+        " the probability of a slot being empty)."
+      ],
+      "palletName": "Babe"
+    },
+    {
+      "name": "MaxAuthorities",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "a0860100",
+      "docs": [
+        " Max number of authorities allowed"
+      ],
+      "palletName": "Babe"
+    },
+    {
+      "name": "MinimumPeriod",
+      "type": "Type#9",
+      "typeId": 9,
+      "value": "b80b000000000000",
+      "docs": [
+        " The minimum period between blocks. Beware that this is different to the *expected*",
+        " period that the block production apparatus provides. Your chosen consensus system will",
+        " generally work with this to determine a sensible block time. e.g. For Aura, it will be",
+        " double this period on default settings."
+      ],
+      "palletName": "Timestamp"
+    },
+    {
+      "name": "Deposit",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e87648170000000000000000000000",
+      "docs": [
+        " The deposit needed for reserving an index."
+      ],
+      "palletName": "Indices"
+    },
+    {
+      "name": "ExistentialDeposit",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e40b54020000000000000000000000",
+      "docs": [
+        " The minimum amount required to keep an account open."
+      ],
+      "palletName": "Balances"
+    },
+    {
+      "name": "MaxLocks",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "32000000",
+      "docs": [
+        " The maximum number of locks that should exist on an account.",
+        " Not strictly enforced, but used for weight estimation."
+      ],
+      "palletName": "Balances"
+    },
+    {
+      "name": "MaxReserves",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "32000000",
+      "docs": [
+        " The maximum number of named reserves that can exist on an account."
+      ],
+      "palletName": "Balances"
+    },
+    {
+      "name": "OperationalFeeMultiplier",
+      "type": "Type#2",
+      "typeId": 2,
+      "value": "05",
+      "docs": [
+        " A fee mulitplier for `Operational` extrinsics to compute \"virtual tip\" to boost their",
+        " `priority`",
+        "",
+        " This value is multipled by the `final_fee` to obtain a \"virtual tip\" that is later",
+        " added to a tip component in regular `priority` calculations.",
+        " It means that a `Normal` transaction can front-run a similarly-sized `Operational`",
+        " extrinsic (with no tip), by including a tip value greater than the virtual tip.",
+        "",
+        " ```rust,ignore",
+        " // For `Normal`",
+        " let priority = priority_calc(tip);",
+        "",
+        " // For `Operational`",
+        " let virtual_tip = (inclusion_fee + tip) * OperationalFeeMultiplier;",
+        " let priority = priority_calc(tip + virtual_tip);",
+        " ```",
+        "",
+        " Note that since we use `final_fee` the multiplier applies also to the regular `tip`",
+        " sent with the transaction. So, not only does the transaction get a priority bump based",
+        " on the `inclusion_fee`, but we also amplify the impact of tips applied to `Operational`",
+        " transactions."
+      ],
+      "palletName": "TransactionPayment"
+    },
+    {
+      "name": "UncleGenerations",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00000000",
+      "docs": [
+        " The number of blocks back we should accept uncles.",
+        " This means that we will deal with uncle-parents that are",
+        " `UncleGenerations + 1` before `now`."
+      ],
+      "palletName": "Authorship"
+    },
+    {
+      "name": "MaxNominations",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "10000000",
+      "docs": [
+        " Maximum number of nominations per nominator."
+      ],
+      "palletName": "Staking"
+    },
+    {
+      "name": "HistoryDepth",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "54000000",
+      "docs": [
+        " Number of eras to keep in history.",
+        "",
+        " Following information is kept for eras in `[current_era -",
+        " HistoryDepth, current_era]`: `ErasStakers`, `ErasStakersClipped`,",
+        " `ErasValidatorPrefs`, `ErasValidatorReward`, `ErasRewardPoints`,",
+        " `ErasTotalStake`, `ErasStartSessionIndex`,",
+        " `StakingLedger.claimed_rewards`.",
+        "",
+        " Must be more than the number of eras delayed by session.",
+        " I.e. active era must always be in history. I.e. `active_era >",
+        " current_era - history_depth` must be guaranteed.",
+        "",
+        " If migrating an existing pallet from storage value to config value,",
+        " this should be set to same value or greater as in storage.",
+        "",
+        " Note: `HistoryDepth` is used as the upper bound for the `BoundedVec`",
+        " item `StakingLedger.claimed_rewards`. Setting this value lower than",
+        " the existing value can lead to inconsistencies in the",
+        " `StakingLedger` and will need to be handled properly in a migration.",
+        " The test `reducing_history_depth_abrupt` shows this effect."
+      ],
+      "palletName": "Staking"
+    },
+    {
+      "name": "SessionsPerEra",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "06000000",
+      "docs": [
+        " Number of sessions per era."
+      ],
+      "palletName": "Staking"
+    },
+    {
+      "name": "BondingDuration",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "1c000000",
+      "docs": [
+        " Number of eras that staked funds must remain bonded for."
+      ],
+      "palletName": "Staking"
+    },
+    {
+      "name": "SlashDeferDuration",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "1b000000",
+      "docs": [
+        " Number of eras that slashes are deferred by, after computation.",
+        "",
+        " This should be less than the bonding duration. Set to 0 if slashes",
+        " should be applied immediately, without opportunity for intervention."
+      ],
+      "palletName": "Staking"
+    },
+    {
+      "name": "MaxNominatorRewardedPerValidator",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00010000",
+      "docs": [
+        " The maximum number of nominators rewarded for each validator.",
+        "",
+        " For each validator only the `$MaxNominatorRewardedPerValidator` biggest stakers can",
+        " claim their reward. This used to limit the i/o cost for the nominator payout."
+      ],
+      "palletName": "Staking"
+    },
+    {
+      "name": "MaxUnlockingChunks",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "20000000",
+      "docs": [
+        " The maximum number of `unlocking` chunks a [`StakingLedger`] can",
+        " have. Effectively determines how many unique eras a staker may be",
+        " unbonding in.",
+        "",
+        " Note: `MaxUnlockingChunks` is used as the upper bound for the",
+        " `BoundedVec` item `StakingLedger.unlocking`. Setting this value",
+        " lower than the existing value can lead to inconsistencies in the",
+        " `StakingLedger` and will need to be handled properly in a runtime",
+        " migration. The test `reducing_max_unlocking_chunks_abrupt` shows",
+        " this effect."
+      ],
+      "palletName": "Staking"
+    },
+    {
+      "name": "MaxAuthorities",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "a0860100",
+      "docs": [
+        " Max Authorities in use"
+      ],
+      "palletName": "Grandpa"
+    },
+    {
+      "name": "UnsignedPriority",
+      "type": "Type#9",
+      "typeId": 9,
+      "value": "ffffffffffffffff",
+      "docs": [
+        " A configuration for base priority of unsigned transactions.",
+        "",
+        " This is exposed so that it can be tuned for particular runtime, when",
+        " multiple pallets send unsigned transactions."
+      ],
+      "palletName": "ImOnline"
+    },
+    {
+      "name": "EnactmentPeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00270600",
+      "docs": [
+        " The period between a proposal being approved and enacted.",
+        "",
+        " It should generally be a little more than the unstake period to ensure that",
+        " voting stakers have an opportunity to remove themselves from the system in the case",
+        " where they are on the losing side of a vote."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "LaunchPeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00270600",
+      "docs": [
+        " How often (in blocks) new public referenda are launched."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "VotingPeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00270600",
+      "docs": [
+        " How often (in blocks) to check for new votes."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "VoteLockingPeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00270600",
+      "docs": [
+        " The minimum period of vote locking.",
+        "",
+        " It should be no shorter than enactment period to ensure that in the case of an approval,",
+        " those successful voters are locked into the consequences that their votes entail."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "MinimumDeposit",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "0010a5d4e80000000000000000000000",
+      "docs": [
+        " The minimum amount to be used as a deposit for a public referendum proposal."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "InstantAllowed",
+      "type": "Type#43",
+      "typeId": 43,
+      "value": "01",
+      "docs": [
+        " Indicator for whether an emergency origin is even allowed to happen. Some chains may",
+        " want to set this permanently to `false`, others may want to condition it on things such",
+        " as an upgrade having happened recently."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "FastTrackVotingPeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "08070000",
+      "docs": [
+        " Minimum voting period allowed for a fast-track referendum."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "CooloffPeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "c0890100",
+      "docs": [
+        " Period in blocks where an external proposal may not be re-submitted after being vetoed."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "PreimageByteDeposit",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "80969800000000000000000000000000",
+      "docs": [
+        " The amount of balance that must be deposited per byte of preimage stored."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "MaxVotes",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "64000000",
+      "docs": [
+        " The maximum number of votes for an account.",
+        "",
+        " Also used to compute weight, an overly big value can",
+        " lead to extrinsic with very big weight: see `delegate` for instance."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "MaxProposals",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "64000000",
+      "docs": [
+        " The maximum number of public proposals that can exist at any time."
+      ],
+      "palletName": "Democracy"
+    },
+    {
+      "name": "PalletId",
+      "type": "Type#141",
+      "typeId": 141,
+      "value": "706872656c656374",
+      "docs": [
+        " Identifier for the elections-phragmen pallet's lock"
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "CandidacyBond",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "0010a5d4e80000000000000000000000",
+      "docs": [
+        " How much should be locked up in order to submit one's candidacy."
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "VotingBondBase",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "007013b72e0000000000000000000000",
+      "docs": [
+        " Base deposit associated with voting.",
+        "",
+        " This should be sensibly high to economically ensure the pallet cannot be attacked by",
+        " creating a gigantic number of votes."
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "VotingBondFactor",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00d01213000000000000000000000000",
+      "docs": [
+        " The amount of bond that need to be locked for each vote (32 bytes)."
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "DesiredMembers",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "0d000000",
+      "docs": [
+        " Number of members to elect."
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "DesiredRunnersUp",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "14000000",
+      "docs": [
+        " Number of runners_up to keep."
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "TermDuration",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "c0890100",
+      "docs": [
+        " How long each seat is kept. This defines the next block number at which an election",
+        " round will happen. If set to zero, no elections are ever triggered and the module will",
+        " be in passive mode."
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "MaxCandidates",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "e8030000",
+      "docs": [
+        " The maximum number of candidates in a phragmen election.",
+        "",
+        " Warning: The election happens onchain, and this value will determine",
+        " the size of the election. When this limit is reached no more",
+        " candidates are accepted in the election."
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "MaxVoters",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "10270000",
+      "docs": [
+        " The maximum number of voters to allow in a phragmen election.",
+        "",
+        " Warning: This impacts the size of the election which is run onchain.",
+        " When the limit is reached the new voters are ignored."
+      ],
+      "palletName": "PhragmenElection"
+    },
+    {
+      "name": "ProposalBond",
+      "type": "sp_arithmetic::per_things::Permill",
+      "typeId": 556,
+      "value": "50c30000",
+      "docs": [
+        " Fraction of a proposal's value that should be bonded in order to place the proposal.",
+        " An accepted proposal gets these back. A rejected proposal does not."
+      ],
+      "palletName": "Treasury"
+    },
+    {
+      "name": "ProposalBondMinimum",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "0010a5d4e80000000000000000000000",
+      "docs": [
+        " Minimum amount of funds that should be placed in a deposit for making a proposal."
+      ],
+      "palletName": "Treasury"
+    },
+    {
+      "name": "ProposalBondMaximum",
+      "type": "Option",
+      "typeId": 557,
+      "value": "01005039278c0400000000000000000000",
+      "docs": [
+        " Maximum amount of funds that should be placed in a deposit for making a proposal."
+      ],
+      "palletName": "Treasury"
+    },
+    {
+      "name": "SpendPeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00460500",
+      "docs": [
+        " Period between successive spends."
+      ],
+      "palletName": "Treasury"
+    },
+    {
+      "name": "Burn",
+      "type": "sp_arithmetic::per_things::Permill",
+      "typeId": 556,
+      "value": "10270000",
+      "docs": [
+        " Percentage of spare funds (if any) that are burnt per spend period."
+      ],
+      "palletName": "Treasury"
+    },
+    {
+      "name": "PalletId",
+      "type": "frame_support::PalletId",
+      "typeId": 558,
+      "value": "70792f7472737279",
+      "docs": [
+        " The treasury's pallet id, used for deriving its sovereign account ID."
+      ],
+      "palletName": "Treasury"
+    },
+    {
+      "name": "MaxApprovals",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "64000000",
+      "docs": [
+        " The maximum number of approvals that can wait in the spending queue.",
+        "",
+        " NOTE: This parameter is also used within the Bounties Pallet extension if enabled."
+      ],
+      "palletName": "Treasury"
+    },
+    {
+      "name": "Prefix",
+      "type": "Type#11",
+      "typeId": 11,
+      "value": "8450617920444f547320746f2074686520506f6c6b61646f74206163636f756e743a",
+      "docs": [],
+      "palletName": "Claims"
+    },
+    {
+      "name": "MinVestedTransfer",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e40b54020000000000000000000000",
+      "docs": [
+        " The minimum amount transferred to call `vested_transfer`."
+      ],
+      "palletName": "Vesting"
+    },
+    {
+      "name": "MaxVestingSchedules",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "1c000000",
+      "docs": [],
+      "palletName": "Vesting"
+    },
+    {
+      "name": "batched_calls_limit",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "aa2a0000",
+      "docs": [
+        " The limit on the number of batched calls."
+      ],
+      "palletName": "Utility"
+    },
+    {
+      "name": "BasicDeposit",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "007db52a2f0000000000000000000000",
+      "docs": [
+        " The amount held on deposit for a registered identity"
+      ],
+      "palletName": "Identity"
+    },
+    {
+      "name": "FieldDeposit",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00cd5627000000000000000000000000",
+      "docs": [
+        " The amount held on deposit per additional field for a registered identity."
+      ],
+      "palletName": "Identity"
+    },
+    {
+      "name": "SubAccountDeposit",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "80f884b02e0000000000000000000000",
+      "docs": [
+        " The amount held on deposit for a registered subaccount. This should account for the fact",
+        " that one storage item's value will increase by the size of an account ID, and there will",
+        " be another trie item whose value is the size of an account ID plus 32 bytes."
+      ],
+      "palletName": "Identity"
+    },
+    {
+      "name": "MaxSubAccounts",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "64000000",
+      "docs": [
+        " The maximum number of sub-accounts allowed per identified account."
+      ],
+      "palletName": "Identity"
+    },
+    {
+      "name": "MaxAdditionalFields",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "64000000",
+      "docs": [
+        " Maximum number of additional fields that may be stored in an ID. Needed to bound the I/O",
+        " required to access an identity, but can be pretty high."
+      ],
+      "palletName": "Identity"
+    },
+    {
+      "name": "MaxRegistrars",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "14000000",
+      "docs": [
+        " Maxmimum number of registrars allowed in the system. Needed to bound the complexity",
+        " of, e.g., updating judgements."
+      ],
+      "palletName": "Identity"
+    },
+    {
+      "name": "ProxyDepositBase",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "0084b2952e0000000000000000000000",
+      "docs": [
+        " The base amount of currency needed to reserve for creating a proxy.",
+        "",
+        " This is held for an additional storage item whose value size is",
+        " `sizeof(Balance)` bytes and whose key size is `sizeof(AccountId)` bytes."
+      ],
+      "palletName": "Proxy"
+    },
+    {
+      "name": "ProxyDepositFactor",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "8066ab13000000000000000000000000",
+      "docs": [
+        " The amount of currency needed per proxy added.",
+        "",
+        " This is held for adding 32 bytes plus an instance of `ProxyType` more into a",
+        " pre-existing storage value. Thus, when configuring `ProxyDepositFactor` one should take",
+        " into account `32 + proxy_type.encode().len()` bytes of data."
+      ],
+      "palletName": "Proxy"
+    },
+    {
+      "name": "MaxProxies",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "20000000",
+      "docs": [
+        " The maximum amount of proxies allowed for a single account."
+      ],
+      "palletName": "Proxy"
+    },
+    {
+      "name": "MaxPending",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "20000000",
+      "docs": [
+        " The maximum amount of time-delayed announcements that are allowed to be pending."
+      ],
+      "palletName": "Proxy"
+    },
+    {
+      "name": "AnnouncementDepositBase",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "0084b2952e0000000000000000000000",
+      "docs": [
+        " The base amount of currency needed to reserve for creating an announcement.",
+        "",
+        " This is held when a new storage item holding a `Balance` is created (typically 16",
+        " bytes)."
+      ],
+      "palletName": "Proxy"
+    },
+    {
+      "name": "AnnouncementDepositFactor",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00cd5627000000000000000000000000",
+      "docs": [
+        " The amount of currency needed per announcement made.",
+        "",
+        " This is held for adding an `AccountId`, `Hash` and `BlockNumber` (typically 68 bytes)",
+        " into a pre-existing storage value."
+      ],
+      "palletName": "Proxy"
+    },
+    {
+      "name": "DepositBase",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "008c61c52e0000000000000000000000",
+      "docs": [
+        " The base amount of currency needed to reserve for creating a multisig execution or to",
+        " store a dispatch call for later.",
+        "",
+        " This is held for an additional storage item whose value size is",
+        " `4 + sizeof((BlockNumber, Balance, AccountId))` bytes and whose key size is",
+        " `32 + sizeof(AccountId)` bytes."
+      ],
+      "palletName": "Multisig"
+    },
+    {
+      "name": "DepositFactor",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00d01213000000000000000000000000",
+      "docs": [
+        " The amount of currency needed per unit threshold when creating a multisig execution.",
+        "",
+        " This is held for adding 32 bytes more into a pre-existing storage value."
+      ],
+      "palletName": "Multisig"
+    },
+    {
+      "name": "MaxSignatories",
+      "type": "Type#81",
+      "typeId": 81,
+      "value": "6400",
+      "docs": [
+        " The maximum amount of signatories allowed in the multisig."
+      ],
+      "palletName": "Multisig"
+    },
+    {
+      "name": "BountyDepositBase",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e40b54020000000000000000000000",
+      "docs": [
+        " The amount held on deposit for placing a bounty proposal."
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "BountyDepositPayoutDelay",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00c20100",
+      "docs": [
+        " The delay period for which a bounty beneficiary need to wait before claim the payout."
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "BountyUpdatePeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "80c61300",
+      "docs": [
+        " Bounty duration in blocks."
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "CuratorDepositMultiplier",
+      "type": "sp_arithmetic::per_things::Permill",
+      "typeId": 556,
+      "value": "20a10700",
+      "docs": [
+        " The curator deposit is calculated as a percentage of the curator fee.",
+        "",
+        " This deposit has optional upper and lower bounds with `CuratorDepositMax` and",
+        " `CuratorDepositMin`."
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "CuratorDepositMax",
+      "type": "Option",
+      "typeId": 557,
+      "value": "0100204aa9d10100000000000000000000",
+      "docs": [
+        " Maximum amount of funds that should be placed in a deposit for making a proposal."
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "CuratorDepositMin",
+      "type": "Option",
+      "typeId": 557,
+      "value": "0100e87648170000000000000000000000",
+      "docs": [
+        " Minimum amount of funds that should be placed in a deposit for making a proposal."
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "BountyValueMinimum",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e87648170000000000000000000000",
+      "docs": [
+        " Minimum value for a bounty."
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "DataDepositPerByte",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e1f505000000000000000000000000",
+      "docs": [
+        " The amount held on deposit per byte within the tip report reason or bounty description."
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "MaximumReasonLength",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00400000",
+      "docs": [
+        " Maximum acceptable reason length.",
+        "",
+        " Benchmarks depend on this value, be sure to update weights file when changing this value"
+      ],
+      "palletName": "Bounties"
+    },
+    {
+      "name": "MaxActiveChildBountyCount",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "64000000",
+      "docs": [
+        " Maximum number of child bounties that can be added to a parent bounty."
+      ],
+      "palletName": "ChildBounties"
+    },
+    {
+      "name": "ChildBountyValueMinimum",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e40b54020000000000000000000000",
+      "docs": [
+        " Minimum value for a child-bounty."
+      ],
+      "palletName": "ChildBounties"
+    },
+    {
+      "name": "MaximumReasonLength",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00400000",
+      "docs": [
+        " Maximum acceptable reason length.",
+        "",
+        " Benchmarks depend on this value, be sure to update weights file when changing this value"
+      ],
+      "palletName": "Tips"
+    },
+    {
+      "name": "DataDepositPerByte",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e1f505000000000000000000000000",
+      "docs": [
+        " The amount held on deposit per byte within the tip report reason or bounty description."
+      ],
+      "palletName": "Tips"
+    },
+    {
+      "name": "TipCountdown",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "40380000",
+      "docs": [
+        " The period for which a tip remains open after is has achieved threshold tippers."
+      ],
+      "palletName": "Tips"
+    },
+    {
+      "name": "TipFindersFee",
+      "type": "sp_arithmetic::per_things::Percent",
+      "typeId": 207,
+      "value": "14",
+      "docs": [
+        " The percent of the final tip which goes to the original reporter of the tip."
+      ],
+      "palletName": "Tips"
+    },
+    {
+      "name": "TipReportDepositBase",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e40b54020000000000000000000000",
+      "docs": [
+        " The amount held on deposit for placing a tip report."
+      ],
+      "palletName": "Tips"
+    },
+    {
+      "name": "UnsignedPhase",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "58020000",
+      "docs": [
+        " Duration of the unsigned phase."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "SignedPhase",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "58020000",
+      "docs": [
+        " Duration of the signed phase."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "BetterSignedThreshold",
+      "type": "sp_arithmetic::per_things::Perbill",
+      "typeId": 42,
+      "value": "00000000",
+      "docs": [
+        " The minimum amount of improvement to the solution score that defines a solution as",
+        " \"better\" in the Signed phase."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "BetterUnsignedThreshold",
+      "type": "sp_arithmetic::per_things::Perbill",
+      "typeId": 42,
+      "value": "20a10700",
+      "docs": [
+        " The minimum amount of improvement to the solution score that defines a solution as",
+        " \"better\" in the Unsigned phase."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "OffchainRepeat",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "12000000",
+      "docs": [
+        " The repeat threshold of the offchain worker.",
+        "",
+        " For example, if it is 5, that means that at least 5 blocks will elapse between attempts",
+        " to submit the worker's solution."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "MinerTxPriority",
+      "type": "Type#9",
+      "typeId": 9,
+      "value": "65666666666666e6",
+      "docs": [
+        " The priority of the unsigned transaction submitted in the unsigned-phase"
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "SignedMaxSubmissions",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "10000000",
+      "docs": [
+        " Maximum number of signed submissions that can be queued.",
+        "",
+        " It is best to avoid adjusting this during an election, as it impacts downstream data",
+        " structures. In particular, `SignedSubmissionIndices<T>` is bounded on this value. If you",
+        " update this value during an election, you _must_ ensure that",
+        " `SignedSubmissionIndices.len()` is less than or equal to the new value. Otherwise,",
+        " attempts to submit new solutions may cause a runtime panic."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "SignedMaxWeight",
+      "type": "sp_weights::weight_v2::Weight",
+      "typeId": 8,
+      "value": "68151d3557010000",
+      "docs": [
+        " Maximum weight of a signed solution.",
+        "",
+        " If [`Config::MinerConfig`] is being implemented to submit signed solutions (outside of",
+        " this pallet), then [`MinerConfig::solution_weight`] is used to compare against",
+        " this value."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "SignedMaxRefunds",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "04000000",
+      "docs": [
+        " The maximum amount of unchecked solutions to refund the call fee for."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "SignedRewardBase",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00e40b54020000000000000000000000",
+      "docs": [
+        " Base reward for a signed solution"
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "SignedDepositBase",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00a0db215d0000000000000000000000",
+      "docs": [
+        " Base deposit for a signed solution."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "SignedDepositByte",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "787d0100000000000000000000000000",
+      "docs": [
+        " Per-byte deposit for a signed solution."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "SignedDepositWeight",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00000000000000000000000000000000",
+      "docs": [
+        " Per-weight deposit for a signed solution."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "MaxElectingVoters",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "e4570000",
+      "docs": [
+        " The maximum number of electing voters to put in the snapshot. At the moment, snapshots",
+        " are only over a single block, but once multi-block elections are introduced they will",
+        " take place over multiple blocks."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "MaxElectableTargets",
+      "type": "Type#81",
+      "typeId": 81,
+      "value": "ffff",
+      "docs": [
+        " The maximum number of electable targets to put in the snapshot."
+      ],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "MinerMaxLength",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00003600",
+      "docs": [],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "MinerMaxWeight",
+      "type": "sp_weights::weight_v2::Weight",
+      "typeId": 8,
+      "value": "68151d3557010000",
+      "docs": [],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "MinerMaxVotesPerVoter",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "10000000",
+      "docs": [],
+      "palletName": "ElectionProviderMultiPhase"
+    },
+    {
+      "name": "BagThresholds",
+      "type": "Type#613",
+      "typeId": 613,
+      "value": "210300e40b5402000000f39e809702000000a8b197e20200000094492e3603000000279c3a930300000003bccefa0300000042c01b6e040000001b4775ee04000000385e557d0500000046dc601c0600000089386ccd06000000b6ee809207000000fe7ee36d08000000e81b1a6209000000b019f4710a000000103592a00b000000cfc96ff10c00000041146d680e000000e79bda0910000000cee885da1100000028a9c7df13000000bb70931f160000008e4089a018000000810a096a1b000000366a48841e0000005bd36af821000000807c9cd025000000c95530182a000000bd63c1db2e00000071e0572934000000689092103a000000edc4d4a240000000699379f3470000008fd80c18500000004baf8a28590000006a16a63f630000000995177b6e00000078c5f4fb7a00000062c811e78800000051bf6d6598000000048eaba4a9000000544698d7bc00000091cac036d2000000175f1801ea000000bd15b27c0401000043358ff721010000b8fc84c84201000099673c506701000007e44efa8f010000b341833ebd010000027f2ea2ef0100009883bcb927020000164d652a66020000b49513acab0200002d8e820bf9020000a1e6982c4f030000a616080daf030000cc9d37c719040000a0d584959004000042e7e0d514050000028cd70da80500000f750aef4b060000ea8d2e5c02070000c3cb996ecd070000b1e5717caf080000aa2b8e1fab090000b5c1203dc30a000026d03d0efb0b000070c75929560d0000ebadda8cd80e0000f797dbaa86100000cff04476651200001f2660717a14000009a611becb1600001dfbe82f60190000943a3c603f1c00008afe89c4711f0000ced963c70023000003a92ae4f6260000fe72eec55f2b000036c9cc6948300000dae33245bf350000062a7470d43b00007c9732d69942000084a32468234a0000571ad45987520000e7f10262de5b00000db8760344660000ae0401ded67100007d9eb308b97e00001e044a76108d00003a1df064079d0000e04fafdaccae00005679f02f95c2000095c3aaa99ad80000967c05251ef10000177a66d6670c010028cb1f1ec82a0100fa282f75984c0100d57dc8743c7201007dc4b3fb229c0100365cde74c7ca01009eb8e142b3fe01000c31ae547f3802005fe101e8d57802006373da7e74c0020051d1a60d2e100300c7e9a468ed68030061c091f7b7cb0300bf27a1b7b03904007b1499941bb404008523ed22613c050069a5d4c512d40500ec8c934def7c0600f5aa901be83807008cbe5ddb260a080002978ce113f30800fae314435df60900ddf12dbafe160b002ebadc6f4a580c000c5518c4f2bd0d00f0bb5431154c0f00498e866b46071100b2c153de9ff41200278a2fb2ce191500b2399f84247d1700e199e704aa251a00ba13f5ab331b1d00264785cc7866200088bf803f2d1124001c9823f81d262800ccc422d450b12c00f088820528c03100367c6d7e896137006e9329d30aa63d008cbc6c1322a044000070f32a5c644c00b43b84699909550080b4abe450a95e00a0cda979db5f69004cc27f4cc74c7500d0ac0eba34938200483e0ccf3d5a910068c68e7469cda100281e6fa52b1db40098a92326747fc800f09a74634d30df0080cdfc4b8d72f8009014602d9a901401f0b413d945dd330120973596c1b4560150dcfbaead7d7d01e01198b947aaa80130c7ee16bbb9d801206e488697390e02a0fa4b1d72c74902c0117170b5128c02808a1643a6ded502c0f823b1a204280380af5970a2768303c06f2d87ff41e90340937fac8f925a040091097117b6d804400fdf5b212065050049c149446e0106008ebca6e56caf0600595686851c71078068aa34a4b7480880a1e29e52b9380900bdabe880e4430a002a72b4204c6d0b80f1c013335cb80c00a03ccbdce3280e80b8629a9e20c30f00de5693d2ca8b11005d7f4c93238813001a87df3504be1500a7ce4b84ef3318000110fbea24f11a00802ae5d1b5fd1d0022a134609d62210044216bf0da2925000261f1828f5e29006620cf851e0d2e008410195252433300a0c18fca8410390026ad1493cc853f00d0cd24662fb646009ce19a1cdab64e0058ccc20c5f9f5700200a7578fb89610030bbbbd6e4936c0060cba7dc9edd7800b83bc0425b8b8600b886236164c59500f8f15fdc93b8a600206a91c0d696b900d8efe28fc097ce0068299bf52ef9e5ffffffffffffffff",
+      "docs": [
+        " The list of thresholds separating the various bags.",
+        "",
+        " Ids are separated into unsorted bags according to their score. This specifies the",
+        " thresholds separating the bags. An id's bag is the largest bag for which the id's score",
+        " is less than or equal to its upper threshold.",
+        "",
+        " When ids are iterated, higher bags are iterated completely before lower bags. This means",
+        " that iteration is _semi-sorted_: ids of higher score tend to come before ids of lower",
+        " score, but peer ids within a particular bag are sorted in insertion order.",
+        "",
+        " # Expressing the constant",
+        "",
+        " This constant must be sorted in strictly increasing order. Duplicate items are not",
+        " permitted.",
+        "",
+        " There is an implied upper limit of `Score::MAX`; that value does not need to be",
+        " specified within the bag. For any two threshold lists, if one ends with",
+        " `Score::MAX`, the other one does not, and they are otherwise equal, the two",
+        " lists will behave identically.",
+        "",
+        " # Calculation",
+        "",
+        " It is recommended to generate the set of thresholds in a geometric series, such that",
+        " there exists some constant ratio such that `threshold[k + 1] == (threshold[k] *",
+        " constant_ratio).max(threshold[k] + 1)` for all `k`.",
+        "",
+        " The helpers in the `/utils/frame/generate-bags` module can simplify this calculation.",
+        "",
+        " # Examples",
+        "",
+        " - If `BagThresholds::get().is_empty()`, then all ids are put into the same bag, and",
+        "   iteration is strictly in insertion order.",
+        " - If `BagThresholds::get().len() == 64`, and the thresholds are determined according to",
+        "   the procedure given above, then the constant ratio is equal to 2.",
+        " - If `BagThresholds::get().len() == 200`, and the thresholds are determined according to",
+        "   the procedure given above, then the constant ratio is approximately equal to 1.248.",
+        " - If the threshold list begins `[1, 2, 3, ...]`, then an id with score 0 or 1 will fall",
+        "   into bag 0, an id with score 2 will fall into bag 1, etc.",
+        "",
+        " # Migration",
+        "",
+        " In the event that this list ever changes, a copy of the old bags list must be retained.",
+        " With that `List::migrate` can be called, which will perform the appropriate migration."
+      ],
+      "palletName": "VoterList"
+    },
+    {
+      "name": "PalletId",
+      "type": "frame_support::PalletId",
+      "typeId": 558,
+      "value": "70792f6e6f706c73",
+      "docs": [
+        " The nomination pool's pallet id."
+      ],
+      "palletName": "NominationPools"
+    },
+    {
+      "name": "MaxPointsToBalance",
+      "type": "Type#2",
+      "typeId": 2,
+      "value": "0a",
+      "docs": [
+        " The maximum pool points-to-balance ratio that an `open` pool can have.",
+        "",
+        " This is important in the event slashing takes place and the pool's points-to-balance",
+        " ratio becomes disproportional.",
+        "",
+        " Moreover, this relates to the `RewardCounter` type as well, as the arithmetic operations",
+        " are a function of number of points, and by setting this value to e.g. 10, you ensure",
+        " that the total number of points in the system are at most 10 times the total_issuance of",
+        " the chain, in the absolute worse case.",
+        "",
+        " For a value of 10, the threshold would be a pool points-to-balance ratio of 10:1.",
+        " Such a scenario would also be the equivalent of the pool being 90% slashed."
+      ],
+      "palletName": "NominationPools"
+    },
+    {
+      "name": "UnsignedPriority",
+      "type": "Type#9",
+      "typeId": 9,
+      "value": "ffffffffffffffff",
+      "docs": [],
+      "palletName": "Paras"
+    },
+    {
+      "name": "ParaDeposit",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "0010a5d4e80000000000000000000000",
+      "docs": [
+        " The deposit to be paid to run a parathread.",
+        " This should include the cost for storing the genesis head and validation code."
+      ],
+      "palletName": "Registrar"
+    },
+    {
+      "name": "DataDepositPerByte",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "80969800000000000000000000000000",
+      "docs": [
+        " The deposit to be paid per byte stored on chain."
+      ],
+      "palletName": "Registrar"
+    },
+    {
+      "name": "LeasePeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00751200",
+      "docs": [
+        " The number of blocks over which a single period lasts."
+      ],
+      "palletName": "Slots"
+    },
+    {
+      "name": "LeaseOffset",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "00100e00",
+      "docs": [
+        " The number of blocks to offset each lease period by."
+      ],
+      "palletName": "Slots"
+    },
+    {
+      "name": "EndingPeriod",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "40190100",
+      "docs": [
+        " The number of blocks over which an auction may be retroactively ended."
+      ],
+      "palletName": "Auctions"
+    },
+    {
+      "name": "SampleLength",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "14000000",
+      "docs": [
+        " The length of each sample to take during the ending period.",
+        "",
+        " `EndingPeriod` / `SampleLength` = Total # of Samples"
+      ],
+      "palletName": "Auctions"
+    },
+    {
+      "name": "SlotRangeCount",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "24000000",
+      "docs": [],
+      "palletName": "Auctions"
+    },
+    {
+      "name": "LeasePeriodsPerSlot",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "08000000",
+      "docs": [],
+      "palletName": "Auctions"
+    },
+    {
+      "name": "PalletId",
+      "type": "frame_support::PalletId",
+      "typeId": 558,
+      "value": "70792f6366756e64",
+      "docs": [
+        " `PalletId` for the crowdloan pallet. An appropriate value could be `PalletId(*b\"py/cfund\")`"
+      ],
+      "palletName": "Crowdloan"
+    },
+    {
+      "name": "MinContribution",
+      "type": "Type#6",
+      "typeId": 6,
+      "value": "00743ba40b0000000000000000000000",
+      "docs": [
+        " The minimum amount that may be contributed into a crowdloan. Should almost certainly be at",
+        " least `ExistentialDeposit`."
+      ],
+      "palletName": "Crowdloan"
+    },
+    {
+      "name": "RemoveKeysLimit",
+      "type": "Type#4",
+      "typeId": 4,
+      "value": "e8030000",
+      "docs": [
+        " Max number of storage keys to remove per extrinsic call."
+      ],
+      "palletName": "Crowdloan"
+    }
+  ]
+}
