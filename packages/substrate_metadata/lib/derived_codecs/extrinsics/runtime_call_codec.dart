@@ -25,7 +25,8 @@ class RuntimeCallCodec with Codec<RuntimeCall> {
     final callVariant = registry.getVariantByIndex(calls.type, callIndex);
 
     if (callVariant == null) {
-      throw MetadataException('Call with index $callIndex not found in pallet ${pallet.name}');
+      throw MetadataException(
+          'Call with index $callIndex not found in pallet ${pallet.name}');
     }
 
     // Decode arguments
@@ -52,11 +53,13 @@ class RuntimeCallCodec with Codec<RuntimeCall> {
     // Find the call variant to encode arguments properly
     final pallet = registry.palletByIndex(value.palletIndex);
     if (pallet == null) {
-      throw MetadataException('Pallet with index ${value.palletIndex} not found');
+      throw MetadataException(
+          'Pallet with index ${value.palletIndex} not found');
     }
 
     final calls = pallet.calls;
-    if (calls == null) throw MetadataException('Pallet ${pallet.name} has no calls');
+    if (calls == null)
+      throw MetadataException('Pallet ${pallet.name} has no calls');
 
     final callVariant = registry.getVariantByIndex(calls.type, value.callIndex);
     if (callVariant == null) {
@@ -90,7 +93,8 @@ class RuntimeCallCodec with Codec<RuntimeCall> {
     // Find the call variant to calculate argument sizes
     final pallet = registry.palletByIndex(value.palletIndex);
     if (pallet == null) {
-      throw MetadataException('Pallet with index ${value.palletIndex} not found');
+      throw MetadataException(
+          'Pallet with index ${value.palletIndex} not found');
     }
 
     final calls = pallet.calls;

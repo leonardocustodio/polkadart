@@ -21,7 +21,7 @@ part of ink_abi;
 class InkAbi {
   late final InkMetadataRegistry _registry;
   late final Map<String, dynamic> _project;
-  late final int? version;
+  late final dynamic _version;
   late final int constructorsIndex;
   late final int messagesIndex;
 
@@ -41,17 +41,27 @@ class InkAbi {
     _project = SchemaValidator.getInkProject(inkAbiJson);
 
     // Determine version from the input or project
-    version = _project['version'] as int? ??
+    _version = _project['version'] ??
         (inkAbiJson.containsKey('V3') ? 3 : (inkAbiJson.containsKey('V4') ? 4 : null));
 
-    // Add version to project if missing (for v3 metadata)
-    if (_project['version'] == null && version != null) {
-      _project['version'] = version;
-    }
-
-    _registry = InkMetadataRegistry(_project);
+    _registry = InkMetadataRegistry(_project, _getVersion(_version));
     constructorsIndex = _registry.constructorIndex;
     messagesIndex = _registry.messageIndex;
+  }
+
+  int? get version => _getVersion(_version);
+
+  int? _getVersion(final dynamic ver) {
+    if (ver == null) {
+      return null;
+    }
+    if (ver is String) {
+      return int.tryParse(ver);
+    }
+    if (ver is! int) {
+      throw Exception('Expected int/String version-type but got `${ver.runtimeType}`.');
+    }
+    return ver;
   }
 
   // ======================================================================
@@ -210,10 +220,6 @@ class InkAbi {
   // EVENT DECODING
   // ======================================================================
 
-  dynamic decodeEventFromHex(final String hexData, [final List<String>? topics]) {
-    return decodeEvent(decodeHex(hexData), topics);
-  }
-
   /// Decode event based on contract version
   ///
   /// Automatically handles both v4 (index-based) and v5 (topic-based) events.
@@ -230,7 +236,8 @@ class InkAbi {
   /// // v5 event (topics required)
   /// final event = inkAbi.decodeEvent(eventBytes, ['0x...']);
   /// ```
-  dynamic decodeEvent(final Uint8List data, [final List<String>? topics]) {
+  dynamic decodeEvent(final String hex, [final List<String>? topics]) {
+    final data = decodeHex(hex);
     if (version == 5) {
       if (topics == null || topics.isEmpty) {
         throw InkEventException.topicsRequired();
@@ -371,7 +378,7 @@ class InkAbi {
   /// final args = inkAbi.decodeConstructor('0x9bae9d5e00c817a804');
   /// // Returns: [1000] (if constructor takes a single u128 argument)
   /// ```
-  dynamic decodeConstructorData(final String data) {
+  dynamic decodeConstructor(final String data) {
     try {
       final input = SelectorByteInput.fromHex(data, constructorSelectors);
       final codec = _registry.codecFor(constructorsIndex);
@@ -403,7 +410,7 @@ class InkAbi {
   /// final args = inkAbi.decodeMessage('0x633aa55164000000');
   /// // Returns: [100] (if message takes a single u32 argument)
   /// ```
-  dynamic decodeMessageData(final String data) {
+  dynamic decodeMessage(final String data) {
     try {
       final input = SelectorByteInput.fromHex(data, messageSelectors);
       final codec = _registry.codecFor(messagesIndex);

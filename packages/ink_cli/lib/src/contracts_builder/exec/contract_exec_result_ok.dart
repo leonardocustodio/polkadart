@@ -11,11 +11,36 @@ class ContractExecResultOk {
     required this.accountId,
   });
 
-  static ContractExecResultOk fromJson(final Map<String, dynamic> json) {
+  /// Parse from decoded SCALE data
+  ///
+  /// Structure: `{ result: { flags: int, data: List<int> }, accountId: List<int> }`
+  static ContractExecResultOk fromJson(final dynamic json) {
+    if (json is! Map) {
+      throw ArgumentError('Expected Map, got ${json.runtimeType}');
+    }
+
+    final resultField = json['result'];
+    int flags = 0;
+    List<int> data = [];
+
+    if (resultField is Map) {
+      flags = resultField['flags'] ?? 0;
+      final dataField = resultField['data'];
+      if (dataField is List) {
+        data = dataField.cast<int>();
+      }
+    }
+
+    List<int> accountId = [];
+    final accountIdField = json['accountId'];
+    if (accountIdField is List) {
+      accountId = accountIdField.cast<int>();
+    }
+
     return ContractExecResultOk(
-      flags: json['result']?['flags'] ?? 0,
-      data: json['result']?['data']?.cast<int>() ?? <int>[],
-      accountId: json['accountId']?.cast<int>() ?? <int>[],
+      flags: flags,
+      data: data,
+      accountId: accountId,
     );
   }
 }

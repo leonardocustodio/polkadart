@@ -51,7 +51,7 @@ class InkMetadataRegistry {
   ///
   /// The metadata must include 'version', 'types', and 'spec' fields.
   /// Throws [InkAbiException] if metadata is invalid.
-  InkMetadataRegistry(this._inkMetadata) : version = _inkMetadata['version'] as int? {
+  InkMetadataRegistry(this._inkMetadata, this.version) {
     _validateMetadata();
     _initializeTypeRegistry();
     _initializeSpecs();
@@ -68,10 +68,8 @@ class InkMetadataRegistry {
     if (_inkMetadata['spec'] == null) {
       throw InkAbiException('Missing spec in ink! metadata');
     }
-
-    final ver = version;
-    if (ver != 3 && ver != 4 && ver != 5) {
-      throw InkAbiException('Unsupported ink! metadata version: $ver');
+    if (version != 3 && version != 4 && version != 5) {
+      throw InkAbiException('Unsupported ink! metadata version: $version');
     }
   }
 
@@ -480,6 +478,12 @@ class InkMetadataRegistry {
   // ========================================================================
   // Type Access
   // ========================================================================
+
+  /// Get all portable types from the registry
+  ///
+  /// Returns the list of all types defined in the ink! metadata.
+  /// Useful for type generation and name assignment.
+  List<PortableType> get types => _portableRegistry.types;
 
   /// Get type by ID from the portable registry
   ///
