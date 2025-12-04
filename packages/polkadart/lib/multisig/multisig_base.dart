@@ -8,6 +8,7 @@ import 'package:equatable/equatable.dart' show Equatable;
 import 'package:json_annotation/json_annotation.dart' show JsonConverter, JsonSerializable, JsonKey;
 import 'package:polkadart/apis/apis.dart';
 import 'package:polkadart/balances/balances_base.dart';
+import 'package:polkadart/helpers/call_indices_lookup.dart';
 import 'package:polkadart/extrinsic_builder/extrinsic_builder_base.dart'
     show ExtrinsicBuilder, SigningCallback;
 import 'package:polkadart/util/uint8list_extension.dart';

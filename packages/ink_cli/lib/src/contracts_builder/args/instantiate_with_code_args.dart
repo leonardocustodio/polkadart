@@ -3,7 +3,7 @@ part of ink_cli;
 class InstantiateWithCodeArgs implements ContractArgs {
   final BigInt value;
   final GasLimit gasLimit;
-  final Option storageDepositLimit;
+  final BigInt? storageDepositLimit;
   final Uint8List code;
   final Uint8List data;
   final Uint8List salt;

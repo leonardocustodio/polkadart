@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:ink_cli/ink_cli.dart';
 import 'package:polkadart/polkadart.dart';
-import 'package:polkadart/scale_codec.dart';
+import 'package:polkadart_scale_codec/utils/utils.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 
 import 'flipper.dart';

@@ -1,10 +1,10 @@
 part of ink_cli;
 
 class ContractCallArgs implements ContractArgs {
-  final List<int> address;
+  final Uint8List address;
   final BigInt value;
   final GasLimit gasLimit;
-  final Option storageDepositLimit;
+  final BigInt? storageDepositLimit;
   final Uint8List data;
 
   const ContractCallArgs({
