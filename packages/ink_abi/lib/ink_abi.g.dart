@@ -28,20 +28,15 @@ Map<String, dynamic> _$ArgSpecToJson(ArgSpec instance) => <String, dynamic>{
       'docs': instance.docs,
     };
 
-EventSpec _$EventSpecFromJson(Map<String, dynamic> json) => EventSpec(
-      label: json['label'] as String,
-      typeId: (json['typeId'] as num).toInt(),
-      amountIndexed: (json['amountIndexed'] as num).toInt(),
-      signatureTopic: json['signatureTopic'] as String?,
-      docs: (json['docs'] as List<dynamic>?)?.map((e) => e as String).toList(),
-    );
-
 Map<String, dynamic> _$EventSpecToJson(EventSpec instance) => <String, dynamic>{
+      'stringify': instance.stringify,
+      'hashCode': instance.hashCode,
       'label': instance.label,
       'typeId': instance.typeId,
       'amountIndexed': instance.amountIndexed,
       'signatureTopic': instance.signatureTopic,
       'docs': instance.docs,
+      'props': instance.props,
     };
 
 ConstructorSpec _$ConstructorSpecFromJson(Map<String, dynamic> json) => ConstructorSpec(
