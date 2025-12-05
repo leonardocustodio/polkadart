@@ -8,7 +8,7 @@ abstract class HasherAbstract {
 }
 
 class HashNode {
-  int index;
+  final int index;
   int lowIndex;
   bool onStack;
   String hash;
@@ -60,7 +60,7 @@ class DCGHasher<T> implements HasherAbstract {
         nodes = List.filled(graph.length, null);
 
   @override
-  Hash getHash(Ni ni) {
+  Hash getHash(final Ni ni) {
     // Equivalent to: assert(0 <= ni && ni < graph.length)
     assert(0 <= ni && ni < graph.length,
         'Index $ni is out of bounds for graph of length ${graph.length}');
@@ -80,7 +80,7 @@ class DCGHasher<T> implements HasherAbstract {
   }
 
   /// Equivalent to private traverse(ni: Ni): Hash
-  Hash _traverse(Ni ni) {
+  Hash _traverse(final Ni ni) {
     parentNode = HashNode(
       index: 0,
       lowIndex: 0,
@@ -96,7 +96,7 @@ class DCGHasher<T> implements HasherAbstract {
   }
 
   /// Equivalent to private visit(ni: Ni): Hash
-  Hash _visit(Ni ni) {
+  Hash _visit(final Ni ni) {
     final parent = parentNode;
     if (parent == null) {
       throw StateError('parentNode was unexpectedly null');
@@ -177,7 +177,7 @@ class DCGHasher<T> implements HasherAbstract {
 
 /// Equivalent to export function sha(obj: object): Hash
 /// By default, sha256 will yield a 64-character hex.
-Hash sha(Map<String, dynamic> obj) {
+Hash sha(final Map<String, dynamic> obj) {
   final content = jsonEncode(obj);
   final digest = sha256.convert(utf8.encode(content));
   final fullHex = digest.bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();

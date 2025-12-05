@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:ink_cli/ink_cli.dart';
-import 'package:polkadart/provider.dart';
+import 'package:polkadart/polkadart.dart' show Provider;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
 import 'package:polkadart_scale_codec/utils/utils.dart';
 

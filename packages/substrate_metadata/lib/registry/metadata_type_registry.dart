@@ -614,6 +614,40 @@ class MetadataTypeRegistry {
     return null;
   }
 
+  /// Get a runtime API method by name (V15 only)
+  ///
+  /// Returns the method metadata if found, null otherwise.
+  RuntimeApiMethodMetadataV15? getRuntimeApiMethod(String apiName, String methodName) {
+    final api = getRuntimeApi(apiName);
+    if (api == null) return null;
+
+    for (final method in api.methods) {
+      if (method.name == methodName) {
+        return method;
+      }
+    }
+    return null;
+  }
+
+  /// Get codec for a runtime API method's output type (V15 only)
+  ///
+  /// This is useful for decoding responses from `state_call` RPC method.
+  /// Returns null if the API or method is not found, or if using V14 metadata.
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = registry.getRuntimeApiOutputCodec('ContractsApi', 'instantiate');
+  /// if (codec != null) {
+  ///   final result = codec.decode(input);
+  /// }
+  /// ```
+  Codec? getRuntimeApiOutputCodec(String apiName, String methodName) {
+    final method = getRuntimeApiMethod(apiName, methodName);
+    if (method == null) return null;
+
+    return codecFor(method.output);
+  }
+
   // ======================================================================
   // UTILITY METHODS
   // ======================================================================

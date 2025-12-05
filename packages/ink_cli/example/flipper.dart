@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:ink_abi/ink_abi_base.dart';
+import 'package:ink_abi/ink_abi.dart';
 import 'package:ink_cli/ink_cli.dart';
 import 'package:polkadart/polkadart.dart';
 import 'dart:typed_data';
