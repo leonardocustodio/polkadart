@@ -104,7 +104,7 @@ class VariantCodecInterface implements CodecInterface {
   });
 }
 
-/// Sequence codec interface (Vec<T>)
+/// Sequence codec interface (`Vec<T>`)
 class SequenceCodecInterface implements CodecInterface {
   @override
   final List<String>? path;
