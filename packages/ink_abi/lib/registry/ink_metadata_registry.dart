@@ -59,7 +59,7 @@ class InkMetadataRegistry {
 
   /// Validate that the metadata has all required fields
   void _validateMetadata() {
-    if (_inkMetadata['version'] == null) {
+    if (version == null) {
       throw InkAbiException('Missing version in ink! metadata');
     }
     if (_inkMetadata['types'] == null) {

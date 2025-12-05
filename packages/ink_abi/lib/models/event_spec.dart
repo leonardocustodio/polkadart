@@ -5,7 +5,7 @@ part of ink_abi;
 /// Events are emitted by the contract during execution to communicate
 /// important state changes or occurrences. This class provides metadata
 /// about an event including its type ID, indexed field count, and signature.
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class EventSpec extends Equatable {
   /// Event name/label
   final String label;
