@@ -72,6 +72,12 @@ class RuntimeCallCodec with Codec<RuntimeCall> {
         throw MetadataException('Missing required argument: $fieldName');
       }
 
+      // Check if the value is ScaleRawBytes - if so, write bytes directly
+      if (fieldValue is ScaleRawBytes) {
+        ScaleRawBytes.codec.encodeTo(fieldValue, output);
+        continue;
+      }
+
       final codec = registry.codecFor(field.type);
       codec.encodeTo(fieldValue, output);
     }
@@ -106,10 +112,22 @@ class RuntimeCallCodec with Codec<RuntimeCall> {
         throw MetadataException('Missing required argument: $fieldName');
       }
 
+      // Check if the value is ScaleRawBytes - use its length directly
+      if (fieldValue is ScaleRawBytes) {
+        size += fieldValue.bytes.length;
+        continue;
+      }
+
       final codec = registry.codecFor(field.type);
       size += codec.sizeHint(fieldValue);
     }
 
     return size;
+  }
+
+  @override
+  bool isSizeZero() {
+    // This class directly encodes pallet index + call index
+    return false;
   }
 }

@@ -38,4 +38,7 @@ class $TypeDefSequence with Codec<TypeDefSequence> {
   int sizeHint(TypeDefSequence value) {
     return CompactCodec.codec.sizeHint(value.type);
   }
+
+  @override
+  bool isSizeZero() => CompactCodec.codec.isSizeZero();
 }

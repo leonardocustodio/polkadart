@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:ink_abi/ink_abi_base.dart';
+import 'package:ink_abi/ink_abi.dart';
 
 void main() {
   final String dir = Directory.current.absolute.path;

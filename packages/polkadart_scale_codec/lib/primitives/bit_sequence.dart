@@ -150,6 +150,12 @@ class BitSequenceCodec with Codec<BitArray> {
     size += bitStore.calculateByteSize(value.length);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // BitSequence always has a length prefix (compact-encoded), so it can never be size zero
+    return false;
+  }
 }
 
 int _bitMask(int index, {int bitSize = 32, bool lsbOrder = false}) {

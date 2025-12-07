@@ -49,4 +49,7 @@ class $PalletMetadataV14 with Codec<PalletMetadataV14> {
   int sizeHint(PalletMetadataV14 value) {
     return PalletMetadata.codec.sizeHint(value);
   }
+
+  @override
+  bool isSizeZero() => PalletMetadata.codec.isSizeZero();
 }

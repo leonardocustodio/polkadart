@@ -28,4 +28,14 @@ class TupleCodec with Codec<List<dynamic>> {
     }
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    // Tuple is size zero if it's empty OR if all inner codecs are size zero
+    if (codecs.isEmpty) {
+      return true;
+    }
+
+    return codecs.every((codec) => codec.isSizeZero());
+  }
 }

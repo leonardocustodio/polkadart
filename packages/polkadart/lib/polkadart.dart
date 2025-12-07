@@ -1,7 +1,7 @@
 library polkadart;
 
-export './substrate/substrate.dart';
-export './primitives/primitives.dart';
-export './apis/apis.dart';
-export './provider.dart';
-export './extrinsic/extrinsic.dart';
+export 'apis/apis.dart';
+export 'extrinsic_builder/extrinsic_builder_base.dart';
+export 'helpers/call_indices_lookup.dart';
+export 'models/models.dart';
+export 'primitives/primitives.dart';

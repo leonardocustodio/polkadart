@@ -48,10 +48,7 @@ class ApiVersion {
     return codec.encode(this);
   }
 
-  List<dynamic> toJson() => [
-        '0x${id.toRadixString(16)}',
-        version,
-      ];
+  List<dynamic> toJson() => ['0x${id.toRadixString(16)}', version];
 
   @override
   bool operator ==(Object other) =>
@@ -69,10 +66,7 @@ class $ApiVersionCodec with Codec<ApiVersion> {
 
   @override
   ApiVersion decode(Input input) {
-    return ApiVersion(
-      id: U64Codec.codec.decode(input),
-      version: U32Codec.codec.decode(input),
-    );
+    return ApiVersion(id: U64Codec.codec.decode(input), version: U32Codec.codec.decode(input));
   }
 
   @override
@@ -84,5 +78,10 @@ class $ApiVersionCodec with Codec<ApiVersion> {
   @override
   int sizeHint(ApiVersion value) {
     return U64Codec.codec.sizeHint(value.id) + U32Codec.codec.sizeHint(value.version);
+  }
+
+  @override
+  bool isSizeZero() {
+    return U64Codec.codec.isSizeZero() && U32Codec.codec.isSizeZero();
   }
 }

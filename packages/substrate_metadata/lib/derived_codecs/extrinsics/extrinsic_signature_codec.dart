@@ -39,4 +39,12 @@ class ExtrinsicSignatureCodec with Codec<ExtrinsicSignature> {
         _signatureCodec.sizeHint(value.signature) +
         _extensionsCodec.sizeHint(value.extra);
   }
+
+  @override
+  bool isSizeZero() {
+    // This class just delegates to inner codecs, check all of them
+    return _addressCodec.isSizeZero() &&
+        _signatureCodec.isSizeZero() &&
+        _extensionsCodec.isSizeZero();
+  }
 }

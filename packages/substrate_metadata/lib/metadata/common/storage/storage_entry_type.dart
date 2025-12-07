@@ -29,7 +29,7 @@ class $StorageEntryType with Codec<StorageEntryType> {
 
       case 1: // Map
         // Decode each hasher
-        final hashers = SequenceCodec(StorageHasher.codec).decode(input);
+        final hashers = SequenceCodec(StorageHasherEnum.codec).decode(input);
 
         // Decode key type ID
         final keyType = CompactCodec.codec.decode(input);
@@ -59,7 +59,7 @@ class $StorageEntryType with Codec<StorageEntryType> {
         output.pushByte(1);
 
         // Encode each hasher
-        SequenceCodec(StorageHasher.codec).encodeTo(storageEntryTypeMap.hashers, output);
+        SequenceCodec(StorageHasherEnum.codec).encodeTo(storageEntryTypeMap.hashers, output);
 
         // Encode key type ID
         CompactCodec.codec.encodeTo(storageEntryTypeMap.keyType, output);
@@ -78,13 +78,16 @@ class $StorageEntryType with Codec<StorageEntryType> {
         size += CompactCodec.codec.sizeHint(storageEntryTypePlain.valueType);
 
       case final StorageEntryTypeMap storageEntryTypeMap:
-        size += SequenceCodec(StorageHasher.codec).sizeHint(storageEntryTypeMap.hashers);
+        size += SequenceCodec(StorageHasherEnum.codec).sizeHint(storageEntryTypeMap.hashers);
         size += CompactCodec.codec.sizeHint(storageEntryTypeMap.keyType);
         size += CompactCodec.codec.sizeHint(storageEntryTypeMap.valueType);
     }
 
     return size;
   }
+
+  @override
+  bool isSizeZero() => false; // Always encodes variant index byte
 }
 
 /// Plain storage value (single value, no key)
@@ -108,7 +111,7 @@ class StorageEntryTypeMap extends StorageEntryType {
   ///
   /// - Single hasher: standard Map
   /// - Multiple hashers: NMap (N-dimensional map)
-  final List<StorageHasher> hashers;
+  final List<StorageHasherEnum> hashers;
 
   /// Type ID of the key
   ///

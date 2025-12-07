@@ -80,6 +80,12 @@ class CompactBigIntCodec with Codec<BigInt> {
       return ((value.bitLength + 7) >> 3) + 1;
     }
   }
+
+  @override
+  bool isSizeZero() {
+    // Compact encoding always produces at least 1 byte
+    return false;
+  }
 }
 
 class CompactCodec with Codec<int> {
@@ -161,5 +167,11 @@ class CompactCodec with Codec<int> {
     } else {
       return ((value.bitLength + 7) >> 3) + 1;
     }
+  }
+
+  @override
+  bool isSizeZero() {
+    // Compact encoding always produces at least 1 byte
+    return false;
   }
 }

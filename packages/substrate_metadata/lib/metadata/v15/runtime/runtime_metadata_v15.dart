@@ -152,6 +152,17 @@ class $RuntimeMetadataV15 with Codec<RuntimeMetadataV15> {
     size += CustomMetadataV15.codec.sizeHint(value.customMetadata);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return SequenceCodec(PortableType.codec).isSizeZero() &&
+        SequenceCodec(PalletMetadataV15.codec).isSizeZero() &&
+        ExtrinsicMetadataV15.codec.isSizeZero() &&
+        CompactCodec.codec.isSizeZero() &&
+        SequenceCodec(RuntimeApiMetadataV15.codec).isSizeZero() &&
+        OuterEnumsV15.codec.isSizeZero() &&
+        CustomMetadataV15.codec.isSizeZero();
+  }
 }
 
 /// Outer enum type references (V15)
@@ -220,4 +231,7 @@ class $OuterEnumsV15 with Codec<OuterEnumsV15> {
         CompactCodec.codec.sizeHint(value.eventType) +
         CompactCodec.codec.sizeHint(value.errorType);
   }
+
+  @override
+  bool isSizeZero() => CompactCodec.codec.isSizeZero();
 }

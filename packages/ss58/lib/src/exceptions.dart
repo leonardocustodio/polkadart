@@ -8,21 +8,11 @@ import './address.dart' show Address;
 /// final item1 = RegistryItem.fromJson({
 ///      "prefix": 0,
 ///      "network": "example1",
-///      "displayName": "Example 1 display name",
-///      "symbols": ["EXA"],
-///      "decimals": [10],
-///      "standardAccount": "*",
-///      "website": ""
 ///    });
 ///
 /// final item2 = RegistryItem.fromJson({
 ///      "prefix": 0,
 ///      "network": "example2",
-///      "displayName": "example 2 display name",
-///      "symbols": ["EXA"],
-///      "decimals": [10],
-///      "standardAccount": "*",
-///      "website": ""
 ///    });
 ///
 /// final registry = Registry([item1, item2]);
@@ -47,21 +37,11 @@ class DuplicatePrefixException implements Exception {
 /// final item1 = RegistryItem.fromJson({
 ///      "prefix": 1,
 ///      "network": "example",
-///      "displayName": "Example 1 display name",
-///      "symbols": ["EXA"],
-///      "decimals": [10],
-///      "standardAccount": "*",
-///      "website": ""
 ///    });
 ///
 /// final item2 = RegistryItem.fromJson({
 ///      "prefix": 2,
 ///      "network": "example",
-///      "displayName": "example 2 display name",
-///      "symbols": ["EXA"],
-///      "decimals": [10],
-///      "standardAccount": "*",
-///      "website": ""
 ///    });
 ///
 /// final registry = Registry([item1, item2]);
@@ -150,7 +130,7 @@ class InvalidPrefixException implements Exception {
 }
 
 ///
-/// Invalid Prefix Exception
+/// Invalid CheckSum Exception
 class InvalidCheckSumException implements Exception {
   const InvalidCheckSumException();
 

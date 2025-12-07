@@ -32,6 +32,12 @@ class NestedOptionCodec<E> with Codec<Option<E>> {
     }
     return 1 + subtypeCodec.sizeHint(value.value as E);
   }
+
+  @override
+  bool isSizeZero() {
+    // NestedOption always has at least 1 byte for the Some/None flag
+    return false;
+  }
 }
 
 class OptionCodec<E> with Codec<E?> {
@@ -63,6 +69,12 @@ class OptionCodec<E> with Codec<E?> {
       return 1;
     }
     return 1 + subtypeCodec.sizeHint(value);
+  }
+
+  @override
+  bool isSizeZero() {
+    // Option always has at least 1 byte for the Some/None flag
+    return false;
   }
 }
 

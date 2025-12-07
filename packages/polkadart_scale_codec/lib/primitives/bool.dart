@@ -19,4 +19,10 @@ class BoolCodec with Codec<bool> {
   int sizeHint(bool value) {
     return 1;
   }
+
+  @override
+  bool isSizeZero() {
+    // Bool always encodes to 1 byte (0 or 1)
+    return false;
+  }
 }

@@ -1,280 +1,398 @@
 # substrate_metadata
 
-[substrate_metadata](https://www.pub.dev/packages/substrate_metadata) is a flutter and dart library for encoding and decoding chain **metadata**, **constants**, **extrinsics** and **events** of blocks.
+A powerful Dart/Flutter library for encoding and decoding Substrate blockchain metadata, extrinsics, events, and constants.
 
-# Lets Get Started
+## Installation
 
-### Decode Metadata
+Add to your `pubspec.yaml`:
 
-```dart
-  // decoded metadata
-  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
-
-  //
-  // get raw Map<String, dynamic>
-  final rawMetadata = decodedMetadata.metadataJson;
-  
-  //
-  // get Metadata Object
-  final metadataObject = decodedMetadata.metadataObject;
+```yaml
+dependencies:
+  substrate_metadata: any
 ```
 
-### Create ChainInfo from Metadata
+Then run:
 
-```dart
-  // decoded metadata
-  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
-
-  // create ChainInfo from metadata
-  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
+```bash
+dart pub get
 ```
 
-### Decode Extrinsic
+## Quick Start
 
 ```dart
-  // decode metadata
-  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
+import 'package:substrate_metadata/substrate_metadata.dart';
 
-  // create ChainInfo from metadata
-  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
+// 1. Decode metadata from hex bytes
+final metadataBytes = decodeHex('0x6d657461...'); // Your chain's metadata
+final prefixed = RuntimeMetadataPrefixed.fromBytes(metadataBytes);
 
-  final String extrinsicHex = '0x990403......a2f9e184';
-  
-  // Create extrinsics input
-  final input = Input.fromHex(extrinsicHex);
+// 2. Create ChainInfo - your one-stop shop for chain operations
+final chainInfo = prefixed.buildChainInfo();
 
-  // decode extrinsic
-  final dynamic decoded = ExtrinsicsCodec(chainInfo: chainInfo).decode(input);
+// 3. Decode events from storage
+final eventsHex = '0x08000000...'; // Events from System.Events storage
+final events = chainInfo.eventsCodec.decode(Input.fromHex(eventsHex));
+
+for (final record in events) {
+  print('${record.event.palletName}.${record.event.eventName}');
+  print('Data: ${record.event.data}');
+}
+
+// 4. Access runtime constants
+final existentialDeposit = chainInfo.constantsCodec.getConstant(
+  'Balances',
+  'ExistentialDeposit'
+);
+print('Existential Deposit: $existentialDeposit');
 ```
 
-### Encode Extrinsic
+## Common Use Cases
+
+### Decoding Events
 
 ```dart
-  // decode metadata
-  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
+final eventsCodec = EventsRecordCodec(registry);
 
-  // create ChainInfo from metadata
-  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
-  
-  // Create Output
-  final output = HexOutput();
+// Decode events from System.Events storage
+final events = eventsCodec.decode(Input.fromHex(eventsHex));
 
-  final Map<String, dynamic> extrinsicsMap = {'version': 4, 'signature': ....... };
-
-  // encode extrinsic
-  ExtrinsicsCodec(chainInfo: chainInfo).encodeTo(extrinsicsMap, output);
-  
-  // encoded extrinsics Hex
-  final extrinsicsHex = output.toString();
-```
-
-### Decode Events
-
-```dart
-  // decode metadata
-  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
-
-  // create ChainInfo from metadata
-  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
-
-  final String encodedEventsHex = '0x38000dd14c4572......................5ec6e6fcd6184d952d000000';
-  
-  final input = Input.fromHex(encodedEventsHex);
-
-  // list of decoded events
-  final List<dynamic> decodedEvents = chainInfo.scaleCodec.decode('EventCodec', input);
-```
-
-### Encode Events
-
-```dart
-  // decode metadata
-  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
-
-  // create ChainInfo from metadata
-  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
-
-  final Map<String, dynamic> events = [{ 'phase': {'ApplyExtrinsic': 0}, 'event': {....} }];
-
-  final output = HexOutput();
-  
-  // encode the events
-  chainInfo.scaleCodec.encodeTo('EventCodec', events, output);
-  
-  // events hex
-  final eventsHex = output.toString();
-```
-
-### Decode Constants
-
-```dart
-  // decode metadata
-  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
-
-  // create ChainInfo from metadata
-  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
-
-  //
-  // Look on constants of chain description
-  for (final palletMapEntry in chainInfo.constants.entries) {
-
-    //
-    // Loop throught all the constants in this given pallet
-    for (final constantMapEntry in palletMapEntry.value.entries) {
-      final Constant originalConstant = constantMapEntry.value;
-      
-      //
-      // Encoded Constant bytes
-      final encodedBytes = originalConstant.bytes;
-      
-      //
-      // Decoded Constant value
-      final decoded = originalConstant.value;
-    }
+for (final record in events) {
+  // Phase: when the event occurred
+  switch (record.phase.type) {
+    case PhaseType.applyExtrinsic:
+      print('During extrinsic ${record.phase.extrinsicIndex}');
+    case PhaseType.finalization:
+      print('During finalization');
+    case PhaseType.initialization:
+      print('During initialization');
   }
+
+  // Event details
+  final event = record.event;
+  print('Pallet: ${event.palletName} (index: ${event.palletIndex})');
+  print('Event: ${event.eventName} (index: ${event.eventIndex})');
+  print('Data: ${event.data}');
+
+  // Topics for filtering
+  print('Topics: ${record.topics}');
+}
+
+// Encode events back to bytes
+final output = HexOutput();
+eventsCodec.encodeTo(events, output);
+final encodedHex = output.toString();
+
+// Query event metadata
+final transferInfo = eventsCodec.getEventInfo('Balances', 'Transfer');
+print('Fields: ${transferInfo?.fields.map((f) => f.name)}');
 ```
 
-### Encode Constants
+### Decoding Extrinsics
 
 ```dart
-  // decode metadata
-  final DecodedMetadata decodedMetadata = MetadataDecoder.instance.decode('0x6d657.....790b807d0b');
+final extrinsicsCodec = ExtrinsicsCodec(registry);
 
-  // create ChainInfo from metadata
-  final ChainInfo chainInfo = ChainInfo.fromMetadata(decodedMetadata);
+// Decode extrinsics from a block
+final extrinsics = extrinsicsCodec.decode(Input.fromHex(blockExtrinsicsHex));
 
-  final output = ByteOutput();
+for (final ext in extrinsics) {
+  print('Version: ${ext.version}');
+  print('Signed: ${ext.isSigned}');
 
-  final decodedConstantValue = /** Some constant value from originalConstant **/;
+  // The call being made
+  final call = ext.call;
+  print('Call: ${call.palletName}.${call.callName}');
+  print('Args: ${call.args}');
 
-  originalConstant.type.encodeTo(decodedConstantValue, output);
-  
-  final encodedConstant = output.toBytes();
+  // Signature (if signed)
+  if (ext.signature != null) {
+    final sig = ext.signature!;
+    print('Signer: ${sig.address}');
+    print('Nonce: ${sig.extra['CheckNonce']}');
+    print('Tip: ${sig.extra['ChargeTransactionPayment']}');
+  }
+}
+
+// Encode a runtime call
+final callCodec = RuntimeCallCodec(registry);
+final encodedCall = callCodec.encode(RuntimeCall(
+  palletName: 'Balances',
+  palletIndex: 5,
+  callName: 'transfer_allow_death',
+  callIndex: 0,
+  args: {
+    'dest': {'Id': recipientBytes},
+    'value': BigInt.from(1000000000000),
+  },
+));
 ```
 
-### Add SpecVersion
+### Working with Constants
 
 ```dart
-  final specJson = {'specName': 'polkadot', 'specVersion':......};
+// Standard codec - loads all constants eagerly
+final constantsCodec = ConstantsCodec(registry);
 
-  final specVersion = SpecVersion.fromJson(specJson);
+// Get a single constant
+final blockHashCount = constantsCodec.getConstant('System', 'BlockHashCount');
 
-  // specVersion gets added to support decoding the blocks.
-  chainObject.addSpecVersion(specVersion);
+// Get all constants for a pallet
+final balancesConstants = constantsCodec.getPalletConstants('Balances');
+print('ExistentialDeposit: ${balancesConstants['ExistentialDeposit']}');
+
+// Get all constants across runtime
+final allConstants = constantsCodec.getAllConstants();
+
+// Get constant metadata
+final info = constantsCodec.getConstantInfo('Balances', 'ExistentialDeposit');
+print('Type: ${info?.typeString}');
+print('Docs: ${info?.documentation}');
+
+// Lazy codec - loads constants on demand (memory efficient)
+final lazyCodec = LazyConstantsCodec(registry);
+
+// Preload frequently used constants
+lazyCodec.preloadConstants([
+  ('Balances', 'ExistentialDeposit'),
+  ('TransactionPayment', 'TransactionByteFee'),
+]);
+
+// Check loading status
+final stats = lazyCodec.getLoadingStats();
+print('Loaded: ${stats['loadedConstants']}/${stats['totalConstants']}');
 ```
 
-### Create ChainInfo from SpecVersion
+### ChainInfo & MetadataTypeRegistry
 
 ```dart
-  // when using preV14 metadata
-  final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
-  final Chain chain = Chain(chainDefinitions);
+// ChainInfo - convenient facade for all chain operations
+final chainInfo = ChainInfo.fromMetadata(metadataBytes);
 
-  // or
+// Or from prefixed metadata
+final prefixed = RuntimeMetadataPrefixed.fromBytes(bytes);
+final chainInfo = prefixed.buildChainInfo();
 
-  // when using V14 metadata, you don't need to provide chainDefinitions
-  final Chain chain = Chain();
+// Access components
+final registry = chainInfo.registry;           // Type registry
+final eventsCodec = chainInfo.eventsCodec;     // Events codec
+final extrinsicsCodec = chainInfo.extrinsicsCodec;  // Extrinsics codec
+final constantsCodec = chainInfo.constantsCodec;    // Constants codec
+final callsCodec = chainInfo.callsCodec;       // Runtime calls codec
 
-  final specJson = {'specName': 'polkadot', 'specVersion':......};
+// MetadataTypeRegistry - the heart of the type system
+final registry = MetadataTypeRegistry(prefixedMetadata);
 
-  final SpecVersion specVersion = SpecVersion.fromJson(specJson);
+// Get codec for any type ID
+final codec = registry.codecFor(typeId);
+final decoded = codec.decode(input);
 
-  final ChainInfo chainInfo = chain.getChainInfoFromSpecVersion(specVersion);
+// Look up types
+final type = registry.typeById(42);
+final typeByPath = registry.typeByPath('sp_runtime::DispatchError');
+
+// Access pallet metadata
+final balances = registry.palletByName('Balances');
+final system = registry.palletByIndex(0);
+
+// Get storage metadata
+final accountStorage = registry.getStorageMetadata('System', 'Account');
+
+// V15: Access runtime APIs
+final apiCodec = registry.getRuntimeApiOutputCodec('Core', 'version');
 ```
 
-### Decode Extrinsic (With Chain)
+## Features
+
+- **Metadata V14 & V15 Support** - Full support for modern Substrate metadata formats
+- **Complete Type System** - Portable type registry with all Substrate type definitions
+- **Event Decoding/Encoding** - Decode and encode runtime events with full type safety
+- **Extrinsic Handling** - Parse and construct signed/unsigned extrinsics
+- **Constants Access** - Easy access to runtime constants with lazy loading support
+- **Storage Hashers** - Blake2b, Blake3, and XXHash implementations for storage key generation
+- **Cross-Platform** - Works on Flutter, Dart VM, and Web (WASM compatible)
+- **Zero Configuration** - Automatically adapts to any Substrate-based chain via metadata
+
+## Storage Hashers
+
+Generate storage keys for querying chain state:
 
 ```dart
-  // when using preV14 metadata
-  final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
-  final Chain chain = Chain(chainDefinitions);
+// Available hashers
+final blake2b128 = Hasher.blake2b128;  // Cryptographic, 16 bytes
+final blake2b256 = Hasher.blake2b256;  // Cryptographic, 32 bytes
+final twox128 = Hasher.twoxx128;       // Fast (non-crypto), 16 bytes
+final twox64 = Hasher.twoxx64;         // Fast (non-crypto), 8 bytes
 
-  // or
+// Hash a string
+final hash = Hasher.twoxx128.hashString('System');
 
-  // when using V14 metadata, you don't need to provide chainDefinitions
-  final Chain chain = Chain();
+// Storage value (no key)
+final storageValue = StorageValue(
+  prefix: 'System',
+  storage: 'Number',
+  valueCodec: U32Codec.codec,
+);
+final key = storageValue.hashedKey();  // 32 bytes
 
-  // Preferred to provide all the available Spec-Version information.
-  chain.initSpecVersionFromFile('../chain/versions.json');
+// Storage map (single key)
+final storageMap = StorageMap(
+  prefix: 'System',
+  storage: 'Account',
+  hasher: StorageHasher.blake2b128Concat(accountIdCodec),
+  valueCodec: accountInfoCodec,
+);
+final accountKey = storageMap.hashedKeyFor(accountId);
 
-  final RawBlock rawBlock = RawBlock.fromJson( { blockJson } );
+// Storage double map (two keys)
+final doubleMap = StorageDoubleMap(
+  prefix: 'Staking',
+  storage: 'ErasStakers',
+  hasher1: StorageHasher.twoxx64Concat(U32Codec.codec),
+  hasher2: StorageHasher.twoxx64Concat(accountIdCodec),
+  valueCodec: exposureCodec,
+);
+final stakersKey = doubleMap.hashedKeyFor(eraIndex, validatorId);
 
-  // DecodedBlockExtrinsics
-  final DecodedBlockExtrinsics decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
+// N-map for variable number of keys
+final nMap = StorageNMap(
+  prefix: 'Assets',
+  storage: 'Account',
+  hashers: [
+    StorageHasher.blake2b128Concat(U32Codec.codec),
+    StorageHasher.blake2b128Concat(accountIdCodec),
+  ],
+  valueCodec: assetAccountCodec,
+);
+final assetKey = nMap.hashedKeyFor([assetId, accountId]);
 ```
 
-### Encode Extrinsic (With Chain)
+### Hasher Selection Guide
+
+| Hasher | Security | Speed | Use Case |
+|--------|----------|-------|----------|
+| `blake2b128Concat` | Secure | Moderate | User-controlled keys (recommended) |
+| `blake2b256` | Secure | Moderate | High-security hashing |
+| `twox64Concat` | Not secure | Fast | Trusted keys only |
+| `twox128` | Not secure | Fast | Internal/system keys |
+| `identity` | N/A | Fastest | When key is already unique |
+
+**Note**: "Concat" variants append the original key, enabling storage enumeration.
+
+## Data Models
+
+### RuntimeEvent
 
 ```dart
-  // when using preV14 metadata
-  final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
-  final Chain chain = Chain(chainDefinitions);
+class RuntimeEvent {
+  final String palletName;    // e.g., "Balances"
+  final int palletIndex;      // e.g., 5
+  final String eventName;     // e.g., "Transfer"
+  final int eventIndex;       // e.g., 2
+  final Map<String, dynamic> data;  // Event fields
 
-  // or
-
-  // when using V14 metadata, you don't need to provide chainDefinitions
-  final Chain chain = Chain();
-
-  // Preferred to provide all the available Spec-Version information.
-  chain.initSpecVersionFromFile('../chain/versions.json');
-
-  final RawBlock rawBlock = RawBlock.fromJson( { blockJson } );
-
-  // DecodedBlockExtrinsics
-  final DecodedBlockExtrinsics decodedExtrinsic = chain.decodeExtrinsics(rawBlock);
-
-  // encodedRawBlock.hashCode == rawBlock
-  final RawBlock encodedRawBlock = chain.encodeExtrinsic(decodedExtrinsic);
+  String get identifier => '$palletName.$eventName';
+}
 ```
 
-### Decode Events (With Chain)
+### UncheckedExtrinsic
 
 ```dart
-  // when using preV14 metadata
-  final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
-  final Chain chain = Chain(chainDefinitions);
+class UncheckedExtrinsic {
+  final int version;                    // Extrinsic version (usually 4)
+  final ExtrinsicSignature? signature;  // null for unsigned
+  final RuntimeCall call;               // The actual call
 
-  // or
-
-  // when using V14 metadata, you don't need to provide chainDefinitions
-  final Chain chain = Chain();
-
-  // Preferred to provide all the available Spec-Version information.
-  chain.initSpecVersionFromFile('../chain/versions.json');
-
-  final RawBlockEvents rawBlockEvents = RawBlockEvents.fromJson( { blockJson } );
-
-  // DecodedBlockEvents
-  final DecodedBlockEvents decodedEvents = chain.decodeEvents(rawBlockEvents);
+  bool get isSigned => signature != null;
+}
 ```
 
-### Encode Events (With Chain)
+### RuntimeCall
 
 ```dart
-  // when using preV14 metadata
-  final chainDefinitions = LegacyTypesBundle.fromJson(chainJson);
-  final Chain chain = Chain(chainDefinitions);
+class RuntimeCall {
+  final String palletName;
+  final int palletIndex;
+  final String callName;
+  final int callIndex;
+  final Map<String, dynamic> args;
+}
+```
 
-  // or
+### EventRecord
 
-  // when using V14 metadata, you don't need to provide chainDefinitions
-  final Chain chain = Chain();
+```dart
+class EventRecord {
+  final Phase phase;           // When during block execution
+  final RuntimeEvent event;    // The actual event
+  final List<String> topics;   // For indexed filtering
+}
+```
 
-  // Preferred to provide all the available Spec-Version information.
-  chain.initSpecVersionFromFile('../chain/versions.json');
+### Phase
 
-  final rawBlockEvents = RawBlockEvents.fromJson( { blockJson } );
+```dart
+enum PhaseType { applyExtrinsic, finalization, initialization }
 
-  // DecodedBlockEvents
-  final DecodedBlockEvents decodedEvents = chain.decodeEvents(rawBlockEvents);
+class Phase {
+  final PhaseType type;
+  final int? extrinsicIndex;  // Only for applyExtrinsic
+}
+```
 
-  // encodedBlockEvents.hashCode == rawBlockEvents.hashCode
-  final RawBlockEvents encodedBlockEvents = chain.encodeEvents(decodedEvents);
+## Core Concepts
+
+### The Metadata-Driven Approach
+
+Unlike traditional SDKs that require compile-time type definitions, `substrate_metadata` dynamically builds codecs from runtime metadata. This means:
+
+1. **Any Chain Support** - Works with Polkadot, Kusama, or any custom Substrate chain
+2. **Version Agnostic** - Automatically handles runtime upgrades
+3. **No Code Generation** - No build steps or generated files needed
+
+### Key Components
+
+| Component | Purpose |
+|-----------|---------|
+| `RuntimeMetadataPrefixed` | Decoded metadata with version detection |
+| `MetadataTypeRegistry` | Core type resolution and codec generation |
+| `ChainInfo` | High-level facade for common operations |
+| `EventsRecordCodec` | Decode/encode event records |
+| `ExtrinsicsCodec` | Decode/encode block extrinsics |
+| `ConstantsCodec` | Access runtime constants |
+
+## Metadata Versions
+
+### V14 (Current Standard)
+
+- Portable type registry
+- Pallet metadata (calls, events, errors, constants, storage)
+- Extrinsic metadata with signed extensions
+
+### V15 (Latest)
+
+Everything in V14, plus:
+
+- **Runtime APIs**: Metadata for runtime API methods
+- **Outer Enums**: Direct access to RuntimeCall, RuntimeEvent, RuntimeError types
+- **Custom Metadata**: Chain-specific metadata extensions
+- **Pallet Documentation**: Documentation strings for pallets
+
+```dart
+// V15-specific: Access runtime APIs
+if (registry.outerEnums != null) {
+  final apiCodec = registry.getRuntimeApiOutputCodec('TransactionPaymentApi', 'query_info');
+  // Use codec for runtime API calls
+}
 ```
 
 ## Resources
 
-- [Polkadot Docs](https://docs.polkadot.com/polkadot-protocol/basics/data-encoding/)
-- [parity-scale-codec](https://github.com/paritytech/parity-scale-codec)
-- [Polkadot.JS](https://polkadot.js.org/)
-- [Subsquid](https://github.com/subsquid/squid)
+- [Polkadart Repository](https://github.com/leonardocustodio/polkadart)
+- [Polkadot Documentation](https://docs.polkadot.com/)
+- [SCALE Codec Specification](https://docs.polkadot.com/polkadot-protocol/basics/data-encoding/)
+- [Substrate Metadata](https://docs.substrate.io/build/application-dev/#metadata-system)
+- [Polkadot.js](https://polkadot.js.org/)
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICENSE) file for details.

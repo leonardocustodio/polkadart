@@ -26,10 +26,18 @@ class SignedExtensionsCodec with Codec<Map<String, dynamic>> {
       final val = value[key];
 
       if (val == null) {
-        throw MetadataException('Missing signed extension value for $key');
+        if (codecs[i] is! NullCodec && codecs[i].isSizeZero() == false) {
+          throw MetadataException('Missing signed extension value for $key.');
+        }
+        // We can continue to next because this codec doesn't encode anything.
+        // And even calling encode would not have any impact on the size
+        continue;
       }
-
-      codecs[i].encodeTo(val, output);
+      try {
+        codecs[i].encodeTo(val, output);
+      } catch (_) {
+        throw Exception('exception here at key:$key, value:$value, codec=${codecs[i]}');
+      }
     }
   }
 
@@ -50,4 +58,7 @@ class SignedExtensionsCodec with Codec<Map<String, dynamic>> {
 
     return size;
   }
+
+  @override
+  bool isSizeZero() => codecs.every((codec) => codec.isSizeZero());
 }

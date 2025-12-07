@@ -34,4 +34,7 @@ class $StorageEntryModifier with Codec<StorageEntryModifier> {
 
   @override
   int sizeHint(StorageEntryModifier value) => 1;
+
+  @override
+  bool isSizeZero() => false; // Always encodes 1 byte
 }

@@ -1,9 +1,10 @@
 part of apis;
 
+typedef ExtrinsicListener = Function(ExtrinsicStatus);
+
 /// Substrate state API
 class AuthorApi<P extends Provider> {
   final P _provider;
-
   const AuthorApi(this._provider);
 
   /// Submit a fully formatted extrinsic for block inclusion.
@@ -23,19 +24,23 @@ class AuthorApi<P extends Provider> {
 
   /// Submits and subscribe to watch an extrinsic until unsubscribed.
   Future<StreamSubscription<ExtrinsicStatus>> submitAndWatchExtrinsic(
-      Uint8List extrinsic, Function(ExtrinsicStatus) onData) async {
+    Uint8List extrinsic,
+    ExtrinsicListener onData,
+  ) async {
     final List<dynamic> params = ['0x${hex.encode(extrinsic)}'];
 
-    final subscription = await _provider.subscribe('author_submitAndWatchExtrinsic', params,
-        onCancel: (subscription) async {
-      await _provider.send(
-        'author_unwatchExtrinsic',
-        [subscription],
-      );
-    });
+    final subscription = await _provider.subscribe(
+      'author_submitAndWatchExtrinsic',
+      params,
+      onCancel: (subscription) async {
+        await _provider.send('author_unwatchExtrinsic', [subscription]);
+      },
+    );
 
-    return subscription.stream.map((response) {
-      return ExtrinsicStatus.fromJson(response.result);
-    }).listen(onData);
+    return subscription.stream
+        .map((response) {
+          return ExtrinsicStatus.fromJson(response.result);
+        })
+        .listen(onData);
   }
 }

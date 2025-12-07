@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/metadata/merkleize.dart';
 import 'package:substrate_metadata/metadata/metadata.dart';
 import 'package:test/test.dart';
 import 'snapshot.dart';

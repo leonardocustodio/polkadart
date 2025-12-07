@@ -37,12 +37,7 @@ class RuntimeMetadataPrefixed {
   static const $RuntimeMetadataPrefixed codec = $RuntimeMetadataPrefixed._();
 
   factory RuntimeMetadataPrefixed.fromHex(String hexString) {
-    List<int> rawData;
-    if (hexString.startsWith('0x')) {
-      rawData = hex.decode(hexString.substring(2));
-    } else {
-      rawData = hex.decode(hexString);
-    }
+    final List<int> rawData = decodeHex(hexString);
     final input = ByteInput.fromBytes(rawData);
     return codec.decode(input);
   }
@@ -51,6 +46,10 @@ class RuntimeMetadataPrefixed {
     final input = ByteInput.fromBytes(rawData);
     return codec.decode(input);
   }
+
+  MetadataTypeRegistry buildRegistry() => MetadataTypeRegistry(this);
+
+  ChainInfo buildChainInfo() => ChainInfo.fromRuntimeMetadataPrefixed(this);
 
   /// Check if the magic number is valid
   bool get isValidMagicNumber => magicNumber == metaReserved;
@@ -125,5 +124,11 @@ class $RuntimeMetadataPrefixed with Codec<RuntimeMetadataPrefixed> {
     }
 
     return size;
+  }
+
+  @override
+  bool isSizeZero() {
+    // This class directly encodes magic number (U32) + version byte (U8)
+    return false;
   }
 }

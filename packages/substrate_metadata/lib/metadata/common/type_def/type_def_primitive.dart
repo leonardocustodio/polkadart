@@ -18,6 +18,27 @@ enum Primitive {
   I256;
 
   static const $Primitive codec = $Primitive._();
+
+  static Primitive fromString(final String primitive) {
+    return switch (primitive.toLowerCase()) {
+      'bool' => Primitive.Bool,
+      'char' => Primitive.Char,
+      'str' => Primitive.Str,
+      'u8' => Primitive.U8,
+      'u16' => Primitive.U16,
+      'u32' => Primitive.U32,
+      'u64' => Primitive.U64,
+      'u128' => Primitive.U128,
+      'u256' => Primitive.U256,
+      'i8' => Primitive.I8,
+      'i16' => Primitive.I16,
+      'i32' => Primitive.I32,
+      'i64' => Primitive.I64,
+      'i128' => Primitive.I128,
+      'i256' => Primitive.I256,
+      _ => throw Exception('Unknown primitive type: $primitive.'),
+    };
+  }
 }
 
 class $Primitive with Codec<Primitive> {
@@ -39,6 +60,9 @@ class $Primitive with Codec<Primitive> {
 
   @override
   int sizeHint(final Primitive value) => 1;
+
+  @override
+  bool isSizeZero() => false; // Always encodes 1 byte
 }
 
 /// A primitive Rust type.
@@ -112,4 +136,7 @@ class $TypeDefPrimitive with Codec<TypeDefPrimitive> {
   int sizeHint(TypeDefPrimitive value) {
     return Primitive.codec.sizeHint(value.primitive);
   }
+
+  @override
+  bool isSizeZero() => Primitive.codec.isSizeZero();
 }

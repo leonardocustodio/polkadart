@@ -222,6 +222,12 @@ class RuntimeEventCodec with Codec<RuntimeEvent> {
     return encode(event);
   }
 
+  @override
+  bool isSizeZero() {
+    // This class directly encodes pallet/variant indices
+    return false;
+  }
+
   /// Decode event from specific pallet (when you know the pallet)
   /// This is useful when you already know which pallet the event is from
   Map<String, dynamic> decodePalletEvent(String palletName, int eventIndex, Input input) {

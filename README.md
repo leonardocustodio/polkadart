@@ -243,7 +243,7 @@ Every contribution matters! Check our [Contributing Guide](CONTRIBUTING.md) for 
 
 ## 👥 Contributors
 
-A heartfelt thank you to all the amazing contributors who have helped build Polkadart! [emoji key](https://github.com/all-contributors/all-contributors/blob/master/docs/emoji-key.md)
+A heartfelt thank you to all the amazing contributors who have helped build Polkadart! [emoji key](https://allcontributors.org/emoji-key/)
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->

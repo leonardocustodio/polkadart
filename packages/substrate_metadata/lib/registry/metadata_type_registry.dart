@@ -1,7 +1,8 @@
 import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
-import 'package:substrate_metadata/extensions/primitive_extensions.dart';
-import 'package:substrate_metadata/models/models.dart';
-import 'package:substrate_metadata/substrate_metadata.dart';
+import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
+import 'package:substrate_metadata/metadata/metadata.dart';
+import 'package:substrate_metadata/models/models.dart' show PortableRegistry;
+import 'package:substrate_metadata/utils/utils.dart';
 
 /// Type registry that works directly with Substrate metadata
 ///
@@ -62,6 +63,8 @@ class MetadataTypeRegistry {
 
     _buildPalletIndices();
   }
+
+  ChainInfo buildChainInfo() => ChainInfo(this);
 
   /// Extract PortableRegistry from versioned metadata
   static PortableRegistry _extractTypes(RuntimeMetadataPrefixed prefixed) {
@@ -146,7 +149,7 @@ class MetadataTypeRegistry {
         return _buildCompositeCodec(fields, type);
 
       case TypeDefVariant(:final variants):
-        return _buildVariantCodec(variants);
+        return _buildVariantCodec(variants, type);
 
       case TypeDefSequence(:final type):
         final elementCodec = codecFor(type);
@@ -181,6 +184,7 @@ class MetadataTypeRegistry {
     final path = type.type.pathString;
 
     // Handle Option<T>
+    // TODO: Consider removing it
     if (path == 'Option' && type.type.params.isNotEmpty) {
       final innerTypeId = type.type.params.first.type;
       if (innerTypeId != null) {
@@ -190,6 +194,7 @@ class MetadataTypeRegistry {
     }
 
     // Handle Result<T, E>
+    // TODO: Consider removing it
     if (path == 'Result' && type.type.params.length == 2) {
       final okTypeId = type.type.params[0].type;
       final errTypeId = type.type.params[1].type;
@@ -217,7 +222,19 @@ class MetadataTypeRegistry {
   }
 
   /// Build variant codec (enum)
-  Codec _buildVariantCodec(List<VariantDef> variants) {
+  Codec _buildVariantCodec(final List<VariantDef> variants, final PortableType type) {
+    if (variants.length == 2) {
+      final OptionCodec? optionCodec = _buildOptionCodec(variants, type);
+      if (optionCodec != null) {
+        return optionCodec;
+      }
+
+      final ResultCodec? resultCodec = _buildResultCodec(variants, type);
+      if (resultCodec != null) {
+        return resultCodec;
+      }
+    }
+
     final variantMap = <int, MapEntry<String, Codec>>{};
 
     for (final variant in variants) {
@@ -244,6 +261,64 @@ class MetadataTypeRegistry {
     }
 
     return ComplexEnumCodec.sparse(variantMap);
+  }
+
+  // Try to build the Option Codec
+  OptionCodec? _buildOptionCodec(final List<VariantDef> variants, final PortableType type) {
+    final path = type.type.pathString;
+
+    // Special handling for Option<T> as variant
+    if (path == 'Option') {
+      // Verify it has the correct structure: None (0) and Some (1)
+      final VariantDef noneVariant = variants.firstWhere(
+        (final v) => v.name == 'None' && v.index == 0,
+        orElse: () => variants[0],
+      );
+      final VariantDef someVariant = variants.firstWhere(
+        (final v) => v.name == 'Some' && v.index == 1,
+        orElse: () => variants[1],
+      );
+
+      if (noneVariant.name == 'None' &&
+          someVariant.name == 'Some' &&
+          someVariant.fields.length == 1) {
+        // Extract the inner type from Some variant
+        final innerTypeId = someVariant.fields.first.type;
+        final innerCodec = codecFor(innerTypeId);
+        return OptionCodec(innerCodec);
+      }
+    }
+    return null;
+  }
+
+  ResultCodec? _buildResultCodec(final List<VariantDef> variants, final PortableType type) {
+    final path = type.type.pathString;
+
+    // Special handling for Result<T, E> as variant
+    if (path == 'Result') {
+      // Verify it has the correct structure: Ok (0) and Err (1)
+      final okVariant = variants.firstWhere(
+        (final v) => v.name == 'Ok' && v.index == 0,
+        orElse: () => variants[0],
+      );
+      final errVariant = variants.firstWhere(
+        (final v) => v.name == 'Err' && v.index == 1,
+        orElse: () => variants[1],
+      );
+
+      if (okVariant.name == 'Ok' &&
+          errVariant.name == 'Err' &&
+          okVariant.fields.length == 1 &&
+          errVariant.fields.length == 1) {
+        // Extract the Ok and Err types
+        final okTypeId = okVariant.fields.first.type;
+        final errTypeId = errVariant.fields.first.type;
+        final okCodec = codecFor(okTypeId);
+        final errCodec = codecFor(errTypeId);
+        return ResultCodec(okCodec, errCodec);
+      }
+    }
+    return null;
   }
 
   /// Build compact codec based on underlying type
@@ -409,7 +484,7 @@ class MetadataTypeRegistry {
   }
 
   /// Get storage hashers for a storage entry
-  List<StorageHasher>? getStorageHashers(String palletName, String storageName) {
+  List<StorageHasherEnum>? getStorageHashers(String palletName, String storageName) {
     final storage = getStorageMetadata(palletName, storageName);
     if (storage == null) return null;
 
@@ -537,6 +612,40 @@ class MetadataTypeRegistry {
       }
     }
     return null;
+  }
+
+  /// Get a runtime API method by name (V15 only)
+  ///
+  /// Returns the method metadata if found, null otherwise.
+  RuntimeApiMethodMetadataV15? getRuntimeApiMethod(String apiName, String methodName) {
+    final api = getRuntimeApi(apiName);
+    if (api == null) return null;
+
+    for (final method in api.methods) {
+      if (method.name == methodName) {
+        return method;
+      }
+    }
+    return null;
+  }
+
+  /// Get codec for a runtime API method's output type (V15 only)
+  ///
+  /// This is useful for decoding responses from `state_call` RPC method.
+  /// Returns null if the API or method is not found, or if using V14 metadata.
+  ///
+  /// Example:
+  /// ```dart
+  /// final codec = registry.getRuntimeApiOutputCodec('ContractsApi', 'instantiate');
+  /// if (codec != null) {
+  ///   final result = codec.decode(input);
+  /// }
+  /// ```
+  Codec? getRuntimeApiOutputCodec(String apiName, String methodName) {
+    final method = getRuntimeApiMethod(apiName, methodName);
+    if (method == null) return null;
+
+    return codecFor(method.output);
   }
 
   // ======================================================================

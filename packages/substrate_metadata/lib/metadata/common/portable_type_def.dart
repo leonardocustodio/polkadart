@@ -103,4 +103,11 @@ class $PortableTypeDef with Codec<PortableTypeDef> {
     size += SequenceCodec(StrCodec.codec).sizeHint(value.docs);
     return size;
   }
+
+  @override
+  bool isSizeZero() {
+    return SequenceCodec(StrCodec.codec).isSizeZero() &&
+        SequenceCodec(TypeParameter.codec).isSizeZero() &&
+        TypeDef.codec.isSizeZero();
+  }
 }

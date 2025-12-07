@@ -3,7 +3,7 @@ part of metadata;
 /// Storage hashers for map keys
 ///
 /// Different hashing algorithms provide different security and performance tradeoffs.
-enum StorageHasher {
+enum StorageHasherEnum {
   /// Blake2 128-bit hash
   blake2_128,
 
@@ -31,26 +31,29 @@ enum StorageHasher {
   /// Only safe when the key space is trusted (e.g., pallet index).
   identity;
 
-  static const $StorageHasher codec = $StorageHasher._();
+  static const $StorageHasherEnum codec = $StorageHasherEnum._();
 }
 
-class $StorageHasher with Codec<StorageHasher> {
-  const $StorageHasher._();
+class $StorageHasherEnum with Codec<StorageHasherEnum> {
+  const $StorageHasherEnum._();
 
   @override
-  StorageHasher decode(Input input) {
+  StorageHasherEnum decode(Input input) {
     final index = input.read();
-    if (index < 0 || index >= StorageHasher.values.length) {
+    if (index < 0 || index >= StorageHasherEnum.values.length) {
       throw Exception('Unknown StorageHasher variant index $index');
     }
-    return StorageHasher.values[index];
+    return StorageHasherEnum.values[index];
   }
 
   @override
-  void encodeTo(StorageHasher storageHasher, Output output) {
+  void encodeTo(StorageHasherEnum storageHasher, Output output) {
     output.pushByte(storageHasher.index);
   }
 
   @override
-  int sizeHint(StorageHasher value) => 1;
+  int sizeHint(StorageHasherEnum value) => 1;
+
+  @override
+  bool isSizeZero() => false; // Always encodes 1 byte
 }

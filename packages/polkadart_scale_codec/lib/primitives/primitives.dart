@@ -17,9 +17,10 @@ import 'package:typed_data/typed_buffers.dart'
         Int8Buffer,
         Int16Buffer,
         Int32Buffer;
-import 'package:polkadart_scale_codec/core/core.dart';
-import 'package:polkadart_scale_codec/io/io.dart';
-import 'package:polkadart_scale_codec/utils/utils.dart';
+import 'package:polkadart_scale_codec/core/core.dart' show Codec;
+import 'package:polkadart_scale_codec/io/io.dart' show Input, Output;
+import 'package:polkadart_scale_codec/utils/utils.dart'
+    show CompositeException, EnumException, OutOfBoundsException, assertion;
 import 'package:equatable/equatable.dart';
 import 'dart:convert' show utf8;
 import 'dart:core';
@@ -53,4 +54,6 @@ part 'null_codec.dart';
 part 'set.dart';
 part 'result.dart';
 part 'proxy.dart';
+part 'primitives_enum.dart';
 part 'primitives_codec.dart';
+part 'scale_raw_bytes.dart';
