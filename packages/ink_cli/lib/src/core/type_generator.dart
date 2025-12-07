@@ -5,8 +5,9 @@ class TypeGenerator {
   final AbiOutput fileOutput;
 
   late final Map<int, String> _nameAssignment;
-  late final InkAbiDescription _description;
-  late final Map<String, dynamic> _project;
+  late final InkAbi _inkAbi;
+  late final Map<String, dynamic> _rawMetadata;
+  late final List<CodecInterface> _types;
 
   TypeGenerator({
     required this.abiFilePath,
@@ -19,20 +20,117 @@ class TypeGenerator {
     return jsonDecode(content);
   }
 
-  /// 2) Validate the ABI file into an InkProject
-  Map<String, dynamic> _getProject() {
-    final metadata = _readMetadata();
-    return SchemaValidator.getInkProject(metadata);
+  /// 2) Create InkAbi from the metadata JSON (validates schema internally)
+  InkAbi _getInkAbi() {
+    return InkAbi(_rawMetadata);
   }
 
-  /// 3) Create InkAbiDescription from the validated project
-  InkAbiDescription _getDescription() {
-    return InkAbiDescription(_project);
+  /// 3) Convert PortableTypes from registry to CodecInterface list
+  List<CodecInterface> _buildCodecInterfaceList() {
+    final List<CodecInterface> interfaces = <CodecInterface>[];
+    for (final portableType in _inkAbi.registry.types) {
+      try {
+        final codecInterface = _convertPortableTypeToCodecInterface(portableType);
+        interfaces.add(codecInterface);
+      } catch (e) {
+        // If conversion fails, add a placeholder to maintain index alignment
+        interfaces.add(PrimitiveCodecInterface(
+          path: portableType.type.path,
+          primitive: Primitive.U8, // Default placeholder
+        ));
+      }
+    }
+
+    return interfaces;
+  }
+
+  /// Convert a single PortableType to CodecInterface
+  CodecInterface _convertPortableTypeToCodecInterface(PortableType portableType) {
+    final TypeDef typeDef = portableType.type.typeDef;
+    final List<String> pathList = portableType.type.path;
+    final List<String> docs = portableType.type.docs;
+
+    return switch (typeDef) {
+      TypeDefPrimitive() => PrimitiveCodecInterface(
+          path: pathList,
+          docs: docs,
+          primitive: _convertPrimitiveFromTypeDef(typeDef),
+        ),
+      TypeDefComposite() => CompositeCodecInterface(
+          path: pathList,
+          docs: docs,
+          fields: getFields(typeDef.fields),
+        ),
+      TypeDefVariant() => VariantCodecInterface(
+          path: pathList,
+          docs: docs,
+          variants: typeDef.variants
+              .map((final variant) => Variants(
+                    name: variant.name,
+                    fields: getFields(variant.fields),
+                    index: variant.index,
+                    docs: variant.docs,
+                  ))
+              .toList(),
+        ),
+      TypeDefSequence() => SequenceCodecInterface(
+          path: pathList,
+          docs: docs,
+          type: typeDef.type,
+        ),
+      TypeDefArray() => ArrayCodecInterface(
+          path: pathList,
+          docs: docs,
+          len: typeDef.length,
+          type: typeDef.type,
+        ),
+      TypeDefTuple() => TupleCodecInterface(
+          path: pathList,
+          docs: docs,
+          tuple: typeDef.fields,
+        ),
+      TypeDefCompact() => CompactCodecInterface(
+          path: pathList,
+          docs: docs,
+          type: typeDef.type,
+        ),
+      TypeDefBitSequence() => BitSequenceCodecInterface(
+          path: pathList,
+          docs: docs,
+          bitStoreType: typeDef.bitStoreType,
+          bitOrderType: typeDef.bitOrderType,
+        ),
+    };
+  }
+
+  List<Field> getFields(final List<substrate_metadata.Field> fields) {
+    return fields
+        .map((final field) => Field(
+              name: field.name,
+              type: field.type,
+              typeName: field.typeName,
+              docs: field.docs,
+            ))
+        .toList();
+  }
+
+  /// Convert TypeDefPrimitive to local Primitive enum
+  ///
+  /// Maps substrate_metadata's Primitive enum to the local Primitive enum
+  /// using name-based lookup to avoid naming conflicts.
+  Primitive _convertPrimitiveFromTypeDef(TypeDefPrimitive typeDef) {
+    // Get the primitive name as string (e.g., "I8", "U8", "Bool", etc.)
+    final primitiveName = typeDef.primitive.name;
+    // Look up the corresponding local Primitive enum value by name
+    return Primitive.values.firstWhere(
+      (p) => p.name == primitiveName,
+      orElse: () => throw StateError('Unknown primitive type: $primitiveName'),
+    );
   }
 
   /// 4) Build name assignments using `Names`
   Map<int, String> _buildNameAssignment() {
-    final names = Names(_description.types());
+    final names = Names(_types);
 
     // Reserve certain names
     names.reserve('metadata');
@@ -42,33 +140,33 @@ class TypeGenerator {
     names.reserve('int');
     names.reserve('List');
 
-    // Set known custom names, e.g. for event, messages, constructors
-    names.assign(_description.event(), 'Event');
-    names.assign(_description.messages(), 'Message');
-    names.assign(_description.constructors(), 'Constructor');
+    // Set known custom names for messages and constructors type indices
+    names.assign(_inkAbi.messagesIndex, 'Message');
+    names.assign(_inkAbi.constructorsIndex, 'Constructor');
 
-    // Possibly alias event argument types, etc.
-    void addArgAlias(Map<String, dynamic> arg) {
-      final typeSpec = arg['type'];
-      if (typeSpec?['displayName'] is List && typeSpec['displayName'].isNotEmpty) {
-        final displayList = List<String>.from(typeSpec['displayName']);
-        final aliasName = displayList.last;
-        names.alias(typeSpec['type'], aliasName);
+    // Possibly alias argument types using display names
+    void addArgAlias(ArgSpec arg) {
+      final displayName = arg.type.displayName;
+      if (displayName.isNotEmpty) {
+        final aliasName = displayName.last;
+        names.alias(arg.type.typeId, aliasName);
       }
     }
 
-    for (final event in _project['spec']['events']) {
-      for (final arg in event['args']) {
+    // Note: EventSpec doesn't expose args directly - event types are composite
+    // types created from the event's args and stored by typeId in the registry.
+    // We skip event alias iteration here since the type IDs are already registered.
+
+    // Add aliases from messages
+    for (final message in _inkAbi.messages) {
+      for (final arg in message.args) {
         addArgAlias(arg);
       }
     }
-    for (final msg in _project['spec']['messages']) {
-      for (final arg in msg['args']) {
-        addArgAlias(arg);
-      }
-    }
-    for (final constructor in _project['spec']['constructors']) {
-      for (final arg in constructor['args']) {
+
+    // Add aliases from constructors
+    for (final constructor in _inkAbi.constructors) {
+      for (final arg in constructor.args) {
         addArgAlias(arg);
       }
     }
@@ -78,26 +176,27 @@ class TypeGenerator {
 
   /// The main entrypoint to trigger generation.
   void generate() {
-    // 1) Build the project & description
-    _project = _getProject();
-    _description = _getDescription();
+    // 1) Read and validate metadata
+    _rawMetadata = _readMetadata();
+    _inkAbi = _getInkAbi();
 
-    // 2) Acquire the normalized type list
-    final List<CodecInterface> types = _description.types();
+    // 2) Build CodecInterface list from portable types
+    _types = _buildCodecInterfaceList();
 
-    // 3) Build name assignments and create a sink
+    // 3) Build name assignments using Names helper
     _nameAssignment = _buildNameAssignment();
-    final sink = Sink(types, _nameAssignment);
 
-    // 4) Create an Interfaces helper to produce type expressions
-    final ifs = Interfaces(sink);
+    // 4) Create Sink and Interfaces for type generation
+    final sink = Sink(_types, _nameAssignment);
+    // ignore: unused_local_variable
+    final ifs = Interfaces(sink); // Used for type expressions in args (future enhancement)
 
     // 5) Start writing code to `out`
     // For example, we might print some imports:
     fileOutput.line("// ignore_for_file: non_constant_identifier_names");
     fileOutput.line();
     fileOutput.line("import 'package:polkadart_keyring/polkadart_keyring.dart';");
-    fileOutput.line("import 'package:ink_abi/ink_abi_base.dart';");
+    fileOutput.line("import 'package:ink_abi/ink_abi.dart';");
     fileOutput.line("import 'package:ink_cli/ink_cli.dart';");
     fileOutput.line("import 'package:polkadart/polkadart.dart';");
     fileOutput.line("import 'dart:typed_data';");
@@ -122,14 +221,12 @@ class TypeGenerator {
       end: null,
     );
 
-    // Suppose we want to replicate the decodeEvent function, etc.:
+    // Generate decode functions that delegate to InkAbi
     fileOutput.line();
-    if (_project['version'] == 5) {
+    if (_inkAbi.version == 5) {
       fileOutput.block(
         start: 'dynamic decodeEvent(final String hex, [final List<String>? topics]) {',
         cb: () {
-          /* final eventType = ifs.use(_description.event());
-          out.line('final $eventType event = _abi.decodeEvent(hex, topics);'); */
           fileOutput.line('return _abi.decodeEvent(hex, topics);');
         },
         end: '}',
@@ -138,8 +235,6 @@ class TypeGenerator {
       fileOutput.block(
         start: 'dynamic decodeEvent(final String hex) {',
         cb: () {
-          /* final eventType = ifs.use(_description.event());
-          out.line('final $eventType event = _abi.decodeEvent(hex);'); */
           fileOutput.line('return _abi.decodeEvent(hex);');
         },
         end: '}',
@@ -150,8 +245,6 @@ class TypeGenerator {
     fileOutput.block(
       start: 'dynamic decodeMessage(final String hex) {',
       cb: () {
-        /* final msgType = ifs.use(_description.messages());
-        out.line('final $msgType msg = _abi.decodeMessage(hex);'); */
         fileOutput.line('return _abi.decodeMessage(hex);');
       },
       end: '}',
@@ -161,8 +254,6 @@ class TypeGenerator {
     fileOutput.block(
       start: 'dynamic decodeConstructor(final String hex) {',
       cb: () {
-        /* final ctorType = ifs.use(_description.constructors());
-        out.line('final $ctorType cons = _abi.decodeConstructor(hex);'); */
         fileOutput.line('return _abi.decodeConstructor(hex);');
       },
       end: '}',
@@ -188,25 +279,24 @@ class TypeGenerator {
           end: '});',
         );
 
-        // For each message that doesn't mutate, create a method
-        final constructors = _project['spec']['constructors'] as List;
-        for (final m in constructors) {
-          // build signature
-          final args = (m['args'] as List)
-              .map((arg) => 'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+        // For each constructor, create a deployment method
+        for (final ConstructorSpec constructor in _inkAbi.constructors) {
+          // Build signature with proper type resolution via Interfaces.use()
+          final args = constructor.args
+              .map((ArgSpec arg) => 'required final ${ifs.use(arg.type.typeId)} ${arg.label}')
               .toList();
-          final returnType = m['returnType']?['type'];
-          if (returnType == null) {
+
+          if (constructor.returnType == null) {
             continue;
           }
 
-          final methodName = (m['label'] as String).replaceAll('::', '_');
+          final methodName = constructor.label.replaceAll('::', '_');
           args.addAll(
             <String>[
               'required final Uint8List code',
               'required final KeyPair keyPair',
-              'required final ContractDeployer deployer,'
-                  'final Map<String, dynamic> extraOptions = const <String, dynamic>{}',
+              'required final ContractDeployer deployer',
+              'final Map<String, dynamic> extraOptions = const <String, dynamic>{}',
               'final BigInt? storageDepositLimit',
               'final Uint8List? salt',
               'final GasLimit? gasLimit',
@@ -217,8 +307,9 @@ class TypeGenerator {
 
           fileOutput.line();
           // Add docs
-          final docs = (m['docs'] as List).cast<String>();
-          fileOutput.blockComment(docs);
+          if (constructor.docs != null && constructor.docs!.isNotEmpty) {
+            fileOutput.blockComment(constructor.docs!);
+          }
           fileOutput.block(
             start: 'static Future<InstantiateRequest> ${methodName}_contract({',
             cb: () {
@@ -236,7 +327,7 @@ class TypeGenerator {
                 start: 'return await deployer.deployContract(',
                 cb: () {
                   fileOutput.line('inkAbi: _abi,');
-                  fileOutput.line("selector: '${m['selector']}',");
+                  fileOutput.line("selector: '${constructor.selector}',");
                   fileOutput.line('code: code,');
                   fileOutput.line('keypair: keyPair,');
                   fileOutput.line('extraOptions: extraOptions,');
@@ -245,7 +336,7 @@ class TypeGenerator {
                   fileOutput.line('gasLimit: gasLimit,');
                   fileOutput.line('tip: tip,');
                   fileOutput.line('eraPeriod: eraPeriod,');
-                  final callArgs = (m['args'] as List).map((arg) => arg['label']).join(', ');
+                  final callArgs = constructor.args.map((arg) => arg.label).join(', ');
                   fileOutput.line("constructorArgs: [$callArgs],");
                 },
                 end: ');',
@@ -255,12 +346,11 @@ class TypeGenerator {
           );
         }
 
-        // For each message that doesn't mutate, create a method
-        final messages = _project['spec']['messages'] as List;
-        for (final m in messages) {
-          // build signature
+        // For each message, create a method
+        for (final MessageSpec message in _inkAbi.messages) {
+          // Build signature with proper type resolution via Interfaces.use()
           List<String> argsList = <String>[];
-          if (m['mutates'] == true) {
+          if (message.mutates) {
             argsList = <String>[
               'required final KeyPair keyPair',
               'required final ContractMutator mutator',
@@ -270,36 +360,32 @@ class TypeGenerator {
               'final int eraPeriod = 0',
             ];
           }
-          argsList.addAll((m['args'] as List)
-              .map((arg) => 'required final ${ifs.use(arg['type']['type'])} ${arg['label']}')
+          argsList.addAll(message.args
+              .map((ArgSpec arg) => 'required final ${ifs.use(arg.type.typeId)} ${arg.label}')
               .toList());
 
           String args = argsList.join(', ');
           if (args.isNotEmpty) {
             args = '{$args}';
           }
-          //final returnType = m['returnType']?['type'];
-          /* if (returnType == null) {
-              continue;
-            } */
 
-          final methodName = (m['label'] as String).replaceAll('::', '_');
+          final methodName = message.label.replaceAll('::', '_');
           fileOutput.line();
           // Add docs
-          final docs = (m['docs'] as List).cast<String>();
-          fileOutput.blockComment(docs);
+          if (message.docs != null && message.docs!.isNotEmpty) {
+            fileOutput.blockComment(message.docs!);
+          }
           fileOutput.block(
-            // Investigate it when optimizing polkadart_scale_codec: ${returnType == null ? 'dynamic' : ifs.use(returnType)}
             start: 'Future<dynamic> $methodName($args) async {',
             cb: () {
-              final callArgs = (m['args'] as List).map((arg) => arg['label']).join(', ');
+              final callArgs = message.args.map((arg) => arg.label).join(', ');
 
-              if (m['mutates'] == false) {
-                fileOutput.line("return _stateCall('${m['selector']}', [$callArgs]);");
+              if (message.mutates == false) {
+                fileOutput.line("return _stateCall('${message.selector}', [$callArgs]);");
               } else {
                 fileOutput.line('''
                 return _contractCall(
-                  selector: '${m['selector']}',
+                  selector: '${message.selector}',
                   keypair: keyPair,
                   args: [$callArgs],
                   mutator: mutator,
@@ -379,8 +465,7 @@ class TypeGenerator {
       end: '}',
     );
 
-    // 6) Finally, "drain" the sink so that all queued definitions (interfaces, etc.) are printed
+    // 6) Generate type definitions from queued callbacks
     sink.generate(fileOutput);
-    return;
   }
 }

@@ -414,7 +414,7 @@ npm run build  # Production build
 
 ## Recognition
 
-Contributors are recognized in our README through the [All Contributors](https://all-contributors.github.io/all-contributors/) specification. Your contributions will be acknowledged!
+Contributors are recognized in our README through the [All Contributors](https://allcontributors.org/) specification. Your contributions will be acknowledged!
 
 ## License
 

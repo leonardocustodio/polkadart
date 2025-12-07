@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:ink_abi/ink_abi_base.dart';
+import 'package:ink_abi/ink_abi.dart';
 import 'package:ink_cli/ink_cli.dart';
 import 'package:polkadart/polkadart.dart';
 import 'dart:typed_data';
@@ -586,7 +586,7 @@ class Contract {
 
   ///
   ///  Returns the account balance for the specified `owner`.
-  Future<dynamic> balance_of({required final AccountId owner}) async {
+  Future<dynamic> balance_of({required final List<int> owner}) async {
     return _stateCall('0x0f755a56', [owner]);
   }
 
@@ -597,7 +597,7 @@ class Contract {
       GasLimit? gasLimit,
       final dynamic tip = 0,
       final int eraPeriod = 0,
-      required final AccountId to,
+      required final List<int> to,
       required final Balance value}) async {
     return _contractCall(
       selector: '0x84a15da1',
@@ -620,8 +620,8 @@ class Contract {
       GasLimit? gasLimit,
       final dynamic tip = 0,
       final int eraPeriod = 0,
-      required final AccountId from,
-      required final AccountId to,
+      required final List<int> from,
+      required final List<int> to,
       required final Balance value}) async {
     return _contractCall(
       selector: '0x0b396f18',
@@ -642,7 +642,7 @@ class Contract {
       GasLimit? gasLimit,
       final dynamic tip = 0,
       final int eraPeriod = 0,
-      required final AccountId spender,
+      required final List<int> spender,
       required final Balance value}) async {
     return _contractCall(
       selector: '0x681266a0',
@@ -657,7 +657,7 @@ class Contract {
   }
 
   Future<dynamic> allowance(
-      {required final AccountId owner, required final AccountId spender}) async {
+      {required final List<int> owner, required final List<int> spender}) async {
     return _stateCall('0x6a00165e', [owner, spender]);
   }
 
@@ -703,7 +703,5 @@ class Contract {
     return result;
   }
 }
-
-typedef AccountId = List<int>;
 
 typedef Balance = BigInt;

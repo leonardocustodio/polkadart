@@ -19,6 +19,11 @@ const List<int> _hashPrefix = [83, 83, 53, 56, 80, 82, 69];
 /// Fast base encoding / decoding of any given alphabet using bitcoin style leading zero compression.
 final _base58 = BaseXCodec('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
 
+/// [Private]
+///
+/// Cached Blake2b instance for better performance.
+final _blake2b = DartBlake2b();
+
 class Address extends Equatable {
   ///
   /// Address [type](https://docs.substrate.io/v3/advanced/ss58/#address-type)
@@ -30,6 +35,28 @@ class Address extends Equatable {
 
   /// constructor to initiate Address Object
   const Address({required this.prefix, required this.pubkey});
+
+  ///
+  /// Try to decode SS58 address string, returning null on failure.
+  ///
+  /// This is a safe version of [decode] that doesn't throw exceptions.
+  /// Returns null if the address is invalid for any reason.
+  ///
+  /// ```dart
+  /// final address = Address.tryDecode('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
+  /// if (address != null) {
+  ///   print('Valid address with prefix: ${address.prefix}');
+  /// } else {
+  ///   print('Invalid address');
+  /// }
+  /// ```
+  static Address? tryDecode(String address) {
+    try {
+      return Address.decode(address);
+    } catch (_) {
+      return null;
+    }
+  }
 
   ///
   /// Decode SS58 address string.
@@ -59,8 +86,8 @@ class Address extends Equatable {
       // d[0] d[1] are: 01aaaaaa bbcccccc
       // they make the LE-encoded 16-bit value: aaaaaabb 00cccccc
       // so the lower byte is formed of aaaaaabb and the higher byte is 00cccccc
-      var lower = ((data[0] << 2) | (data[1] >> 6));
-      var upper = data[1] & 63;
+      final lower = ((data[0] << 2) | (data[1] >> 6));
+      final upper = data[1] & 63;
       prefix = (lower & 255) | (upper << 8);
       offset = 2;
     } else {
@@ -94,10 +121,7 @@ class Address extends Equatable {
       }
     }
 
-    return Address(
-      prefix: prefix,
-      pubkey: data.sublist(offset, data.length - hashLen),
-    );
+    return Address(prefix: prefix, pubkey: data.sublist(offset, data.length - hashLen));
   }
 
   ///
@@ -186,11 +210,10 @@ class Address extends Equatable {
 /// `computeHash` uses `Blake2b` for hashing.
 ///
 /// BLAKE2B ([RFC 7693](https://tools.ietf.org/html/rfc7693)) [HashAlgorithm].
+/// Uses a cached Blake2b instance for better performance.
 List<int> computeHash(Uint8List data, int length) {
-  final algorithm = DartBlake2b();
-
   // sinker to which all the hashes will be appended and then (hashed or digested) at last step;
-  final sink = algorithm.newHashSink();
+  final sink = _blake2b.newHashSink();
 
   // add hash prefix
   sink.add(_hashPrefix);
