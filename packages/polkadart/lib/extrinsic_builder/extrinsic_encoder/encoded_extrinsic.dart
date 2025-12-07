@@ -11,11 +11,7 @@ class EncodedExtrinsic extends Equatable {
   /// Information about the extrinsic
   final EncodedExtrinsicInfo info;
 
-  const EncodedExtrinsic({
-    required this.bytes,
-    required this.hash,
-    required this.info,
-  });
+  const EncodedExtrinsic({required this.bytes, required this.hash, required this.info});
 
   /// Get hex representation
   String toHex() => '0x${encodeHex(bytes)}';
@@ -24,14 +20,16 @@ class EncodedExtrinsic extends Equatable {
   String get hashHex => '0x${encodeHex(hash)}';
 
   /// Submit this extrinsic to a node
-  Future<String> submit(final Provider provider) async {
+  Future<Uint8List> submit(final Provider provider) async {
     final authorApi = AuthorApi(provider);
     final result = await authorApi.submitExtrinsic(bytes);
-    return '0x${encodeHex(result)}';
+    return result;
   }
 
   Future<StreamSubscription<ExtrinsicStatus>> submitAndWatch(
-      final Provider provider, final ExtrinsicListener onStatusChange) async {
+    final Provider provider,
+    final ExtrinsicListener onStatusChange,
+  ) async {
     final authorApi = AuthorApi(provider);
     return await authorApi.submitAndWatchExtrinsic(bytes, onStatusChange);
   }
@@ -43,11 +41,7 @@ class EncodedExtrinsic extends Equatable {
     final hash = Hasher.blake2b256.hash(bytes);
     final info = encoder.getExtrinsicInfo(signedData);
 
-    return EncodedExtrinsic(
-      bytes: bytes,
-      hash: hash,
-      info: info,
-    );
+    return EncodedExtrinsic(bytes: bytes, hash: hash, info: info);
   }
 
   @override

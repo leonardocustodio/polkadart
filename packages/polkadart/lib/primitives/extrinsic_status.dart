@@ -4,10 +4,7 @@ class ExtrinsicStatus extends Equatable {
   final String type;
   final dynamic value;
 
-  const ExtrinsicStatus({
-    required this.type,
-    required this.value,
-  });
+  const ExtrinsicStatus({required this.type, required this.value});
 
   factory ExtrinsicStatus.fromJson(dynamic json) {
     String type;
@@ -23,10 +20,7 @@ class ExtrinsicStatus extends Equatable {
       throw Exception('ExtrinsicStatus: Invalid json value "$json"');
     }
 
-    return ExtrinsicStatus(
-      type: type,
-      value: value,
-    );
+    return ExtrinsicStatus(type: type, value: value);
   }
 
   // ============================================================================

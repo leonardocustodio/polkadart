@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:collection' show UnmodifiableListView;
 
 import './exceptions.dart';
 import './registry_item.dart';
@@ -24,7 +24,7 @@ class Registry {
   /// ```
   Registry(List<RegistryItem> items) {
     _items.addAll(items);
-    for (var item in items) {
+    for (final item in items) {
       if (_byPrefix[item.prefix] != null) {
         throw DuplicatePrefixException(item.prefix);
       } else {
@@ -38,14 +38,10 @@ class Registry {
     }
   }
 
-  /// Initialize the registry with the [jsonString], process it to find list of registries
+  /// Initialize the registry with the [jsonList], process it to find list of registries
   /// and return a new instance of [Registry].
-  factory Registry.fromJsonString(String jsonString) {
-    List<dynamic> dynamicItems = jsonDecode(jsonString)['registry'] as List<dynamic>;
-    List<RegistryItem> convertedItems = dynamicItems.map((value) {
-      return RegistryItem.fromJson(value as Map<String, dynamic>);
-    }).toList();
-
+  factory Registry.fromMap(List<Map<String, dynamic>> jsonList) {
+    final List<RegistryItem> convertedItems = jsonList.map(RegistryItem.fromJson).toList();
     return Registry(convertedItems);
   }
 
@@ -56,7 +52,7 @@ class Registry {
   /// throw NoEntryForNetworkException: when (_byNetwork.containsKey(network) == false)
   /// ```
   RegistryItem getByNetwork(String network) {
-    var item = _byNetwork[network];
+    final item = _byNetwork[network];
     if (item == null) {
       throw NoEntryForNetworkException(network);
     }
@@ -71,7 +67,7 @@ class Registry {
   /// throw NoEntryForPrefixException: when (_byPrefix.containsKey(prefix) == false)
   /// ```
   RegistryItem getByPrefix(int prefix) {
-    var item = _byPrefix[prefix];
+    final item = _byPrefix[prefix];
     if (item == null) {
       throw NoEntryForPrefixException(prefix);
     }
@@ -80,6 +76,7 @@ class Registry {
 
   /// Registry Item getter
   ///
-  /// this getter is important to make _items un-modifiable
-  List<RegistryItem> get items => List<RegistryItem>.from(_items);
+  /// Returns an unmodifiable view of the registry items.
+  /// This is more efficient than creating a copy on each access.
+  List<RegistryItem> get items => UnmodifiableListView(_items);
 }

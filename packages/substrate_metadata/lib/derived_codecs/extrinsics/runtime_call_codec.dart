@@ -72,6 +72,12 @@ class RuntimeCallCodec with Codec<RuntimeCall> {
         throw MetadataException('Missing required argument: $fieldName');
       }
 
+      // Check if the value is ScaleRawBytes - if so, write bytes directly
+      if (fieldValue is ScaleRawBytes) {
+        ScaleRawBytes.codec.encodeTo(fieldValue, output);
+        continue;
+      }
+
       final codec = registry.codecFor(field.type);
       codec.encodeTo(fieldValue, output);
     }
@@ -104,6 +110,12 @@ class RuntimeCallCodec with Codec<RuntimeCall> {
 
       if (fieldValue == null && field.typeName?.contains('Option<') != true) {
         throw MetadataException('Missing required argument: $fieldName');
+      }
+
+      // Check if the value is ScaleRawBytes - use its length directly
+      if (fieldValue is ScaleRawBytes) {
+        size += fieldValue.bytes.length;
+        continue;
       }
 
       final codec = registry.codecFor(field.type);

@@ -1,6 +1,7 @@
 name: Build Docs
 on:
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
     paths:
       - "docs/**"
       - ".github/workflows/docs_build.yml"
@@ -12,6 +13,10 @@ jobs:
   build:
     name: Check docs builds
     runs-on: ubuntu-latest
+    # Skip if PR has 'skip-ci' label
+    if: |
+      github.event_name == 'push' ||
+      !contains(github.event.pull_request.labels.*.name, 'skip-ci')
 
     steps:
       - uses: actions/checkout@v5

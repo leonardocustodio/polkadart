@@ -23,8 +23,9 @@ class RuntimeVersion {
   }
 
   factory RuntimeVersion.fromJson(Map<String, dynamic> json) {
-    final apis =
-        (json['apis'] as List).map<ApiVersion>((json) => ApiVersion.fromJson(json)).toList();
+    final apis = (json['apis'] as List)
+        .map<ApiVersion>((json) => ApiVersion.fromJson(json))
+        .toList();
 
     return RuntimeVersion(
       specName: json['specName'] as String,
@@ -93,15 +94,15 @@ class RuntimeVersion {
   }
 
   Map<String, dynamic> toJson() => {
-        'specName': specName,
-        'implName': implName,
-        'authoringVersion': authoringVersion,
-        'specVersion': specVersion,
-        'implVersion': implVersion,
-        'apis': apis.map((value) => value.toJson()).toList(),
-        'transactionVersion': transactionVersion,
-        'stateVersion': stateVersion,
-      };
+    'specName': specName,
+    'implName': implName,
+    'authoringVersion': authoringVersion,
+    'specVersion': specVersion,
+    'implVersion': implVersion,
+    'apis': apis.map((value) => value.toJson()).toList(),
+    'transactionVersion': transactionVersion,
+    'stateVersion': stateVersion,
+  };
 
   @override
   bool operator ==(Object other) =>
@@ -118,15 +119,24 @@ class RuntimeVersion {
       other.stateVersion == stateVersion;
 
   @override
-  int get hashCode => Object.hash(specName, implName, authoringVersion, specVersion, implName, apis,
-      transactionVersion, stateVersion);
+  int get hashCode => Object.hash(
+    specName,
+    implName,
+    authoringVersion,
+    specVersion,
+    implName,
+    apis,
+    transactionVersion,
+    stateVersion,
+  );
 }
 
 class $RuntimeVersionCodec with Codec<RuntimeVersion> {
   const $RuntimeVersionCodec();
 
-  static final BigInt coreId =
-      U64Codec.codec.decode(ByteInput(Hasher.blake2b64.hashString('Core')));
+  static final BigInt coreId = U64Codec.codec.decode(
+    ByteInput(Hasher.blake2b64.hashString('Core')),
+  );
 
   /// There exists multiple versions of [`RuntimeVersion`] and they are versioned using the `Core`
   /// runtime api:
@@ -139,34 +149,13 @@ class $RuntimeVersionCodec with Codec<RuntimeVersion> {
   }
 
   @override
-  void encodeTo(
-    RuntimeVersion value,
-    Output output,
-  ) {
-    StrCodec.codec.encodeTo(
-      value.specName,
-      output,
-    );
-    StrCodec.codec.encodeTo(
-      value.implName,
-      output,
-    );
-    U32Codec.codec.encodeTo(
-      value.authoringVersion,
-      output,
-    );
-    U32Codec.codec.encodeTo(
-      value.specVersion,
-      output,
-    );
-    U32Codec.codec.encodeTo(
-      value.implVersion,
-      output,
-    );
-    const SequenceCodec<ApiVersion>(ApiVersion.codec).encodeTo(
-      value.apis,
-      output,
-    );
+  void encodeTo(RuntimeVersion value, Output output) {
+    StrCodec.codec.encodeTo(value.specName, output);
+    StrCodec.codec.encodeTo(value.implName, output);
+    U32Codec.codec.encodeTo(value.authoringVersion, output);
+    U32Codec.codec.encodeTo(value.specVersion, output);
+    U32Codec.codec.encodeTo(value.implVersion, output);
+    const SequenceCodec<ApiVersion>(ApiVersion.codec).encodeTo(value.apis, output);
 
     // - `Core` version < 3 is a runtime version without a transaction version and state version.
     // - `Core` version 3 is a runtime version without a state version.
@@ -174,17 +163,11 @@ class $RuntimeVersionCodec with Codec<RuntimeVersion> {
     final int? coreVersion = coreVersionFromApis(value.apis);
 
     if (coreVersion == null || coreVersion >= 3) {
-      U32Codec.codec.encodeTo(
-        value.transactionVersion,
-        output,
-      );
+      U32Codec.codec.encodeTo(value.transactionVersion, output);
     }
 
     if (coreVersion == null || coreVersion >= 4) {
-      U8Codec.codec.encodeTo(
-        value.stateVersion,
-        output,
-      );
+      U8Codec.codec.encodeTo(value.stateVersion, output);
     }
   }
 
@@ -201,10 +184,12 @@ class $RuntimeVersionCodec with Codec<RuntimeVersion> {
     // - `Core` version 3 is a runtime version without a state version.
     // - `Core` version 4 is the latest runtime version.
     final int? coreVersion = coreVersionFromApis(apis);
-    final int transactionVersion =
-        coreVersion == null || coreVersion >= 3 ? U32Codec.codec.decode(input) : 1;
-    final int stateVersion =
-        coreVersion == null || coreVersion >= 4 ? U8Codec.codec.decode(input) : 0;
+    final int transactionVersion = coreVersion == null || coreVersion >= 3
+        ? U32Codec.codec.decode(input)
+        : 1;
+    final int stateVersion = coreVersion == null || coreVersion >= 4
+        ? U8Codec.codec.decode(input)
+        : 0;
 
     return RuntimeVersion(
       specName: specName,

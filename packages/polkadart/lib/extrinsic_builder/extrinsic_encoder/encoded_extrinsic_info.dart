@@ -48,15 +48,15 @@ class EncodedExtrinsicInfo extends Equatable {
 
   @override
   List<Object> get props => [
-        totalSize,
-        lengthPrefixSize,
-        versionByteSize,
-        addressSize,
-        signatureSize,
-        extensionSize,
-        callDataSize,
-        hash,
-        signatureType,
-        isSigned,
-      ];
+    totalSize,
+    lengthPrefixSize,
+    versionByteSize,
+    addressSize,
+    signatureSize,
+    extensionSize,
+    callDataSize,
+    hash,
+    signatureType,
+    isSigned,
+  ];
 }
