@@ -1,7 +1,6 @@
-///
 /// Data of para-chains.
 ///
-/// Updated in 04/08/2022 from https://github.com/paritytech/ss58-registry/blob/main/ss58-registry.json
+/// Updated on 07/12/2025 from https://github.com/paritytech/ss58-registry/blob/main/ss58-registry.json
 const jsonRegistryData = <Map<String, dynamic>>[
   {"prefix": 0, "network": "polkadot"},
   {"prefix": 1, "network": "BareSr25519"},

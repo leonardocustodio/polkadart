@@ -126,7 +126,7 @@ void main() {
   );
 
   test(
-    'Should return the same registry item when getByPrefix and getByNetwork are called psasing kusama values',
+    'Should return the same registry item when getByPrefix and getByNetwork are called passing kusama values',
     () {
       final registry = Registry.fromMap(reg.jsonRegistryData);
 
