@@ -38,7 +38,7 @@ class Registry {
     }
   }
 
-  /// Initialize the registry with the [jsonString], process it to find list of registries
+  /// Initialize the registry with the [jsonList], process it to find list of registries
   /// and return a new instance of [Registry].
   factory Registry.fromMap(List<Map<String, dynamic>> jsonList) {
     final List<RegistryItem> convertedItems = jsonList.map(RegistryItem.fromJson).toList();
