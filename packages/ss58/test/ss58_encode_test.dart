@@ -34,7 +34,8 @@ void main() {
     test('Should encode and return correct address', () {
       final int prefix = 42;
       final Uint8List bytes = Uint8List.fromList(
-          hex.decode('d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'));
+        hex.decode('d43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'),
+      );
 
       final String expectedEncodedAddress = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
 
@@ -50,25 +51,32 @@ void main() {
       expect(
         () => addressWithNegativePrefix.encode(),
         throwsA(
-          predicate((exception) =>
-              exception is InvalidPrefixException && exception.toString() == expectedErrorMessage),
+          predicate(
+            (exception) =>
+                exception is InvalidPrefixException && exception.toString() == expectedErrorMessage,
+          ),
         ),
       );
     });
 
-    test('Should throw InvalidPrefixException when an address prefix is greater than the limit',
-        () {
-      final addressWithInvalidPrefix = Address(prefix: 16384, pubkey: Uint8List.fromList([]));
-      final expectedErrorMessage = 'Invalid SS58 prefix: 16384.';
+    test(
+      'Should throw InvalidPrefixException when an address prefix is greater than the limit',
+      () {
+        final addressWithInvalidPrefix = Address(prefix: 16384, pubkey: Uint8List.fromList([]));
+        final expectedErrorMessage = 'Invalid SS58 prefix: 16384.';
 
-      expect(
-        () => addressWithInvalidPrefix.encode(),
-        throwsA(
-          predicate((exception) =>
-              exception is InvalidPrefixException && exception.toString() == expectedErrorMessage),
-        ),
-      );
-    });
+        expect(
+          () => addressWithInvalidPrefix.encode(),
+          throwsA(
+            predicate(
+              (exception) =>
+                  exception is InvalidPrefixException &&
+                  exception.toString() == expectedErrorMessage,
+            ),
+          ),
+        );
+      },
+    );
 
     test('Should throw BadAddressLengthException when an address bytes length is equal to 3.', () {
       final Uint8List bytes = Uint8List(3);
