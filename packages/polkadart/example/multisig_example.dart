@@ -1,7 +1,7 @@
 // ignore_for_file: unused_local_variable
 
+import 'package:polkadart/apis/apis.dart' show StateApi, Provider;
 import 'package:polkadart/multisig/multisig_base.dart' show Multisig, MultisigAccount;
-import 'package:polkadart/polkadart.dart';
 import 'package:polkadart_keyring/polkadart_keyring.dart' as keyring;
 import 'package:ss58/ss58.dart';
 import 'package:substrate_metadata/chain/chain_info.dart' show ChainInfo;
