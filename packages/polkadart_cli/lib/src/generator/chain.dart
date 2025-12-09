@@ -3,7 +3,8 @@ import 'package:recase/recase.dart' show ReCase;
 import 'package:path/path.dart' as path;
 import '../typegen/typegen.dart'
     show VariantBuilder, TupleBuilder, TypeDescriptor, TypeBuilder, GeneratedOutput;
-import 'package:substrate_metadata/substrate_metadata.dart' show RuntimeMetadata;
+import 'package:substrate_metadata/substrate_metadata.dart'
+    show RuntimeMetadata, RuntimeMetadataExtensions;
 import './pallet.dart' show PalletGenerator;
 import './polkadart.dart' show PolkadartGenerator;
 
@@ -25,6 +26,14 @@ class ChainGenerator {
     final Map<int, TypeDescriptor> typeGenerators =
         TypeDescriptor.fromTypes(metadata.types, typesPath);
 
+    // Get outer enums from metadata
+    final outerEnumsData = metadata.outerEnums;
+    final Map<String, int> outerEnums = {
+      'call': outerEnumsData.callType,
+      if (outerEnumsData.eventType != -1) 'event': outerEnumsData.eventType,
+      if (outerEnumsData.errorType != -1) 'error': outerEnumsData.errorType,
+    };
+
     // Get pallet generators
     final List<PalletGenerator> palletGenerators = metadata.pallets
         // Remove Empty Pallets
@@ -34,11 +43,7 @@ class ChainGenerator {
               filePath: path.join(palletsPath, '${ReCase(pallet.name).snakeCase}.dart'),
               palletMetadata: pallet,
               registry: typeGenerators,
-              outerEnums: {
-                'call': metadata.outerEnums.callType,
-                'event': metadata.outerEnums.eventType,
-                'error': metadata.outerEnums.errorType,
-              },
+              outerEnums: outerEnums,
             ))
         .toList();
 
