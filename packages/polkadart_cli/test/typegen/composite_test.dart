@@ -32,13 +32,15 @@ void main() {
       final pointCodecClass = output.classes.last;
       expect(pointCodecClass.name, '\$PointCodec');
       expect(pointCodecClass.fields.length, 0);
-      expect(pointCodecClass.methods.length, 3);
+      expect(pointCodecClass.methods.length, 4);
       expect(pointCodecClass.methods.firstWhere((m) => m.name == 'encodeTo').returns?.type.symbol,
           'void');
       expect(pointCodecClass.methods.firstWhere((m) => m.name == 'decode').returns?.type.symbol,
           'Point');
       expect(pointCodecClass.methods.firstWhere((m) => m.name == 'sizeHint').returns?.type.symbol,
           'int');
+      expect(pointCodecClass.methods.firstWhere((m) => m.name == 'isSizeZero').returns?.type.symbol,
+          'bool');
 
       expect(
           generator.build().build(),
@@ -46,7 +48,7 @@ void main() {
             '// ignore_for_file: no_leading_underscores_for_library_prefixes\n',
             'import \'dart:typed_data\' as _i2;\n',
             '\n',
-            'import \'package:polkadart/scale_codec.dart\' as _i1;\n',
+            'import \'package:polkadart_scale_codec/polkadart_scale_codec.dart\' as _i1;\n',
             '\n',
             'class Point {\n',
             '  const Point({\n',
@@ -121,6 +123,10 @@ void main() {
             '    size = size + _i1.I32Codec.codec.sizeHint(obj.y);\n',
             '    return size;\n',
             '  }\n',
+            '\n',
+            '  @override\n',
+            '  bool isSizeZero() =>\n',
+            '      _i1.I32Codec.codec.isSizeZero() && _i1.I32Codec.codec.isSizeZero();\n',
             '}\n',
             ''
           ].join());

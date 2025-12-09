@@ -17,9 +17,11 @@ import 'package:code_builder/code_builder.dart'
         Reference,
         TypeReference,
         declareFinal,
+        literalFalse,
         literalNum,
         literalList,
         literalString,
+        literalTrue,
         refer;
 import './typegen.dart' as generators
     show
@@ -228,7 +230,17 @@ Class createCompositeCodec(generators.CompositeBuilder compositeGenerator) {
                   .property('sizeHint')
                   .call([refer('obj').property(field.sanitizedName)])))
               .statement))
-          ..statements.add(refer('size').returned.statement))));
+          ..statements.add(refer('size').returned.statement))))
+      ..methods.add(Method((b) => b
+        ..name = 'isSizeZero'
+        ..returns = refs.bool
+        ..annotations.add(refer('override'))
+        ..body = compositeGenerator.fields.isEmpty
+            ? literalTrue.code
+            : compositeGenerator.fields
+                .map((field) => field.codec.codecInstance(dirname).property('isSizeZero').call([]))
+                .reduce((a, b) => a.and(b))
+                .code));
   });
 }
 
@@ -394,7 +406,12 @@ Class createVariantCodec(generators.VariantBuilder variantGenerator) => Class((c
             Code(
                 'default: throw Exception(\'${classType.symbol}: Unsupported "\$value" of type "\${value.runtimeType}"\');'),
             Code('}'),
-          ])));
+          ])))
+        ..methods.add(Method((b) => b
+          ..name = 'isSizeZero'
+          ..returns = refs.bool
+          ..annotations.add(refer('override'))
+          ..body = literalFalse.code));
     });
 
 Class createVariantClass(
@@ -601,7 +618,12 @@ Class createSimpleVariantCodec(
           ])
           ..body = generators.PrimitiveDescriptor.u8(1)
               .encode(dirname, refer('value').property('codecIndex'))
-              .statement));
+              .statement))
+        ..methods.add(Method((b) => b
+          ..name = 'isSizeZero'
+          ..returns = refs.bool
+          ..annotations.add(refer('override'))
+          ..body = literalFalse.code));
     });
 
 Class createTupleClass(
@@ -695,5 +717,14 @@ Class createTupleCodec(
             ..statements.add(Code('int size = 0;'))
             ..statements.addAll(List.generate(
                 size, (index) => Code('size += codec$index.sizeHint(tuple.value$index);')))
-            ..statements.add(Code('return size;')))));
+            ..statements.add(Code('return size;')))))
+        ..methods.add(Method((b) => b
+          ..name = 'isSizeZero'
+          ..returns = refs.bool
+          ..annotations.add(refer('override'))
+          ..body = size == 0
+              ? literalTrue.code
+              : List.generate(size, (index) => refer('codec$index').property('isSizeZero').call([]))
+                  .reduce((a, b) => a.and(b))
+                  .code));
     });

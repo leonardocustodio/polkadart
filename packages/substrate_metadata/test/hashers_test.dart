@@ -63,10 +63,6 @@ void main() {
       final hasher = TwoxxHasher(1); // Twox64 = 1 block of 64 bits
       final hash = hasher.hash(accountId);
 
-      print('AccountId: ${encodeHex(accountId)}');
-      print('Hash result: ${encodeHex(hash)}');
-      print('Expected: ${encodeHex(expectedHash)}');
-
       expect(encodeHex(hash), encodeHex(expectedHash),
           reason: 'Twox64 hash of 32-byte AccountId should match PJS');
     });

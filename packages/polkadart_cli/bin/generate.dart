@@ -16,12 +16,12 @@ class ChainProperties {
   static Future<ChainProperties> fromURL(Uri uri) async {
     final provider = Provider.fromUri(uri);
     final api = StateApi(provider);
-    final decodedMetadata = await api.getTypedMetadata();
+    final decodedMetadata = await api.getMetadata();
     final version = await api.getRuntimeVersion();
 
     await provider.disconnect();
 
-    if (![14, 15].contains(decodedMetadata.metadata.runtimeMetadataVersion())) {
+    if (![14, 15].contains(decodedMetadata.metadata.version)) {
       throw Exception('Only metadata versions 14 and 15 are supported');
     }
 

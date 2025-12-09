@@ -130,6 +130,16 @@ class TypeDefBuilder extends TypeBuilder {
                 .property('sizeHint')
                 .call([refer('value')])
                 .returned
+                .statement))
+          ..methods.add(Method((b) => b
+            ..name = 'isSizeZero'
+            ..returns = refs.bool
+            ..annotations.add(refer('override'))
+            ..body = generator
+                .codecInstance(dirname)
+                .property('isSizeZero')
+                .call([])
+                .returned
                 .statement));
       });
 }

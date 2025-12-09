@@ -18,6 +18,8 @@ part 'common/portable_type.dart';
 part 'common/portable_type_def.dart';
 part 'common/type_parameter.dart';
 part 'common/variant_def.dart';
+part 'common/outer_enums.dart';
+
 // Common -> Pallet
 part 'common/pallet/pallet_call_metadata.dart';
 part 'common/pallet/pallet_constant_metadata.dart';

@@ -15,7 +15,7 @@ void main() {
           generator.build().build(),
           [
             '// ignore_for_file: no_leading_underscores_for_library_prefixes\n',
-            'import \'package:polkadart/scale_codec.dart\' as _i1;\n',
+            'import \'package:polkadart_scale_codec/polkadart_scale_codec.dart\' as _i1;\n',
             '\n',
             'typedef SomeType = int;\n',
             '\n',
@@ -42,6 +42,11 @@ void main() {
             '  int sizeHint(SomeType value) {\n',
             '    return _i1.U8Codec.codec.sizeHint(value);\n',
             '  }\n',
+            '\n',
+            '  @override\n',
+            '  bool isSizeZero() {\n',
+            '    return _i1.U8Codec.codec.isSizeZero();\n',
+            '  }\n',
             '}\n',
             ''
           ].join());
@@ -57,7 +62,7 @@ void main() {
           generator.build().build(),
           [
             '// ignore_for_file: no_leading_underscores_for_library_prefixes\n',
-            'import \'package:polkadart/scale_codec.dart\' as _i1;\n',
+            'import \'package:polkadart_scale_codec/polkadart_scale_codec.dart\' as _i1;\n',
             '\n',
             'typedef SomeType = List<int>;\n',
             '\n',
@@ -84,11 +89,16 @@ void main() {
             '  int sizeHint(SomeType value) {\n',
             '    return _i1.U8SequenceCodec.codec.sizeHint(value);\n',
             '  }\n',
+            '\n',
+            '  @override\n',
+            '  bool isSizeZero() {\n',
+            '    return _i1.U8SequenceCodec.codec.isSizeZero();\n',
+            '  }\n',
             '}\n',
             '',
           ].join());
     });
-    test('sequence typedef', () {
+    test('composite typedef', () {
       final generator = TypeDefBuilder(
         filePath: './types/some_type.dart',
         name: 'SomeType',
@@ -100,7 +110,7 @@ void main() {
           generator.build().build(),
           [
             '// ignore_for_file: no_leading_underscores_for_library_prefixes\n',
-            'import \'package:polkadart/scale_codec.dart\' as _i2;\n',
+            'import \'package:polkadart_scale_codec/polkadart_scale_codec.dart\' as _i2;\n',
             '\n',
             'import \'point.dart\' as _i1;\n',
             '\n',
@@ -128,6 +138,11 @@ void main() {
             '  @override\n',
             '  int sizeHint(SomeType value) {\n',
             '    return _i1.Point.codec.sizeHint(value);\n',
+            '  }\n',
+            '\n',
+            '  @override\n',
+            '  bool isSizeZero() {\n',
+            '    return _i1.Point.codec.isSizeZero();\n',
             '  }\n',
             '}\n',
             '',

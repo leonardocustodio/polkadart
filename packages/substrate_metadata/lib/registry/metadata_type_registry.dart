@@ -686,19 +686,6 @@ class MetadataTypeRegistry {
       );
 }
 
-/// Outer enum types for V15 metadata
-class OuterEnums {
-  final int callType;
-  final int eventType;
-  final int errorType;
-
-  const OuterEnums({
-    required this.callType,
-    required this.eventType,
-    required this.errorType,
-  });
-}
-
 /// Cache statistics for monitoring
 class CacheStats {
   final int codecCacheSize;

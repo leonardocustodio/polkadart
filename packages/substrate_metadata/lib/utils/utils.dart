@@ -26,6 +26,7 @@ import 'package:polkadart_scale_codec/primitives/primitives.dart'
 import 'package:substrate_metadata/metadata/metadata.dart'
     show
         ExtrinsicMetadata,
+        OuterEnums,
         PalletMetadata,
         PortableType,
         Primitive,

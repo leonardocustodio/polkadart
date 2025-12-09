@@ -19,7 +19,7 @@ import 'package:code_builder/code_builder.dart'
         literalString,
         refer;
 import 'package:path/path.dart' as p;
-import 'package:polkadart/scale_codec.dart' as scale_codec;
+import 'package:polkadart_scale_codec/io/io.dart';
 import 'package:recase/recase.dart' show ReCase;
 import 'package:substrate_metadata/substrate_metadata.dart' as metadata;
 
@@ -34,7 +34,10 @@ import '../typegen/typegen.dart' as typegen
         VariantBuilder,
         Variant,
         TypeDefBuilder,
-        EmptyDescriptor;
+        EmptyDescriptor,
+        SequenceDescriptor,
+        ArrayDescriptor,
+        PrimitiveDescriptor;
 import '../utils/utils.dart' show sanitize, sanitizeDocs;
 
 enum StorageHasherType {
@@ -83,25 +86,18 @@ class StorageHasher<G extends typegen.TypeDescriptor> {
   }
 
   factory StorageHasher.fromMetadata({
-    required metadata.StorageHasher hasher,
+    required metadata.StorageHasherEnum hasher,
     required G codec,
   }) {
-    switch (hasher) {
-      case metadata.StorageHasher.blake2_128:
-        return StorageHasher.blake128(codec: codec);
-      case metadata.StorageHasher.blake2_128Concat:
-        return StorageHasher.blake128Concat(codec: codec);
-      case metadata.StorageHasher.blake2_256:
-        return StorageHasher.blake256(codec: codec);
-      case metadata.StorageHasher.twox64Concat:
-        return StorageHasher.twoxx64Concat(codec: codec);
-      case metadata.StorageHasher.twox128:
-        return StorageHasher.twoxx128(codec: codec);
-      case metadata.StorageHasher.twox256:
-        return StorageHasher.twoxx256(codec: codec);
-      case metadata.StorageHasher.identity:
-        return StorageHasher.identity(codec: codec);
-    }
+    return switch (hasher) {
+      metadata.StorageHasherEnum.blake2_128 => StorageHasher.blake128(codec: codec),
+      metadata.StorageHasherEnum.blake2_128Concat => StorageHasher.blake128Concat(codec: codec),
+      metadata.StorageHasherEnum.blake2_256 => StorageHasher.blake256(codec: codec),
+      metadata.StorageHasherEnum.twox64Concat => StorageHasher.twoxx64Concat(codec: codec),
+      metadata.StorageHasherEnum.twox128 => StorageHasher.twoxx128(codec: codec),
+      metadata.StorageHasherEnum.twox256 => StorageHasher.twoxx256(codec: codec),
+      metadata.StorageHasherEnum.identity => StorageHasher.identity(codec: codec),
+    };
   }
 }
 
@@ -136,37 +132,43 @@ class Storage {
   factory Storage.fromMetadata(
       metadata.StorageEntryMetadata storageMetadata, Map<int, typegen.TypeDescriptor> registry) {
     final type = storageMetadata.type;
-    final valueCodec = registry[type.value]!;
-    final List<typegen.TypeDescriptor> keysCodec;
+    final List<StorageHasher> hashers;
+    final typegen.TypeDescriptor valueCodec;
 
-    // Load key hashers
-    if (type.key != null) {
-      final keyId = type.key!;
-      if (type.hashers.isEmpty) {
-        throw Exception('Invalid storage, hashers cannot be empty when key is present');
-      } else if (type.hashers.length == 1) {
-        keysCodec = [registry[keyId]!];
-      } else {
-        final tupleCodec = registry[keyId]! as typegen.TupleBuilder;
-        keysCodec = tupleCodec.generators;
-      }
-    } else {
-      keysCodec = [];
+    switch (type) {
+      case metadata.StorageEntryTypePlain(:final valueType):
+        valueCodec = registry[valueType]!;
+        hashers = [];
+
+      case metadata.StorageEntryTypeMap(
+          :final keyType,
+          :final valueType,
+          hashers: final metadataHashers
+        ):
+        valueCodec = registry[valueType]!;
+        final List<typegen.TypeDescriptor> keysCodec;
+
+        if (metadataHashers.isEmpty) {
+          throw Exception('Invalid storage, hashers cannot be empty for map storage');
+        } else if (metadataHashers.length == 1) {
+          keysCodec = [registry[keyType]!];
+        } else {
+          final tupleCodec = registry[keyType]! as typegen.TupleBuilder;
+          keysCodec = tupleCodec.generators;
+        }
+
+        if (keysCodec.length != metadataHashers.length) {
+          throw Exception('Invalid storage, hasher\'s amount does not match key\'s amount');
+        }
+
+        hashers = [
+          for (int i = 0; i < metadataHashers.length; i++)
+            StorageHasher.fromMetadata(
+              hasher: metadataHashers[i],
+              codec: keysCodec[i],
+            )
+        ];
     }
-
-    // Check if hasher's amount matches key's amount
-    if (keysCodec.length != type.hashers.length) {
-      throw Exception('Invalid storage, hasher\'s amount does not match key\'s amount');
-    }
-
-    // Build storage hashers
-    final hashers = [
-      for (int i = 0; i < type.hashers.length; i++)
-        StorageHasher.fromMetadata(
-          hasher: type.hashers[i],
-          codec: keysCodec[i],
-        )
-    ];
 
     return Storage(
       name: storageMetadata.name,
@@ -467,7 +469,7 @@ Class createPalletQueries(
                       : storage.valueCodec
                           .valueFrom(
                             dirname,
-                            scale_codec.ByteInput(Uint8List.fromList(storage.defaultValue)),
+                            ByteInput(Uint8List.fromList(storage.defaultValue)),
                           )
                           .returned
                           .statement)
@@ -519,23 +521,36 @@ Class createPalletQueries(
                       ..statements.add(Code('}'))
                       ..statements.add(storage.isNullable
                           ? Code('return []; /* Nullable */')
-                          : refer('keys')
-                              .property('map')
-                              .call([
+                          : () {
+                              // Build the base expression
+                              var expr = refer('keys').property('map').call([
                                 Method((b) => b
                                   ..lambda = true
                                   ..requiredParameters.add(Parameter((p) => p..name = 'key'))
                                   ..body = storage.valueCodec
-                                      .valueFrom(
-                                          dirname,
-                                          scale_codec.ByteInput(
-                                              Uint8List.fromList(storage.defaultValue)))
+                                      .valueFrom(dirname,
+                                          ByteInput(Uint8List.fromList(storage.defaultValue)))
                                       .code).closure
-                              ])
-                              .property('toList()')
-                              .asA(refs.list(ref: storage.valueCodec.primitive(dirname)))
-                              .returned
-                              .statement)
+                              ]).property('toList()');
+
+                              // Only add cast for Sequence and Array types (needed for empty list defaults) but not for primitive sequences (they use List<int>.filled which has explicit type). Unwrap typedefs to get the actual underlying type
+                              typegen.TypeDescriptor actualCodec = storage.valueCodec;
+                              while (actualCodec is typegen.TypeDefBuilder) {
+                                actualCodec = actualCodec.generator;
+                              }
+
+                              final needsCast = (actualCodec is typegen.SequenceDescriptor &&
+                                      actualCodec.typeDef is! typegen.PrimitiveDescriptor) ||
+                                  (actualCodec is typegen.ArrayDescriptor &&
+                                      actualCodec.typeDef is! typegen.PrimitiveDescriptor);
+
+                              if (needsCast) {
+                                expr =
+                                    expr.asA(refs.list(ref: storage.valueCodec.primitive(dirname)));
+                              }
+
+                              return expr.returned.statement;
+                            }())
                       ..statements.add(storage.isNullable ? Code('') : Code('/* Default */')));
                 })))
         ..methods.addAll(generator.storages.map((storage) => Method((builder) {
@@ -584,7 +599,13 @@ Class createPalletTxs(
 
       final runtimeGenerator = runtimeVariant.variants.first.generator;
       final runtimePrimitive = runtimeGenerator.primitive(dirname);
-      final runtimeCall = refer(generator.name, runtimePrimitive.url);
+      // Find the matching variant by original name (case-insensitive match)
+      final matchingVariant = runtimeVariant.variants.firstWhere(
+        (v) => v.originalName.toLowerCase() == generator.name.toLowerCase(),
+        orElse: () =>
+            throw Exception('Could not find runtime call variant for pallet "${generator.name}"'),
+      );
+      final runtimeCall = refer(matchingVariant.name, runtimePrimitive.url);
 
       final isEnumClass = variants.variants.every((variant) => variant.fields.isEmpty);
       classBuilder
@@ -647,8 +668,7 @@ Class createPalletConstants(
           ..modifier = FieldModifier.final$
           ..docs.addAll(sanitizeDocs(constant.docs))
           ..assignment = constant.codec
-              .valueFrom(dirname, scale_codec.ByteInput(Uint8List.fromList(constant.value)),
-                  constant: true)
+              .valueFrom(dirname, ByteInput(Uint8List.fromList(constant.value)), constant: true)
               .code)));
     });
 

@@ -1,14 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
 import 'dart:typed_data';
 import 'package:convert/convert.dart';
+import 'package:polkadart/polkadart.dart' show ExtrinsicBuilder, Provider, StateApi;
 import 'package:polkadart/apis/apis.dart';
-import 'package:polkadart/polkadart.dart'
-    show AuthorApi, ExtrinsicPayload, Provider, SignatureType, SigningPayload, StateApi;
 import 'package:polkadart_example/generated/polkadot/types/sp_runtime/multiaddress/multi_address.dart'
     as polkadot;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart' as scale_codec;
-import 'package:substrate_metadata/metadata/merkleize.dart';
+import 'package:substrate_metadata/substrate_metadata.dart';
 import 'generated/polkadot/polkadot.dart';
 
 Future<void> main(List<String> arguments) async {
@@ -27,67 +25,61 @@ Future<void> main(List<String> arguments) async {
   final specVersion = runtimeVersion.specVersion;
   final txVersion = runtimeVersion.transactionVersion;
   final block = await provider.send('chain_getBlock', []);
-  final blockHeight = int.parse(block.result['block']['header']['number']);
-  final blockHash = (await provider.send('chain_getBlockHash', [])).result.replaceAll('0x', '');
-  final genesisHash = (await provider.send('chain_getBlockHash', [0])).result.replaceAll('0x', '');
+  final blockNumber = int.parse(block.result['block']['header']['number']);
+  final blockHash = Uint8List.fromList(
+    hex.decode((await provider.send('chain_getBlockHash', [])).result.replaceAll('0x', '')),
+  );
+  final genesisHash = Uint8List.fromList(
+    hex.decode((await provider.send('chain_getBlockHash', [0])).result.replaceAll('0x', '')),
+  );
 
-  final call =
-      api.tx.balances.transferKeepAlive(dest: bobMultiAddress, value: BigInt.from(1000000000000));
+  final call = api.tx.balances.transferKeepAlive(
+    dest: bobMultiAddress,
+    value: BigInt.from(1000000000000),
+  );
   final encodedCall = call.encode();
   print('Custom Encoded Call: ${hex.encode(encodedCall)}');
 
-  // Get Metadata
+  // Get Metadata and build ChainInfo
   final metadata = await state.getMetadata();
-  // Get Registry
-  final scale_codec.Registry registry = metadata.chainInfo.scaleCodec.registry;
+  final chainInfo = ChainInfo.fromRuntimeMetadataPrefixed(metadata);
 
   // Get MetadataHash
-  final typedMetadata = await state.getTypedMetadata();
-  final merkleizer =
-      MetadataMerkleizer.fromMetadata(typedMetadata.metadata, decimals: 10, tokenSymbol: 'DOT');
-  final metadataHash = hex.encode(merkleizer.digest());
-
-  // Get SignedExtensions mapped with codecs Map<String, Codec<dynamic>>
-  final Map<String, scale_codec.Codec<dynamic>> signedExtensions =
-      registry.getSignedExtensionTypes();
-  print('Signed Extensions Keys: ${signedExtensions.keys.toList()}');
+  final merkleizer = MetadataMerkleizer.fromMetadata(
+    metadata.metadata,
+    decimals: 10,
+    tokenSymbol: 'DOT',
+  );
+  final metadataHash = merkleizer.digest();
+  print('Metadata Hash: ${hex.encode(metadataHash)}');
 
   final nextNonce = await SystemApi(provider).accountNextIndex(alice.address);
   print('Alice address: ${alice.address}');
   print('Nonce: $nextNonce');
 
-  final payloadWithExtension = SigningPayload(
-    method: encodedCall,
+  // Build extrinsic with metadata hash
+  final builder = ExtrinsicBuilder(
+    chainInfo: chainInfo,
+    callData: encodedCall,
     specVersion: specVersion,
     transactionVersion: txVersion,
     genesisHash: genesisHash,
     blockHash: blockHash,
-    blockNumber: blockHeight,
+    blockNumber: blockNumber,
     eraPeriod: 64,
     nonce: nextNonce,
-    tip: 0,
-    metadataHash: metadataHash,
+    tip: BigInt.zero,
+  ).metadataHash(enabled: true, hash: metadataHash);
+
+  // Get signing payload for inspection
+  final signingPayload = builder.getSigningPayload();
+  print('Encoded Payload: ${hex.encode(signingPayload)}');
+
+  // Sign and submit
+  final txHash = await builder.signBuildAndSubmit(
+    provider: provider,
+    signerAddress: alice.address,
+    signingCallback: alice.sign,
   );
-
-  final customExtensionPayload = payloadWithExtension.encode(registry);
-  print('Encoded Payload: ${hex.encode(customExtensionPayload)}');
-
-  final signature = alice.sign(customExtensionPayload);
-  print('Signature: ${hex.encode(signature)}');
-
-  final srExtrinsic = ExtrinsicPayload(
-    signer: Uint8List.fromList(alice.publicKey.bytes),
-    method: encodedCall,
-    signature: signature,
-    eraPeriod: 64,
-    blockNumber: blockHeight,
-    nonce: nextNonce,
-    tip: 0,
-    metadataHash: metadataHash,
-  ).encode(registry, SignatureType.sr25519);
-  print('Encoded extrinsic: ${hex.encode(srExtrinsic)}');
-
-  final author = AuthorApi(provider);
-  final hash = await author.submitExtrinsic(srExtrinsic);
-  print('Extrinsic hash: ${hex.encode(hash)}');
+  print('Extrinsic hash: ${hex.encode(txHash)}');
 }
