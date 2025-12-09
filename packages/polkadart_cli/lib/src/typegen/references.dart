@@ -228,7 +228,8 @@ TypeReference bTreeMapCodec(Reference key, Reference value) {
 /////////////////////
 // Substrate types //
 /////////////////////
-const storageHasher = Reference('StorageHasher', 'package:substrate_metadata/substrate_metadata.dart');
+const storageHasher =
+    Reference('StorageHasher', 'package:substrate_metadata/substrate_metadata.dart');
 const provider = Reference('Provider', 'package:polkadart/polkadart.dart');
 const stateApi = Reference('StateApi', 'package:polkadart/polkadart.dart');
 const systemApi = Reference('SystemApi', 'package:polkadart/polkadart.dart');

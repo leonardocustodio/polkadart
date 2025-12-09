@@ -155,8 +155,8 @@ class OptionDescriptor extends TypeDescriptor {
     }
     // For other types (like Tuple), keep the conditional to avoid type issues
     return obj.notEqualTo(literalNull).conditional(
-      innerInstance,
-      literalNull,
-    );
+          innerInstance,
+          literalNull,
+        );
   }
 }
