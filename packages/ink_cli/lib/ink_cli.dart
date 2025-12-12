@@ -7,12 +7,10 @@ import 'package:path/path.dart' as path;
 import 'package:crypto/crypto.dart';
 import 'package:ink_abi/ink_abi.dart';
 import 'package:polkadart/polkadart.dart';
-import 'package:substrate_metadata/substrate_metadata.dart';
 import 'package:substrate_metadata/substrate_metadata.dart' as substrate_metadata;
 
 // Era is exported from substrate_metadata via derived_codecs
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 
 /// contracts_builder
 // - contract_args
