@@ -26,10 +26,7 @@ enum BitStore {
 /// The BitOrder bridges semantic indices to electrical position counters or
 /// selection masks (marked by the BitSel and BitMask types).
 /// Reference: https://github.com/ferrilab/bitvec/blob/v0/22/3/src/order.rs#L358-L377
-enum BitOrder {
-  MSB,
-  LSB,
-}
+enum BitOrder { MSB, LSB }
 
 ///
 /// A codec representing a sequence of bits.
@@ -191,8 +188,10 @@ class BitArray {
     if (list.lengthInBytes % 4 != 0) {
       throw FormatException('Uint8List length must be a multiplication of 4');
     }
-    final data =
-        list.buffer.asUint32List(list.offsetInBytes, list.lengthInBytes >> 2);
+    final data = list.buffer.asUint32List(
+      list.offsetInBytes,
+      list.lengthInBytes >> 2,
+    );
     return BitArray._(length, data);
   }
 
@@ -361,7 +360,9 @@ class BitArray {
   @override
   int get hashCode =>
       asUint32Iterable().fold(
-          0, (int previousValue, element) => previousValue ^ element.hashCode) ^
+        0,
+        (int previousValue, element) => previousValue ^ element.hashCode,
+      ) ^
       length.hashCode;
 
   List<int> toJson() {

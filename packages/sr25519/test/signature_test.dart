@@ -104,8 +104,9 @@ void main() {
   });
 
   test('Test verify rust', () {
-    final List<int> publicBytes =
-        hex.decode('46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a');
+    final List<int> publicBytes = hex.decode(
+      '46ebddef8cd9bb167dc30878d7113b7e168e6f0646beffd77d69d39bad76b47a',
+    );
 
     final PublicKey pub = PublicKey();
     pub.decode(publicBytes);
@@ -113,10 +114,13 @@ void main() {
     final List<int> message = utf8.encode('this is a message');
 
     final Signature sig = Signature.fromHex(
-        '4e172314444b8f820bb54c22e95076f220ed25373e5c178234aa6c211d29271244b947e3ff3418ff6b45fd1df1140c8cbff69fc58ee6dc96df70936a2bb74b82');
+      '4e172314444b8f820bb54c22e95076f220ed25373e5c178234aa6c211d29271244b947e3ff3418ff6b45fd1df1140c8cbff69fc58ee6dc96df70936a2bb74b82',
+    );
 
-    final merlin.Transcript transcript =
-        Sr25519.newSigningContext(utf8.encode('substrate'), message);
+    final merlin.Transcript transcript = Sr25519.newSigningContext(
+      utf8.encode('substrate'),
+      message,
+    );
 
     late bool verified;
     expect(() => (verified, _) = pub.verify(sig, transcript), returnsNormally);
@@ -142,23 +146,30 @@ void main() {
   });
 
   test('Test verify rust preaudit deprecated', () {
-    final List<int> publicBytes =
-        hex.decode('b4bfa1f7a5166695eb75299fd1c4c03ea212871c342f2c5dfea0902b2c246918');
+    final List<int> publicBytes = hex.decode(
+      'b4bfa1f7a5166695eb75299fd1c4c03ea212871c342f2c5dfea0902b2c246918',
+    );
 
     final PublicKey pub = PublicKey();
     pub.decode(publicBytes);
 
     final List<int> message = utf8.encode(
-        'Verifying that I am the owner of 5G9hQLdsKQswNPgB499DeA5PkFBbgkLPJWkkS6FAM6xGQ8xD. Hash: 221455a3\n');
+      'Verifying that I am the owner of 5G9hQLdsKQswNPgB499DeA5PkFBbgkLPJWkkS6FAM6xGQ8xD. Hash: 221455a3\n',
+    );
 
     final List<int> sig = hex.decode(
-        '5a9755f069939f45d96aaf125cf5ce7ba1db998686f87f2fb3cbdea922078741a73891ba265f70c31436e18a9acd14d189d73c12317ab6c313285cd938453202');
+      '5a9755f069939f45d96aaf125cf5ce7ba1db998686f87f2fb3cbdea922078741a73891ba265f70c31436e18a9acd14d189d73c12317ab6c313285cd938453202',
+    );
 
     late bool verified;
     expect(
-        () => verified =
-            pub.verifySimplePreAuditDeprecated('substrate', message, Uint8List.fromList(sig)),
-        returnsNormally);
+      () => verified = pub.verifySimplePreAuditDeprecated(
+        'substrate',
+        message,
+        Uint8List.fromList(sig),
+      ),
+      returnsNormally,
+    );
     expect(verified, true);
   });
 }

@@ -15,13 +15,13 @@ final _metadataJson = {
       "build_mode": "Debug",
       "cargo_contract_version": "2.0.0-rc",
       "rust_toolchain": "stable-aarch64-apple-darwin",
-      "wasm_opt_settings": {"keep_debug_symbols": false, "optimization_passes": "Z"}
-    }
+      "wasm_opt_settings": {"keep_debug_symbols": false, "optimization_passes": "Z"},
+    },
   },
   "contract": {
     "name": "flipper",
     "version": "0.1.0",
-    "authors": ["[your_name] <[your_email]>"]
+    "authors": ["[your_name] <[your_email]>"],
   },
   "spec": {
     "constructors": [
@@ -31,18 +31,18 @@ final _metadataJson = {
             "label": "init_value",
             "type": {
               "displayName": ["bool"],
-              "type": 0
-            }
-          }
+              "type": 0,
+            },
+          },
         ],
         "docs": ["Creates a new flipper smart contract initialized with the given value."],
         "label": "new",
         "payable": false,
         "returnType": {
           "displayName": ["ink_primitives", "ConstructorResult"],
-          "type": 1
+          "type": 1,
         },
-        "selector": "0x9bae9d5e"
+        "selector": "0x9bae9d5e",
       },
       {
         "args": [],
@@ -51,16 +51,16 @@ final _metadataJson = {
         "payable": false,
         "returnType": {
           "displayName": ["ink_primitives", "ConstructorResult"],
-          "type": 1
+          "type": 1,
         },
-        "selector": "0x61ef7e3e"
-      }
+        "selector": "0x61ef7e3e",
+      },
     ],
     "docs": [],
     "events": [],
     "lang_error": {
       "displayName": ["ink", "LangError"],
-      "type": 3
+      "type": 3,
     },
     "messages": [
       {
@@ -71,9 +71,9 @@ final _metadataJson = {
         "payable": false,
         "returnType": {
           "displayName": ["ink", "MessageResult"],
-          "type": 1
+          "type": 1,
         },
-        "selector": "0x633aa551"
+        "selector": "0x633aa551",
       },
       {
         "args": [],
@@ -83,11 +83,11 @@ final _metadataJson = {
         "payable": false,
         "returnType": {
           "displayName": ["ink", "MessageResult"],
-          "type": 4
+          "type": 4,
         },
-        "selector": "0x2f865bd9"
-      }
-    ]
+        "selector": "0x2f865bd9",
+      },
+    ],
   },
   "storage": {
     "root": {
@@ -96,23 +96,23 @@ final _metadataJson = {
           "fields": [
             {
               "layout": {
-                "leaf": {"key": "0x00000000", "ty": 0}
+                "leaf": {"key": "0x00000000", "ty": 0},
               },
-              "name": "value"
-            }
+              "name": "value",
+            },
           ],
-          "name": "Flipper"
-        }
+          "name": "Flipper",
+        },
       },
-      "root_key": "0x00000000"
-    }
+      "root_key": "0x00000000",
+    },
   },
   "types": [
     {
       "id": 0,
       "type": {
-        "def": {"primitive": "bool"}
-      }
+        "def": {"primitive": "bool"},
+      },
     },
     {
       "id": 1,
@@ -122,33 +122,33 @@ final _metadataJson = {
             "variants": [
               {
                 "fields": [
-                  {"type": 2}
+                  {"type": 2},
                 ],
                 "index": 0,
-                "name": "Ok"
+                "name": "Ok",
               },
               {
                 "fields": [
-                  {"type": 3}
+                  {"type": 3},
                 ],
                 "index": 1,
-                "name": "Err"
-              }
-            ]
-          }
+                "name": "Err",
+              },
+            ],
+          },
         },
         "params": [
           {"name": "T", "type": 2},
-          {"name": "E", "type": 3}
+          {"name": "E", "type": 3},
         ],
-        "path": ["Result"]
-      }
+        "path": ["Result"],
+      },
     },
     {
       "id": 2,
       "type": {
-        "def": {"tuple": []}
-      }
+        "def": {"tuple": []},
+      },
     },
     {
       "id": 3,
@@ -156,12 +156,12 @@ final _metadataJson = {
         "def": {
           "variant": {
             "variants": [
-              {"index": 1, "name": "CouldNotReadInput"}
-            ]
-          }
+              {"index": 1, "name": "CouldNotReadInput"},
+            ],
+          },
         },
-        "path": ["ink_primitives", "LangError"]
-      }
+        "path": ["ink_primitives", "LangError"],
+      },
     },
     {
       "id": 4,
@@ -171,30 +171,30 @@ final _metadataJson = {
             "variants": [
               {
                 "fields": [
-                  {"type": 0}
+                  {"type": 0},
                 ],
                 "index": 0,
-                "name": "Ok"
+                "name": "Ok",
               },
               {
                 "fields": [
-                  {"type": 3}
+                  {"type": 3},
                 ],
                 "index": 1,
-                "name": "Err"
-              }
-            ]
-          }
+                "name": "Err",
+              },
+            ],
+          },
         },
         "params": [
           {"name": "T", "type": 0},
-          {"name": "E", "type": 3}
+          {"name": "E", "type": 3},
         ],
-        "path": ["Result"]
-      }
-    }
+        "path": ["Result"],
+      },
+    },
   ],
-  "version": "4"
+  "version": "4",
 };
 
 final InkAbi _abi = InkAbi(_metadataJson);
@@ -283,13 +283,14 @@ class Contract {
 
   ///
   ///  Flips the current value of the Flipper's boolean.
-  Future<dynamic> flip(
-      {required final KeyPair keyPair,
-      required final ContractMutator mutator,
-      BigInt? storageDepositLimit,
-      GasLimit? gasLimit,
-      final dynamic tip = 0,
-      final int eraPeriod = 0}) async {
+  Future<dynamic> flip({
+    required final KeyPair keyPair,
+    required final ContractMutator mutator,
+    BigInt? storageDepositLimit,
+    GasLimit? gasLimit,
+    final dynamic tip = 0,
+    final int eraPeriod = 0,
+  }) async {
     return _contractCall(
       selector: '0x633aa551',
       keypair: keyPair,
@@ -333,10 +334,7 @@ class Contract {
     return value;
   }
 
-  Future<dynamic> _stateCall(
-    final String selector,
-    final List<dynamic> args,
-  ) async {
+  Future<dynamic> _stateCall(final String selector, final List<dynamic> args) async {
     final input = _abi.encodeMessageInput(selector, args);
     final baseResult = await _baseCall(input, args);
     final decodedResult = decodeResult(baseResult);

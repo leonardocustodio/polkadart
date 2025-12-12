@@ -18,8 +18,10 @@ class EcdsaKeyPair extends KeyPair {
 
   @override
   Future<KeyPair> fromUri(String uri, [String? password]) async {
-    final seed =
-        await SubstrateBip39.ecdsa.seedFromUri(uri, password: password);
+    final seed = await SubstrateBip39.ecdsa.seedFromUri(
+      uri,
+      password: password,
+    );
     return fromSeed(Uint8List.fromList(seed));
   }
 
@@ -38,8 +40,10 @@ class EcdsaKeyPair extends KeyPair {
     }
     message = _blake2bDigest(message);
     final signature = _privateKey.sign(message, lowS: true);
-    return Uint8List.fromList(
-        [...signature.toCompactRawBytes(), signature.recovery ?? 0]);
+    return Uint8List.fromList([
+      ...signature.toCompactRawBytes(),
+      signature.recovery ?? 0,
+    ]);
   }
 
   @override
@@ -81,8 +85,10 @@ class EcdsaKeyPair extends KeyPair {
 
   @override
   Future<void> unlockFromMnemonic(String mnemonic, [String? password]) async {
-    final seed =
-        await SubstrateBip39.ecdsa.seedFromUri(mnemonic, password: password);
+    final seed = await SubstrateBip39.ecdsa.seedFromUri(
+      mnemonic,
+      password: password,
+    );
     _unlock(_privateKeyFromSeed(Uint8List.fromList(seed)));
   }
 
@@ -114,8 +120,9 @@ class EcdsaKeyPair extends KeyPair {
   @override
   void lock() {
     _isLocked = true;
-    _privateKey =
-        secp256k1.PrivateKey.fromBytes(Uint8List.fromList(List.filled(32, 0)));
+    _privateKey = secp256k1.PrivateKey.fromBytes(
+      Uint8List.fromList(List.filled(32, 0)),
+    );
   }
 
   @override

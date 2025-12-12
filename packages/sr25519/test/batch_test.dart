@@ -75,7 +75,10 @@ void main() {
 
     transcripts[6] = merlin.Transcript('hello_999');
     final verified = verifyBatch(transcripts, sigs, pubkeys);
-    expect(verified, false,
-        reason: 'should have failed to batch verify signatures, as we altered 1 transcript.');
+    expect(
+      verified,
+      false,
+      reason: 'should have failed to batch verify signatures, as we altered 1 transcript.',
+    );
   });
 }

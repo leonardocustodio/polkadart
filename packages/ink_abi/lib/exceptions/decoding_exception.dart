@@ -35,10 +35,7 @@ class DecodingException extends InkAbiException {
   }
 
   /// Create exception for output decoding failure
-  factory DecodingException.outputDecodingFailed(
-    String selector,
-    String reason,
-  ) {
+  factory DecodingException.outputDecodingFailed(String selector, String reason) {
     return DecodingException(
       'Failed to decode output for selector $selector: $reason',
       selector: selector,
@@ -56,17 +53,11 @@ class DecodingException extends InkAbiException {
 
   /// Create exception for event signature topic mismatch
   factory DecodingException.signatureTopicNotFound(String topic) {
-    return DecodingException(
-      'No event found with signature topic: $topic',
-      signatureTopic: topic,
-    );
+    return DecodingException('No event found with signature topic: $topic', signatureTopic: topic);
   }
 
   /// Create exception for event decoding failure
-  factory DecodingException.eventDecodingFailed(
-    int eventIndex,
-    String reason,
-  ) {
+  factory DecodingException.eventDecodingFailed(int eventIndex, String reason) {
     return DecodingException(
       'Failed to decode event at index $eventIndex: $reason',
       eventIndex: eventIndex,
@@ -106,17 +97,11 @@ class DecodingException extends InkAbiException {
 ///
 /// This is a specialized decoding exception for event-specific errors.
 class InkEventException extends DecodingException {
-  const InkEventException(
-    super.message, {
-    super.eventIndex,
-    super.context,
-  });
+  const InkEventException(super.message, {super.eventIndex, super.context});
 
   /// Create exception for topics requirement
   factory InkEventException.topicsRequired() {
-    return const InkEventException(
-      'Topics required for v5 contracts',
-    );
+    return const InkEventException('Topics required for v5 contracts');
   }
 
   /// Create exception when event cannot be determined

@@ -82,7 +82,8 @@ class I32ArrayCodec with Codec<Int32List> {
   void encodeTo(Int32List value, Output output) {
     if (value.length != length) {
       throw Exception(
-          'I32ArrayCodec: invalid length, expect $length found ${value.length}');
+        'I32ArrayCodec: invalid length, expect $length found ${value.length}',
+      );
     }
     for (final val in value) {
       I32Codec.codec.encodeTo(val, output);

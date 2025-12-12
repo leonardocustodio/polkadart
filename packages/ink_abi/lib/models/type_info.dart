@@ -18,12 +18,7 @@ class TypeInfo {
   /// Documentation for this type
   final List<String> docs;
 
-  const TypeInfo({
-    required this.id,
-    required this.path,
-    required this.typeDef,
-    required this.docs,
-  });
+  const TypeInfo({required this.id, required this.path, required this.typeDef, required this.docs});
 
   /// Get path as string (e.g., 'core::option::Option')
   String get pathString => path.join('::');

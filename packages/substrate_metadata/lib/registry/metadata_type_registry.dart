@@ -45,8 +45,8 @@ class MetadataTypeRegistry {
   /// Automatically handles V14 and V15 metadata formats.
   /// Validates magic number and version compatibility.
   MetadataTypeRegistry(this.prefixed)
-      : version = prefixed.metadata.version,
-        types = _extractTypes(prefixed) {
+    : version = prefixed.metadata.version,
+      types = _extractTypes(prefixed) {
     // Validate magic number
     if (!prefixed.isValidMagicNumber) {
       throw MetadataException(
@@ -680,10 +680,10 @@ class MetadataTypeRegistry {
 
   /// Get cache statistics for monitoring
   CacheStats get cacheStats => CacheStats(
-        codecCacheSize: _codecCache.length,
-        typePathCacheSize: _typePathCache.length,
-        proxyCodecCount: _proxyCodecs.length,
-      );
+    codecCacheSize: _codecCache.length,
+    typePathCacheSize: _typePathCache.length,
+    proxyCodecCount: _proxyCodecs.length,
+  );
 }
 
 /// Cache statistics for monitoring

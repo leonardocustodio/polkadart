@@ -41,8 +41,9 @@ void main() {
     });
 
     test('verify random signatures', () {
-      final randomMessage =
-          Utilities.hexToBytes(getRandomBigInt().toRadixString(16).padLeft(64, '0'));
+      final randomMessage = Utilities.hexToBytes(
+        getRandomBigInt().toRadixString(16).padLeft(64, '0'),
+      );
       final privateKey = PrivateKey(getRandomBigInt());
       final publicKey = privateKey.getPublicKey();
       final signature = privateKey.sign(randomMessage);
@@ -84,12 +85,15 @@ void main() {
         0x23,
       ]);
       final x = BigInt.parse(
-          '100260381870027870612475458630405506840396644859280795015145920502443964769584');
+        '100260381870027870612475458630405506840396644859280795015145920502443964769584',
+      );
       final y = BigInt.parse(
-          '41096923727651821103518389640356553930186852801619204169823347832429067794568');
+        '41096923727651821103518389640356553930186852801619204169823347832429067794568',
+      );
       final r = BigInt.one;
       final s = BigInt.parse(
-          '115792089237316195423570985008687907852837564279074904382605163141518162728904');
+        '115792089237316195423570985008687907852837564279074904382605163141518162728904',
+      );
 
       final pub = PublicKey.fromPoint(Point(x, y, BigInt.one));
       final signature = Signature(r: BigInt.two, s: BigInt.two);
@@ -101,30 +105,39 @@ void main() {
       expect(verified, false);
     });
     test('not verify msg = curve order', () {
-      final msg =
-          Utilities.hexToBytes('fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141');
+      final msg = Utilities.hexToBytes(
+        'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141',
+      );
       final x = BigInt.parse(
-          '55066263022277343669578718895168534326250603453777594175500187360389116729240');
+        '55066263022277343669578718895168534326250603453777594175500187360389116729240',
+      );
       final y = BigInt.parse(
-          '32670510020758816978083085130507043184471273380659243275938904335757337482424');
+        '32670510020758816978083085130507043184471273380659243275938904335757337482424',
+      );
       final r = BigInt.parse(
-          '104546003225722045112039007203142344920046999340768276760147352389092131869133');
+        '104546003225722045112039007203142344920046999340768276760147352389092131869133',
+      );
       final s = BigInt.parse(
-          '96900796730960181123786672629079577025401317267213807243199432755332205217369');
+        '96900796730960181123786672629079577025401317267213807243199432755332205217369',
+      );
       final pub = PublicKey.fromPoint(Point(x, y, BigInt.one));
       final sig = Signature(r: r, s: s);
       expect(pub.verify(sig, msg), false);
     });
     test('verify non-strict msg bb5a...', () {
-      final msg =
-          Utilities.hexToBytes('bb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023');
+      final msg = Utilities.hexToBytes(
+        'bb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023',
+      );
       final x = BigInt.parse(
-          '3252872872578928810725465493269682203671229454553002637820453004368632726370');
+        '3252872872578928810725465493269682203671229454553002637820453004368632726370',
+      );
       final y = BigInt.parse(
-          '17482644437196207387910659778872952193236850502325156318830589868678978890912');
+        '17482644437196207387910659778872952193236850502325156318830589868678978890912',
+      );
       final r = BigInt.parse('432420386565659656852420866390673177323');
       final s = BigInt.parse(
-          '115792089237316195423570985008687907852837564279074904382605163141518161494334');
+        '115792089237316195423570985008687907852837564279074904382605163141518161494334',
+      );
       final pub = PublicKey.fromPoint(Point(x, y, BigInt.one));
       final sig = Signature(r: r, s: s);
       expect(pub.verify(sig, msg, lowS: false), true);

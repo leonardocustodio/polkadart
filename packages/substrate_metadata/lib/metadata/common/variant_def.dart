@@ -32,9 +32,7 @@ class VariantDef {
   }
 
   Map<String, dynamic> toJson() {
-    final json = <String, dynamic>{
-      'name': name,
-    };
+    final json = <String, dynamic>{'name': name};
     if (fields.isNotEmpty) {
       json['fields'] = fields.map((final Field field) => field.toJson()).toList();
     }
@@ -66,12 +64,7 @@ class $VariantDef with Codec<VariantDef> {
     // Decode documentation
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return VariantDef(
-      name: name,
-      fields: fields,
-      index: index,
-      docs: docs,
-    );
+    return VariantDef(name: name, fields: fields, index: index, docs: docs);
   }
 
   @override

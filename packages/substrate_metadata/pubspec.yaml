@@ -6,7 +6,7 @@ repository: https://github.com/leonardocustodio/polkadart
 resolution: workspace
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.8.0
 
 dependencies:
   pointycastle: ^4.0.0 # BSD-3-Clause

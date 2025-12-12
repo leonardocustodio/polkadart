@@ -9,16 +9,10 @@ void main() {
 
   {
     final output = HexOutput();
-    ArrayCodec(
-      ArrayCodec(U8Codec.codec, 2),
-      2,
-    ).encodeTo(
-      [
-        [1, 2],
-        [3, 4]
-      ],
-      output,
-    );
+    ArrayCodec(ArrayCodec(U8Codec.codec, 2), 2).encodeTo([
+      [1, 2],
+      [3, 4],
+    ], output);
     print(output.toString()); // 0x01020304
   }
 
@@ -30,18 +24,12 @@ void main() {
 
   {
     final output = HexOutput();
-    ArrayCodec(
-      TupleCodec([U8Codec.codec, BoolCodec.codec]),
-      4,
-    ).encodeTo(
-      [
-        [0, true],
-        [1, false],
-        [2, true],
-        [3, false]
-      ],
-      output,
-    );
+    ArrayCodec(TupleCodec([U8Codec.codec, BoolCodec.codec]), 4).encodeTo([
+      [0, true],
+      [1, false],
+      [2, true],
+      [3, false],
+    ], output);
 
     print(output.toString()); // 0x0001010002010300
   }

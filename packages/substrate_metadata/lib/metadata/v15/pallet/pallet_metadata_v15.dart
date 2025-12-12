@@ -22,10 +22,7 @@ class PalletMetadataV15 extends PalletMetadata {
   static const $PalletMetadataV15 codec = $PalletMetadataV15._();
 
   @override
-  Map<String, dynamic> toJson() => {
-        ...super.toJson(),
-        'docs': docs,
-      };
+  Map<String, dynamic> toJson() => {...super.toJson(), 'docs': docs};
 }
 
 /// Codec for PalletMetadataV15

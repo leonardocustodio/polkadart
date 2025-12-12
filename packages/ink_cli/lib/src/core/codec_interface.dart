@@ -30,12 +30,7 @@ class Field {
   final String? typeName;
   final List<String>? docs;
 
-  const Field({
-    this.name,
-    required this.type,
-    this.typeName,
-    this.docs,
-  });
+  const Field({this.name, required this.type, this.typeName, this.docs});
 }
 
 /// Variant definition for variant types
@@ -45,12 +40,7 @@ class Variants {
   final int index;
   final List<String>? docs;
 
-  const Variants({
-    required this.name,
-    required this.fields,
-    required this.index,
-    this.docs,
-  });
+  const Variants({required this.name, required this.fields, required this.index, this.docs});
 }
 
 /// Base CodecInterface - abstract class for all type interfaces
@@ -67,11 +57,7 @@ class PrimitiveCodecInterface implements CodecInterface {
   final List<String>? docs;
   final Primitive primitive;
 
-  const PrimitiveCodecInterface({
-    this.path,
-    this.docs,
-    required this.primitive,
-  });
+  const PrimitiveCodecInterface({this.path, this.docs, required this.primitive});
 }
 
 /// Composite codec interface (structs)
@@ -82,11 +68,7 @@ class CompositeCodecInterface implements CodecInterface {
   final List<String>? docs;
   final List<Field> fields;
 
-  const CompositeCodecInterface({
-    this.path,
-    this.docs,
-    required this.fields,
-  });
+  const CompositeCodecInterface({this.path, this.docs, required this.fields});
 }
 
 /// Variant codec interface (enums)
@@ -97,11 +79,7 @@ class VariantCodecInterface implements CodecInterface {
   final List<String>? docs;
   final List<Variants> variants;
 
-  const VariantCodecInterface({
-    this.path,
-    this.docs,
-    required this.variants,
-  });
+  const VariantCodecInterface({this.path, this.docs, required this.variants});
 }
 
 /// Sequence codec interface (`Vec<T>`)
@@ -112,11 +90,7 @@ class SequenceCodecInterface implements CodecInterface {
   final List<String>? docs;
   final int type; // element type index
 
-  const SequenceCodecInterface({
-    this.path,
-    this.docs,
-    required this.type,
-  });
+  const SequenceCodecInterface({this.path, this.docs, required this.type});
 }
 
 /// Array codec interface ([T; N])
@@ -128,12 +102,7 @@ class ArrayCodecInterface implements CodecInterface {
   final int len;
   final int type; // element type index
 
-  const ArrayCodecInterface({
-    this.path,
-    this.docs,
-    required this.len,
-    required this.type,
-  });
+  const ArrayCodecInterface({this.path, this.docs, required this.len, required this.type});
 }
 
 /// Tuple codec interface
@@ -145,12 +114,7 @@ class TupleCodecInterface implements CodecInterface {
   final int? id; // optional type id for internal use
   final List<int> tuple; // list of type indices
 
-  const TupleCodecInterface({
-    this.path,
-    this.docs,
-    this.id,
-    required this.tuple,
-  });
+  const TupleCodecInterface({this.path, this.docs, this.id, required this.tuple});
 }
 
 /// Compact codec interface
@@ -161,11 +125,7 @@ class CompactCodecInterface implements CodecInterface {
   final List<String>? docs;
   final int type; // inner type index
 
-  const CompactCodecInterface({
-    this.path,
-    this.docs,
-    required this.type,
-  });
+  const CompactCodecInterface({this.path, this.docs, required this.type});
 }
 
 /// BitSequence codec interface
@@ -193,9 +153,5 @@ class OptionCodecInterface implements CodecInterface {
   final List<String>? docs;
   final int type; // inner type index
 
-  const OptionCodecInterface({
-    this.path,
-    this.docs,
-    required this.type,
-  });
+  const OptionCodecInterface({this.path, this.docs, required this.type});
 }

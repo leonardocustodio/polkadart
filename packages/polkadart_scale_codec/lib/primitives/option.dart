@@ -85,9 +85,7 @@ class Option<E> {
   final bool _isSome; // Workaround for Option<int?>.some(null)
 
   const Option.some(this.value) : _isSome = true;
-  const Option.none()
-      : value = null,
-        _isSome = false;
+  const Option.none() : value = null, _isSome = false;
 
   bool get isSome => _isSome;
   bool get isNone => !_isSome;

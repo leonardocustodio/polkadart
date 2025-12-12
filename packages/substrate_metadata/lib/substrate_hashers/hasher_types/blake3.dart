@@ -35,7 +35,7 @@ final _iv = Uint32List.fromList([
   0x510e527f,
   0x9b05688c,
   0x1f83d9ab,
-  0x5be0cd19
+  0x5be0cd19,
 ]);
 
 int _rotr32(int x, int y) => (((x) >> (y)) ^ ((x) << (32 - (y))));
@@ -109,7 +109,12 @@ void _round(Uint32List state, Uint32List msg, int round) {
 }
 
 Uint32List _compressFirst8(
-    Uint32List cv, Uint32List blockWords, int counter, int blockLength, int flags) {
+  Uint32List cv,
+  Uint32List blockWords,
+  int counter,
+  int blockLength,
+  int flags,
+) {
   final state = Uint32List(16);
 
   state[0] = cv[0];
@@ -150,7 +155,12 @@ Uint32List _compressFirst8(
 }
 
 Uint32List _compress(
-    Uint32List cv, Uint32List blockWords, int counter, int blockLength, int flags) {
+  Uint32List cv,
+  Uint32List blockWords,
+  int counter,
+  int blockLength,
+  int flags,
+) {
   final state = _compressFirst8(cv, blockWords, counter, blockLength, flags);
 
   state[8] = state[8] ^ cv[0];
@@ -205,15 +215,16 @@ void _chunkUpdate(_ChunkState chunk, Uint8List input) {
       final blockWords = _blockBytesToWords(chunk.block);
 
       chunk.cv = Uint32List.view(
-          _compressFirst8(
-            chunk.cv,
-            blockWords,
-            chunk.chunkCounter,
-            _blockLength,
-            chunk.flags | (chunk.blocksCompressed == 0 ? _flagChunkStart : 0),
-          ).buffer,
-          0,
-          8);
+        _compressFirst8(
+          chunk.cv,
+          blockWords,
+          chunk.chunkCounter,
+          _blockLength,
+          chunk.flags | (chunk.blocksCompressed == 0 ? _flagChunkStart : 0),
+        ).buffer,
+        0,
+        8,
+      );
 
       chunk.blocksCompressed++;
       // Clear block
@@ -234,16 +245,16 @@ void _chunkUpdate(_ChunkState chunk, Uint8List input) {
 
 _Output _chunkOutput(_ChunkState chunk) {
   final blockWords = _blockBytesToWords(chunk.block);
-  return _Output(chunk.cv, blockWords, chunk.chunkCounter, chunk.blockLength,
-      (chunk.flags | (chunk.blocksCompressed == 0 ? _flagChunkStart : 0) | _flagChunkEnd));
+  return _Output(
+    chunk.cv,
+    blockWords,
+    chunk.chunkCounter,
+    chunk.blockLength,
+    (chunk.flags | (chunk.blocksCompressed == 0 ? _flagChunkStart : 0) | _flagChunkEnd),
+  );
 }
 
-_Output _parentOutput(
-  Uint32List leftChildCv,
-  Uint32List rightChildCv,
-  Uint32List key,
-  int flags,
-) {
+_Output _parentOutput(Uint32List leftChildCv, Uint32List rightChildCv, Uint32List key, int flags) {
   final blockWords = Uint32List(16);
   blockWords.setAll(0, leftChildCv);
   blockWords.setAll(8, rightChildCv);
@@ -251,12 +262,7 @@ _Output _parentOutput(
   return _Output(key, blockWords, 0, _blockLength, _flagParent | flags);
 }
 
-Uint32List _parentCv(
-  Uint32List leftChildCv,
-  Uint32List rightChildCv,
-  Uint32List key,
-  int flags,
-) {
+Uint32List _parentCv(Uint32List leftChildCv, Uint32List rightChildCv, Uint32List key, int flags) {
   return _getChainingValue(_parentOutput(leftChildCv, rightChildCv, key, flags));
 }
 
@@ -268,9 +274,9 @@ class _HashContext {
   int _flags;
 
   _HashContext._(Uint32List key, int flags)
-      : _key = Uint32List.fromList(key),
-        chunk = _ChunkState(key, 0, flags),
-        _flags = flags;
+    : _key = Uint32List.fromList(key),
+      chunk = _ChunkState(key, 0, flags),
+      _flags = flags;
 
   _HashContext() : this._(_iv, 0);
 
@@ -326,7 +332,12 @@ class _HashContext {
     final int outputBlockCounter = 0;
     for (int i = 0; i < output.length; i += 2 * _outLength) {
       final words = _compress(
-          o.inputCv, o.blockWords, outputBlockCounter, o.blockLength, o.flags | _flagRoot);
+        o.inputCv,
+        o.blockWords,
+        outputBlockCounter,
+        o.blockLength,
+        o.flags | _flagRoot,
+      );
 
       int j = 0;
       for (final word in words) {

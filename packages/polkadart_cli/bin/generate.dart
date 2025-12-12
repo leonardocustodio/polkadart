@@ -25,10 +25,7 @@ class ChainProperties {
       throw Exception('Only metadata versions 14 and 15 are supported');
     }
 
-    return ChainProperties(
-      decodedMetadata.metadata,
-      version,
-    );
+    return ChainProperties(decodedMetadata.metadata, version);
   }
 }
 
@@ -62,7 +59,10 @@ void main(List<String> args) async {
 
     // Extract metadata
     final generator = ChainGenerator.fromMetadata(
-        chainName: chainName, basePath: chainDirectory, metadata: properties.metadata);
+      chainName: chainName,
+      basePath: chainDirectory,
+      metadata: properties.metadata,
+    );
 
     // Generate files
     await generator.build(verbose: verbose);

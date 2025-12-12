@@ -62,11 +62,7 @@ void _setBrightRed() {
 ArgParser _initiateParse() {
   final ArgParser parser = ArgParser();
 
-  parser.addFlag(
-    _help,
-    hide: true,
-    abbr: 'h',
-  );
+  parser.addFlag(_help, hide: true, abbr: 'h');
   parser.addOption(
     _sourceMetadataFile,
     help: '$_sourceMetadataFile file is used to parse and generate contract methods',

@@ -6,15 +6,20 @@ abstract class TypeDescriptor {
   const TypeDescriptor();
 
   static Map<int, TypeDescriptor> fromTypes(
-      List<metadata.PortableType> registry, String typesPath) {
+    List<metadata.PortableType> registry,
+    String typesPath,
+  ) {
     return parseTypes(registry, typesPath);
   }
 
   /// Returns the id of type in the registry.
   int id();
 
-  Expression encode(BasePath from, Expression obj,
-      [Expression output = const Reference('output')]) {
+  Expression encode(
+    BasePath from,
+    Expression obj, [
+    Expression output = const Reference('output'),
+  ]) {
     return codecInstance(from).property('encodeTo').call([obj, output]);
   }
 
@@ -57,10 +62,12 @@ class GeneratedOutput {
   const GeneratedOutput({required this.classes, required this.enums, required this.typedefs});
 
   String build() {
-    final library3 = Library((b) => b
-      ..body.addAll(typedefs)
-      ..body.addAll(enums)
-      ..body.addAll(classes));
+    final library3 = Library(
+      (b) => b
+        ..body.addAll(typedefs)
+        ..body.addAll(enums)
+        ..body.addAll(classes),
+    );
 
     final code = library3
         .accept(DartEmitter.scoped(useNullSafetySyntax: true, orderDirectives: true))
@@ -332,8 +339,7 @@ class LiteralValue<E extends Expression> extends Expression {
     Iterable<Expression> positionalArguments, [
     Map<String, Expression> namedArguments = const {},
     List<Reference> typeArguments = const [],
-  ]) =>
-      _expression.call(positionalArguments, namedArguments, typeArguments);
+  ]) => _expression.call(positionalArguments, namedArguments, typeArguments);
 
   @override
   Expression property(String name) => _expression.property(name);

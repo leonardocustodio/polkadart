@@ -5,16 +5,16 @@ class ResultDescriptor extends TypeDescriptor {
   late TypeDescriptor ok;
   late TypeDescriptor err;
 
-  ResultDescriptor({
-    required int id,
-    required this.ok,
-    required this.err,
-  }) : _id = id;
+  ResultDescriptor({required int id, required this.ok, required this.err}) : _id = id;
 
   ResultDescriptor._lazy(this._id);
 
-  factory ResultDescriptor.lazy(
-      {required int id, required LazyLoader loader, required int ok, required int err}) {
+  factory ResultDescriptor.lazy({
+    required int id,
+    required LazyLoader loader,
+    required int ok,
+    required int err,
+  }) {
     final generator = ResultDescriptor._lazy(id);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.ok = register[ok]!;
@@ -45,8 +45,9 @@ class ResultDescriptor extends TypeDescriptor {
     } else {
       value = err.valueFrom(from, input);
     }
-    return primitive(from).newInstanceNamed(isOk ? 'ok' : 'err', [value]).asLiteralValue(
-        isConstant: constant && value.isConstant);
+    return primitive(from)
+        .newInstanceNamed(isOk ? 'ok' : 'err', [value])
+        .asLiteralValue(isConstant: constant && value.isConstant);
   }
 
   @override

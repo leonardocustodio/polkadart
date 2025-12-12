@@ -35,7 +35,8 @@ class TopicsCodec with Codec<List<String>> {
       // Validate hash length
       if (cleanHash.length != HASH_SIZE * 2) {
         throw MetadataException(
-            'Invalid hash length: expected ${HASH_SIZE * 2} hex characters, got ${cleanHash.length}');
+          'Invalid hash length: expected ${HASH_SIZE * 2} hex characters, got ${cleanHash.length}',
+        );
       }
 
       // Validate hex characters

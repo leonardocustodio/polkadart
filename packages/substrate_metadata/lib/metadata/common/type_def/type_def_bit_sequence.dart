@@ -6,10 +6,7 @@ part of metadata;
 class TypeDefBitSequence extends TypeDef {
   final int bitStoreType;
   final int bitOrderType;
-  const TypeDefBitSequence({
-    required this.bitStoreType,
-    required this.bitOrderType,
-  });
+  const TypeDefBitSequence({required this.bitStoreType, required this.bitOrderType});
 
   static const $TypeDef codec = TypeDef.codec;
 
@@ -20,10 +17,7 @@ class TypeDefBitSequence extends TypeDef {
 
   @override
   Map<String, dynamic> toJson() {
-    return {
-      'bitStoreType': bitStoreType,
-      'bitOrderType': bitOrderType,
-    };
+    return {'bitStoreType': bitStoreType, 'bitOrderType': bitOrderType};
   }
 }
 
@@ -34,10 +28,7 @@ class $TypeDefBitSequence with Codec<TypeDefBitSequence> {
   TypeDefBitSequence decode(Input input) {
     final bitStoreType = CompactCodec.codec.decode(input);
     final bitOrderType = CompactCodec.codec.decode(input);
-    return TypeDefBitSequence(
-      bitStoreType: bitStoreType,
-      bitOrderType: bitOrderType,
-    );
+    return TypeDefBitSequence(bitStoreType: bitStoreType, bitOrderType: bitOrderType);
   }
 
   @override

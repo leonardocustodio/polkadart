@@ -6,47 +6,27 @@ class StorageHasher<K> {
   final bool concat;
 
   const StorageHasher(this.codec, this.hasher, this.concat)
-      : assert(hasher != null || concat == true);
+    : assert(hasher != null || concat == true);
 
-  const StorageHasher.identity(this.codec)
-      : hasher = null,
-        concat = true;
+  const StorageHasher.identity(this.codec) : hasher = null, concat = true;
 
-  const StorageHasher.blake2b128(this.codec)
-      : hasher = Hasher.blake2b128,
-        concat = false;
+  const StorageHasher.blake2b128(this.codec) : hasher = Hasher.blake2b128, concat = false;
 
-  const StorageHasher.blake2b128Concat(this.codec)
-      : hasher = Hasher.blake2b128,
-        concat = true;
+  const StorageHasher.blake2b128Concat(this.codec) : hasher = Hasher.blake2b128, concat = true;
 
-  const StorageHasher.blake2b256(this.codec)
-      : hasher = Hasher.blake2b256,
-        concat = false;
+  const StorageHasher.blake2b256(this.codec) : hasher = Hasher.blake2b256, concat = false;
 
-  const StorageHasher.twoxx64(this.codec)
-      : hasher = Hasher.twoxx64,
-        concat = false;
+  const StorageHasher.twoxx64(this.codec) : hasher = Hasher.twoxx64, concat = false;
 
-  const StorageHasher.twoxx64Concat(this.codec)
-      : hasher = Hasher.twoxx64,
-        concat = true;
+  const StorageHasher.twoxx64Concat(this.codec) : hasher = Hasher.twoxx64, concat = true;
 
-  const StorageHasher.twoxx128(this.codec)
-      : hasher = Hasher.twoxx128,
-        concat = false;
+  const StorageHasher.twoxx128(this.codec) : hasher = Hasher.twoxx128, concat = false;
 
-  const StorageHasher.twoxx128Concat(this.codec)
-      : hasher = Hasher.twoxx128,
-        concat = true;
+  const StorageHasher.twoxx128Concat(this.codec) : hasher = Hasher.twoxx128, concat = true;
 
-  const StorageHasher.twoxx256(this.codec)
-      : hasher = Hasher.twoxx256,
-        concat = false;
+  const StorageHasher.twoxx256(this.codec) : hasher = Hasher.twoxx256, concat = false;
 
-  const StorageHasher.twoxx256Concat(this.codec)
-      : hasher = Hasher.twoxx256,
-        concat = true;
+  const StorageHasher.twoxx256Concat(this.codec) : hasher = Hasher.twoxx256, concat = true;
 
   int size(K key) {
     int size = hasher?.digestSize ?? 0;
@@ -86,11 +66,13 @@ class StorageValue<V> {
   Uint8List hashedKey() {
     final Uint8List hash = Uint8List(32);
     Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(prefix)),
-        output: hash.buffer.asUint8List(hash.offsetInBytes, 16));
+      data: Uint8List.fromList(utf8.encode(prefix)),
+      output: hash.buffer.asUint8List(hash.offsetInBytes, 16),
+    );
     Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(storage)),
-        output: hash.buffer.asUint8List(hash.offsetInBytes + 16, 16));
+      data: Uint8List.fromList(utf8.encode(storage)),
+      output: hash.buffer.asUint8List(hash.offsetInBytes + 16, 16),
+    );
     return hash;
   }
 
@@ -127,11 +109,13 @@ class StorageMap<K, V> {
 
   void _hashPrefixTo({required Uint8List output}) {
     Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(prefix)),
-        output: output.buffer.asUint8List(output.offsetInBytes, 16));
+      data: Uint8List.fromList(utf8.encode(prefix)),
+      output: output.buffer.asUint8List(output.offsetInBytes, 16),
+    );
     Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(storage)),
-        output: output.buffer.asUint8List(output.offsetInBytes + 16, 16));
+      data: Uint8List.fromList(utf8.encode(storage)),
+      output: output.buffer.asUint8List(output.offsetInBytes + 16, 16),
+    );
   }
 
   V decodeValue(Uint8List buffer) {
@@ -171,11 +155,13 @@ class StorageDoubleMap<K1, K2, V> {
 
   void _hashPrefixTo(K1 key1, {required Uint8List output}) {
     Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(prefix)),
-        output: output.buffer.asUint8List(output.offsetInBytes, 16));
+      data: Uint8List.fromList(utf8.encode(prefix)),
+      output: output.buffer.asUint8List(output.offsetInBytes, 16),
+    );
     Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(storage)),
-        output: output.buffer.asUint8List(output.offsetInBytes + 16, 16));
+      data: Uint8List.fromList(utf8.encode(storage)),
+      output: output.buffer.asUint8List(output.offsetInBytes + 16, 16),
+    );
 
     final int cursor = output.offsetInBytes + 32;
     hasher1.hashTo(key: key1, output: output.buffer.asUint8List(cursor));
@@ -204,8 +190,9 @@ class StorageTripleMap<K1, K2, K3, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2, K3 key3) {
-    final Uint8List hash =
-        Uint8List(32 + hasher1.size(key1) + hasher2.size(key2) + hasher3.size(key3));
+    final Uint8List hash = Uint8List(
+      32 + hasher1.size(key1) + hasher2.size(key2) + hasher3.size(key3),
+    );
     Hasher.twoxx128.hashTo(
       data: Uint8List.fromList(utf8.encode(prefix)),
       output: hash.buffer.asUint8List(hash.offsetInBytes, 16),
@@ -249,7 +236,8 @@ class StorageQuadrupleMap<K1, K2, K3, K4, V> {
 
   Uint8List hashedKeyFor(K1 key1, K2 key2, K3 key3, K4 key4) {
     final Uint8List hash = Uint8List(
-        32 + hasher1.size(key1) + hasher2.size(key2) + hasher3.size(key3) + hasher4.size(key4));
+      32 + hasher1.size(key1) + hasher2.size(key2) + hasher3.size(key3) + hasher4.size(key4),
+    );
     Hasher.twoxx128.hashTo(
       data: Uint8List.fromList(utf8.encode(prefix)),
       output: hash.buffer.asUint8List(hash.offsetInBytes, 16),
@@ -296,12 +284,14 @@ class StorageQuintupleMap<K1, K2, K3, K4, K5, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2, K3 key3, K4 key4, K5 key5) {
-    final Uint8List hash = Uint8List(32 +
-        hasher1.size(key1) +
-        hasher2.size(key2) +
-        hasher3.size(key3) +
-        hasher4.size(key4) +
-        hasher5.size(key5));
+    final Uint8List hash = Uint8List(
+      32 +
+          hasher1.size(key1) +
+          hasher2.size(key2) +
+          hasher3.size(key3) +
+          hasher4.size(key4) +
+          hasher5.size(key5),
+    );
     Hasher.twoxx128.hashTo(
       data: Uint8List.fromList(utf8.encode(prefix)),
       output: hash.buffer.asUint8List(hash.offsetInBytes, 16),
@@ -352,13 +342,15 @@ class StorageSextupleMap<K1, K2, K3, K4, K5, K6, V> {
   });
 
   Uint8List hashedKeyFor(K1 key1, K2 key2, K3 key3, K4 key4, K5 key5, K6 key6) {
-    final Uint8List hash = Uint8List(32 +
-        hasher1.size(key1) +
-        hasher2.size(key2) +
-        hasher3.size(key3) +
-        hasher4.size(key4) +
-        hasher5.size(key5) +
-        hasher6.size(key6));
+    final Uint8List hash = Uint8List(
+      32 +
+          hasher1.size(key1) +
+          hasher2.size(key2) +
+          hasher3.size(key3) +
+          hasher4.size(key4) +
+          hasher5.size(key5) +
+          hasher6.size(key6),
+    );
     Hasher.twoxx128.hashTo(
       data: Uint8List.fromList(utf8.encode(prefix)),
       output: hash.buffer.asUint8List(hash.offsetInBytes, 16),
@@ -393,11 +385,12 @@ class StorageNMap<V> {
   final List<StorageHasher> hashers;
   final Codec<V> valueCodec;
 
-  const StorageNMap(
-      {required this.prefix,
-      required this.storage,
-      required this.hashers,
-      required this.valueCodec});
+  const StorageNMap({
+    required this.prefix,
+    required this.storage,
+    required this.hashers,
+    required this.valueCodec,
+  });
 
   Uint8List hashedKeyFor(List<dynamic> keys) {
     if (keys.length != hashers.length) {
@@ -409,11 +402,13 @@ class StorageNMap<V> {
     }
     final Uint8List hash = Uint8List(keySize);
     Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(prefix)),
-        output: hash.buffer.asUint8List(hash.offsetInBytes, 16));
+      data: Uint8List.fromList(utf8.encode(prefix)),
+      output: hash.buffer.asUint8List(hash.offsetInBytes, 16),
+    );
     Hasher.twoxx128.hashTo(
-        data: Uint8List.fromList(utf8.encode(storage)),
-        output: hash.buffer.asUint8List(hash.offsetInBytes + 16, 16));
+      data: Uint8List.fromList(utf8.encode(storage)),
+      output: hash.buffer.asUint8List(hash.offsetInBytes + 16, 16),
+    );
     int cursor = hash.offsetInBytes + 32;
     for (int i = 0; i < keys.length; i++) {
       hashers[i].hashTo(key: keys[i], output: hash.buffer.asUint8List(cursor));

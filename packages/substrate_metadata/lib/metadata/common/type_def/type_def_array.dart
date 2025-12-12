@@ -17,10 +17,7 @@ class TypeDefArray extends TypeDef {
 
   @override
   Map<String, dynamic> toJson() {
-    return {
-      'len': length,
-      'type': type,
-    };
+    return {'len': length, 'type': type};
   }
 }
 

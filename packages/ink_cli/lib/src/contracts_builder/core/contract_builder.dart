@@ -88,7 +88,9 @@ class ContractBuilder {
   /// print('Transaction hash: ${encodeHex(txHash)}');
   /// ```
   static Future<Uint8List> submitExtrinsic(
-      final Provider provider, final Uint8List extrinsic) async {
+    final Provider provider,
+    final Uint8List extrinsic,
+  ) async {
     return await AuthorApi(provider).submitExtrinsic(extrinsic);
   }
 }

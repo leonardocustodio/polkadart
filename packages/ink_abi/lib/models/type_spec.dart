@@ -13,10 +13,7 @@ class TypeSpec extends Equatable {
   /// Display name components (e.g., ['ink', 'MessageResult'])
   final List<String> displayName;
 
-  const TypeSpec({
-    required this.typeId,
-    required this.displayName,
-  });
+  const TypeSpec({required this.typeId, required this.displayName});
 
   factory TypeSpec.fromJson(final Map<String, dynamic> json) => _$TypeSpecFromJson(json);
   Map<String, dynamic> toJson() => _$TypeSpecToJson(this);

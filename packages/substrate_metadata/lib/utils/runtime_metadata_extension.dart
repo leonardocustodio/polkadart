@@ -31,15 +31,15 @@ extension RuntimeMetadataExtensions on RuntimeMetadata {
   OuterEnums get outerEnums {
     return switch (this) {
       final RuntimeMetadataV14 v14 => OuterEnums(
-          callType: v14.extrinsic.callType,
-          eventType: -1,
-          errorType: -1,
-        ),
+        callType: v14.extrinsic.callType,
+        eventType: -1,
+        errorType: -1,
+      ),
       final RuntimeMetadataV15 v15 => OuterEnums(
-          callType: v15.outerEnums.callType,
-          eventType: v15.outerEnums.eventType,
-          errorType: v15.outerEnums.errorType,
-        ),
+        callType: v15.outerEnums.callType,
+        eventType: v15.outerEnums.eventType,
+        errorType: v15.outerEnums.errorType,
+      ),
     };
   }
 }

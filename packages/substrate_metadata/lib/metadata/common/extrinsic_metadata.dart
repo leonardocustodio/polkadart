@@ -30,13 +30,13 @@ class ExtrinsicMetadata {
   });
 
   Map<String, dynamic> toJson() => {
-        'version': version,
-        'address_type': addressType,
-        'call_type': callType,
-        'signature_type': signatureType,
-        'extra_type': extraType,
-        'signed_extensions': signedExtensions.map((e) => e.toJson()).toList(),
-      };
+    'version': version,
+    'address_type': addressType,
+    'call_type': callType,
+    'signature_type': signatureType,
+    'extra_type': extraType,
+    'signed_extensions': signedExtensions.map((e) => e.toJson()).toList(),
+  };
 }
 
 /// Metadata of an extrinsic signed extension.
@@ -59,10 +59,10 @@ class SignedExtensionMetadata {
   });
 
   Map<String, dynamic> toJson() => {
-        'identifier': identifier,
-        'ty': type,
-        'additional_signed': additionalSigned,
-      };
+    'identifier': identifier,
+    'ty': type,
+    'additional_signed': additionalSigned,
+  };
 }
 
 class $SignedExtensionMetadataCodec with Codec<SignedExtensionMetadata> {

@@ -30,11 +30,13 @@ void main() {
   {
     final output = HexOutput();
     BTreeMapCodec(
-            keyCodec: BTreeMapCodec(
-                keyCodec: U32Codec.codec, valueCodec: BoolCodec.codec),
-            valueCodec: BoolCodec.codec)
-        .encodeTo({
-      {632: false}: true
+      keyCodec: BTreeMapCodec(
+        keyCodec: U32Codec.codec,
+        valueCodec: BoolCodec.codec,
+      ),
+      valueCodec: BoolCodec.codec,
+    ).encodeTo({
+      {632: false}: true,
     }, output);
     print(output.toString()); // '0x0404780200000001'
   }
@@ -87,22 +89,14 @@ void main() {
   ///
   ///
   {
-    final codec = CompositeCodec(
-      {
-        'a': U8Codec.codec,
-        'b': BoolCodec.codec,
-      },
-    );
+    final codec = CompositeCodec({'a': U8Codec.codec, 'b': BoolCodec.codec});
 
     final input = Input.fromHex('0x2a01');
     final decoded = codec.decode(input);
     print(decoded); // {a: 42, b: true}
 
     final output = HexOutput();
-    codec.encodeTo(
-      {'a': 42, 'b': true},
-      output,
-    );
+    codec.encodeTo({'a': 42, 'b': true}, output);
     print(output.toString()); // '0x2a01'
   }
 
@@ -112,8 +106,9 @@ void main() {
   ///
   ///
   {
-    final codec =
-        OptionCodec(TupleCodec([CompactCodec.codec, BoolCodec.codec]));
+    final codec = OptionCodec(
+      TupleCodec([CompactCodec.codec, BoolCodec.codec]),
+    );
 
     final output = HexOutput();
     codec.encodeTo([3, true], output);
@@ -131,15 +126,18 @@ void main() {
   ///
   {
     final input = Input.fromHex(
-        '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f');
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f',
+    );
     final decoded = I256Codec.codec.decode(input);
     print(
-        decoded); // BigInt.parse('57896044618658097711785492504343953926634992332820282019728792003956564819967')
+      decoded,
+    ); // BigInt.parse('57896044618658097711785492504343953926634992332820282019728792003956564819967')
 
     final output = HexOutput();
     I256Codec.codec.encodeTo(decoded, output);
-    print(output
-        .toString()); // 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f
+    print(
+      output.toString(),
+    ); // 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f
   }
 
   ///
@@ -149,15 +147,18 @@ void main() {
   ///
   {
     final input = Input.fromHex(
-        '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+      '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+    );
     final decoded = U256Codec.codec.decode(input);
     print(
-        decoded); //  BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935')
+      decoded,
+    ); //  BigInt.parse('115792089237316195423570985008687907853269984665640564039457584007913129639935')
 
     final output = HexOutput();
     U256Codec.codec.encodeTo(decoded, output);
-    print(output
-        .toString()); // 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    print(
+      output.toString(),
+    ); // 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   }
 
   ///

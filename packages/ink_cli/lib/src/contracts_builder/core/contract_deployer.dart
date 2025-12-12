@@ -15,9 +15,7 @@ class ContractDeployer {
   ///
   /// This fetches the runtime metadata and builds the ChainInfo
   /// for use with the new typed metadata approach.
-  static Future<ContractDeployer> from({
-    required final Provider provider,
-  }) async {
+  static Future<ContractDeployer> from({required final Provider provider}) async {
     final runtimeMetadata = await StateApi(provider).getMetadata();
     final chainInfo = runtimeMetadata.buildChainInfo();
     return ContractDeployer(provider, runtimeMetadata, chainInfo);
@@ -115,13 +113,12 @@ class ContractDeployer {
     final Uint8List actualHash = await ContractBuilder.submitExtrinsic(provider, extrinsic);
 
     final bool isMatched = encodeHex(expectedTxHash) == encodeHex(actualHash);
-    assertion(isMatched,
-        'The expected hash and the actual hash of the deployment transaction does not match.');
-
-    return InstantiateRequest(
-      execResult.result.ok!.accountId,
-      extrinsic,
+    assertion(
+      isMatched,
+      'The expected hash and the actual hash of the deployment transaction does not match.',
     );
+
+    return InstantiateRequest(execResult.result.ok!.accountId, extrinsic);
   }
 
   /// Performs a dry-run instantiation request to estimate gas and validate the contract.
@@ -160,8 +157,9 @@ class ContractDeployer {
     // salt
     bytesCodec.encodeTo(salt, data);
 
-    final Uint8List result =
-        await StateApi(provider).call('ContractsApi_instantiate', data.toBytes());
+    final Uint8List result = await StateApi(
+      provider,
+    ).call('ContractsApi_instantiate', data.toBytes());
 
     // Use ContractsApiResponseCodec to properly decode Runtime API responses
     final apiCodec = ContractsApiResponseCodec(chainInfo.registry);

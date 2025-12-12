@@ -7,8 +7,8 @@ class PrimitiveDescriptor extends TypeDescriptor {
   const PrimitiveDescriptor._(int id, this.primitiveType) : _id = id;
 
   PrimitiveDescriptor({required int id, required metadata.Primitive primitive})
-      : primitiveType = primitive,
-        _id = id;
+    : primitiveType = primitive,
+      _id = id;
 
   factory PrimitiveDescriptor.str(int id) => PrimitiveDescriptor._(id, metadata.Primitive.Str);
   factory PrimitiveDescriptor.char(int id) => PrimitiveDescriptor._(id, metadata.Primitive.Char);

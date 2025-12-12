@@ -10,8 +10,10 @@ class Names {
   Names(this._types);
 
   void assign(final int ti, final String name) {
-    assert(_isFree(name),
-        'Attempted to assign name "$name" which is already it is already reserved or assigned.');
+    assert(
+      _isFree(name),
+      'Attempted to assign name "$name" which is already it is already reserved or assigned.',
+    );
     _assigned[name] = getTypeHash(_types, ti);
     _assignment[ti] = name;
   }
@@ -22,7 +24,9 @@ class Names {
 
   void reserve(final String name) {
     assert(
-        _isFree(name), 'Cannot reserve name "$name" because it is already reserved or assigned.');
+      _isFree(name),
+      'Cannot reserve name "$name" because it is already reserved or assigned.',
+    );
     _reserved.add(name);
   }
 
@@ -182,10 +186,7 @@ Map<String, int?>? asResultType(final VariantCodecInterface type) {
       errType = err.fields[0].type;
     }
 
-    return <String, int?>{
-      'ok': okType,
-      'err': errType,
-    };
+    return <String, int?>{'ok': okType, 'err': errType};
   }
   return null;
 }
@@ -225,9 +226,7 @@ Map<String, int?>? asOptionType(final VariantCodecInterface type) {
     if (some.fields.isNotEmpty) {
       someType = some.fields[0].type;
     }
-    return <String, int?>{
-      'some': someType,
-    };
+    return <String, int?>{'some': someType};
   }
   return null;
 }

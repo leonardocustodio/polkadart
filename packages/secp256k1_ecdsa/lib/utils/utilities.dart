@@ -25,8 +25,9 @@ class Utilities {
       result[i] = random.nextInt(256);
     }
     BigInt bigInt = BigInt.parse(
-        result.reversed.toList().map((byte) => byte.toRadixString(16).padLeft(2, '0')).join(''),
-        radix: 16);
+      result.reversed.toList().map((byte) => byte.toRadixString(16).padLeft(2, '0')).join(''),
+      radix: 16,
+    );
     bigInt &= max; // Ensures the number is within the range.
 
     return bigInt < min ? min : bigInt; // Ensures the number is not below the minimum.
@@ -169,13 +170,13 @@ class Utilities {
       return hashFuncSync(k, <Uint8List>[v, ...b]);
     }
 
-// HMAC-DRBG reseed() function. Steps D-G
+    // HMAC-DRBG reseed() function. Steps D-G
     void reseed([Uint8List? seed]) {
       seed ??= Uint8List(0);
       // k = hmac(k || v || 0x00 || seed)
       k = h([
         Uint8List.fromList(<int>[0x00]),
-        seed
+        seed,
       ]);
       // v = hmac(k || v)
       v = h([]);
@@ -185,7 +186,7 @@ class Utilities {
       // k = hmac(k || v || 0x01 || seed)
       k = h([
         Uint8List.fromList(<int>[0x01]),
-        seed
+        seed,
       ]);
       // v = hmac(k || v)
       v = h([]);
@@ -237,8 +238,13 @@ class Utilities {
     return bytes;
   }
 
-  static (Uint8List seed, K2SigFunc k2sig) prepSig(Uint8List message, BigInt privateKey,
-      {RandomBytesFunc? randomBytesFunc, bool? lowS, Uint8List? extraEntropy}) {
+  static (Uint8List seed, K2SigFunc k2sig) prepSig(
+    Uint8List message,
+    BigInt privateKey, {
+    RandomBytesFunc? randomBytesFunc,
+    bool? lowS,
+    Uint8List? extraEntropy,
+  }) {
     // RFC6979 3.2: we skip step A
     lowS ??= true;
     // msg bigint

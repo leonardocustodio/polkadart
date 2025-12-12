@@ -49,11 +49,11 @@ class RuntimeMetadataV14 extends RuntimeMetadata {
 
   @override
   Map<String, dynamic> toJson() => {
-        'types': types.map((final PortableType value) => value.toJson()).toList(growable: false),
-        'pallets': pallets.map((pallet) => pallet.toJson()).toList(),
-        'extrinsic': extrinsic.toJson(),
-        'type': type,
-      };
+    'types': types.map((final PortableType value) => value.toJson()).toList(growable: false),
+    'pallets': pallets.map((pallet) => pallet.toJson()).toList(),
+    'extrinsic': extrinsic.toJson(),
+    'type': type,
+  };
 }
 
 /// Codec for RuntimeMetadataV14
@@ -76,12 +76,7 @@ class $RuntimeMetadataV14 with Codec<RuntimeMetadataV14> {
     // Decode runtime type ID
     final type = CompactCodec.codec.decode(input);
 
-    return RuntimeMetadataV14(
-      types: types,
-      pallets: pallets,
-      extrinsic: extrinsic,
-      type: type,
-    );
+    return RuntimeMetadataV14(types: types, pallets: pallets, extrinsic: extrinsic, type: type);
   }
 
   @override

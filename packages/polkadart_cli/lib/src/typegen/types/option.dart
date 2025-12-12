@@ -46,12 +46,14 @@ class OptionDescriptor extends TypeDescriptor {
       if (input.read() == 0) {
         return refs
             .option(inner.primitive(from))
-            .newInstanceNamed('none', []).asLiteralValue(isConstant: true);
+            .newInstanceNamed('none', [])
+            .asLiteralValue(isConstant: true);
       } else {
         final innerValue = inner.valueFrom(from, input);
-        return refs.option(inner.primitive(from)).newInstanceNamed('some', [
-          innerValue,
-        ]).asLiteralValue(isConstant: constant && innerValue.isConstant);
+        return refs
+            .option(inner.primitive(from))
+            .newInstanceNamed('some', [innerValue])
+            .asLiteralValue(isConstant: constant && innerValue.isConstant);
       }
     }
 
@@ -69,10 +71,7 @@ class OptionDescriptor extends TypeDescriptor {
     }
     final innerJsonType = context.jsonTypeFrom(inner).asNullable();
     if (inner is OptionDescriptor) {
-      return refs.map(
-        refs.string,
-        innerJsonType,
-      );
+      return refs.map(refs.string, innerJsonType);
     }
     return innerJsonType;
   }
@@ -82,10 +81,9 @@ class OptionDescriptor extends TypeDescriptor {
     if (inner is OptionDescriptor) {
       final valueInstance = obj.property('value');
       final innerInstance = inner.instanceToJson(from, valueInstance);
-      return obj.property('isNone').conditional(
-            literalMap({'None': literalNull}),
-            literalMap({'Some': innerInstance}),
-          );
+      return obj
+          .property('isNone')
+          .conditional(literalMap({'None': literalNull}), literalMap({'Some': innerInstance}));
     }
     // For nullable options, check if the inner type actually transforms the object
     final nonNullObj = CodeExpression(Block.of([obj.code, Code('!')]));
@@ -107,10 +105,12 @@ class OptionDescriptor extends TypeDescriptor {
         return obj
             .nullSafeProperty('map')
             .call([
-              Method.returnsVoid((b) => b
-                ..requiredParameters.add(Parameter((b) => b..name = 'value'))
-                ..lambda = true
-                ..body = arrayDesc.typeDef.instanceToJson(from, refer('value')).code).closure
+              Method.returnsVoid(
+                (b) => b
+                  ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+                  ..lambda = true
+                  ..body = arrayDesc.typeDef.instanceToJson(from, refer('value')).code,
+              ).closure,
             ])
             .property('toList')
             .call([]);
@@ -124,10 +124,12 @@ class OptionDescriptor extends TypeDescriptor {
         return obj
             .nullSafeProperty('map')
             .call([
-              Method.returnsVoid((b) => b
-                ..requiredParameters.add(Parameter((b) => b..name = 'value'))
-                ..lambda = true
-                ..body = seqDesc.typeDef.instanceToJson(from, refer('value')).code).closure
+              Method.returnsVoid(
+                (b) => b
+                  ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+                  ..lambda = true
+                  ..body = seqDesc.typeDef.instanceToJson(from, refer('value')).code,
+              ).closure,
             ])
             .property('toList')
             .call([]);
@@ -154,9 +156,6 @@ class OptionDescriptor extends TypeDescriptor {
       }
     }
     // For other types (like Tuple), keep the conditional to avoid type issues
-    return obj.notEqualTo(literalNull).conditional(
-          innerInstance,
-          literalNull,
-        );
+    return obj.notEqualTo(literalNull).conditional(innerInstance, literalNull);
   }
 }

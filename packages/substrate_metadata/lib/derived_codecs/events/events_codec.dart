@@ -87,11 +87,7 @@ class EventsRecordCodec with Codec<List<EventRecord>> {
     final event = _eventCodec.decode(input);
     final topics = _topicsCodec.decode(input);
 
-    return EventRecord(
-      phase: phase,
-      event: event,
-      topics: topics,
-    );
+    return EventRecord(phase: phase, event: event, topics: topics);
   }
 
   /// Encode a single EventRecord
@@ -126,12 +122,7 @@ class EventsRecordCodec with Codec<List<EventRecord>> {
       palletName: palletName,
       index: variant.index,
       fields: variant.fields
-          .map((f) => FieldInfo(
-                name: f.name,
-                type: f.type,
-                typeName: f.typeName,
-                docs: f.docs,
-              ))
+          .map((f) => FieldInfo(name: f.name, type: f.type, typeName: f.typeName, docs: f.docs))
           .toList(),
       docs: variant.docs,
     );
@@ -152,20 +143,19 @@ class EventsRecordCodec with Codec<List<EventRecord>> {
     final variants = (eventType.type.typeDef as TypeDefVariant).variants;
 
     return variants
-        .map((variant) => EventInfo(
-              name: variant.name,
-              palletName: palletName,
-              index: variant.index,
-              fields: variant.fields
-                  .map((f) => FieldInfo(
-                        name: f.name,
-                        type: f.type,
-                        typeName: f.typeName,
-                        docs: f.docs,
-                      ))
-                  .toList(),
-              docs: variant.docs,
-            ))
+        .map(
+          (variant) => EventInfo(
+            name: variant.name,
+            palletName: palletName,
+            index: variant.index,
+            fields: variant.fields
+                .map(
+                  (f) => FieldInfo(name: f.name, type: f.type, typeName: f.typeName, docs: f.docs),
+                )
+                .toList(),
+            docs: variant.docs,
+          ),
+        )
         .toList();
   }
 

@@ -20,8 +20,9 @@ void main() {
 
     setUp(() {
       final inputBytes = decodeHex(metadataV14);
-      final RuntimeMetadataPrefixed prefixedMetadata =
-          RuntimeMetadataPrefixed.fromBytes(inputBytes);
+      final RuntimeMetadataPrefixed prefixedMetadata = RuntimeMetadataPrefixed.fromBytes(
+        inputBytes,
+      );
       registry = MetadataTypeRegistry(prefixedMetadata);
       constantsCodec = ConstantsCodec(registry);
 
@@ -48,8 +49,11 @@ void main() {
       final actualJson = allConstants.map((c) => c.toJson()).toList();
 
       // Compare counts
-      expect(actualJson.length, expectedConstants.length,
-          reason: 'Number of constants should match snapshot');
+      expect(
+        actualJson.length,
+        expectedConstants.length,
+        reason: 'Number of constants should match snapshot',
+      );
 
       // Verify metadata
       expect(snapshot['metadata']['totalConstants'], allConstants.length);
@@ -61,14 +65,26 @@ void main() {
         final expected = expectedConstants[i];
 
         expect(actual['name'], expected['name'], reason: 'Constant name mismatch at index $i');
-        expect(actual['palletName'], expected['palletName'],
-            reason: 'Pallet name mismatch at index $i');
-        expect(actual['typeId'], expected['typeId'],
-            reason: 'TypeId mismatch for ${actual['name']}');
-        expect(actual['value'], '0x${expected['value']}',
-            reason: 'Value mismatch for ${actual['palletName']}.${actual['name']}');
-        expect(actual['type'], expected['type'],
-            reason: 'Type string mismatch for ${actual['name']}');
+        expect(
+          actual['palletName'],
+          expected['palletName'],
+          reason: 'Pallet name mismatch at index $i',
+        );
+        expect(
+          actual['typeId'],
+          expected['typeId'],
+          reason: 'TypeId mismatch for ${actual['name']}',
+        );
+        expect(
+          actual['value'],
+          '0x${expected['value']}',
+          reason: 'Value mismatch for ${actual['palletName']}.${actual['name']}',
+        );
+        expect(
+          actual['type'],
+          expected['type'],
+          reason: 'Type string mismatch for ${actual['name']}',
+        );
         expect(actual['docs'], expected['docs'], reason: 'Docs mismatch for ${actual['name']}');
       }
     });

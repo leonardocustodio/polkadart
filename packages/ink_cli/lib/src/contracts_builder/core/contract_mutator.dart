@@ -100,13 +100,12 @@ class ContractMutator {
     final Uint8List actualHash = await ContractBuilder.submitExtrinsic(provider, extrinsic);
 
     final bool isMatched = encodeHex(expectedTxHash) == encodeHex(actualHash);
-    assertion(isMatched,
-        'The expected hash and the actual hash of the contract call transaction does not match.');
-
-    return InstantiateRequest(
-      execResult.result.ok!.accountId,
-      extrinsic,
+    assertion(
+      isMatched,
+      'The expected hash and the actual hash of the contract call transaction does not match.',
     );
+
+    return InstantiateRequest(execResult.result.ok!.accountId, extrinsic);
   }
 
   /// Decodes and deserializes a contract execution result.

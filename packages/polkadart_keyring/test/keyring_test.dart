@@ -14,10 +14,14 @@ void main() {
     setUp(() async {
       keyring = Keyring();
       message = Uint8List.fromList('this is a message'.codeUnits);
-      seedOne =
-          Uint8List.fromList('12345678901234567890123456789012'.codeUnits);
-      seedTwo = Uint8List.fromList(hex.decode(
-          '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
+      seedOne = Uint8List.fromList(
+        '12345678901234567890123456789012'.codeUnits,
+      );
+      seedTwo = Uint8List.fromList(
+        hex.decode(
+          '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60',
+        ),
+      );
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
@@ -27,8 +31,10 @@ void main() {
     });
 
     test('Creating KeyPairs from Mnemonic', () async {
-      final keyPair = await keyring.fromMnemonic(mnemonic,
-          keyPairType: KeyPairType.ed25519);
+      final keyPair = await keyring.fromMnemonic(
+        mnemonic,
+        keyPairType: KeyPairType.ed25519,
+      );
       expect(keyPair.address, equals(keyPairMnemonic.address));
     });
 
@@ -49,8 +55,10 @@ void main() {
       expect(keyring.getByAddress(address2), equals(keyPair2));
 
       // Check that an exception is thrown when retrieving a non-existing key pair
-      expect(() => keyring.getByAddress('non_existent_address'),
-          throwsArgumentError);
+      expect(
+        () => keyring.getByAddress('non_existent_address'),
+        throwsArgumentError,
+      );
     });
 
     test('Retrieving KeyPairs by PublicKey', () {
@@ -106,11 +114,12 @@ void main() {
 
       // Check that the public keys are correct
       expect(
-          keyring.publicKeys,
-          equals([
-            keyPair1.bytes().toList(growable: false),
-            keyPair2.bytes().toList(growable: false)
-          ]));
+        keyring.publicKeys,
+        equals([
+          keyPair1.bytes().toList(growable: false),
+          keyPair2.bytes().toList(growable: false),
+        ]),
+      );
     });
 
     test('Getting All Addresses', () {
@@ -220,7 +229,7 @@ void main() {
         149,
         40,
         74,
-        12
+        12,
       ];
 
       expect(signature, equals(expectedSignature));

@@ -31,12 +31,12 @@ class StorageEntryMetadata {
   static const $StorageEntryMetadata codec = $StorageEntryMetadata._();
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'modifier': modifier.toString(),
-        'type': type.toJson(),
-        'default': defaultValue,
-        'docs': docs,
-      };
+    'name': name,
+    'modifier': modifier.toString(),
+    'type': type.toJson(),
+    'default': defaultValue,
+    'docs': docs,
+  };
 }
 
 /// Codec for StorageEntryMetadata

@@ -15,8 +15,11 @@ class TupleCodec with Codec<List<dynamic>> {
 
   @override
   List<dynamic> decode(Input input) {
-    return List.generate(codecs.length, (index) => codecs[index].decode(input),
-        growable: false);
+    return List.generate(
+      codecs.length,
+      (index) => codecs[index].decode(input),
+      growable: false,
+    );
   }
 
   @override

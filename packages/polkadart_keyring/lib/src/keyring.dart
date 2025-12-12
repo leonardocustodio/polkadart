@@ -11,9 +11,7 @@ class Keyring {
   final Pairs pairs;
   final KeyPairType keyPairType;
 
-  Keyring()
-      : pairs = Pairs(),
-        keyPairType = KeyPairType.sr25519;
+  Keyring() : pairs = Pairs(), keyPairType = KeyPairType.sr25519;
 
   /// private constructor for internal use
   Keyring._(this.keyPairType) : pairs = Pairs();
@@ -43,10 +41,12 @@ class Keyring {
   /// // final uri = '//Alice';
   /// final keyPair = await keyring.fromUri(uri);
   /// ```
-  Future<KeyPair> fromUri(String uri,
-      {String? password,
-      bool addToPairs = false,
-      KeyPairType? keyPairType}) async {
+  Future<KeyPair> fromUri(
+    String uri, {
+    String? password,
+    bool addToPairs = false,
+    KeyPairType? keyPairType,
+  }) async {
     late KeyPair pair;
 
     switch (keyPairType ?? this.keyPairType) {
@@ -79,12 +79,18 @@ class Keyring {
   /// final mnemonic = "your mnemonic phrase";
   /// final keyPair = await keyring.fromMnemonic(mnemonic);
   /// ```
-  Future<KeyPair> fromMnemonic(String mnemonic,
-      {String? password,
-      bool addToPairs = false,
-      KeyPairType? keyPairType}) async {
-    return await fromUri(mnemonic,
-        addToPairs: addToPairs, password: password, keyPairType: keyPairType);
+  Future<KeyPair> fromMnemonic(
+    String mnemonic, {
+    String? password,
+    bool addToPairs = false,
+    KeyPairType? keyPairType,
+  }) async {
+    return await fromUri(
+      mnemonic,
+      addToPairs: addToPairs,
+      password: password,
+      keyPairType: keyPairType,
+    );
   }
 
   /// Create a new [KeyPair] from a Uint8List seed and optionally add it to the keyring.
@@ -100,8 +106,11 @@ class Keyring {
   /// final seed = your Uint8List seed;
   /// final keyPair = await keyring.fromSeed(seed);
   /// ```
-  KeyPair fromSeed(Uint8List seed,
-      {bool addToPairs = false, KeyPairType? keyPairType}) {
+  KeyPair fromSeed(
+    Uint8List seed, {
+    bool addToPairs = false,
+    KeyPairType? keyPairType,
+  }) {
     late KeyPair pair;
 
     switch (keyPairType ?? this.keyPairType) {
@@ -202,8 +211,10 @@ class Keyring {
   /// final address = keyring.encodeAddress(publicKey);
   /// ```
   String encodeAddress(List<int> key, [int ss58Format = 42]) {
-    return Address(prefix: ss58Format, pubkey: Uint8List.fromList(key))
-        .encode();
+    return Address(
+      prefix: ss58Format,
+      pubkey: Uint8List.fromList(key),
+    ).encode();
   }
 
   ///
@@ -220,7 +231,8 @@ class Keyring {
   /// ```
   Uint8List decodeAddress(String address) {
     return Uint8List.fromList(
-        Address.decode(address).pubkey.toList(growable: false));
+      Address.decode(address).pubkey.toList(growable: false),
+    );
   }
 
   /// Get all public keys in the keyring.

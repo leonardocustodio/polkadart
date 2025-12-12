@@ -6,12 +6,16 @@ class ArrayDescriptor extends TypeDescriptor {
   final int length;
 
   ArrayDescriptor({required int id, required TypeDescriptor codec, required this.length})
-      : typeDef = codec,
-        _id = id;
+    : typeDef = codec,
+      _id = id;
   ArrayDescriptor._lazy(this._id, this.length);
 
-  factory ArrayDescriptor.lazy(
-      {required int id, required LazyLoader loader, required int codec, required int length}) {
+  factory ArrayDescriptor.lazy({
+    required int id,
+    required LazyLoader loader,
+    required int codec,
+    required int length,
+  }) {
     final generator = ArrayDescriptor._lazy(id, length);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.typeDef = register[codec]!;
@@ -91,17 +95,19 @@ class ArrayDescriptor extends TypeDescriptor {
       }
     }
 
-    return codec.constInstance([
-      typeDef.codecInstance(from),
-      literalNum(length),
-    ]);
+    return codec.constInstance([typeDef.codecInstance(from), literalNum(length)]);
   }
 
   LiteralValue listToExpression(List<int> values, bool constant) {
     final TypeReference listType = refs.list(ref: refs.int);
     if (!constant && values.every((value) => value == 0)) {
-      return listType.newInstanceNamed('filled', [literalNum(values.length), literalNum(0)],
-          {'growable': literalFalse}).asLiteralValue();
+      return listType
+          .newInstanceNamed(
+            'filled',
+            [literalNum(values.length), literalNum(0)],
+            {'growable': literalFalse},
+          )
+          .asLiteralValue();
     } else if (constant) {
       return literalConstList(values, refs.int).asLiteralValue(isConstant: true);
     }
@@ -111,8 +117,13 @@ class ArrayDescriptor extends TypeDescriptor {
   LiteralValue listToExpressionBigInt(List<BigInt> values, bool constant) {
     final TypeReference listType = refs.list(ref: refs.bigInt);
     if (!constant && values.every((value) => value == BigInt.zero)) {
-      return listType.newInstanceNamed('filled', [literalNum(values.length), refer('BigInt.zero')],
-          {'growable': literalFalse}).asLiteralValue();
+      return listType
+          .newInstanceNamed(
+            'filled',
+            [literalNum(values.length), refer('BigInt.zero')],
+            {'growable': literalFalse},
+          )
+          .asLiteralValue();
     }
 
     final bigIntExpressions = values.map((value) {
@@ -157,7 +168,7 @@ class ArrayDescriptor extends TypeDescriptor {
     }
 
     final values = <LiteralValue>[
-      for (int i = 0; i < length; i++) typeDef.valueFrom(from, input, constant: constant)
+      for (int i = 0; i < length; i++) typeDef.valueFrom(from, input, constant: constant),
     ];
 
     if (constant && values.every((value) => value.isConstant)) {
@@ -220,10 +231,12 @@ class ArrayDescriptor extends TypeDescriptor {
     return obj
         .property('map')
         .call([
-          Method.returnsVoid((b) => b
-            ..requiredParameters.add(Parameter((b) => b..name = 'value'))
-            ..lambda = true
-            ..body = typeDef.instanceToJson(from, refer('value')).code).closure
+          Method.returnsVoid(
+            (b) => b
+              ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+              ..lambda = true
+              ..body = typeDef.instanceToJson(from, refer('value')).code,
+          ).closure,
         ])
         .property('toList')
         .call([]);
