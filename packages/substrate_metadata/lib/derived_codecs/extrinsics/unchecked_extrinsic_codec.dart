@@ -35,11 +35,7 @@ class UncheckedExtrinsicCodec with Codec<UncheckedExtrinsic> {
 
     final call = _callCodec.decode(input);
 
-    return UncheckedExtrinsic(
-      version: version,
-      signature: signature,
-      call: call,
-    );
+    return UncheckedExtrinsic(version: version, signature: signature, call: call);
   }
 
   @override

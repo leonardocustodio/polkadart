@@ -12,10 +12,14 @@ void main() {
 
     setUp(() {
       pairs = Pairs();
-      seedOne =
-          Uint8List.fromList('12345678901234567890123456789012'.codeUnits);
-      seedTwo = Uint8List.fromList(hex.decode(
-          '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
+      seedOne = Uint8List.fromList(
+        '12345678901234567890123456789012'.codeUnits,
+      );
+      seedTwo = Uint8List.fromList(
+        hex.decode(
+          '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60',
+        ),
+      );
 
       keyPair1 = KeyPair.ed25519.fromSeed(seedOne);
       keyPair2 = KeyPair.ed25519.fromSeed(seedTwo);
@@ -38,8 +42,10 @@ void main() {
       expect(pairs.getByAddress(address2), equals(keyPair2));
 
       // Check that an exception is thrown when retrieving a non-existing key pair
-      expect(() => pairs.getByAddress('non_existent_address'),
-          throwsArgumentError);
+      expect(
+        () => pairs.getByAddress('non_existent_address'),
+        throwsArgumentError,
+      );
     });
 
     test('Retrieving KeyPairs by PublicKey', () {
@@ -95,14 +101,20 @@ void main() {
       expect(pairs.publicKeys.length, 2);
 
       expect(
-          const ListEquality().equals(
-              pairs.publicKeys[0], keyPair1.bytes().toList(growable: false)),
-          true);
+        const ListEquality().equals(
+          pairs.publicKeys[0],
+          keyPair1.bytes().toList(growable: false),
+        ),
+        true,
+      );
 
       expect(
-          const ListEquality().equals(
-              pairs.publicKeys[1], keyPair2.bytes().toList(growable: false)),
-          true);
+        const ListEquality().equals(
+          pairs.publicKeys[1],
+          keyPair2.bytes().toList(growable: false),
+        ),
+        true,
+      );
       // Check that addresses are retrieved correctly
       expect(pairs.addresses, contains(keyPair1.address));
       expect(pairs.addresses, contains(keyPair2.address));

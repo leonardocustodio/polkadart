@@ -34,7 +34,7 @@ enum PrimitivesEnum {
       'U64' => U64Codec.codec,
       'U128' => U128Codec.codec,
       'U256' => U256Codec.codec,
-      _ => throw Exception('Not a primitive: $name')
+      _ => throw Exception('Not a primitive: $name'),
     };
   }
 }

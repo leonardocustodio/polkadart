@@ -11,19 +11,15 @@ class UncheckedExtrinsic {
   /// The actual call being made
   final RuntimeCall call;
 
-  const UncheckedExtrinsic({
-    required this.version,
-    this.signature,
-    required this.call,
-  });
+  const UncheckedExtrinsic({required this.version, this.signature, required this.call});
 
   /// Whether this is a signed extrinsic
   bool get isSigned => signature != null;
 
   Map<String, dynamic> toJson() => {
-        'version': version,
-        'isSigned': isSigned,
-        'signature': signature?.toJson(),
-        'call': call.toJson(),
-      };
+    'version': version,
+    'isSigned': isSigned,
+    'signature': signature?.toJson(),
+    'call': call.toJson(),
+  };
 }

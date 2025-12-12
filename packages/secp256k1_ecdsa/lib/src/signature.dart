@@ -19,9 +19,10 @@ class Signature {
     }
     bytes = Utilities.matchLength(bytes, 64); // compact repr is (32b r)||(32b s)
     return Signature(
-        recovery: recovery,
-        r: Utilities.sliceBytes(bytes, 0, fLen),
-        s: Utilities.sliceBytes(bytes, fLen, 2 * fLen));
+      recovery: recovery,
+      r: Utilities.sliceBytes(bytes, 0, fLen),
+      s: Utilities.sliceBytes(bytes, fLen, 2 * fLen),
+    );
   }
 
   static Signature fromCompactHex(String hex) {

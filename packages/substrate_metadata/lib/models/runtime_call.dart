@@ -30,10 +30,10 @@ class RuntimeCall {
   }
 
   Map<String, dynamic> toJson() => {
-        'pallet': palletName,
-        'palletIndex': palletIndex,
-        'call': callName,
-        'callIndex': callIndex,
-        'args': args.toJson(),
-      };
+    'pallet': palletName,
+    'palletIndex': palletIndex,
+    'call': callName,
+    'callIndex': callIndex,
+    'args': args.toJson(),
+  };
 }

@@ -114,10 +114,7 @@ class InkMetadataRegistry {
       return <TypeParameter>[];
     }
     return params.map((final p) {
-      return TypeParameter(
-        name: p['name'] as String,
-        type: p['type'] as int?,
-      );
+      return TypeParameter(name: p['name'] as String, type: p['type'] as int?);
     }).toList();
   }
 
@@ -133,18 +130,13 @@ class InkMetadataRegistry {
       'composite' => _convertCompositeTypeDef(value as Map<String, dynamic>),
       'variant' => _convertVariantTypeDef(value as Map<String, dynamic>),
       'sequence' => TypeDefSequence(type: value['type'] as int),
-      'array' => TypeDefArray(
-          type: value['type'] as int,
-          length: value['len'] as int,
-        ),
-      'tuple' => TypeDefTuple(
-          fields: (value as List?)?.cast<int>() ?? [],
-        ),
+      'array' => TypeDefArray(type: value['type'] as int, length: value['len'] as int),
+      'tuple' => TypeDefTuple(fields: (value as List?)?.cast<int>() ?? []),
       'compact' => TypeDefCompact(type: value['type'] as int),
       'bitsequence' => TypeDefBitSequence(
-          bitStoreType: value['bit_store_type'] as int,
-          bitOrderType: value['bit_order_type'] as int,
-        ),
+        bitStoreType: value['bit_store_type'] as int,
+        bitOrderType: value['bit_order_type'] as int,
+      ),
       _ => throw InkAbiException('Unknown type def: $key'),
     };
   }
@@ -518,7 +510,8 @@ class InkMetadataRegistry {
   CacheStats get cacheStats => _typeRegistry.cacheStats;
 
   @override
-  String toString() => 'InkMetadataRegistry(version: $version, '
+  String toString() =>
+      'InkMetadataRegistry(version: $version, '
       'messages: ${_messages.length}, '
       'constructors: ${_constructors.length}, '
       'events: ${_events.length}'

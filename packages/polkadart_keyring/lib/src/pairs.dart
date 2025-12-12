@@ -26,7 +26,8 @@ class Pairs {
   /// Throws an exception if the key pair associated with the provided [address] is not found.
   KeyPair getByAddress(String address) {
     return getByPublicKey(
-        Address.decode(address).pubkey.toList(growable: false));
+      Address.decode(address).pubkey.toList(growable: false),
+    );
   }
 
   /// Get a [KeyPair] from the collection by its public key.

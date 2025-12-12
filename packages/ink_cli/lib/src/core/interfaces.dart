@@ -159,10 +159,12 @@ class Interfaces {
           if (type.fields.isEmpty) {
             out.line('const $name();');
           } else {
-            final params = type.fields.map((f) {
-              final fieldName = f.name ?? 'field${type.fields.indexOf(f)}';
-              return 'required this.$fieldName';
-            }).join(', ');
+            final params = type.fields
+                .map((f) {
+                  final fieldName = f.name ?? 'field${type.fields.indexOf(f)}';
+                  return 'required this.$fieldName';
+                })
+                .join(', ');
             out.line('const $name({$params});');
           }
         },
@@ -248,15 +250,13 @@ class Interfaces {
       Primitive.I16 ||
       Primitive.U16 ||
       Primitive.I32 ||
-      Primitive.U32 =>
-        'int',
+      Primitive.U32 => 'int',
       Primitive.I64 ||
       Primitive.U64 ||
       Primitive.I128 ||
       Primitive.U128 ||
       Primitive.I256 ||
-      Primitive.U256 =>
-        'BigInt',
+      Primitive.U256 => 'BigInt',
       Primitive.Bool => 'bool',
       Primitive.Str => 'String',
       _ => throw Exception('Unexpected primitive: ${primitive.name}'),

@@ -34,9 +34,9 @@ class Phase {
   const Phase.initialization() : this._(PhaseType.initialization);
 
   Map<String, dynamic> toJson() => {
-        'type': type.name,
-        if (extrinsicIndex != null) 'extrinsicIndex': extrinsicIndex,
-      };
+    'type': type.name,
+    if (extrinsicIndex != null) 'extrinsicIndex': extrinsicIndex,
+  };
 
   @override
   String toString() {

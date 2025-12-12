@@ -12,8 +12,9 @@ class HexOutput with Output {
 
   @override
   void write(List<int> bytes) {
-    _buffer
-        .writeAll(bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')));
+    _buffer.writeAll(
+      bytes.map((byte) => byte.toRadixString(16).padLeft(2, '0')),
+    );
   }
 
   ///

@@ -83,7 +83,8 @@ class I64ArrayCodec with Codec<List<BigInt>> {
   void encodeTo(List<BigInt> value, Output output) {
     if (value.length != length) {
       throw Exception(
-          'I64ArrayCodec: invalid length, expect $length found ${value.length}');
+        'I64ArrayCodec: invalid length, expect $length found ${value.length}',
+      );
     }
     for (final val in value) {
       I64Codec.codec.encodeTo(val, output);

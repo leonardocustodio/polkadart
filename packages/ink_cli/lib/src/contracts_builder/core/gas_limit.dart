@@ -26,9 +26,6 @@ class GasLimit {
   }
 
   Map<String, BigInt> toMap() {
-    return <String, BigInt>{
-      'ref_time': refTime,
-      'proof_size': proofSize,
-    };
+    return <String, BigInt>{'ref_time': refTime, 'proof_size': proofSize};
   }
 }

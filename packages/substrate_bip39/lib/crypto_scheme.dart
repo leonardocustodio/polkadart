@@ -34,7 +34,8 @@ abstract class CryptoScheme {
     final entropy = wordsToEntropy[words];
     if (entropy == null) {
       throw SubstrateBip39Exception.invalidEntropy(
-          'Invalid number of words given for phrase, must be 12/15/18/21/24');
+        'Invalid number of words given for phrase, must be 12/15/18/21/24',
+      );
     }
     return Mnemonic.generate(Language.english, length: entropy);
   }
@@ -61,16 +62,14 @@ abstract class CryptoScheme {
   static Future<List<int>> seedFromEntropy(List<int> entropy, {String? password}) async {
     if (entropy.length < 16 || entropy.length > 32 || entropy.length % 4 != 0) {
       throw SubstrateBip39Exception.invalidEntropy(
-          'InvalidEntropy: byte length must be between 16 and 32 and multiple of 4');
+        'InvalidEntropy: byte length must be between 16 and 32 and multiple of 4',
+      );
     }
 
     final salt = 'mnemonic${password ?? ''}';
     final pbkdf2 = Pbkdf2(macAlgorithm: Hmac.sha512(), iterations: 2048, bits: 512);
 
-    final secret = await pbkdf2.deriveKey(
-      secretKey: SecretKey(entropy),
-      nonce: utf8.encode(salt),
-    );
+    final secret = await pbkdf2.deriveKey(secretKey: SecretKey(entropy), nonce: utf8.encode(salt));
 
     return secret.extractBytes();
   }

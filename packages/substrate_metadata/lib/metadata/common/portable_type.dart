@@ -8,10 +8,7 @@ class PortableType {
   /// The actual type definition
   final PortableTypeDef type;
 
-  const PortableType({
-    required this.id,
-    required this.type,
-  });
+  const PortableType({required this.id, required this.type});
 
   /// Codec instance for PortableType
   static const $PortableType codec = $PortableType._();

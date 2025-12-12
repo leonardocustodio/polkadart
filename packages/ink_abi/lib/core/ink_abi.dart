@@ -41,7 +41,8 @@ class InkAbi {
     _project = SchemaValidator.getInkProject(inkAbiJson);
 
     // Determine version from the input or project
-    _version = _project['version'] ??
+    _version =
+        _project['version'] ??
         (inkAbiJson.containsKey('V3') ? 3 : (inkAbiJson.containsKey('V4') ? 4 : null));
 
     _registry = InkMetadataRegistry(_project, _getVersion(_version));
@@ -279,8 +280,10 @@ class InkAbi {
         try {
           return codec.decode(input);
         } catch (e) {
-          throw DecodingException('Failed to decode event "${event.label}": $e',
-              signatureTopic: topic);
+          throw DecodingException(
+            'Failed to decode event "${event.label}": $e',
+            signatureTopic: topic,
+          );
         }
       }
     }
@@ -288,7 +291,8 @@ class InkAbi {
     // Fallback: find by topic count
     final matchingEvents = _registry.events
         .where(
-            (final event) => event.signatureTopic == null && event.amountIndexed == topics.length)
+          (final event) => event.signatureTopic == null && event.amountIndexed == topics.length,
+        )
         .toList(growable: false);
 
     if (matchingEvents.length == 1) {

@@ -11,17 +11,13 @@ class EventRecord {
   /// Topics for indexed event filtering
   final List<String> topics;
 
-  const EventRecord({
-    required this.phase,
-    required this.event,
-    required this.topics,
-  });
+  const EventRecord({required this.phase, required this.event, required this.topics});
 
   Map<String, dynamic> toJson() => {
-        'phase': phase.toJson(),
-        'event': event.toJson(),
-        'topics': topics,
-      };
+    'phase': phase.toJson(),
+    'event': event.toJson(),
+    'topics': topics,
+  };
 
   @override
   String toString() => 'EventRecord(phase: $phase, event: $event, topics: $topics)';

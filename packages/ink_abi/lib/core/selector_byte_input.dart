@@ -64,10 +64,7 @@ class SelectorByteInput extends ByteInput {
       if (e is DecodingException) {
         rethrow;
       }
-      throw DecodingException(
-        'Failed to parse hex data: $e',
-        context: {'hex': hex},
-      );
+      throw DecodingException('Failed to parse hex data: $e', context: {'hex': hex});
     }
   }
 

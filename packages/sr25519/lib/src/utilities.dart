@@ -6,8 +6,11 @@ final publicKeyAtInfinity = r255.Element.newElement()..scalarBaseMult(r255.Scala
 
 /// NewRandomScalar returns a random ristretto scalar
 r255.Scalar newRandomScalar([Random? random]) {
-  final List<int> s =
-      List<int>.generate(64, (_) => (random ?? Random.secure()).nextInt(256), growable: false);
+  final List<int> s = List<int>.generate(
+    64,
+    (_) => (random ?? Random.secure()).nextInt(256),
+    growable: false,
+  );
 
   final ss = r255.Scalar();
   ss.fromUniformBytes(s);

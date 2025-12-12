@@ -32,8 +32,11 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
     // Create Sequences Generator
     if (type.typeDef is metadata.TypeDefSequence) {
       final sequence = type.typeDef as metadata.TypeDefSequence;
-      generators[typeID] =
-          SequenceDescriptor.lazy(id: typeID, loader: lazyLoader, codec: sequence.type);
+      generators[typeID] = SequenceDescriptor.lazy(
+        id: typeID,
+        loader: lazyLoader,
+        codec: sequence.type,
+      );
       continue;
     }
 
@@ -41,7 +44,11 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
     if (type.typeDef is metadata.TypeDefArray) {
       final array = type.typeDef as metadata.TypeDefArray;
       generators[typeID] = ArrayDescriptor.lazy(
-          id: typeID, loader: lazyLoader, codec: array.type, length: array.length);
+        id: typeID,
+        loader: lazyLoader,
+        codec: array.type,
+        length: array.length,
+      );
       continue;
     }
 
@@ -58,10 +65,11 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
       // Create TypeDef Generator
       if (tuple.fields.isEmpty) {
         generators[typeID] = TypeDefBuilder(
-            filePath: listToFilePath([typesPath, ...type.path]),
-            name: sanitizeClassName(type.path.last),
-            generator: EmptyDescriptor(typeID),
-            docs: type.docs);
+          filePath: listToFilePath([typesPath, ...type.path]),
+          name: sanitizeClassName(type.path.last),
+          generator: EmptyDescriptor(typeID),
+          docs: type.docs,
+        );
         continue;
       }
 
@@ -85,7 +93,10 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
       if (storeType.typeDef is metadata.TypeDefPrimitive) {
         final primitiveTypeDef = storeType.typeDef as metadata.TypeDefPrimitive;
         generators[typeID] = BitSequenceDescriptor.fromPrimitive(
-            id: typeID, primitive: primitiveTypeDef.primitive, order: bitOrder);
+          id: typeID,
+          primitive: primitiveTypeDef.primitive,
+          order: bitOrder,
+        );
         continue;
       }
       generators[typeID] = BitSequenceDescriptor(id: typeID, store: BitStore.U8, order: bitOrder);
@@ -105,10 +116,11 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
       // Create TypeDef Generator
       if (composite.fields.isEmpty) {
         generators[typeID] = TypeDefBuilder(
-            filePath: listToFilePath([typesPath, ...type.path]),
-            name: sanitizeClassName(type.path.last),
-            generator: EmptyDescriptor(typeID),
-            docs: type.docs);
+          filePath: listToFilePath([typesPath, ...type.path]),
+          name: sanitizeClassName(type.path.last),
+          generator: EmptyDescriptor(typeID),
+          docs: type.docs,
+        );
         continue;
       }
 
@@ -125,10 +137,11 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
             final tupleTypeDef = tupleType.typeDef as metadata.TypeDefTuple;
             if (tupleTypeDef.fields.length == 2) {
               generators[typeID] = BTreeMapDescriptor.lazy(
-                  id: typeID,
-                  loader: lazyLoader,
-                  key: tupleTypeDef.fields[0],
-                  value: tupleTypeDef.fields[1]);
+                id: typeID,
+                loader: lazyLoader,
+                key: tupleTypeDef.fields[0],
+                value: tupleTypeDef.fields[1],
+              );
               continue;
             }
           }
@@ -145,7 +158,10 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
           if (sequenceType.typeDef is metadata.TypeDefSequence) {
             final sequenceTypeDef = sequenceType.typeDef as metadata.TypeDefSequence;
             generators[typeID] = SequenceDescriptor.lazy(
-                id: typeID, loader: lazyLoader, codec: sequenceTypeDef.type);
+              id: typeID,
+              loader: lazyLoader,
+              codec: sequenceTypeDef.type,
+            );
             continue;
           }
         }
@@ -167,10 +183,11 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
                   final tupleTypeDef = tupleType.typeDef as metadata.TypeDefTuple;
                   if (tupleTypeDef.fields.length == 2) {
                     generators[typeID] = BTreeMapDescriptor.lazy(
-                        id: typeID,
-                        loader: lazyLoader,
-                        key: tupleTypeDef.fields[0],
-                        value: tupleTypeDef.fields[1]);
+                      id: typeID,
+                      loader: lazyLoader,
+                      key: tupleTypeDef.fields[0],
+                      value: tupleTypeDef.fields[1],
+                    );
                     continue;
                   }
                 }
@@ -229,18 +246,22 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
 
       // Create Compose Generator
       generators[typeID] = CompositeBuilder(
-          id: typeID,
-          filePath: listToFilePath([typesPath, ...type.path]),
-          name: sanitizeClassName(type.path.last),
-          docs: type.docs,
-          fields: composite.fields
-              .map((field) => Field.lazy(
-                  loader: lazyLoader,
-                  codec: field.type,
-                  docs: field.docs,
-                  name: field.name,
-                  rustTypeName: field.typeName))
-              .toList());
+        id: typeID,
+        filePath: listToFilePath([typesPath, ...type.path]),
+        name: sanitizeClassName(type.path.last),
+        docs: type.docs,
+        fields: composite.fields
+            .map(
+              (field) => Field.lazy(
+                loader: lazyLoader,
+                codec: field.type,
+                docs: field.docs,
+                name: field.name,
+                rustTypeName: field.typeName,
+              ),
+            )
+            .toList(),
+      );
       continue;
     }
 
@@ -257,10 +278,11 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
       // Create TypeDef Generator
       if (variant.variants.isEmpty) {
         generators[typeID] = TypeDefBuilder(
-            filePath: listToFilePath([typesPath, ...type.path]),
-            name: sanitizeClassName(type.path.last),
-            generator: EmptyDescriptor(typeID),
-            docs: type.docs);
+          filePath: listToFilePath([typesPath, ...type.path]),
+          name: sanitizeClassName(type.path.last),
+          generator: EmptyDescriptor(typeID),
+          docs: type.docs,
+        );
         continue;
       }
 
@@ -273,7 +295,10 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
           variant.variants[1].fields.length == 1 &&
           variant.variants[1].name == 'Some') {
         generators[typeID] = OptionDescriptor.lazy(
-            id: typeID, loader: lazyLoader, codec: variant.variants[1].fields[0].type);
+          id: typeID,
+          loader: lazyLoader,
+          codec: variant.variants[1].fields[0].type,
+        );
         continue;
       }
 
@@ -297,32 +322,39 @@ Map<int, TypeDescriptor> parseTypes(List<metadata.PortableType> registry, String
       // Create Variant Generator
       final enumName = sanitizeClassName(type.path.last, prefix: 'Enum', suffix: 'Enum');
       generators[typeID] = VariantBuilder(
-          id: typeID,
-          filePath: listToFilePath([typesPath, ...type.path]),
-          name: enumName,
-          originalName: type.path.last,
-          docs: type.docs,
-          variants: variant.variants.map((variant) {
-            String variantName =
-                sanitizeClassName(variant.name, prefix: 'Variant', suffix: 'Variant');
-            if (variantName == enumName) {
-              variantName = '${variantName}Variant';
-            }
-            return Variant(
-                name: variantName,
-                originalName: variant.name,
-                index: variant.index,
-                docs: variant.docs,
-                fields: variant.fields
-                    .map((field) => Field.lazy(
-                          loader: lazyLoader,
-                          codec: field.type,
-                          name: field.name,
-                          docs: field.docs,
-                          rustTypeName: field.typeName,
-                        ))
-                    .toList());
-          }).toList());
+        id: typeID,
+        filePath: listToFilePath([typesPath, ...type.path]),
+        name: enumName,
+        originalName: type.path.last,
+        docs: type.docs,
+        variants: variant.variants.map((variant) {
+          String variantName = sanitizeClassName(
+            variant.name,
+            prefix: 'Variant',
+            suffix: 'Variant',
+          );
+          if (variantName == enumName) {
+            variantName = '${variantName}Variant';
+          }
+          return Variant(
+            name: variantName,
+            originalName: variant.name,
+            index: variant.index,
+            docs: variant.docs,
+            fields: variant.fields
+                .map(
+                  (field) => Field.lazy(
+                    loader: lazyLoader,
+                    codec: field.type,
+                    name: field.name,
+                    docs: field.docs,
+                    rustTypeName: field.typeName,
+                  ),
+                )
+                .toList(),
+          );
+        }).toList(),
+      );
       continue;
     }
 

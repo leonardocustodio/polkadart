@@ -83,7 +83,8 @@ class U64ArrayCodec with Codec<List<BigInt>> {
   void encodeTo(List<BigInt> value, Output output) {
     if (value.length != length) {
       throw Exception(
-          'U64ArrayCodec: invalid length, expect $length found ${value.length}');
+        'U64ArrayCodec: invalid length, expect $length found ${value.length}',
+      );
     }
     for (final val in value) {
       U64Codec.codec.encodeTo(val, output);

@@ -81,7 +81,8 @@ class U16ArrayCodec with Codec<List<int>> {
   void encodeTo(List<int> value, Output output) {
     if (value.length != length) {
       throw Exception(
-          'U16ArrayCodec: invalid length, expect $length found ${value.length}');
+        'U16ArrayCodec: invalid length, expect $length found ${value.length}',
+      );
     }
     for (final val in value) {
       U16Codec.codec.encodeTo(val, output);

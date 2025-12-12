@@ -136,8 +136,9 @@ class ContractsApiResponseCodec {
       'gasRequired': _weightV2Codec(),
       'StorageDeposit': _storageDepositCodec(),
       'debugMessage': SequenceCodec(U8Codec.codec),
-      'result':
-          isInstantiate ? _instantiateReturnValueResultCodec() : _execReturnValueResultCodec(),
+      'result': isInstantiate
+          ? _instantiateReturnValueResultCodec()
+          : _execReturnValueResultCodec(),
     });
   }
 
@@ -173,34 +174,22 @@ class ContractsApiResponseCodec {
 
   /// `Result<InstantiateReturnValueOk, DispatchError>` codec
   Codec _instantiateReturnValueResultCodec() {
-    return ResultCodec(
-      _instantiateReturnValueOkCodec(),
-      _dispatchErrorCodec(),
-    );
+    return ResultCodec(_instantiateReturnValueOkCodec(), _dispatchErrorCodec());
   }
 
   /// `Result<ExecReturnValue, DispatchError>` codec
   Codec _execReturnValueResultCodec() {
-    return ResultCodec(
-      _execReturnValueCodec(),
-      _dispatchErrorCodec(),
-    );
+    return ResultCodec(_execReturnValueCodec(), _dispatchErrorCodec());
   }
 
   /// InstantiateReturnValueOk codec
   Codec _instantiateReturnValueOkCodec() {
-    return CompositeCodec({
-      'result': _execReturnValueCodec(),
-      'accountId': _accountIdCodec(),
-    });
+    return CompositeCodec({'result': _execReturnValueCodec(), 'accountId': _accountIdCodec()});
   }
 
   /// ExecReturnValue codec
   Codec _execReturnValueCodec() {
-    return CompositeCodec({
-      'flags': U32Codec.codec,
-      'data': SequenceCodec(U8Codec.codec),
-    });
+    return CompositeCodec({'flags': U32Codec.codec, 'data': SequenceCodec(U8Codec.codec)});
   }
 
   /// AccountId codec for ContractsApi responses

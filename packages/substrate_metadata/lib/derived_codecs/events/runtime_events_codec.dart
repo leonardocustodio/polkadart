@@ -57,7 +57,8 @@ class RuntimeEventCodec with Codec<RuntimeEvent> {
     final eventVariant = registry.getVariantByIndex(eventTypeId, value.eventIndex);
     if (eventVariant == null) {
       throw MetadataException(
-          'Event with index ${value.eventIndex} not found in pallet ${pallet.name}');
+        'Event with index ${value.eventIndex} not found in pallet ${pallet.name}',
+      );
     }
 
     output.pushByte(value.eventIndex);
@@ -85,7 +86,10 @@ class RuntimeEventCodec with Codec<RuntimeEvent> {
   }
 
   PalletMetadata _findPalletV15FromRuntimeEvent(
-      RuntimeEvent event, Output output, int outerEventType) {
+    RuntimeEvent event,
+    Output output,
+    int outerEventType,
+  ) {
     final outerVariant = registry.getVariant(outerEventType, event.palletName);
     if (outerVariant == null) {
       throw MetadataException('Pallet ${event.palletName} not found in outer event enum');
@@ -163,11 +167,7 @@ class RuntimeEventCodec with Codec<RuntimeEvent> {
   }
 
   /// Encode event data based on variant fields
-  void _encodeEventData(
-    Output output,
-    VariantDef variant,
-    Map<String, dynamic> data,
-  ) {
+  void _encodeEventData(Output output, VariantDef variant, Map<String, dynamic> data) {
     for (int i = 0; i < variant.fields.length; i++) {
       final field = variant.fields[i];
       final fieldName = field.name ?? 'field$i';

@@ -53,11 +53,7 @@ class EncodingException extends InkAbiException {
   }
 
   /// Create exception for invalid argument count
-  factory EncodingException.argumentCountMismatch(
-    int expected,
-    int actual,
-    String selector,
-  ) {
+  factory EncodingException.argumentCountMismatch(int expected, int actual, String selector) {
     return EncodingException(
       'Expected $expected arguments but got $actual',
       selector: selector,

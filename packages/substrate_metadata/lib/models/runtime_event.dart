@@ -29,12 +29,12 @@ class RuntimeEvent {
   String get identifier => '$palletName.$eventName';
 
   Map<String, dynamic> toJson() => {
-        'pallet': palletName,
-        'palletIndex': palletIndex,
-        'event': eventName,
-        'eventIndex': eventIndex,
-        'data': data.toJson(),
-      };
+    'pallet': palletName,
+    'palletIndex': palletIndex,
+    'event': eventName,
+    'eventIndex': eventIndex,
+    'data': data.toJson(),
+  };
 
   @override
   String toString() =>

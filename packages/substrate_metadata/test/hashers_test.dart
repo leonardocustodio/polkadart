@@ -54,8 +54,9 @@ void main() {
     // Expected xxHash64 (from PJS): a8107b48dc0a9baa
     test('TwoxxHasher with 32-byte AccountId', () {
       // This is the AccountId bytes that need to be hashed
-      final accountId =
-          decodeHex('c1763ec7974010d7d4d3810f266921bcc759d5f65e5cedd67e926ddcf2230e6b');
+      final accountId = decodeHex(
+        'c1763ec7974010d7d4d3810f266921bcc759d5f65e5cedd67e926ddcf2230e6b',
+      );
 
       // Expected xxHash64 output (from Polkadot.js)
       final expectedHash = decodeHex('a8107b48dc0a9baa');
@@ -63,8 +64,11 @@ void main() {
       final hasher = TwoxxHasher(1); // Twox64 = 1 block of 64 bits
       final hash = hasher.hash(accountId);
 
-      expect(encodeHex(hash), encodeHex(expectedHash),
-          reason: 'Twox64 hash of 32-byte AccountId should match PJS');
+      expect(
+        encodeHex(hash),
+        encodeHex(expectedHash),
+        reason: 'Twox64 hash of 32-byte AccountId should match PJS',
+      );
     });
   });
 }

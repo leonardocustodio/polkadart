@@ -13,18 +13,15 @@ class PalletStorageMetadata {
   /// List of all storage entries in this pallet
   final List<StorageEntryMetadata> entries;
 
-  const PalletStorageMetadata({
-    required this.prefix,
-    required this.entries,
-  });
+  const PalletStorageMetadata({required this.prefix, required this.entries});
 
   /// Codec instance for PalletStorageMetadata
   static const $PalletStorageMetadata codec = $PalletStorageMetadata._();
 
   Map<String, dynamic> toJson() => {
-        'prefix': prefix,
-        'entries': entries.map((entry) => entry.toJson()).toList(),
-      };
+    'prefix': prefix,
+    'entries': entries.map((entry) => entry.toJson()).toList(),
+  };
 }
 
 /// Codec for PalletStorageMetadata
@@ -39,10 +36,7 @@ class $PalletStorageMetadata with Codec<PalletStorageMetadata> {
     // Decode all storage entries
     final entries = SequenceCodec(StorageEntryMetadata.codec).decode(input);
 
-    return PalletStorageMetadata(
-      prefix: prefix,
-      entries: entries,
-    );
+    return PalletStorageMetadata(prefix: prefix, entries: entries);
   }
 
   @override

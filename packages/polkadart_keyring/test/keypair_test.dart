@@ -12,8 +12,11 @@ void main() {
 
     setUp(() async {
       message = Uint8List.fromList('this is a message'.codeUnits);
-      seed = Uint8List.fromList(hex.decode(
-          '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
+      seed = Uint8List.fromList(
+        hex.decode(
+          '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60',
+        ),
+      );
       mnemonic =
           'moral movie very draw assault whisper awful rebuild speed purity repeat card';
 
@@ -55,14 +58,16 @@ void main() {
         247,
         7,
         81,
-        26
+        26,
       ];
       expect(bytes, expectedBytes);
     });
 
     test('fromMnemonic', () {
-      expect(keyPairMnemonic.address,
-          '5GvjEiJk5fFGurvyx4vgjWAKef9yXP31ThQDdeEEhvsdsWx1');
+      expect(
+        keyPairMnemonic.address,
+        '5GvjEiJk5fFGurvyx4vgjWAKef9yXP31ThQDdeEEhvsdsWx1',
+      );
     });
 
     test('sign and verify', () {
@@ -131,7 +136,7 @@ void main() {
         149,
         40,
         74,
-        12
+        12,
       ];
       expect(signature, expectedSignature);
       final isVerified = keyPair.verify(message, signature);

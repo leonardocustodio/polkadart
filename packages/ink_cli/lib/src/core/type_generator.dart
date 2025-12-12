@@ -9,10 +9,7 @@ class TypeGenerator {
   late final Map<String, dynamic> _rawMetadata;
   late final List<CodecInterface> _types;
 
-  TypeGenerator({
-    required this.abiFilePath,
-    required this.fileOutput,
-  });
+  TypeGenerator({required this.abiFilePath, required this.fileOutput});
 
   /// 1) Read the file and parse JSON
   dynamic _readMetadata() {
@@ -34,10 +31,12 @@ class TypeGenerator {
         interfaces.add(codecInterface);
       } catch (e) {
         // If conversion fails, add a placeholder to maintain index alignment
-        interfaces.add(PrimitiveCodecInterface(
-          path: portableType.type.path,
-          primitive: Primitive.U8, // Default placeholder
-        ));
+        interfaces.add(
+          PrimitiveCodecInterface(
+            path: portableType.type.path,
+            primitive: Primitive.U8, // Default placeholder
+          ),
+        );
       }
     }
 
@@ -52,65 +51,53 @@ class TypeGenerator {
 
     return switch (typeDef) {
       TypeDefPrimitive() => PrimitiveCodecInterface(
-          path: pathList,
-          docs: docs,
-          primitive: _convertPrimitiveFromTypeDef(typeDef),
-        ),
+        path: pathList,
+        docs: docs,
+        primitive: _convertPrimitiveFromTypeDef(typeDef),
+      ),
       TypeDefComposite() => CompositeCodecInterface(
-          path: pathList,
-          docs: docs,
-          fields: getFields(typeDef.fields),
-        ),
+        path: pathList,
+        docs: docs,
+        fields: getFields(typeDef.fields),
+      ),
       TypeDefVariant() => VariantCodecInterface(
-          path: pathList,
-          docs: docs,
-          variants: typeDef.variants
-              .map((final variant) => Variants(
-                    name: variant.name,
-                    fields: getFields(variant.fields),
-                    index: variant.index,
-                    docs: variant.docs,
-                  ))
-              .toList(),
-        ),
-      TypeDefSequence() => SequenceCodecInterface(
-          path: pathList,
-          docs: docs,
-          type: typeDef.type,
-        ),
+        path: pathList,
+        docs: docs,
+        variants: typeDef.variants
+            .map(
+              (final variant) => Variants(
+                name: variant.name,
+                fields: getFields(variant.fields),
+                index: variant.index,
+                docs: variant.docs,
+              ),
+            )
+            .toList(),
+      ),
+      TypeDefSequence() => SequenceCodecInterface(path: pathList, docs: docs, type: typeDef.type),
       TypeDefArray() => ArrayCodecInterface(
-          path: pathList,
-          docs: docs,
-          len: typeDef.length,
-          type: typeDef.type,
-        ),
-      TypeDefTuple() => TupleCodecInterface(
-          path: pathList,
-          docs: docs,
-          tuple: typeDef.fields,
-        ),
-      TypeDefCompact() => CompactCodecInterface(
-          path: pathList,
-          docs: docs,
-          type: typeDef.type,
-        ),
+        path: pathList,
+        docs: docs,
+        len: typeDef.length,
+        type: typeDef.type,
+      ),
+      TypeDefTuple() => TupleCodecInterface(path: pathList, docs: docs, tuple: typeDef.fields),
+      TypeDefCompact() => CompactCodecInterface(path: pathList, docs: docs, type: typeDef.type),
       TypeDefBitSequence() => BitSequenceCodecInterface(
-          path: pathList,
-          docs: docs,
-          bitStoreType: typeDef.bitStoreType,
-          bitOrderType: typeDef.bitOrderType,
-        ),
+        path: pathList,
+        docs: docs,
+        bitStoreType: typeDef.bitStoreType,
+        bitOrderType: typeDef.bitOrderType,
+      ),
     };
   }
 
   List<Field> getFields(final List<substrate_metadata.Field> fields) {
     return fields
-        .map((final field) => Field(
-              name: field.name,
-              type: field.type,
-              typeName: field.typeName,
-              docs: field.docs,
-            ))
+        .map(
+          (final field) =>
+              Field(name: field.name, type: field.type, typeName: field.typeName, docs: field.docs),
+        )
         .toList();
   }
 
@@ -215,11 +202,7 @@ class TypeGenerator {
     );
 
     fileOutput.line();
-    fileOutput.block(
-      start: 'final InkAbi _abi = InkAbi(_metadataJson);',
-      cb: null,
-      end: null,
-    );
+    fileOutput.block(start: 'final InkAbi _abi = InkAbi(_metadataJson);', cb: null, end: null);
 
     // Generate decode functions that delegate to InkAbi
     fileOutput.line();
@@ -291,19 +274,17 @@ class TypeGenerator {
           }
 
           final methodName = constructor.label.replaceAll('::', '_');
-          args.addAll(
-            <String>[
-              'required final Uint8List code',
-              'required final KeyPair keyPair',
-              'required final ContractDeployer deployer',
-              'final Map<String, dynamic> extraOptions = const <String, dynamic>{}',
-              'final BigInt? storageDepositLimit',
-              'final Uint8List? salt',
-              'final GasLimit? gasLimit',
-              'final dynamic tip = 0',
-              'final int eraPeriod = 0',
-            ],
-          );
+          args.addAll(<String>[
+            'required final Uint8List code',
+            'required final KeyPair keyPair',
+            'required final ContractDeployer deployer',
+            'final Map<String, dynamic> extraOptions = const <String, dynamic>{}',
+            'final BigInt? storageDepositLimit',
+            'final Uint8List? salt',
+            'final GasLimit? gasLimit',
+            'final dynamic tip = 0',
+            'final int eraPeriod = 0',
+          ]);
 
           fileOutput.line();
           // Add docs
@@ -360,9 +341,11 @@ class TypeGenerator {
               'final int eraPeriod = 0',
             ];
           }
-          argsList.addAll(message.args
-              .map((ArgSpec arg) => 'required final ${ifs.use(arg.type.typeId)} ${arg.label}')
-              .toList());
+          argsList.addAll(
+            message.args
+                .map((ArgSpec arg) => 'required final ${ifs.use(arg.type.typeId)} ${arg.label}')
+                .toList(),
+          );
 
           String args = argsList.join(', ');
           if (args.isNotEmpty) {
@@ -416,8 +399,7 @@ class TypeGenerator {
           cb: () {
             fileOutput.line('final input = _abi.encodeMessageInput(selector, args);');
             fileOutput.line('final result = await _baseCall(input, args);');
-            fileOutput.line(
-              '''final value = await mutator.mutate(
+            fileOutput.line('''final value = await mutator.mutate(
                 keypair: keypair,
                 input: input,
                 result: result,
@@ -426,8 +408,7 @@ class TypeGenerator {
                 gasLimit: gasLimit,
                 tip: tip,
                 eraPeriod: eraPeriod,
-              );''',
-            );
+              );''');
             fileOutput.line('return value;');
           },
           end: '}',
@@ -455,8 +436,9 @@ class TypeGenerator {
           cb: () {
             fileOutput.line('final data = encodeCall(address, input, contractAddress);');
             fileOutput.line('final api = StateApi(provider);');
-            fileOutput
-                .line('final result = await api.call(\'ContractsApi_call\', data, at: blockHash);');
+            fileOutput.line(
+              'final result = await api.call(\'ContractsApi_call\', data, at: blockHash);',
+            );
             fileOutput.line('return result;');
           },
           end: '}',

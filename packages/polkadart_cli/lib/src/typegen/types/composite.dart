@@ -12,8 +12,8 @@ class CompositeBuilder extends TypeBuilder {
     required this.name,
     required this.fields,
     required this.docs,
-  })  : _id = id,
-        super(filePath) {
+  }) : _id = id,
+       super(filePath) {
     for (int i = 0; i < fields.length; i++) {
       if (fields[i].originalName == null) {
         fields[i].sanitizedName = 'value$i';
@@ -30,16 +30,20 @@ class CompositeBuilder extends TypeBuilder {
 
   @override
   TypeReference codec(BasePath from) {
-    return TypeReference((b) => b
-      ..symbol = name
-      ..url = p.relative(filePath, from: from));
+    return TypeReference(
+      (b) => b
+        ..symbol = name
+        ..url = p.relative(filePath, from: from),
+    );
   }
 
   @override
   TypeReference primitive(BasePath from) {
-    return TypeReference((b) => b
-      ..symbol = name
-      ..url = p.relative(filePath, from: from));
+    return TypeReference(
+      (b) => b
+        ..symbol = name
+        ..url = p.relative(filePath, from: from),
+    );
   }
 
   @override
@@ -49,12 +53,14 @@ class CompositeBuilder extends TypeBuilder {
     }
 
     final args = CallArguments.fromFields(
-        fields, (field) => field.codec.valueFrom(from, input, constant: constant));
+      fields,
+      (field) => field.codec.valueFrom(from, input, constant: constant),
+    );
 
     if (constant && args.every((value) => value.isConstant)) {
-      return primitive(from)
-          .constInstance(args.positional, args.named)
-          .asLiteralValue(isConstant: true);
+      return primitive(
+        from,
+      ).constInstance(args.positional, args.named).asLiteralValue(isConstant: true);
     }
 
     return primitive(from).newInstance(args.positional, args.named).asLiteralValue();
@@ -101,12 +107,15 @@ class CompositeBuilder extends TypeBuilder {
     }
     if (fields.every((field) => field.originalName == null)) {
       return literalList(
-          fields.map((field) => field.codec.instanceToJson(from, refer(field.sanitizedName))));
+        fields.map((field) => field.codec.instanceToJson(from, refer(field.sanitizedName))),
+      );
     }
     return literalMap({
       for (final field in fields)
-        ReCase(field.originalOrSanitizedName()).camelCase:
-            field.codec.instanceToJson(from, refer(field.sanitizedName))
+        ReCase(field.originalOrSanitizedName()).camelCase: field.codec.instanceToJson(
+          from,
+          refer(field.sanitizedName),
+        ),
     });
   }
 

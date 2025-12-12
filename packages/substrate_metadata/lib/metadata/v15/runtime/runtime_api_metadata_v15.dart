@@ -17,20 +17,16 @@ class RuntimeApiMetadataV15 {
   /// Documentation for this API
   final List<String> docs;
 
-  const RuntimeApiMetadataV15({
-    required this.name,
-    required this.methods,
-    this.docs = const [],
-  });
+  const RuntimeApiMetadataV15({required this.name, required this.methods, this.docs = const []});
 
   /// Codec instance for RuntimeApiMetadataV15
   static const $RuntimeApiMetadataV15 codec = $RuntimeApiMetadataV15._();
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'methods': methods.map((m) => m.toJson()).toList(),
-        'docs': docs,
-      };
+    'name': name,
+    'methods': methods.map((m) => m.toJson()).toList(),
+    'docs': docs,
+  };
 }
 
 /// Codec for RuntimeApiMetadataV15
@@ -43,11 +39,7 @@ class $RuntimeApiMetadataV15 with Codec<RuntimeApiMetadataV15> {
     final methods = SequenceCodec(RuntimeApiMethodMetadataV15.codec).decode(input);
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return RuntimeApiMetadataV15(
-      name: name,
-      methods: methods,
-      docs: docs,
-    );
+    return RuntimeApiMetadataV15(name: name, methods: methods, docs: docs);
   }
 
   @override
@@ -98,12 +90,7 @@ class RuntimeApiMethodMetadataV15 {
   /// Codec instance for RuntimeApiMethodMetadataV15
   static const $RuntimeApiMethodMetadataV15 codec = $RuntimeApiMethodMetadataV15._();
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'inputs': inputs,
-        'output': output,
-        'docs': docs,
-      };
+  Map<String, dynamic> toJson() => {'name': name, 'inputs': inputs, 'output': output, 'docs': docs};
 }
 
 /// Codec for RuntimeApiMethodMetadataV15
@@ -117,12 +104,7 @@ class $RuntimeApiMethodMetadataV15 with Codec<RuntimeApiMethodMetadataV15> {
     final output = CompactCodec.codec.decode(input);
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return RuntimeApiMethodMetadataV15(
-      name: name,
-      inputs: inputs,
-      output: output,
-      docs: docs,
-    );
+    return RuntimeApiMethodMetadataV15(name: name, inputs: inputs, output: output, docs: docs);
   }
 
   @override
@@ -162,18 +144,12 @@ class RuntimeApiMethodParamMetadataV15 {
   /// Type ID of the parameter
   final int typeId;
 
-  const RuntimeApiMethodParamMetadataV15({
-    required this.name,
-    required this.typeId,
-  });
+  const RuntimeApiMethodParamMetadataV15({required this.name, required this.typeId});
 
   /// Codec instance for RuntimeApiMethodParamMetadataV15
   static const $RuntimeApiMethodParamMetadataV15 codec = $RuntimeApiMethodParamMetadataV15._();
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'typeId': typeId,
-      };
+  Map<String, dynamic> toJson() => {'name': name, 'typeId': typeId};
 }
 
 /// Codec for RuntimeApiMethodParamMetadataV15
@@ -185,10 +161,7 @@ class $RuntimeApiMethodParamMetadataV15 with Codec<RuntimeApiMethodParamMetadata
     final name = StrCodec.codec.decode(input);
     final typeId = CompactCodec.codec.decode(input);
 
-    return RuntimeApiMethodParamMetadataV15(
-      name: name,
-      typeId: typeId,
-    );
+    return RuntimeApiMethodParamMetadataV15(name: name, typeId: typeId);
   }
 
   @override

@@ -19,11 +19,7 @@ class ExtrinsicSignatureCodec with Codec<ExtrinsicSignature> {
     final signature = _signatureCodec.decode(input);
     final extra = _extensionsCodec.decode(input);
 
-    return ExtrinsicSignature(
-      address: address,
-      signature: signature,
-      extra: extra,
-    );
+    return ExtrinsicSignature(address: address, signature: signature, extra: extra);
   }
 
   @override

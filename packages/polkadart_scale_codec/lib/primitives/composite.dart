@@ -32,7 +32,8 @@ class CompositeCodec with Codec<Map<String, dynamic>> {
     for (final entry in mappedCodec.entries) {
       if (mappedCodec.containsKey(entry.key) == false) {
         throw CompositeException(
-            'Codec not found for key: ${entry.key}, in mappedCodec: $mappedCodec');
+          'Codec not found for key: ${entry.key}, in mappedCodec: $mappedCodec',
+        );
       }
 
       final codec = entry.value;

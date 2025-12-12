@@ -5,11 +5,7 @@ class ContractExecResultOk {
   final List<int> data;
   final List<int> accountId;
 
-  const ContractExecResultOk({
-    required this.flags,
-    required this.data,
-    required this.accountId,
-  });
+  const ContractExecResultOk({required this.flags, required this.data, required this.accountId});
 
   /// Parse from decoded SCALE data
   ///
@@ -37,10 +33,6 @@ class ContractExecResultOk {
       accountId = accountIdField.cast<int>();
     }
 
-    return ContractExecResultOk(
-      flags: flags,
-      data: data,
-      accountId: accountId,
-    );
+    return ContractExecResultOk(flags: flags, data: data, accountId: accountId);
   }
 }

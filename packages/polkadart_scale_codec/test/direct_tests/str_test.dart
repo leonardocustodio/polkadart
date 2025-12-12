@@ -34,11 +34,12 @@ void main() {
       final bytes = [
         16, // compact encoding of length 16
         114, 111, 111, 116, // "root"
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // 12 null bytes
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 12 null bytes
       ];
 
-      final decoded =
-          StrCodec.codec.decode(ByteInput(Uint8List.fromList(bytes)));
+      final decoded = StrCodec.codec.decode(
+        ByteInput(Uint8List.fromList(bytes)),
+      );
       expect(decoded, equals('root'));
       expect(decoded.length, equals(4));
     });
@@ -49,11 +50,12 @@ void main() {
         36, // compact encoding of length 9
         116, 101, 115, 116, // "test"
         0, // null byte
-        100, 97, 116, 97 // "data"
+        100, 97, 116, 97, // "data"
       ];
 
-      final decoded =
-          StrCodec.codec.decode(ByteInput(Uint8List.fromList(bytes)));
+      final decoded = StrCodec.codec.decode(
+        ByteInput(Uint8List.fromList(bytes)),
+      );
       expect(decoded, equals('test')); // Should stop at first null
       expect(decoded.length, equals(4));
     });
@@ -64,11 +66,12 @@ void main() {
       final encoded = [
         72, // compact encoding of length 18
         119, 104, 105, 116, 101, 108, 105, 115, 116, 101, 100, 95, 99, 97, 108,
-        108, 101, 114
+        108, 101, 114,
       ];
 
-      final decoded =
-          StrCodec.codec.decode(ByteInput(Uint8List.fromList(encoded)));
+      final decoded = StrCodec.codec.decode(
+        ByteInput(Uint8List.fromList(encoded)),
+      );
       expect(decoded, equals(testString));
     });
 

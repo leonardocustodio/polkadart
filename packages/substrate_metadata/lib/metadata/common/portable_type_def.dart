@@ -78,12 +78,7 @@ class $PortableTypeDef with Codec<PortableTypeDef> {
     // Decode documentation
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return PortableTypeDef(
-      path: path,
-      params: params,
-      typeDef: typeDef,
-      docs: docs,
-    );
+    return PortableTypeDef(path: path, params: params, typeDef: typeDef, docs: docs);
   }
 
   @override
