@@ -62,21 +62,24 @@ class Variant extends TypeDescriptor {
     }
     if (fields.length == 1 && fields.first.originalName == null) {
       return literalMap({
-        originalName: fields.first.codec.instanceToJson(from, refer(fields.first.sanitizedName))
+        originalName: fields.first.codec.instanceToJson(from, refer(fields.first.sanitizedName)),
       });
     }
     if (fields.every((field) => field.originalName == null)) {
       return literalMap({
         originalName: literalList(
-            fields.map((field) => field.codec.instanceToJson(from, refer(field.sanitizedName))))
+          fields.map((field) => field.codec.instanceToJson(from, refer(field.sanitizedName))),
+        ),
       });
     }
     return literalMap({
       originalName: literalMap({
         for (final field in fields)
-          ReCase(field.originalOrSanitizedName()).camelCase:
-              field.codec.instanceToJson(from, refer(field.sanitizedName))
-      })
+          ReCase(field.originalOrSanitizedName()).camelCase: field.codec.instanceToJson(
+            from,
+            refer(field.sanitizedName),
+          ),
+      }),
     });
   }
 
@@ -92,9 +95,11 @@ class Variant extends TypeDescriptor {
 
   @override
   TypeReference primitive(BasePath from) {
-    return TypeReference((b) => b
-      ..symbol = name
-      ..url = p.relative(generator.filePath, from: from));
+    return TypeReference(
+      (b) => b
+        ..symbol = name
+        ..url = p.relative(generator.filePath, from: from),
+    );
   }
 
   @override
@@ -110,15 +115,15 @@ class VariantBuilder extends TypeBuilder {
   List<Variant> variants;
   List<String> docs;
 
-  VariantBuilder(
-      {required int id,
-      required String filePath,
-      required this.name,
-      required this.originalName,
-      required this.variants,
-      required this.docs})
-      : _id = id,
-        super(filePath) {
+  VariantBuilder({
+    required int id,
+    required String filePath,
+    required this.name,
+    required this.originalName,
+    required this.variants,
+    required this.docs,
+  }) : _id = id,
+       super(filePath) {
     for (final variant in variants) {
       variant.generator = this;
     }
@@ -129,16 +134,20 @@ class VariantBuilder extends TypeBuilder {
 
   @override
   TypeReference codec(BasePath from) {
-    return TypeReference((b) => b
-      ..symbol = name
-      ..url = p.relative(filePath, from: from));
+    return TypeReference(
+      (b) => b
+        ..symbol = name
+        ..url = p.relative(filePath, from: from),
+    );
   }
 
   @override
   TypeReference primitive(BasePath from) {
-    return TypeReference((b) => b
-      ..symbol = name
-      ..url = p.relative(filePath, from: from));
+    return TypeReference(
+      (b) => b
+        ..symbol = name
+        ..url = p.relative(filePath, from: from),
+    );
   }
 
   @override
@@ -148,14 +157,16 @@ class VariantBuilder extends TypeBuilder {
     final isSimple = variants.every((variant) => variant.fields.isEmpty);
 
     if (isSimple) {
-      return primitive(from)
-          .property(Field.toFieldName(variant.name))
-          .asLiteralValue(isConstant: true);
+      return primitive(
+        from,
+      ).property(Field.toFieldName(variant.name)).asLiteralValue(isConstant: true);
     }
 
     final variantType = variant.primitive(from);
     final args = CallArguments.fromFields(
-        variant.fields, (field) => field.codec.valueFrom(from, input, constant: constant));
+      variant.fields,
+      (field) => field.codec.valueFrom(from, input, constant: constant),
+    );
     if (constant && args.every((value) => value.isConstant)) {
       return variantType
           .constInstance(args.positional, args.named)
@@ -176,8 +187,9 @@ class VariantBuilder extends TypeBuilder {
     }
 
     // Check if all variants are of the same type, otherwise use Map<String, dynamic>
-    final complexJsonType =
-        findCommonType(variants.map((variant) => context.jsonTypeFrom(variant)));
+    final complexJsonType = findCommonType(
+      variants.map((variant) => context.jsonTypeFrom(variant)),
+    );
     if (complexJsonType.symbol != 'Map') {
       throw Exception('$name: Invalid complex variant type: $complexJsonType');
     }
@@ -201,16 +213,18 @@ class VariantBuilder extends TypeBuilder {
     // Complex Variants
     final dirname = p.dirname(filePath);
     final builderContext = TypeBuilderContext(from: dirname);
-    final variantsJsonType =
-        variants.map((variant) => builderContext.jsonTypeFrom(variant)).toList();
+    final variantsJsonType = variants
+        .map((variant) => builderContext.jsonTypeFrom(variant))
+        .toList();
     final baseClassJsonType = findCommonType(variantsJsonType);
     final baseClass = classbuilder.createVariantBaseClass(this, baseClassJsonType);
     final valuesClass = classbuilder.createVariantValuesClass(this);
     final codecClass = classbuilder.createVariantCodec(this);
     final classes = [baseClass, valuesClass, codecClass];
     for (int i = 0; i < variants.length; i++) {
-      classes
-          .add(classbuilder.createVariantClass(filePath, name, variants[i], variantsJsonType[i]));
+      classes.add(
+        classbuilder.createVariantClass(filePath, name, variants[i], variantsJsonType[i]),
+      );
     }
     return GeneratedOutput(classes: classes, enums: [], typedefs: []);
   }

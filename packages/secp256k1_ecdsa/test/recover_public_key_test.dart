@@ -10,8 +10,9 @@ void main() {
 
   group('recoverPublicKey()', () {
     test('recover public key from recovery bit', () {
-      final message =
-          Utilities.hexToBytes('00000000000000000000000000000000000000000000000000000000deadbeef');
+      final message = Utilities.hexToBytes(
+        '00000000000000000000000000000000000000000000000000000000deadbeef',
+      );
       final privateKey = PrivateKey(BigInt.from(123456789));
       final publicKey = privateKey.getPublicKey();
       final sig = privateKey.sign(message);
@@ -24,8 +25,9 @@ void main() {
     test('handle all-zeros msghash', () {
       final privKey = PrivateKey(getRandomBigInt());
       final pub = privKey.getPublicKey();
-      final zeros =
-          Utilities.hexToBytes('0000000000000000000000000000000000000000000000000000000000000000');
+      final zeros = Utilities.hexToBytes(
+        '0000000000000000000000000000000000000000000000000000000000000000',
+      );
       final sig = privKey.sign(zeros);
       final recoveredKey = sig.recoverPublicKey(zeros);
       expect(recoveredKey.toBytes(false), pub.toBytes(false));

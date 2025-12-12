@@ -54,14 +54,14 @@ class PalletMetadata {
   static const $PalletMetadata codec = $PalletMetadata._();
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'storage': storage?.toJson(),
-        'calls': calls?.toJson(),
-        'event': event?.toJson(),
-        'constants': constants.map((c) => c.toJson()).toList(),
-        'error': error?.toJson(),
-        'index': index,
-      };
+    'name': name,
+    'storage': storage?.toJson(),
+    'calls': calls?.toJson(),
+    'event': event?.toJson(),
+    'constants': constants.map((c) => c.toJson()).toList(),
+    'error': error?.toJson(),
+    'index': index,
+  };
 }
 
 /// Codec for PalletMetadataV15

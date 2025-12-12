@@ -82,7 +82,8 @@ class I8ArrayCodec with Codec<Int8List> {
   void encodeTo(Int8List value, Output output) {
     if (value.length != length) {
       throw Exception(
-          'I8ArrayCodec: invalid length, expect $length found ${value.length}');
+        'I8ArrayCodec: invalid length, expect $length found ${value.length}',
+      );
     }
     for (final val in value) {
       I8Codec.codec.encodeTo(val, output);

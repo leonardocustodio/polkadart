@@ -67,17 +67,17 @@ class RuntimeMetadataV15 extends RuntimeMetadata {
 
   @override
   Map<String, dynamic> toJson() => {
-        'types': types.map((final PortableType value) => value.toJson()).toList(growable: false),
-        'pallets': pallets.map((p) => p.toJson()).toList(),
-        'extrinsic': extrinsic.toJson(),
-        'type': type,
-        'apis': apis.map((a) => a.toJson()).toList(),
-        'outerEnums': {
-          'callType': outerEnums.callType,
-          'eventType': outerEnums.eventType,
-          'errorType': outerEnums.errorType,
-        },
-      };
+    'types': types.map((final PortableType value) => value.toJson()).toList(growable: false),
+    'pallets': pallets.map((p) => p.toJson()).toList(),
+    'extrinsic': extrinsic.toJson(),
+    'type': type,
+    'apis': apis.map((a) => a.toJson()).toList(),
+    'outerEnums': {
+      'callType': outerEnums.callType,
+      'eventType': outerEnums.eventType,
+      'errorType': outerEnums.errorType,
+    },
+  };
 }
 
 /// Codec for RuntimeMetadataV15
@@ -185,20 +185,16 @@ class OuterEnumsV15 {
   /// This enum contains all errors from all pallets.
   final int errorType;
 
-  const OuterEnumsV15({
-    required this.callType,
-    required this.eventType,
-    required this.errorType,
-  });
+  const OuterEnumsV15({required this.callType, required this.eventType, required this.errorType});
 
   /// Codec instance for OuterEnumsV15
   static const $OuterEnumsV15 codec = $OuterEnumsV15._();
 
   Map<String, dynamic> toJson() => {
-        'callType': callType,
-        'eventType': eventType,
-        'errorType': errorType,
-      };
+    'callType': callType,
+    'eventType': eventType,
+    'errorType': errorType,
+  };
 }
 
 /// Codec for OuterEnumsV15
@@ -211,11 +207,7 @@ class $OuterEnumsV15 with Codec<OuterEnumsV15> {
     final eventType = CompactCodec.codec.decode(input);
     final errorType = CompactCodec.codec.decode(input);
 
-    return OuterEnumsV15(
-      callType: callType,
-      eventType: eventType,
-      errorType: errorType,
-    );
+    return OuterEnumsV15(callType: callType, eventType: eventType, errorType: errorType);
   }
 
   @override

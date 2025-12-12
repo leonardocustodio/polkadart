@@ -6,15 +6,11 @@ class ContractsMethod {
 
   const ContractsMethod._({required this.method, required this.args});
 
-  static ContractsMethod methodCall({
-    required final ContractArgs args,
-  }) {
+  static ContractsMethod methodCall({required final ContractArgs args}) {
     return ContractsMethod._(method: 'call', args: args);
   }
 
-  static ContractsMethod instantiateWithCode({
-    required final ContractArgs args,
-  }) {
+  static ContractsMethod instantiateWithCode({required final ContractArgs args}) {
     return ContractsMethod._(method: 'instantiate_with_code', args: args);
   }
 
@@ -23,10 +19,9 @@ class ContractsMethod {
   /// Uses ChainInfo's RuntimeCallCodec for proper encoding with portable types.
   Uint8List encode(final ChainInfo chainInfo) {
     // Use CallIndicesLookup to get pallet and call indices
-    final indices = CallIndicesLookup(chainInfo).getPalletAndCallIndex(
-      palletName: 'Contracts',
-      callName: method,
-    );
+    final indices = CallIndicesLookup(
+      chainInfo,
+    ).getPalletAndCallIndex(palletName: 'Contracts', callName: method);
 
     // Create RuntimeCall object
     final runtimeCall = RuntimeCall(

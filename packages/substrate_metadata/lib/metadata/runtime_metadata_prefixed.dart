@@ -28,10 +28,7 @@ class RuntimeMetadataPrefixed {
   /// The actual metadata (versioned enum)
   final RuntimeMetadata metadata;
 
-  const RuntimeMetadataPrefixed({
-    required this.magicNumber,
-    required this.metadata,
-  });
+  const RuntimeMetadataPrefixed({required this.magicNumber, required this.metadata});
 
   /// Codec instance for RuntimeMetadataPrefixed
   static const $RuntimeMetadataPrefixed codec = $RuntimeMetadataPrefixed._();
@@ -55,9 +52,9 @@ class RuntimeMetadataPrefixed {
   bool get isValidMagicNumber => magicNumber == metaReserved;
 
   Map<String, dynamic> toJson() => {
-        'magicNumber': magicNumber,
-        'metadata': {'V${metadata.version}': metadata.toJson()},
-      };
+    'magicNumber': magicNumber,
+    'metadata': {'V${metadata.version}': metadata.toJson()},
+  };
 }
 
 /// Codec for RuntimeMetadataPrefixed

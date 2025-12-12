@@ -61,8 +61,9 @@ void main() {
         ],
       ];
 
-      final privateKey =
-          PrivateKey.fromHex('0101010101010101010101010101010101010101010101010101010101010101');
+      final privateKey = PrivateKey.fromHex(
+        '0101010101010101010101010101010101010101010101010101010101010101',
+      );
 
       for (final value in CASES) {
         final (msg, exp) = (value[0], value[1]);

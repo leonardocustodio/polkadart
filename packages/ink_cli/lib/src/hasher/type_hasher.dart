@@ -12,14 +12,15 @@ class TypeHasher extends HasherAbstract {
 }
 
 Map<String, dynamic> _computeHash(
-    final List<CodecInterface> types, final HasherAbstract hasher, final CodecInterface type) {
+  final List<CodecInterface> types,
+  final HasherAbstract hasher,
+  final CodecInterface type,
+) {
   switch (type) {
     //
     // Primitive
     case PrimitiveCodecInterface():
-      return <String, dynamic>{
-        'primitive': toStringPrimitive(type.primitive),
-      };
+      return <String, dynamic>{'primitive': toStringPrimitive(type.primitive)};
     //
     // Compact
     case CompactCodecInterface():
@@ -35,15 +36,11 @@ Map<String, dynamic> _computeHash(
     //
     // Array
     case ArrayCodecInterface():
-      return <String, dynamic>{
-        'array': hasher.getHash(type.type),
-      };
+      return <String, dynamic>{'array': hasher.getHash(type.type)};
     //
     // SequenceCodec
     case SequenceCodecInterface():
-      return <String, dynamic>{
-        'array': hasher.getHash(type.type),
-      };
+      return <String, dynamic>{'array': hasher.getHash(type.type)};
     //
     // Tuple
     case TupleCodecInterface():
@@ -117,9 +114,7 @@ Map<String, dynamic> _computeHash(
     //
     // Option
     case OptionCodecInterface():
-      return <String, dynamic>{
-        'option': hasher.getHash(type.type),
-      };
+      return <String, dynamic>{'option': hasher.getHash(type.type)};
 
     default:
       throw Exception('');
@@ -139,15 +134,13 @@ String toStringPrimitive(final Primitive primitive) {
     Primitive.I16 ||
     Primitive.U16 ||
     Primitive.I32 ||
-    Primitive.U32 =>
-      'int',
+    Primitive.U32 => 'int',
     Primitive.I64 ||
     Primitive.U64 ||
     Primitive.I128 ||
     Primitive.U128 ||
     Primitive.I256 ||
-    Primitive.U256 =>
-      'BigInt',
+    Primitive.U256 => 'BigInt',
     Primitive.Bool => 'bool',
     Primitive.Str => 'string',
     _ => throw Exception('Unexpected case: $primitive'),

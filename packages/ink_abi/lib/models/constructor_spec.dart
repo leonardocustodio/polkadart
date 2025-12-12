@@ -44,7 +44,8 @@ class ConstructorSpec extends Equatable {
   int? get codecTypeId => returnType?.typeId;
 
   @override
-  String toString() => 'ConstructorSpec(label: $label, selector: $selector, '
+  String toString() =>
+      'ConstructorSpec(label: $label, selector: $selector, '
       'args: ${args.length}, payable: $payable)';
 
   @override

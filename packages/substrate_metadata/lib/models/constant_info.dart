@@ -30,11 +30,11 @@ class ConstantInfo {
   String get documentation => docs.join('\n');
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'type': typeString,
-        'typeId': typeId,
-        'value': value.toHexString(),
-        'docs': docs,
-        'palletName': palletName,
-      };
+    'name': name,
+    'type': typeString,
+    'typeId': typeId,
+    'value': value.toHexString(),
+    'docs': docs,
+    'palletName': palletName,
+  };
 }

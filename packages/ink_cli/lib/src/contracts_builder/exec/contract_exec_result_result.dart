@@ -4,10 +4,7 @@ class ContractExecResultResult {
   final ContractExecResultOk? ok;
   final dynamic err;
 
-  const ContractExecResultResult({
-    required this.ok,
-    required this.err,
-  });
+  const ContractExecResultResult({required this.ok, required this.err});
 
   /// Parse result from decoded SCALE data
   ///
@@ -24,10 +21,7 @@ class ContractExecResultResult {
           err: null,
         );
       } else {
-        return ContractExecResultResult(
-          ok: null,
-          err: json.errValue,
-        );
+        return ContractExecResultResult(ok: null, err: json.errValue);
       }
     }
 

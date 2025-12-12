@@ -23,9 +23,7 @@ extension ToJson<T> on T {
 dynamic _convertToJsonRecursive(dynamic value) {
   if (value is MapEntry) {
     // Convert MapEntry to Map with single key-value pair
-    return {
-      value.key.toString(): _convertToJsonRecursive(value.value),
-    };
+    return {value.key.toString(): _convertToJsonRecursive(value.value)};
   } else if (value is Map) {
     // Recursively convert all map entries
     final result = <String, dynamic>{};
@@ -54,9 +52,7 @@ Object? _encodeJson(Object? value) {
   } else if (value is Option) {
     return _extractSomeValue(value);
   } else if (value is MapEntry) {
-    final v = <String, dynamic>{
-      value.key: _encodeJson(value.value),
-    };
+    final v = <String, dynamic>{value.key: _encodeJson(value.value)};
     return v;
   }
   if (value is Map && value.isNotEmpty && value.keys.first is int) {

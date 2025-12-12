@@ -22,14 +22,18 @@ void main() {
     test('Lowest value encoding', () {
       final output = HexOutput();
       I128Codec.codec.encodeTo(
-          BigInt.parse('-170141183460469231731687303715884105728'), output);
+        BigInt.parse('-170141183460469231731687303715884105728'),
+        output,
+      );
       expect(output.toString(), '0x00000000000000000000000000000080');
     });
 
     test('Highest value encoding', () {
       final output = HexOutput();
       I128Codec.codec.encodeTo(
-          BigInt.parse('170141183460469231731687303715884105727'), output);
+        BigInt.parse('170141183460469231731687303715884105727'),
+        output,
+      );
       expect(output.toString(), '0xffffffffffffffffffffffffffffff7f');
     });
   });

@@ -48,9 +48,8 @@ class ConstantsCodec {
     // Find the constant
     final constant = pallet.constants.firstWhere(
       (c) => c.name == constantName,
-      orElse: () => throw MetadataException(
-        'Constant $constantName not found in pallet $palletName',
-      ),
+      orElse: () =>
+          throw MetadataException('Constant $constantName not found in pallet $palletName'),
     );
 
     final decodedValue = _decodeConstant(constant);
@@ -117,9 +116,8 @@ class ConstantsCodec {
 
     final constant = pallet.constants.firstWhere(
       (c) => c.name == constantName,
-      orElse: () => throw MetadataException(
-        'Constant $constantName not found in pallet $palletName',
-      ),
+      orElse: () =>
+          throw MetadataException('Constant $constantName not found in pallet $palletName'),
     );
 
     final type = registry.typeById(constant.type);
@@ -141,9 +139,7 @@ class ConstantsCodec {
       final codec = registry.codecFor(constant.type);
       return codec.decode(input);
     } catch (e) {
-      throw MetadataException(
-        'Failed to decode constant ${constant.name}: $e',
-      );
+      throw MetadataException('Failed to decode constant ${constant.name}: $e');
     }
   }
 

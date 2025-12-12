@@ -55,7 +55,8 @@ class EventSpec extends Equatable {
   Map<String, dynamic> toJson() => _$EventSpecToJson(this);
 
   @override
-  String toString() => 'EventSpec(label: $label, typeId: $typeId, '
+  String toString() =>
+      'EventSpec(label: $label, typeId: $typeId, '
       'indexed: $amountIndexed, signatureTopic: $signatureTopic)';
 
   @override

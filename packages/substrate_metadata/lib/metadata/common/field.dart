@@ -19,12 +19,7 @@ class Field {
   /// Documentation for this field
   final List<String> docs;
 
-  const Field({
-    this.name,
-    required this.type,
-    this.typeName,
-    this.docs = const [],
-  });
+  const Field({this.name, required this.type, this.typeName, this.docs = const []});
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -60,12 +55,7 @@ class $Field with Codec<Field> {
     // Decode documentation
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return Field(
-      name: name,
-      type: type,
-      typeName: typeName,
-      docs: docs,
-    );
+    return Field(name: name, type: type, typeName: typeName, docs: docs);
   }
 
   @override

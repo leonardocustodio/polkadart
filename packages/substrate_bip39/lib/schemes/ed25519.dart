@@ -18,7 +18,8 @@ class Ed25519 extends CryptoScheme {
     for (final junction in path) {
       if (junction.isSoft) {
         throw SubstrateBip39Exception.invalidPath(
-            'Soft key derivation is not supported for ED25519');
+          'Soft key derivation is not supported for ED25519',
+        );
       }
       deriveHardJunction(output, junction.junctionId, output: output);
     }

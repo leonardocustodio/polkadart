@@ -44,7 +44,8 @@ class MessageSpec extends Equatable {
   int get codecTypeId => returnType.typeId;
 
   @override
-  String toString() => 'MessageSpec(label: $label, selector: $selector, '
+  String toString() =>
+      'MessageSpec(label: $label, selector: $selector, '
       'args: ${args.length}, mutates: $mutates, payable: $payable)';
 
   @override

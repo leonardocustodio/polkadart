@@ -46,16 +46,21 @@ class PrivateKey {
     return n2b(num);
   } */
 
-  Signature sign(Uint8List message,
-      {HmacFnSync? hmacFnSync,
-      RandomBytesFunc? randomBytesFunc,
-      bool? lowS,
-      Uint8List? extraEntropy}) {
+  Signature sign(
+    Uint8List message, {
+    HmacFnSync? hmacFnSync,
+    RandomBytesFunc? randomBytesFunc,
+    bool? lowS,
+    Uint8List? extraEntropy,
+  }) {
     hmacFnSync ??= (key, msgs) => hmacSha256(key, Utilities.concatBytes(msgs));
-    final (seed, k2sig) = Utilities.prepSig(message, _privateKey,
-        randomBytesFunc: randomBytesFunc,
-        lowS: lowS,
-        extraEntropy: extraEntropy); // Extract arguments for hmac-drbg
+    final (seed, k2sig) = Utilities.prepSig(
+      message,
+      _privateKey,
+      randomBytesFunc: randomBytesFunc,
+      lowS: lowS,
+      extraEntropy: extraEntropy,
+    ); // Extract arguments for hmac-drbg
     return Utilities.hmacDrbg(hmacFnSync)(seed, k2sig); // Re-run drbg until k2sig returns ok
   }
 }

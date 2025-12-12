@@ -40,9 +40,7 @@ class LazyConstantsCodec {
     // Get metadata
     final info = getConstantInfo(palletName, constantName);
     if (info == null) {
-      throw MetadataException(
-        'Constant $constantName not found in pallet $palletName',
-      );
+      throw MetadataException('Constant $constantName not found in pallet $palletName');
     }
 
     // Decode and cache
@@ -80,8 +78,9 @@ class LazyConstantsCodec {
 
   /// Get loading statistics
   Map<String, int> getLoadingStats() {
-    final totalPallets =
-        registry.prefixed.metadata.pallets.where((p) => p.constants.isNotEmpty).length;
+    final totalPallets = registry.prefixed.metadata.pallets
+        .where((p) => p.constants.isNotEmpty)
+        .length;
 
     int totalConstants = 0;
     int loadedConstants = 0;
@@ -147,9 +146,7 @@ class LazyConstantsCodec {
       final codec = registry.codecFor(info.typeId);
       return codec.decode(input);
     } catch (e) {
-      throw MetadataException(
-        'Failed to decode constant ${info.name}: $e',
-      );
+      throw MetadataException('Failed to decode constant ${info.name}: $e');
     }
   }
 
@@ -159,9 +156,7 @@ class LazyConstantsCodec {
       final codec = registry.codecFor(constant.type);
       return codec.decode(input);
     } catch (e) {
-      throw MetadataException(
-        'Failed to decode constant ${constant.name}: $e',
-      );
+      throw MetadataException('Failed to decode constant ${constant.name}: $e');
     }
   }
 

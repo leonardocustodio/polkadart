@@ -13,27 +13,16 @@ class TypeResolutionException extends InkAbiException {
   /// The type path that failed to resolve (if applicable)
   final String? typePath;
 
-  const TypeResolutionException(
-    super.message, {
-    this.typeId,
-    this.typePath,
-    super.context,
-  });
+  const TypeResolutionException(super.message, {this.typeId, this.typePath, super.context});
 
   /// Create exception for missing type ID
   factory TypeResolutionException.typeNotFound(int typeId) {
-    return TypeResolutionException(
-      'Type with ID $typeId not found in metadata',
-      typeId: typeId,
-    );
+    return TypeResolutionException('Type with ID $typeId not found in metadata', typeId: typeId);
   }
 
   /// Create exception for missing type path
   factory TypeResolutionException.pathNotFound(String path) {
-    return TypeResolutionException(
-      'Type with path "$path" not found in metadata',
-      typePath: path,
-    );
+    return TypeResolutionException('Type with path "$path" not found in metadata', typePath: path);
   }
 
   /// Create exception for invalid type definition

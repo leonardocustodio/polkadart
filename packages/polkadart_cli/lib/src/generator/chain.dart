@@ -14,17 +14,26 @@ class ChainGenerator {
   PolkadartGenerator polkadart;
   final Map<int, TypeDescriptor> types;
 
-  ChainGenerator(
-      {required this.name, required this.directory, required this.polkadart, required this.types});
+  ChainGenerator({
+    required this.name,
+    required this.directory,
+    required this.polkadart,
+    required this.types,
+  });
 
-  factory ChainGenerator.fromMetadata(
-      {required Directory basePath, required chainName, required RuntimeMetadata metadata}) {
+  factory ChainGenerator.fromMetadata({
+    required Directory basePath,
+    required chainName,
+    required RuntimeMetadata metadata,
+  }) {
     final typesPath = path.join(basePath.path, 'types');
     final palletsPath = path.join(basePath.path, 'pallets');
 
     // Get type generators
-    final Map<int, TypeDescriptor> typeGenerators =
-        TypeDescriptor.fromTypes(metadata.types, typesPath);
+    final Map<int, TypeDescriptor> typeGenerators = TypeDescriptor.fromTypes(
+      metadata.types,
+      typesPath,
+    );
 
     // Get outer enums from metadata
     final outerEnumsData = metadata.outerEnums;
@@ -37,19 +46,23 @@ class ChainGenerator {
     // Get pallet generators
     final List<PalletGenerator> palletGenerators = metadata.pallets
         // Remove Empty Pallets
-        .where((pallet) =>
-            pallet.calls != null || pallet.storage != null || pallet.constants.isNotEmpty)
-        .map((pallet) => PalletGenerator.fromMetadata(
-              filePath: path.join(palletsPath, '${ReCase(pallet.name).snakeCase}.dart'),
-              palletMetadata: pallet,
-              registry: typeGenerators,
-              outerEnums: outerEnums,
-            ))
+        .where(
+          (pallet) => pallet.calls != null || pallet.storage != null || pallet.constants.isNotEmpty,
+        )
+        .map(
+          (pallet) => PalletGenerator.fromMetadata(
+            filePath: path.join(palletsPath, '${ReCase(pallet.name).snakeCase}.dart'),
+            palletMetadata: pallet,
+            registry: typeGenerators,
+            outerEnums: outerEnums,
+          ),
+        )
         .toList();
 
     // Group generators per file
-    final Map<String, List<TypeBuilder>> generatorPerFile =
-        _groupTypeBuilderPerFile(typeGenerators.values);
+    final Map<String, List<TypeBuilder>> generatorPerFile = _groupTypeBuilderPerFile(
+      typeGenerators.values,
+    );
 
     // Rename ambiguous generators
     for (final entry in generatorPerFile.entries) {
@@ -110,8 +123,10 @@ class ChainGenerator {
         print(path.relative(entry.key, from: directory.path));
       }
       final String code = entry.value
-          .fold(GeneratedOutput(classes: [], enums: [], typedefs: []),
-              (previousValue, builder) => previousValue.merge(builder.build()))
+          .fold(
+            GeneratedOutput(classes: [], enums: [], typedefs: []),
+            (previousValue, builder) => previousValue.merge(builder.build()),
+          )
           .build();
       await Directory(path.dirname(entry.key)).create(recursive: true);
       await File(entry.key).writeAsString(code);
@@ -147,9 +162,9 @@ Map<String, List<TypeBuilder>> _groupTypeBuilderPerFile(Iterable<TypeDescriptor>
       generatorPerFile[generator.filePath] = [generator];
     } else if (generator is TupleBuilder) {
       final builders = generatorPerFile[generator.filePath]!;
-      final isDuplicated = builders
-          .whereType<TupleBuilder>()
-          .any((tupleBuilder) => tupleBuilder.generators.length == generator.generators.length);
+      final isDuplicated = builders.whereType<TupleBuilder>().any(
+        (tupleBuilder) => tupleBuilder.generators.length == generator.generators.length,
+      );
       if (!isDuplicated) {
         generatorPerFile[generator.filePath]!.add(generator);
       }

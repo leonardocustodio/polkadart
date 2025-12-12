@@ -6,9 +6,5 @@ class OuterEnums {
   final int eventType;
   final int errorType;
 
-  const OuterEnums({
-    required this.callType,
-    required this.eventType,
-    required this.errorType,
-  });
+  const OuterEnums({required this.callType, required this.eventType, required this.errorType});
 }

@@ -29,10 +29,7 @@ class ExtrinsicMetadataV14 extends ExtrinsicMetadata {
   static const $ExtrinsicMetadataV14 codec = $ExtrinsicMetadataV14._();
 
   @override
-  Map<String, dynamic> toJson() => {
-        'type': type,
-        ...super.toJson(),
-      };
+  Map<String, dynamic> toJson() => {'type': type, ...super.toJson()};
 }
 
 class $ExtrinsicMetadataV14 with Codec<ExtrinsicMetadataV14> {

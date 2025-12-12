@@ -6,10 +6,7 @@ class LazyLine {
   final String indent;
   final VoidCallback gen;
 
-  const LazyLine({
-    required this.indent,
-    required this.gen,
-  });
+  const LazyLine({required this.indent, required this.gen});
 }
 
 class FileOutput extends AbiOutput {

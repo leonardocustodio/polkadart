@@ -5,19 +5,20 @@ class TupleBuilder extends TypeBuilder {
   List<TypeDescriptor> generators;
 
   TupleBuilder({required int id, required String filePath, required this.generators})
-      : _id = id,
-        super(filePath);
+    : _id = id,
+      super(filePath);
 
   TupleBuilder._lazy({required int id, required String filePath})
-      : generators = [],
-        _id = id,
-        super(filePath);
+    : generators = [],
+      _id = id,
+      super(filePath);
 
-  factory TupleBuilder.lazy(
-      {required int id,
-      required LazyLoader loader,
-      required String filePath,
-      required List<int> codecs}) {
+  factory TupleBuilder.lazy({
+    required int id,
+    required LazyLoader loader,
+    required String filePath,
+    required List<int> codecs,
+  }) {
     final generator = TupleBuilder._lazy(id: id, filePath: filePath);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       for (final codec in codecs) {
@@ -32,18 +33,22 @@ class TupleBuilder extends TypeBuilder {
 
   @override
   TypeReference codec(BasePath from) {
-    return TypeReference((b) => b
-      ..symbol = 'Tuple${generators.length}Codec'
-      ..url = p.relative(filePath, from: from)
-      ..types.addAll(generators.map((e) => e.primitive(from))));
+    return TypeReference(
+      (b) => b
+        ..symbol = 'Tuple${generators.length}Codec'
+        ..url = p.relative(filePath, from: from)
+        ..types.addAll(generators.map((e) => e.primitive(from))),
+    );
   }
 
   @override
   TypeReference primitive(BasePath from) {
-    return TypeReference((b) => b
-      ..symbol = 'Tuple${generators.length}'
-      ..url = p.relative(filePath, from: from)
-      ..types.addAll(generators.map((e) => e.primitive(from))));
+    return TypeReference(
+      (b) => b
+        ..symbol = 'Tuple${generators.length}'
+        ..url = p.relative(filePath, from: from)
+        ..types.addAll(generators.map((e) => e.primitive(from))),
+    );
   }
 
   @override
@@ -54,7 +59,7 @@ class TupleBuilder extends TypeBuilder {
   @override
   LiteralValue valueFrom(BasePath from, Input input, {bool constant = false}) {
     final values = <LiteralValue>[
-      for (final generator in generators) generator.valueFrom(from, input, constant: constant)
+      for (final generator in generators) generator.valueFrom(from, input, constant: constant),
     ];
 
     if (constant && values.every((value) => value.isConstant)) {
@@ -81,7 +86,7 @@ class TupleBuilder extends TypeBuilder {
   Expression instanceToJson(BasePath from, Expression obj) {
     return literalList([
       for (int i = 0; i < generators.length; i++)
-        generators[i].instanceToJson(from, obj.property('value$i'))
+        generators[i].instanceToJson(from, obj.property('value$i')),
     ]);
   }
 

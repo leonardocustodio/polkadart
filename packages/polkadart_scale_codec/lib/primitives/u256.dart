@@ -9,9 +9,10 @@ class U256Codec with Codec<BigInt> {
   void encodeTo(BigInt value, Output output) {
     U128Codec.codec
       ..encodeTo(
-          (value & BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16))
-              .toUnsigned(128),
-          output)
+        (value & BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16))
+            .toUnsigned(128),
+        output,
+      )
       ..encodeTo((value >> 128).toUnsigned(128), output);
   }
 

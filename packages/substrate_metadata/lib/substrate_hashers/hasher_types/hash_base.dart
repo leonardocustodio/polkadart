@@ -157,10 +157,7 @@ abstract class HashBase implements StreamTransformer<List<int>, HashDigest> {
   ///
   /// Default [encoding] scheme to get the input bytes is [latin1].
   @pragma('vm:prefer-inline')
-  Future<HashDigest> consumeAs(
-    Stream<String> stream, [
-    Encoding encoding = latin1,
-  ]) {
+  Future<HashDigest> consumeAs(Stream<String> stream, [Encoding encoding = latin1]) {
     return bind(stream.transform(encoding.encoder)).first;
   }
 

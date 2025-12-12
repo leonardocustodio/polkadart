@@ -28,7 +28,9 @@ void main() {
     test('Highest value encoding', () {
       final output = HexOutput();
       U128Codec.codec.encodeTo(
-          BigInt.parse('340282366920938463463374607431768211455'), output);
+        BigInt.parse('340282366920938463463374607431768211455'),
+        output,
+      );
       expect(output.toString(), '0xffffffffffffffffffffffffffffffff');
     });
   });

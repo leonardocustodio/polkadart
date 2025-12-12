@@ -37,11 +37,7 @@ class $StorageEntryType with Codec<StorageEntryType> {
         // Decode value type ID
         final valueType = CompactCodec.codec.decode(input);
 
-        return StorageEntryTypeMap(
-          hashers: hashers,
-          keyType: keyType,
-          valueType: valueType,
-        );
+        return StorageEntryTypeMap(hashers: hashers, keyType: keyType, valueType: valueType);
 
       default:
         throw Exception('Unknown StorageEntryType index: $index');
@@ -134,7 +130,7 @@ class StorageEntryTypeMap extends StorageEntryType {
         'hashers': hashers.map((hasher) => hasher.toString()).toList(),
         'key': keyType,
         'value': valueType,
-      }
+      },
     };
   }
 }

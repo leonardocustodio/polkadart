@@ -16,10 +16,7 @@ abstract class Hasher {
   static const twoxx128 = TwoxxHasher(2);
   static const twoxx256 = TwoxxHasher(4);
 
-  void hashTo({
-    required Uint8List data,
-    required Uint8List output,
-  });
+  void hashTo({required Uint8List data, required Uint8List output});
 
   Uint8List hash(Uint8List data) {
     final output = Uint8List(digestSize);

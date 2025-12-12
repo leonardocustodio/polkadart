@@ -18,9 +18,9 @@ class PubspecConfig {
     required bool enabled,
     required String outputDir,
     required Map<String, ChainSettings> chains,
-  })  : _enabled = enabled,
-        _outputDir = outputDir,
-        _chains = chains;
+  }) : _enabled = enabled,
+       _outputDir = outputDir,
+       _chains = chains;
 
   factory PubspecConfig.fromPubspecFile() {
     final pubspecFile = getPubspecFile();
@@ -48,14 +48,20 @@ class PubspecConfig {
     final enabled = polkadartConfig['enabled'];
     if (enabled != null && enabled is! bool) {
       throw ConfigException.invalidField(
-          path: 'polkadart.enabled', expect: 'boolean', actual: enabled.runtimeType);
+        path: 'polkadart.enabled',
+        expect: 'boolean',
+        actual: enabled.runtimeType,
+      );
     }
 
     // Extract polkadart.output_dir section
     final outputDir = polkadartConfig['output_dir'];
     if (outputDir != null && outputDir is! String) {
       throw ConfigException.invalidField(
-          path: 'polkadart.output_dir', expect: 'string', actual: outputDir.runtimeType);
+        path: 'polkadart.output_dir',
+        expect: 'string',
+        actual: outputDir.runtimeType,
+      );
     }
 
     // Extract polkadart.chains section
@@ -65,7 +71,10 @@ class PubspecConfig {
     }
     if (chains is! yaml.YamlMap) {
       throw ConfigException.invalidField(
-          path: 'polkadart.chains', expect: 'YAML map', actual: chains.runtimeType);
+        path: 'polkadart.chains',
+        expect: 'YAML map',
+        actual: chains.runtimeType,
+      );
     }
 
     return PubspecConfig._(
@@ -73,7 +82,7 @@ class PubspecConfig {
       outputDir: polkadartConfig['output_dir'] ?? './lib/generated',
       chains: {
         for (final entry in chains.entries)
-          entry.key: ChainSettings.fromConfig('polkadart.chains.${entry.key}', entry.value)
+          entry.key: ChainSettings.fromConfig('polkadart.chains.${entry.key}', entry.value),
       },
     );
   }
@@ -113,18 +122,25 @@ class ChainSettings {
         }
         if (uri is! String) {
           throw ConfigException.invalidField(
-              path: '$path.metadata_uri', expect: 'string', actual: uri.runtimeType);
+            path: '$path.metadata_uri',
+            expect: 'string',
+            actual: uri.runtimeType,
+          );
         }
         metadataUri = Uri.parse(uri);
       } else {
         throw ConfigException.invalidField(
-            path: path, expect: 'string or YAML map', actual: chainSettings.runtimeType);
+          path: path,
+          expect: 'string or YAML map',
+          actual: chainSettings.runtimeType,
+        );
       }
     }
 
     if (!_validUriSchemes.contains(metadataUri.scheme)) {
       throw ConfigException(
-          'The parameter "$path.metadata_uri" is invalid, must a valid Websocket (wss/ws) or (http/https) uri');
+        'The parameter "$path.metadata_uri" is invalid, must a valid Websocket (wss/ws) or (http/https) uri',
+      );
     }
 
     // Parse class_name

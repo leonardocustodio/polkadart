@@ -12,7 +12,7 @@ class SimpleEnumCodec<A> with Codec<A> {
   SimpleEnumCodec.fromList(List<A?> list) {
     map.addAll({
       for (var i = 0; i < list.length; i++)
-        if (list[i] != null) i: list[i]!
+        if (list[i] != null) i: list[i]!,
     });
   }
 
@@ -54,35 +54,36 @@ class ComplexEnumCodec<V> with Codec<MapEntry<String, V?>> {
   final Map<int, String> _keyedName;
 
   ComplexEnumCodec.sparse(Map<int, MapEntry<String, Codec<V?>>> map)
-      : _keyedIndex = {
-          for (final entry in map.entries) entry.value.key: entry.key
-        },
-        _keyedName = {
-          for (final entry in map.entries) entry.key: entry.value.key
-        },
-        map = {
-          for (final entry in map.entries) entry.value.key: entry.value.value
-        };
+    : _keyedIndex = {
+        for (final entry in map.entries) entry.value.key: entry.key,
+      },
+      _keyedName = {
+        for (final entry in map.entries) entry.key: entry.value.key,
+      },
+      map = {
+        for (final entry in map.entries) entry.value.key: entry.value.value,
+      };
 
   ComplexEnumCodec.fromList(List<MapEntry<String, Codec<V?>>?> list)
-      : map = {
-          for (var i = 0; i < list.length; i++)
-            if (list[i] != null) list[i]!.key: list[i]!.value
-        },
-        _keyedIndex = {
-          for (var i = 0; i < list.length; i++)
-            if (list[i] != null) list[i]!.key: i
-        },
-        _keyedName = {
-          for (var i = 0; i < list.length; i++)
-            if (list[i] != null) i: list[i]!.key
-        };
+    : map = {
+        for (var i = 0; i < list.length; i++)
+          if (list[i] != null) list[i]!.key: list[i]!.value,
+      },
+      _keyedIndex = {
+        for (var i = 0; i < list.length; i++)
+          if (list[i] != null) list[i]!.key: i,
+      },
+      _keyedName = {
+        for (var i = 0; i < list.length; i++)
+          if (list[i] != null) i: list[i]!.key,
+      };
 
   @override
   void encodeTo(MapEntry<String, V?> value, Output output) {
     if (_keyedIndex[value.key] == null) {
       throw EnumException(
-          'Invalid enum value: ${value.key}. Can only accept: ${_keyedIndex.keys.join(', ')}');
+        'Invalid enum value: ${value.key}. Can only accept: ${_keyedIndex.keys.join(', ')}',
+      );
     }
 
     final int palletIndex = _keyedIndex[value.key]!;

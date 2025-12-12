@@ -34,12 +34,7 @@ class PalletConstantMetadata {
   /// Codec instance for PalletConstantMetadata
   static const $PalletConstantMetadata codec = $PalletConstantMetadata._();
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'type': type,
-        'value': value,
-        'docs': docs,
-      };
+  Map<String, dynamic> toJson() => {'name': name, 'type': type, 'value': value, 'docs': docs};
 }
 
 /// Codec for PalletConstantMetadata
@@ -60,12 +55,7 @@ class $PalletConstantMetadata with Codec<PalletConstantMetadata> {
     // Decode documentation
     final docs = SequenceCodec(StrCodec.codec).decode(input);
 
-    return PalletConstantMetadata(
-      name: name,
-      type: type,
-      value: value,
-      docs: docs,
-    );
+    return PalletConstantMetadata(name: name, type: type, value: value, docs: docs);
   }
 
   @override
