@@ -20,8 +20,10 @@ class CompactBigIntCodec with Codec<BigInt> {
         ..pushByte((value.toInt() >> 14).toUnsigned(8))
         ..pushByte((value.toInt() >> 22).toUnsigned(8));
     } else {
-      assertion(value.bitLength >= 30,
-          'Previously checked anyting less than 2^30; qed');
+      assertion(
+        value.bitLength >= 30,
+        'Previously checked anyting less than 2^30; qed',
+      );
       final bytesNeeded = (value.bitLength + 7) >> 3;
       output.pushByte(((bytesNeeded - 4) << 2).toUnsigned(8) | 3);
       for (var i = 0; i < bytesNeeded; i++) {
@@ -80,6 +82,12 @@ class CompactBigIntCodec with Codec<BigInt> {
       return ((value.bitLength + 7) >> 3) + 1;
     }
   }
+
+  @override
+  bool isSizeZero() {
+    // Compact encoding always produces at least 1 byte
+    return false;
+  }
 }
 
 class CompactCodec with Codec<int> {
@@ -102,8 +110,10 @@ class CompactCodec with Codec<int> {
         ..pushByte((value.toInt() >> 14).toUnsigned(8))
         ..pushByte((value.toInt() >> 22).toUnsigned(8));
     } else {
-      assertion(value.bitLength >= 30,
-          'Previously checked anyting less than 2^30; qed');
+      assertion(
+        value.bitLength >= 30,
+        'Previously checked anyting less than 2^30; qed',
+      );
       final bytesNeeded = (value.bitLength + 7) >> 3;
       output.pushByte(((bytesNeeded - 4) << 2).toUnsigned(8) | 3);
       for (var i = 0; i < bytesNeeded; i++) {
@@ -161,5 +171,11 @@ class CompactCodec with Codec<int> {
     } else {
       return ((value.bitLength + 7) >> 3) + 1;
     }
+  }
+
+  @override
+  bool isSizeZero() {
+    // Compact encoding always produces at least 1 byte
+    return false;
   }
 }

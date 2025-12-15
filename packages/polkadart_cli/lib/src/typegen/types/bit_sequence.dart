@@ -5,11 +5,7 @@ class BitSequenceDescriptor extends TypeDescriptor {
   BitStore store;
   BitOrder order;
 
-  BitSequenceDescriptor({
-    required int id,
-    required this.store,
-    required this.order,
-  }) : _id = id;
+  BitSequenceDescriptor({required int id, required this.store, required this.order}) : _id = id;
 
   factory BitSequenceDescriptor.fromPrimitive({
     required int id,
@@ -38,11 +34,7 @@ class BitSequenceDescriptor extends TypeDescriptor {
         store = BitStore.U8;
         break;
     }
-    return BitSequenceDescriptor(
-      id: id,
-      store: store,
-      order: order,
-    );
+    return BitSequenceDescriptor(id: id, store: store, order: order);
   }
 
   @override
@@ -60,10 +52,9 @@ class BitSequenceDescriptor extends TypeDescriptor {
 
   @override
   Expression codecInstance(BasePath from) {
-    return codec(from).constInstance([
-      refs.bitStore.property(store.name),
-      refs.bitOrder.property(order.name),
-    ]);
+    return codec(
+      from,
+    ).constInstance([refs.bitStore.property(store.name), refs.bitOrder.property(order.name)]);
   }
 
   @override
@@ -73,7 +64,8 @@ class BitSequenceDescriptor extends TypeDescriptor {
       literalNum(bitArray.length),
       refs.uint32List
           .property('fromList')
-          .call([literalConstList(bitArray.asUint32Iterable().toList())]).property('buffer'),
+          .call([literalConstList(bitArray.asUint32Iterable().toList())])
+          .property('buffer'),
     ]).asLiteralValue();
   }
 

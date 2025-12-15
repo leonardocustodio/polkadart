@@ -120,7 +120,7 @@ void main() {
       143,
       127,
       166,
-      84
+      84,
     ]);
     final pub = PublicKey.newPublicKey(pubbytes);
 
@@ -157,7 +157,7 @@ void main() {
       191,
       37,
       150,
-      61
+      61,
     ]);
     final Uint8List outputbytes = Uint8List.fromList([
       0,
@@ -191,7 +191,7 @@ void main() {
       43,
       31,
       179,
-      28
+      28,
     ]);
 
     final r255.Element input = r255.Element.newElement();
@@ -234,7 +234,7 @@ void main() {
       76,
       139,
       39,
-      0
+      0,
     ]);
     final Uint8List sbytes = Uint8List.fromList([
       102,
@@ -268,7 +268,7 @@ void main() {
       176,
       246,
       5,
-      3
+      3,
     ]);
     final r255.Scalar c = r255.Scalar();
     c.decode(cbytes);
@@ -284,8 +284,10 @@ void main() {
 
   // input data from https://github.com/noot/schnorrkel/blob/master/src/vrf.rs#L922
   test('Test VrfInOut  MakeBytes', () {
-    final merlin.Transcript transcript =
-        Sr25519.newSigningContext(utf8.encode('yo!'), utf8.encode('meow'));
+    final merlin.Transcript transcript = Sr25519.newSigningContext(
+      utf8.encode('yo!'),
+      utf8.encode('meow'),
+    );
 
     final Uint8List pub = Uint8List.fromList([
       12,
@@ -319,7 +321,7 @@ void main() {
       139,
       220,
       202,
-      0
+      0,
     ]);
     final Uint8List input = Uint8List.fromList([
       188,
@@ -353,7 +355,7 @@ void main() {
       155,
       73,
       128,
-      68
+      68,
     ]);
     final Uint8List output = Uint8List.fromList([
       214,
@@ -387,7 +389,7 @@ void main() {
       64,
       74,
       220,
-      48
+      48,
     ]);
     final Uint8List proof = Uint8List.fromList([
       144,
@@ -453,10 +455,26 @@ void main() {
       112,
       195,
       84,
-      15
+      15,
     ]);
-    final Uint8List makeBytes16Expected = Uint8List.fromList(
-        [169, 57, 149, 50, 0, 243, 120, 138, 25, 250, 74, 235, 247, 137, 228, 40]);
+    final Uint8List makeBytes16Expected = Uint8List.fromList([
+      169,
+      57,
+      149,
+      50,
+      0,
+      243,
+      120,
+      138,
+      25,
+      250,
+      74,
+      235,
+      247,
+      137,
+      228,
+      40,
+    ]);
 
     final PublicKey pubkey = PublicKey.newPublicKey(pub);
 
@@ -468,8 +486,10 @@ void main() {
 
     final VrfProof p = VrfProof.fromUint8List(proof);
 
-    final merlin.Transcript verifyTranscript =
-        Sr25519.newSigningContext(utf8.encode('yo!'), utf8.encode('meow'));
+    final merlin.Transcript verifyTranscript = Sr25519.newSigningContext(
+      utf8.encode('yo!'),
+      utf8.encode('meow'),
+    );
     final bool ok = pubkey.vrfVerify(verifyTranscript, out, p);
     expect(ok, true);
 
@@ -479,8 +499,10 @@ void main() {
   });
 
   test('Test VrfVerify NotKusama', () {
-    final merlin.Transcript transcript =
-        Sr25519.newSigningContext(utf8.encode('yo!'), utf8.encode('meow'));
+    final merlin.Transcript transcript = Sr25519.newSigningContext(
+      utf8.encode('yo!'),
+      utf8.encode('meow'),
+    );
     final Uint8List pub = Uint8List.fromList([
       178,
       10,
@@ -513,7 +535,7 @@ void main() {
       88,
       73,
       45,
-      111
+      111,
     ]);
     final Uint8List input = Uint8List.fromList([
       118,
@@ -547,7 +569,7 @@ void main() {
       72,
       35,
       95,
-      111
+      111,
     ]);
     final Uint8List output = Uint8List.fromList([
       114,
@@ -581,7 +603,7 @@ void main() {
       207,
       105,
       7,
-      5
+      5,
     ]);
     final Uint8List proof = Uint8List.fromList([
       123,
@@ -647,10 +669,26 @@ void main() {
       69,
       57,
       7,
-      14
+      14,
     ]);
-    final Uint8List makeBytes16Expected = Uint8List.fromList(
-        [193, 153, 104, 18, 4, 27, 121, 146, 149, 228, 12, 17, 251, 184, 117, 16]);
+    final Uint8List makeBytes16Expected = Uint8List.fromList([
+      193,
+      153,
+      104,
+      18,
+      4,
+      27,
+      121,
+      146,
+      149,
+      228,
+      12,
+      17,
+      251,
+      184,
+      117,
+      16,
+    ]);
 
     final PublicKey pubkey = PublicKey.newPublicKey(pub);
     pubkey.kusamaVRF = false;
@@ -662,8 +700,10 @@ void main() {
 
     final VrfProof p = VrfProof.fromUint8List(proof);
 
-    final merlin.Transcript verifyTranscript =
-        Sr25519.newSigningContext(utf8.encode('yo!'), utf8.encode('meow'));
+    final merlin.Transcript verifyTranscript = Sr25519.newSigningContext(
+      utf8.encode('yo!'),
+      utf8.encode('meow'),
+    );
     final bool ok = pubkey.vrfVerify(verifyTranscript, out, p);
     expect(ok, true);
 

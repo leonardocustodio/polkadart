@@ -20,6 +20,12 @@ class U8Codec with Codec<int> {
   int sizeHint(int value) {
     return 1;
   }
+
+  @override
+  bool isSizeZero() {
+    // U8 always encodes to 1 byte
+    return false;
+  }
 }
 
 class U8SequenceCodec with Codec<List<int>> {
@@ -49,6 +55,12 @@ class U8SequenceCodec with Codec<List<int>> {
   int sizeHint(List<int> value) {
     return CompactCodec.codec.sizeHint(value.length) + value.length;
   }
+
+  @override
+  bool isSizeZero() {
+    // U8Sequence always has a length prefix (compact-encoded)
+    return false;
+  }
 }
 
 class U8ArrayCodec with Codec<List<int>> {
@@ -68,7 +80,8 @@ class U8ArrayCodec with Codec<List<int>> {
   void encodeTo(List<int> value, Output output) {
     if (value.length != length) {
       throw Exception(
-          'U8ArrayCodec: invalid length, expect $length found ${value.length}');
+        'U8ArrayCodec: invalid length, expect $length found ${value.length}',
+      );
     }
     for (final val in value) {
       U8Codec.codec.encodeTo(val, output);
@@ -78,5 +91,11 @@ class U8ArrayCodec with Codec<List<int>> {
   @override
   int sizeHint(List<int> value) {
     return length;
+  }
+
+  @override
+  bool isSizeZero() {
+    // U8Array is size zero only if length is 0
+    return length == 0;
   }
 }

@@ -1,5 +1,9 @@
 library substrate_metadata;
 
-export 'core/metadata_decoder.dart';
+export 'chain/chain_info.dart';
+export 'derived_codecs/derived_codecs.dart';
 export 'metadata/metadata.dart';
-export 'scale_info/scale_info.dart';
+export 'models/models.dart';
+export 'registry/metadata_type_registry.dart';
+export 'substrate_hashers/substrate_hashers.dart';
+export 'utils/utils.dart';

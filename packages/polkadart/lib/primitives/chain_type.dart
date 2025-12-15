@@ -95,10 +95,7 @@ class $ChainTypeCodec with Codec<ChainType> {
   }
 
   @override
-  void encodeTo(
-    ChainType value,
-    Output output,
-  ) {
+  void encodeTo(ChainType value, Output output) {
     switch (value.runtimeType) {
       case const (Development):
         (value as Development).encodeTo(output);
@@ -130,6 +127,12 @@ class $ChainTypeCodec with Codec<ChainType> {
         throw Exception('ChainType: Unsupported "$value" of type "${value.runtimeType}"');
     }
   }
+
+  @override
+  bool isSizeZero() {
+    // ChainType always encodes with a variant index (U8), so size is never zero
+    return false;
+  }
 }
 
 /// A development chain that runs mainly on one node.
@@ -139,10 +142,7 @@ class Development extends ChainType {
   @override
   Map<String, String?> toJson() => {'Development': null};
   void encodeTo(Output output) {
-    U8Codec.codec.encodeTo(
-      0,
-      output,
-    );
+    U8Codec.codec.encodeTo(0, output);
   }
 }
 
@@ -154,10 +154,7 @@ class Local extends ChainType {
   Map<String, String?> toJson() => {'Local': null};
 
   void encodeTo(Output output) {
-    U8Codec.codec.encodeTo(
-      1,
-      output,
-    );
+    U8Codec.codec.encodeTo(1, output);
   }
 }
 
@@ -168,10 +165,7 @@ class Live extends ChainType {
   @override
   Map<String, String?> toJson() => {'Live': null};
   void encodeTo(Output output) {
-    U8Codec.codec.encodeTo(
-      2,
-      output,
-    );
+    U8Codec.codec.encodeTo(2, output);
   }
 }
 
@@ -193,14 +187,8 @@ class Custom extends ChainType {
   }
 
   void encodeTo(Output output) {
-    U8Codec.codec.encodeTo(
-      3,
-      output,
-    );
-    StrCodec.codec.encodeTo(
-      value,
-      output,
-    );
+    U8Codec.codec.encodeTo(3, output);
+    StrCodec.codec.encodeTo(value, output);
   }
 
   @override

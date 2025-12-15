@@ -83,13 +83,7 @@ class SecretKey implements DerivableKey {
       throw Exception('invalid dskBytes length, expected 32');
     }
 
-    return ExtendedKey(
-      SecretKey.from(
-        dskBytes,
-        nonce,
-      ),
-      dcc,
-    );
+    return ExtendedKey(SecretKey.from(dskBytes, nonce), dcc);
   }
 
   /// hardDeriveMiniSecretKey implements BIP-32 like 'hard' derivation of a mini secret from a secret key

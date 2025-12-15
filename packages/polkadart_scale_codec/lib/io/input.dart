@@ -82,7 +82,8 @@ mixin Input {
   void assertEndOfDataReached([String message = '']) {
     if (hasBytes()) {
       throw Exception(
-          'End of data not reached. There are $remainingLength bytes left to be processed.$message');
+        'End of data not reached. There are $remainingLength bytes left to be processed.$message',
+      );
     }
   }
 }
@@ -118,7 +119,8 @@ class ByteInput with Input {
 
     offset = end; // Update the index
     return Uint8List.fromList(
-        _buffer.sublist(beg, end).toList()); // Extract the required bytes
+      _buffer.sublist(beg, end).toList(),
+    ); // Extract the required bytes
   }
 
   /// clone

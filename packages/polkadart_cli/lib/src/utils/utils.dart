@@ -50,16 +50,11 @@ const Set<String> reservedWords = {
   'codec',
   'encode',
   'decode',
-  'toJson'
+  'toJson',
 };
 
 // Classes from dart:core
-const Set<String> reservedClassnNames = {
-  'BigInt',
-  'List',
-  'Map',
-  'String',
-};
+const Set<String> reservedClassnNames = {'BigInt', 'List', 'Map', 'String'};
 
 bool isValidClassName(String value) =>
     RegExp(r'^[A-Z][a-zA-Z0-9]*$').hasMatch(value) && !reservedClassnNames.contains(value);
@@ -87,12 +82,12 @@ String sanitizeClassName(String name, {String suffix = '_', prefix = 'Class'}) {
 }
 
 List<String> sanitizeDocs(List<String> docs) => docs.map((doc) {
-      if (doc.startsWith('///')) return doc;
-      if (!doc.startsWith(' ')) {
-        doc = ' $doc';
-      }
-      return '///${doc.replaceAll('\n', '\n///')}';
-    }).toList();
+  if (doc.startsWith('///')) return doc;
+  if (!doc.startsWith(' ')) {
+    doc = ' $doc';
+  }
+  return '///${doc.replaceAll('\n', '\n///')}';
+}).toList();
 
 Expression bigIntToExpression(BigInt value) {
   if (value == BigInt.zero) {
@@ -147,8 +142,10 @@ TypeReference _toCompatibleType(TypeReference a, TypeReference b) {
 
     // Recusively convert subtypes
     for (int i = 0; i < a.types.length; i++) {
-      final type =
-          _toCompatibleType(a.types[i].type as TypeReference, b.types[i].type as TypeReference);
+      final type = _toCompatibleType(
+        a.types[i].type as TypeReference,
+        b.types[i].type as TypeReference,
+      );
       builder.types.add(type);
     }
 

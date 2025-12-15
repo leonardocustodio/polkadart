@@ -31,8 +31,11 @@ void main() {
 
     test('#toHex(compressed)', () {
       for (final vector in points.valid.pointCompress) {
-        final (String p, bool compress, String expected) =
-            (vector.p, vector.compress, vector.expected!);
+        final (String p, bool compress, String expected) = (
+          vector.p,
+          vector.compress,
+          vector.expected!,
+        );
         final got = Point.fromHex(p);
         expect(got.toHex(compress), expected);
       }

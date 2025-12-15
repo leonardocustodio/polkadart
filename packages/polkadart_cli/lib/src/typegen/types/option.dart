@@ -46,12 +46,14 @@ class OptionDescriptor extends TypeDescriptor {
       if (input.read() == 0) {
         return refs
             .option(inner.primitive(from))
-            .newInstanceNamed('none', []).asLiteralValue(isConstant: true);
+            .newInstanceNamed('none', [])
+            .asLiteralValue(isConstant: true);
       } else {
         final innerValue = inner.valueFrom(from, input);
-        return refs.option(inner.primitive(from)).newInstanceNamed('some', [
-          innerValue,
-        ]).asLiteralValue(isConstant: constant && innerValue.isConstant);
+        return refs
+            .option(inner.primitive(from))
+            .newInstanceNamed('some', [innerValue])
+            .asLiteralValue(isConstant: constant && innerValue.isConstant);
       }
     }
 
@@ -69,10 +71,7 @@ class OptionDescriptor extends TypeDescriptor {
     }
     final innerJsonType = context.jsonTypeFrom(inner).asNullable();
     if (inner is OptionDescriptor) {
-      return refs.map(
-        refs.string,
-        innerJsonType,
-      );
+      return refs.map(refs.string, innerJsonType);
     }
     return innerJsonType;
   }
@@ -82,13 +81,81 @@ class OptionDescriptor extends TypeDescriptor {
     if (inner is OptionDescriptor) {
       final valueInstance = obj.property('value');
       final innerInstance = inner.instanceToJson(from, valueInstance);
-      return obj.property('isNone').conditional(
-            literalMap({'None': literalNull}),
-            literalMap({'Some': innerInstance}),
-          );
+      return obj
+          .property('isNone')
+          .conditional(literalMap({'None': literalNull}), literalMap({'Some': innerInstance}));
     }
-    final valueInstance = CodeExpression(Block.of([obj.code, Code('?')]));
-    final innerInstance = inner.instanceToJson(from, valueInstance);
-    return innerInstance == valueInstance ? obj : innerInstance;
+    // For nullable options, check if the inner type actually transforms the object
+    final nonNullObj = CodeExpression(Block.of([obj.code, Code('!')]));
+    final innerInstance = inner.instanceToJson(from, nonNullObj);
+    if (innerInstance == nonNullObj) {
+      // If inner doesn't transform the object, just return it as is (already nullable)
+      return obj;
+    }
+    // use null-aware operator
+    if (inner is CompositeBuilder || inner is VariantBuilder) {
+      return obj.nullSafeProperty('toJson').call([]);
+    }
+    if (inner is ArrayDescriptor) {
+      final arrayDesc = inner as ArrayDescriptor;
+      if (arrayDesc.typeDef is PrimitiveDescriptor) {
+        // Primitive arrays just call .toList()
+        return obj.nullSafeProperty('toList').call([]);
+      } else {
+        return obj
+            .nullSafeProperty('map')
+            .call([
+              Method.returnsVoid(
+                (b) => b
+                  ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+                  ..lambda = true
+                  ..body = arrayDesc.typeDef.instanceToJson(from, refer('value')).code,
+              ).closure,
+            ])
+            .property('toList')
+            .call([]);
+      }
+    }
+    if (inner is SequenceDescriptor) {
+      final seqDesc = inner as SequenceDescriptor;
+      if (seqDesc.typeDef is PrimitiveDescriptor) {
+        return obj.nullSafeProperty('toList').call([]);
+      } else {
+        return obj
+            .nullSafeProperty('map')
+            .call([
+              Method.returnsVoid(
+                (b) => b
+                  ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+                  ..lambda = true
+                  ..body = seqDesc.typeDef.instanceToJson(from, refer('value')).code,
+              ).closure,
+            ])
+            .property('toList')
+            .call([]);
+      }
+    }
+    // TypeDefBuilder
+    if (inner is TypeDefBuilder) {
+      final typedef = inner as TypeDefBuilder;
+      final typeDefInner = typedef.generator;
+      // For nested options (Option<TypeDef<Option<T>>>), delegate to the typedef's instanceToJson
+      // which will handle the inner option correctly with null-safe operators
+      if (typeDefInner is OptionDescriptor) {
+        return typedef.instanceToJson(from, obj);
+      }
+      if (typeDefInner is ArrayDescriptor) {
+        if (typeDefInner.typeDef is PrimitiveDescriptor) {
+          return obj.nullSafeProperty('toList').call([]);
+        }
+      }
+      if (typeDefInner is SequenceDescriptor) {
+        if (typeDefInner.typeDef is PrimitiveDescriptor) {
+          return obj.nullSafeProperty('toList').call([]);
+        }
+      }
+    }
+    // For other types (like Tuple), keep the conditional to avoid type issues
+    return obj.notEqualTo(literalNull).conditional(innerInstance, literalNull);
   }
 }

@@ -16,7 +16,8 @@ class Secp256k1 extends CryptoScheme {
     for (final junction in path) {
       if (junction.isSoft) {
         throw SubstrateBip39Exception.invalidPath(
-            'Soft key derivation is not supported for ECDSA/Secp256k1');
+          'Soft key derivation is not supported for ECDSA/Secp256k1',
+        );
       }
       deriveHardJunction(output, junction.junctionId, output: output);
     }

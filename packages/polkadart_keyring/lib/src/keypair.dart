@@ -228,8 +228,10 @@ abstract class KeyPair {
   /// Returns `true` if the `KeyPair` matches with the other object.
   @override
   bool operator ==(Object other) {
-    return const ListEquality().equals(bytes().toList(growable: false),
-        (other as KeyPair).bytes().toList(growable: false));
+    return const ListEquality().equals(
+      bytes().toList(growable: false),
+      (other as KeyPair).bytes().toList(growable: false),
+    );
   }
 
   ///

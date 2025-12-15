@@ -15,8 +15,11 @@ class TupleCodec with Codec<List<dynamic>> {
 
   @override
   List<dynamic> decode(Input input) {
-    return List.generate(codecs.length, (index) => codecs[index].decode(input),
-        growable: false);
+    return List.generate(
+      codecs.length,
+      (index) => codecs[index].decode(input),
+      growable: false,
+    );
   }
 
   @override
@@ -27,5 +30,15 @@ class TupleCodec with Codec<List<dynamic>> {
       size += codecs[i].sizeHint(value[i]);
     }
     return size;
+  }
+
+  @override
+  bool isSizeZero() {
+    // Tuple is size zero if it's empty OR if all inner codecs are size zero
+    if (codecs.isEmpty) {
+      return true;
+    }
+
+    return codecs.every((codec) => codec.isSizeZero());
   }
 }

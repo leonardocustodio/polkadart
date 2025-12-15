@@ -2,7 +2,10 @@ part of sr25519;
 
 /// VerifyBatch batch verifies the given signatures
 bool verifyBatch(
-    List<merlin.Transcript> transcripts, List<Signature> signatures, List<PublicKey> pubkeys) {
+  List<merlin.Transcript> transcripts,
+  List<Signature> signatures,
+  List<PublicKey> pubkeys,
+) {
   if (transcripts.length != signatures.length ||
       signatures.length != pubkeys.length ||
       pubkeys.length != transcripts.length) {

@@ -128,7 +128,7 @@ void main() {
         'void come effort suffer camp survey warrior heavy shoot primary clutch crush open amazing screen patrol group space point ten exist slush involve unfold',
         'f585c11aec520db57dd353c69554b21a89b20fb0650966fa0a9d6f74fd989d8f',
         '938ba18c3f521f19bd4a399c8425b02c716844325b1a65106b9d1593fbafe5e0b85448f523f91c48e331995ff24ae406757cff47d11f240847352b348ff436ed',
-      ]
+      ],
     ];
 
     for (final vector in testVectors) {
@@ -138,8 +138,10 @@ void main() {
 
       final entropy = Mnemonic.fromSentence(phrase, Language.english).entropy;
       final seed = await SubstrateBip39.seedFromEntropy(entropy, password: 'Substrate');
-      final seedFromPhrase =
-          await SubstrateBip39.ed25519.seedFromUri(phrase, password: 'Substrate');
+      final seedFromPhrase = await SubstrateBip39.ed25519.seedFromUri(
+        phrase,
+        password: 'Substrate',
+      );
       final secret = await SubstrateBip39.miniSecretFromEntropy(entropy, password: 'Substrate');
 
       expect(entropy, expectedEntropy);
@@ -155,30 +157,12 @@ void main() {
         'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about//Alice',
         '44619e7d561115c143d6926973562c86cf5b31c915e9c0a5294e7c74dabfb17b',
       ],
-      [
-        '//Alice',
-        'abf8e5bdbe30c65656c0a3cbd181ff8a56294a69dfedd27982aace4a76909115',
-      ],
-      [
-        '//Bob',
-        '3b7b60af2abcd57ba401ab398f84f4ca54bd6b2140d2503fbcf3286535fe3ff1',
-      ],
-      [
-        '//Charlie',
-        '072c02fa1409dc37e03a4ed01703d4a9e6bba9c228a49a00366e9630a97cba7c',
-      ],
-      [
-        '//Dave',
-        '771f47d3caf8a2ee40b0719e1c1ecbc01d73ada220cf08df12a00453ab703738',
-      ],
-      [
-        '//Eve',
-        'bef5a3cd63dd36ab9792364536140e5a0cce6925969940c431934de056398556',
-      ],
-      [
-        '//Ferdie',
-        '1441e38eb309b66e9286867a5cd05902b05413eb9723a685d4d77753d73d0a1d',
-      ],
+      ['//Alice', 'abf8e5bdbe30c65656c0a3cbd181ff8a56294a69dfedd27982aace4a76909115'],
+      ['//Bob', '3b7b60af2abcd57ba401ab398f84f4ca54bd6b2140d2503fbcf3286535fe3ff1'],
+      ['//Charlie', '072c02fa1409dc37e03a4ed01703d4a9e6bba9c228a49a00366e9630a97cba7c'],
+      ['//Dave', '771f47d3caf8a2ee40b0719e1c1ecbc01d73ada220cf08df12a00453ab703738'],
+      ['//Eve', 'bef5a3cd63dd36ab9792364536140e5a0cce6925969940c431934de056398556'],
+      ['//Ferdie', '1441e38eb309b66e9286867a5cd05902b05413eb9723a685d4d77753d73d0a1d'],
       [
         'bottom drive obey lake curtain smoke basket hold race lonely fit walk//1//2//3',
         'b4b62b076ae5e9b63dc6a976924fa7a83bf0e7d2d627bd4374344f78c871e248',
@@ -225,8 +209,10 @@ void main() {
   test('seedFromUri', () async {
     final entropy = hex.decode('59d1d7b63fbc9a343360a7dabc035f66d7504c549696d2b0b1ae56862911a821');
     final seed = await SubstrateBip39.seedFromEntropy(entropy);
-    expect(hex.encode(seed),
-        '38b35a8cfbad9e9ca3ed4260be142b8237494aea83dee55d24f6228d4014b5736f40f51ebb8ddab08c31da0da394a0e0f68cb0e06402497e31908e942bf79d78');
+    expect(
+      hex.encode(seed),
+      '38b35a8cfbad9e9ca3ed4260be142b8237494aea83dee55d24f6228d4014b5736f40f51ebb8ddab08c31da0da394a0e0f68cb0e06402497e31908e942bf79d78',
+    );
   });
 
   test('miniSecretFromEntropy', () async {

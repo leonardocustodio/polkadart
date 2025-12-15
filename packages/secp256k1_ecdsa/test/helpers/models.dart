@@ -12,7 +12,4 @@ class Models {
   }
 }
 
-enum ModelsType {
-  ecdsa,
-  points,
-}
+enum ModelsType { ecdsa, points }

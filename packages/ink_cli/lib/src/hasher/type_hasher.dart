@@ -6,61 +6,56 @@ class TypeHasher extends HasherAbstract {
   TypeHasher(List<CodecInterface> types) : _dcg = DCGHasher(types, _computeHash);
 
   @override
-  String getHash(int nodeIndex) {
+  String getHash(final int nodeIndex) {
     return _dcg.getHash(nodeIndex);
   }
 }
 
 Map<String, dynamic> _computeHash(
-    List<CodecInterface> types, HasherAbstract hasher, CodecInterface type) {
-  switch (type.kind) {
+  final List<CodecInterface> types,
+  final HasherAbstract hasher,
+  final CodecInterface type,
+) {
+  switch (type) {
     //
     // Primitive
-    case TypeKind.primitive:
-      return <String, dynamic>{
-        'primitive': toStringPrimitive((type as PrimitiveCodecInterface).primitive.name),
-      };
+    case PrimitiveCodecInterface():
+      return <String, dynamic>{'primitive': toStringPrimitive(type.primitive)};
     //
     // Compact
-    case TypeKind.compact:
-      final primitive = types[(type as CompactCodecInterface).type];
-      assert(primitive.kind == TypeKind.primitive);
+    case CompactCodecInterface():
+      final primitive = types[type.type];
+      assert(primitive is PrimitiveCodecInterface);
       return <String, dynamic>{
-        'primitive': toStringPrimitive((type as PrimitiveCodecInterface).primitive.name),
+        'primitive': toStringPrimitive((type as PrimitiveCodecInterface).primitive),
       };
     //
     // Bit Sequence
-    case TypeKind.bitsequence:
+    case BitSequenceCodecInterface():
       return <String, dynamic>{'binary': true};
     //
     // Array
-    case TypeKind.array:
-      return <String, dynamic>{
-        'array': hasher.getHash((type as ArrayCodecInterface).type),
-      };
+    case ArrayCodecInterface():
+      return <String, dynamic>{'array': hasher.getHash(type.type)};
     //
-    // Array
-    case TypeKind.sequence:
-      return <String, dynamic>{
-        'array': hasher.getHash((type as SequenceCodecInterface).type),
-      };
+    // SequenceCodec
+    case SequenceCodecInterface():
+      return <String, dynamic>{'array': hasher.getHash(type.type)};
     //
     // Tuple
-    case TypeKind.tuple:
-      final tuple = type as TupleCodecInterface;
+    case TupleCodecInterface():
       return <String, dynamic>{
-        'tuple': tuple.tuple.map((typeIndex) => hasher.getHash(typeIndex)).toList(),
+        'tuple': type.tuple.map((typeIndex) => hasher.getHash(typeIndex)).toList(),
       };
     //
     // Composite
-    case TypeKind.composite:
-      final composite = type as CompositeCodecInterface;
-      if (composite.fields.isEmpty || composite.fields[0].name == null) {
+    case CompositeCodecInterface():
+      if (type.fields.isEmpty || type.fields[0].name == null) {
         return <String, dynamic>{
-          'tuple': composite.fields.map((field) => hasher.getHash(field.type)).toList(),
+          'tuple': type.fields.map((field) => hasher.getHash(field.type)).toList(),
         };
       } else {
-        final List<interfaces_base.Field> fields = composite.fields.toList();
+        final List<Field> fields = type.fields.toList();
         fields.sort(compareByName);
         return <String, dynamic>{
           'struct': fields
@@ -75,9 +70,9 @@ Map<String, dynamic> _computeHash(
       }
     //
     // Variant
-    case TypeKind.variant:
-      final variants = (type as VariantCodecInterface).variants.toList();
-      variants.sort(compareByName);
+    case VariantCodecInterface():
+      final variants = type.variants.toList();
+      variants.sort((final variantA, final variantB) => variantA.name.compareTo(variantB.name));
       return <String, dynamic>{
         'variant': variants.map((variant) {
           if (variant.fields.isEmpty || variant.fields[0].name == null) {
@@ -94,9 +89,7 @@ Map<String, dynamic> _computeHash(
                   hasher,
                   TupleCodecInterface(
                     id: -1,
-                    tuple: variant.fields
-                        .map((final interfaces_base.Field field) => field.type)
-                        .toList(),
+                    tuple: variant.fields.map((final Field field) => field.type).toList(),
                   ),
                 ),
               };
@@ -108,7 +101,7 @@ Map<String, dynamic> _computeHash(
               'name': variant.name,
               'type': fields
                   .map(
-                    (final interfaces_base.Field field) => <String, dynamic>{
+                    (final Field field) => <String, dynamic>{
                       'name': field.name,
                       'type': hasher.getHash(field.type),
                     },
@@ -120,47 +113,43 @@ Map<String, dynamic> _computeHash(
       };
     //
     // Option
-    case TypeKind.option:
-      return <String, dynamic>{
-        'option': hasher.getHash((type as OptionCodecInterface).type),
-      };
+    case OptionCodecInterface():
+      return <String, dynamic>{'option': hasher.getHash(type.type)};
+
+    default:
+      throw Exception('');
   }
 }
 
-int compareByName(dynamic a, dynamic b) {
+int compareByName(final Field a, final Field b) {
   final an = a.name!;
   final bn = b.name!;
   return an.compareTo(bn);
 }
 
-String toStringPrimitive(String primitive) {
-  switch (primitive.toUpperCase()) {
-    case 'I8':
-    case 'U8':
-    case 'I16':
-    case 'U16':
-    case 'I32':
-    case 'U32':
-      return 'int';
-    case 'I64':
-    case 'U64':
-    case 'I128':
-    case 'U128':
-    case 'I256':
-    case 'U256':
-      return 'BigInt';
-    case 'BOOL':
-      return 'bool';
-    case 'STR':
-      return 'string';
-    default:
-      throw Exception('Unexpected case: $primitive');
-  }
+String toStringPrimitive(final Primitive primitive) {
+  return switch (primitive) {
+    Primitive.I8 ||
+    Primitive.U8 ||
+    Primitive.I16 ||
+    Primitive.U16 ||
+    Primitive.I32 ||
+    Primitive.U32 => 'int',
+    Primitive.I64 ||
+    Primitive.U64 ||
+    Primitive.I128 ||
+    Primitive.U128 ||
+    Primitive.I256 ||
+    Primitive.U256 => 'BigInt',
+    Primitive.Bool => 'bool',
+    Primitive.Str => 'string',
+    _ => throw Exception('Unexpected case: $primitive'),
+  };
 }
 
 final _hashers = <List<CodecInterface>, TypeHasher>{};
 
-TypeHasher getTypeHasher(List<CodecInterface> types) {
+TypeHasher getTypeHasher(final List<CodecInterface> types) {
   TypeHasher? hasher = _hashers[types];
   if (hasher == null) {
     hasher = TypeHasher(types);
@@ -169,7 +158,7 @@ TypeHasher getTypeHasher(List<CodecInterface> types) {
   return hasher;
 }
 
-String getTypeHash(List<CodecInterface> types, dynamic type) {
+String getTypeHash(final List<CodecInterface> types, final dynamic type) {
   assert(type is int || type is CodecInterface);
 
   final TypeHasher hasher = getTypeHasher(types);

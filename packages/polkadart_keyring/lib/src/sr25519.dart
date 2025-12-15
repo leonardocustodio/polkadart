@@ -20,8 +20,10 @@ class Sr25519KeyPair extends KeyPair {
     return (await _fromUri(uri, password)).$1;
   }
 
-  Future<(List<int>, SecretUri)> _fromUri(String uri,
-      [String? password]) async {
+  Future<(List<int>, SecretUri)> _fromUri(
+    String uri, [
+    String? password,
+  ]) async {
     if (uri.startsWith('//')) {
       uri = '$DEV_PHRASE$uri';
     }
@@ -44,14 +46,18 @@ class Sr25519KeyPair extends KeyPair {
 
     final List<int> entropy;
     try {
-      entropy =
-          Mnemonic.fromSentence(secretUri.phrase, Language.english).entropy;
+      entropy = Mnemonic.fromSentence(
+        secretUri.phrase,
+        Language.english,
+      ).entropy;
     } on Exception catch (e) {
       throw SubstrateBip39Exception.fromException(e);
     }
 
-    seed =
-        await CryptoScheme.seedFromEntropy(entropy, password: passwordOverride);
+    seed = await CryptoScheme.seedFromEntropy(
+      entropy,
+      password: passwordOverride,
+    );
     return (seed, secretUri);
   }
 
@@ -83,9 +89,14 @@ class Sr25519KeyPair extends KeyPair {
 
   /// deriveCommon provides common functions for testing Soft and Hard key derivation
   sr25519.ExtendedKey deriveHardSoft(
-      bool hard, sr25519.DerivableKey key, DeriveJunction junction) {
-    final List<int> ccBytes =
-        List.from(junction.junctionId.sublist(0, 32), growable: false);
+    bool hard,
+    sr25519.DerivableKey key,
+    DeriveJunction junction,
+  ) {
+    final List<int> ccBytes = List.from(
+      junction.junctionId.sublist(0, 32),
+      growable: false,
+    );
 
     if (hard) {
       return sr25519.ExtendedKey.deriveKeyHard(key, [], ccBytes);
@@ -108,7 +119,10 @@ class Sr25519KeyPair extends KeyPair {
   @override
   bool verify(Uint8List message, Uint8List signature) {
     final (verified, exception) = sr25519.Sr25519.verify(
-        _publicKey, sr25519.Signature.fromBytes(signature), message);
+      _publicKey,
+      sr25519.Signature.fromBytes(signature),
+      message,
+    );
     if (exception != null) {
       throw exception;
     }

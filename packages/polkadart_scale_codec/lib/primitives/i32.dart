@@ -22,6 +22,12 @@ class I32Codec with Codec<int> {
   int sizeHint(int value) {
     return 4;
   }
+
+  @override
+  bool isSizeZero() {
+    // I32 always encodes to 4 bytes
+    return false;
+  }
 }
 
 class I32SequenceCodec with Codec<List<int>> {
@@ -51,6 +57,12 @@ class I32SequenceCodec with Codec<List<int>> {
   int sizeHint(List<int> value) {
     return CompactCodec.codec.sizeHint(value.length) + value.length * 4;
   }
+
+  @override
+  bool isSizeZero() {
+    // I32Sequence always has a length prefix (compact-encoded)
+    return false;
+  }
 }
 
 class I32ArrayCodec with Codec<Int32List> {
@@ -70,7 +82,8 @@ class I32ArrayCodec with Codec<Int32List> {
   void encodeTo(Int32List value, Output output) {
     if (value.length != length) {
       throw Exception(
-          'I32ArrayCodec: invalid length, expect $length found ${value.length}');
+        'I32ArrayCodec: invalid length, expect $length found ${value.length}',
+      );
     }
     for (final val in value) {
       I32Codec.codec.encodeTo(val, output);
@@ -80,5 +93,11 @@ class I32ArrayCodec with Codec<Int32List> {
   @override
   int sizeHint(Int32List value) {
     return length * 4;
+  }
+
+  @override
+  bool isSizeZero() {
+    // I32Array is size zero only if length is 0
+    return length == 0;
   }
 }

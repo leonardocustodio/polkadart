@@ -20,11 +20,11 @@ analyzer:
     use_string_in_part_of_directives: ignore
     unnecessary_library_name: ignore
 
-# Uncomment the following section to specify additional rules.
-
-# linter:
-#   rules:
-#     - camel_case_types
+linter:
+  rules:
+    - prefer_final_locals
+    - prefer_final_fields
+    - prefer_final_in_for_each
 
 # analyzer:
 #   exclude:

@@ -3,34 +3,45 @@ part of utils;
 /// Returns normalized Json to Human readable format
 extension ToJson<T> on T {
   T toJson() {
-    if (this is MapEntry) {
-      return _encodeJson(this) as T;
-    }
-    if (this is List<T>) {
-      return (this as List<T>).map((T e) => e.toJson()).toList(growable: false) as T;
-    }
-    if (this is List<dynamic>) {
-      return (this as List<dynamic>)
-          .cast<Map<String, dynamic>>()
-          .map((Map<String, dynamic> e) => e.toJson())
-          .toList(growable: false) as T;
-    }
-    if (this is List<Map<String, dynamic>> || this is Map<String, dynamic>) {
-      return jsonDecode(toHuman());
-    }
-    return this;
+    return _convertToJsonRecursive(this) as T;
   }
 
   String toHuman() {
-    if (this is List<Map<String, dynamic>> || this is Map<String, dynamic>) {
+    final converted = _convertToJsonRecursive(this);
+    if (converted is List || converted is Map) {
       return jsonEncode(
-        this,
-        // handle BigInt and Some / None
+        converted,
+        // handle BigInt and other special types
         toEncodable: _encodeJson,
       );
     }
-    return toString();
+    return converted.toString();
   }
+}
+
+/// Recursively converts values to JSON-compatible format
+dynamic _convertToJsonRecursive(dynamic value) {
+  if (value is MapEntry) {
+    // Convert MapEntry to Map with single key-value pair
+    return {value.key.toString(): _convertToJsonRecursive(value.value)};
+  } else if (value is Map) {
+    // Recursively convert all map entries
+    final result = <String, dynamic>{};
+    value.forEach((k, v) {
+      result[k.toString()] = _convertToJsonRecursive(v);
+    });
+    return result;
+  } else if (value is List) {
+    // Recursively convert all list items
+    return value.map((item) => _convertToJsonRecursive(item)).toList();
+  } else if (value is BigInt) {
+    return value.toString();
+  } else if (value is BitArray) {
+    return value.toJson();
+  } else if (value is Option) {
+    return _extractSomeValue(value);
+  }
+  return value;
 }
 
 Object? _encodeJson(Object? value) {
@@ -41,9 +52,7 @@ Object? _encodeJson(Object? value) {
   } else if (value is Option) {
     return _extractSomeValue(value);
   } else if (value is MapEntry) {
-    final v = <String, dynamic>{
-      value.key: _encodeJson(value.value),
-    };
+    final v = <String, dynamic>{value.key: _encodeJson(value.value)};
     return v;
   }
   if (value is Map && value.isNotEmpty && value.keys.first is int) {

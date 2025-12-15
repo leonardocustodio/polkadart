@@ -32,11 +32,22 @@ class CompositeCodec with Codec<Map<String, dynamic>> {
     for (final entry in mappedCodec.entries) {
       if (mappedCodec.containsKey(entry.key) == false) {
         throw CompositeException(
-            'Codec not found for key: ${entry.key}, in mappedCodec: $mappedCodec');
+          'Codec not found for key: ${entry.key}, in mappedCodec: $mappedCodec',
+        );
       }
 
       final codec = entry.value;
       codec.encodeTo(value[entry.key], output);
     }
+  }
+
+  @override
+  bool isSizeZero() {
+    // Composite is size zero if it's empty OR if all inner codecs are size zero
+    if (mappedCodec.isEmpty) {
+      return true;
+    }
+
+    return mappedCodec.values.every((codec) => codec.isSizeZero());
   }
 }

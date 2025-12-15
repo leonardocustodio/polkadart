@@ -22,4 +22,12 @@ mixin Codec<E> {
     encodeTo(value, bytes);
     return bytes.toBytes();
   }
+
+  /// Is Size Zero
+  ///
+  /// Iterate through the inner codecs if available,
+  /// and find whether any of it is non-zero size or not.
+  ///
+  /// Helps to avoid encoding or decoding the values who encapsulates the empty Composite Codec inside one another.
+  bool isSizeZero();
 }

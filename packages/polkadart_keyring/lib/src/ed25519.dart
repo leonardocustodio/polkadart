@@ -18,8 +18,10 @@ class Ed25519KeyPair extends KeyPair {
 
   @override
   Future<KeyPair> fromUri(String uri, [String? password]) async {
-    final seed =
-        await SubstrateBip39.ed25519.seedFromUri(uri, password: password);
+    final seed = await SubstrateBip39.ed25519.seedFromUri(
+      uri,
+      password: password,
+    );
     return fromSeed(Uint8List.fromList(seed));
   }
 
@@ -51,8 +53,10 @@ class Ed25519KeyPair extends KeyPair {
 
   @override
   Future<void> unlockFromMnemonic(String mnemonic, [String? password]) async {
-    final seed =
-        await SubstrateBip39.ed25519.seedFromUri(mnemonic, password: password);
+    final seed = await SubstrateBip39.ed25519.seedFromUri(
+      mnemonic,
+      password: password,
+    );
     _unlock(ed.newKeyFromSeed(Uint8List.fromList(seed)));
   }
 

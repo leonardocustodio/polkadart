@@ -12,8 +12,10 @@ void main() {
     final SecretKey priv = KeyPair.generateKeypair().secretKey;
 
     late final merlin.Transcript transcript;
-    expect(() => transcript = Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot')),
-        returnsNormally);
+    expect(
+      () => transcript = Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot')),
+      returnsNormally,
+    );
     final msg = utf8.encode('hello');
     final cc = DartBlake2b().hashSync(msg).bytes;
     expect(() => priv.deriveKey(transcript, cc), returnsNormally);
@@ -24,10 +26,14 @@ void main() {
     final PublicKey pub = keyPair.publicKey;
     final SecretKey priv = keyPair.secretKey;
 
-    final merlin.Transcript transcriptPriv =
-        Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot'));
-    final merlin.Transcript transcriptPub =
-        Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('noot'));
+    final merlin.Transcript transcriptPriv = Sr25519.newSigningContext(
+      utf8.encode('test'),
+      utf8.encode('noot'),
+    );
+    final merlin.Transcript transcriptPub = Sr25519.newSigningContext(
+      utf8.encode('test'),
+      utf8.encode('noot'),
+    );
     final List<int> msg = utf8.encode('hello');
 
     final List<int> cc = DartBlake2b().hashSync(msg).bytes;
@@ -44,10 +50,14 @@ void main() {
     // confirm public keys are the same from private and public paths
     expect(const ListEquality().equals(pubbytes, pubFromPrivBytes), true);
 
-    final merlin.Transcript signingTranscript =
-        Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('signme'));
-    final merlin.Transcript verifyTranscript =
-        Sr25519.newSigningContext(utf8.encode('test'), utf8.encode('signme'));
+    final merlin.Transcript signingTranscript = Sr25519.newSigningContext(
+      utf8.encode('test'),
+      utf8.encode('signme'),
+    );
+    final merlin.Transcript verifyTranscript = Sr25519.newSigningContext(
+      utf8.encode('test'),
+      utf8.encode('signme'),
+    );
     final sig = (dpriv.key as SecretKey).sign(signingTranscript);
 
     // confirm that key derived from public path can verify signature derived from private path

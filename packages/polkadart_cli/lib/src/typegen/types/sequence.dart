@@ -8,8 +8,11 @@ class SequenceDescriptor extends TypeDescriptor {
 
   SequenceDescriptor._lazy(this._id);
 
-  factory SequenceDescriptor.lazy(
-      {required int id, required LazyLoader loader, required int codec}) {
+  factory SequenceDescriptor.lazy({
+    required int id,
+    required LazyLoader loader,
+    required int codec,
+  }) {
     final generator = SequenceDescriptor._lazy(id);
     loader.addLoader((Map<int, TypeDescriptor> register) {
       generator.typeDef = register[codec]!;
@@ -98,8 +101,13 @@ class SequenceDescriptor extends TypeDescriptor {
   LiteralValue listToExpression(List<int> values, bool constant) {
     final TypeReference listType = refs.list(ref: refs.int);
     if (!constant && values.every((value) => value == 0)) {
-      return listType.newInstanceNamed('filled', [literalNum(values.length), literalNum(0)],
-          {'growable': literalTrue}).asLiteralValue();
+      return listType
+          .newInstanceNamed(
+            'filled',
+            [literalNum(values.length), literalNum(0)],
+            {'growable': literalTrue},
+          )
+          .asLiteralValue();
     } else if (constant) {
       return literalConstList(values, refs.int).asLiteralValue(isConstant: true);
     }
@@ -109,8 +117,13 @@ class SequenceDescriptor extends TypeDescriptor {
   LiteralValue listToExpressionBigInt(List<BigInt> values, bool constant) {
     final TypeReference listType = refs.list(ref: refs.bigInt);
     if (!constant && values.every((value) => value == BigInt.zero)) {
-      return listType.newInstanceNamed('filled', [literalNum(values.length), refer('BigInt.zero')],
-          {'growable': literalTrue}).asLiteralValue();
+      return listType
+          .newInstanceNamed(
+            'filled',
+            [literalNum(values.length), refer('BigInt.zero')],
+            {'growable': literalTrue},
+          )
+          .asLiteralValue();
     }
 
     final bigIntExpressions = values.map((value) {
@@ -156,7 +169,7 @@ class SequenceDescriptor extends TypeDescriptor {
 
     final length = CompactCodec.codec.decode(input);
     final values = <LiteralValue>[
-      for (int i = 0; i < length; i++) typeDef.valueFrom(from, input, constant: constant)
+      for (int i = 0; i < length; i++) typeDef.valueFrom(from, input, constant: constant),
     ];
 
     if (constant && values.every((value) => value.isConstant)) {
@@ -219,10 +232,12 @@ class SequenceDescriptor extends TypeDescriptor {
     return obj
         .property('map')
         .call([
-          Method.returnsVoid((b) => b
-            ..requiredParameters.add(Parameter((b) => b..name = 'value'))
-            ..lambda = true
-            ..body = typeDef.instanceToJson(from, refer('value')).code).closure
+          Method.returnsVoid(
+            (b) => b
+              ..requiredParameters.add(Parameter((b) => b..name = 'value'))
+              ..lambda = true
+              ..body = typeDef.instanceToJson(from, refer('value')).code,
+          ).closure,
         ])
         .property('toList')
         .call([]);

@@ -23,7 +23,7 @@ class DeriveJunction {
   static const junctionIdLength = 32;
 
   const DeriveJunction(this.hardenedDerivation, this.junctionId)
-      : assert(junctionId.length == junctionIdLength);
+    : assert(junctionId.length == junctionIdLength);
 
   /// Create a new DeriveJunction from a given byte encoded value.
   factory DeriveJunction.fromBytes(bool hard, Uint8List junctionId) {
@@ -117,8 +117,9 @@ class SecretUri {
   /// The root phrase for our publicly known keys.
   static const devPhrase = 'bottom drive obey lake curtain smoke basket hold race lonely fit walk';
 
-  static final RegExp _secretPhraseRegex =
-      RegExp(r'^(?<phrase>[\d\w ]+)?(?<path>(//?[^/]+)*)(///(?<password>.*))?$');
+  static final RegExp _secretPhraseRegex = RegExp(
+    r'^(?<phrase>[\d\w ]+)?(?<path>(//?[^/]+)*)(///(?<password>.*))?$',
+  );
   static final RegExp _junctionRegex = RegExp(r'/(/?[^/]+)');
 
   SecretUri(this.phrase, this.password, this.junctions);

@@ -10,8 +10,10 @@ class Names {
   Names(this._types);
 
   void assign(final int ti, final String name) {
-    assert(_isFree(name),
-        'Attempted to assign name "$name" which is already it is already reserved or assigned.');
+    assert(
+      _isFree(name),
+      'Attempted to assign name "$name" which is already it is already reserved or assigned.',
+    );
     _assigned[name] = getTypeHash(_types, ti);
     _assignment[ti] = name;
   }
@@ -22,7 +24,9 @@ class Names {
 
   void reserve(final String name) {
     assert(
-        _isFree(name), 'Cannot reserve name "$name" because it is already reserved or assigned.');
+      _isFree(name),
+      'Cannot reserve name "$name" because it is already reserved or assigned.',
+    );
     _reserved.add(name);
   }
 
@@ -76,7 +80,7 @@ class Names {
     // Here we try to name everything (except sequences) if it doesn't have a name yet.
     for (int ti = 0; ti < _types.length; ti++) {
       final CodecInterface type = _types[ti];
-      if (_assignment.containsKey(ti) || type.kind == TypeKind.sequence) {
+      if (_assignment.containsKey(ti) || type is SequenceCodecInterface) {
         continue;
       }
 
@@ -89,7 +93,7 @@ class Names {
     // -- Third pass --
     // If still unnamed (and not a sequence), we look for a single alias
     for (int ti = 0; ti < _types.length; ti++) {
-      if (_assignment.containsKey(ti) || _types[ti].kind == TypeKind.sequence) {
+      if (_assignment.containsKey(ti) || _types[ti] is SequenceCodecInterface) {
         continue;
       }
 
@@ -131,10 +135,10 @@ String? deriveName(final CodecInterface type) {
 
 bool isNameNeeded(final List<CodecInterface> types, final int ti) {
   final CodecInterface ty = types[ti];
-  switch (ty.kind) {
-    case TypeKind.variant:
-      return asResultType(ty as VariantCodecInterface) == null && asOptionType(ty) == null;
-    case TypeKind.composite:
+  switch (ty) {
+    case VariantCodecInterface():
+      return asResultType(ty) == null && asOptionType(ty) == null;
+    case CompositeCodecInterface():
       return true;
     default:
       return false;
@@ -182,10 +186,7 @@ Map<String, int?>? asResultType(final VariantCodecInterface type) {
       errType = err.fields[0].type;
     }
 
-    return <String, int?>{
-      'ok': okType,
-      'err': errType,
-    };
+    return <String, int?>{'ok': okType, 'err': errType};
   }
   return null;
 }
@@ -225,9 +226,7 @@ Map<String, int?>? asOptionType(final VariantCodecInterface type) {
     if (some.fields.isNotEmpty) {
       someType = some.fields[0].type;
     }
-    return <String, int?>{
-      'some': someType,
-    };
+    return <String, int?>{'some': someType};
   }
   return null;
 }
@@ -235,22 +234,3 @@ Map<String, int?>? asOptionType(final VariantCodecInterface type) {
 bool isValueVariant(final Variants v) {
   return v.fields.isEmpty || (v.fields.length < 2 && v.fields[0].name == null);
 }
-
-/* /// Placeholder for your real implementation.
-String getTypeHash(List<Type> types, int ti) {
-  // Return a stable hash or unique string for the type at `ti`.
-  // This is just a stub.
-  return 'hash_of_type_$ti';
-}
-
-/// Placeholder for your real implementation.
-bool asResultType(Type ty) {
-  // Return `true` if `ty` is recognized as a `Result`.
-  return false;
-}
-
-/// Placeholder for your real implementation.
-bool asOptionType(Type ty) {
-  // Return `true` if `ty` is recognized as an `Option`.
-  return false;
-} */

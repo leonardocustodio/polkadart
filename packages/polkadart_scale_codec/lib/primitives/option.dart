@@ -32,6 +32,12 @@ class NestedOptionCodec<E> with Codec<Option<E>> {
     }
     return 1 + subtypeCodec.sizeHint(value.value as E);
   }
+
+  @override
+  bool isSizeZero() {
+    // NestedOption always has at least 1 byte for the Some/None flag
+    return false;
+  }
 }
 
 class OptionCodec<E> with Codec<E?> {
@@ -64,6 +70,12 @@ class OptionCodec<E> with Codec<E?> {
     }
     return 1 + subtypeCodec.sizeHint(value);
   }
+
+  @override
+  bool isSizeZero() {
+    // Option always has at least 1 byte for the Some/None flag
+    return false;
+  }
 }
 
 const None = Option.none();
@@ -73,9 +85,7 @@ class Option<E> {
   final bool _isSome; // Workaround for Option<int?>.some(null)
 
   const Option.some(this.value) : _isSome = true;
-  const Option.none()
-      : value = null,
-        _isSome = false;
+  const Option.none() : value = null, _isSome = false;
 
   bool get isSome => _isSome;
   bool get isNone => !_isSome;

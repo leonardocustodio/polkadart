@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:ink_abi/ink_abi_base.dart';
+import 'package:ink_abi/ink_abi.dart';
 import 'package:ink_cli/ink_cli.dart';
 import 'package:polkadart/polkadart.dart';
 import 'dart:typed_data';
@@ -15,13 +15,13 @@ final _metadataJson = {
       "build_mode": "Release",
       "cargo_contract_version": "4.1.1",
       "rust_toolchain": "stable-aarch64-apple-darwin",
-      "wasm_opt_settings": {"keep_debug_symbols": false, "optimization_passes": "Z"}
-    }
+      "wasm_opt_settings": {"keep_debug_symbols": false, "optimization_passes": "Z"},
+    },
   },
   "contract": {
     "name": "erc20",
     "version": "5.0.0",
-    "authors": ["Parity Technologies <admin@parity.io>"]
+    "authors": ["Parity Technologies <admin@parity.io>"],
   },
   "image": null,
   "spec": {
@@ -32,9 +32,9 @@ final _metadataJson = {
             "label": "total_supply",
             "type": {
               "displayName": ["Balance"],
-              "type": 0
-            }
-          }
+              "type": 0,
+            },
+          },
         ],
         "default": false,
         "docs": ["Creates a new ERC-20 contract with the specified initial supply."],
@@ -42,39 +42,39 @@ final _metadataJson = {
         "payable": false,
         "returnType": {
           "displayName": ["ink_primitives", "ConstructorResult"],
-          "type": 14
+          "type": 14,
         },
-        "selector": "0x9bae9d5e"
-      }
+        "selector": "0x9bae9d5e",
+      },
     ],
     "docs": [],
     "environment": {
       "accountId": {
         "displayName": ["AccountId"],
-        "type": 2
+        "type": 2,
       },
       "balance": {
         "displayName": ["Balance"],
-        "type": 0
+        "type": 0,
       },
       "blockNumber": {
         "displayName": ["BlockNumber"],
-        "type": 23
+        "type": 23,
       },
       "chainExtension": {
         "displayName": ["ChainExtension"],
-        "type": 24
+        "type": 24,
       },
       "hash": {
         "displayName": ["Hash"],
-        "type": 21
+        "type": 21,
       },
       "maxEventTopics": 4,
       "staticBufferSize": 16384,
       "timestamp": {
         "displayName": ["Timestamp"],
-        "type": 22
-      }
+        "type": 22,
+      },
     },
     "events": [
       {
@@ -85,8 +85,8 @@ final _metadataJson = {
             "label": "from",
             "type": {
               "displayName": ["Option"],
-              "type": 20
-            }
+              "type": 20,
+            },
           },
           {
             "docs": [],
@@ -94,8 +94,8 @@ final _metadataJson = {
             "label": "to",
             "type": {
               "displayName": ["Option"],
-              "type": 20
-            }
+              "type": 20,
+            },
           },
           {
             "docs": [],
@@ -103,14 +103,14 @@ final _metadataJson = {
             "label": "value",
             "type": {
               "displayName": ["Balance"],
-              "type": 0
-            }
-          }
+              "type": 0,
+            },
+          },
         ],
         "docs": ["Event emitted when a token transfer occurs."],
         "label": "Transfer",
         "module_path": "erc20::erc20",
-        "signature_topic": null
+        "signature_topic": null,
       },
       {
         "args": [
@@ -120,8 +120,8 @@ final _metadataJson = {
             "label": "owner",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
+              "type": 2,
+            },
           },
           {
             "docs": [],
@@ -129,8 +129,8 @@ final _metadataJson = {
             "label": "spender",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
+              "type": 2,
+            },
           },
           {
             "docs": [],
@@ -138,22 +138,22 @@ final _metadataJson = {
             "label": "value",
             "type": {
               "displayName": ["Balance"],
-              "type": 0
-            }
-          }
+              "type": 0,
+            },
+          },
         ],
         "docs": [
           "Event emitted when an approval occurs that `spender` is allowed to withdraw",
-          "up to the amount of `value` tokens from `owner`."
+          "up to the amount of `value` tokens from `owner`.",
         ],
         "label": "Approval",
         "module_path": "erc20::erc20",
-        "signature_topic": "0x1a35e726f5feffda199144f6097b2ba23713e549bfcbe090c0981e3bcdfbcc1d"
-      }
+        "signature_topic": "0x1a35e726f5feffda199144f6097b2ba23713e549bfcbe090c0981e3bcdfbcc1d",
+      },
     ],
     "lang_error": {
       "displayName": ["ink", "LangError"],
-      "type": 15
+      "type": 15,
     },
     "messages": [
       {
@@ -165,9 +165,9 @@ final _metadataJson = {
         "payable": false,
         "returnType": {
           "displayName": ["ink", "MessageResult"],
-          "type": 16
+          "type": 16,
         },
-        "selector": "0xdb6375a8"
+        "selector": "0xdb6375a8",
       },
       {
         "args": [
@@ -175,24 +175,24 @@ final _metadataJson = {
             "label": "owner",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
-          }
+              "type": 2,
+            },
+          },
         ],
         "default": false,
         "docs": [
           " Returns the account balance for the specified `owner`.",
           "",
-          " Returns `0` if the account is non-existent."
+          " Returns `0` if the account is non-existent.",
         ],
         "label": "balance_of",
         "mutates": false,
         "payable": false,
         "returnType": {
           "displayName": ["ink", "MessageResult"],
-          "type": 16
+          "type": 16,
         },
-        "selector": "0x0f755a56"
+        "selector": "0x0f755a56",
       },
       {
         "args": [
@@ -200,31 +200,31 @@ final _metadataJson = {
             "label": "owner",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
+              "type": 2,
+            },
           },
           {
             "label": "spender",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
-          }
+              "type": 2,
+            },
+          },
         ],
         "default": false,
         "docs": [
           " Returns the amount which `spender` is still allowed to withdraw from `owner`.",
           "",
-          " Returns `0` if no allowance has been set."
+          " Returns `0` if no allowance has been set.",
         ],
         "label": "allowance",
         "mutates": false,
         "payable": false,
         "returnType": {
           "displayName": ["ink", "MessageResult"],
-          "type": 16
+          "type": 16,
         },
-        "selector": "0x6a00165e"
+        "selector": "0x6a00165e",
       },
       {
         "args": [
@@ -232,16 +232,16 @@ final _metadataJson = {
             "label": "to",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
+              "type": 2,
+            },
           },
           {
             "label": "value",
             "type": {
               "displayName": ["Balance"],
-              "type": 0
-            }
-          }
+              "type": 0,
+            },
+          },
         ],
         "default": false,
         "docs": [
@@ -252,16 +252,16 @@ final _metadataJson = {
           " # Errors",
           "",
           " Returns `InsufficientBalance` error if there are not enough tokens on",
-          " the caller's account balance."
+          " the caller's account balance.",
         ],
         "label": "transfer",
         "mutates": true,
         "payable": false,
         "returnType": {
           "displayName": ["ink", "MessageResult"],
-          "type": 17
+          "type": 17,
         },
-        "selector": "0x84a15da1"
+        "selector": "0x84a15da1",
       },
       {
         "args": [
@@ -269,16 +269,16 @@ final _metadataJson = {
             "label": "spender",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
+              "type": 2,
+            },
           },
           {
             "label": "value",
             "type": {
               "displayName": ["Balance"],
-              "type": 0
-            }
-          }
+              "type": 0,
+            },
+          },
         ],
         "default": false,
         "docs": [
@@ -288,16 +288,16 @@ final _metadataJson = {
           " If this function is called again it overwrites the current allowance with",
           " `value`.",
           "",
-          " An `Approval` event is emitted."
+          " An `Approval` event is emitted.",
         ],
         "label": "approve",
         "mutates": true,
         "payable": false,
         "returnType": {
           "displayName": ["ink", "MessageResult"],
-          "type": 17
+          "type": 17,
         },
-        "selector": "0x681266a0"
+        "selector": "0x681266a0",
       },
       {
         "args": [
@@ -305,23 +305,23 @@ final _metadataJson = {
             "label": "from",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
+              "type": 2,
+            },
           },
           {
             "label": "to",
             "type": {
               "displayName": ["AccountId"],
-              "type": 2
-            }
+              "type": 2,
+            },
           },
           {
             "label": "value",
             "type": {
               "displayName": ["Balance"],
-              "type": 0
-            }
-          }
+              "type": 0,
+            },
+          },
         ],
         "default": false,
         "docs": [
@@ -338,18 +338,18 @@ final _metadataJson = {
           " for the caller to withdraw from `from`.",
           "",
           " Returns `InsufficientBalance` error if there are not enough tokens on",
-          " the account balance of `from`."
+          " the account balance of `from`.",
         ],
         "label": "transfer_from",
         "mutates": true,
         "payable": false,
         "returnType": {
           "displayName": ["ink", "MessageResult"],
-          "type": 17
+          "type": 17,
         },
-        "selector": "0x0b396f18"
-      }
-    ]
+        "selector": "0x0b396f18",
+      },
+    ],
   },
   "storage": {
     "root": {
@@ -358,48 +358,48 @@ final _metadataJson = {
           "fields": [
             {
               "layout": {
-                "leaf": {"key": "0x00000000", "ty": 0}
+                "leaf": {"key": "0x00000000", "ty": 0},
               },
-              "name": "total_supply"
+              "name": "total_supply",
             },
             {
               "layout": {
                 "root": {
                   "layout": {
-                    "leaf": {"key": "0xe7dc2326", "ty": 0}
+                    "leaf": {"key": "0xe7dc2326", "ty": 0},
                   },
                   "root_key": "0xe7dc2326",
-                  "ty": 1
-                }
+                  "ty": 1,
+                },
               },
-              "name": "balances"
+              "name": "balances",
             },
             {
               "layout": {
                 "root": {
                   "layout": {
-                    "leaf": {"key": "0xb721a0ec", "ty": 0}
+                    "leaf": {"key": "0xb721a0ec", "ty": 0},
                   },
                   "root_key": "0xb721a0ec",
-                  "ty": 9
-                }
+                  "ty": 9,
+                },
               },
-              "name": "allowances"
-            }
+              "name": "allowances",
+            },
           ],
-          "name": "Erc20"
-        }
+          "name": "Erc20",
+        },
       },
       "root_key": "0x00000000",
-      "ty": 13
-    }
+      "ty": 13,
+    },
   },
   "types": [
     {
       "id": 0,
       "type": {
-        "def": {"primitive": "u128"}
-      }
+        "def": {"primitive": "u128"},
+      },
     },
     {
       "id": 1,
@@ -408,10 +408,10 @@ final _metadataJson = {
         "params": [
           {"name": "K", "type": 2},
           {"name": "V", "type": 0},
-          {"name": "KeyType", "type": 5}
+          {"name": "KeyType", "type": 5},
         ],
-        "path": ["ink_storage", "lazy", "mapping", "Mapping"]
-      }
+        "path": ["ink_storage", "lazy", "mapping", "Mapping"],
+      },
     },
     {
       "id": 2,
@@ -419,26 +419,26 @@ final _metadataJson = {
         "def": {
           "composite": {
             "fields": [
-              {"type": 3, "typeName": "[u8; 32]"}
-            ]
-          }
+              {"type": 3, "typeName": "[u8; 32]"},
+            ],
+          },
         },
-        "path": ["ink_primitives", "types", "AccountId"]
-      }
+        "path": ["ink_primitives", "types", "AccountId"],
+      },
     },
     {
       "id": 3,
       "type": {
         "def": {
-          "array": {"len": 32, "type": 4}
-        }
-      }
+          "array": {"len": 32, "type": 4},
+        },
+      },
     },
     {
       "id": 4,
       "type": {
-        "def": {"primitive": "u8"}
-      }
+        "def": {"primitive": "u8"},
+      },
     },
     {
       "id": 5,
@@ -446,33 +446,33 @@ final _metadataJson = {
         "def": {"composite": {}},
         "params": [
           {"name": "L", "type": 6},
-          {"name": "R", "type": 7}
+          {"name": "R", "type": 7},
         ],
-        "path": ["ink_storage_traits", "impls", "ResolverKey"]
-      }
+        "path": ["ink_storage_traits", "impls", "ResolverKey"],
+      },
     },
     {
       "id": 6,
       "type": {
         "def": {"composite": {}},
-        "path": ["ink_storage_traits", "impls", "AutoKey"]
-      }
+        "path": ["ink_storage_traits", "impls", "AutoKey"],
+      },
     },
     {
       "id": 7,
       "type": {
         "def": {"composite": {}},
         "params": [
-          {"name": "ParentKey", "type": 8}
+          {"name": "ParentKey", "type": 8},
         ],
-        "path": ["ink_storage_traits", "impls", "ManualKey"]
-      }
+        "path": ["ink_storage_traits", "impls", "ManualKey"],
+      },
     },
     {
       "id": 8,
       "type": {
-        "def": {"tuple": []}
-      }
+        "def": {"tuple": []},
+      },
     },
     {
       "id": 9,
@@ -481,18 +481,18 @@ final _metadataJson = {
         "params": [
           {"name": "K", "type": 10},
           {"name": "V", "type": 0},
-          {"name": "KeyType", "type": 11}
+          {"name": "KeyType", "type": 11},
         ],
-        "path": ["ink_storage", "lazy", "mapping", "Mapping"]
-      }
+        "path": ["ink_storage", "lazy", "mapping", "Mapping"],
+      },
     },
     {
       "id": 10,
       "type": {
         "def": {
-          "tuple": [2, 2]
-        }
-      }
+          "tuple": [2, 2],
+        },
+      },
     },
     {
       "id": 11,
@@ -500,20 +500,20 @@ final _metadataJson = {
         "def": {"composite": {}},
         "params": [
           {"name": "L", "type": 6},
-          {"name": "R", "type": 12}
+          {"name": "R", "type": 12},
         ],
-        "path": ["ink_storage_traits", "impls", "ResolverKey"]
-      }
+        "path": ["ink_storage_traits", "impls", "ResolverKey"],
+      },
     },
     {
       "id": 12,
       "type": {
         "def": {"composite": {}},
         "params": [
-          {"name": "ParentKey", "type": 8}
+          {"name": "ParentKey", "type": 8},
         ],
-        "path": ["ink_storage_traits", "impls", "ManualKey"]
-      }
+        "path": ["ink_storage_traits", "impls", "ManualKey"],
+      },
     },
     {
       "id": 13,
@@ -525,25 +525,25 @@ final _metadataJson = {
                 "name": "total_supply",
                 "type": 0,
                 "typeName":
-                    "<Balance as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<375105693u32, ()>,>>::Type"
+                    "<Balance as::ink::storage::traits::AutoStorableHint<::ink::\nstorage::traits::ManualKey<375105693u32, ()>,>>::Type",
               },
               {
                 "name": "balances",
                 "type": 1,
                 "typeName":
-                    "<Mapping<AccountId, Balance> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<639884519u32, ()\n>,>>::Type"
+                    "<Mapping<AccountId, Balance> as::ink::storage::traits::\nAutoStorableHint<::ink::storage::traits::ManualKey<639884519u32, ()\n>,>>::Type",
               },
               {
                 "name": "allowances",
                 "type": 9,
                 "typeName":
-                    "<Mapping<(AccountId, AccountId), Balance> as::ink::storage::traits\n::AutoStorableHint<::ink::storage::traits::ManualKey<\n3969917367u32, ()>,>>::Type"
-              }
-            ]
-          }
+                    "<Mapping<(AccountId, AccountId), Balance> as::ink::storage::traits\n::AutoStorableHint<::ink::storage::traits::ManualKey<\n3969917367u32, ()>,>>::Type",
+              },
+            ],
+          },
         },
-        "path": ["erc20", "erc20", "Erc20"]
-      }
+        "path": ["erc20", "erc20", "Erc20"],
+      },
     },
     {
       "id": 14,
@@ -553,27 +553,27 @@ final _metadataJson = {
             "variants": [
               {
                 "fields": [
-                  {"type": 8}
+                  {"type": 8},
                 ],
                 "index": 0,
-                "name": "Ok"
+                "name": "Ok",
               },
               {
                 "fields": [
-                  {"type": 15}
+                  {"type": 15},
                 ],
                 "index": 1,
-                "name": "Err"
-              }
-            ]
-          }
+                "name": "Err",
+              },
+            ],
+          },
         },
         "params": [
           {"name": "T", "type": 8},
-          {"name": "E", "type": 15}
+          {"name": "E", "type": 15},
         ],
-        "path": ["Result"]
-      }
+        "path": ["Result"],
+      },
     },
     {
       "id": 15,
@@ -581,12 +581,12 @@ final _metadataJson = {
         "def": {
           "variant": {
             "variants": [
-              {"index": 1, "name": "CouldNotReadInput"}
-            ]
-          }
+              {"index": 1, "name": "CouldNotReadInput"},
+            ],
+          },
         },
-        "path": ["ink_primitives", "LangError"]
-      }
+        "path": ["ink_primitives", "LangError"],
+      },
     },
     {
       "id": 16,
@@ -596,27 +596,27 @@ final _metadataJson = {
             "variants": [
               {
                 "fields": [
-                  {"type": 0}
+                  {"type": 0},
                 ],
                 "index": 0,
-                "name": "Ok"
+                "name": "Ok",
               },
               {
                 "fields": [
-                  {"type": 15}
+                  {"type": 15},
                 ],
                 "index": 1,
-                "name": "Err"
-              }
-            ]
-          }
+                "name": "Err",
+              },
+            ],
+          },
         },
         "params": [
           {"name": "T", "type": 0},
-          {"name": "E", "type": 15}
+          {"name": "E", "type": 15},
         ],
-        "path": ["Result"]
-      }
+        "path": ["Result"],
+      },
     },
     {
       "id": 17,
@@ -626,27 +626,27 @@ final _metadataJson = {
             "variants": [
               {
                 "fields": [
-                  {"type": 18}
+                  {"type": 18},
                 ],
                 "index": 0,
-                "name": "Ok"
+                "name": "Ok",
               },
               {
                 "fields": [
-                  {"type": 15}
+                  {"type": 15},
                 ],
                 "index": 1,
-                "name": "Err"
-              }
-            ]
-          }
+                "name": "Err",
+              },
+            ],
+          },
         },
         "params": [
           {"name": "T", "type": 18},
-          {"name": "E", "type": 15}
+          {"name": "E", "type": 15},
         ],
-        "path": ["Result"]
-      }
+        "path": ["Result"],
+      },
     },
     {
       "id": 18,
@@ -656,27 +656,27 @@ final _metadataJson = {
             "variants": [
               {
                 "fields": [
-                  {"type": 8}
+                  {"type": 8},
                 ],
                 "index": 0,
-                "name": "Ok"
+                "name": "Ok",
               },
               {
                 "fields": [
-                  {"type": 19}
+                  {"type": 19},
                 ],
                 "index": 1,
-                "name": "Err"
-              }
-            ]
-          }
+                "name": "Err",
+              },
+            ],
+          },
         },
         "params": [
           {"name": "T", "type": 8},
-          {"name": "E", "type": 19}
+          {"name": "E", "type": 19},
         ],
-        "path": ["Result"]
-      }
+        "path": ["Result"],
+      },
     },
     {
       "id": 19,
@@ -685,12 +685,12 @@ final _metadataJson = {
           "variant": {
             "variants": [
               {"index": 0, "name": "InsufficientBalance"},
-              {"index": 1, "name": "InsufficientAllowance"}
-            ]
-          }
+              {"index": 1, "name": "InsufficientAllowance"},
+            ],
+          },
         },
-        "path": ["erc20", "erc20", "Error"]
-      }
+        "path": ["erc20", "erc20", "Error"],
+      },
     },
     {
       "id": 20,
@@ -701,19 +701,19 @@ final _metadataJson = {
               {"index": 0, "name": "None"},
               {
                 "fields": [
-                  {"type": 2}
+                  {"type": 2},
                 ],
                 "index": 1,
-                "name": "Some"
-              }
-            ]
-          }
+                "name": "Some",
+              },
+            ],
+          },
         },
         "params": [
-          {"name": "T", "type": 2}
+          {"name": "T", "type": 2},
         ],
-        "path": ["Option"]
-      }
+        "path": ["Option"],
+      },
     },
     {
       "id": 21,
@@ -721,34 +721,34 @@ final _metadataJson = {
         "def": {
           "composite": {
             "fields": [
-              {"type": 3, "typeName": "[u8; 32]"}
-            ]
-          }
+              {"type": 3, "typeName": "[u8; 32]"},
+            ],
+          },
         },
-        "path": ["ink_primitives", "types", "Hash"]
-      }
+        "path": ["ink_primitives", "types", "Hash"],
+      },
     },
     {
       "id": 22,
       "type": {
-        "def": {"primitive": "u64"}
-      }
+        "def": {"primitive": "u64"},
+      },
     },
     {
       "id": 23,
       "type": {
-        "def": {"primitive": "u32"}
-      }
+        "def": {"primitive": "u32"},
+      },
     },
     {
       "id": 24,
       "type": {
         "def": {"variant": {}},
-        "path": ["ink_env", "types", "NoChainExtension"]
-      }
-    }
+        "path": ["ink_env", "types", "NoChainExtension"],
+      },
+    },
   ],
-  "version": 5
+  "version": 5,
 };
 
 final InkAbi _abi = InkAbi(_metadataJson);
@@ -817,7 +817,7 @@ class Contract {
   ///  Returns the account balance for the specified `owner`.
   ///
   ///  Returns `0` if the account is non-existent.
-  Future<dynamic> balance_of({required final AccountId owner}) async {
+  Future<dynamic> balance_of({required final List<int> owner}) async {
     return _stateCall('0x0f755a56', [owner]);
   }
 
@@ -825,8 +825,10 @@ class Contract {
   ///  Returns the amount which `spender` is still allowed to withdraw from `owner`.
   ///
   ///  Returns `0` if no allowance has been set.
-  Future<dynamic> allowance(
-      {required final AccountId owner, required final AccountId spender}) async {
+  Future<dynamic> allowance({
+    required final List<int> owner,
+    required final List<int> spender,
+  }) async {
     return _stateCall('0x6a00165e', [owner, spender]);
   }
 
@@ -839,15 +841,16 @@ class Contract {
   ///
   ///  Returns `InsufficientBalance` error if there are not enough tokens on
   ///  the caller's account balance.
-  Future<dynamic> transfer(
-      {required final KeyPair keyPair,
-      required final ContractMutator mutator,
-      BigInt? storageDepositLimit,
-      GasLimit? gasLimit,
-      final dynamic tip = 0,
-      final int eraPeriod = 0,
-      required final AccountId to,
-      required final Balance value}) async {
+  Future<dynamic> transfer({
+    required final KeyPair keyPair,
+    required final ContractMutator mutator,
+    BigInt? storageDepositLimit,
+    GasLimit? gasLimit,
+    final dynamic tip = 0,
+    final int eraPeriod = 0,
+    required final List<int> to,
+    required final Balance value,
+  }) async {
     return _contractCall(
       selector: '0x84a15da1',
       keypair: keyPair,
@@ -868,15 +871,16 @@ class Contract {
   ///  `value`.
   ///
   ///  An `Approval` event is emitted.
-  Future<dynamic> approve(
-      {required final KeyPair keyPair,
-      required final ContractMutator mutator,
-      BigInt? storageDepositLimit,
-      GasLimit? gasLimit,
-      final dynamic tip = 0,
-      final int eraPeriod = 0,
-      required final AccountId spender,
-      required final Balance value}) async {
+  Future<dynamic> approve({
+    required final KeyPair keyPair,
+    required final ContractMutator mutator,
+    BigInt? storageDepositLimit,
+    GasLimit? gasLimit,
+    final dynamic tip = 0,
+    final int eraPeriod = 0,
+    required final List<int> spender,
+    required final Balance value,
+  }) async {
     return _contractCall(
       selector: '0x681266a0',
       keypair: keyPair,
@@ -904,16 +908,17 @@ class Contract {
   ///
   ///  Returns `InsufficientBalance` error if there are not enough tokens on
   ///  the account balance of `from`.
-  Future<dynamic> transfer_from(
-      {required final KeyPair keyPair,
-      required final ContractMutator mutator,
-      BigInt? storageDepositLimit,
-      GasLimit? gasLimit,
-      final dynamic tip = 0,
-      final int eraPeriod = 0,
-      required final AccountId from,
-      required final AccountId to,
-      required final Balance value}) async {
+  Future<dynamic> transfer_from({
+    required final KeyPair keyPair,
+    required final ContractMutator mutator,
+    BigInt? storageDepositLimit,
+    GasLimit? gasLimit,
+    final dynamic tip = 0,
+    final int eraPeriod = 0,
+    required final List<int> from,
+    required final List<int> to,
+    required final Balance value,
+  }) async {
     return _contractCall(
       selector: '0x0b396f18',
       keypair: keyPair,
@@ -951,10 +956,7 @@ class Contract {
     return value;
   }
 
-  Future<dynamic> _stateCall(
-    final String selector,
-    final List<dynamic> args,
-  ) async {
+  Future<dynamic> _stateCall(final String selector, final List<dynamic> args) async {
     final input = _abi.encodeMessageInput(selector, args);
     final baseResult = await _baseCall(input, args);
     final decodedResult = decodeResult(baseResult);
@@ -968,7 +970,5 @@ class Contract {
     return result;
   }
 }
-
-typedef AccountId = List<int>;
 
 typedef Balance = BigInt;

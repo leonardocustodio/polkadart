@@ -3,19 +3,23 @@ import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 void main() {
   {
     final output = HexOutput();
-    BTreeMapCodec(keyCodec: U8Codec.codec, valueCodec: BoolCodec.codec)
-        .encodeTo({42: true}, output);
+    BTreeMapCodec(
+      keyCodec: U8Codec.codec,
+      valueCodec: BoolCodec.codec,
+    ).encodeTo({42: true}, output);
     print(output.toString()); // '0x042a01'
   }
 
   {
     final output = HexOutput();
     BTreeMapCodec(
-            keyCodec: BTreeMapCodec(
-                keyCodec: U32Codec.codec, valueCodec: BoolCodec.codec),
-            valueCodec: BoolCodec.codec)
-        .encodeTo({
-      {632: false}: true
+      keyCodec: BTreeMapCodec(
+        keyCodec: U32Codec.codec,
+        valueCodec: BoolCodec.codec,
+      ),
+      valueCodec: BoolCodec.codec,
+    ).encodeTo({
+      {632: false}: true,
     }, output);
     print(output.toString()); // '0x0404780200000001'
   }
@@ -28,12 +32,9 @@ void main() {
         valueCodec: BoolCodec.codec,
       ),
       valueCodec: BoolCodec.codec,
-    ).encodeTo(
-      {
-        {'1291': true}: false,
-      },
-      output,
-    );
+    ).encodeTo({
+      {'1291': true}: false,
+    }, output);
     print(output.toString()); // '0x040410313239310100'
   }
 

@@ -9,9 +9,10 @@ class U256Codec with Codec<BigInt> {
   void encodeTo(BigInt value, Output output) {
     U128Codec.codec
       ..encodeTo(
-          (value & BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16))
-              .toUnsigned(128),
-          output)
+        (value & BigInt.parse('ffffffffffffffffffffffffffffffff', radix: 16))
+            .toUnsigned(128),
+        output,
+      )
       ..encodeTo((value >> 128).toUnsigned(128), output);
   }
 
@@ -25,5 +26,11 @@ class U256Codec with Codec<BigInt> {
   @override
   int sizeHint(BigInt value) {
     return 32;
+  }
+
+  @override
+  bool isSizeZero() {
+    // U256 always encodes to 32 bytes
+    return false;
   }
 }

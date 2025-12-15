@@ -22,16 +22,12 @@ class Bip39 {
 
   /// SeedFromMnemonic returns seed for func MiniSecretKeyFromMnemonic
   static Future<List<int>> seedFromMnemonic(String mnemonic, [String? password]) async {
-    final pbkdf2 = DartPbkdf2(
-      macAlgorithm: Hmac(Sha512()),
-      iterations: 2048,
-      bits: 512,
-    ).toSync();
+    final pbkdf2 = DartPbkdf2(macAlgorithm: Hmac(Sha512()), iterations: 2048, bits: 512).toSync();
     final entropy = mnemonicToEntropy(mnemonic);
     final seed = await pbkdf2.toSync().deriveKey(
-          secretKey: cryptography.SecretKey(entropy),
-          nonce: utf8.encode('mnemonic${password ?? ''}'),
-        );
+      secretKey: cryptography.SecretKey(entropy),
+      nonce: utf8.encode('mnemonic${password ?? ''}'),
+    );
     return seed.extractBytes();
   }
 
