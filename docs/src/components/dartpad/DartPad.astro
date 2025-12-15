@@ -1,5 +1,0 @@
----
-const { fileName } = Astro.props;
-const data = await import((`../../assets/snippets/${fileName}.txt?raw`)).then(module => module.default);
----
-<pre><code class="language-dart" data-dartpad="true" data-theme="dark" data-url="code.polkadart.dev">{ data }</code></pre>
