@@ -1,0 +1,72 @@
+# Docker ignore file for Polkadart monorepo
+# This file specifies which files and directories should be excluded
+# when building the Docker image to reduce build time and image size
+
+# Git files
+.git
+.gitignore
+.github
+
+# IDE and editor files
+.vscode
+.idea
+*.iml
+*.ipr
+*.iws
+.DS_Store
+
+# Build outputs
+**/build/
+**/.dart_tool/
+**/.packages
+coverage/
+*.lcov
+
+# Pub cache
+.pub-cache/
+.pub/
+
+# Flutter/Dart specific
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec_overrides.yaml
+
+# Example native folders (can be regenerated)
+**/example/android/
+**/example/ios/
+**/example/web/
+**/example/windows/
+**/example/macos/
+examples/**/android/
+examples/**/ios/
+examples/**/web/
+examples/**/windows/
+examples/**/macos/
+
+# Keep important entitlements
+!examples/**/macos/Runner/DebugProfile.entitlements
+
+# Logs and temporary files
+*.log
+*.pyc
+*.swp
+*.class
+.buildlog/
+.history
+.svn/
+
+# Node modules (if any)
+node_modules/
+package-lock.json
+
+# FVM (Flutter Version Management)
+.fvm/flutter_sdk
+
+# Documentation build
+**/doc/api/
+
+# Test coverage
+coverage.lcov
+
+# Melos tool cache (will be regenerated)
+.melos_tool/
