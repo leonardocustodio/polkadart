@@ -107,7 +107,7 @@ jobs:
       # Cache Flutter SDK
       - name: Cache Flutter SDK
         id: flutter-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.os }}-flutter-stable-${{ hashFiles('.github/workflows/tests_optimized.yml') }}
@@ -121,7 +121,7 @@ jobs:
 
       # Cache pub dependencies
       - name: Cache pub dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
@@ -134,7 +134,7 @@ jobs:
 
       # Cache melos
       - name: Cache melos
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .melos_tool
