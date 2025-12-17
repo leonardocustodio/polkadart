@@ -7,10 +7,10 @@ import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
-/// Path constants relative to package root (where tests are run from)
-const _eventsFile = '../../chain/polkadot/v14/events.jsonl';
-const _runtimeUpgradesFile = '../../chain/polkadot/runtime_upgrades.json';
-const _metadataDir = '../../chain/polkadot/v14';
+/// Path constants relative to monorepo root (where melos runs tests from)
+const _eventsFile = 'chain/polkadot/v14/events.jsonl';
+const _runtimeUpgradesFile = 'chain/polkadot/runtime_upgrades.json';
+const _metadataDir = 'chain/polkadot/v14';
 
 // Load data at top level so we can generate individual tests
 final _events = loadEvents(_eventsFile);

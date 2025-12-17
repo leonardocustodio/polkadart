@@ -6,8 +6,8 @@ import 'package:test/test.dart';
 
 import '../../test_helpers.dart';
 
-/// Path constants relative to package root (where tests are run from)
-const _blocksFile = '../../chain/kusama/v14/blocks.jsonl';
+/// Path constants relative to monorepo root (where melos runs tests from)
+const _blocksFile = 'chain/kusama/v14/blocks.jsonl';
 
 // Load data at top level so we can generate individual tests
 final _blocks = loadBlocks(_blocksFile);
