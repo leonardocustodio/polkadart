@@ -26,9 +26,9 @@ RUN cd packages/smoldot/rust && \
     mkdir -p ../native/linux && \
     cp target/release/libsmoldot.so ../native/linux/
 
-# Default: run all tests
+# Default: run all tests including chain tests
 # Override with: docker run polkadart dart run melos run analyze
-CMD ["dart", "run", "melos", "run", "test"]
+CMD ["sh", "-c", "dart run melos run test && dart run melos run test:chain"]
 
 # Examples:
 #   docker run --rm polkadart                                              # Run all tests
