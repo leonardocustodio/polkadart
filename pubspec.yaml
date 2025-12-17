@@ -31,7 +31,12 @@ melos:
         flutter: false
 
     test:
-      run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart test --no-chain-stack-traces --ignore-timeouts --coverage="coverage" --concurrency=1'
+      description: Run tests excluding chain tests (chain tests require local data setup)
+      run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart test --no-chain-stack-traces --ignore-timeouts --coverage="coverage" --concurrency=1 --exclude-tags=chain'
+
+    test:chain:
+      description: Run chain tests only
+      run: dart test packages/substrate_metadata/test/chain_tests/ --no-chain-stack-traces --concurrency=1
 
     coverage:
       run: dart run melos exec --scope="${SCOPE:-*}" -c 1 -- 'dart run coverage:format_coverage --lcov --in=coverage --out=coverage/coverage.lcov --report-on=lib'
