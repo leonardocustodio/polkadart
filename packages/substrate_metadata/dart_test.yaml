@@ -1,0 +1,13 @@
+# Test configuration for substrate_metadata package
+#
+# The 'chain' tag is used to mark tests that require locally generated
+# chain data (blocks, events, metadata). These tests are excluded from
+# CI runs and should be run locally before committing changes.
+#
+# To run all tests: dart test
+# To run only chain tests: dart test --tags=chain
+# To exclude chain tests: dart test --exclude-tags=chain
+
+tags:
+  chain:
+    # Chain tests require locally generated data
