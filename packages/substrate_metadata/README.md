@@ -4,250 +4,6 @@ A powerful Dart/Flutter library for encoding and decoding Substrate blockchain m
 
 ---
 
-## Breaking Changes from Previous Version
-
-This is a **major rewrite** of the `substrate_metadata` package. If you're upgrading from a previous version, please read this section carefully.
-
-### Removed: Legacy Metadata Support (V9-V13)
-
-The new implementation **only supports Metadata V14 and V15**. Support for legacy metadata versions V9 through V13 has been removed.
-
-```dart
-// OLD: Legacy versions were supported
-final metadata = MetadataDecoder.instance.decode(hexString); // Worked with V9-V15
-
-// NEW: Only V14 and V15 are supported
-final prefixed = RuntimeMetadataPrefixed.fromBytes(bytes); // V14 or V15 only
-```
-
-**Impact**: If you're connecting to chains running very old runtimes (pre-V14), you'll need to upgrade those chains or use the legacy version of this package.
-
-### Removed: `Chain` Class and Spec Version Management
-
-The `Chain` class and the entire spec version management system have been removed. The old API managed multiple metadata versions indexed by block number.
-
-```dart
-// OLD API (removed)
-final chain = Chain();
-await chain.initSpecVersionFromFile('spec_versions.json');
-final versionDesc = chain.getVersionDescription(blockNumber);
-final decoded = chain.decodeExtrinsics(rawBlockExtrinsics);
-final events = chain.decodeEvents(rawBlockEvents);
-
-// NEW API
-final prefixed = RuntimeMetadataPrefixed.fromBytes(metadataBytes);
-final chainInfo = prefixed.buildChainInfo();
-final decoded = chainInfo.extrinsicsCodec.decode(input);
-final events = chainInfo.eventsCodec.decode(input);
-```
-
-**Migration**: Create a new `ChainInfo` instance when the chain's metadata changes (i.e., after a runtime upgrade).
-
-### Removed: `MetadataDecoder` Singleton
-
-The `MetadataDecoder.instance` singleton pattern has been replaced with direct static factory methods.
-
-```dart
-// OLD API (removed)
-final decoded = MetadataDecoder.instance.decode(hexString);
-final version = decoded.version;
-final metadata = decoded.metadata;
-
-// NEW API
-final prefixed = RuntimeMetadataPrefixed.fromHex(hexString);
-// or
-final prefixed = RuntimeMetadataPrefixed.fromBytes(bytes);
-final metadata = prefixed.metadata; // RuntimeMetadataV14 or RuntimeMetadataV15
-```
-
-### Removed: `DecodedMetadata`, `RawBlockExtrinsics`, `RawBlockEvents`
-
-These wrapper classes have been removed. The new API works directly with codecs and typed models.
-
-```dart
-// OLD API (removed)
-final rawBlock = RawBlockExtrinsics(blockNumber: 123, extrinsics: hexList);
-final decoded = chain.decodeExtrinsics(rawBlock);  // DecodedBlockExtrinsics
-
-// NEW API
-final extrinsics = chainInfo.extrinsicsCodec.decode(Input.fromHex(blockExtrinsicsHex));
-// Returns List<UncheckedExtrinsic> with strongly typed RuntimeCall
-```
-
-### Removed: `Constant<T>` Generic Class
-
-The generic `Constant<T>` class with lazy value decoding has been replaced with `ConstantsCodec`.
-
-```dart
-// OLD API (removed)
-final chainInfo = ChainInfo.fromMetadata(decoded, legacyTypes);
-final constant = chainInfo.constants['Balances']!['ExistentialDeposit']!;
-final value = constant.value;  // Decoded on access
-final type = constant.type;    // Codec<T>
-final docs = constant.docs;
-
-// NEW API
-final chainInfo = prefixed.buildChainInfo();
-final value = chainInfo.constantsCodec.getConstant('Balances', 'ExistentialDeposit');
-final info = chainInfo.constantsCodec.getConstantInfo('Balances', 'ExistentialDeposit');
-// info.typeString, info.documentation, info.palletName, etc.
-
-// For memory-efficient lazy loading:
-final lazyCodec = LazyConstantsCodec(registry);
-final value = lazyCodec.getConstant('Balances', 'ExistentialDeposit');
-```
-
-### Removed: `LegacyTypes`, `LegacyTypesBundle`, `LegacyParser`
-
-All legacy type system components have been removed since V9-V13 support was dropped.
-
-```dart
-// OLD API (removed)
-final legacyTypes = LegacyTypes(types: {...}, typesAlias: {...});
-final chainInfo = ChainInfo.fromMetadata(decoded, legacyTypes);
-```
-
-**Migration**: These are no longer needed with V14+ metadata since all type information is self-contained in the metadata.
-
-### Removed: Parsers (`V14Parser`, `TypeExpressionParser`, `TypeNormalizer`)
-
-The parsers have been replaced with `MetadataTypeRegistry` which handles all type resolution internally.
-
-```dart
-// OLD API (removed)
-final chainInfo = V14Parser.getChainInfo(decodedMetadata);
-
-// NEW API
-final registry = MetadataTypeRegistry(prefixedMetadata);
-final codec = registry.codecFor(typeId);
-```
-
-### Changed: Event Decoding Returns Strongly Typed Models
-
-```dart
-// OLD API - returned List<dynamic>
-final events = chain.decodeEvents(rawBlockEvents);
-for (final event in events) {
-  final pallet = event['pallet'];
-  final name = event['name'];
-  final data = event['data'];
-}
-
-// NEW API - returns List<EventRecord>
-final events = chainInfo.eventsCodec.decode(input);
-for (final record in events) {
-  final pallet = record.event.palletName;    // String
-  final name = record.event.eventName;       // String
-  final data = record.event.data;            // Map<String, dynamic>
-  final phase = record.phase;                // Phase (typed enum)
-  final topics = record.topics;              // List<String>
-}
-```
-
-### Changed: Extrinsic Decoding Returns Strongly Typed Models
-
-```dart
-// OLD API - returned List<Map>
-final extrinsics = chain.decodeExtrinsics(rawBlockExtrinsics);
-for (final ext in extrinsics) {
-  final hash = ext['hash'];
-  final calls = ext['calls'];
-  final signature = ext['signature'];
-}
-
-// NEW API - returns List<UncheckedExtrinsic>
-final extrinsics = chainInfo.extrinsicsCodec.decode(input);
-for (final ext in extrinsics) {
-  final version = ext.version;           // int
-  final isSigned = ext.isSigned;         // bool
-  final call = ext.call;                 // RuntimeCall
-  final signature = ext.signature;       // ExtrinsicSignature?
-
-  // Access call details
-  print('${call.palletName}.${call.callName}');
-  print('Args: ${call.args}');
-}
-```
-
-### Changed: Type System Restructured
-
-The `scale_info/` folder has been replaced with `metadata/common/type_def/`.
-
-```dart
-// OLD imports (removed)
-import 'package:substrate_metadata/scale_info/scale_info.dart';
-// TypeDef, TypeDefComposite, TypeDefVariant, Field, Variant, etc.
-
-// NEW imports
-import 'package:substrate_metadata/substrate_metadata.dart';
-// Same types, different location in metadata/common/
-```
-
-### Changed: Dependencies Reduced
-
-The package now has fewer dependencies:
-
-| Removed | Kept | Added |
-|---------|------|-------|
-| `convert` | `pointycastle` | `hashlib_codecs` |
-| `equatable` | `polkadart_scale_codec` | |
-| `json_schema` | | |
-| `polkadart` | | |
-| `utility` | | |
-| `cross_file` | | |
-
-### Changed: Minimum Dart SDK Version
-
-```yaml
-# OLD
-environment:
-  sdk: ^3.6.0
-
-# NEW
-environment:
-  sdk: ^3.8.0
-```
-
-### New: Built-in Substrate Hashers
-
-Storage hashers are now built into this package.
-
-```dart
-import 'package:substrate_metadata/substrate_metadata.dart';
-
-// Available hashers
-final hash = Hasher.blake2b128.hash(bytes);
-final hash = Hasher.blake2b256.hash(bytes);
-final hash = Hasher.twoxx64.hash(bytes);
-final hash = Hasher.twoxx128.hash(bytes);
-
-// Storage key generation
-final storageMap = StorageMap(
-  prefix: 'System',
-  storage: 'Account',
-  hasher: StorageHasher.blake2b128Concat(accountIdCodec),
-  valueCodec: accountInfoCodec,
-);
-final key = storageMap.hashedKeyFor(accountId);
-```
-
-### New: `LazyConstantsCodec` for Memory Optimization
-
-```dart
-// Load constants on-demand instead of all at once
-final lazyCodec = LazyConstantsCodec(registry);
-
-// Preload frequently used constants
-lazyCodec.preloadConstants([
-  ('Balances', 'ExistentialDeposit'),
-  ('System', 'BlockHashCount'),
-]);
-
-// Check loading statistics
-final stats = lazyCodec.getLoadingStats();
-print('Loaded: ${stats['loadedConstants']}/${stats['totalConstants']}');
-```
-
 ## Installation
 
 Add to your `pubspec.yaml`:
@@ -629,6 +385,252 @@ if (registry.outerEnums != null) {
   final apiCodec = registry.getRuntimeApiOutputCodec('TransactionPaymentApi', 'query_info');
   // Use codec for runtime API calls
 }
+```
+
+---
+
+# Breaking Changes from 2.0.0 Version
+
+This is a **major rewrite** of the `substrate_metadata` package. If you're upgrading from a pre `2.0.0` version, please read this section carefully.
+
+### Removed: Legacy Metadata Support (V9-V13)
+
+The new implementation **only supports Metadata V14 and V15**. Support for legacy metadata versions V9 through V13 has been removed.
+
+```dart
+// OLD: Legacy versions were supported
+final metadata = MetadataDecoder.instance.decode(hexString); // Worked with V9-V15
+
+// NEW: Only V14 and V15 are supported
+final prefixed = RuntimeMetadataPrefixed.fromBytes(bytes); // V14 or V15 only
+```
+
+**Impact**: If you're connecting to chains running very old runtimes (pre-V14), you'll need to upgrade those chains or use the legacy version of this package.
+
+### Removed: `Chain` Class and Spec Version Management
+
+The `Chain` class and the entire spec version management system have been removed. The old API managed multiple metadata versions indexed by block number.
+
+```dart
+// OLD API (removed)
+final chain = Chain();
+await chain.initSpecVersionFromFile('spec_versions.json');
+final versionDesc = chain.getVersionDescription(blockNumber);
+final decoded = chain.decodeExtrinsics(rawBlockExtrinsics);
+final events = chain.decodeEvents(rawBlockEvents);
+
+// NEW API
+final prefixed = RuntimeMetadataPrefixed.fromBytes(metadataBytes);
+final chainInfo = prefixed.buildChainInfo();
+final decoded = chainInfo.extrinsicsCodec.decode(input);
+final events = chainInfo.eventsCodec.decode(input);
+```
+
+**Migration**: Create a new `ChainInfo` instance when the chain's metadata changes (i.e., after a runtime upgrade).
+
+### Removed: `MetadataDecoder` Singleton
+
+The `MetadataDecoder.instance` singleton pattern has been replaced with direct static factory methods.
+
+```dart
+// OLD API (removed)
+final decoded = MetadataDecoder.instance.decode(hexString);
+final version = decoded.version;
+final metadata = decoded.metadata;
+
+// NEW API
+final prefixed = RuntimeMetadataPrefixed.fromHex(hexString);
+// or
+final prefixed = RuntimeMetadataPrefixed.fromBytes(bytes);
+final metadata = prefixed.metadata; // RuntimeMetadataV14 or RuntimeMetadataV15
+```
+
+### Removed: `DecodedMetadata`, `RawBlockExtrinsics`, `RawBlockEvents`
+
+These wrapper classes have been removed. The new API works directly with codecs and typed models.
+
+```dart
+// OLD API (removed)
+final rawBlock = RawBlockExtrinsics(blockNumber: 123, extrinsics: hexList);
+final decoded = chain.decodeExtrinsics(rawBlock);  // DecodedBlockExtrinsics
+
+// NEW API
+final extrinsics = chainInfo.extrinsicsCodec.decode(Input.fromHex(blockExtrinsicsHex));
+// Returns List<UncheckedExtrinsic> with strongly typed RuntimeCall
+```
+
+### Removed: `Constant<T>` Generic Class
+
+The generic `Constant<T>` class with lazy value decoding has been replaced with `ConstantsCodec`.
+
+```dart
+// OLD API (removed)
+final chainInfo = ChainInfo.fromMetadata(decoded, legacyTypes);
+final constant = chainInfo.constants['Balances']!['ExistentialDeposit']!;
+final value = constant.value;  // Decoded on access
+final type = constant.type;    // Codec<T>
+final docs = constant.docs;
+
+// NEW API
+final chainInfo = prefixed.buildChainInfo();
+final value = chainInfo.constantsCodec.getConstant('Balances', 'ExistentialDeposit');
+final info = chainInfo.constantsCodec.getConstantInfo('Balances', 'ExistentialDeposit');
+// info.typeString, info.documentation, info.palletName, etc.
+
+// For memory-efficient lazy loading:
+final lazyCodec = LazyConstantsCodec(registry);
+final value = lazyCodec.getConstant('Balances', 'ExistentialDeposit');
+```
+
+### Removed: `LegacyTypes`, `LegacyTypesBundle`, `LegacyParser`
+
+All legacy type system components have been removed since V9-V13 support was dropped.
+
+```dart
+// OLD API (removed)
+final legacyTypes = LegacyTypes(types: {...}, typesAlias: {...});
+final chainInfo = ChainInfo.fromMetadata(decoded, legacyTypes);
+```
+
+**Migration**: These are no longer needed with V14+ metadata since all type information is self-contained in the metadata.
+
+### Removed: Parsers (`V14Parser`, `TypeExpressionParser`, `TypeNormalizer`)
+
+The parsers have been replaced with `MetadataTypeRegistry` which handles all type resolution internally.
+
+```dart
+// OLD API (removed)
+final chainInfo = V14Parser.getChainInfo(decodedMetadata);
+
+// NEW API
+final registry = MetadataTypeRegistry(prefixedMetadata);
+final codec = registry.codecFor(typeId);
+```
+
+### Changed: Event Decoding Returns Strongly Typed Models
+
+```dart
+// OLD API - returned List<dynamic>
+final events = chain.decodeEvents(rawBlockEvents);
+for (final event in events) {
+  final pallet = event['pallet'];
+  final name = event['name'];
+  final data = event['data'];
+}
+
+// NEW API - returns List<EventRecord>
+final events = chainInfo.eventsCodec.decode(input);
+for (final record in events) {
+  final pallet = record.event.palletName;    // String
+  final name = record.event.eventName;       // String
+  final data = record.event.data;            // Map<String, dynamic>
+  final phase = record.phase;                // Phase (typed enum)
+  final topics = record.topics;              // List<String>
+}
+```
+
+### Changed: Extrinsic Decoding Returns Strongly Typed Models
+
+```dart
+// OLD API - returned List<Map>
+final extrinsics = chain.decodeExtrinsics(rawBlockExtrinsics);
+for (final ext in extrinsics) {
+  final hash = ext['hash'];
+  final calls = ext['calls'];
+  final signature = ext['signature'];
+}
+
+// NEW API - returns List<UncheckedExtrinsic>
+final extrinsics = chainInfo.extrinsicsCodec.decode(input);
+for (final ext in extrinsics) {
+  final version = ext.version;           // int
+  final isSigned = ext.isSigned;         // bool
+  final call = ext.call;                 // RuntimeCall
+  final signature = ext.signature;       // ExtrinsicSignature?
+
+  // Access call details
+  print('${call.palletName}.${call.callName}');
+  print('Args: ${call.args}');
+}
+```
+
+### Changed: Type System Restructured
+
+The `scale_info/` folder has been replaced with `metadata/common/type_def/`.
+
+```dart
+// OLD imports (removed)
+import 'package:substrate_metadata/scale_info/scale_info.dart';
+// TypeDef, TypeDefComposite, TypeDefVariant, Field, Variant, etc.
+
+// NEW imports
+import 'package:substrate_metadata/substrate_metadata.dart';
+// Same types, different location in metadata/common/
+```
+
+### Changed: Dependencies Reduced
+
+The package now has fewer dependencies:
+
+| Removed | Kept | Added |
+|---------|------|-------|
+| `convert` | `pointycastle` | `hashlib_codecs` |
+| `equatable` | `polkadart_scale_codec` | |
+| `json_schema` | | |
+| `polkadart` | | |
+| `utility` | | |
+| `cross_file` | | |
+
+### Changed: Minimum Dart SDK Version
+
+```yaml
+# OLD
+environment:
+  sdk: ^3.6.0
+
+# NEW
+environment:
+  sdk: ^3.8.0
+```
+
+### New: Built-in Substrate Hashers
+
+Storage hashers are now built into this package.
+
+```dart
+import 'package:substrate_metadata/substrate_metadata.dart';
+
+// Available hashers
+final hash = Hasher.blake2b128.hash(bytes);
+final hash = Hasher.blake2b256.hash(bytes);
+final hash = Hasher.twoxx64.hash(bytes);
+final hash = Hasher.twoxx128.hash(bytes);
+
+// Storage key generation
+final storageMap = StorageMap(
+  prefix: 'System',
+  storage: 'Account',
+  hasher: StorageHasher.blake2b128Concat(accountIdCodec),
+  valueCodec: accountInfoCodec,
+);
+final key = storageMap.hashedKeyFor(accountId);
+```
+
+### New: `LazyConstantsCodec` for Memory Optimization
+
+```dart
+// Load constants on-demand instead of all at once
+final lazyCodec = LazyConstantsCodec(registry);
+
+// Preload frequently used constants
+lazyCodec.preloadConstants([
+  ('Balances', 'ExistentialDeposit'),
+  ('System', 'BlockHashCount'),
+]);
+
+// Check loading statistics
+final stats = lazyCodec.getLoadingStats();
+print('Loaded: ${stats['loadedConstants']}/${stats['totalConstants']}');
 ```
 
 ## Resources
