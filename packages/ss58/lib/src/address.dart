@@ -26,7 +26,7 @@ final _blake2b = DartBlake2b();
 
 class Address extends Equatable {
   ///
-  /// Address [type](https://docs.substrate.io/v3/advanced/ss58/#address-type)
+  /// Address [type](https://docs.polkadot.com/polkadot-protocol/parachain-basics/accounts/#address-type)
   final int prefix;
 
   ///

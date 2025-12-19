@@ -1,6 +1,6 @@
 # SS58
 
-A Dart library for encoding and decoding [SS58 addresses](https://docs.substrate.io/reference/address-formats/) used in [Substrate](https://substrate.io/)-based blockchains like Polkadot, Kusama, and 80+ other networks.
+A Dart library for encoding and decoding [SS58 addresses](https://docs.polkadot.com/polkadot-protocol/parachain-basics/accounts/#address-formats) used in [Substrate](https://docs.polkadot.com/develop/parachains/intro-polkadot-sdk/#substrate)-based blockchains like Polkadot, Kusama, and 80+ other networks.
 
 ## Features
 
@@ -260,7 +260,7 @@ try {
 
 - [SS58 Address Format Specification](https://docs.substrate.io/reference/address-formats/)
 - [SS58 Registry (GitHub)](https://github.com/paritytech/ss58-registry)
-- [Substrate Documentation](https://docs.substrate.io/)
+- [Substrate Documentation](https://docs.polkadot.com/develop/parachains/intro-polkadot-sdk/#substrate)
 - [Polkadot Wiki](https://wiki.polkadot.network/)
 
 ## License
