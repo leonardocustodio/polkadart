@@ -1,3 +1,47 @@
+## 1.0.0
+
+### Breaking Changes
+- **Extrinsic API completely redesigned** - Manual `SigningPayload` and `ExtrinsicPayload` replaced with fluent `ExtrinsicBuilder`
+- Removed `SigningPayload`, `ExtrinsicPayload`, and related classes
+- Removed `Transfers` class with static methods - replaced by `Balances` module
+- Removed `substrate.dart` and `scale_codec.dart` wrapper libraries
+- Removed `provider.dart` as standalone export - now part of `apis` library
+- Multisig API changed from static methods to instance-based pattern
+
+### Added
+- **`ExtrinsicBuilder`** - New fluent API for building extrinsics:
+  - Factory constructor: `ExtrinsicBuilder.fromChainData()` for automatic chain data integration
+  - Configuration methods: `.nonce()`, `.tip()`, `.era()`, `.immortal()`, `.assetId()`, `.metadataHash()`
+  - Signing methods: `signAndBuild()`, `signBuildAndSubmit()`, `signBuildAndSubmitWatch()`
+  - Static `quickSend()` method for one-liner transaction submission
+  - `SigningCallback` typedef: `Uint8List Function(Uint8List payload)`
+- **Balances module** with builder pattern:
+  - `Balances.transfer`, `Balances.transferKeepAlive`, `Balances.transferAll`, `Balances.forceTransfer`, `Balances.forceSetBalance`, `Balances.setBalanceDeprecated`
+  - Three address input methods: `.to()` (SS58), `.toAccountId()` (pubkey), `.toMultiAddress()` (advanced)
+  - Automatic conversion to `RuntimeCall` via `.toRuntimeCall(chainInfo)`
+- **`ChainDataFetcher`** - Parallel fetching of chain state with structured `ChainData` return
+- **`CallIndicesLookup`** - Helper for resolving pallet and call indices from metadata
+- **`MultisigAccount`** class - Automatic multisig address derivation with validation
+- **Enhanced `MultisigStorage`**:
+  - Static `fetch()` method for async retrieval
+  - Status methods: `hasApproved()`, `isDepositor()`, `isFinalApproval()`, `isComplete()`
+  - `getStatus()` method returning `MultisigStorageStatus` object
+
+### Changed
+- **Multisig refactored** from static methods to instance-based:
+  - Constructor: `Multisig({required provider, required chainInfo, required multisigAccount})`
+  - Uses `SigningCallback` instead of `KeyPair` for signing
+  - Instance methods: `createAndFundMultisig()`, `createCallData()`, `initiateTransfer()`, `approveAsMulti()`, `asMulti()`, `cancel()`
+- Direct exports of `polkadart_scale_codec` and `substrate_metadata` in main library
+- Provider classes moved to `/lib/apis/provider.dart` as part of APIs library
+
+### Removed
+- `primitives/runtime_metadata.dart` - replaced by direct substrate_metadata usage
+- `primitives/transfers.dart` - replaced by balances module
+- Multisig helper files: `multisig_meta.dart`, `signatories.dart`, `signatory.dart`, `exceptions.dart`, `extensions.dart`, `utilities.dart`
+- Extrinsic files: `abstract_payload.dart`, `signing_payload.dart`, `extrinsic_payload.dart`, `signature_type.dart`
+- Signed extensions: `asset_hub.dart`, `signed_extensions_abstract.dart`, `substrate.dart`
+
 ## 0.7.2
 
 ## 0.7.1

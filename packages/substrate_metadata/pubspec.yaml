@@ -1,6 +1,6 @@
 name: substrate_metadata
 description: A package able to provide metadata types, encode and decode storage entries, extrinsics, events, and constants for Substrate runtimes.
-version: 1.6.0
+version: 2.0.0
 homepage: https://github.com/leonardocustodio/polkadart/tree/main/packages/substrate_metadata
 repository: https://github.com/leonardocustodio/polkadart
 resolution: workspace
@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   pointycastle: ^4.0.0 # BSD-3-Clause
-  polkadart_scale_codec: ^1.6.0
+  polkadart_scale_codec: ^2.0.0
   hashlib_codecs: ^3.0.1
 
 dev_dependencies:

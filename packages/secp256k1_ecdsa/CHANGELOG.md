@@ -1,3 +1,6 @@
+## 0.6.3
+- Code formatting improvements only - no functional changes
+
 ## 0.6.2
 - Package was bumped to use new Polkadart version
 
