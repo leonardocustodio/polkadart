@@ -1,3 +1,33 @@
+## 2.0.0
+
+### Breaking Changes
+- **`RegistryItem` simplified**
+  - Removed: `displayName`, `symbols`, `decimals`, `standardAccount`, `website`
+  - Kept: `prefix`, `network` only
+- **`Registry.fromJsonString()` renamed** to `Registry.fromMap()` accepting `List<Map<String, dynamic>>`
+- Registry data format changed from JSON string to typed Dart list
+- Constructor is now public and const
+
+### Added
+- **`Address.tryDecode()`** - Safe decoding that returns null instead of throwing exceptions
+- **Cached Blake2b instance** for better performance (avoids algorithm instantiation per hash)
+- **Exceptions export** - Exception classes now publicly exported
+- **Comprehensive test suite** covering all functionality
+- **60 new networks** - Registry expanded from 93 to 153 networks:
+  - Notable additions: karmachain (21), vara (137), bittensor (13116), mythos (29972)
+  - Also: sora_dot_para, frequency, allfeat_network, metaquity_network, curio, ternoa, krest, societal, logion, vow-chain, moonsama, peerplays, krigan, golden_gate, t3rn, impact, analog-timechain, goro, mosaic-chain, xcavate, and many more
+
+### Changed
+- Registry data updated from 04/08/2022 to 07/12/2025
+- `UnmodifiableListView` used in `Registry.items` getter instead of creating copies
+- Documentation URL updated from substrate.io to docs.polkadot.com
+- Code generation: Added `json_annotation` and generated `registry_item.g.dart`
+- Example code improved with `final` keyword usage
+
+### Improved
+- Exception documentation clarified (e.g., "Invalid CheckSum Exception" comment fix)
+- Simplified example documentation in exception classes
+
 ## 1.3.1
 - Packages were bumped for new publish workflow
 

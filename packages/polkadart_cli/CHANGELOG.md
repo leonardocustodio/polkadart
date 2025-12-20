@@ -1,3 +1,24 @@
+## 1.0.0
+
+### Breaking Changes
+- **Metadata API migration**: `getTypedMetadata()` → `getMetadata()`, `metadata.runtimeMetadataVersion()` → `metadata.version`
+- **SCALE codec import update**: `package:polkadart/scale_codec.dart` → `package:polkadart_scale_codec/polkadart_scale_codec.dart`
+- Pallet generator now imports from `package:polkadart_scale_codec/io/io.dart`
+
+### Changed
+- Storage type parsing modernized using Dart 3+ pattern matching with sealed types (`StorageEntryTypePlain`, `StorageEntryTypeMap`)
+- Replaced switch-case with pattern matching for `StorageHasherEnum`
+- Outer enums extraction improved with conditional inclusion (checks for -1 sentinel values)
+- Runtime call variant matching by original name with case-insensitive comparison
+- Multi-query type casting: intelligent unwrapping of typedefs, only adds `.asA()` cast for Sequence/Array types with non-primitive elements
+
+### Added
+- New type exports: `SequenceDescriptor`, `ArrayDescriptor`, `PrimitiveDescriptor`
+
+### Improved
+- Code formatting consistency throughout config, generator, and typegen files
+- Better parameter alignment and trailing commas
+
 ## 0.7.2
 
 ## 0.7.1

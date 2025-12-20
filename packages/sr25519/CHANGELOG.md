@@ -1,3 +1,11 @@
+## 0.7.2
+
+### Changed
+- Code formatting improvements only - no functional changes
+- All changes are cosmetic formatting improvements following Dart style guidelines
+- Multi-line parameter formatting for better readability
+- Trailing commas added throughout
+
 ## 0.7.1
 
  - Update dependencies

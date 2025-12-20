@@ -1,3 +1,31 @@
+## 2.0.0
+
+### Breaking Changes
+- **Removed `Registry` class** (metadata parsing logic) from core library
+- **Removed `ScaleCodec` wrapper class** from core library
+- Core library now only contains `Codec` mixin
+- **Added required `isSizeZero()` method** to `Codec` mixin - all custom codecs must implement this
+
+### Added
+- **`LengthPrefixedCodec<T>`** - Generic wrapper adding Compact<u32> length prefix to any codec
+  - Useful for Substrate variable-length encoding patterns
+- **`ScaleRawBytes`** - Wrapper class for already-encoded SCALE bytes
+  - Avoids decode/re-encode cycles
+  - Codec writes raw bytes directly without encoding
+  - Extends `Equatable` for value comparison
+- **`Primitives` enum utility** - Maps primitive type names to codecs with static `fromString()` method
+- **`isSizeZero()` implementations** across all primitives:
+  - `NullCodec`: Returns `true` - always size zero
+  - `CompositeCodec`: Returns `true` if empty OR all inner codecs are size zero
+  - `U8ArrayCodec`: Returns `length == 0` - zero only if empty array
+  - `OptionCodec`, `NestedOptionCodec`, `ResultCodec`, `U8Codec`, `U8SequenceCodec`, `LengthPrefixedCodec`: Return `false`
+- **ResultCodec test coverage** - New test file with test cases for encoding/decoding Result types
+
+### Changed
+- Core library simplified to only contain `codec_mixin.dart`
+- Main library now exports `extended_codecs/length_prefixed_codec.dart`
+- Minor formatting improvements in `CompositeCodec` and `Option.none()` constructor
+
 ## 1.6.0
 
  - Update dependencies

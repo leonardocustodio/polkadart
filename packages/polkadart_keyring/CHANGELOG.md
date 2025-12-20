@@ -1,3 +1,21 @@
+## 0.7.2
+
+### Changed
+- Code formatting improvements throughout the package following Dart style guidelines
+- Multi-line parameter formatting with trailing commas for better readability
+- No functional changes - all logic, algorithms, and API signatures remain identical
+
+### Files Updated (formatting only)
+- `lib/src/ecdsa.dart` - Method parameters and return statements reformatted
+- `lib/src/ed25519.dart` - Method parameters reformatted
+- `lib/src/sr25519.dart` - Method signatures and calls reformatted
+- `lib/src/keypair.dart` - Equality operator reformatted
+- `lib/src/keyring.dart` - Constructor and method signatures reformatted
+- `lib/src/pairs.dart` - Return statements reformatted
+- `lib/utils/utilities.dart` - Function signature reformatted
+- `test/keyring_test.dart` - Variable initializations and expect statements reformatted
+- `example/example.dart` - Main function call reformatted
+
 ## 0.7.1
 
  - Update dependencies

@@ -1,3 +1,11 @@
+## 0.7.2
+
+### Changed
+- Code formatting improvements only - no functional changes
+- All changes are comprehensive code formatting pass following Dart style guidelines
+- Multi-line formatting for exception throws, constructor calls, and method signatures
+- Trailing commas added throughout
+
 ## 0.7.1
 
  - **FIX**: Entropy property on newer library version ([#691](https://github.com/leonardocustodio/polkadart/issues/691)).
