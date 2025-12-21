@@ -435,7 +435,7 @@ class ExtensionBuilder {
     if (_hasExtension('ChargeAssetTxPayment')) {
       extensions['ChargeAssetTxPayment'] = <String, dynamic>{
         'tip': _tip,
-        'asset_id': assetId == null ? MapEntry('None', null) : MapEntry('Some', assetId),
+        'asset_id': assetId,
       };
     }
 
@@ -451,10 +451,10 @@ class ExtensionBuilder {
     if (_hasExtension('CheckMetadataHash')) {
       if (enabled && hash != null) {
         extensions['CheckMetadataHash'] = <String, dynamic>{'mode': MapEntry('Enabled', 1)};
-        additionalSigned['CheckMetadataHash'] = MapEntry('Some', [0x01, ...hash]);
+        additionalSigned['CheckMetadataHash'] = [...hash];
       } else {
         extensions['CheckMetadataHash'] = <String, dynamic>{'mode': MapEntry('Disabled', 0)};
-        additionalSigned['CheckMetadataHash'] = MapEntry('None', 0);
+        additionalSigned['CheckMetadataHash'] = [0x00];
       }
     }
 
