@@ -39,6 +39,10 @@ dependency_overrides:
     path: ../../packages/substrate_bip39
   substrate_metadata:
     path: ../../packages/substrate_metadata
+  sr25519:
+    path: ../../packages/sr25519
+  secp256k1_ecdsa:
+    path: ../../packages/secp256k1_ecdsa
 
 polkadart:
   output_dir: lib/generated

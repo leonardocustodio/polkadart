@@ -25,7 +25,6 @@ import 'package:polkadart_example/generated/encointer/encointer.dart';
 import 'package:polkadart_example/generated/encointer/types/sp_runtime/multiaddress/multi_address.dart'
     as encointer;
 import 'package:polkadart_keyring/polkadart_keyring.dart';
-import 'package:polkadart_scale_codec/polkadart_scale_codec.dart';
 import 'package:substrate_metadata/substrate_metadata.dart';
 
 import 'package:polkadart_example/generated/encointer/types/encointer_primitives/communities/community_identifier.dart'
@@ -99,7 +98,7 @@ Future<void> main(List<String> arguments) async {
           tip: BigInt.zero,
         ).customExtension('ChargeAssetTxPayment', {
           "tip": BigInt.zero,
-          "asset_id": Option.some(paymentAsset.toJson()),
+          "asset_id": paymentAsset.toJson(),
         });
 
     // Get signing payload for inspection
