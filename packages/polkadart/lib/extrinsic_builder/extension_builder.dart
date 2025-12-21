@@ -454,7 +454,7 @@ class ExtensionBuilder {
         additionalSigned['CheckMetadataHash'] = [...hash];
       } else {
         extensions['CheckMetadataHash'] = <String, dynamic>{'mode': MapEntry('Disabled', 0)};
-        additionalSigned['CheckMetadataHash'] = [0x00];
+        additionalSigned['CheckMetadataHash'] = null;
       }
     }
 
