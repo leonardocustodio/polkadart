@@ -433,10 +433,7 @@ class ExtensionBuilder {
     _assetId = assetId;
 
     if (_hasExtension('ChargeAssetTxPayment')) {
-      extensions['ChargeAssetTxPayment'] = <String, dynamic>{
-        'tip': _tip,
-        'asset_id': assetId,
-      };
+      extensions['ChargeAssetTxPayment'] = <String, dynamic>{'tip': _tip, 'asset_id': assetId};
     }
 
     return this;
