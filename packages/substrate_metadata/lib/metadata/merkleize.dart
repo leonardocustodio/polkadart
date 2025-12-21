@@ -812,7 +812,10 @@ class MetadataMerkleizer {
     }
   }
 
-  Map<String?, dynamic> decodeComposite(TypeDefComposite def, Input input) {
+  dynamic decodeComposite(TypeDefComposite def, Input input) {
+    if (def.fields.length == 1 && def.fields.first.name == null) {
+      return decodeTypeDef(metadata.typeById(def.fields.first.type).type.typeDef, input);
+    }
     return {
       for (final f in def.fields)
         f.name: decodeTypeDef(metadata.typeById(f.type).type.typeDef, input),
