@@ -65,7 +65,7 @@ rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
 
 ```bash
 cd packages/smoldot
-./tools/build_rust.sh
+./tool/build_rust.sh
 ```
 
 This will:
@@ -77,7 +77,7 @@ This will:
 
 ```bash
 cd packages/smoldot
-./tools/build_android.sh
+./tool/build_android.sh
 ```
 
 Output: `native/android/{abi}/libsmoldot.so` for each ABI
@@ -86,7 +86,7 @@ Output: `native/android/{abi}/libsmoldot.so` for each ABI
 
 ```bash
 cd packages/smoldot
-./tools/build_ios.sh
+./tool/build_ios.sh
 ```
 
 Output:
@@ -228,7 +228,7 @@ For automated builds, see `.github/workflows/build_smoldot.yml`:
 - name: Build Rust library
   run: |
     cd packages/smoldot
-    ./tools/build_rust.sh
+    ./tool/build_rust.sh
 ```
 
 ## Optimization
