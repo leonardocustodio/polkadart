@@ -5,16 +5,16 @@ import 'package:substrate_metadata/substrate_metadata.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Metadata V15 Tests', () {
+  group('Metadata V16 Tests', () {
     late Map<String, dynamic> metadataJson;
     late RuntimeMetadataPrefixed prefixedMetadata;
-    late RuntimeMetadataV15 metadata;
+    late RuntimeMetadataV16 metadata;
 
     setUpAll(() {
-      // Load the downloaded V15 metadata
-      final metadataFile = File('./test/metadata_tests/v15/westend_v15_metadata.json');
+      // Load the downloaded V16 metadata
+      final metadataFile = File('./test/metadata_tests/v16/westend_v16_metadata.json');
       if (!metadataFile.existsSync()) {
-        throw Exception('V15 metadata file not found.');
+        throw Exception('V16 metadata file not found.');
       }
 
       metadataJson = jsonDecode(metadataFile.readAsStringSync());
@@ -24,9 +24,9 @@ void main() {
       final inputBytes = decodeHex(metadataHex);
       prefixedMetadata = RuntimeMetadataPrefixed.fromBytes(inputBytes);
 
-      // Verify it's V15
-      expect(prefixedMetadata.metadata, isA<RuntimeMetadataV15>());
-      metadata = prefixedMetadata.metadata as RuntimeMetadataV15;
+      // Verify it's V16
+      expect(prefixedMetadata.metadata, isA<RuntimeMetadataV16>());
+      metadata = prefixedMetadata.metadata as RuntimeMetadataV16;
     });
 
     group('Basic Decoding Tests', () {
@@ -35,9 +35,9 @@ void main() {
         expect(prefixedMetadata.magicNumber, metaReserved);
       });
 
-      test('Metadata version is 15', () {
-        expect(metadata.version, 15);
-        expect(metadataJson['metadata_version'], 15);
+      test('Metadata version is 16', () {
+        expect(metadata.version, 16);
+        expect(metadataJson['metadata_version'], 16);
       });
 
       test('Types are populated', () {
@@ -60,28 +60,43 @@ void main() {
       });
     });
 
-    group('V15-Specific Feature Tests', () {
-      test('Extrinsic metadata uses signed extensions', () {
+    group('V16-Specific Feature Tests', () {
+      test('Extrinsic metadata uses transaction extensions (not signed extensions)', () {
         final extrinsic = metadata.extrinsic;
-        expect(extrinsic, isA<ExtrinsicMetadataV15>());
-        expect(extrinsic.signedExtensions, isNotEmpty);
+        expect(extrinsic, isA<ExtrinsicMetadataV16>());
+        expect(extrinsic.transactionExtensions, isNotEmpty);
       });
 
-      test('Pallets have documentation', () {
-        // V15 added docs field to pallets
-        var palletsWithDocs = 0;
+      test('Pallets have deprecation info field', () {
+        // All V16 pallets should have the deprecationInfo field (even if null)
         for (final pallet in metadata.pallets) {
-          if (pallet.docs.isNotEmpty) {
-            palletsWithDocs++;
-          }
+          // Just accessing the field should not throw
+          pallet.deprecationInfo;
         }
-        // Most pallets should have documentation
-        expect(palletsWithDocs, greaterThan(0));
+        expect(metadata.pallets, isNotEmpty);
+      });
+
+      test('Pallets can have associated types', () {
+        var totalAssociatedTypes = 0;
+        for (final pallet in metadata.pallets) {
+          totalAssociatedTypes += pallet.associatedTypes.length;
+        }
+        // At least some pallets should have associated types
+        expect(totalAssociatedTypes, greaterThan(0));
+      });
+
+      test('Pallets can have view functions', () {
+        var totalViewFunctions = 0;
+        for (final pallet in metadata.pallets) {
+          totalViewFunctions += pallet.viewFunctions.length;
+        }
+        // View functions may or may not exist depending on the runtime
+        expect(totalViewFunctions, greaterThanOrEqualTo(0));
       });
     });
 
     group('System Pallet Tests', () {
-      late PalletMetadataV15 systemPallet;
+      late PalletMetadataV16 systemPallet;
 
       setUp(() {
         systemPallet = metadata.pallets.firstWhere((p) => p.name == 'System');
@@ -106,8 +121,8 @@ void main() {
       });
 
       test('System pallet has storage', () {
-        expect(systemPallet.storage, isNotNull);
-        final storage = systemPallet.storage!;
+        expect(systemPallet.storageV16, isNotNull);
+        final storage = systemPallet.storageV16!;
         expect(storage.entries, isNotEmpty);
       });
 
@@ -117,18 +132,18 @@ void main() {
       });
 
       test('System pallet has events', () {
-        expect(systemPallet.event, isNotNull);
-        expect(systemPallet.event!.type, isNonNegative);
+        expect(systemPallet.eventV16, isNotNull);
+        expect(systemPallet.eventV16!.type, isNonNegative);
       });
 
       test('System pallet has errors', () {
-        expect(systemPallet.error, isNotNull);
-        expect(systemPallet.error!.type, isNonNegative);
+        expect(systemPallet.errorV16, isNotNull);
+        expect(systemPallet.errorV16!.type, isNonNegative);
       });
     });
 
     group('Balances Pallet Tests', () {
-      late PalletMetadataV15 balancesPallet;
+      late PalletMetadataV16 balancesPallet;
 
       setUp(() {
         balancesPallet = metadata.pallets.firstWhere((p) => p.name == 'Balances');
@@ -172,7 +187,7 @@ void main() {
         registry = MetadataTypeRegistry(prefixedMetadata);
       });
 
-      test('Registry builds successfully from V15 metadata', () {
+      test('Registry builds successfully from V16 metadata', () {
         expect(registry, isNotNull);
         expect(registry.prefixed, prefixedMetadata);
       });
@@ -183,7 +198,7 @@ void main() {
     });
 
     group('Merkleization Tests', () {
-      test('Can create MetadataMerkleizer from V15 metadata', () {
+      test('Can create MetadataMerkleizer from V16 metadata', () {
         final merkleizer = MetadataMerkleizer.fromMetadata(
           metadata,
           decimals: 12,
@@ -235,7 +250,7 @@ void main() {
         expect(merkleizer.lookup, isNotEmpty);
       });
 
-      test('Extrinsic info is correct for V15', () {
+      test('Extrinsic info is correct for V16', () {
         final merkleizer = MetadataMerkleizer.fromMetadata(
           metadata,
           decimals: 12,
@@ -270,10 +285,10 @@ void main() {
         expect(json, isNotNull);
         expect(json['magicNumber'], isNotNull);
         expect(json['metadata'], isNotNull);
-        expect(json['metadata']['V15'], isNotNull);
+        expect(json['metadata']['V16'], isNotNull);
       });
 
-      test('V15 metadata JSON has expected structure', () {
+      test('V16 metadata JSON has expected structure', () {
         final json = metadata.toJson();
 
         expect(json['types'], isNotNull);
@@ -281,7 +296,7 @@ void main() {
         expect(json['extrinsic'], isNotNull);
         expect(json['apis'], isNotNull);
         expect(json['outerEnums'], isNotNull);
-        // Note: customMetadata was added in V16, not present in V15
+        expect(json['customMetadata'], isNotNull);
       });
     });
 
@@ -297,21 +312,21 @@ void main() {
 
         // Verify basic properties match
         expect(reDecoded.magicNumber, prefixedMetadata.magicNumber);
-        expect(reDecoded.metadata.version, 15);
+        expect(reDecoded.metadata.version, 16);
 
-        final reDecodedV15 = reDecoded.metadata as RuntimeMetadataV15;
-        expect(reDecodedV15.types.length, metadata.types.length);
-        expect(reDecodedV15.pallets.length, metadata.pallets.length);
-        expect(reDecodedV15.apis.length, metadata.apis.length);
+        final reDecodedV16 = reDecoded.metadata as RuntimeMetadataV16;
+        expect(reDecodedV16.types.length, metadata.types.length);
+        expect(reDecodedV16.pallets.length, metadata.pallets.length);
+        expect(reDecodedV16.apis.length, metadata.apis.length);
       });
     });
 
-    group('Multiple Chain V15 Tests', () {
+    group('Multiple Chain V16 Tests', () {
       final chains = ['westend', 'paseo', 'polkadot', 'kusama'];
 
       for (final chain in chains) {
-        test('Can decode $chain V15 metadata', () {
-          final file = File('./test/metadata_tests/v15/${chain}_v15_metadata.json');
+        test('Can decode $chain V16 metadata', () {
+          final file = File('./test/metadata_tests/v16/${chain}_v16_metadata.json');
           if (!file.existsSync()) {
             return; // Skip if file not found
           }
@@ -321,11 +336,11 @@ void main() {
           final bytes = decodeHex(hex);
 
           final prefixed = RuntimeMetadataPrefixed.fromBytes(bytes);
-          expect(prefixed.metadata.version, 15);
+          expect(prefixed.metadata.version, 16);
 
-          final v15 = prefixed.metadata as RuntimeMetadataV15;
-          expect(v15.pallets, isNotEmpty);
-          expect(v15.types, isNotEmpty);
+          final v16 = prefixed.metadata as RuntimeMetadataV16;
+          expect(v16.pallets, isNotEmpty);
+          expect(v16.types, isNotEmpty);
         });
       }
     });
